@@ -1,4 +1,4 @@
-![alt ArchaicQuest II](https://i.imgur.com/rhi04Dz.png)
+![alt ArchaicQuest II](https://i.imgur.com/LJo8K4h.png)
 
 #ArchaicQuest II - Multi User Dungeon
 
