@@ -1,0 +1,59 @@
+﻿@{
+    ViewData["Title"] = "Play browser based RPG";
+}
+@section Scripts {
+    <script src="/lib/signalr/signalr.js"></script>
+    <script type="text/javascript">
+        // Bind DOM elements
+        var sendForm = document.getElementById("send-form");
+        var sendButton = document.getElementById("send-button");
+        var messagesList = document.getElementById("messages-list");
+        var messageTextBox = document.getElementById("message-textbox");
+
+        function appendMessage(content) {
+            var li = document.createElement("li");
+            li.innerText = content;
+            messagesList.appendChild(li);
+        }
+
+        var connection = new signalR.HubConnection("/Hubs/game");
+
+        sendForm.addEventListener("submit", function() {
+            var message = messageTextBox.value;
+            messageTextBox.value = "";
+            connection.send("Send", message);
+        });
+
+        document.getElementById("test-button").addEventListener("click", function () {
+             console.log("clicked send")
+            connection.send("CreateCharacter", "lee");
+        });
+
+        connection.on("SendMessage", function (sender, message) {
+            appendMessage(sender + ': ' + message);
+        });
+
+        connection.on("SendAction", function (sender, action) {
+            appendMessage(sender + ' ' + action);
+        });
+
+        connection.start().then(function() {
+            messageTextBox.disabled = false;
+            sendButton.disabled = false;
+        });
+    </script>
+}
+
+
+<form id="send-form" action="#">
+    Send a message:
+    <input type="text" id="message-textbox" disabled />
+    <button id="send-button" type="submit" disabled>Send</button>
+</form>
+
+<form id="test-form" action="#">
+    <button id="test-button" type="submit">test DB</button>
+</form>
+
+<ul id="messages-list"></ul>
+
