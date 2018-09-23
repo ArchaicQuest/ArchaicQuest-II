@@ -7,7 +7,7 @@ This project contains:
 * The Signalr game server
 * The Web client
 
-The first phase of this project is to complete the web API so the game content can be created using the Admin system.
+The first phase of this project is to complete the web API so the game content can be created using [the Admin system](https://github.com/ArchaicQuest/ArchaicQuest-II-Web-Admin).
 
 For the web api we need endpoints that allow the creation of these things:
 * Items - In progress
