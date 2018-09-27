@@ -17,13 +17,8 @@ namespace ArchaicQuestII.Core.Item
             Drink,
             Key,
             Light,
-            Misc,
-            Note,
             Potion,
             Weapon,
-            Gold,
-            Silver,
-            Copper,
             Forage,
             Repair,
             LockPick
@@ -136,7 +131,7 @@ namespace ArchaicQuestII.Core.Item
 
         public enum ArmourTypes
         {
-            Clot,
+            Cloth,
             Leather,
             [Display(Name = "Studded Leather")]
             StuddedLeather,
