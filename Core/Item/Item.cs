@@ -157,6 +157,7 @@ namespace ArchaicQuestII.Core.Item
         public int WeaponSpeed { get; set; }
         public Dice Damage { get; set; }
         public Guid KeyId { get; set; }
+        public Book Book { get; set; }
 
         public ArmourRating ArmorRating { get; set; }
         public int Weight { get; set; } = 2;
