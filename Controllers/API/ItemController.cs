@@ -83,6 +83,23 @@ namespace ArchaicQuestII.Controllers
 
         }
 
+
+        [HttpGet]
+        [Route("api/item/FindItems")]
+        public List<Item> FindItems([FromQuery] string query)
+        {
+
+            var items = DB.GetItems().Where(x => x.Name != null);
+
+            if (string.IsNullOrEmpty(query))
+            {
+                return items.ToList();
+            }
+
+            return items.Where(x => x.Name.IndexOf(query, StringComparison.OrdinalIgnoreCase) != -1).ToList();
+
+        }
+
         [HttpGet]
         [Route("api/item/ReturnItemTypes")]
         public JsonResult ReturnItemTypes()
