@@ -73,7 +73,7 @@ namespace ArchaicQuestII.Controllers.API
                 }
             }
 
-            Save.SaveRoom(newRoom);
+            DB.SaveRoom(newRoom);
 
         }
     }

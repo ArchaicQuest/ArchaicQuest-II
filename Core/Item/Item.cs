@@ -132,6 +132,7 @@ namespace ArchaicQuestII.Core.Item
         public enum ArmourTypes
         {
             Cloth,
+            Clot,
             Leather,
             [Display(Name = "Studded Leather")]
             StuddedLeather,

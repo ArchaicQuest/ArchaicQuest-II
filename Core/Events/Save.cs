@@ -2,16 +2,18 @@ using ArchaicQuestII.Log;
 using LiteDB;
 using Serilog;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 
 namespace ArchaicQuestII.Core.Events
 {
-    public class Save
+    public class DB
     {
         private static Log.Log _logger { get; set; }
 
-        public Save() { 
+        public DB() { 
             _logger = new Log.Log();
         }
 
@@ -81,6 +83,21 @@ namespace ArchaicQuestII.Core.Events
             catch (Exception ex)
             {
                 _logger.Error("Error Saving item " + ex.Message);
+            }
+
+        }
+
+        public static List<Item.Item> GetItems()
+        {
+            using (var db = new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MyData.db")))
+            {
+
+                var col = db.GetCollection<Item.Item>("Item");
+
+                var returnPlayer = col.FindAll().ToList();
+
+                return returnPlayer;
+
             }
 
         }

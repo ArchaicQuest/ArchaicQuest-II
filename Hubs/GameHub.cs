@@ -12,12 +12,12 @@ namespace ArchaicQuestII.Hubs
     public class GameHub : Hub
     {
         private Log.Log _logger { get; set; }
-        private Save _save { get; set; }
+        private DB _save { get; set; }
 
         public GameHub()
         {
             _logger = new Log.Log();
-            _save = new Save();
+            _save = new DB();
         }
         public override async Task OnConnectedAsync()
         {

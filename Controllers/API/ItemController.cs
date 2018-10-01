@@ -32,6 +32,7 @@ namespace ArchaicQuestII.Controllers
                 ArmourType = item.ArmourType,
                 AttackType = item.AttackType,
                 Condition = item.Condition,
+                Book = item.Book,
                 ContainerItems = item.ContainerItems,
                 DamageType = item.DamageType,
                 DecayTimer = item.DecayTimer,
@@ -57,7 +58,19 @@ namespace ArchaicQuestII.Controllers
                 newItem.KeyId = new Guid();
             }
 
-            Save.SaveItem(newItem);
+            DB.SaveItem(newItem);
+
+        }
+
+
+        [HttpGet]
+        [Route("api/item/Get")]
+        public List<Item> GetItem()
+        {
+
+            var items = DB.GetItems();
+
+            return items;
 
         }
 
