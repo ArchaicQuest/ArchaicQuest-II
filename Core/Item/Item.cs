@@ -148,10 +148,7 @@ namespace ArchaicQuestII.Core.Item
 
         }
 
-        /// <summary>
-        /// if container this holds the items
-        /// </summary>
-        public List<Item> ContainerItems { get; set; } = new List<Item>();
+
         public DamageTypes DamageType { get; set; }
         public ArmourTypes ArmourType { get; set; }
         public List<ItemFlags> ItemFlag { get; set; }
@@ -162,7 +159,7 @@ namespace ArchaicQuestII.Core.Item
         public int WeaponSpeed { get; set; }
         public Dice Damage { get; set; }
         public Guid KeyId { get; set; }
-
+        public Container Container { get; set; }
         public ArmourRating ArmorRating { get; set; }
         public int Weight { get; set; } = 2;
  

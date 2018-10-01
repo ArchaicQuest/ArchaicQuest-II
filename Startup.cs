@@ -49,9 +49,9 @@ namespace ArchaicQuestII
             app.UseStaticFiles();
 
             app.UseCors(
-                options => options.WithOrigins("http://localhost:4200").AllowAnyMethod()
+                options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()
             );
-
+      
             app.UseMvc(routes =>
             {
               
