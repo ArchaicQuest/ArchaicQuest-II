@@ -82,6 +82,24 @@ namespace ArchaicQuestII.Controllers
 
             var items = DB.GetItems().Where(x => x.Name != null);
 
+
+
+            if (string.IsNullOrEmpty(query))
+            {
+                return items.ToList();
+            }
+
+            return items.Where(x => x.Name.IndexOf(query, StringComparison.OrdinalIgnoreCase) != -1).ToList();
+
+        }
+
+        [HttpGet]
+        [Route("api/item/FindKeys")]
+        public List<Item> FindKeys([FromQuery] string query)
+        {
+
+            var items = DB.GetItems().Where(x => x.Name != null && x.ItemType == Item.ItemTypes.Key);
+
             if (string.IsNullOrEmpty(query))
             {
                 return items.ToList();
