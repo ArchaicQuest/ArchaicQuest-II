@@ -32,17 +32,8 @@ namespace ArchaicQuestII.Controllers
                 ArmourType = item.ArmourType,
                 AttackType = item.AttackType,
                 Condition = item.Condition,
-                Container =
-                {
-                    Size = item.Container.Size,
-                    Items = item.Container.Items,
-                    IsOpen = item.Container.IsOpen,
-                    IsLocked = item.Container.IsLocked,
-                    AssociatedKeyId = item.Container.AssociatedKeyId
-
-                },
+                Container = item.Container,
                 Book = item.Book,
-
                 DamageType = item.DamageType,
                 DecayTimer = item.DecayTimer,
                 Description = item.Description,
