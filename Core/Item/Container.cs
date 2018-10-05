@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static ArchaicQuestII.Core.Item.Item;
 
 namespace ArchaicQuestII.Core.Item
 {
@@ -15,15 +16,6 @@ namespace ArchaicQuestII.Core.Item
             Large,
             ExtraLarge,
             Infinite
-        }
-
-        public enum LockStrength
-        {
-            Simple, 
-            Easy,
-            Medium,
-            Hard,
-            Impossible,
         }
 
         public ContainerSize Size { get; set; }

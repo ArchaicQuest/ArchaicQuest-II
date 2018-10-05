@@ -141,8 +141,17 @@ namespace ArchaicQuestII.Core.Item
             [Display(Name = "Plate Mail")]
             PlateMail,
 
-
         }
+
+        public enum LockStrength
+        {
+            Simple,
+            Easy,
+            Medium,
+            Hard,
+            Impossible,
+        }
+
 
 
         public DamageTypes DamageType { get; set; }

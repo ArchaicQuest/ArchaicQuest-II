@@ -7,6 +7,8 @@ using ArchaicQuestII.Core.Room;
 using ArchaicQuestII.Core.Item;
 using ArchaicQuestII.Core.Events;
 using Microsoft.Azure.KeyVault.Models;
+using static ArchaicQuestII.Core.Item.Container;
+using static ArchaicQuestII.Core.Item.Item;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -107,6 +109,42 @@ namespace ArchaicQuestII.Controllers
 
             return items.Where(x => x.Name.IndexOf(query, StringComparison.OrdinalIgnoreCase) != -1).ToList();
 
+        }
+
+        [HttpGet]
+        [Route("api/item/ContainerSize")]
+        public JsonResult ContainerSize()
+        {
+            var containerSize = new List<object>();
+
+            foreach (var size in Enum.GetValues(typeof(ContainerSize)))
+            {
+
+                containerSize.Add(new
+                {
+                    id = (int)size,
+                    name = size.ToString()
+                });
+            }
+            return Json(containerSize);
+        }
+
+        [HttpGet]
+        [Route("api/item/LockStrength")]
+        public JsonResult LockStrength()
+        {
+            var lockStrength = new List<object>();
+
+            foreach (var lockDifficulty in Enum.GetValues(typeof(LockStrength)))
+            {
+
+                lockStrength.Add(new
+                {
+                    id = (int)lockDifficulty,
+                    name = lockDifficulty.ToString()
+                });
+            }
+            return Json(lockStrength);
         }
 
         [HttpGet]
