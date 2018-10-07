@@ -13,15 +13,15 @@ namespace ArchaicQuestII.Core.Item
             Armour,
             Book,
             Container,
-            Food,
             Drink,
+            Food,
+            Forage,
             Key,
             Light,
+            LockPick,
             Potion,
-            Weapon,
-            Forage,
             Repair,
-            LockPick
+            Weapon,
         }
 
 
@@ -30,20 +30,20 @@ namespace ArchaicQuestII.Core.Item
             Antievil, //zap if align -350 & lower
             Antigood, //zap if align +350 & lower
             Antineutral, //zap if align -350 to +350
-            Bless, // +20% resist dam. 
+            Bless, // +20% resist dam.
             Container, // isContainer
             Cursed,
             Equipable, // can be equipped
             Evil, //glow on det.evil
             Glow, //lights area
-            Hum,  //affect n/a
             Holy,
+            Hum,  //affect n/a
             Invis, //invisible
             Nodrop, // cannot drop
             Nolocate,   //locate spell fails
             Noremove, //cannot remove w/o remove curse
+            QuestItem,
             Vampric, // Drains hp on hoit
-            QuestItem
         }
 
         public enum ItemLocation
@@ -56,83 +56,89 @@ namespace ArchaicQuestII.Core.Item
 
         public enum EqSlot
         {
-            Light,
-            Finger,
-            Neck,
-            Face,
-            Head,
-            Torso,
-            Legs,
-            Feet,
-            Hands,
             Arms,
             Body,
-            Waist,
-            Wrist,
-            Wielded,
+            Face,
+            Feet,
+            Finger,
+            Floating,
+            Hands,
+            Head,
             Held,
+            Legs,
+            Light,
+            Neck,
             Shield,
-            Floating
+            Torso,
+            Waist,
+            Wielded,
+            Wrist,
 
         }
 
         public enum AttackTypes
         {
-            Slash,
-            Slice,
-            Stab,
-            Thrust,
+            Charge,
             Chop,
             Claw,
             Cleave,
-            Charge,
             Crush,
-            Smash,
             Pierce,
-            Punch,
             Pound,
+            Punch,
             Scratch,
             Slap,
-            Whip,
+            Slash,
+            Slice,
+            Smash,
+            Stab,
+            Thrust,
+            Thwack,
+            Whip
         }
 
 
         public enum DamageTypes
         {
+            None,
             Acidic,
             Blast,
             Chill,
+            Divine,
             Flame,
             Flaming,
             Freezing,
-            Shocking,
             Poisoned,
-            Stun
+            Shocking,
+            Stun,
+            Wrath
         }
 
         public enum WeaponTypes
         {
+            Arrows,
             Axe,
+            Blunt,
+            Bolt,
+            Bows,
+            Crossbow,
             Exotic,
             Flail,
-            Blunt,
+            [Display(Name = "Hand to hand")]
+            HandToHand,
+            [Display(Name = "Long blades")]
+            LongBlades,
             Polearm,
+            [Display(Name = "Short blades")]
+            ShortBlades,
             Spear,
             Staff,
-            LongBlades,
-            ShortBlades,
             Whip,
-            Bows,
-            Arrows,
-            Crossbow,
-            Bolt,
-            HandToHand
         }
 
         public enum ArmourTypes
         {
             Cloth,
-            Clot,
             Leather,
             [Display(Name = "Studded Leather")]
             StuddedLeather,
