@@ -8,19 +8,17 @@ namespace ArchaicQuestII.Core.Item
     public class Money
     {
         public int Amount { get; set; }
-        public Description Description { get; set; }
+
     }
 
-    public class Gold: Money
+    public class Gold : Money
     {
-        public Gold()
+        private Description Description { get; set; } = new Description
         {
-            Description = new Description()
-            {
-                Look = "A gold coin.",
-                Exam = "A gold coin.",
-                Room = "A gold coin."
-            };
-        }
+            Look = "A gold coin.",
+            Exam = "A gold coin.",
+            Room = "A gold coin."
+        };
     }
 }
+

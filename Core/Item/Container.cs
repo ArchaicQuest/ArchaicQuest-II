@@ -24,7 +24,7 @@ namespace ArchaicQuestII.Core.Item
         public bool IsOpen { get; set; }
         public bool CanLock { get; set; }
         public bool IsLocked { get; set; }
-        public Gold GoldPieces { get; set; }
+        //public Gold GoldPieces { get; set; }
         // needs to match Key lock guid
         public Guid? AssociatedKeyId { get; set; }
         public LockStrength LockDifficulty { get; set; }
