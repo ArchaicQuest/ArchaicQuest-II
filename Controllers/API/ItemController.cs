@@ -97,6 +97,15 @@ namespace ArchaicQuestII.Controllers
         }
 
         [HttpGet]
+        [Route("api/item/FindItemById")]
+        public Item FindItemById([FromQuery] int id)
+        {
+
+            return DB.GetItems().FirstOrDefault(x => x.Id.Equals(id));
+
+        }
+
+        [HttpGet]
         [Route("api/item/FindKeys")]
         public List<Item> FindKeys([FromQuery] string query)
         {
