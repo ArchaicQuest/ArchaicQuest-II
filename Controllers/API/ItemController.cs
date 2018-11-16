@@ -38,6 +38,21 @@ namespace ArchaicQuestII.Controllers
                 Container = item.Container,
                 Book = item.Book,
                 DamageType = item.DamageType,
+                Damage = new Damage()
+                {
+                    Maximum = item.Damage.Maximum,
+                    Minimum = item.Damage.Minimum,
+                },
+                Modifier = new Modifier()
+                {
+                    DamRoll = item.Modifier.DamRoll,
+                    HitRoll = item.Modifier.HitRoll,
+                    HP = item.Modifier.HP,
+                    Mana = item.Modifier.Mana,
+                    Moves = item.Modifier.Moves,
+                    SpellDam = item.Modifier.SpellDam,
+                    Saves = item.Modifier.Saves,
+                },
                 DecayTimer = item.DecayTimer,
                 Description = item.Description,
                 Slot = item.Slot,

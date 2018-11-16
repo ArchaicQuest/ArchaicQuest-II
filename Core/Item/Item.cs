@@ -169,11 +169,11 @@ namespace ArchaicQuestII.Core.Item
         public EqSlot Slot { get; set; }
         public WeaponTypes WeaponType { get; set; }
         public int WeaponSpeed { get; set; }
-        public Dice Damage { get; set; }
+        public Damage Damage { get; set; }
         public Guid KeyId { get; set; }
         public Container Container { get; set; }
         public Book Book { get; set; }
-
+        public Modifier Modifier { get; set; }
         public ArmourRating ArmorRating { get; set; }
         public int Weight { get; set; } = 2;
  
