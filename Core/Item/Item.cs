@@ -28,23 +28,23 @@ namespace ArchaicQuestII.Core.Item
         public enum ItemFlags
         {
             None = 0,
-            Antievil = 1, //zap if align -350 & lower
-            Antigood = 2, //zap if align +350 & lower
-            Antineutral = 4, //zap if align -350 to +350
-            Bless = 8, // +20% resist dam.
-            Container = 16, // isContainer
-            Cursed = 32,
-            Equipable = 64, // can be equipped
-            Evil = 128, //glow on det.evil
-            Glow = 256, //lights area
-            Holy = 512,
-            Hum = 1024, //affect n/a
-            Invis = 2024, //invisible
-            Nodrop = 4096, // cannot drop
-            Nolocate = 8192,   //locate spell fails
-            Noremove = 16384, //cannot remove w/o remove curse
-            QuestItem = 32768,
-            Vampric = 65536, // Drains hp on hoit
+            Antievil = 1 << 0, //zap if align -350 & lower
+            Antigood = 1 << 1, //zap if align +350 & lower
+            Antineutral = 1 << 2, //zap if align -350 to +350
+            Bless = 1 << 3, // +20% resist dam.
+            Container = 1 << 4, // isContainer
+            Cursed = 1 << 5,
+            Equipable = 1 << 6, // can be equipped
+            Evil = 1 << 7, //glow on det.evil
+            Glow = 1 << 8, //lights area
+            Holy = 1 << 9,
+            Hum = 1 << 10, //affect n/a
+            Invis = 1 << 11, //invisible
+            Nodrop = 1 << 12, // cannot drop
+            Nolocate = 1 << 13,   //locate spell fails
+            Noremove = 1 << 14, //cannot remove w/o remove curse
+            QuestItem = 1 << 15,
+            Vampric = 1 << 16, // Drains hp on hoit
         }
 
         public enum ItemLocation
