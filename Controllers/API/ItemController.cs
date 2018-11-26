@@ -28,9 +28,11 @@ namespace ArchaicQuestII.Controllers
                 var exception = new Exception("Invalid object");
                 throw exception;
             }
+
             var newItem = new Item()
             {
                 Name = item.Name,
+                Level = item.Level,
                 ArmorRating = item.ArmorRating,
                 ArmourType = item.ArmourType,
                 AttackType = item.AttackType,
@@ -76,11 +78,27 @@ namespace ArchaicQuestII.Controllers
                 newItem.KeyId = new Guid();
             }
 
+
+            if (!string.IsNullOrEmpty(item.Id.ToString()))
+            {
+
+                var foundItem = DB.GetItems().FirstOrDefault(x => x.Id.Equals(item.Id));
+
+                if (foundItem == null)
+                {
+                    throw new Exception("Item Id does not exist");
+                }
+
+                newItem.Id = item.Id;
+            }
+            
+
+
             DB.SaveItem(newItem);
 
         }
 
-
+ 
         [HttpGet]
         [Route("api/item/Get")]
         public List<Item> GetItem()

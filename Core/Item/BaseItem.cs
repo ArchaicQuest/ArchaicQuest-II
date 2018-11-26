@@ -11,6 +11,10 @@ namespace ArchaicQuestII.Core.Item
         public int Id { get; set; }
         [JsonProperty(PropertyName = "name")]
         public string Name { get; set; }
+        /// <summary>
+        /// Min level needed to use item
+        /// </summary>
+        public int Level { get; set; }
         public bool KnownByName { get; set; }
         public Description Description { get; set; }
         /// <summary>
