@@ -174,7 +174,7 @@ namespace ArchaicQuestII.Core.Item
         public Container Container { get; set; }
         public Book Book { get; set; }
         public Modifier Modifier { get; set; }
-        public ArmourRating ArmorRating { get; set; }
+        public ArmourRating ArmourRating { get; set; }
         public int Weight { get; set; } = 2;
  
         /// <summary>

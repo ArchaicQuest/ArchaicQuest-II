@@ -33,12 +33,21 @@ namespace ArchaicQuestII.Controllers
             {
                 Name = item.Name,
                 Level = item.Level,
-                ArmorRating = item.ArmorRating,
+                ArmourRating = new ArmourRating()
+                {
+                    Armour = item.ArmourRating.Armour,
+                    Magic = item.ArmourRating.Magic
+                },
                 ArmourType = item.ArmourType,
                 AttackType = item.AttackType,
                 Condition = item.Condition,
                 Container = item.Container,
-                Book = item.Book,
+                Book = new Book()
+                {
+                    Blank = item.Book.Blank,
+                    PageCount = item.Book.PageCount,
+                    Pages = item.Book.Pages
+                },
                 DamageType = item.DamageType,
                 Damage = new Damage()
                 {
@@ -79,7 +88,7 @@ namespace ArchaicQuestII.Controllers
             }
 
 
-            if (!string.IsNullOrEmpty(item.Id.ToString()))
+            if (!string.IsNullOrEmpty(item.Id.ToString()) && item.Id != -1)
             {
 
                 var foundItem = DB.GetItems().FirstOrDefault(x => x.Id.Equals(item.Id));
