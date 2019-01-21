@@ -9,7 +9,7 @@ namespace ArchaicQuestII.Core.Character
         public string Name { get; set; }
         public string Gender { get; set; }
         public string Race { get; set; }
-        public string SelectedClass { get; set; }
+        public string ClassName { get; set; }
         public int Level { get; set; }
         public string Description { get; set; }
         public int AlignmentScore { get; set; } = 0;
