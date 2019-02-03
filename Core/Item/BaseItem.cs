@@ -8,6 +8,7 @@ namespace ArchaicQuestII.Core.Item
 {
     public class BaseItem
     {
+        public Guid? Uuid { get; set; }
         public int Id { get; set; }
         [JsonProperty(PropertyName = "name")]
         public string Name { get; set; }

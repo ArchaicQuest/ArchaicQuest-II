@@ -148,11 +148,20 @@ namespace ArchaicQuestII.Controllers
         }
 
         [HttpGet]
+        [Route("api/item/FindKeyById")]
+        public Item FindKeyById([FromQuery] string id)
+        {
+
+            return DB.GetItems().FirstOrDefault(x => x.KeyId.Equals(new Guid(id)) && x.ItemType == ItemTypes.Key);
+
+        }
+
+        [HttpGet]
         [Route("api/item/FindKeys")]
         public List<Item> FindKeys([FromQuery] string query)
         {
 
-            var items = DB.GetItems().Where(x => x.Name != null && x.ItemType == Item.ItemTypes.Key);
+            var items = DB.GetItems().Where(x => x.Name != null && x.ItemType == ItemTypes.Key);
 
             if (string.IsNullOrEmpty(query))
             {

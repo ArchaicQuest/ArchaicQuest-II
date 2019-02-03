@@ -66,6 +66,27 @@ namespace ArchaicQuestII.Core.Events
 
         }
 
+        public static void SaveMob(Character.Character mob)
+        {
+
+            try
+            {
+                using (var db = new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MyData.db")))
+                {
+                    var col = db.GetCollection<Character.Character>("Mobs");
+
+                    col.Upsert(mob);
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("Error Saving mob " + ex.Message);
+            }
+
+        }
+
         public static void SaveItem(Item.Item item)
         {
  
@@ -83,6 +104,37 @@ namespace ArchaicQuestII.Core.Events
             catch (Exception ex)
             {
                 _logger.Error("Error Saving item " + ex.Message);
+            }
+
+        }
+
+        public static List<Character.Character> GetMobs()
+        {
+            using (var db = new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MyData.db")))
+            {
+
+                var col = db.GetCollection<Character.Character>("Mobs");
+
+                var mobs = col.FindAll().ToList();
+
+                return mobs;
+
+            }
+
+        }
+
+
+        public static Character.Character GetMob(string id)
+        {
+            using (var db = new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MyData.db")))
+            {
+
+                var col = db.GetCollection<Character.Character>("Mobs");
+
+                var mob = col.FindById(id);
+
+                return mob;
+
             }
 
         }

@@ -1,5 +1,7 @@
 
+using ArchaicQuestII.Core.Item;
 using character;
+using Money = character.Money;
 
 namespace ArchaicQuestII.Core.Character
 {
@@ -21,7 +23,7 @@ namespace ArchaicQuestII.Core.Character
         public Attributes Attributes {get; set; }
         public Attributes MaxAttributes {get; set; }
         public string Target { get; set; }
-        public int ArmorRating { get; set; }
+        public ArmourRating ArmorRating { get; set; }
         public Money Money { get; set; }
         public Affects Affects { get; set; }
         public Config Config { get; set; }
