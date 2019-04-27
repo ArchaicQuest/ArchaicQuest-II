@@ -1,8 +1,8 @@
 using System;
 
-namespace ArchaicQuestII.Core.Player
+namespace ArchaicQuestII.Core.Character.Model
 {
-    public class Player: Character.Character
+    public class Player: Character
     {
         public DateTime JoinedDate { get; set; }
         public DateTime LastLoginTime { get; set; }

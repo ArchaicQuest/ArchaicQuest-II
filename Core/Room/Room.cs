@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ArchaicQuestII.Core.Character.Model;
 
 namespace ArchaicQuestII.Core.Room
 {
@@ -107,11 +108,11 @@ namespace ArchaicQuestII.Core.Room
         /// <summary>
         /// Current players in the room
         /// </summary>
-        public List<Player.Player> Players { get; set; }
+        public List<Player> Players { get; set; }
         /// <summary>
         /// Mobs in the room
         /// </summary>
-        public List<Player.Player> Mobs { get; set; }
+        public List<Player> Mobs { get; set; }
         /// <summary>
         /// Items in the room
         /// </summary>

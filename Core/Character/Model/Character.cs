@@ -1,9 +1,6 @@
 
 using ArchaicQuestII.Core.Item;
-using character;
-using Money = character.Money;
-
-namespace ArchaicQuestII.Core.Character
+namespace ArchaicQuestII.Core.Character.Model
 {
     public class Character
     {

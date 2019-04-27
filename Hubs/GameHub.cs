@@ -1,12 +1,10 @@
 
 using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+using ArchaicQuestII.Core.Character.Model;
 using Microsoft.AspNetCore.SignalR;
 using ArchaicQuestII.Core.Events;
-using ArchaicQuestII.Core.Player;
-using Serilog;
-
+ 
 namespace ArchaicQuestII.Hubs
 {
     public class GameHub : Hub

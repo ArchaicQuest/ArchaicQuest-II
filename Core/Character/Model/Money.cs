@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace character
+namespace ArchaicQuestII.Core.Character.Model
 {
     public class Money
     {
