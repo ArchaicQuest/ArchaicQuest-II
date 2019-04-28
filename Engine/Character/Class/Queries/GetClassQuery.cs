@@ -5,21 +5,20 @@ using System.Linq;
 using System.Threading.Tasks;
 using LiteDB;
 
-namespace ArchaicQuestII.Core.Character.Class.Commands
+namespace ArchaicQuestII.Core.Character.Class.Queries
 {
-    public class CreateClassCommand
+    public class GetClassQuery
     {
-        public void CreateClass(Model.Class charClass)
+        public Model.Class GetClass(int id)
         {
-
             using (var db = new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MyData.db")))
             {
                 var col = db.GetCollection<Model.Class>("Class");
 
-                col.Insert(charClass);
-                col.EnsureIndex(x => x.Name);
-            }
+                var charClass = col.FindById(id);
 
+                return charClass;
+            }
         }
     }
 }
