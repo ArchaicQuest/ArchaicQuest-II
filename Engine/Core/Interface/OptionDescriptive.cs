@@ -12,8 +12,8 @@ namespace ArchaicQuestII.Engine.Core.Interface
         [BsonField("n")]
         public string Name { get; set; }
         [BsonField("dc")]
-        public DateTimeOffset DateCreated { get; set; }
+        public DateTimeOffset DateCreated { get; set; } = new DateTimeOffset();
         [BsonField("cb")]
-        public string CreatedBy { get; set; }
+        public string CreatedBy { get; set; } = "Malleus";
     }
 }
