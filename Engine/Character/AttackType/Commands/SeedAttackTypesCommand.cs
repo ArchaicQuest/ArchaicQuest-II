@@ -13,7 +13,7 @@ namespace ArchaicQuestII.Core.Character.Class.Commands
     {
 
 
-        public void SeedClass()
+        public void Seed()
         {
 
             using (var db = new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MyData.db")))

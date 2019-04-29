@@ -10,7 +10,7 @@ namespace ArchaicQuestII.Core.Character.Class.Queries
 {
     public class GetAttackTypesQuery
     {
-        public List<Option> GetClasses()
+        public List<Option> GetAttackTypes()
         {
             using (var db = new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MyData.db")))
             {

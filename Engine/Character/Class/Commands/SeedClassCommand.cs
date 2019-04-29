@@ -34,7 +34,7 @@ namespace ArchaicQuestII.Core.Character.Class.Commands
 
         }
 
-        public List<Model.Class> SeedData()
+        private List<Model.Class> SeedData()
         {
             var seedData = new List<Model.Class>()
             {
