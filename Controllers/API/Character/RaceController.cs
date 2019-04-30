@@ -17,7 +17,7 @@ namespace ArchaicQuestII.Controllers.API.Character
 
         [HttpPost]
         [Route("api/Character/AttackType")]
-        public void Post(Option attackType)
+        public void Post(OptionDescriptive attackType)
         {
             var command = new CreateAttackTypeCommand();
             command.CreateAttackType(attackType);
@@ -25,7 +25,7 @@ namespace ArchaicQuestII.Controllers.API.Character
 
         [HttpGet]
         [Route("api/Character/AttackType/{id:int}")]
-        public Option Get(int id)
+        public OptionDescriptive Get(int id)
         {
             var query = new GetAttackTypeQuery();
             return query.GetAttackType(id);
@@ -33,7 +33,7 @@ namespace ArchaicQuestII.Controllers.API.Character
 
         [HttpGet]
         [Route("api/Character/AttackType")]
-        public List<Option> Get()
+        public List<OptionDescriptive> Get()
         {
             var query = new GetAttackTypesQuery();
             return query.GetAttackTypes();

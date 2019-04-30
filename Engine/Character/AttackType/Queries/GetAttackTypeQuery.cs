@@ -10,11 +10,11 @@ namespace ArchaicQuestII.Core.Character.Class.Queries
 {
     public class GetAttackTypeQuery
     {
-        public Option GetAttackType(int id)
+        public OptionDescriptive GetAttackType(int id)
         {
             using (var db = new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MyData.db")))
             {
-                var col = db.GetCollection<Option>("AttackType");
+                var col = db.GetCollection<OptionDescriptive>("AttackType");
 
                 var data = col.FindById(id);
 
