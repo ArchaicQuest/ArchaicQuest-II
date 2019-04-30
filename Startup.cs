@@ -71,10 +71,12 @@ namespace ArchaicQuestII
             var seedClass = new SeedClassCommand();
             var seedRace = new SeedRaceCommand();
             var seedAttackType = new SeedAttackTypesCommand();
+            var seedStatusese = new SeedStatusCommand();
 
             seedAttackType.Seed();
             seedClass.SeedClass();
             seedRace.Seed();
+            seedStatusese.Seed();
         }
     }
 }

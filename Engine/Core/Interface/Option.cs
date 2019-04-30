@@ -6,9 +6,14 @@ using LiteDB;
 
 namespace ArchaicQuestII.Engine.Core.Interface
 {
-    public class OptionDescriptive : Option
+    public class Option
     {
-        [BsonField("d")]
-        public string Description { get; set; }
+        public int Id { get; set; }
+        [BsonField("n")]
+        public string Name { get; set; }
+        [BsonField("dc")]
+        public DateTimeOffset DateCreated { get; set; } = new DateTimeOffset();
+        [BsonField("cb")]
+        public string CreatedBy { get; set; } = "Malleus";
     }
 }
