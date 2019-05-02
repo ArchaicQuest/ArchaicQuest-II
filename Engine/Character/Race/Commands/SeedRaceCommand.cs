@@ -80,7 +80,16 @@ They come in a wide range of skin, eye and hair colours as well as different sha
                 {
                     Name = "Tlaloc",
                     CreatedBy = "Malleus",
-                    Description = @"`Tlaloc, Reptilian lizard like humanoid race. Info coming soon"
+                    Description = @"`Tlaloc, Reptilian lizard like humanoid race. Info coming soon",
+
+                },
+                new Race.Model.Race()
+                {
+                    Name = "Other",
+                    CreatedBy = "Malleus",
+                    Description = @"`Generic race for mob is none suitable is found. you could always create one",
+                    Playable = false
+
                 },
             };
 
