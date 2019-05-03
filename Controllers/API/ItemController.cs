@@ -4,11 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ArchaicQuestII.Core.Room;
-using ArchaicQuestII.Core.Item;
+using ArchaicQuestII.Engine.Item;
 using ArchaicQuestII.Core.Events;
+using ArchaicQuestII.Engine.Item.Enum;
 using Microsoft.Azure.KeyVault.Models;
-using static ArchaicQuestII.Core.Item.Container;
-using static ArchaicQuestII.Core.Item.Item;
+using static ArchaicQuestII.Engine.Item.Container;
+using static ArchaicQuestII.Engine.Item.Item;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -255,7 +256,7 @@ namespace ArchaicQuestII.Controllers
 
             var itemTypes = new List<object>();
 
-            foreach (var item in Enum.GetValues(typeof(Item.EqSlot)))
+            foreach (var item in Enum.GetValues(typeof(EqSlot)))
             {
 
                 itemTypes.Add(new

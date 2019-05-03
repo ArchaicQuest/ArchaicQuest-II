@@ -1,7 +1,7 @@
 
 using System;
 using System.Threading.Tasks;
-using ArchaicQuestII.Core.Character.Model;
+using ArchaicQuestII.Engine.Character.Model;
 using Microsoft.AspNetCore.SignalR;
 using ArchaicQuestII.Core.Events;
  

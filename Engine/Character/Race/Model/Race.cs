@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ArchaicQuestII.Core.Character.Model;
+using ArchaicQuestII.Engine.Character.Model;
 using ArchaicQuestII.Engine.Core.Interface;
 using LiteDB;
 
-namespace ArchaicQuestII.Core.Character.Race.Model
+namespace ArchaicQuestII.Engine.Character.Race.Model
 {
     public class Race: OptionDescriptive
     {

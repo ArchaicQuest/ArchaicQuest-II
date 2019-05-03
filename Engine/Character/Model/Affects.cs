@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ArchaicQuestII.Core.Character.Model
+namespace ArchaicQuestII.Engine.Character.Model
 {
     public class Affects
     {

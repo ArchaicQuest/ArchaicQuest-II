@@ -1,6 +1,8 @@
 
-using ArchaicQuestII.Core.Item;
-namespace ArchaicQuestII.Core.Character.Model
+using ArchaicQuestII.Engine.Item;
+using System.Collections.Generic;
+
+namespace ArchaicQuestII.Engine.Character.Model
 {
     public class Character
     {
@@ -15,6 +17,8 @@ namespace ArchaicQuestII.Core.Character.Model
         public int TotalExperience { get; set; }
         public int Experience { get; set; }
         public int ExperienceToNextLevel { get; set; }
+        public Equipment.Model.Equipment Equipment { get; set; } = new Equipment.Model.Equipment();
+        public List<Item.Item> Inventory { get; set; }
         public Stats Stats { get; set; }
         public Stats MaxStats { get; set; }
         public Attributes Attributes {get; set; }

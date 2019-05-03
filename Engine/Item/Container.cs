@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using static ArchaicQuestII.Core.Item.Item;
+using static ArchaicQuestII.Engine.Item.Item;
 
-namespace ArchaicQuestII.Core.Item
+namespace ArchaicQuestII.Engine.Item
 {
     public class Container
     {

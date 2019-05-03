@@ -1,10 +1,12 @@
-﻿using System;
+﻿using ArchaicQuestII.Engine.Item.Enum;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ArchaicQuestII.Core.Item
+
+namespace ArchaicQuestII.Engine.Item
 {
     public class Item : BaseItem
     {
@@ -55,27 +57,7 @@ namespace ArchaicQuestII.Core.Item
             Wield
         }
 
-        public enum EqSlot
-        {
-            Arms,
-            Body,
-            Face,
-            Feet,
-            Finger,
-            Floating,
-            Hands,
-            Head,
-            Held,
-            Legs,
-            Light,
-            Neck,
-            Shield,
-            Torso,
-            Waist,
-            Wielded,
-            Wrist,
-
-        }
+ 
 
         public enum AttackTypes
         {

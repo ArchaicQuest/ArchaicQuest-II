@@ -8,7 +8,7 @@ using ArchaicQuestII.Engine.Character.Model;
 using ArchaicQuestII.Engine.Core.Interface;
 using LiteDB;
 
-namespace ArchaicQuestII.Core.Character.Class.Commands
+namespace ArchaicQuestII.Engine.Character.Class.Commands
 {
     public class SeedAlignmentCommand
     {

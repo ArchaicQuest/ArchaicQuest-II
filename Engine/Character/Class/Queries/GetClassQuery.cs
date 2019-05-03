@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using LiteDB;
 
-namespace ArchaicQuestII.Core.Character.Class.Queries
+namespace ArchaicQuestII.Engine.Character.Class.Queries
 {
     public class GetClassQuery
     {

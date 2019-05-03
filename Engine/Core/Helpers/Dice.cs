@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ArchaicQuestII.Core.Item
+namespace ArchaicQuestII.Engine.Item
 {
     public class Dice
     {

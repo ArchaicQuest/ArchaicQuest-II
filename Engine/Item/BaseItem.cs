@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace ArchaicQuestII.Core.Item
+namespace ArchaicQuestII.Engine.Item
 {
     public class BaseItem
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using LiteDB;
 
-namespace ArchaicQuestII.Core.Character.Class.Model
+namespace ArchaicQuestII.Engine.Character.Class.Model
 {
     public class Class
     {

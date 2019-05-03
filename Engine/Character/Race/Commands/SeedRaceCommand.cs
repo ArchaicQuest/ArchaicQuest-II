@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using ArchaicQuestII.Core.Character.Race.Commands;
+using ArchaicQuestII.Engine.Character.Race.Commands;
 using ArchaicQuestII.Engine.Character.Class.Commands;
 using ArchaicQuestII.Engine.Core.Interface;
 using LiteDB;
 
-namespace ArchaicQuestII.Core.Character.Class.Commands
+namespace ArchaicQuestII.Engine.Character.Class.Commands
 {
     public class SeedRaceCommand
     {

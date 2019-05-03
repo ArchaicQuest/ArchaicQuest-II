@@ -7,7 +7,7 @@ using ArchaicQuestII.Engine.Character.Class.Commands;
 using ArchaicQuestII.Engine.Core.Interface;
 using LiteDB;
 
-namespace ArchaicQuestII.Core.Character.Class.Commands
+namespace ArchaicQuestII.Engine.Character.Class.Commands
 {
     public class SeedStatusCommand
     {

@@ -7,7 +7,7 @@ using ArchaicQuestII.Engine.Character.Model;
 using ArchaicQuestII.Engine.Core.Interface;
 using LiteDB;
 
-namespace ArchaicQuestII.Core.Character.Class.Queries
+namespace ArchaicQuestII.Engine.Character.Class.Queries
 {
     public class GetAlignmentQuery
     {

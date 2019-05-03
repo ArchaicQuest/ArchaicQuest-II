@@ -5,8 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using ArchaicQuestII.Core.Character.Model;
-
+using ArchaicQuestII.Engine.Character.Model;
+using ArchaicQuestII.Engine.Item;
 
 namespace ArchaicQuestII.Core.Events
 {
@@ -68,14 +68,14 @@ namespace ArchaicQuestII.Core.Events
 
         }
 
-        public static void SaveMob(Character.Model.Character mob)
+        public static void SaveMob(Character mob)
         {
 
             try
             {
                 using (var db = new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MyData.db")))
                 {
-                    var col = db.GetCollection<Character.Model.Character>("Mobs");
+                    var col = db.GetCollection<Character>("Mobs");
 
                     col.Upsert(mob);
 
@@ -89,14 +89,14 @@ namespace ArchaicQuestII.Core.Events
 
         }
 
-        public static void SaveItem(Item.Item item)
+        public static void SaveItem(Item item)
         {
  
             try
             {
                 using (var db = new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MyData.db")))
                 {
-                    var col = db.GetCollection<Item.Item>("Item");
+                    var col = db.GetCollection<Item>("Item");
 
                     col.Upsert(item);
 
@@ -110,12 +110,12 @@ namespace ArchaicQuestII.Core.Events
 
         }
 
-        public static List<Character.Model.Character> GetMobs()
+        public static List<Character> GetMobs()
         {
             using (var db = new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MyData.db")))
             {
 
-                var col = db.GetCollection<Character.Model.Character>("Mobs");
+                var col = db.GetCollection<Character>("Mobs");
 
                 var mobs = col.FindAll().ToList();
 
@@ -126,12 +126,12 @@ namespace ArchaicQuestII.Core.Events
         }
 
 
-        public static Character.Model.Character GetMob(string id)
+        public static Character GetMob(string id)
         {
             using (var db = new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MyData.db")))
             {
 
-                var col = db.GetCollection<Character.Model.Character>("Mobs");
+                var col = db.GetCollection<Character>("Mobs");
 
                 var mob = col.FindById(id);
 
@@ -141,12 +141,12 @@ namespace ArchaicQuestII.Core.Events
 
         }
 
-        public static List<Item.Item> GetItems()
+        public static List<Item> GetItems()
         {
             using (var db = new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MyData.db")))
             {
 
-                var col = db.GetCollection<Item.Item>("Item");
+                var col = db.GetCollection<Item>("Item");
 
                 var returnPlayer = col.FindAll().ToList();
 

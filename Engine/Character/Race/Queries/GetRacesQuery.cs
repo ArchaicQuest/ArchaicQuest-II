@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using ArchaicQuestII.Core.Events;
 using LiteDB;
 
-namespace ArchaicQuestII.Core.Character.Race.Commands
+namespace ArchaicQuestII.Engine.Character.Race.Commands
 {
     public class GetRacesQuery
     {

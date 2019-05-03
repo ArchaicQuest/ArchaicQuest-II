@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using LiteDB;
 
-namespace ArchaicQuestII.Core.Character.Class.Commands
+namespace ArchaicQuestII.Engine.Character.Class.Commands
 {
     public class SeedClassCommand
     {

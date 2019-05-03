@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using ArchaicQuestII.Engine.Core.Interface;
 using LiteDB;
 
-namespace ArchaicQuestII.Core.Character.Class.Queries
+namespace ArchaicQuestII.Engine.Character.Class.Queries
 {
     public class GetAttackTypesQuery
     {

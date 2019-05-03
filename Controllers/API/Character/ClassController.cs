@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ArchaicQuestII.Core.Character.Class.Commands;
-using ArchaicQuestII.Core.Character.Class.Model;
-using ArchaicQuestII.Core.Character.Class.Queries;
-using ArchaicQuestII.Core.Character.Race.Commands;
-using ArchaicQuestII.Core.Character.Race.Model;
-using ArchaicQuestII.Core.Item;
+using ArchaicQuestII.Engine.Character.Class.Commands;
+using ArchaicQuestII.Engine.Character.Class.Model;
+using ArchaicQuestII.Engine.Character.Class.Queries;
+using ArchaicQuestII.Engine.Character.Race.Commands;
+using ArchaicQuestII.Engine.Character.Race.Model;
+using ArchaicQuestII.Engine.Item;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ArchaicQuestII.Controllers.API.Character
