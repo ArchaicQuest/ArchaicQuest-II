@@ -33,6 +33,8 @@ namespace ArchaicQuestII.Controllers
             var newMob = new Character()
             {
                 Name = mob.Name,
+                LongName = mob.LongName,
+                Status = mob.Status,
                 Level = mob.Level,
                 ArmorRating = new ArmourRating()
                 {
@@ -43,6 +45,9 @@ namespace ArchaicQuestII.Controllers
                 AlignmentScore = mob.AlignmentScore,
                 Attributes = mob.Attributes,
                 MaxAttributes = mob.Attributes,
+                Inventory = mob.Inventory,
+                Equipment = mob.Equipment,
+                Equipped = mob.Equipped,
                 ClassName = mob.ClassName,
                 Config = null,
                 Description = mob.Description,

@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <Folder Include="Engine\Character\Equipment\Enum\" />
+    <Folder Include="Engine\Character\Status\NewFolder\" />
   </ItemGroup>
  
 

@@ -39,6 +39,7 @@ namespace ArchaicQuestII.Engine.Item
         /// Cannont remove item
         /// </summary>
         public bool Stuck { get; set; }
+
         /// <summary>
         /// how many ticks till item decays
         /// 0 is never
