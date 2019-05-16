@@ -27,7 +27,6 @@ namespace ArchaicQuestII.Engine.Character.Model
         public int ExperienceToNextLevel { get; set; }
         public Equipment.Model.Equipment Equipment { get; set; } = new Equipment.Model.Equipment();
         public List<Item.Item> Inventory { get; set; } = new List<Item.Item>();
-        public List<Item.Item> Equipped { get; set; } = new List<Item.Item>();
         public Stats Stats { get; set; }
         public Status.Status Status { get; set; }
         public Stats MaxStats { get; set; }

@@ -47,7 +47,6 @@ namespace ArchaicQuestII.Controllers
                 MaxAttributes = mob.Attributes,
                 Inventory = mob.Inventory,
                 Equipment = mob.Equipment,
-                Equipped = mob.Equipped,
                 ClassName = mob.ClassName,
                 Config = null,
                 Description = mob.Description,

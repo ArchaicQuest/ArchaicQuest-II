@@ -140,6 +140,19 @@ namespace ArchaicQuestII.Controllers
         }
 
         [HttpGet]
+        [Route("api/item/FindItemsByType")]
+        public List<Item> FindItemsByType([FromQuery] EqSlot query)
+        {
+
+            var items = DB.GetItems().Where(x => x.Slot.Equals(query));
+
+
+        
+            return items.ToList();
+
+        }
+
+        [HttpGet]
         [Route("api/item/FindItemById")]
         public Item FindItemById([FromQuery] int id)
         {
