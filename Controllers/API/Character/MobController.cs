@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using ArchaicQuestII.Engine.Character;
 using ArchaicQuestII.Engine.Character.Model;
 using Microsoft.AspNetCore.Mvc;
-using ArchaicQuestII.Core.Room;
+using ArchaicQuestII.Core.World;
 using ArchaicQuestII.Core.Events;
 using ArchaicQuestII.Engine.Item;
 using Microsoft.Azure.KeyVault.Models;
@@ -46,7 +46,7 @@ namespace ArchaicQuestII.Controllers
                 Attributes = mob.Attributes,
                 MaxAttributes = mob.Attributes,
                 Inventory = mob.Inventory,
-                Equipment = mob.Equipment,
+                Equipped = mob.Equipped,
                 ClassName = mob.ClassName,
                 Config = null,
                 Description = mob.Description,

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using ArchaicQuestII.Core.Room;
+using ArchaicQuestII.Core.World;
 using ArchaicQuestII.Engine.Item;
 using ArchaicQuestII.Core.Events;
 using ArchaicQuestII.Engine.Item.Enum;

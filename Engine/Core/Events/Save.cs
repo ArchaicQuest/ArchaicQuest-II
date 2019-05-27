@@ -5,8 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using ArchaicQuestII.Core.World;
 using ArchaicQuestII.Engine.Character.Model;
 using ArchaicQuestII.Engine.Item;
+using ArchaicQuestII.Engine.World;
+using ArchaicQuestII.Engine.World.Area.Model;
 
 namespace ArchaicQuestII.Core.Events
 {
@@ -47,14 +50,14 @@ namespace ArchaicQuestII.Core.Events
 
         }
 
-        public static void SaveRoom(Room.Room room)
+        public static void SaveRoom(Room room)
         {
 
             try
             {
                 using (var db = new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MyData.db")))
                 {
-                    var col = db.GetCollection<Room.Room>("Room");
+                    var col = db.GetCollection<Room>("Room");
 
                     col.Upsert(room);
 
@@ -108,6 +111,42 @@ namespace ArchaicQuestII.Core.Events
                 _logger.Error("Error Saving item " + ex.Message);
             }
 
+        }
+
+        public static void SaveArea(Area area)
+        {
+
+            try
+            {
+                using (var db = new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MyData.db")))
+                {
+                    var col = db.GetCollection<Area>("Area");
+
+                    col.Upsert(area);
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("Error Saving area " + ex.Message);
+            }
+
+        }
+
+
+        public static List<Area> GetAreas()
+        {
+
+                using (var db = new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MyData.db")))
+                {
+                    var col = db.GetCollection<Area>("Area");
+
+                  var data = col.FindAll().ToList();
+
+                    return data;
+
+                }
         }
 
         public static List<Character> GetMobs()

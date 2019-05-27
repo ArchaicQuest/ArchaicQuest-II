@@ -7,29 +7,29 @@ namespace ArchaicQuestII.Engine.Character.Equipment.Model
 {
     public class Equipment
     { 
-        public string Light { get; set; } = "Nothing";
-        public string Finger { get; set; } = "Nothing";
-        public string Finger2 { get; set; } = "Nothing";
-        public string Neck { get; set; } = "Nothing";
-        public string Neck2 { get; set; } = "Nothing";
-        public string Eyes { get; set; } = "Nothing";
-        public string Face { get; set; } = "Nothing";
-        public string Head { get; set; } = "Nothing";
-        public string Ear { get; set; } = "Nothing";
-        public string Torso { get; set; } = "Nothing";
-        public string Legs { get; set; } = "Nothing";
-        public string Feet { get; set; } = "Nothing";
-        public string Hands { get; set; } = "Nothing";
-        public string Arms { get; set; } = "Nothing";
-        public string AboutBody { get; set; } = "Nothing";
-        public string OnBack { get; set; } = "Nothing";
-        public string Waist { get; set; } = "Nothing";
-        public string Wrist { get; set; } = "Nothing";
-        public string Wrist2 { get; set; } = "Nothing";
-        public string Wielded { get; set; } = "Nothing";
-        public string Shield { get; set; } = "Nothing";
-        public string Held { get; set; } = "Nothing";
-        public string Floating { get; set; } = "Nothing";
-        public string Quiver { get; set; } = "Nothing";
+        public Item.Item Light { get; set; }
+        public Item.Item Finger { get; set; }
+        public Item.Item  Finger2 { get; set; } 
+        public Item.Item  Neck { get; set; } 
+        public Item.Item  Neck2 { get; set; } 
+        public Item.Item  Eyes { get; set; } 
+        public Item.Item  Face { get; set; } 
+        public Item.Item  Head { get; set; } 
+        public Item.Item  Ear { get; set; } 
+        public Item.Item  Torso { get; set; } 
+        public Item.Item  Legs { get; set; } 
+        public Item.Item  Feet { get; set; } 
+        public Item.Item  Hands { get; set; } 
+        public Item.Item  Arms { get; set; } 
+        public Item.Item  AboutBody { get; set; } 
+        public Item.Item  OnBack { get; set; } 
+        public Item.Item  Waist { get; set; } 
+        public Item.Item  Wrist { get; set; } 
+        public Item.Item  Wrist2 { get; set; } 
+        public Item.Item  Wielded { get; set; } 
+        public Item.Item  Shield { get; set; } 
+        public Item.Item  Held { get; set; } 
+        public Item.Item  Floating { get; set; } 
+        public Item.Item  Quiver { get; set; } 
     }
 }

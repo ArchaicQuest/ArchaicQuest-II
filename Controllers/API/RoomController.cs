@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ArchaicQuestII.Engine.Character.Model;
 using Microsoft.AspNetCore.Mvc;
-using ArchaicQuestII.Core.Room;
+using ArchaicQuestII.Core.World;
 using ArchaicQuestII.Core.Events;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -23,8 +23,6 @@ namespace ArchaicQuestII.Controllers.API
                 Title = room.Title,
                 Description = room.Description,
                 Area = room.Area,
-                AreaId = room.AreaId,
-                Region = room.Region,
                 Coords = new Coordinates()
                 {
                     X = room.Coords.X,

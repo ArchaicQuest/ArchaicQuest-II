@@ -142,7 +142,7 @@ namespace ArchaicQuestII.Engine.Item
         }
 
 
-
+        public bool Equipped { get; set; }
         public DamageTypes DamageType { get; set; }
         public ArmourTypes ArmourType { get; set; }
         public ItemFlags ItemFlag { get; set; }

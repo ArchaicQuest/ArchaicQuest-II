@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ArchaicQuestII.Engine.Character.Model;
 
-namespace ArchaicQuestII.Core.Room
+namespace ArchaicQuestII.Core.World
 {
     public class Room
     {
@@ -35,24 +35,12 @@ namespace ArchaicQuestII.Core.Room
 
         public int Id { get; set; }
         /// <summary>
-        /// A Mud can have many areas, to organise these
-        /// they will be grouped under regions
-        /// </summary>
-        public string Region { get; set; }
-        /// <summary>
         /// An area is part of the game world, there is no limit
         /// to how many rooms you have in an area
         /// </summary>
+
         public string Area { get; set; }
-        /// <summary>
-        /// AreaId is the Unique identifier of the room
-        /// </summary>
-        public int AreaId { get; set; }
-        /// <summary>
-        /// Used for mapping, can use this type to style 
-        /// the colour of nodes on a map or emote global
-        /// text based on the type
-        /// </summary>
+
         public RoomType Type { get; set; } = RoomType.Standard;
         /// <summary>
         /// Has player visited this room? 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ArchaicQuestII.Core.Room
+namespace ArchaicQuestII.Core.World
 {
     public class Coordinates
     {

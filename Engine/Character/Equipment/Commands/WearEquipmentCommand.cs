@@ -10,10 +10,10 @@ namespace ArchaicQuestII.Engine.Character.Equipment.Commands
             switch (item.Slot)
             {
                 case 0:
-                    character.Equipment.Arms = item.Name;
+                    character.Equipped.Arms = item;
                     break;
                 default:
-                    character.Equipment.Held = item.Name;
+                    character.Equipped.Held = item;
                     break;
             }
 
