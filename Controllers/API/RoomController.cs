@@ -6,6 +6,7 @@ using ArchaicQuestII.Engine.Character.Model;
 using Microsoft.AspNetCore.Mvc;
 using ArchaicQuestII.Core.World;
 using ArchaicQuestII.Core.Events;
+using ArchaicQuestII.Engine.World.Room;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -22,7 +23,7 @@ namespace ArchaicQuestII.Controllers.API
             {
                 Title = room.Title,
                 Description = room.Description,
-                Area = room.Area,
+               // Area = room.Area,
                 Coords = new Coordinates()
                 {
                     X = room.Coords.X,
@@ -34,10 +35,10 @@ namespace ArchaicQuestII.Controllers.API
                 InstantRePop = room.InstantRePop,
                 UpdateMessage = room.UpdateMessage,
                 Mobs = new List<Player>(),
-                Keywords = new List<RoomObject>(),
-                Terrain = room.Terrain,
+                RoomObjects = new List<RoomObject>(),
+                //Terrain = room.Terrain,
                 Type = room.Type,
-                Modified = DateTime.Now
+              //  Modified = DateTime.Now
             };
 
             if (room.Exits != null)
@@ -64,11 +65,11 @@ namespace ArchaicQuestII.Controllers.API
                 }
             }
 
-            if (room.Keywords != null)
+            if (room.RoomObjects != null)
             {
-                foreach (var keyword in room.Keywords)
+                foreach (var keyword in room.RoomObjects)
                 {
-                    newRoom.Keywords.Add(keyword);
+                    newRoom.RoomObjects.Add(keyword);
                 }
             }
 

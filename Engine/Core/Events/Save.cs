@@ -10,6 +10,7 @@ using ArchaicQuestII.Engine.Character.Model;
 using ArchaicQuestII.Engine.Item;
 using ArchaicQuestII.Engine.World;
 using ArchaicQuestII.Engine.World.Area.Model;
+using ArchaicQuestII.Engine.World.Room;
 
 namespace ArchaicQuestII.Core.Events
 {
