@@ -90,23 +90,23 @@ namespace ArchaicQuestII.Controllers
         //}
 
 
-        //[HttpGet]
-        //[Route("api/mob/FindMobs")]
-        //public List<Character> FindMobs([FromQuery] string query)
-        //{
+        [HttpGet]
+        [Route("api/Character/Mob")]
+        public List<Character> Get([FromQuery] string query)
+        {
 
-        //    var mobs = DB.GetItems().Where(x => x.Name != null);
+            var mobs = DB.GetMobs().Where(x => x.Name != null);
 
 
 
-        //    if (string.IsNullOrEmpty(query))
-        //    {
-        //        return mobs.ToList();
-        //    }
+            if (string.IsNullOrEmpty(query))
+            {
+                return mobs.ToList();
+            }
 
-        //    return mobs.Where(x => x.Name.IndexOf(query, StringComparison.OrdinalIgnoreCase) != -1).ToList();
+            return mobs.Where(x => x.Name.IndexOf(query, StringComparison.OrdinalIgnoreCase) != -1).ToList();
 
-        //}
+        }
 
         //[HttpGet]
         //[Route("api/mob/FindMobById")]
