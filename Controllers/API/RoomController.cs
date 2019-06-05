@@ -30,7 +30,7 @@ namespace ArchaicQuestII.Controllers.API
                     Y = room.Coords.Y,
                     Z = room.Coords.Z
                 },
-                Exits = new List<Exit>(),
+                Exits = new RoomExits(),
                 Emotes = new List<string>(),
                 InstantRePop = room.InstantRePop,
                 UpdateMessage = room.UpdateMessage,
@@ -41,14 +41,7 @@ namespace ArchaicQuestII.Controllers.API
               //  Modified = DateTime.Now
             };
 
-            if (room.Exits != null)
-            {
-                foreach (var exit in room.Exits)
-                {
-                    newRoom.Exits.Add(exit);
-                }
-            }
-
+           
             if (room.Emotes != null)
             {
                 foreach (var emote in room.Emotes)
