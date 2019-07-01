@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\Dev\Personal\AQ2\ArchaicQuestII" t="IncludeRecursive">
+      <e p=".gitignore" t="Include" />
+      <e p="appsettings.Development.json" t="Include" />
+      <e p="appsettings.json" t="Include" />
+      <e p="archaicquest.log" t="Include" />
+      <e p="ArchaicQuestII.csproj" t="IncludeRecursive" />
+      <e p="ArchaicQuestII.sln" t="IncludeFlat" />
+      <e p="bin" t="ExcludeRecursive" />
+      <e p="Controllers" t="Include">
+        <e p="API" t="Include">
+          <e p="Character" t="Include">
+            <e p="AlignmentController.cs" t="Include" />
+            <e p="AttackTypesController.cs" t="Include" />
+            <e p="ClassController.cs" t="Include" />
+            <e p="MobController.cs" t="Include" />
+            <e p="RaceController.cs" t="Include" />
+            <e p="StatusController.cs" t="Include" />
+          </e>
+          <e p="ItemController.cs" t="Include" />
+          <e p="RoomController.cs" t="Include" />
+          <e p="World" t="Include">
+            <e p="AreaController.cs" t="Include" />
+          </e>
+        </e>
+        <e p="PlayController.cs" t="Include" />
+      </e>
+      <e p="Engine" t="Include">
+        <e p="Character" t="Include">
+          <e p="Alignment" t="Include">
+            <e p="Commands" t="Include">
+              <e p="AlignmentCommand.cs" t="Include" />
+              <e p="SeedAlignmentCommand.cs" t="Include" />
+            </e>
+            <e p="Queries" t="Include">
+              <e p="GetAlignmentQuery.cs" t="Include" />
+              <e p="GetAlignmentsQuery.cs" t="Include" />
+            </e>
+          </e>
+          <e p="AttackType" t="Include">
+            <e p="Commands" t="Include">
+              <e p="CreateAttackTypeCommand.cs" t="Include" />
+              <e p="SeedAttackTypesCommand.cs" t="Include" />
+            </e>
+            <e p="Queries" t="Include">
+              <e p="GetAttackTypeQuery.cs" t="Include" />
+              <e p="GetAttackTypesQuery.cs" t="Include" />
+            </e>
+          </e>
+          <e p="Class" t="Include">
+            <e p="Commands" t="Include">
+              <e p="CreateClassCommand.cs" t="Include" />
+              <e p="SeedClassCommand.cs" t="Include" />
+            </e>
+            <e p="Model" t="Include">
+              <e p="Class.cs" t="Include" />
+            </e>
+            <e p="Queries" t="Include">
+              <e p="GetClassesQuery.cs" t="Include" />
+              <e p="GetClassQuery.cs" t="Include" />
+            </e>
+          </e>
+          <e p="Equipment" t="Include">
+            <e p="Commands" t="Include">
+              <e p="WearEquipmentCommand.cs" t="Include" />
+            </e>
+            <e p="Enum" t="Include" />
+            <e p="Model" t="Include">
+              <e p="Equipment.cs" t="Include" />
+            </e>
+          </e>
+          <e p="Gender" t="Include">
+            <e p="GenderEnum.cs" t="Include" />
+          </e>
+          <e p="Model" t="Include">
+            <e p="Affects.cs" t="Include" />
+            <e p="Alignment.cs" t="Include" />
+            <e p="Atrributes.cs" t="Include" />
+            <e p="Character.cs" t="Include" />
+            <e p="Config.cs" t="Include" />
+            <e p="Money.cs" t="Include" />
+            <e p="Player.cs" t="Include" />
+            <e p="Stats.cs" t="Include" />
+          </e>
+          <e p="Race" t="Include">
+            <e p="Commands" t="Include">
+              <e p="CreateRaceCommand.cs" t="Include" />
+              <e p="SeedRaceCommand.cs" t="Include" />
+            </e>
+            <e p="Model" t="Include">
+              <e p="Race.cs" t="Include" />
+            </e>
+            <e p="Queries" t="Include">
+              <e p="GetRaceQuery.cs" t="Include" />
+              <e p="GetRacesQuery.cs" t="Include" />
+            </e>
+          </e>
+          <e p="Status" t="Include">
+            <e p="Commands" t="Include">
+              <e p="CreateStatusCommand.cs" t="Include" />
+              <e p="SeedStatusCommand.cs" t="Include" />
+            </e>
+            <e p="NewFolder" t="Include" />
+            <e p="Queries" t="Include">
+              <e p="GetStatusesQuery.cs" t="Include" />
+              <e p="GetStatusQuery.cs" t="Include" />
+            </e>
+            <e p="Status.cs" t="Include" />
+          </e>
+        </e>
+        <e p="Core" t="Include">
+          <e p="Events" t="Include">
+            <e p="Save.cs" t="Include" />
+          </e>
+          <e p="Helpers" t="Include">
+            <e p="Dice.cs" t="Include" />
+          </e>
+          <e p="Interface" t="Include">
+            <e p="Option.cs" t="Include" />
+            <e p="OptionDescriptive.cs" t="Include" />
+          </e>
+          <e p="Log" t="Include">
+            <e p="ILog.cs" t="Include" />
+            <e p="Log.cs" t="Include" />
+          </e>
+        </e>
+        <e p="Item" t="Include">
+          <e p="ArmourRating.cs" t="Include" />
+          <e p="BaseItem.cs" t="Include" />
+          <e p="Book.cs" t="Include" />
+          <e p="Container.cs" t="Include" />
+          <e p="Damage.cs" t="Include" />
+          <e p="Description.cs" t="Include" />
+          <e p="Enum" t="Include">
+            <e p="EquipmentSlot.cs" t="Include" />
+          </e>
+          <e p="Item.cs" t="Include" />
+          <e p="Modifier.cs" t="Include" />
+          <e p="Money.cs" t="Include" />
+        </e>
+        <e p="World" t="Include">
+          <e p="Area" t="Include">
+            <e p="Commands" t="Include">
+              <e p="UpdateAreaCommand.cs" t="Include" />
+            </e>
+            <e p="Model" t="Include">
+              <e p="Area.cs" t="Include" />
+            </e>
+            <e p="Queries" t="Include">
+              <e p="GetAreaQuery.cs" t="Include" />
+            </e>
+          </e>
+          <e p="Coordinates.cs" t="Include" />
+          <e p="Exit.cs" t="Include" />
+          <e p="Room" t="Include">
+            <e p="Room.cs" t="Include" />
+            <e p="RoomExits.cs" t="Include" />
+          </e>
+          <e p="RoomObject.cs" t="Include" />
+        </e>
+      </e>
+      <e p="Hubs" t="Include">
+        <e p="GameHub.cs" t="Include" />
+      </e>
+      <e p="LICENSE" t="Include" />
+      <e p="Models" t="Include">
+        <e p="ErrorViewModel.cs" t="Include" />
+      </e>
+      <e p="node_modules\@aspnet\signalr" t="IncludeRecursive" />
+      <e p="node_modules\@types" t="IncludeRecursive">
+        <e p="prop-types" t="IncludeRecursive" />
+        <e p="react" t="IncludeRecursive" />
+        <e p="react-dom" t="IncludeRecursive" />
+      </e>
+      <e p="node_modules\bootstrap" t="IncludeRecursive" />
+      <e p="node_modules\clean-webpack-plugin" t="IncludeRecursive" />
+      <e p="node_modules\css-loader" t="IncludeRecursive" />
+      <e p="node_modules\csstype" t="IncludeRecursive" />
+      <e p="node_modules\mini-css-extract-plugin" t="IncludeRecursive" />
+      <e p="node_modules\node-sass" t="IncludeRecursive" />
+      <e p="node_modules\optimize-css-assets-webpack-plugin" t="IncludeRecursive" />
+      <e p="node_modules\react" t="IncludeRecursive" />
+      <e p="node_modules\react-dom" t="IncludeRecursive" />
+      <e p="node_modules\react-router-dom" t="IncludeRecursive" />
+      <e p="node_modules\sass-loader" t="IncludeRecursive" />
+      <e p="node_modules\ts-loader" t="IncludeRecursive" />
+      <e p="node_modules\webpack" t="IncludeRecursive" />
+      <e p="node_modules\webpack-cli" t="IncludeRecursive" />
+      <e p="node_modules\webpack-dev-middleware" t="IncludeRecursive" />
+      <e p="node_modules\webpack-dev-server" t="IncludeRecursive" />
+      <e p="obj" t="ExcludeRecursive">
+        <e p="Debug" t="Include">
+          <e p="netcoreapp2.2" t="Include">
+            <e p="ArchaicQuestII.AssemblyInfo.cs" t="Include" />
+          </e>
+        </e>
+      </e>
+      <e p="package-lock.json" t="Include" />
+      <e p="package.json" t="Include" />
+      <e p="packages" t="ExcludeRecursive" />
+      <e p="Program.cs" t="Include" />
+      <e p="Properties" t="Include">
+        <e p="launchSettings.json" t="Include" />
+      </e>
+      <e p="README.md" t="Include" />
+      <e p="Startup.cs" t="Include" />
+      <e p="Views" t="Include">
+        <e p="_ViewImports.cshtml" t="Include" />
+        <e p="_ViewStart.cshtml" t="Include" />
+        <e p="Play" t="Include">
+          <e p="Index.cshtml" t="Include" />
+        </e>
+        <e p="Shared" t="Include">
+          <e p="_Layout.cshtml" t="Include" />
+          <e p="Error.cshtml" t="Include" />
+        </e>
+      </e>
+      <e p="wwwroot" t="Include">
+        <e p="favicon.ico" t="Include" />
+        <e p="lib" t="Include">
+          <e p="signalr" t="Include">
+            <e p="signalr.js" t="Include" />
+          </e>
+        </e>
+      </e>
+    </e>
+    <e p="C:\Users\Malleus\.Rider2019.1\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\Malleus\.Rider2019.1\system\resharper-host\local\Transient\ReSharperHost\v191\SolutionCaches\_ArchaicQuestII.-2147036602.00" t="ExcludeRecursive" />
+  </component>
+</project>

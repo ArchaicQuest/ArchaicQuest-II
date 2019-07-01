@@ -41,11 +41,11 @@ namespace ArchaicQuestII.Engine.World.Room
         /// List of available exits
         /// North, East, West, South, Up, and Down
         /// </summary>
-        public RoomExits Exits { get; set; }
+        public RoomExits Exits { get; set; } = new RoomExits();
         public Coordinates Coords { get; set; } = new Coordinates(); 
-        public List<Player> Players { get; set; }
-        public List<Player> Mobs { get; set; }
-        public List<string> Items { get; set; }
+        public List<Player> Players { get; set; } = new List<Player>();
+        public List<Character.Model.Character> Mobs { get; set; } = new List<Character.Model.Character>();
+        public List<Item.Item> Items { get; set; } = new List<Item.Item>();
         public RoomType? Type { get; set; } = RoomType.Standard;
         /// <summary>
         /// List of emotes that will be randomly played on tick
@@ -57,7 +57,7 @@ namespace ArchaicQuestII.Engine.World.Room
         /// look 'noun' for more information about an object mentioned
         /// in the room description
         /// </summary>
-        public List<RoomObject> RoomObjects { get; set; }
+        public List<RoomObject> RoomObjects { get; set; } = new List<RoomObject>();
         /// <summary>
         /// Has the room been touched or not
         /// </summary>

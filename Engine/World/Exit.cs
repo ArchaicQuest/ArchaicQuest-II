@@ -10,10 +10,13 @@ namespace ArchaicQuestII.Core.World
         public Coordinates Coords { get; set; }
         public int AreaId { get; set; }
         public string Name { get; set; }
-        public bool Open { get; set; } = true;
-        public bool CanOpen { get; set; } = true;
-        public bool? CanLock { get; set; }
-        public bool? Locked { get; set; }
+        public bool Door { get; set; } = true;
+        public bool Closed { get; set; } = true;
+        public bool Locked { get; set; }
+        public bool PickProof { get; set; }
+        public bool NoPass { get; set; }
+        public bool NoScan { get; set; }
+        public bool Hidden { get; set; }
         public Guid? LockId { get; set; }
     }
 }

@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="9c53e88d-cb5e-4250-a25e-dddc68525ffa" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/Engine/Core/Events/Save.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/Core/Events/Save.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Engine/World/Exit.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Engine/World/Exit.cs" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Controllers/API/ItemController.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="90">
+              <caret line="17" column="17" selection-start-line="17" selection-start-column="17" selection-end-line="17" selection-end-column="17" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Controllers/API/Character/ClassController.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="180">
+              <caret line="22" column="43" lean-forward="true" selection-start-line="22" selection-start-column="43" selection-end-line="22" selection-end-column="43" />
+              <folding>
+                <marker date="1556921532456" expanded="false" signature="6:423" ph="..." />
+                <marker date="1556921532456" expanded="true" signature="475:1142" ph="{...}" />
+                <marker date="1556921532456" expanded="true" signature="510:1140" ph="{...}" />
+                <marker date="1556921532456" expanded="true" signature="617:733" ph="{...}" />
+                <marker date="1556921532456" expanded="true" signature="833:937" ph="{...}" />
+                <marker date="1556921532456" expanded="true" signature="1028:1134" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Engine/Core/Events/Save.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-210">
+              <caret line="22" column="9" selection-start-line="22" selection-start-column="9" selection-end-line="22" selection-end-column="9" />
+              <folding>
+                <marker date="1559949821376" expanded="false" signature="6:371" ph="..." />
+                <marker date="1559949821376" expanded="true" signature="409:4703" ph="{...}" />
+                <marker date="1559949821376" expanded="true" signature="431:4701" ph="{...}" />
+                <marker date="1559949821376" expanded="true" signature="512:561" ph="{...}" />
+                <marker date="1559949821376" expanded="true" signature="609:1260" ph="{...}" />
+                <marker date="1559949821376" expanded="true" signature="651:814" ph="{...}" />
+                <marker date="1559949821376" expanded="true" signature="831:1120" ph="{...}" />
+                <marker date="1559949821376" expanded="true" signature="978:1105" ph="{...}" />
+                <marker date="1559949821376" expanded="true" signature="1153:1249" ph="{...}" />
+                <marker date="1559949821376" expanded="true" signature="1308:1756" ph="{...}" />
+                <marker date="1559949821376" expanded="true" signature="1335:1618" ph="{...}" />
+                <marker date="1559949821376" expanded="true" signature="1482:1603" ph="{...}" />
+                <marker date="1559949821376" expanded="true" signature="1651:1745" ph="{...}" />
+                <marker date="1559949821376" expanded="true" signature="1807:2258" ph="{...}" />
+                <marker date="1559949821376" expanded="true" signature="1834:2121" ph="{...}" />
+                <marker date="1559949821376" expanded="true" signature="1981:2106" ph="{...}" />
+                <marker date="1559949821376" expanded="true" signature="2154:2247" ph="{...}" />
+                <marker date="1559949821376" expanded="true" signature="2306:2755" ph="{...}" />
+                <marker date="1559949821376" expanded="true" signature="2334:2617" ph="{...}" />
+                <marker date="1559949821376" expanded="true" signature="2481:2602" ph="{...}" />
+                <marker date="1559949821376" expanded="true" signature="2650:2744" ph="{...}" />
+                <marker date="1559949821376" expanded="true" signature="2803:3251" ph="{...}" />
+                <marker date="1559949821376" expanded="true" signature="2830:3113" ph="{...}" />
+                <marker date="1559949821376" expanded="true" signature="2977:3098" ph="{...}" />
+                <marker date="1559949821376" expanded="true" signature="3146:3240" ph="{...}" />
+                <marker date="1559949821376" expanded="true" signature="3297:3621" ph="{...}" />
+                <marker date="1559949821376" expanded="true" signature="3441:3611" ph="{...}" />
+                <marker date="1559949821376" expanded="true" signature="3670:3978" ph="{...}" />
+                <marker date="1559949821376" expanded="true" signature="3805:3967" ph="{...}" />
+                <marker date="1559949821376" expanded="true" signature="4030:4330" ph="{...}" />
+                <marker date="1559949821376" expanded="true" signature="4165:4319" ph="{...}" />
+                <marker date="1559949821376" expanded="true" signature="4375:4694" ph="{...}" />
+                <marker date="1559949821376" expanded="true" signature="4510:4683" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/Controllers/API/ItemController.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Controllers/API/Character/ClassController.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Engine/Core/Events/Save.cs" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="ProjectConfigurationFiles">
+    <option name="files">
+      <list>
+        <option value="$PROJECT_DIR$/.idea/.idea.ArchaicQuestII/.idea/indexLayout.xml" />
+        <option value="$PROJECT_DIR$/.idea/.idea.ArchaicQuestII/.idea/vcs.xml" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="318" />
+    <option name="y" value="132" />
+    <option name="width" value="2100" />
+    <option name="height" value="1500" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="SolutionExplorer" proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="FileSystemExplorer" />
+      <pane id="SolutionExplorer">
+        <subPane>
+          <expand>
+            <path>
+              <item name="" type="784c90a0:SolutionExplorerRootNode" />
+              <item name="ArchaicQuestII" type="24d0babc:SolutionExplorerModelNode" />
+            </path>
+            <path>
+              <item name="" type="784c90a0:SolutionExplorerRootNode" />
+              <item name="ArchaicQuestII" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="ArchaicQuestII" type="24d0babc:SolutionExplorerModelNode" />
+            </path>
+            <path>
+              <item name="" type="784c90a0:SolutionExplorerRootNode" />
+              <item name="ArchaicQuestII" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="ArchaicQuestII" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="Controllers" type="24d0babc:SolutionExplorerModelNode" />
+            </path>
+            <path>
+              <item name="" type="784c90a0:SolutionExplorerRootNode" />
+              <item name="ArchaicQuestII" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="ArchaicQuestII" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="Controllers" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="API" type="24d0babc:SolutionExplorerModelNode" />
+            </path>
+            <path>
+              <item name="" type="784c90a0:SolutionExplorerRootNode" />
+              <item name="ArchaicQuestII" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="ArchaicQuestII" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="Controllers" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="API" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="Character" type="24d0babc:SolutionExplorerModelNode" />
+            </path>
+            <path>
+              <item name="" type="784c90a0:SolutionExplorerRootNode" />
+              <item name="ArchaicQuestII" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="ArchaicQuestII" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="Engine" type="24d0babc:SolutionExplorerModelNode" />
+            </path>
+            <path>
+              <item name="" type="784c90a0:SolutionExplorerRootNode" />
+              <item name="ArchaicQuestII" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="ArchaicQuestII" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="Engine" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="Core" type="24d0babc:SolutionExplorerModelNode" />
+            </path>
+            <path>
+              <item name="" type="784c90a0:SolutionExplorerRootNode" />
+              <item name="ArchaicQuestII" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="ArchaicQuestII" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="Engine" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="Core" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="Events" type="24d0babc:SolutionExplorerModelNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+        <option name="show-all-files" value="false" />
+      </pane>
+      <pane id="AssemblyExplorer" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="Rider.DefaultBreakpoints.AreToggled" value="true" />
+    <property name="Rider.ProjectViewActivator.IsNotFirstRun" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected=".NET Launch Settings Profile.ArchaicQuestII">
+    <configuration name="ArchaicQuestII" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
+      <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/ArchaicQuestII.csproj" />
+      <option name="LAUNCH_PROFILE_TFM" value=".NETCoreApp,Version=v2.2" />
+      <option name="LAUNCH_PROFILE_NAME" value="ArchaicQuestII" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <option name="USE_MONO" value="0" />
+      <option name="RUNTIME_ARGUMENTS" value="" />
+      <option name="GENERATE_APPLICATIONHOST_CONFIG" value="1" />
+      <option name="SHOW_IIS_EXPRESS_OUTPUT" value="0" />
+      <option name="SEND_DEBUG_REQUEST" value="1" />
+      <option name="ADDITIONAL_IIS_EXPRESS_ARGUMENTS" value="" />
+      <method v="2">
+        <option name="Build" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ArchaicQuestII: IIS Express" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
+      <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/ArchaicQuestII.csproj" />
+      <option name="LAUNCH_PROFILE_TFM" value=".NETCoreApp,Version=v2.2" />
+      <option name="LAUNCH_PROFILE_NAME" value="IIS Express" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <option name="USE_MONO" value="0" />
+      <option name="RUNTIME_ARGUMENTS" value="" />
+      <option name="GENERATE_APPLICATIONHOST_CONFIG" value="1" />
+      <option name="SHOW_IIS_EXPRESS_OUTPUT" value="0" />
+      <option name="SEND_DEBUG_REQUEST" value="1" />
+      <option name="ADDITIONAL_IIS_EXPRESS_ARGUMENTS" value="" />
+      <method v="2">
+        <option name="Build" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="9c53e88d-cb5e-4250-a25e-dddc68525ffa" name="Default Changelist" comment="" />
+      <created>1561157360778</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1561157360778</updated>
+      <workItem from="1561157366045" duration="3380000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="3380000" />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-7" y="-7" width="1839" height="1191" extended-state="6" />
+    <layout>
+      <window_info id="npm" side_tool="true" />
+      <window_info id="Favorites" side_tool="true" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="bottom" id="NuGet" weight="0.32991612" />
+      <window_info anchor="bottom" id="Docker" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Database Changes" />
+      <window_info anchor="bottom" id="Version Control" weight="0.32991612" />
+      <window_info anchor="bottom" id="Unit Tests" />
+      <window_info anchor="bottom" id="REST Client" weight="0.32991612" />
+      <window_info anchor="bottom" id="Terminal" weight="0.32991612" />
+      <window_info anchor="bottom" id="Event Log" side_tool="true" />
+      <window_info anchor="bottom" id="Performance Profiler" weight="0.32991612" />
+      <window_info anchor="bottom" id="Build" weight="0.32991612" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.32991612" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.32991612" />
+      <window_info anchor="right" id="Errors In Solution" />
+      <window_info anchor="right" id="Database" />
+      <window_info anchor="right" id="Unit Tests Coverage" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="UnityProjectConfiguration" hasMinimizedUI="null" />
+  <component name="UnityUnitTestConfiguration" currentTestLauncher="NUnit" />
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" suspend="NONE" type="DotNet Exception Breakpoints">
+          <properties exception="System.Threading.ThreadAbortException" displayValue="System.Threading.ThreadAbortException" />
+          <option name="timeStamp" value="1" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/Controllers/API/ItemController.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="17" column="17" selection-start-line="17" selection-start-column="17" selection-end-line="17" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Engine/Core/Events/Save.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-210">
+          <caret line="22" column="9" selection-start-line="22" selection-start-column="9" selection-end-line="22" selection-end-column="9" />
+          <folding>
+            <marker date="1559949821376" expanded="false" signature="6:371" ph="..." />
+            <marker date="1559949821376" expanded="true" signature="409:4703" ph="{...}" />
+            <marker date="1559949821376" expanded="true" signature="431:4701" ph="{...}" />
+            <marker date="1559949821376" expanded="true" signature="512:561" ph="{...}" />
+            <marker date="1559949821376" expanded="true" signature="609:1260" ph="{...}" />
+            <marker date="1559949821376" expanded="true" signature="651:814" ph="{...}" />
+            <marker date="1559949821376" expanded="true" signature="831:1120" ph="{...}" />
+            <marker date="1559949821376" expanded="true" signature="978:1105" ph="{...}" />
+            <marker date="1559949821376" expanded="true" signature="1153:1249" ph="{...}" />
+            <marker date="1559949821376" expanded="true" signature="1308:1756" ph="{...}" />
+            <marker date="1559949821376" expanded="true" signature="1335:1618" ph="{...}" />
+            <marker date="1559949821376" expanded="true" signature="1482:1603" ph="{...}" />
+            <marker date="1559949821376" expanded="true" signature="1651:1745" ph="{...}" />
+            <marker date="1559949821376" expanded="true" signature="1807:2258" ph="{...}" />
+            <marker date="1559949821376" expanded="true" signature="1834:2121" ph="{...}" />
+            <marker date="1559949821376" expanded="true" signature="1981:2106" ph="{...}" />
+            <marker date="1559949821376" expanded="true" signature="2154:2247" ph="{...}" />
+            <marker date="1559949821376" expanded="true" signature="2306:2755" ph="{...}" />
+            <marker date="1559949821376" expanded="true" signature="2334:2617" ph="{...}" />
+            <marker date="1559949821376" expanded="true" signature="2481:2602" ph="{...}" />
+            <marker date="1559949821376" expanded="true" signature="2650:2744" ph="{...}" />
+            <marker date="1559949821376" expanded="true" signature="2803:3251" ph="{...}" />
+            <marker date="1559949821376" expanded="true" signature="2830:3113" ph="{...}" />
+            <marker date="1559949821376" expanded="true" signature="2977:3098" ph="{...}" />
+            <marker date="1559949821376" expanded="true" signature="3146:3240" ph="{...}" />
+            <marker date="1559949821376" expanded="true" signature="3297:3621" ph="{...}" />
+            <marker date="1559949821376" expanded="true" signature="3441:3611" ph="{...}" />
+            <marker date="1559949821376" expanded="true" signature="3670:3978" ph="{...}" />
+            <marker date="1559949821376" expanded="true" signature="3805:3967" ph="{...}" />
+            <marker date="1559949821376" expanded="true" signature="4030:4330" ph="{...}" />
+            <marker date="1559949821376" expanded="true" signature="4165:4319" ph="{...}" />
+            <marker date="1559949821376" expanded="true" signature="4375:4694" ph="{...}" />
+            <marker date="1559949821376" expanded="true" signature="4510:4683" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Controllers/API/Character/ClassController.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="22" column="43" lean-forward="true" selection-start-line="22" selection-start-column="43" selection-end-line="22" selection-end-column="43" />
+          <folding>
+            <marker date="1556921532456" expanded="false" signature="6:423" ph="..." />
+            <marker date="1556921532456" expanded="true" signature="475:1142" ph="{...}" />
+            <marker date="1556921532456" expanded="true" signature="510:1140" ph="{...}" />
+            <marker date="1556921532456" expanded="true" signature="617:733" ph="{...}" />
+            <marker date="1556921532456" expanded="true" signature="833:937" ph="{...}" />
+            <marker date="1556921532456" expanded="true" signature="1028:1134" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
