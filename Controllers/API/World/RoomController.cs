@@ -1,22 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ArchaicQuestII.Engine.Character.Model;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ArchaicQuestII.Core.World;
 using ArchaicQuestII.Core.Events;
-using ArchaicQuestII.Engine.World.Room;
+using ArchaicQuestII.Engine.World.Room.Commands;
+using ArchaicQuestII.Engine.World.Room.Model;
+using ArchaicQuestII.Engine.World.Room.Queries;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace ArchaicQuestII.Controllers.API
+namespace ArchaicQuestII.Controllers.API.World
 {
    
     public class RoomController : Controller
     {
         [HttpPost]
-        [Route("api/room/post")]
+        [Route("api/World/Room")]
         public void Post([FromBody] Room room)
         {
             var newRoom = new Room()
@@ -45,7 +42,26 @@ namespace ArchaicQuestII.Controllers.API
            
            
 
-            DB.SaveRoom(newRoom);
+           DB.Save(newRoom, "Room");
+
+        }
+
+
+        [HttpGet]
+        [Route("api/World/Room/{id:int}")]
+        public Room Get(int id)
+        {
+
+            return new GetRoomQuery().GetRoom(id);
+
+        }
+
+        [HttpPut]
+        [Route("api/World/Room/{id:int}")]
+        public void Put([FromBody] Room data)
+        {
+
+            new UpdateRoomCommand().UpdateRoom(data);
 
         }
     }

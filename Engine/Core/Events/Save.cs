@@ -11,6 +11,7 @@ using ArchaicQuestII.Engine.Item;
 using ArchaicQuestII.Engine.World;
 using ArchaicQuestII.Engine.World.Area.Model;
 using ArchaicQuestII.Engine.World.Room;
+using ArchaicQuestII.Engine.World.Room.Model;
 
 namespace ArchaicQuestII.Core.Events
 {
@@ -22,6 +23,32 @@ namespace ArchaicQuestII.Core.Events
             _logger = new Log.Log();
         }
 
+
+        public static void Save<T>(T data, string collectionName)
+        {
+            if (data == null)
+            {
+
+                throw new ArgumentNullException(nameof(data));
+            }
+
+            try
+            {
+                using (var db = new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MyData.db")))
+                {
+                    var col = db.GetCollection<T>(collectionName);
+
+                    col.Upsert(data);
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("Error Saving " + ex.Message);
+            }
+
+        }
 
         public void SavePlayer(Player player)
         {

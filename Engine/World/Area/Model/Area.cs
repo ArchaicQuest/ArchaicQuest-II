@@ -14,6 +14,6 @@ namespace ArchaicQuestII.Engine.World.Area.Model
         public DateTime? DateUpdated { get; set; }
         public string CreatedBy { get; set; } = "Malleus";
         public string[] ModifiedBy { get; set; }
-        public List<Room.Room> Rooms { get; set; }
+        public List<Room.Model.Room> Rooms { get; set; }
     }
 }

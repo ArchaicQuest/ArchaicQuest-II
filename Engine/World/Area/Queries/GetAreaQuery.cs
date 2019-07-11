@@ -17,7 +17,7 @@ namespace ArchaicQuestII.Engine.World.Area.Queries
 
                 var data = col.FindById(id);
 
-                var roomCol = db.GetCollection<Room.Room>("Room");
+                var roomCol = db.GetCollection<Room.Model.Room>("Room");
 
                 var rooms = roomCol.Find(x => x.AreaId == id);
 
