@@ -10,7 +10,7 @@ using ArchaicQuestII.Engine.Character.Class.Commands;
 using ArchaicQuestII.Engine.Character.Model;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ArchaicQuestII.Controllers.API.Character
+namespace ArchaicQuestII.API.Character
 {
     public class AlignmentController
     {

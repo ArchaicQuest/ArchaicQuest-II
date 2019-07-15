@@ -7,7 +7,7 @@ using ArchaicQuestII.Engine.Character.Race.Model;
 using ArchaicQuestII.Engine.Item;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ArchaicQuestII.Controllers.API.Character
+namespace ArchaicQuestII.API.Character
 {
     public class RaceController
     {
