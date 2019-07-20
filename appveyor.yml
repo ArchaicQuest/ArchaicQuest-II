@@ -25,7 +25,7 @@ artifacts:
 clone_depth: 1
 deploy:
 - provider: FTP
-  host: ftp.217.194.213.132
+  host: 217.194.213.132
   protocol: ftp
   username: aqplay
   password:
