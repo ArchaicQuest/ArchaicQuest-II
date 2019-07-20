@@ -1,0 +1,7 @@
+language: csharp
+solution: ArchaicQuestII.sln
+mono: none
+dotnet: 2.2.203
+script:
+ - dotnet restore
+ - dotnet build
