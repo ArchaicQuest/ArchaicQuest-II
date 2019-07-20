@@ -24,5 +24,9 @@ artifacts:
    type: WebDeployPackage
 clone_depth: 1
 deploy:
-- provider: Environment
-   name: ArchaicQuest
+- provider: FTP
+  host: ftp.217.194.213.132
+  protocol: ftp
+  username: aqplay
+  password:
+    secure: B7a8pFUW0uUZZvLBYd3QeQ==
