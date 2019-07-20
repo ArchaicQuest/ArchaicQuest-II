@@ -25,7 +25,4 @@ artifacts:
 clone_depth: 1
 deploy:
 - provider: FTP
-  host: 217.194.213.132
-  protocol: ftp
-  username: $(username)
-  password: $(password)
+   name: ArchaicQuest
