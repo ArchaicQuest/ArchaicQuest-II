@@ -27,6 +27,5 @@ deploy:
 - provider: FTP
   host: 217.194.213.132
   protocol: ftp
-  username: aqplay
-  password:
-    secure: B7a8pFUW0uUZZvLBYd3QeQ==
+  username: $(username)
+  password: $(password)
