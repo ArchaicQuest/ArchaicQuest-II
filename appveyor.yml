@@ -3,6 +3,7 @@ image: Visual Studio 2017
   # Good practise, because Windows line endings are different from Unix/Linux ones
   - cmd: git config --global core.autocrlf true
 install:
+  #n
 before_build:
   # Display .NET Core version
   - cmd: dotnet --version
@@ -16,6 +17,7 @@ build:
   publish_core_console: true
   verbosity: minimal
 after_build:
+  #1
 artifacts:
  - path: '\bin\Debug\netcoreapp2.2\publish'
    name: WebSite
