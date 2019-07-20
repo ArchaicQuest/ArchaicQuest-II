@@ -16,14 +16,10 @@ before_build:
 build_script:
   # output will be in ./src/bin/debug/netcoreapp1.1/publish
   - cmd: dotnet publish
-build:
-  publish_wap: true
-  publish_core_console: true
-  verbosity: minimal
 after_build:
   #1
 artifacts:
- - path: '\src\bin\Debug\netcoreapp2.\publish'
+ - path: '\src\bin\Debug\netcoreapp2.2\publish'
    name: WebSite
    type: WebDeployPackage
 clone_depth: 1
