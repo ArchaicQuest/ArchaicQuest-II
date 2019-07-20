@@ -12,10 +12,10 @@ before_build:
   # Display .NET Core version
   - cmd: dotnet --version
   # Display minimal restore text
-  - cmd: dotnet restore ./ArchaicQuestII.sln --verbosity m
+  - cmd: dotnet restore  ./src/ArchaicQuestII.sln --verbosity m
 build_script:
   # output will be in ./src/bin/debug/netcoreapp1.1/publish
-  - cmd: dotnet publish ./ArchaicQuestII.sln
+  - cmd: dotnet publish  ./src/ArchaicQuestII.sln
 build:
   publish_wap: true
   publish_core_console: true
@@ -23,9 +23,10 @@ build:
 after_build:
   #1
 artifacts:
- - path: '\bin\Debug\netcoreapp2.2\publish'
+ - path: '\src\bin\Debug\netcoreapp2.\publish'
    name: WebSite
    type: WebDeployPackage
+clone_depth: 1
 deploy:
 - provider: FTP
   host: 217.194.213.132
