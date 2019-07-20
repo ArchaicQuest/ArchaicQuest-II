@@ -13,7 +13,7 @@ before_build:
   - cmd: dotnet --version
   # Display minimal restore text
   - cmd: dotnet restore ./ArchaicQuestII.sln --verbosity m
-  build_script:
+build_script:
   # output will be in ./src/bin/debug/netcoreapp1.1/publish
   - cmd: dotnet publish ./ArchaicQuestII.sln
 build:
