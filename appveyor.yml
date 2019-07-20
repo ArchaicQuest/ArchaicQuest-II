@@ -19,7 +19,7 @@ build_script:
 after_build:
   #1
 artifacts:
- - path: '\src\bin\Debug\netcoreapp2.2\publish'
+ - path: '\bin\Debug\netcoreapp2.2\publish'
    name: WebSite
    type: WebDeployPackage
 clone_depth: 1
