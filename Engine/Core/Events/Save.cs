@@ -169,10 +169,17 @@ namespace ArchaicQuestII.Core.Events
                 using (var db = new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MyData.db")))
                 {
                     var col = db.GetCollection<Area>("Area");
+                    var data = col.FindAll().ToList();
+                    var roomCol = db.GetCollection<Room>("Room");
+                    
+                    //This can/should be improved - will do for now
+                    foreach (var area in data)
+                    {
+                        var getRooms = roomCol.FindAll().Where(x => x.AreaId.Equals(area.Id)).ToList();
+                        area.Rooms = getRooms;
+                    }
 
-                  var data = col.FindAll().ToList();
-
-                    return data;
+                return data;
 
                 }
         }
