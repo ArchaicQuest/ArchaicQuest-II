@@ -10,6 +10,7 @@ namespace ArchaicQuestII.Core.World
         public Coordinates Coords { get; set; }
         public int AreaId { get; set; }
         public string Name { get; set; }
+        public string Keyword { get; set; }
         public bool Door { get; set; } = true;
         public bool Closed { get; set; } = true;
         public bool Locked { get; set; }

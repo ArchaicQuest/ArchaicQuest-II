@@ -45,21 +45,7 @@ namespace ArchaicQuestII.Controllers
              
             };
 
-
-            if (!string.IsNullOrEmpty(area.Id.ToString()) && area.Id != -1)
-            {
-
-                var foundItem = DB.GetMob(area.Id.ToString());
-
-                if (foundItem == null)
-                {
-                    throw new Exception("mob Id does not exist");
-                }
-
-                newArea.Id = area.Id;
-            }
-
-
+ 
 
             DB.SaveArea(newArea);
 

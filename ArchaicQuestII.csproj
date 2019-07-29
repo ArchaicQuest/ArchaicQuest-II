@@ -5,6 +5,7 @@
 	<TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <MvcRazorCompileOnPublish>false</MvcRazorCompileOnPublish>
+    <RuntimeFrameworkName>Microsoft.AspNetCore.App</RuntimeFrameworkName>
   </PropertyGroup>
 
   <ItemGroup>
