@@ -17,8 +17,12 @@ namespace ArchaicQuestII.Engine.World.Room.Commands
                 var col = db.GetCollection<Model.Room>("Room");
                 var data = col.FindById(room.Id);
 
+                if (data == null)
+                {
+                    return;
+                }
               
-                col.Upsert(data);
+                col.Upsert(room);
 
 
             }
