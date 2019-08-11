@@ -71,6 +71,8 @@ namespace ArchaicQuestII.Engine.World.Room.Model
         /// Does this repop every tick
         /// </summary>
         public bool InstantRePop { get; set; }
+        public DateTime DateCreated { get; set; } = new DateTime();
+        public DateTime DateUpdated { get; set; }
 
     }
 }
