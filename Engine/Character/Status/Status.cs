@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace ArchaicQuestII.Engine.Character.Status
-{
+{   [Flags]
     public enum Status
     {
         Standing = 0,

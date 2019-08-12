@@ -21,7 +21,8 @@ namespace ArchaicQuestII.Engine.Item
         /// <summary>
         /// d4, d6, d8, d10, d20
         /// </summary>
-        public int DiceSize { get; set; }
+        public int DiceMinSize { get; set; }
+        public int DiceMaxSize { get; set; }
 
         public int Roll(int roll, int minSize, int maxSize)
         {

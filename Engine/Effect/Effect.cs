@@ -32,9 +32,8 @@ namespace ArchaicQuestII.Engine.Effect
     public class EffectModifer
     {
         public int Value { get; set; }
-        public EffectChecks Origin { get; set; }
-        public EffectChecks Target { get; set; }
-        public EffectExpression Expression { get; set; }
+        public bool PositiveEffect { get; set; }
+      
     }
 
 
