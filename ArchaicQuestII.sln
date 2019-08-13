@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27004.2009
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArchaicQuestII", "ArchaicQuestII.csproj", "{194F0C0D-407E-44AB-8E9E-C7C061C57C49}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArchaicQuestII-Tests", "..\ArchaicQuestII-Tests\ArchaicQuestII-Tests.csproj", "{07A33542-5F17-457C-A756-EF08E2226CA2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,10 +17,10 @@ Global
 		{194F0C0D-407E-44AB-8E9E-C7C061C57C49}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{194F0C0D-407E-44AB-8E9E-C7C061C57C49}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{194F0C0D-407E-44AB-8E9E-C7C061C57C49}.Release|Any CPU.Build.0 = Release|Any CPU
-		{960C0028-611F-418E-8EA8-F9E105B344F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{960C0028-611F-418E-8EA8-F9E105B344F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{960C0028-611F-418E-8EA8-F9E105B344F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{960C0028-611F-418E-8EA8-F9E105B344F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07A33542-5F17-457C-A756-EF08E2226CA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07A33542-5F17-457C-A756-EF08E2226CA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07A33542-5F17-457C-A756-EF08E2226CA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07A33542-5F17-457C-A756-EF08E2226CA2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

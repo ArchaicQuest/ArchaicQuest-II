@@ -7,6 +7,7 @@ using ArchaicQuestII.Engine.Item;
 using System.Data;
 using ArchaicQuestII.Engine.Effect;
 using ArchaicQuestII.Engine.Skills;
+using ArchaicQuestII.Engine.World.Room.Model;
 
 namespace ArchaicQuestII.Engine.Spell
 {
@@ -23,10 +24,19 @@ namespace ArchaicQuestII.Engine.Spell
         public Messages[] SkillAction { get; set; }
         public Messages SkillEnd { get; set; }
         public Messages SkillFailure { get; set; }
+        public LevelBasedMessages LevelBasedMessages { get; set; }
         public SpellType Type { get; set; }
         public int Rounds { get; set; }
+        public Cost Cost { get; set; }
 
-        public void DoSpell(string spellName, Player origin, Player target)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Spell"></param>
+        /// <param name="origin"></param>
+        /// <param name="target"></param>
+        /// <param name="room"></param>
+        public void DoSpell(Spells Spell, Player origin, Player target, Room room)
         {
             // you're asleep
             // your deead
@@ -34,8 +44,7 @@ namespace ArchaicQuestII.Engine.Spell
             // mana check
             // target check (shrugs)
 
-            //find spell here, or pass to func
-            Spells Spell = new Spells();
+     
 
             var formula = Spell.Damage.Roll(Spell.Damage.DiceRoll, Spell.Damage.DiceMinSize,
                               Spell.Damage.DiceMaxSize) + (origin.Level + 1) / 2;
@@ -43,6 +52,7 @@ namespace ArchaicQuestII.Engine.Spell
             //Fire skill start message to player, room, target
 
             //deduct mana
+
 
             if (Spell.Rounds != 1)
             {
@@ -53,7 +63,98 @@ namespace ArchaicQuestII.Engine.Spell
       
             if (Spell.Type.Affect)
             {
-                //Fire skill Action message to player, room, target
+            
+                //can be used for spells like magic missile that fires multiple bolts at higher levels
+                if (Spell.LevelBasedMessages.HasLevelBasedMessages)
+                {
+                    switch (origin.Level)
+                    {
+                        case 1:
+                        case 2:
+                        case 3:
+                        case 4:
+                        case 5:
+                        case 6:
+                        case 7:
+                        case 8:
+                        case 9:
+                        case 10:
+                            //send level spec message
+                            //Spell.LevelBasedMessages.Ten.ToPlayer;
+                            //Spell.LevelBasedMessages.Ten.ToRoom
+                            //Spell.LevelBasedMessages.Ten.ToTarget
+                            break;
+                        case 11:
+                        case 12:
+                        case 13:
+                        case 14:
+                        case 15:
+                        case 16:
+                        case 17:
+                        case 18:
+                        case 19:
+                        case 20:
+                            //send level spec message
+                            //Spell.LevelBasedMessages.Ten.ToPlayer;
+                            //Spell.LevelBasedMessages.Ten.ToRoom
+                            //Spell.LevelBasedMessages.Ten.ToTarget
+                            break;
+                        case 21:
+                        case 22:
+                        case 23:
+                        case 24:
+                        case 25:
+                        case 26:
+                        case 27:
+                        case 28:
+                        case 29:
+                        case 30:
+                            //send level spec message
+                            //Spell.LevelBasedMessages.Ten.ToPlayer;
+                            //Spell.LevelBasedMessages.Ten.ToRoom
+                            //Spell.LevelBasedMessages.Ten.ToTarget
+                            break;
+                        case 31:
+                        case 32:
+                        case 33:
+                        case 34:
+                        case 35:
+                        case 36:
+                        case 37:
+                        case 38:
+                        case 39:
+                        case 40:
+                            //send level spec message
+                            //Spell.LevelBasedMessages.Ten.ToPlayer;
+                            //Spell.LevelBasedMessages.Ten.ToRoom
+                            //Spell.LevelBasedMessages.Ten.ToTarget
+                            break;
+                        case 41:
+                        case 42:
+                        case 43:
+                        case 44:
+                        case 45:
+                        case 46:
+                        case 47:
+                        case 48:
+                        case 49:
+                        case 50:
+                        case 51:
+                            //send level spec message
+                            //Spell.LevelBasedMessages.Ten.ToPlayer;
+                            //Spell.LevelBasedMessages.Ten.ToRoom
+                            //Spell.LevelBasedMessages.Ten.ToTarget
+                            break;
+                        default:
+
+                            //Fire defualt skill Action message to player, room, target
+                            break;
+                    }
+                }
+                else
+                {
+                    //Fire skill Action message to player, room, target
+                }
 
 
                 if (Spell.Effect.Location == EffectLocation.Strength)
@@ -110,36 +211,9 @@ namespace ArchaicQuestII.Engine.Spell
  
 
         }
-        public int ParseExpression(string exp, Player origin, Player target)
-        {
 
-            if (exp.Contains("{origin.level}"))
-            {
-                exp.Replace("{origin.level}", origin.Level.ToString());
-            }
-
-            DataTable dt = new DataTable();
-            var v = dt.Compute(exp, "");
-
-            return Int32.Parse(v.ToString());
-        }
     }
 
  
 }
 
-//Description
-//Damage(die rolls)
-//Affects(slow, haste etc affects created in admin)
-//Type - Alteration, Illusion, etc the d&d schools basically
-//Duration
-//Delay - (how many ticks, 1 tick 120ms?)
-//Messages
-//Setup(delay)
-//- your hands begin to glow
-//- y hands begin to glow
-//Action 
-//- your burning hands blasts x
-//- y burning hands blasts x
-//- y burning hands blasts you
-//Help
