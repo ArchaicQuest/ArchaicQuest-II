@@ -5,29 +5,21 @@ using System.Threading.Tasks;
 using ArchaicQuestII.Engine.Character.Model;
 using ArchaicQuestII.Engine.Item;
 using System.Data;
+using ArchaicQuestII.Engine.Core.Events;
 using ArchaicQuestII.Engine.Effect;
 using ArchaicQuestII.Engine.Skills;
 using ArchaicQuestII.Engine.World.Room.Model;
 
 namespace ArchaicQuestII.Engine.Spell
 {
-    public class Spells
+    public class Spells: ISpells
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public Dice Damage { get; set; }
-        public Effect.Effect Effect { get; set; }
-        public Requirements Requirements { get; set; }
-        public Sphere SpellGroup { get; set; }
-        public Messages SkillStart { get; set; }
-        public Messages[] SkillAction { get; set; }
-        public Messages SkillEnd { get; set; }
-        public Messages SkillFailure { get; set; }
-        public LevelBasedMessages LevelBasedMessages { get; set; }
-        public SpellType Type { get; set; }
-        public int Rounds { get; set; }
-        public Cost Cost { get; set; }
+        private readonly IWriteToClient _writer;
+
+        public Spells(IWriteToClient writer)
+        {
+            _writer = writer;
+        }
 
         /// <summary>
         /// 
@@ -36,7 +28,7 @@ namespace ArchaicQuestII.Engine.Spell
         /// <param name="origin"></param>
         /// <param name="target"></param>
         /// <param name="room"></param>
-        public void DoSpell(Spells Spell, Player origin, Player target, Room room)
+        public virtual void DoSpell(Model.Spell Spell, Player origin, Player target, Room room = null)
         {
             // you're asleep
             // your deead
@@ -47,20 +39,21 @@ namespace ArchaicQuestII.Engine.Spell
      
 
             var formula = Spell.Damage.Roll(Spell.Damage.DiceRoll, Spell.Damage.DiceMinSize,
-                              Spell.Damage.DiceMaxSize) + (origin.Level + 1) / 2;
+                              Spell.Damage.DiceMaxSize) + (origin.Level + 1) / 2; //+ mod
 
             //Fire skill start message to player, room, target
 
             //deduct mana
 
 
-            if (Spell.Rounds != 1)
+            if (Spell.Rounds > 1)
             {
                 // prob needs to be on player
                 Spell.Rounds -= 1;
                 return;
             }
-      
+            _writer.WriteLine(Spell.SkillStart.ToPlayer);
+
             if (Spell.Type.Affect)
             {
             
@@ -80,9 +73,9 @@ namespace ArchaicQuestII.Engine.Spell
                         case 9:
                         case 10:
                             //send level spec message
-                            //Spell.LevelBasedMessages.Ten.ToPlayer;
-                            //Spell.LevelBasedMessages.Ten.ToRoom
-                            //Spell.LevelBasedMessages.Ten.ToTarget
+                            _writer.WriteLine(Spell.LevelBasedMessages.Ten.ToPlayer);
+                            _writer.WriteLine(Spell.LevelBasedMessages.Ten.ToTarget);
+                            _writer.WriteLine(Spell.LevelBasedMessages.Ten.ToRoom);
                             break;
                         case 11:
                         case 12:
@@ -95,9 +88,10 @@ namespace ArchaicQuestII.Engine.Spell
                         case 19:
                         case 20:
                             //send level spec message
-                            //Spell.LevelBasedMessages.Ten.ToPlayer;
-                            //Spell.LevelBasedMessages.Ten.ToRoom
-                            //Spell.LevelBasedMessages.Ten.ToTarget
+                            _writer.WriteLine(Spell.LevelBasedMessages.Twenty.ToPlayer);
+                            _writer.WriteLine(Spell.LevelBasedMessages.Twenty.ToTarget);
+                            _writer.WriteLine(Spell.LevelBasedMessages.Twenty.ToRoom);
+                         
                             break;
                         case 21:
                         case 22:
@@ -110,9 +104,9 @@ namespace ArchaicQuestII.Engine.Spell
                         case 29:
                         case 30:
                             //send level spec message
-                            //Spell.LevelBasedMessages.Ten.ToPlayer;
-                            //Spell.LevelBasedMessages.Ten.ToRoom
-                            //Spell.LevelBasedMessages.Ten.ToTarget
+                            _writer.WriteLine(Spell.LevelBasedMessages.Thirty.ToPlayer);
+                            _writer.WriteLine(Spell.LevelBasedMessages.Thirty.ToTarget);
+                            _writer.WriteLine(Spell.LevelBasedMessages.Thirty.ToRoom);
                             break;
                         case 31:
                         case 32:
@@ -125,9 +119,9 @@ namespace ArchaicQuestII.Engine.Spell
                         case 39:
                         case 40:
                             //send level spec message
-                            //Spell.LevelBasedMessages.Ten.ToPlayer;
-                            //Spell.LevelBasedMessages.Ten.ToRoom
-                            //Spell.LevelBasedMessages.Ten.ToTarget
+                            _writer.WriteLine(Spell.LevelBasedMessages.Forty.ToPlayer);
+                            _writer.WriteLine(Spell.LevelBasedMessages.Forty.ToTarget);
+                            _writer.WriteLine(Spell.LevelBasedMessages.Forty.ToRoom);
                             break;
                         case 41:
                         case 42:
@@ -141,19 +135,21 @@ namespace ArchaicQuestII.Engine.Spell
                         case 50:
                         case 51:
                             //send level spec message
-                            //Spell.LevelBasedMessages.Ten.ToPlayer;
-                            //Spell.LevelBasedMessages.Ten.ToRoom
-                            //Spell.LevelBasedMessages.Ten.ToTarget
+                            _writer.WriteLine(Spell.LevelBasedMessages.Fifty.ToPlayer);
+                            _writer.WriteLine(Spell.LevelBasedMessages.Fifty.ToTarget);
+                            _writer.WriteLine(Spell.LevelBasedMessages.Fifty.ToRoom);
                             break;
                         default:
 
-                            //Fire defualt skill Action message to player, room, target
+                             
                             break;
                     }
                 }
                 else
                 {
                     //Fire skill Action message to player, room, target
+                    _writer.WriteLine(Spell.SkillAction[0].ToPlayer);
+                    
                 }
 
 

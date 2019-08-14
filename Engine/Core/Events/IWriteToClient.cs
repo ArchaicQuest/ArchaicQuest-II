@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 
 //copy pasta https://stackoverflow.com/a/20595549/1395510
-namespace ArchaicQuestII.Engine.Core.Interface
+namespace ArchaicQuestII.Engine.Core.Events
 {
-    interface IWriteToClient
+   public interface IWriteToClient
     {
             void WriteLine(string message);
     }

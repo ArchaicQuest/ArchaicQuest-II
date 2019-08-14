@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ArchaicQuestII.Hubs;
 using Serilog;
 using ArchaicQuestII.Core.Events;
+using ArchaicQuestII.Engine.Core.Events;
 using ArchaicQuestII.Log;
 
 namespace ArchaicQuestII
@@ -27,6 +28,7 @@ namespace ArchaicQuestII
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<ILog>(new Log.Log());
+            services.AddSingleton<IWriteToClient>(new WriteToClient());
             services.AddMvc();
             services.AddSignalR(o =>
             {
