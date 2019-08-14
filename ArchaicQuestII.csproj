@@ -6,6 +6,8 @@
     <PreserveCompilationContext>true</PreserveCompilationContext>
     <MvcRazorCompileOnPublish>false</MvcRazorCompileOnPublish>
     <RuntimeFrameworkName>Microsoft.AspNetCore.App</RuntimeFrameworkName>
+    <Authors>Liam</Authors>
+    <PackageProjectUrl>http://www.archaicquest.com</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>
