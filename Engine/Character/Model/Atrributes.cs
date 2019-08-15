@@ -1,14 +1,22 @@
 ﻿using System;
+using System.Collections.Generic;
+using ArchaicQuestII.Engine.Effect;
 
 namespace ArchaicQuestII.Engine.Character.Model
 {
     public class Attributes
     {
-        public int Strength { get; set; }
-        public int Dexterity { get; set; }
-        public int Constitution { get; set; }
-        public int Wisdom { get; set; }
-        public int Intelligence { get; set; }
-        public int Charisma { get; set; }
+
+        public Dictionary<EffectLocation, int> Attribute { get; set; } = new Dictionary<EffectLocation, int>
+        {
+            {EffectLocation.Strength, 0},
+            {EffectLocation.Dexterity, 0},
+            {EffectLocation.Constitution, 0},
+            {EffectLocation.Wisdom, 0},
+            {EffectLocation.Intelligence, 0},
+            {EffectLocation.Charisma, 0},
+            {EffectLocation.Hitpoints, 0},
+        };
+      
     }
 }

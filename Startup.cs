@@ -11,6 +11,7 @@ using ArchaicQuestII.Hubs;
 using Serilog;
 using ArchaicQuestII.Core.Events;
 using ArchaicQuestII.Engine.Core.Events;
+using ArchaicQuestII.Engine.Spell.Interface;
 using ArchaicQuestII.Log;
 
 namespace ArchaicQuestII
@@ -27,8 +28,9 @@ namespace ArchaicQuestII
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var writeToClient = new WriteToClient();
             services.AddSingleton<ILog>(new Log.Log());
-            services.AddSingleton<IWriteToClient>(new WriteToClient());
+          services.AddSingleton<IWriteToClient>(writeToClient);
             services.AddMvc();
             services.AddSignalR(o =>
             {
