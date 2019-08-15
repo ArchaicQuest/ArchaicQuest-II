@@ -1,5 +1,5 @@
 ﻿
-using ArchaicQuestII.Engine.Skills;
+using ArchaicQuestII.Engine.Skill;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +9,6 @@ namespace ArchaicQuestII.Engine.Spell.Interface
 {
     public interface ISpellAction
     {
-        void DisplayActionToUser(Model.LevelBasedMessages levelBasedActions, List<Messages> Actions, int level);
+        void DisplayActionToUser(LevelBasedMessages levelBasedActions, List<Messages> Actions, int level);
     }
 }

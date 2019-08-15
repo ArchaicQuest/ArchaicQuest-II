@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ArchaicQuestII.Engine.Character.Model;
 using ArchaicQuestII.Engine.Item;
 using System.Data;
+using System.Reflection;
 using ArchaicQuestII.Engine.Core.Events;
 using ArchaicQuestII.Engine.Effect;
 using ArchaicQuestII.Engine.Skills;
@@ -16,11 +17,11 @@ namespace ArchaicQuestII.Engine.Spell
     public class Spells: ISpells
     {
         private readonly IWriteToClient _writer;
-        private readonly ISpellAction _spellAction;
-        public Spells(IWriteToClient writer, ISpellAction spellAction)
+       
+        public Spells(IWriteToClient writer)
         {
             _writer = writer;
-            _spellAction = spellAction;
+           
         }
 
         /// <summary>
@@ -56,22 +57,9 @@ namespace ArchaicQuestII.Engine.Spell
 
             _writer.WriteLine(Spell.SkillStart.ToPlayer);
 
-            if (Spell.Type.Affect)
-            {
 
-                _spellAction.DisplayActionToUser(Spell.LevelBasedMessages, Spell.SkillAction, origin.Level);
-
-                if (Spell.Effect.Modifier.PositiveEffect)
-                {
-                    target.Attributes.Attribute[Spell.Effect.Location] += formula;
-                }
-                else
-                {
-                    target.Attributes.Attribute[Spell.Effect.Location] -= formula;
-                }
-                 
-            }
-
+            new SpellEffect(_writer, Spell, origin, target, formula).Type[Spell.Type].Invoke();
+ 
         }
 
     }

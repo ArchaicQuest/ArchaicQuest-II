@@ -5,11 +5,12 @@ using System.Threading.Tasks;
 
 namespace ArchaicQuestII.Engine.Spell
 {
-    public class SpellType
+    public enum SpellType
     {
-        public bool Affect { get; set; }
-        public bool Travel { get; set; }
-        public bool Creation { get; set; }
-        public bool Summon { get; set; }
+        None = 0,
+        Affect = 1 << 0,  
+        Travel = 1 << 1,
+        Creation = 1 << 2,
+        Summon = 1 << 3,
     }
 }

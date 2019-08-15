@@ -1,10 +1,13 @@
-﻿using ArchaicQuestII.Engine.Skills;
+﻿ 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ArchaicQuestII.Engine.Spell.Interface;
+using ArchaicQuestII.Engine.Core.Events;
+using ArchaicQuestII.Engine.Skills;
 
-namespace ArchaicQuestII.Engine.Spell.Model
+namespace ArchaicQuestII.Engine.Skill
 {
     public class LevelBasedMessages
     {
@@ -15,7 +18,7 @@ namespace ArchaicQuestII.Engine.Spell.Model
         public Messages Forty { get; set; }
         public Messages Fifty { get; set; }
 
-
-
+      
+        
     }
 }

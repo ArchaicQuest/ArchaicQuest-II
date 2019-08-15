@@ -1,35 +1,24 @@
-﻿ 
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ArchaicQuestII.Engine.Spell.Interface;
 using ArchaicQuestII.Engine.Core.Events;
-using ArchaicQuestII.Engine.Skills;
+using ArchaicQuestII.Engine.Skill;
 
-namespace ArchaicQuestII.Engine.Spell
+namespace ArchaicQuestII.Engine.Skills
 {
-    public class LevelBasedMessages: ISpellAction
+    public class SkillMessage
     {
-        public bool HasLevelBasedMessages { get; set; }
-        public Messages Ten { get; set; }
-        public Messages Twenty { get; set; }
-        public Messages Thirty { get; set; }
-        public Messages Forty { get; set; }
-        public Messages Fifty { get; set; }
-
         private readonly IWriteToClient _writer;
 
-        public LevelBasedMessages(IWriteToClient writer)
+        public SkillMessage(IWriteToClient writer)
         {
             _writer = writer;
         }
 
-
-        public void DisplayActionToUser(Model.LevelBasedMessages levelBasedActions, List<Messages> Actions, int level)
+        public void DisplayActionToUser(LevelBasedMessages levelBasedActions, List<Messages> Actions, int level)
         {
-
-
+       
             if (levelBasedActions.HasLevelBasedMessages)
             {
                 switch (level)
@@ -113,13 +102,18 @@ namespace ArchaicQuestII.Engine.Spell
                         break;
                     default:
 
+                        foreach (var message in Actions)
+                        {
+                            _writer.WriteLine(message.ToPlayer);
+                            _writer.WriteLine(message.ToTarget);
+                            _writer.WriteLine(message.ToRoom);
+                        }
 
                         break;
                 }
             }
             else
             {
-
                 foreach (var message in Actions)
                 {
                     _writer.WriteLine(message.ToPlayer);

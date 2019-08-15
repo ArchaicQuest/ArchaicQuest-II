@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ArchaicQuestII.Engine.Skills
+namespace ArchaicQuestII.Engine.Skill
 {
     public enum Cost
     {
