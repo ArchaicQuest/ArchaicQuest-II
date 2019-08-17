@@ -6,6 +6,8 @@ using ArchaicQuestII.Engine.Character.Model;
 using ArchaicQuestII.Engine.Effect;
 using ArchaicQuestII.Engine.Item;
 using ArchaicQuestII.Engine.Skill;
+using ArchaicQuestII.Engine.Skill.Enum;
+using ArchaicQuestII.Engine.Skill.Model;
 using ArchaicQuestII.Engine.Spell;
 using ArchaicQuestII.Engine.Spell.Interface;
 using ArchaicQuestII.Engine.Spell.Model;
@@ -27,6 +29,7 @@ namespace ArchaicQuestII_Tests
 
         public SpellTests()
         {
+           
             _Spells = new Spell()
             { 
                 Name = "Ogre strength",
@@ -75,8 +78,8 @@ namespace ArchaicQuestII_Tests
                     Evil = true
                 },
                 Type = SpellType.Affect,
-                Cost = Cost.HitPoints,
-                LevelBasedMessages = new LevelBasedMessages(),
+                Cost = new SkillCost { Table = { [Cost.HitPoints] = 5 } },
+            LevelBasedMessages = new LevelBasedMessages(),
                 SkillEnd = new Messages()
                 {
                     ToPlayer = "sx",

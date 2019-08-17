@@ -4,38 +4,37 @@ using System.Linq;
 using System.Threading.Tasks;
 using ArchaicQuestII.Engine.Character.Model;
 using ArchaicQuestII.Engine.Core.Events;
-using ArchaicQuestII.Engine.Skills;
+using ArchaicQuestII.Engine.Skill;
+using ArchaicQuestII.Engine.Skill;
+using ArchaicQuestII.Engine.Skill.Model;
 
 namespace ArchaicQuestII.Engine.Spell.Type
 {
     public class SpellAffect
     {
         private readonly IWriteToClient _writer;
-        private readonly Model.Spell _spell;
-        private readonly Player _origin;
-        private readonly Player _target;
+        private static SkillTarget _skillTarget;
         private readonly int _value;
 
-        public SpellAffect(IWriteToClient writer, Model.Spell spell, Player origin, Player target, int value)
+        public SpellAffect(IWriteToClient writer, SkillTarget skillTarget, int value)
         {
             _writer = writer;
-            _spell = spell;
-            _origin = origin;
-            _target = target;
+            _skillTarget = skillTarget;
+  
             _value = value;
         }
         public void CauseAffect()
         {
             var action = new SkillMessage(_writer);
-            action.DisplayActionToUser(_spell.LevelBasedMessages, _spell.SkillAction, _origin.Level);
+            action.DisplayActionToUser(_skillTarget.Skill.LevelBasedMessages, _skillTarget.Skill.SkillAction, _skillTarget.Origin.Level);
 
-            if (_spell.Effect.Modifier.PositiveEffect)
+            if (_skillTarget.Skill.Effect.Modifier.PositiveEffect)
             {
-                _target.Attributes.Attribute[_spell.Effect.Location] += _value;
+                _skillTarget.Target.Attributes.Attribute[_skillTarget.Skill.Effect.Location] += _value;
             }
             else
             {
-                _target.Attributes.Attribute[_spell.Effect.Location] -= _value;
+                _skillTarget.Target.Attributes.Attribute[_skillTarget.Skill.Effect.Location] -= _value;
             }
         }
     }

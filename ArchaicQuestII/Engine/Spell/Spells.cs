@@ -8,7 +8,8 @@ using System.Data;
 using System.Reflection;
 using ArchaicQuestII.Engine.Core.Events;
 using ArchaicQuestII.Engine.Effect;
-using ArchaicQuestII.Engine.Skills;
+using ArchaicQuestII.Engine.Skill;
+using ArchaicQuestII.Engine.Skill.Model;
 using ArchaicQuestII.Engine.World.Room.Model;
 using ArchaicQuestII.Engine.Spell.Interface;
 
@@ -27,11 +28,11 @@ namespace ArchaicQuestII.Engine.Spell
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="Spell"></param>
+        /// <param name="spell"></param>
         /// <param name="origin"></param>
         /// <param name="target"></param>
         /// <param name="room"></param>
-        public void DoSpell(Model.Spell Spell, Player origin, Player target, Room room = null)
+        public void DoSpell(Model.Spell spell, Player origin, Player target, Room room = null)
         {
             // you're asleep
             // your deead
@@ -40,25 +41,32 @@ namespace ArchaicQuestII.Engine.Spell
             // target check (shrugs)
 
 
-            var formula = Spell.Damage.Roll(Spell.Damage.DiceRoll, Spell.Damage.DiceMinSize,
-                              Spell.Damage.DiceMaxSize) + (origin.Level + 1) / 2; //+ mod
+            var formula = spell.Damage.Roll(spell.Damage.DiceRoll, spell.Damage.DiceMinSize,
+                              spell.Damage.DiceMaxSize) + (origin.Level + 1) / 2; //+ mod
 
             //Fire skill start message to player, room, target
 
             //deduct mana
 
 
-            if (Spell.Rounds > 1)
+            if (spell.Rounds > 1)
             {
                 // prob needs to be on player
-                Spell.Rounds -= 1;
+                spell.Rounds -= 1;
                 return;
             }
 
-            _writer.WriteLine(Spell.SkillStart.ToPlayer);
+            _writer.WriteLine(spell.SkillStart.ToPlayer);
 
+            var skillTarget = new SkillTarget()
+            {
+                Origin = origin,
+                Target = target,
+                Skill = spell,
+                Room = null
+            };
 
-            new SpellEffect(_writer, Spell, origin, target, formula).Type[Spell.Type].Invoke();
+            new SpellEffect(_writer, skillTarget, formula).Type[spell.Type].Invoke();
  
         }
 

@@ -4,8 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using ArchaicQuestII.Engine.Core.Events;
 using ArchaicQuestII.Engine.Skill;
+using ArchaicQuestII.Engine.Skill.Model;
 
-namespace ArchaicQuestII.Engine.Skills
+namespace ArchaicQuestII.Engine.Skill
 {
     public class SkillMessage
     {

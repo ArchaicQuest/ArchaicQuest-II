@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using ArchaicQuestII.Engine.Character.Model;
 using ArchaicQuestII.Engine.Character.Status;
 
-namespace ArchaicQuestII.Engine.Skill
+namespace ArchaicQuestII.Engine.Skill.Model
 {
     public class Requirements
     {

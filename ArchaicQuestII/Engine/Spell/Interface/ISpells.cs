@@ -7,7 +7,7 @@ using ArchaicQuestII.Engine.Item;
 using System.Data;
 using ArchaicQuestII.Engine.Core.Events;
 using ArchaicQuestII.Engine.Effect;
-using ArchaicQuestII.Engine.Skills;
+using ArchaicQuestII.Engine.Skill;
 using ArchaicQuestII.Engine.World.Room.Model;
 
 namespace ArchaicQuestII.Engine.Spell

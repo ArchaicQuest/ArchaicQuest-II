@@ -5,9 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using ArchaicQuestII.Engine.Spell.Interface;
 using ArchaicQuestII.Engine.Core.Events;
-using ArchaicQuestII.Engine.Skills;
+using ArchaicQuestII.Engine.Skill;
 
-namespace ArchaicQuestII.Engine.Skill
+namespace ArchaicQuestII.Engine.Skill.Model
 {
     public class LevelBasedMessages
     {
