@@ -16,6 +16,8 @@ namespace ArchaicQuestII.Engine.Character.Model
             {EffectLocation.Intelligence, 0},
             {EffectLocation.Charisma, 0},
             {EffectLocation.Hitpoints, 0},
+            {EffectLocation.Mana, 0},
+            {EffectLocation.Moves, 0},
         };
       
     }

@@ -4,8 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using ArchaicQuestII.Engine.Character.Model;
 using ArchaicQuestII.Engine.Core.Events;
+using ArchaicQuestII.Engine.Skill.Enum;
 using ArchaicQuestII.Engine.Skill.Model;
-using ArchaicQuestII.Engine.Spell.Type;
+using ArchaicQuestII.Engine.Skill.Type;
 
 namespace ArchaicQuestII.Engine.Spell
 {
@@ -22,9 +23,9 @@ namespace ArchaicQuestII.Engine.Spell
             _value = value;
         }
 
-        public Dictionary<SpellType, Action> Type { get; set; } = new Dictionary<SpellType, Action>
+        public Dictionary<SkillType, Action> Type { get; set; } = new Dictionary<SkillType, Action>
         {
-            {SpellType.Affect, () => new SpellAffect(_writer, _skillTarget, _value).CauseAffect()}
+            {SkillType.Affect, () => new SkillAffect(_writer, _skillTarget, _value).CauseAffect()}
         };
 
     }

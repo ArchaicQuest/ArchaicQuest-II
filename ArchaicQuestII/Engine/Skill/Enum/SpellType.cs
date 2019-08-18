@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ArchaicQuestII.Engine.Spell
+namespace ArchaicQuestII.Engine.Skill.Enum
 {
-    public enum SpellType
+    public enum SkillType
     {
         None = 0,
         Affect = 1 << 0,  

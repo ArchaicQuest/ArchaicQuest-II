@@ -10,7 +10,7 @@ using ArchaicQuestII.Engine.Effect;
 using ArchaicQuestII.Engine.Skill;
 using ArchaicQuestII.Engine.World.Room.Model;
 
-namespace ArchaicQuestII.Engine.Spell
+namespace ArchaicQuestII.Engine.Spell.Interface
 {
     public interface ISpells
     {

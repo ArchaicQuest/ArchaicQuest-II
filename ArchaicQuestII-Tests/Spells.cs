@@ -3,6 +3,7 @@ using System;
 using System.Buffers;
 using System.Collections.Generic;
 using ArchaicQuestII.Engine.Character.Model;
+using ArchaicQuestII.Engine.Character.Status;
 using ArchaicQuestII.Engine.Effect;
 using ArchaicQuestII.Engine.Item;
 using ArchaicQuestII.Engine.Skill;
@@ -77,7 +78,7 @@ namespace ArchaicQuestII_Tests
                 {
                     Evil = true
                 },
-                Type = SpellType.Affect,
+                Type = SkillType.Affect,
                 Cost = new SkillCost { Table = { [Cost.HitPoints] = 5 } },
             LevelBasedMessages = new LevelBasedMessages(),
                 SkillEnd = new Messages()
@@ -95,7 +96,17 @@ namespace ArchaicQuestII_Tests
                 SpellGroup = new Sphere()
 
             };
-            _player = new Player();
+            _player = new Player()
+            {
+                Status = Status.Standing,
+                Attributes = new Attributes()
+                {
+                    Attribute = new Dictionary<EffectLocation, int>
+                    {
+                        {EffectLocation.Mana, 250}
+                    }
+                }
+            };
             _target = new Player()
             {
                 Attributes = new Attributes()
@@ -236,5 +247,28 @@ namespace ArchaicQuestII_Tests
             _writer.Verify(w => w.WriteLine(It.Is<string>(s => s == "level Fifty target")), Times.Once);
             _writer.Verify(w => w.WriteLine(It.Is<string>(s => s == "level Fifty room")), Times.Once);
         }
+
+        [Fact]
+        public void Not_enough_mana()
+        {
+            _player.Level = 45;
+            _player.Attributes = new Attributes()
+            {
+                Attribute = new Dictionary<EffectLocation, int>
+                {
+                    {EffectLocation.Mana, 0}
+                }
+            };
+
+            _Spells.Cost.Table[Cost.Mana] = 100;
+    
+
+            _spell.DoSpell(_Spells, _player, _target, _room);
+
+            _writer.Verify(w => w.WriteLine(It.Is<string>(s => s == "You don't have enough mana.")), Times.Once);
+
+        }
+
+ 
     }
 }

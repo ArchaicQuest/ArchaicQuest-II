@@ -24,6 +24,7 @@
     <Folder Include="Engine\Character\Equipment\Enum\" />
     <Folder Include="Engine\Character\Status\NewFolder\" />
     <Folder Include="Engine\Core\Data\" />
+    <Folder Include="Engine\Spell\Type\" />
   </ItemGroup>
  
 

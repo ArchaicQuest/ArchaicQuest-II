@@ -17,7 +17,6 @@ namespace ArchaicQuestII.Engine.Spell.Model
     public class Spell:Skill.Model.Skill
     {
         public Sphere SpellGroup { get; set; }
-        public SpellType Type { get; set; }
     }
 
 }
