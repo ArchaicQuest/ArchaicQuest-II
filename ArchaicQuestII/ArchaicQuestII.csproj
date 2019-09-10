@@ -12,6 +12,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="motd" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="motd">
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Autofac" Version="4.9.2" />
     <PackageReference Include="LiteDB" Version="4.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.All" />
