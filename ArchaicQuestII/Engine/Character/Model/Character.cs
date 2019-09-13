@@ -8,6 +8,12 @@ namespace ArchaicQuestII.Engine.Character.Model
 {
     public class Character
     {
+        /// <summary>
+        /// Assigned when player logs in.
+        /// used to find player in cached dictionary and to send data directly to player
+        /// </summary>
+        [BsonIgnore]
+        public int ConnectionId { get; set; }
         public int Id { get; set; }
         public string Name { get; set; }
         /// <summary>
