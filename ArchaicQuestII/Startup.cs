@@ -10,8 +10,6 @@ using Microsoft.Extensions.DependencyInjection;
 using ArchaicQuestII.Hubs;
 using Serilog;
 using ArchaicQuestII.Core.Events;
-using ArchaicQuestII.Engine.Core.Events;
-using ArchaicQuestII.Engine.Spell.Interface;
 using ArchaicQuestII.Log;
 
 namespace ArchaicQuestII
@@ -28,9 +26,7 @@ namespace ArchaicQuestII
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var writeToClient = new WriteToClient();
             services.AddSingleton<ILog>(new Log.Log());
-          services.AddSingleton<IWriteToClient>(writeToClient);
             services.AddMvc();
             services.AddSignalR(o =>
             {
@@ -54,8 +50,7 @@ namespace ArchaicQuestII
             app.UseStaticFiles();
 
             app.UseCors(
-                options => options.WithOrigins("http://localhost:4200")
-                .AllowAnyHeader().AllowAnyMethod().AllowCredentials()
+                options => options.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader().AllowCredentials()   
             );
       
             app.UseMvc(routes =>
