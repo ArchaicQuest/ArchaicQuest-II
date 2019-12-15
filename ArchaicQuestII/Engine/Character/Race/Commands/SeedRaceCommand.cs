@@ -57,7 +57,28 @@ They come in a wide range of skin, eye and hair colours as well as different sha
                 },
                 new Race.Model.Race()
                 {
+                    Name = "Wood-elf",
+                    CreatedBy = "Malleus",
+                    Description = @"wood elf",
+
+                },
+                new Race.Model.Race()
+                {
+                    Name = "Half Elf",
+                    CreatedBy = "Malleus",
+                    Description = @"`Elves are shorter and slimmer than humans, they are also more in tune with nature and magic.
+             They have an innate ability of Sneaking, Infrasion and resistance to charm spells."
+                },
+                new Race.Model.Race()
+                {
                     Name = "Dark Elf",
+                    CreatedBy = "Malleus",
+                    Description = @"`Dark Elves are identical to their elven brethren except their skin ranges from dark pale blue to black.
+             They too have an innate ability of Sneaking, Infrasion and resistance to charm spells."
+                },
+                new Race.Model.Race()
+                {
+                    Name = "Half Drow",
                     CreatedBy = "Malleus",
                     Description = @"`Dark Elves are identical to their elven brethren except their skin ranges from dark pale blue to black.
              They too have an innate ability of Sneaking, Infrasion and resistance to charm spells."
@@ -72,6 +93,22 @@ They come in a wide range of skin, eye and hair colours as well as different sha
                 },
                 new Race.Model.Race()
                 {
+                    Name = "Gnome",
+                    CreatedBy = "Malleus",
+                    Description = @"`Dwarves are a short muscular humanoids who prefer the mountains and the underdark where they enjoy
+             digging for gold. A lot of dwarves do venture out of the caves and can be found in human settlements in the local
+              tavern with a mug of Ale. They are powerful Warriors and Clerics"
+                },
+                new Race.Model.Race()
+                {
+                    Name = "Ariel",
+                    CreatedBy = "Malleus",
+                    Description = @"`Dwarves are a short muscular humanoids who prefer the mountains and the underdark where they enjoy
+             digging for gold. A lot of dwarves do venture out of the caves and can be found in human settlements in the local
+              tavern with a mug of Ale. They are powerful Warriors and Clerics"
+                },
+                new Race.Model.Race()
+                {
                     Name = "Mau",
                     CreatedBy = "Malleus",
                     Description = @"`Mau, Cat like humanoid race. Info coming soon"
@@ -79,6 +116,13 @@ They come in a wide range of skin, eye and hair colours as well as different sha
                 new Race.Model.Race()
                 {
                     Name = "Tlaloc",
+                    CreatedBy = "Malleus",
+                    Description = @"`Tlaloc, Reptilian lizard like humanoid race. Info coming soon",
+
+                },
+                new Race.Model.Race()
+                {
+                    Name = "Minotaur",
                     CreatedBy = "Malleus",
                     Description = @"`Tlaloc, Reptilian lizard like humanoid race. Info coming soon",
 
