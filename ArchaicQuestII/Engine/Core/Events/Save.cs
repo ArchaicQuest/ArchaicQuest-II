@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ArchaicQuestII.Core.World;
+using ArchaicQuestII.Engine.Account;
 using ArchaicQuestII.Engine.Character.Model;
 using ArchaicQuestII.Engine.Item;
 using ArchaicQuestII.Engine.World;
@@ -24,11 +25,10 @@ namespace ArchaicQuestII.Core.Events
         }
 
 
-        public static void Save<T>(T data, string collectionName)
+        public static bool Save<T>(T data, string collectionName)
         {
             if (data == null)
             {
-
                 throw new ArgumentNullException(nameof(data));
             }
 
@@ -36,16 +36,17 @@ namespace ArchaicQuestII.Core.Events
             {
                 using (var db = new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MyData.db")))
                 {
-                    var col = db.GetCollection<T>(collectionName);
-
-                    col.Upsert(data);
-
+                    db.GetCollection<T>(collectionName).Upsert(data);
+                   
                 }
+
+                return true;
 
             }
             catch (Exception ex)
             {
                 _logger.Error("Error Saving " + ex.Message);
+                return false;
             }
 
         }
@@ -163,6 +164,20 @@ namespace ArchaicQuestII.Core.Events
         }
 
 
+        public static Account GetAccount(string email)
+        {
+            using (var db = new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MyData.db")))
+            {
+
+                var col = db.GetCollection<Account>("Account");
+
+                var data = col.FindOne(x => x.Email.Equals(email));
+
+                return data;
+
+            }
+
+        }
         public static List<Area> GetAreas()
         {
 

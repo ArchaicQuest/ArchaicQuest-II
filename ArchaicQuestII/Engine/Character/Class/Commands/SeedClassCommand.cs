@@ -70,7 +70,7 @@ namespace ArchaicQuestII.Engine.Character.Class.Commands
                 },
                 new Model.Class()
                 {
-                    Name = "Mages",
+                    Name = "Mage",
                     Description =
                         @"Mages are the most feared across the realm due to their devastating spells and power.
              The road to such power is a hard, slow journey. Mages struggle more than other classes in melee combat
@@ -78,7 +78,7 @@ namespace ArchaicQuestII.Engine.Character.Class.Commands
                of training for physical combat. This makes mages relatively weak at the beginning of their training
                 but this changes however when a they have mastered the arts of magic. Important attributes for Mages
                  are Intelligence, Wisdom and Dexterity Every race can train to be a mage but Elves are the best."
-                },
+                } 
             };
 
             return seedData;

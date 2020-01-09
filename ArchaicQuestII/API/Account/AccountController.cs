@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http;
+using System.Threading.Tasks;
 using ArchaicQuestII.Engine.Character.Model;
 using Microsoft.AspNetCore.Mvc;
 using ArchaicQuestII.Core.Events;
@@ -12,7 +14,7 @@ namespace ArchaicQuestII.Controllers
 
         [HttpPost]
         [Route("api/Account")]
-        public void Post([FromBody] Account account)
+        public IActionResult Post([FromBody] Account account)
         {
 
 
@@ -20,6 +22,13 @@ namespace ArchaicQuestII.Controllers
             {
                 var exception = new Exception("Invalid Account details");
                 throw exception;
+            }
+
+            var hasEmail = DB.GetAccount(account.Email);
+
+            if (hasEmail != null)
+            {
+                return BadRequest("An account with that email address already exists.");
             }
 
 
@@ -35,8 +44,9 @@ namespace ArchaicQuestII.Controllers
             };
 
 
-            DB.Save(data, "Account");
+           var saved = DB.Save(data, "Account");
 
+            return saved ? (IActionResult) Ok("account created successfully") : BadRequest("Error saving account");
         }
 
     }
