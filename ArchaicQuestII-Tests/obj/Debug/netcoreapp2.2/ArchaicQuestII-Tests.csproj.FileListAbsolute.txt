@@ -32,3 +32,4 @@ C:\Dev\Personal\AQ2\ArchaicQuestII\ArchaicQuestII-Tests\bin\Debug\netcoreapp2.2\
 C:\Dev\Personal\AQ2\ArchaicQuestII\ArchaicQuestII-Tests\obj\Debug\netcoreapp2.2\ArchaicQuestII-Tests.csproj.CopyComplete
 C:\Dev\Personal\AQ2\ArchaicQuestII\ArchaicQuestII-Tests\obj\Debug\netcoreapp2.2\ArchaicQuestII-Tests.dll
 C:\Dev\Personal\AQ2\ArchaicQuestII\ArchaicQuestII-Tests\obj\Debug\netcoreapp2.2\ArchaicQuestII-Tests.pdb
+C:\Dev\Personal\AQ2\ArchaicQuestII\ArchaicQuestII-Tests\bin\Debug\netcoreapp2.2\motd

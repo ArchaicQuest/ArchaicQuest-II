@@ -92,7 +92,7 @@ namespace ArchaicQuestII.Controllers
             if (!string.IsNullOrEmpty(item.Id.ToString()) && item.Id != -1)
             {
 
-                var foundItem = DB.GetItems().FirstOrDefault(x => x.Id.Equals(item.Id));
+                var foundItem = DB.GetCollection<Item>("Item").FirstOrDefault(x => x.Id.Equals(item.Id));
 
                 if (foundItem == null)
                 {
@@ -104,7 +104,7 @@ namespace ArchaicQuestII.Controllers
             
 
 
-            DB.SaveItem(newItem);
+            DB.Save(newItem, "Item");
 
         }
 
@@ -114,7 +114,7 @@ namespace ArchaicQuestII.Controllers
         public List<Item> GetItem()
         {
 
-            var items = DB.GetItems();
+            var items = DB.GetCollection<Item>("Item");
 
             return items;
 
@@ -126,7 +126,7 @@ namespace ArchaicQuestII.Controllers
         public List<Item> FindItems([FromQuery] string query)
         {
 
-            var items = DB.GetItems().Where(x => x.Name != null);
+            var items = DB.GetCollection<Item>("Item").Where(x => x.Name != null);
 
 
 
@@ -144,10 +144,8 @@ namespace ArchaicQuestII.Controllers
         public List<Item> FindItemsByType([FromQuery] EqSlot query)
         {
 
-            var items = DB.GetItems().Where(x => x.Slot.Equals(query));
-
-
-        
+            var items = DB.GetCollection<Item>("Item").Where(x => x.Slot.Equals(query));
+            
             return items.ToList();
 
         }
@@ -157,7 +155,7 @@ namespace ArchaicQuestII.Controllers
         public Item FindItemById([FromQuery] int id)
         {
 
-            return DB.GetItems().FirstOrDefault(x => x.Id.Equals(id));
+            return DB.GetCollection<Item>("Item").FirstOrDefault(x => x.Id.Equals(id));
 
         }
 
@@ -166,7 +164,7 @@ namespace ArchaicQuestII.Controllers
         public Item FindKeyById([FromQuery] string id)
         {
 
-            return DB.GetItems().FirstOrDefault(x => x.KeyId.Equals(new Guid(id)) && x.ItemType == ItemTypes.Key);
+            return DB.GetCollection<Item>("Item").FirstOrDefault(x => x.KeyId.Equals(new Guid(id)) && x.ItemType == ItemTypes.Key);
 
         }
 
@@ -175,7 +173,7 @@ namespace ArchaicQuestII.Controllers
         public List<Item> FindKeys([FromQuery] string query)
         {
 
-            var items = DB.GetItems().Where(x => x.Name != null && x.ItemType == ItemTypes.Key);
+            var items = DB.GetCollection<Item>("Item").Where(x => x.Name != null && x.ItemType == ItemTypes.Key);
 
             if (string.IsNullOrEmpty(query))
             {

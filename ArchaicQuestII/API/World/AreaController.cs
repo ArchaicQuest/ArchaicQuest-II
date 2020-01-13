@@ -47,7 +47,7 @@ namespace ArchaicQuestII.Controllers
 
  
 
-            DB.SaveArea(newArea);
+            DB.Save(newArea, "Area");
 
         }
 

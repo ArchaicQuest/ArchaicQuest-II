@@ -11,12 +11,11 @@ namespace ArchaicQuestII.Hubs
     public class GameHub : Hub
     {
         private Log.Log _logger { get; set; }
-        private DB _save { get; set; }
-
+       
         public GameHub()
         {
             _logger = new Log.Log();
-            _save = new DB();
+            
         }
         /// <summary>
         /// Do action when user connects 
@@ -73,7 +72,7 @@ namespace ArchaicQuestII.Hubs
                 Name = name
             };
 
-            _save.SavePlayer(newPlayer);
+            DB.Save(newPlayer, "Player");
 
         }
     }

@@ -71,7 +71,7 @@ namespace ArchaicQuestII.Controllers
             if (!string.IsNullOrEmpty(player.Id.ToString()) && player.Id != -1)
             {
 
-                var foundItem = DB.GetMob(player.Id.ToString());
+                var foundItem = DB.FindById<Character>(player.Id.ToString(), "players");
 
                 if (foundItem == null)
                 {
@@ -105,7 +105,7 @@ namespace ArchaicQuestII.Controllers
         public List<Character> Get([FromQuery] string query)
         {
 
-            var mobs = DB.GetMobs().Where(x => x.Name != null);
+            var mobs = DB.GetCollection<Character>("Mobs").Where(x => x.Name != null);
 
 
 

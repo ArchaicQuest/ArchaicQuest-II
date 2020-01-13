@@ -24,7 +24,7 @@ namespace ArchaicQuestII.Controllers
                 throw exception;
             }
 
-            var hasEmail = DB.GetAccount(account.Email);
+            var hasEmail = DB.GetColumn<Account>("Account").FindOne(x => x.Email.Equals(account.Email));
 
             if (hasEmail != null)
             {

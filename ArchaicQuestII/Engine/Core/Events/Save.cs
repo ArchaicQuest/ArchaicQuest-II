@@ -51,133 +51,61 @@ namespace ArchaicQuestII.Core.Events
 
         }
 
-        public void SavePlayer(Player player)
-        {
-            if (player == null)
-            {
-
-                _logger.Error("Can't save player as name is null");
-
-                throw new ArgumentNullException(nameof(player));
-            }
-
+        public static List<T> GetCollection<T>(string collectionName)
+        { 
             try
             {
                 using (var db = new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MyData.db")))
-                {
-                    var col = db.GetCollection<Player>("Player");
-
-                    col.Upsert(player);
-
+                {                 
+                    return db.GetCollection<T>(collectionName).FindAll().ToList();
                 }
-
             }
             catch (Exception ex)
             {
-                _logger.Error("Error Saving player " + ex.Message);
+                _logger.Error("Error finding all " + collectionName + " error: " + ex.Message);
             }
 
+            return new List<T>();
         }
 
-        public static void SaveRoom(Room room)
+
+        public static T FindById<T>(string id, string collectionName)
         {
 
             try
             {
                 using (var db = new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MyData.db")))
                 {
-                    var col = db.GetCollection<Room>("Room");
-
-                    col.Upsert(room);
-
+                    return db.GetCollection<T>(collectionName).FindById(id);
                 }
-
             }
             catch (Exception ex)
             {
-                _logger.Error("Error Saving room " + ex.Message);
+                _logger.Error("Error finding " + collectionName + " With ID " + id + " error: " + ex.Message);
             }
+
+            return default(T);
 
         }
 
-        public static void SaveMob(Character mob)
+        public static LiteCollection<T> GetColumn<T>(string collectionName)
         {
-
             try
             {
                 using (var db = new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MyData.db")))
                 {
-                    var col = db.GetCollection<Character>("Mobs");
-
-                    col.Upsert(mob);
-
+                    return db.GetCollection<T>(collectionName);
                 }
-
             }
             catch (Exception ex)
             {
-                _logger.Error("Error Saving mob " + ex.Message);
+                _logger.Error("Error finding " + collectionName + " error: " + ex.Message);
             }
 
+            return null;
         }
 
-        public static void SaveItem(Item item)
-        {
  
-            try
-            {
-                using (var db = new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MyData.db")))
-                {
-                    var col = db.GetCollection<Item>("Item");
-
-                    col.Upsert(item);
-
-                }
-
-            }
-            catch (Exception ex)
-            {
-                _logger.Error("Error Saving item " + ex.Message);
-            }
-
-        }
-
-        public static void SaveArea(Area area)
-        {
-
-            try
-            {
-                using (var db = new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MyData.db")))
-                {
-                    var col = db.GetCollection<Area>("Area");
-
-                    col.Upsert(area);
-
-                }
-
-            }
-            catch (Exception ex)
-            {
-                _logger.Error("Error Saving area " + ex.Message);
-            }
-
-        }
-
-
-        public static Account GetAccount(string email)
-        {
-            using (var db = new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MyData.db")))
-            {
-
-                var col = db.GetCollection<Account>("Account");
-
-                var data = col.FindOne(x => x.Email.Equals(email));
-
-                return data;
-
-            }
-
-        }
         public static List<Area> GetAreas()
         {
 
@@ -199,51 +127,9 @@ namespace ArchaicQuestII.Core.Events
                 }
         }
 
-        public static List<Character> GetMobs()
-        {
-            using (var db = new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MyData.db")))
-            {
+ 
 
-                var col = db.GetCollection<Character>("Mobs");
-
-                var mobs = col.FindAll().ToList();
-
-                return mobs;
-
-            }
-
-        }
-
-
-        public static Character GetMob(string id)
-        {
-            using (var db = new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MyData.db")))
-            {
-
-                var col = db.GetCollection<Character>("Mobs");
-
-                var mob = col.FindById(id);
-
-                return mob;
-
-            }
-
-        }
-
-        public static List<Item> GetItems()
-        {
-            using (var db = new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MyData.db")))
-            {
-
-                var col = db.GetCollection<Item>("Item");
-
-                var returnPlayer = col.FindAll().ToList();
-
-                return returnPlayer;
-
-            }
-
-        }
+ 
 
     }
 }
