@@ -41,7 +41,7 @@
           "lib/netstandard1.5/Castle.Core.dll": {}
         }
       },
-      "LiteDB/4.1.2": {
+      "LiteDB/4.1.4": {
         "type": "package",
         "dependencies": {
           "System.Reflection": "4.3.0",
@@ -2268,9 +2268,10 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v2.2",
         "dependencies": {
+          "ArchaicQuestII.DataAccess": "1.0.0",
           "Autofac": "4.9.2",
           "BCrypt.Net-Next": "3.2.0",
-          "LiteDB": "4.1.2",
+          "LiteDB": "4.1.4",
           "Microsoft.AspNetCore.SignalR": "1.1.0",
           "Serilog.AspNetCore": "2.1.1",
           "Serilog.Sinks.File": "4.0.0"
@@ -2280,6 +2281,19 @@
         },
         "runtime": {
           "bin/placeholder/ArchaicQuestII.dll": {}
+        }
+      },
+      "ArchaicQuestII.DataAccess/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v2.2",
+        "dependencies": {
+          "LiteDB": "4.1.4"
+        },
+        "compile": {
+          "bin/placeholder/ArchaicQuestII.DataAccess.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/ArchaicQuestII.DataAccess.dll": {}
         }
       }
     }
@@ -2357,12 +2371,13 @@
         "readme.txt"
       ]
     },
-    "LiteDB/4.1.2": {
-      "sha512": "lqjADPYzH9eKOJTFB9cHXhqPCHnSrgACoxsX6wxLGK1hyIRewv1HcY4TyXV/xZ0y8IjRZhVQyAvhbJUoNg/7xQ==",
+    "LiteDB/4.1.4": {
+      "sha512": "g4g9JlHzRBZl+Gd2UbiRdszZ7t8wozU2wX7+5xY5uE79tmcgcDhha+ubAP84G1VLbwQmhBGCzRfIx+epLmJciQ==",
       "type": "package",
-      "path": "litedb/4.1.2",
+      "path": "litedb/4.1.4",
       "files": [
         ".nupkg.metadata",
+        ".signature.p7s",
         "lib/net35/LiteDB.dll",
         "lib/net35/LiteDB.xml",
         "lib/net40/LiteDB.dll",
@@ -2371,7 +2386,7 @@
         "lib/netstandard1.3/LiteDB.xml",
         "lib/netstandard2.0/LiteDB.dll",
         "lib/netstandard2.0/LiteDB.xml",
-        "litedb.4.1.2.nupkg.sha512",
+        "litedb.4.1.4.nupkg.sha512",
         "litedb.nuspec"
       ]
     },
@@ -7307,6 +7322,11 @@
       "type": "project",
       "path": "../ArchaicQuestII/ArchaicQuestII.csproj",
       "msbuildProject": "../ArchaicQuestII/ArchaicQuestII.csproj"
+    },
+    "ArchaicQuestII.DataAccess/1.0.0": {
+      "type": "project",
+      "path": "../ArchaicQuestII.DataAccess/ArchaicQuestII.DataAccess.csproj",
+      "msbuildProject": "../ArchaicQuestII.DataAccess/ArchaicQuestII.DataAccess.csproj"
     }
   },
   "projectFileDependencyGroups": {

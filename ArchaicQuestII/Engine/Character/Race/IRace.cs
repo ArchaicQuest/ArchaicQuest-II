@@ -7,5 +7,10 @@ namespace ArchaicQuestII.Engine.Character.Race
 {
     interface IRace
     {
+        void Create(Model.Race race);
+
+        Model.Race Get(int id);
+
+        List<Model.Race> GetAll();
     }
 }

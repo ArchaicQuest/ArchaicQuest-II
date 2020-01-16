@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArchaicQuestII", "ArchaicQu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArchaicQuestII-Tests", "..\ArchaicQuestII-Tests\ArchaicQuestII-Tests.csproj", "{8063C1D0-B7DC-4FDF-BD9D-72CC034B3ABE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArchaicQuestII.DataAccess", "..\ArchaicQuestII.DataAccess\ArchaicQuestII.DataAccess.csproj", "{7D5B33AF-6120-4CA2-9EF5-5311B47C320C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{8063C1D0-B7DC-4FDF-BD9D-72CC034B3ABE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8063C1D0-B7DC-4FDF-BD9D-72CC034B3ABE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8063C1D0-B7DC-4FDF-BD9D-72CC034B3ABE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D5B33AF-6120-4CA2-9EF5-5311B47C320C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D5B33AF-6120-4CA2-9EF5-5311B47C320C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D5B33AF-6120-4CA2-9EF5-5311B47C320C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D5B33AF-6120-4CA2-9EF5-5311B47C320C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

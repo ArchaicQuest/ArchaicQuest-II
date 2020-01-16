@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using ArchaicQuestII.Engine.Character.Class.Commands;
@@ -10,12 +11,15 @@ using Microsoft.Extensions.DependencyInjection;
 using ArchaicQuestII.Hubs;
 using Serilog;
 using ArchaicQuestII.Core.Events;
+using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.Log;
+using LiteDB;
 
 namespace ArchaicQuestII
 {
     public class Startup
     {
+        private IDataBase _db;
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -27,6 +31,9 @@ namespace ArchaicQuestII
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<ILog>(new Log.Log());
+            services.AddSingleton<LiteDatabase>(
+                new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AQ.db")));
+            services.AddScoped<IDataBase, DataBase>();
             services.AddMvc();
             services.AddSignalR(o =>
             {
@@ -36,7 +43,7 @@ namespace ArchaicQuestII
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IDataBase db)
         {
             if (env.IsDevelopment())
             {
@@ -46,7 +53,7 @@ namespace ArchaicQuestII
             {
                 app.UseExceptionHandler("/Play/Error");
             }
-
+            _db = db;
             app.UseStaticFiles();
 
             app.UseCors(
@@ -70,7 +77,7 @@ namespace ArchaicQuestII
 
             var seedClass = new SeedClassCommand();
             var seedRace = new SeedRaceCommand();
-            var seedAttackType = new SeedAttackTypesCommand();
+            var seedAttackType = new SeedAttackTypesCommand(_db);
             var seedStatusese = new SeedStatusCommand();
             var seedAlignment = new SeedAlignmentCommand();
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.Engine.Character.Class.Commands;
 using ArchaicQuestII.Engine.Core.Interface;
 using LiteDB;
@@ -11,19 +12,18 @@ namespace ArchaicQuestII.Engine.Character.Class.Commands
 {
     public class SeedAttackTypesCommand
     {
-
+        private IDataBase _db { get; }
+        public SeedAttackTypesCommand(IDataBase db)
+        {
+            _db = db;
+        }
 
         public void Seed()
         {
 
-            using (var db = new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MyData.db")))
-            {
-                if (db.CollectionExists("AttackType"))
-                {
-                    return;
-                }
+           
 
-                var command = new CreateAttackTypeCommand();
+                var command = new CreateAttackTypeCommand(_db);
 
                 foreach (var data in SeedData())
                 {
@@ -32,7 +32,7 @@ namespace ArchaicQuestII.Engine.Character.Class.Commands
 
 
 
-            }
+             
 
         }
 

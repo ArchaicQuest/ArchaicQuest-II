@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.Engine.Character.Class.Queries;
 using ArchaicQuestII.Engine.Character.Race.Commands;
 using ArchaicQuestII.Engine.Character.Race.Model;
@@ -14,12 +15,16 @@ namespace ArchaicQuestII.API.Character
 {
     public class AttackTypesController
     {
-
+        private IDataBase _db { get; }
+        public AttackTypesController(IDataBase db)
+        {
+            _db = db;
+        }
         [HttpPost]
         [Route("api/Character/AttackType")]
         public void Post(OptionDescriptive attackType)
         {
-            var command = new CreateAttackTypeCommand();
+            var command = new CreateAttackTypeCommand(_db);
             command.CreateAttackType(attackType);
         }
 
