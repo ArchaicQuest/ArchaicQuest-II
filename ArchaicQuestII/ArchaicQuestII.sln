@@ -7,7 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArchaicQuestII", "ArchaicQu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArchaicQuestII-Tests", "..\ArchaicQuestII-Tests\ArchaicQuestII-Tests.csproj", "{8063C1D0-B7DC-4FDF-BD9D-72CC034B3ABE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArchaicQuestII.DataAccess", "..\ArchaicQuestII.DataAccess\ArchaicQuestII.DataAccess.csproj", "{7D5B33AF-6120-4CA2-9EF5-5311B47C320C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArchaicQuestII.DataAccess", "..\ArchaicQuestII.DataAccess\ArchaicQuestII.DataAccess.csproj", "{7D5B33AF-6120-4CA2-9EF5-5311B47C320C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArchaicQuestII.DataAccess.Tests", "..\ArchaicQuestII.DataAccess.Tests\ArchaicQuestII.DataAccess.Tests.csproj", "{560D735B-11AC-4E40-9192-F44CFC802F0A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArchaicQuestII.GameLogic", "..\ArchaicQuestII.GameLogic\ArchaicQuestII.GameLogic.csproj", "{0092FF19-A202-4D4B-BD3B-9116246AFB1C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +31,14 @@ Global
 		{7D5B33AF-6120-4CA2-9EF5-5311B47C320C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7D5B33AF-6120-4CA2-9EF5-5311B47C320C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7D5B33AF-6120-4CA2-9EF5-5311B47C320C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{560D735B-11AC-4E40-9192-F44CFC802F0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{560D735B-11AC-4E40-9192-F44CFC802F0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{560D735B-11AC-4E40-9192-F44CFC802F0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{560D735B-11AC-4E40-9192-F44CFC802F0A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0092FF19-A202-4D4B-BD3B-9116246AFB1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0092FF19-A202-4D4B-BD3B-9116246AFB1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0092FF19-A202-4D4B-BD3B-9116246AFB1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0092FF19-A202-4D4B-BD3B-9116246AFB1C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

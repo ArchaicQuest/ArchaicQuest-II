@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.2",
-    "signature": "b503ce8c0d838a97c7b18ef975f982a1cd89d7a8"
+    "signature": "420788b7248f1fc98d2e2090f0281157e7019c03"
   },
   "compilationOptions": {},
   "targets": {
@@ -53,15 +53,15 @@
           }
         }
       },
-      "LiteDB/4.1.2": {
+      "LiteDB/4.1.4": {
         "dependencies": {
           "System.Reflection": "4.3.0",
           "System.Reflection.TypeExtensions": "4.3.0"
         },
         "runtime": {
           "lib/netstandard2.0/LiteDB.dll": {
-            "assemblyVersion": "4.1.2.0",
-            "fileVersion": "4.1.2.0"
+            "assemblyVersion": "4.1.4.0",
+            "fileVersion": "4.1.4.0"
           }
         }
       },
@@ -1575,15 +1575,24 @@
       },
       "ArchaicQuestII/1.0.0": {
         "dependencies": {
+          "ArchaicQuestII.DataAccess": "1.0.0",
           "Autofac": "4.9.2",
           "BCrypt.Net-Next": "3.2.0",
-          "LiteDB": "4.1.2",
+          "LiteDB": "4.1.4",
           "Microsoft.AspNetCore.SignalR": "1.1.0",
           "Serilog.AspNetCore": "2.1.1",
           "Serilog.Sinks.File": "4.0.0"
         },
         "runtime": {
           "ArchaicQuestII.dll": {}
+        }
+      },
+      "ArchaicQuestII.DataAccess/1.0.0": {
+        "dependencies": {
+          "LiteDB": "4.1.4"
+        },
+        "runtime": {
+          "ArchaicQuestII.DataAccess.dll": {}
         }
       }
     }
@@ -1615,12 +1624,12 @@
       "path": "castle.core/4.4.0",
       "hashPath": "castle.core.4.4.0.nupkg.sha512"
     },
-    "LiteDB/4.1.2": {
+    "LiteDB/4.1.4": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-lqjADPYzH9eKOJTFB9cHXhqPCHnSrgACoxsX6wxLGK1hyIRewv1HcY4TyXV/xZ0y8IjRZhVQyAvhbJUoNg/7xQ==",
-      "path": "litedb/4.1.2",
-      "hashPath": "litedb.4.1.2.nupkg.sha512"
+      "sha512": "sha512-g4g9JlHzRBZl+Gd2UbiRdszZ7t8wozU2wX7+5xY5uE79tmcgcDhha+ubAP84G1VLbwQmhBGCzRfIx+epLmJciQ==",
+      "path": "litedb/4.1.4",
+      "hashPath": "litedb.4.1.4.nupkg.sha512"
     },
     "Microsoft.AspNetCore.Authentication.Abstractions/2.2.0": {
       "type": "package",
@@ -2463,6 +2472,11 @@
       "hashPath": "xunit.runner.visualstudio.2.4.0.nupkg.sha512"
     },
     "ArchaicQuestII/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "ArchaicQuestII.DataAccess/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

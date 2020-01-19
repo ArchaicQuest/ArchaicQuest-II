@@ -14,16 +14,10 @@ namespace ArchaicQuestII.DataAccess
             _db = db;
         }
         public bool Save<T>(T data, string collectionName)
-        {
-            if (data == null)
-            {
-                throw new ArgumentNullException(nameof(data));
-            }
-
+        { 
              _db.GetCollection<T>(collectionName).Upsert(data);
 
             return true;
-
         }
 
         public List<T> GetCollection<T>(string collectionName)
@@ -31,7 +25,7 @@ namespace ArchaicQuestII.DataAccess
             return _db.GetCollection<T>(collectionName).FindAll().ToList();
         }
 
-        public T GetById<T>(string id, string collectionName)
+        public T GetById<T>(int id, string collectionName)
         {
           return  _db.GetCollection<T>(collectionName).FindById(id);
         }

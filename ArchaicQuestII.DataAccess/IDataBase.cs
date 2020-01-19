@@ -8,6 +8,6 @@ namespace ArchaicQuestII.DataAccess
     {
         bool Save<T>(T data, string collectionName);
         List<T> GetCollection<T>(string collectionName);
-        T GetById<T>(string id, string collectionName);
+        T GetById<T>(int id, string collectionName);
     }
 }
