@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using ArchaicQuestII.Core.World;
 using ArchaicQuestII.DataAccess;
-using ArchaicQuestII.Engine.Character.Model;
-using ArchaicQuestII.GameLogic.World.Room;
-
-namespace ArchaicQuestII.Engine.World.Room.Model
+ 
+namespace ArchaicQuestII.GameLogic.World.Room
 {
     public class Room: IRoom;
     {
@@ -82,6 +78,7 @@ namespace ArchaicQuestII.Engine.World.Room.Model
         public bool InstantRePop { get; set; }
         public DateTime DateCreated { get; set; } = new DateTime();
         public DateTime DateUpdated { get; set; }
+
 
         public void UpdateRoom(Room data)
         {

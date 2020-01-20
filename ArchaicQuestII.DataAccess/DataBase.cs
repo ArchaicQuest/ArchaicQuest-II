@@ -20,9 +20,14 @@ namespace ArchaicQuestII.DataAccess
             return true;
         }
 
-        public List<T> GetCollection<T>(string collectionName)
+        public List<T> GetList<T>(string collectionName)
         {
             return _db.GetCollection<T>(collectionName).FindAll().ToList();
+        }
+
+        public LiteCollection<T> GetCollection<T>(string collectionName)
+        {
+            return _db.GetCollection<T>(collectionName);
         }
 
         public T GetById<T>(int id, string collectionName)
