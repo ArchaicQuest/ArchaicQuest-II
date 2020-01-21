@@ -4,8 +4,10 @@ namespace ArchaicQuestII.GameLogic.Character.Alignment
 {
     public interface IAlignment
     {
-        void CreateAlignment(Alignment option);
+        void CreateAlignment(IAlignment option);
         Alignment GetAlignment(int id);
         List<Alignment> GetAlignments();
+        void Seed();
+        List<Alignment> SeedData()
     }
 }

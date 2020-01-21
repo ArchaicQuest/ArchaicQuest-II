@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArchaicQuestII.DataAccess",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArchaicQuestII.DataAccess.Tests", "..\ArchaicQuestII.DataAccess.Tests\ArchaicQuestII.DataAccess.Tests.csproj", "{560D735B-11AC-4E40-9192-F44CFC802F0A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArchaicQuestII.GameLogic", "..\ArchaicQuestII.GameLogic\ArchaicQuestII.GameLogic.csproj", "{0092FF19-A202-4D4B-BD3B-9116246AFB1C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArchaicQuestII.GameLogic", "..\ArchaicQuestII.GameLogic\ArchaicQuestII.GameLogic.csproj", "{0092FF19-A202-4D4B-BD3B-9116246AFB1C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArchaicQuestII.API", "..\ArchaicQuestII.API\ArchaicQuestII.API.csproj", "{714AA7A5-BA64-459F-B402-7FFF067229B6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{0092FF19-A202-4D4B-BD3B-9116246AFB1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0092FF19-A202-4D4B-BD3B-9116246AFB1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0092FF19-A202-4D4B-BD3B-9116246AFB1C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{714AA7A5-BA64-459F-B402-7FFF067229B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{714AA7A5-BA64-459F-B402-7FFF067229B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{714AA7A5-BA64-459F-B402-7FFF067229B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{714AA7A5-BA64-459F-B402-7FFF067229B6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

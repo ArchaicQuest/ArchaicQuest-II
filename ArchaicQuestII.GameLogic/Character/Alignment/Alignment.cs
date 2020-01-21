@@ -20,12 +20,17 @@ namespace ArchaicQuestII.GameLogic.Character.Alignment
 
         private IDataBase _db { get; }
 
+        public Alignment()
+        {
+            
+        }
+
         public Alignment(IDataBase db)
         {
             _db = db;
         }
 
-        public void CreateAlignment(Alignment option)
+        public void CreateAlignment(IAlignment option)
         {
             _db.Save(option, "Alignment");
 
@@ -42,6 +47,88 @@ namespace ArchaicQuestII.GameLogic.Character.Alignment
         public List<Alignment> GetAlignments()
         {
             return _db.GetCollection<Alignment>("Alignment").FindAll().OrderBy(x => x.Name).ToList();
+        }
+
+        /// <summary>
+        /// Only called on application start up
+        /// if alignment data already exists this wont run.
+        /// This is to populate the system with sensible defaults
+        /// </summary>
+        public void Seed()
+        {
+            foreach (var data in SeedData())
+            {
+                CreateAlignment(data);
+            }
+        }
+
+        public List<Alignment> SeedData()
+        {
+            List<Alignment> seedData = new List<Alignment>()
+            {
+              new Alignment()
+              {
+                  Name = "Pure and Holy",
+                  Value = 1000,
+                  CreatedBy = "Malleus"
+              },
+                new Alignment()
+                {
+                    Name = "Extremely Good",
+                    Value = 900,
+                    CreatedBy = "Malleus"
+                },
+                new Alignment()
+                {
+                    Name = "Very Good",
+                    Value = 350,
+                    CreatedBy = "Malleus"
+                },
+                new Alignment()
+                {
+                    Name = "Good",
+                    Value = 100,
+                    CreatedBy = "Malleus"
+                },
+                new Alignment()
+                {
+                    Name = "Neutral leaning towards good",
+                    Value = -100,
+                    CreatedBy = "Malleus"
+                },
+                new Alignment()
+                {
+                    Name = "Neutral",
+                    Value = -350,
+                    CreatedBy = "Malleus"
+                },
+                new Alignment()
+                {
+                    Name = "Neutral leaning towards evil",
+                    Value = -600,
+                    CreatedBy = "Malleus"
+                },
+                new Alignment()
+                {
+                    Name = "Evil",
+                    Value = -900,
+                    CreatedBy = "Malleus"
+                },
+                new Alignment()
+                {
+                    Name = "Very evil",
+                    Value = -1000,
+                    CreatedBy = "Malleus"
+                },
+                new Alignment()
+                {
+                    Name = "Pure evil",
+                    Value = -1000,
+                    CreatedBy = "Malleus"
+                },
+            };
+
+            return seedData;
         }
     }
 }

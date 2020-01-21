@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using ArchaicQuestII.Core.Events;
 using ArchaicQuestII.Engine.Account;
  
-namespace ArchaicQuestII.Controllers
+namespace ArchaicQuestII.API.Controllers
 {
     public class AccountController : Controller
     {
