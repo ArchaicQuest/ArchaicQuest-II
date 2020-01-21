@@ -5,7 +5,7 @@ using ArchaicQuestII.DataAccess;
  
 namespace ArchaicQuestII.GameLogic.World.Room
 {
-    public class Room: IRoom;
+    public class Room: IRoom
     {
         private IDataBase _db { get; }
 
@@ -48,9 +48,9 @@ namespace ArchaicQuestII.GameLogic.World.Room
         /// </summary>
         public ExitDirections Exits { get; set; } = new ExitDirections();
         public Coordinates Coords { get; set; } = new Coordinates(); 
-        public List<Player> Players { get; set; } = new List<Player>();
-        public List<Character.Model.Character> Mobs { get; set; } = new List<Character.Model.Character>();
-        public List<Item.Item> Items { get; set; } = new List<Item.Item>();
+      //  public List<Player> Players { get; set; } = new List<Player>();
+      //  public List<Character.Model.Character> Mobs { get; set; } = new List<Character.Model.Character>();
+       // public List<Item.Item> Items { get; set; } = new List<Item.Item>();
         public RoomType? Type { get; set; } = RoomType.Standard;
         /// <summary>
         /// List of emotes that will be randomly played on tick
@@ -82,12 +82,12 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
         public void UpdateRoom(Room data)
         {
-            _db.Save(data, "Room");
+            _db.Save(data, DataBase.Collections.Room);
         }
 
         public Room GetRoom(int id)
         {
-           return _db.GetById<Room>(id, "Room");
+           return _db.GetById<Room>(id, DataBase.Collections.Room);
         }
     }
 }

@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using ArchaicQuestII.Hubs;
+//using ArchaicQuestII.Hubs;
 using Serilog;
 using ArchaicQuestII.Core.Events;
 using ArchaicQuestII.DataAccess;
@@ -72,7 +72,7 @@ namespace ArchaicQuestII
     
             app.UseSignalR(routes =>
             {
-                routes.MapHub<GameHub>("/Hubs/game");
+              //  routes.MapHub<GameHub>("/Hubs/game");
             });
 
             var seedClass = new SeedClassCommand();

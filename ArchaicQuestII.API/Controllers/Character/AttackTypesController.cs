@@ -1,39 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ArchaicQuestII.Engine.Character.Race.Commands;
-using ArchaicQuestII.Engine.Character.Race.Model;
-using ArchaicQuestII.Engine.Item;
+﻿using System.Collections.Generic;
+using ArchaicQuestII.DataAccess;
+using ArchaicQuestII.GameLogic.Core;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ArchaicQuestII.API.Character
+namespace ArchaicQuestII.API.Controllers.Character
 {
-    public class RaceController
+    public class AttackTypesController
     {
+        private IDataBase _db { get; }
+        public AttackTypesController(IDataBase db)
+        {
+            _db = db;
+        }
 
         [HttpPost]
-        [Route("api/Character/Race")]
-        public void Post(Race race)
+        [Route("api/Character/AttackType")]
+        public void Post(OptionDescriptive attackType)
         {
-            var command = new CreateRaceCommand();
-            command.CreateRace(race);
+            _db.Save(attackType, DataBase.Collections.AttackType);
         }
 
         [HttpGet]
-        [Route("api/Character/Race/{id:int}")]
-        public Race Get(int id)
+        [Route("api/Character/AttackType/{id:int}")]
+        public OptionDescriptive Get(int id)
         {
-            var query = new GetRaceQuery();
-            return query.GetRace(id);
+            return _db.GetById<OptionDescriptive>(id, DataBase.Collections.AttackType);
         }
 
         [HttpGet]
-        [Route("api/Character/Race")]
-        public List<Race> Get()
+        [Route("api/Character/AttackType")]
+        public List<OptionDescriptive> Get()
         {
-            var query = new GetRacesQuery();
-            return query.GetRaces();
+            return _db.GetList<OptionDescriptive>(DataBase.Collections.AttackType);
         }
     }
+
 }

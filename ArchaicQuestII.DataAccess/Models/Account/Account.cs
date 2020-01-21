@@ -26,8 +26,8 @@ namespace ArchaicQuestII.Engine.Account
         /// <summary>
         /// Characters associated with account
         /// </summary>
-        [BsonField("c")]
-        public List<Character.Model.Player> Characters { get; set; } = new List<Character.Model.Player>();
+        //[BsonField("c")]
+        //public List<Character.Model.Player> Characters { get; set; } = new List<Character.Model.Player>();
         [BsonField("dj")]
         public DateTime DateJoined { get; set; } = DateTime.Now;
         [BsonField("c")]

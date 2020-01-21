@@ -30,6 +30,23 @@ namespace ArchaicQuestII.Engine.Character.Equipment.Model
         public Item.Item  Shield { get; set; } 
         public Item.Item  Held { get; set; } 
         public Item.Item  Floating { get; set; } 
-        public Item.Item  Quiver { get; set; } 
+        public Item.Item  Quiver { get; set; }
+
+
+        public void Wear(Character.Model.Character character, Item.Item item)
+        {
+            switch (item.Slot)
+            {
+                case 0:
+                    character.Equipped.Arms = item;
+                    break;
+                default:
+                    character.Equipped.Held = item;
+                    break;
+            }
+
+
+
+        }
     }
 }

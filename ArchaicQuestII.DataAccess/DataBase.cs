@@ -8,31 +8,48 @@ namespace ArchaicQuestII.DataAccess
 {
     public class DataBase : IDataBase
     {
-        private LiteDatabase _db { get; set; }
+        private LiteDatabase _db { get; }
         public DataBase(LiteDatabase db)
         {
             _db = db;
         }
-        public bool Save<T>(T data, string collectionName)
+
+        /// <summary>
+        /// DB methods require a collection name
+        /// to avoid errors due to typos, collection names
+        /// are managed by the collections enum
+        /// </summary>
+        public enum Collections
+        {
+            Alignment,
+            Area,
+            AttackType,
+            Class,
+            Race,
+            Room,
+            Status
+        }
+
+        public bool Save<T>(T data, Collections collectionName)
         { 
-             _db.GetCollection<T>(collectionName).Upsert(data);
+             _db.GetCollection<T>(nameof(collectionName)).Upsert(data);
 
             return true;
         }
 
-        public List<T> GetList<T>(string collectionName)
+        public List<T> GetList<T>(Collections collectionName)
         {
-            return _db.GetCollection<T>(collectionName).FindAll().ToList();
+            return _db.GetCollection<T>(nameof(collectionName)).FindAll().ToList();
         }
 
-        public LiteCollection<T> GetCollection<T>(string collectionName)
+        public LiteCollection<T> GetCollection<T>(Collections collectionName)
         {
-            return _db.GetCollection<T>(collectionName);
+            return _db.GetCollection<T>(nameof(collectionName));
         }
 
-        public T GetById<T>(int id, string collectionName)
+        public T GetById<T>(int id, Collections collectionName)
         {
-          return  _db.GetCollection<T>(collectionName).FindById(id);
+          return  _db.GetCollection<T>(nameof(collectionName)).FindById(id);
         }
     }
 }

@@ -5,11 +5,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Character\Equipment\Enum\**" />
+    <EmbeddedResource Remove="Character\Equipment\Enum\**" />
+    <None Remove="Character\Equipment\Enum\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ArchaicQuestII.DataAccess\ArchaicQuestII.DataAccess.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Character\Equipment\Enum\" />
     <Folder Include="Character\Status\NewFolder\" />
   </ItemGroup>
 

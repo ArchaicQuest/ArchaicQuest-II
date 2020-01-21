@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ArchaicQuestII.Engine.Character.Model;
 using ArchaicQuestII.Engine.Core.Interface;
+using ArchaicQuestII.GameLogic.Core;
 using LiteDB;
 
 namespace ArchaicQuestII.Engine.Character.Race.Model

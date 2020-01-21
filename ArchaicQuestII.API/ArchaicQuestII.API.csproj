@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ArchaicQuestII.DataAccess\ArchaicQuestII.DataAccess.csproj" />
+    <ProjectReference Include="..\ArchaicQuestII.GameLogic\ArchaicQuestII.GameLogic.csproj" />
   </ItemGroup>
 
 </Project>
