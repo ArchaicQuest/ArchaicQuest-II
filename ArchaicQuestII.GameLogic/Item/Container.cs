@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ArchaicQuestII.GameLogic.Item
 {
-    class Container
+    public class Container
     {
         public enum ContainerSize
         {

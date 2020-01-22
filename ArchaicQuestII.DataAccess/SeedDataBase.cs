@@ -189,108 +189,180 @@ namespace ArchaicQuestII.DataAccess
 
 
 
-//        private List<Race.Model.Race> SeedData()
-//        {
-//            var seedData = new List<Race.Model.Race>()
-//            {
-//                new Race.Model.Race()
-//                {
-//                    Name = "Human",
-//                    CreatedBy = "Malleus",
-//                    Description = @"`Humans are highly adaptable and the most common race in the world.
-//They come in a wide range of skin, eye and hair colours as well as different shapes and sizes."
-//                },
-//                new Race.Model.Race()
-//                {
-//                    Name = "Elf",
-//                    CreatedBy = "Malleus",
-//                    Description = @"`Elves are shorter and slimmer than humans, they are also more in tune with nature and magic.
-//             They have an innate ability of Sneaking, Infrasion and resistance to charm spells."
-//                },
-//                new Race.Model.Race()
-//                {
-//                    Name = "Wood-elf",
-//                    CreatedBy = "Malleus",
-//                    Description = @"wood elf",
+        //        private List<Race.Model.Race> SeedData()
+        //        {
+        //            var seedData = new List<Race.Model.Race>()
+        //            {
+        //                new Race.Model.Race()
+        //                {
+        //                    Name = "Human",
+        //                    CreatedBy = "Malleus",
+        //                    Description = @"`Humans are highly adaptable and the most common race in the world.
+        //They come in a wide range of skin, eye and hair colours as well as different shapes and sizes."
+        //                },
+        //                new Race.Model.Race()
+        //                {
+        //                    Name = "Elf",
+        //                    CreatedBy = "Malleus",
+        //                    Description = @"`Elves are shorter and slimmer than humans, they are also more in tune with nature and magic.
+        //             They have an innate ability of Sneaking, Infrasion and resistance to charm spells."
+        //                },
+        //                new Race.Model.Race()
+        //                {
+        //                    Name = "Wood-elf",
+        //                    CreatedBy = "Malleus",
+        //                    Description = @"wood elf",
 
-//                },
-//                new Race.Model.Race()
-//                {
-//                    Name = "Half Elf",
-//                    CreatedBy = "Malleus",
-//                    Description = @"`Elves are shorter and slimmer than humans, they are also more in tune with nature and magic.
-//             They have an innate ability of Sneaking, Infrasion and resistance to charm spells."
-//                },
-//                new Race.Model.Race()
-//                {
-//                    Name = "Dark Elf",
-//                    CreatedBy = "Malleus",
-//                    Description = @"`Dark Elves are identical to their elven brethren except their skin ranges from dark pale blue to black.
-//             They too have an innate ability of Sneaking, Infrasion and resistance to charm spells."
-//                },
-//                new Race.Model.Race()
-//                {
-//                    Name = "Half Drow",
-//                    CreatedBy = "Malleus",
-//                    Description = @"`Dark Elves are identical to their elven brethren except their skin ranges from dark pale blue to black.
-//             They too have an innate ability of Sneaking, Infrasion and resistance to charm spells."
-//                },
-//                new Race.Model.Race()
-//                {
-//                    Name = "Dwarves",
-//                    CreatedBy = "Malleus",
-//                    Description = @"`Dwarves are a short muscular humanoids who prefer the mountains and the underdark where they enjoy
-//             digging for gold. A lot of dwarves do venture out of the caves and can be found in human settlements in the local
-//              tavern with a mug of Ale. They are powerful Warriors and Clerics"
-//                },
-//                new Race.Model.Race()
-//                {
-//                    Name = "Gnome",
-//                    CreatedBy = "Malleus",
-//                    Description = @"`Dwarves are a short muscular humanoids who prefer the mountains and the underdark where they enjoy
-//             digging for gold. A lot of dwarves do venture out of the caves and can be found in human settlements in the local
-//              tavern with a mug of Ale. They are powerful Warriors and Clerics"
-//                },
-//                new Race.Model.Race()
-//                {
-//                    Name = "Ariel",
-//                    CreatedBy = "Malleus",
-//                    Description = @"`Dwarves are a short muscular humanoids who prefer the mountains and the underdark where they enjoy
-//             digging for gold. A lot of dwarves do venture out of the caves and can be found in human settlements in the local
-//              tavern with a mug of Ale. They are powerful Warriors and Clerics"
-//                },
-//                new Race.Model.Race()
-//                {
-//                    Name = "Mau",
-//                    CreatedBy = "Malleus",
-//                    Description = @"`Mau, Cat like humanoid race. Info coming soon"
-//                },
-//                new Race.Model.Race()
-//                {
-//                    Name = "Tlaloc",
-//                    CreatedBy = "Malleus",
-//                    Description = @"`Tlaloc, Reptilian lizard like humanoid race. Info coming soon",
+        //                },
+        //                new Race.Model.Race()
+        //                {
+        //                    Name = "Half Elf",
+        //                    CreatedBy = "Malleus",
+        //                    Description = @"`Elves are shorter and slimmer than humans, they are also more in tune with nature and magic.
+        //             They have an innate ability of Sneaking, Infrasion and resistance to charm spells."
+        //                },
+        //                new Race.Model.Race()
+        //                {
+        //                    Name = "Dark Elf",
+        //                    CreatedBy = "Malleus",
+        //                    Description = @"`Dark Elves are identical to their elven brethren except their skin ranges from dark pale blue to black.
+        //             They too have an innate ability of Sneaking, Infrasion and resistance to charm spells."
+        //                },
+        //                new Race.Model.Race()
+        //                {
+        //                    Name = "Half Drow",
+        //                    CreatedBy = "Malleus",
+        //                    Description = @"`Dark Elves are identical to their elven brethren except their skin ranges from dark pale blue to black.
+        //             They too have an innate ability of Sneaking, Infrasion and resistance to charm spells."
+        //                },
+        //                new Race.Model.Race()
+        //                {
+        //                    Name = "Dwarves",
+        //                    CreatedBy = "Malleus",
+        //                    Description = @"`Dwarves are a short muscular humanoids who prefer the mountains and the underdark where they enjoy
+        //             digging for gold. A lot of dwarves do venture out of the caves and can be found in human settlements in the local
+        //              tavern with a mug of Ale. They are powerful Warriors and Clerics"
+        //                },
+        //                new Race.Model.Race()
+        //                {
+        //                    Name = "Gnome",
+        //                    CreatedBy = "Malleus",
+        //                    Description = @"`Dwarves are a short muscular humanoids who prefer the mountains and the underdark where they enjoy
+        //             digging for gold. A lot of dwarves do venture out of the caves and can be found in human settlements in the local
+        //              tavern with a mug of Ale. They are powerful Warriors and Clerics"
+        //                },
+        //                new Race.Model.Race()
+        //                {
+        //                    Name = "Ariel",
+        //                    CreatedBy = "Malleus",
+        //                    Description = @"`Dwarves are a short muscular humanoids who prefer the mountains and the underdark where they enjoy
+        //             digging for gold. A lot of dwarves do venture out of the caves and can be found in human settlements in the local
+        //              tavern with a mug of Ale. They are powerful Warriors and Clerics"
+        //                },
+        //                new Race.Model.Race()
+        //                {
+        //                    Name = "Mau",
+        //                    CreatedBy = "Malleus",
+        //                    Description = @"`Mau, Cat like humanoid race. Info coming soon"
+        //                },
+        //                new Race.Model.Race()
+        //                {
+        //                    Name = "Tlaloc",
+        //                    CreatedBy = "Malleus",
+        //                    Description = @"`Tlaloc, Reptilian lizard like humanoid race. Info coming soon",
 
-//                },
-//                new Race.Model.Race()
-//                {
-//                    Name = "Minotaur",
-//                    CreatedBy = "Malleus",
-//                    Description = @"`Tlaloc, Reptilian lizard like humanoid race. Info coming soon",
+        //                },
+        //                new Race.Model.Race()
+        //                {
+        //                    Name = "Minotaur",
+        //                    CreatedBy = "Malleus",
+        //                    Description = @"`Tlaloc, Reptilian lizard like humanoid race. Info coming soon",
 
-//                },
-//                new Race.Model.Race()
-//                {
-//                    Name = "Other",
-//                    CreatedBy = "Malleus",
-//                    Description = @"`Generic race for mob is none suitable is found. you could always create one",
-//                    Playable = false
+        //                },
+        //                new Race.Model.Race()
+        //                {
+        //                    Name = "Other",
+        //                    CreatedBy = "Malleus",
+        //                    Description = @"`Generic race for mob is none suitable is found. you could always create one",
+        //                    Playable = false
 
-//                },
-//            };
+        //                },
+        //            };
 
-//            return seedData;
-//        }
-//    }
-}
+        //            return seedData;
+        //        }
+        //    }
+
+
+
+        //public List<Option> SeedData()
+        //{
+        //    var seedData = new List<Option>()
+        //    {
+        //        new Option()
+        //        {
+        //            Name = "Sitting",
+        //            CreatedBy = "Malleus"
+        //        },
+        //        new Option()
+        //        {
+        //            Name = "Standing",
+        //            CreatedBy = "Malleus"
+        //        },
+        //        new Option()
+        //        {
+        //            Name = "Sleeping",
+        //            CreatedBy = "Malleus"
+        //        },
+        //        new Option()
+        //        {
+        //            Name = "Fighting",
+        //            CreatedBy = "Malleus"
+        //        },
+        //        new Option()
+        //        {
+        //            Name = "Resting",
+        //            CreatedBy = "Malleus"
+        //        },
+        //        new Option()
+        //        {
+        //            Name = "Incapitated",
+        //            CreatedBy = "Malleus"
+        //        },
+        //        new Option()
+        //        {
+        //            Name = "Dead",
+        //            CreatedBy = "Malleus"
+        //        },
+        //        new Option()
+        //        {
+        //            Name = "Ghost",
+        //            CreatedBy = "Malleus"
+        //        },
+        //        new Option()
+        //        {
+        //            Name = "Busy",
+        //            CreatedBy = "Malleus"
+        //        },
+        //        new Option()
+        //        {
+        //            Name = "Floating",
+        //            CreatedBy = "Malleus"
+        //        },
+        //        new Option()
+        //        {
+        //            Name = "Mounted",
+        //            CreatedBy = "Malleus"
+        //        },
+        //        new Option()
+        //        {
+        //            Name = "Stunned",
+        //            CreatedBy = "Malleus"
+        //        }
+
+        //    };
+
+        //    return seedData;
+        //}
+    }
 }

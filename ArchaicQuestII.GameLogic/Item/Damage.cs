@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ArchaicQuestII.GameLogic.Item
 {
-    class Damage
+    public class Damage
     {
         public int Minimum { get; set; }
         public int Maximum { get; set; }

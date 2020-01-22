@@ -2,6 +2,8 @@
 using ArchaicQuestII.Engine.Item;
 using System.Collections.Generic;
 using ArchaicQuestII.Engine.Character.Gender;
+using ArchaicQuestII.Engine.Character.Status;
+using ArchaicQuestII.GameLogic.Item;
 using LiteDB;
 
 namespace ArchaicQuestII.GameLogic.Character
@@ -31,10 +33,10 @@ namespace ArchaicQuestII.GameLogic.Character
         public int TotalExperience { get; set; }
         public int Experience { get; set; }
         public int ExperienceToNextLevel { get; set; }
-        public Equi Equipped { get; set; } = new Equipment.Model.Equipment();
+        public Equipment.Equipment Equipped { get; set; } = new Equipment.Equipment();
         public List<Item.Item> Inventory { get; set; } = new List<Item.Item>();
         public Stats Stats { get; set; }
-        public Status.Status Status { get; set; }
+        public Status Status { get; set; }
         public Stats MaxStats { get; set; }
         public Attributes Attributes {get; set; }
         public Attributes MaxAttributes {get; set; }

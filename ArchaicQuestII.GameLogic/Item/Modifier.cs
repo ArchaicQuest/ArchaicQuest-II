@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ArchaicQuestII.GameLogic.Item
 {
-    class Modifier
+    public class Modifier
     {
         /// <summary>
         /// Increases or decreases the characters hitroll score

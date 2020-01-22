@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ArchaicQuestII.GameLogic.Item
 {
-    class ArmourRating
+    public class ArmourRating
     {
         public int Armour { get; set; }
         public int Magic { get; set; }

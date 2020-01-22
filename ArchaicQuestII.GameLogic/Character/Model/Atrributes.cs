@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using ArchaicQuestII.Engine.Effect;
+using ArchaicQuestII.GameLogic.Effect;
 
 namespace ArchaicQuestII.GameLogic.Character
 {

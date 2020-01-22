@@ -14,8 +14,4 @@
     <ProjectReference Include="..\ArchaicQuestII.DataAccess\ArchaicQuestII.DataAccess.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Character\Status\NewFolder\" />
-  </ItemGroup>
-
 </Project>

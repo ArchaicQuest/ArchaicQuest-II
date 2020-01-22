@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using ArchaicQuestII.DataAccess;
-using ArchaicQuestII.Engine.Character.Race.Commands;
 using ArchaicQuestII.Engine.Character.Race.Model;
 using Microsoft.AspNetCore.Mvc;
 
@@ -34,8 +33,7 @@ namespace ArchaicQuestII.API.Character
         [Route("api/Character/Race")]
         public List<Race> Get()
         {
-            var query = new GetRacesQuery();
-            return query.GetRaces();
+            return _db.GetList<Race>(DataBase.Collections.Race);
         }
     }
 }

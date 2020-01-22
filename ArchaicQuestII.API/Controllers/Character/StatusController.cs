@@ -1,42 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ArchaicQuestII.Engine.Character.Class.Queries;
-using ArchaicQuestII.Engine.Character.Race.Commands;
-using ArchaicQuestII.Engine.Character.Race.Model;
-using ArchaicQuestII.Engine.Item;
-using ArchaicQuestII.Engine.Character.Class.Commands;
-using ArchaicQuestII.Engine.Core.Interface;
+﻿using System.Collections.Generic;
+using ArchaicQuestII.DataAccess;
+using ArchaicQuestII.GameLogic.Core;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ArchaicQuestII.API.Character
+namespace ArchaicQuestII.API.Controllers.Character
 {
     public class StatusController
     {
+
+        private IDataBase _db { get; }
+        public StatusController(IDataBase db)
+        {
+            _db = db;
+        }
 
         [HttpPost]
         [Route("api/Character/Status")]
         public void Post(Option status)
         {
-            var command = new CreateStatusCommand();
-            command.CreateStatus(status);
+            _db.Save(status, DataBase.Collections.Status);
         }
 
         [HttpGet]
         [Route("api/Character/Status/{id:int}")]
         public Option Get(int id)
         {
-            var query = new GetStatusQuery();
-            return query.GetStatus(id);
+            return _db.GetById<Option>(id, DataBase.Collections.Status);
         }
 
         [HttpGet]
         [Route("api/Character/Status")]
         public List<Option> Get()
         {
-            var query = new GetStatusesQuery();
-            return query.GetStatuses();
+            return _db.GetList<Option>(DataBase.Collections.Status);
         }
     }
 }

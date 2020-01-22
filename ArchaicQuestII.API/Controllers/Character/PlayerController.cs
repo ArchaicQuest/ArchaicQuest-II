@@ -2,18 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using ArchaicQuestII.Engine.Character;
-using ArchaicQuestII.Engine.Character.Model;
+using ArchaicQuestII.DataAccess;
 using Microsoft.AspNetCore.Mvc;
-using ArchaicQuestII.Core.World;
-using ArchaicQuestII.Core.Events;
-using ArchaicQuestII.Engine.Character.Equipment.Model;
 using ArchaicQuestII.Engine.Character.Status;
-using ArchaicQuestII.Engine.Effect;
-using ArchaicQuestII.Engine.Item;
-using Microsoft.Azure.KeyVault.Models;
-using Newtonsoft.Json;
+using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Equipment;
+using ArchaicQuestII.GameLogic.Item;
+ 
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -22,7 +17,11 @@ namespace ArchaicQuestII.Controllers
 {
     public class PlayerController : Controller
     {
-
+        private IDataBase _db { get; }
+        public PlayerController(IDataBase db)
+        {
+            _db = db;
+        }
         [HttpPost]
         [Route("api/Character/Player")]
         public void Post([FromBody] Player player)
@@ -58,7 +57,7 @@ namespace ArchaicQuestII.Controllers
                 Gender = player.Gender,
                 Stats = new Stats(),
                 MaxStats = player.Stats,
-                Money = new Engine.Character.Model.Money()
+                Money = new GameLogic.Character.Money()
                 {
                     Gold = 100
                 },
@@ -71,7 +70,7 @@ namespace ArchaicQuestII.Controllers
             if (!string.IsNullOrEmpty(player.Id.ToString()) && player.Id != -1)
             {
 
-                var foundItem = DB.FindById<Character>(player.Id.ToString(), "players");
+                var foundItem = _db.GetById<Character>(player.Id, DataBase.Collections.Players);
 
                 if (foundItem == null)
                 {
@@ -83,31 +82,16 @@ namespace ArchaicQuestII.Controllers
 
 
 
-            DB.Save(newPlayer, "players");
+            _db.Save(newPlayer, DataBase.Collections.Players);
 
         }
-
-
-        //[HttpGet]
-        //[Route("api/player/Get")]
-        //public List<Character> GetMob()
-        //{
-
-        //    var mobs = DB.GetItems();
-
-        //    return mobs;
-
-        //}
-
-
+ 
         [HttpGet]
         [Route("api/Character/player")]
         public List<Character> Get([FromQuery] string query)
         {
 
-            var mobs = DB.GetCollection<Character>("Mobs").Where(x => x.Name != null);
-
-
+            var mobs = _db.GetCollection<Character>(DataBase.Collections.Mobs).FindAll().Where(x => x.Name != null);
 
             if (string.IsNullOrEmpty(query))
             {
@@ -118,15 +102,7 @@ namespace ArchaicQuestII.Controllers
 
         }
 
-        //[HttpGet]
-        //[Route("api/player/FindMobById")]
-        //public Character FindMobById([FromQuery] int id)
-        //{
-
-        //    return DB.GetItems().FirstOrDefault(x => x.Id.Equals(id));
-
-        //}
-
+ 
 
 
 

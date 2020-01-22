@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ArchaicQuestII.Engine.Character;
-using ArchaicQuestII.Engine.Character.Model;
+
 using Microsoft.AspNetCore.Mvc;
-using ArchaicQuestII.Core.World;
-using ArchaicQuestII.Core.Events;
-using ArchaicQuestII.Engine.Item;
-using Microsoft.Azure.KeyVault.Models;
+
+using ArchaicQuestII.GameLogic.Character;
+
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
