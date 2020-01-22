@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using ArchaicQuestII.Engine.Character.Gender;
 using LiteDB;
 
-namespace ArchaicQuestII.Engine.Character.Model
+namespace ArchaicQuestII.GameLogic.Character
 {
     public class Character
     {
@@ -31,7 +31,7 @@ namespace ArchaicQuestII.Engine.Character.Model
         public int TotalExperience { get; set; }
         public int Experience { get; set; }
         public int ExperienceToNextLevel { get; set; }
-        public Equipment.Model.Equipment Equipped { get; set; } = new Equipment.Model.Equipment();
+        public Equi Equipped { get; set; } = new Equipment.Model.Equipment();
         public List<Item.Item> Inventory { get; set; } = new List<Item.Item>();
         public Stats Stats { get; set; }
         public Status.Status Status { get; set; }

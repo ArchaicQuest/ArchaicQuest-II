@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ArchaicQuestII.Engine.Character.Model;
+using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.Engine.Core.Interface;
 using ArchaicQuestII.GameLogic.Core;
 using LiteDB;

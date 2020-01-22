@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ArchaicQuestII.Engine.Character.Equipment.Model
+namespace ArchaicQuestII.GameLogic.Character.Equipment
 {
     public class Equipment
     { 
@@ -33,7 +33,7 @@ namespace ArchaicQuestII.Engine.Character.Equipment.Model
         public Item.Item  Quiver { get; set; }
 
 
-        public void Wear(Character.Model.Character character, Item.Item item)
+        public void Wear(Character character, Item.Item item)
         {
             switch (item.Slot)
             {

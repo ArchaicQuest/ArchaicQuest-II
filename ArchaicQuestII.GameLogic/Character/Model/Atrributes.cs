@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using ArchaicQuestII.Engine.Effect;
 
-namespace ArchaicQuestII.Engine.Character.Model
+namespace ArchaicQuestII.GameLogic.Character
 {
     public class Attributes
     {

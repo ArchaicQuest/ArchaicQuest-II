@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ArchaicQuestII.Engine.Character.Model
+namespace ArchaicQuestII.GameLogic.Character
 {
     public class Attribute
     {

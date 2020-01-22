@@ -1,6 +1,6 @@
 using System;
 
-namespace ArchaicQuestII.Engine.Character.Model
+namespace ArchaicQuestII.GameLogic.Character
 {
     public interface IPlayer: ICharacter
     {
