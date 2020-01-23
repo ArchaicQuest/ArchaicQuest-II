@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace ArchaicQuestII.GameLogic.Item
 {
-    class BaseItem
+    public class BaseItem
     {
         public Guid? Uuid { get; set; }
         public int Id { get; set; }
@@ -27,7 +28,7 @@ namespace ArchaicQuestII.GameLogic.Item
         /// room item list and for items that you do not want to be discovered
         /// by other means
         /// </summary>
-        public bool isHiddenInRoom { get; set; }
+        public bool IsHiddenInRoom { get; set; }
         /// <summary>
         /// Hidden items are not visible
         /// unless player has means to see them
@@ -37,7 +38,6 @@ namespace ArchaicQuestII.GameLogic.Item
         /// Cannont remove item
         /// </summary>
         public bool Stuck { get; set; }
-
         /// <summary>
         /// how many ticks till item decays
         /// 0 is never

@@ -1,16 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ArchaicQuestII.DataAccess;
+﻿using ArchaicQuestII.DataAccess;
+using ArchaicQuestII.GameLogic.Character.Alignment;
+using ArchaicQuestII.GameLogic.Character.AttackTypes;
+using ArchaicQuestII.GameLogic.Character.Class;
+using ArchaicQuestII.GameLogic.Character.Race;
+using ArchaicQuestII.GameLogic.Character.Status;
+using ArchaicQuestII.Hubs;
+using LiteDB;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+using System;
+using System.IO;
 
 namespace ArchaicQuestII.API
 {
@@ -27,7 +28,7 @@ namespace ArchaicQuestII.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<ILog>(new Log.Log());
+           // services.AddSingleton<ILog>(new Log.Log());
             services.AddSingleton<LiteDatabase>(
                 new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AQ.db")));
             services.AddScoped<IDataBase, DataBase>();
@@ -71,18 +72,32 @@ namespace ArchaicQuestII.API
             {
                 routes.MapHub<GameHub>("/Hubs/game");
             });
+ 
+            foreach (var data in new Alignment().SeedData())
+            {
+                _db.Save(data, DataBase.Collections.Alignment);
+            }
 
-            var seedClass = new SeedClassCommand();
-            var seedRace = new SeedRaceCommand();
-            var seedAttackType = new SeedAttackTypesCommand(_db);
-            var seedStatusese = new SeedStatusCommand();
-            var seedAlignment = new SeedAlignmentCommand();
+            foreach (var data in new AttackTypes().SeedData())
+            {
+                _db.Save(data, DataBase.Collections.AttackType);
+            }
 
-            seedAttackType.Seed();
-            seedClass.SeedClass();
-            seedRace.Seed();
-            seedStatusese.Seed();
-            seedAlignment.Seed();
+            foreach (var data in new Race().SeedData())
+            {
+                _db.Save(data, DataBase.Collections.Race);
+            }
+
+            foreach (var data in new CharacterStatus().SeedData())
+            {
+                _db.Save(data, DataBase.Collections.Status);
+            }
+
+            foreach (var data in new Class().SeedData())
+            {
+                _db.Save(data, DataBase.Collections.Status);
+            }
+
         }
     }
 

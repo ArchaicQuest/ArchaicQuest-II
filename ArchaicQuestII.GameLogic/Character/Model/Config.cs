@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ArchaicQuestII.GameLogic.Character
+namespace ArchaicQuestII.GameLogic.Character.Model
 {
     public class Config
     {

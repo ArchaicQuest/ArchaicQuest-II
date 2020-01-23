@@ -1,5 +1,5 @@
 ﻿
-namespace ArchaicQuestII.Engine.Character.Gender
+namespace ArchaicQuestII.GameLogic.Character.Gender
 {
     public class GenderEnum
     {

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ArchaicQuestII.GameLogic.Item
 {
-    class Description
+    public class Description
     {
         public string Taste { get; set; } = "It doesn't taste like much.";
         public string Touch { get; set; } = "It doesn't feel like much.";

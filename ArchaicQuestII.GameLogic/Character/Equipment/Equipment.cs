@@ -37,12 +37,12 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
         {
             switch (item.Slot)
             {
-                case 0:
-                    character.Equipped.Arms = item;
-                    break;
-                default:
-                    character.Equipped.Held = item;
-                    break;
+                //case 0:
+                //    character.Equipped.Arms = item;
+                //    break;
+                //default:
+                //    character.Equipped.Held = item;
+                //    break;
             }
 
 

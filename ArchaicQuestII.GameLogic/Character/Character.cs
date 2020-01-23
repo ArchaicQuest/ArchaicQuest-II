@@ -1,10 +1,9 @@
-
-using ArchaicQuestII.Engine.Item;
-using System.Collections.Generic;
-using ArchaicQuestII.Engine.Character.Gender;
-using ArchaicQuestII.Engine.Character.Status;
+using ArchaicQuestII.GameLogic.Character.Model;
+using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Item;
 using LiteDB;
+using System.Collections.Generic;
+using Money = ArchaicQuestII.GameLogic.Item.Money;
 
 namespace ArchaicQuestII.GameLogic.Character
 {
@@ -36,7 +35,7 @@ namespace ArchaicQuestII.GameLogic.Character
         public Equipment.Equipment Equipped { get; set; } = new Equipment.Equipment();
         public List<Item.Item> Inventory { get; set; } = new List<Item.Item>();
         public Stats Stats { get; set; }
-        public Status Status { get; set; }
+        public CharacterStatus.Status Status { get; set; }
         public Stats MaxStats { get; set; }
         public Attributes Attributes {get; set; }
         public Attributes MaxAttributes {get; set; }

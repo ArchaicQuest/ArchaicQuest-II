@@ -25,6 +25,6 @@ namespace ArchaicQuestII.GameLogic.Item
         public int GoldPieces { get; set; }
         // needs to match Key lock guid
         public Guid? AssociatedKeyId { get; set; }
-        public LockStrength LockDifficulty { get; set; }
+        public Item.LockStrength LockDifficulty { get; set; }
     }
 }

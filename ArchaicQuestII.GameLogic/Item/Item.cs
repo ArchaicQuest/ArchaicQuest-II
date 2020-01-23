@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using ArchaicQuestII.GameLogic.Character.Equipment;
 
 namespace ArchaicQuestII.GameLogic.Item
 {
@@ -145,7 +146,7 @@ namespace ArchaicQuestII.GameLogic.Item
         public ItemFlags ItemFlag { get; set; }
         public ItemTypes ItemType { get; set; }
         public AttackTypes AttackType { get; set; }
-        public EqSlot Slot { get; set; }
+        public Equipment Slot { get; set; }
         public WeaponTypes WeaponType { get; set; }
         public int WeaponSpeed { get; set; }
         public Damage Damage { get; set; }
