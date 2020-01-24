@@ -1,18 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ArchaicQuestII.Engine.Character;
-using ArchaicQuestII.Engine.Character.Model;
+﻿using ArchaicQuestII.DataAccess;
 using Microsoft.AspNetCore.Mvc;
-using ArchaicQuestII.Core.World;
-using ArchaicQuestII.Core.Events;
-using ArchaicQuestII.Engine.Item;
-using ArchaicQuestII.Engine.World;
-using ArchaicQuestII.Engine.World.Area.Commands;
-using ArchaicQuestII.Engine.World.Area.Model;
-using ArchaicQuestII.Engine.World.Area.Queries;
-using Microsoft.Azure.KeyVault.Models;
+using System;
+using System.Collections.Generic;
+using ArchaicQuestII.GameLogic.World.Area;
+using ArchaicQuestII.GameLogic.World.Room;
+using System.Linq;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -21,7 +13,11 @@ namespace ArchaicQuestII.Controllers
 {
     public class AreaController : Controller
     {
-
+        private IDataBase _db { get; }
+        public AreaController(IDataBase db)
+        {
+            _db = db;
+        }
         [HttpPost]
         [Route("api/World/Area")]
         public void Post([FromBody] Area area)
@@ -45,9 +41,17 @@ namespace ArchaicQuestII.Controllers
              
             };
 
- 
+            var data = _db.GetById<Area>(area.Id, DataBase.Collections.Area);
 
-            DB.Save(newArea, "Area");
+            data.Description = area.Description;
+            data.DateUpdated = DateTime.Now;
+            data.Title = area.Title;
+
+            _db.Save(data, DataBase.Collections.Area);
+
+
+
+            _db.Save(area, DataBase.Collections.Area);
 
         }
 
@@ -55,26 +59,32 @@ namespace ArchaicQuestII.Controllers
         [Route("api/World/Area")]
         public List<Area> Get()
         {
-
-           return DB.GetAreas();
-
+            return _db.GetList<Area>(DataBase.Collections.Area);
         }
 
         [HttpGet]
         [Route("api/World/Area/{id:int}")]
         public Area Get(int id)
         {
+            var area = _db.GetById<Area>(id, DataBase.Collections.Area);
+            var rooms = _db.GetCollection<Room>(DataBase.Collections.Room).Find(x => x.AreaId == id).ToList();
 
-            return new GetAreaQuery().GetArea(id);
+            area.Rooms = rooms;
 
+            return area;
         }
 
         [HttpPut]
         [Route("api/World/Area/{id:int}")]
         public void Put([FromBody] Area data)
         {
+            var area = _db.GetById<Area>(data.Id, DataBase.Collections.Area);
 
-            new UpdateAreaCommand().UpdateArea(data);
+            area.Description = area.Description;
+            area.DateUpdated = DateTime.Now;
+            area.Title = area.Title;
+
+            _db.Save(data, DataBase.Collections.Area);
 
         }
 

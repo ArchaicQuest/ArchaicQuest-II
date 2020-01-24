@@ -25,6 +25,7 @@ namespace ArchaicQuestII.DataAccess
             Area,
             AttackType,
             Class,
+            Items,
             Mobs,
             Players,
             Race,

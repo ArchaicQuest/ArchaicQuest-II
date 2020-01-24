@@ -1,17 +1,22 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using ArchaicQuestII.Core.World;
-using ArchaicQuestII.Core.Events;
-using ArchaicQuestII.Engine.World.Room.Commands;
-using ArchaicQuestII.Engine.World.Room.Model;
-using ArchaicQuestII.Engine.World.Room.Queries;
+﻿using ArchaicQuestII.DataAccess;
+using ArchaicQuestII.GameLogic.World.Room;
+using Microsoft.AspNetCore.Mvc;
+using System;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace ArchaicQuestII.API.World
 {
-   
+
     public class RoomController : Controller
     {
+
+        private IDataBase _db { get; }
+        public RoomController(IDataBase db)
+        {
+            _db = db;
+        }
+
         [HttpPost]
         [Route("api/World/Room")]
         public void Post([FromBody] Room room)
@@ -20,7 +25,7 @@ namespace ArchaicQuestII.API.World
             {
                 Title = room.Title,
                 Description = room.Description,
-             AreaId = room.AreaId,
+                AreaId = room.AreaId,
                 Coords = new Coordinates()
                 {
                     X = room.Coords.X,
@@ -34,15 +39,13 @@ namespace ArchaicQuestII.API.World
                 Items = room.Items,
                 Mobs = room.Mobs,
                 RoomObjects = room.RoomObjects,
-                //Terrain = room.Terrain,
                 Type = room.Type,
-              //  Modified = DateTime.Now
+                DateUpdated = DateTime.Now,
+                DateCreated = DateTime.Now
             };
 
-         
-           
 
-           DB.Save(newRoom, "Room");
+            _db.Save(newRoom, DataBase.Collections.Room);
 
         }
 
@@ -51,17 +54,14 @@ namespace ArchaicQuestII.API.World
         [Route("api/World/Room/{id:int}")]
         public Room Get(int id)
         {
-
-            return new GetRoomQuery().GetRoom(id);
-
+            return _db.GetById<Room>(id, DataBase.Collections.Room);
         }
 
         [HttpPut]
         [Route("api/World/Room/{id:int}")]
         public void Put([FromBody] Room data)
         {
-
-            new UpdateRoomCommand().UpdateRoom(data);
+            _db.Save(data, DataBase.Collections.Room);
 
         }
     }

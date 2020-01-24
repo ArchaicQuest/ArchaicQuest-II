@@ -6,7 +6,7 @@ using ArchaicQuestII.GameLogic.Character.Equipment;
 
 namespace ArchaicQuestII.GameLogic.Item
 {
-    public class Item
+    public class Item: BaseItem
     {
         public enum ItemTypes
         {

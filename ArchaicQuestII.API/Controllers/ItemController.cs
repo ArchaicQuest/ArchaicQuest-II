@@ -1,15 +1,9 @@
-﻿    using System;
+﻿using ArchaicQuestII.DataAccess;
+using ArchaicQuestII.GameLogic.Item;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using ArchaicQuestII.Core.World;
-using ArchaicQuestII.Engine.Item;
-using ArchaicQuestII.Core.Events;
-using ArchaicQuestII.Engine.Item.Enum;
-using Microsoft.Azure.KeyVault.Models;
-using static ArchaicQuestII.Engine.Item.Container;
-using static ArchaicQuestII.Engine.Item.Item;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -17,7 +11,11 @@ namespace ArchaicQuestII.Controllers
 {
     public class ItemController : Controller
     {
-
+        private IDataBase _db { get; }
+        public ItemController(IDataBase db)
+        {
+            _db = db;
+        }
         [HttpPost]
         [Route("api/item/PostItem")]
         public void PostItem([FromBody] Item item)
@@ -70,7 +68,7 @@ namespace ArchaicQuestII.Controllers
                 Slot = item.Slot,
                 ForageRank = item.ForageRank,
                 Hidden = item.Hidden,
-                isHiddenInRoom = item.isHiddenInRoom,
+                IsHiddenInRoom = item.IsHiddenInRoom,
                 ItemFlag = item.ItemFlag,
                 Keywords = item.Keywords,
                 KnownByName = item.KnownByName,
@@ -92,7 +90,7 @@ namespace ArchaicQuestII.Controllers
             if (!string.IsNullOrEmpty(item.Id.ToString()) && item.Id != -1)
             {
 
-                var foundItem = DB.GetCollection<Item>("Item").FirstOrDefault(x => x.Id.Equals(item.Id));
+                var foundItem = _db.GetById<Item>(item.Id, DataBase.Collections.Items);
 
                 if (foundItem == null)
                 {
@@ -104,7 +102,7 @@ namespace ArchaicQuestII.Controllers
             
 
 
-            DB.Save(newItem, "Item");
+            _db.Save()
 
         }
 
