@@ -35,25 +35,58 @@ namespace ArchaicQuestII.DataAccess
         }
 
         public bool Save<T>(T data, Collections collectionName)
-        { 
-             _db.GetCollection<T>(nameof(collectionName)).Upsert(data);
+        {
+            _db.GetCollection<T>(GetCollectionName(collectionName)).Upsert(data);
 
             return true;
         }
 
         public List<T> GetList<T>(Collections collectionName)
         {
-            return _db.GetCollection<T>(nameof(collectionName)).FindAll().ToList();
+
+            return _db.GetCollection<T>(GetCollectionName(collectionName)).FindAll().ToList();
         }
 
         public LiteCollection<T> GetCollection<T>(Collections collectionName)
         {
-            return _db.GetCollection<T>(nameof(collectionName));
+            return _db.GetCollection<T>(GetCollectionName(collectionName));
         }
 
         public T GetById<T>(int id, Collections collectionName)
         {
-          return  _db.GetCollection<T>(nameof(collectionName)).FindById(id);
+            return _db.GetCollection<T>(GetCollectionName(collectionName)).FindById(id);
+        }
+
+        private static string GetCollectionName(Collections collectionName)
+        {
+            switch (collectionName)
+            {
+                case Collections.Alignment:
+                    return "Alignment";
+                case Collections.Account:
+                    return "Account";
+                case Collections.Area:
+                    return "Area";
+                case Collections.AttackType:
+                    return "AttackType";
+                case Collections.Class:
+                    return "Class";
+                case Collections.Items:
+                    return "Items";
+                case Collections.Mobs:
+                    return "Mobs";
+                case Collections.Players:
+                    return "Players";
+                case Collections.Race:
+                    return "Race";
+                case Collections.Room:
+                    return "Room";
+                case Collections.Status:
+                    return "Status";
+                default:
+                    return "error";
+
+            }
         }
     }
 }

@@ -7,6 +7,8 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Formatting.Compact;
 
 namespace ArchaicQuestII.API
 {
@@ -16,16 +18,32 @@ namespace ArchaicQuestII.API
         {
             var configuration = new ConfigurationBuilder().Build();
 
-            //Serilog.Log.Logger = new LoggerConfiguration()
-            //    .WriteTo.File("archaicquest.log")
-            //.CreateLogger();
+            Serilog.Log.Logger = new LoggerConfiguration()
+                .Enrich.FromLogContext()
+                .WriteTo.File("log.txt")
+                .CreateLogger();
 
-            BuildWebHost(args).Run();
+
+
+            try
+            {
+                Serilog.Log.Information("Starting up ArchaicQuest");
+                BuildWebHost(args).Run();
+            }
+            catch (Exception ex)
+            {
+                Serilog.Log.Fatal(ex, "Application start-up failed");
+            }
+            finally
+            {
+                Serilog.Log.CloseAndFlush();
+            }
         }
 
         public static IWebHost BuildWebHost(string[] args) =>
-        WebHost.CreateDefaultBuilder(args)
-        .UseStartup<Startup>()
-        .Build();
+            WebHost.CreateDefaultBuilder(args)
+                .UseSerilog()
+                .UseStartup<Startup>()
+                .Build();
     }
 }

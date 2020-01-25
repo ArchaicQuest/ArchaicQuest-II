@@ -1,0 +1,95 @@
+2020-01-25 23:42:19.525 +00:00 [INF] Starting up ArchaicQuest
+2020-01-25 23:42:22.055 +00:00 [INF] User profile is available. Using 'C:\Users\Malleus\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2020-01-25 23:42:24.211 +00:00 [INF] Request starting HTTP/2.0 GET https://localhost:44393/api/values  
+2020-01-25 23:42:24.800 +00:00 [INF] Request finished in 591.4416ms 404 
+2020-01-25 23:42:52.605 +00:00 [INF] Request starting HTTP/1.1 GET https://localhost:44393/api/Character/Race application/json 
+2020-01-25 23:42:52.628 +00:00 [INF] Route matched with {action = "Get", controller = "Race"}. Executing action ArchaicQuestII.API.Controllers.Character.RaceController.Get (ArchaicQuestII.API)
+2020-01-25 23:42:52.645 +00:00 [INF] Executing action method ArchaicQuestII.API.Controllers.Character.RaceController.Get (ArchaicQuestII.API) - Validation state: "Valid"
+2020-01-25 23:42:52.717 +00:00 [INF] Executed action method ArchaicQuestII.API.Controllers.Character.RaceController.Get (ArchaicQuestII.API), returned result Microsoft.AspNetCore.Mvc.ObjectResult in 65.0854ms.
+2020-01-25 23:42:52.726 +00:00 [INF] Executing ObjectResult, writing value of type 'System.Collections.Generic.List`1[[ArchaicQuestII.GameLogic.Character.Race.Race, ArchaicQuestII.GameLogic, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2020-01-25 23:42:52.859 +00:00 [INF] Executed action ArchaicQuestII.API.Controllers.Character.RaceController.Get (ArchaicQuestII.API) in 225.8468ms
+2020-01-25 23:42:52.861 +00:00 [INF] Request finished in 256.0936ms 200 application/json; charset=utf-8
+2020-01-25 23:44:29.157 +00:00 [INF] Request starting HTTP/2.0 GET https://localhost:44393/api/Character/Race  
+2020-01-25 23:44:29.157 +00:00 [INF] Route matched with {action = "Get", controller = "Race"}. Executing action ArchaicQuestII.API.Controllers.Character.RaceController.Get (ArchaicQuestII.API)
+2020-01-25 23:44:29.157 +00:00 [INF] Executing action method ArchaicQuestII.API.Controllers.Character.RaceController.Get (ArchaicQuestII.API) - Validation state: "Valid"
+2020-01-25 23:44:32.776 +00:00 [INF] Executed action method ArchaicQuestII.API.Controllers.Character.RaceController.Get (ArchaicQuestII.API), returned result Microsoft.AspNetCore.Mvc.ObjectResult in 3618.5858000000003ms.
+2020-01-25 23:44:32.805 +00:00 [INF] Executing ObjectResult, writing value of type 'System.Collections.Generic.List`1[[ArchaicQuestII.GameLogic.Character.Race.Race, ArchaicQuestII.GameLogic, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2020-01-25 23:44:32.806 +00:00 [INF] Executed action ArchaicQuestII.API.Controllers.Character.RaceController.Get (ArchaicQuestII.API) in 3648.6413000000002ms
+2020-01-25 23:44:32.806 +00:00 [INF] Request finished in 3649.6732ms 200 application/json; charset=utf-8
+2020-01-25 23:45:06.383 +00:00 [INF] Request starting HTTP/2.0 GET https://localhost:44393/api/Character/Race  
+2020-01-25 23:45:06.383 +00:00 [INF] Route matched with {action = "Get", controller = "Race"}. Executing action ArchaicQuestII.API.Controllers.Character.RaceController.Get (ArchaicQuestII.API)
+2020-01-25 23:45:06.383 +00:00 [INF] Executing action method ArchaicQuestII.API.Controllers.Character.RaceController.Get (ArchaicQuestII.API) - Validation state: "Valid"
+2020-01-25 23:45:10.355 +00:00 [INF] Executed action method ArchaicQuestII.API.Controllers.Character.RaceController.Get (ArchaicQuestII.API), returned result Microsoft.AspNetCore.Mvc.ObjectResult in 3971.46ms.
+2020-01-25 23:45:10.355 +00:00 [INF] Executing ObjectResult, writing value of type 'System.Collections.Generic.List`1[[ArchaicQuestII.GameLogic.Character.Race.Race, ArchaicQuestII.GameLogic, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2020-01-25 23:45:10.356 +00:00 [INF] Executed action ArchaicQuestII.API.Controllers.Character.RaceController.Get (ArchaicQuestII.API) in 3973.0469000000003ms
+2020-01-25 23:45:10.356 +00:00 [INF] Request finished in 3973.8237ms 200 application/json; charset=utf-8
+2020-01-25 23:45:11.478 +00:00 [INF] Request starting HTTP/2.0 GET https://localhost:44393/favicon.ico  
+2020-01-25 23:45:11.531 +00:00 [INF] Sending file. Request path: '/favicon.ico'. Physical path: 'C:\Dev\Personal\AQ2\ArchaicQuestII\ArchaicQuestII.API\wwwroot\favicon.ico'
+2020-01-25 23:45:11.533 +00:00 [INF] Request finished in 54.5047ms 200 image/x-icon
+2020-01-25 23:45:12.874 +00:00 [INF] Request starting HTTP/2.0 GET https://localhost:44393/api/Character/Race  
+2020-01-25 23:45:12.874 +00:00 [INF] Route matched with {action = "Get", controller = "Race"}. Executing action ArchaicQuestII.API.Controllers.Character.RaceController.Get (ArchaicQuestII.API)
+2020-01-25 23:45:12.874 +00:00 [INF] Executing action method ArchaicQuestII.API.Controllers.Character.RaceController.Get (ArchaicQuestII.API) - Validation state: "Valid"
+2020-01-25 23:45:12.875 +00:00 [INF] Executed action method ArchaicQuestII.API.Controllers.Character.RaceController.Get (ArchaicQuestII.API), returned result Microsoft.AspNetCore.Mvc.ObjectResult in 0.69980000000000009ms.
+2020-01-25 23:45:12.875 +00:00 [INF] Executing ObjectResult, writing value of type 'System.Collections.Generic.List`1[[ArchaicQuestII.GameLogic.Character.Race.Race, ArchaicQuestII.GameLogic, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2020-01-25 23:45:12.875 +00:00 [INF] Executed action ArchaicQuestII.API.Controllers.Character.RaceController.Get (ArchaicQuestII.API) in 1.4019000000000001ms
+2020-01-25 23:45:12.876 +00:00 [INF] Request finished in 2.0256ms 200 application/json; charset=utf-8
+2020-01-25 23:45:13.293 +00:00 [INF] Request starting HTTP/2.0 GET https://localhost:44393/favicon.ico  
+2020-01-25 23:45:13.295 +00:00 [INF] Sending file. Request path: '/favicon.ico'. Physical path: 'C:\Dev\Personal\AQ2\ArchaicQuestII\ArchaicQuestII.API\wwwroot\favicon.ico'
+2020-01-25 23:45:13.295 +00:00 [INF] Request finished in 1.8225ms 200 image/x-icon
+2020-01-25 23:45:40.815 +00:00 [INF] Request starting HTTP/2.0 GET https://localhost:44393/api/Character/Race  
+2020-01-25 23:45:40.815 +00:00 [INF] Route matched with {action = "Get", controller = "Race"}. Executing action ArchaicQuestII.API.Controllers.Character.RaceController.Get (ArchaicQuestII.API)
+2020-01-25 23:45:40.815 +00:00 [INF] Executing action method ArchaicQuestII.API.Controllers.Character.RaceController.Get (ArchaicQuestII.API) - Validation state: "Valid"
+2020-01-25 23:45:40.816 +00:00 [INF] Executed action method ArchaicQuestII.API.Controllers.Character.RaceController.Get (ArchaicQuestII.API), returned result Microsoft.AspNetCore.Mvc.ObjectResult in 0.7387ms.
+2020-01-25 23:45:40.816 +00:00 [INF] Executing ObjectResult, writing value of type 'System.Collections.Generic.List`1[[ArchaicQuestII.GameLogic.Character.Race.Race, ArchaicQuestII.GameLogic, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2020-01-25 23:45:40.817 +00:00 [INF] Executed action ArchaicQuestII.API.Controllers.Character.RaceController.Get (ArchaicQuestII.API) in 1.4829ms
+2020-01-25 23:45:40.817 +00:00 [INF] Request finished in 1.9614ms 200 application/json; charset=utf-8
+2020-01-25 23:45:41.572 +00:00 [INF] Request starting HTTP/2.0 GET https://localhost:44393/favicon.ico  
+2020-01-25 23:45:41.577 +00:00 [INF] Sending file. Request path: '/favicon.ico'. Physical path: 'C:\Dev\Personal\AQ2\ArchaicQuestII\ArchaicQuestII.API\wwwroot\favicon.ico'
+2020-01-25 23:45:41.577 +00:00 [INF] Request finished in 4.8639ms 200 image/x-icon
+2020-01-25 23:48:02.763 +00:00 [INF] Starting up ArchaicQuest
+2020-01-25 23:48:05.576 +00:00 [INF] User profile is available. Using 'C:\Users\Malleus\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2020-01-25 23:48:07.667 +00:00 [INF] Request starting HTTP/2.0 GET https://localhost:44393/api/values  
+2020-01-25 23:48:07.963 +00:00 [INF] Request finished in 299.8396ms 404 
+2020-01-25 23:50:41.978 +00:00 [INF] Request starting HTTP/1.1 GET https://localhost:44393/api/Character/Race application/json 
+2020-01-25 23:50:42.018 +00:00 [INF] Route matched with {action = "Get", controller = "Race"}. Executing action ArchaicQuestII.API.Controllers.Character.RaceController.Get (ArchaicQuestII.API)
+2020-01-25 23:50:42.038 +00:00 [INF] Executing action method ArchaicQuestII.API.Controllers.Character.RaceController.Get (ArchaicQuestII.API) - Validation state: "Valid"
+2020-01-25 23:50:42.124 +00:00 [INF] Executed action method ArchaicQuestII.API.Controllers.Character.RaceController.Get (ArchaicQuestII.API), returned result Microsoft.AspNetCore.Mvc.ObjectResult in 79.505800000000008ms.
+2020-01-25 23:50:42.133 +00:00 [INF] Executing ObjectResult, writing value of type 'System.Collections.Generic.List`1[[ArchaicQuestII.GameLogic.Character.Race.Race, ArchaicQuestII.GameLogic, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2020-01-25 23:50:42.410 +00:00 [INF] Executed action ArchaicQuestII.API.Controllers.Character.RaceController.Get (ArchaicQuestII.API) in 387.3582ms
+2020-01-25 23:50:42.411 +00:00 [INF] Request finished in 433.215ms 200 application/json; charset=utf-8
+2020-01-25 23:51:41.530 +00:00 [INF] Starting up ArchaicQuest
+2020-01-25 23:51:45.100 +00:00 [INF] User profile is available. Using 'C:\Users\Malleus\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2020-01-25 23:51:46.609 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:62640/api/values  
+2020-01-25 23:51:47.045 +00:00 [INF] Request finished in 442.3678ms 404 
+2020-01-25 23:51:53.233 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:62640/api/Character/Race application/json 
+2020-01-25 23:51:53.266 +00:00 [INF] Route matched with {action = "Get", controller = "Race"}. Executing action ArchaicQuestII.API.Controllers.Character.RaceController.Get (ArchaicQuestII.API)
+2020-01-25 23:51:53.281 +00:00 [INF] Executing action method ArchaicQuestII.API.Controllers.Character.RaceController.Get (ArchaicQuestII.API) - Validation state: "Valid"
+2020-01-25 23:51:53.375 +00:00 [INF] Executed action method ArchaicQuestII.API.Controllers.Character.RaceController.Get (ArchaicQuestII.API), returned result Microsoft.AspNetCore.Mvc.ObjectResult in 83.6036ms.
+2020-01-25 23:51:53.390 +00:00 [INF] Executing ObjectResult, writing value of type 'System.Collections.Generic.List`1[[ArchaicQuestII.GameLogic.Character.Race.Race, ArchaicQuestII.GameLogic, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2020-01-25 23:51:53.764 +00:00 [INF] Executed action ArchaicQuestII.API.Controllers.Character.RaceController.Get (ArchaicQuestII.API) in 494.40270000000004ms
+2020-01-25 23:51:53.766 +00:00 [INF] Request finished in 533.142ms 200 application/json; charset=utf-8
+2020-01-25 23:52:16.333 +00:00 [INF] Starting up ArchaicQuest
+2020-01-25 23:52:20.285 +00:00 [INF] User profile is available. Using 'C:\Users\Malleus\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2020-01-25 23:52:21.548 +00:00 [INF] Request starting HTTP/2.0 GET https://localhost:44393/api/values  
+2020-01-25 23:52:22.036 +00:00 [INF] Request finished in 490.3275ms 404 
+2020-01-25 23:52:43.427 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:62640/api/Character/Race application/json 
+2020-01-25 23:52:43.456 +00:00 [INF] Route matched with {action = "Get", controller = "Race"}. Executing action ArchaicQuestII.API.Controllers.Character.RaceController.Get (ArchaicQuestII.API)
+2020-01-25 23:52:43.485 +00:00 [INF] Executing action method ArchaicQuestII.API.Controllers.Character.RaceController.Get (ArchaicQuestII.API) - Validation state: "Valid"
+2020-01-25 23:52:43.560 +00:00 [INF] Executed action method ArchaicQuestII.API.Controllers.Character.RaceController.Get (ArchaicQuestII.API), returned result Microsoft.AspNetCore.Mvc.ObjectResult in 66.6589ms.
+2020-01-25 23:52:43.568 +00:00 [INF] Executing ObjectResult, writing value of type 'System.Collections.Generic.List`1[[ArchaicQuestII.GameLogic.Character.Race.Race, ArchaicQuestII.GameLogic, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2020-01-25 23:52:43.661 +00:00 [INF] Executed action ArchaicQuestII.API.Controllers.Character.RaceController.Get (ArchaicQuestII.API) in 200.9993ms
+2020-01-25 23:52:43.662 +00:00 [INF] Request finished in 234.984ms 200 application/json; charset=utf-8
+2020-01-25 23:52:46.181 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:62640/api/Character/Race application/json 
+2020-01-25 23:52:46.181 +00:00 [INF] Route matched with {action = "Get", controller = "Race"}. Executing action ArchaicQuestII.API.Controllers.Character.RaceController.Get (ArchaicQuestII.API)
+2020-01-25 23:52:46.181 +00:00 [INF] Executing action method ArchaicQuestII.API.Controllers.Character.RaceController.Get (ArchaicQuestII.API) - Validation state: "Valid"
+2020-01-25 23:52:46.185 +00:00 [INF] Executed action method ArchaicQuestII.API.Controllers.Character.RaceController.Get (ArchaicQuestII.API), returned result Microsoft.AspNetCore.Mvc.ObjectResult in 3.0028ms.
+2020-01-25 23:52:46.186 +00:00 [INF] Executing ObjectResult, writing value of type 'System.Collections.Generic.List`1[[ArchaicQuestII.GameLogic.Character.Race.Race, ArchaicQuestII.GameLogic, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2020-01-25 23:52:46.189 +00:00 [INF] Executed action ArchaicQuestII.API.Controllers.Character.RaceController.Get (ArchaicQuestII.API) in 8.0852ms
+2020-01-25 23:52:46.190 +00:00 [INF] Request finished in 8.8456ms 200 application/json; charset=utf-8
+2020-01-25 23:52:55.021 +00:00 [INF] Request starting HTTP/1.1 GET http://localhost:62640/api/Character/Race application/json 
+2020-01-25 23:52:55.021 +00:00 [INF] Route matched with {action = "Get", controller = "Race"}. Executing action ArchaicQuestII.API.Controllers.Character.RaceController.Get (ArchaicQuestII.API)
+2020-01-25 23:52:55.022 +00:00 [INF] Executing action method ArchaicQuestII.API.Controllers.Character.RaceController.Get (ArchaicQuestII.API) - Validation state: "Valid"
+2020-01-25 23:52:55.024 +00:00 [INF] Executed action method ArchaicQuestII.API.Controllers.Character.RaceController.Get (ArchaicQuestII.API), returned result Microsoft.AspNetCore.Mvc.ObjectResult in 2.5285ms.
+2020-01-25 23:52:55.024 +00:00 [INF] Executing ObjectResult, writing value of type 'System.Collections.Generic.List`1[[ArchaicQuestII.GameLogic.Character.Race.Race, ArchaicQuestII.GameLogic, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2020-01-25 23:52:55.026 +00:00 [INF] Executed action ArchaicQuestII.API.Controllers.Character.RaceController.Get (ArchaicQuestII.API) in 4.4996ms
+2020-01-25 23:52:55.026 +00:00 [INF] Request finished in 4.9689ms 200 application/json; charset=utf-8

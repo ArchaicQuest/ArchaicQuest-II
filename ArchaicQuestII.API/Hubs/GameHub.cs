@@ -5,16 +5,17 @@ using System.IO;
 using System.Threading.Tasks;
 using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
+using Microsoft.Extensions.Logging;
 
 namespace ArchaicQuestII.Hubs
 {
     public class GameHub : Hub
     {
-        private Log.Log _logger { get; set; }
+        private readonly ILogger<GameHub> _logger;
         private IDataBase _db { get; }
-        public GameHub(IDataBase db)
+        public GameHub(IDataBase db, ILogger<GameHub> logger)
         {
-            _logger = new Log.Log();
+            _logger = logger;
             _db = db;
         }
         /// <summary>
@@ -41,7 +42,7 @@ namespace ArchaicQuestII.Hubs
         /// <returns></returns>
         public async Task Send(string message)
         {
-            _logger.Information($"Player sent {message}");
+            _logger.LogInformation($"Player sent {message}");
             await Clients.All.SendAsync("SendMessage", "user x", message);
         }
 
@@ -51,7 +52,7 @@ namespace ArchaicQuestII.Hubs
         /// <returns></returns>
         public async Task SendToClient(string message, string hubId)
         {
-            _logger.Information($"Player sent {message}");
+            _logger.LogInformation($"Player sent {message}");
             await Clients.Client(hubId).SendAsync("SendMessage", message);
         }
 

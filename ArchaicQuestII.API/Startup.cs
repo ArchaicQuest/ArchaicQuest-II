@@ -28,7 +28,6 @@ namespace ArchaicQuestII.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-           // services.AddSingleton<ILog>(new Log.Log());
             services.AddSingleton<LiteDatabase>(
                 new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AQ.db")));
             services.AddScoped<IDataBase, DataBase>();
@@ -95,7 +94,7 @@ namespace ArchaicQuestII.API
 
             foreach (var data in new Class().SeedData())
             {
-                _db.Save(data, DataBase.Collections.Status);
+                _db.Save(data, DataBase.Collections.Class);
             }
 
         }

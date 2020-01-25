@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+	<TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+    <PreserveCompilationContext>true</PreserveCompilationContext>
+    <MvcRazorCompileOnPublish>false</MvcRazorCompileOnPublish>
+    <RuntimeFrameworkName>Microsoft.AspNetCore.App</RuntimeFrameworkName>
+    <Authors>Liam</Authors>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <PackageProjectUrl>http://www.archaicquest.com</PackageProjectUrl>
+    <UserSecretsId>b3d5c58c-3cfa-450e-9af4-68e746d31d57</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="motd" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="motd">
+      <Generator>MSBuild:Compile</Generator>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="4.9.2" />
+    <PackageReference Include="BCrypt.Net-Next" Version="3.2.0" />
+    <PackageReference Include="LiteDB" Version="4.1.4" />
+    <PackageReference Include="Microsoft.AspNetCore.All" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="2.1.1" />
+    <PackageReference Include="Serilog.Sinks.File" Version="4.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="ArchaicQuestII.DataAccess\ArchaicQuestII.DataAccess.csproj" />
+  </ItemGroup>
+ 
+
+</Project>
