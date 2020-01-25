@@ -21,6 +21,7 @@ namespace ArchaicQuestII.DataAccess
         /// </summary>
         public enum Collections
         {
+            Account,
             Alignment,
             Area,
             AttackType,

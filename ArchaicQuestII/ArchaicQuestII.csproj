@@ -34,13 +34,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Engine\Character\Equipment\Enum\" />
-    <Folder Include="Engine\Character\Status\NewFolder\" />
-    <Folder Include="Engine\Core\Data\" />
-    <Folder Include="Engine\Spell\Type\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\ArchaicQuestII.DataAccess\ArchaicQuestII.DataAccess.csproj" />
   </ItemGroup>
  

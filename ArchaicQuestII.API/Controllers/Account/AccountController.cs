@@ -1,16 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Threading.Tasks;
-using ArchaicQuestII.Engine.Character.Model;
+﻿using ArchaicQuestII.DataAccess;
+using ArchaicQuestII.GameLogic.Account;
+using ArchaicQuestII.GameLogic.Character;
 using Microsoft.AspNetCore.Mvc;
-using ArchaicQuestII.Core.Events;
-using ArchaicQuestII.Engine.Account;
- 
+using System;
+using System.Collections.Generic;
+
 namespace ArchaicQuestII.API.Controllers
 {
     public class AccountController : Controller
     {
+        private IDataBase _db { get; }
+        public AccountController(IDataBase db)
+        {
+            _db = db;
+        }
 
         [HttpPost]
         [Route("api/Account")]
@@ -24,7 +27,7 @@ namespace ArchaicQuestII.API.Controllers
                 throw exception;
             }
 
-            var hasEmail = DB.GetColumn<Account>("Account").FindOne(x => x.Email.Equals(account.Email));
+            var hasEmail = _db.GetCollection<Account>(DataBase.Collections.Account).FindOne(x => x.Email.Equals(account.Email));
 
             if (hasEmail != null)
             {
@@ -35,6 +38,7 @@ namespace ArchaicQuestII.API.Controllers
             var data = new Account()
             {
                 UserName = account.UserName,
+                
                 Characters = new List<Player>(),
                 Credits = 0,
                 Email = account.Email,
@@ -44,7 +48,7 @@ namespace ArchaicQuestII.API.Controllers
             };
 
 
-           var saved = DB.Save(data, "Account");
+           var saved = _db.Save(data, DataBase.Collections.Account);
 
             return saved ? (IActionResult) Ok("account created successfully") : BadRequest("Error saving account");
         }

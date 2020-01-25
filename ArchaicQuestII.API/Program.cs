@@ -16,9 +16,9 @@ namespace ArchaicQuestII.API
         {
             var configuration = new ConfigurationBuilder().Build();
 
-            Serilog.Log.Logger = new LoggerConfiguration()
-                .WriteTo.File("archaicquest.log")
-            .CreateLogger();
+            //Serilog.Log.Logger = new LoggerConfiguration()
+            //    .WriteTo.File("archaicquest.log")
+            //.CreateLogger();
 
             BuildWebHost(args).Run();
         }

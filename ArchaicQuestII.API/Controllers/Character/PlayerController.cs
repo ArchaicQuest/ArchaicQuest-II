@@ -1,14 +1,15 @@
 ﻿
+using ArchaicQuestII.DataAccess;
+using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Equipment;
+using ArchaicQuestII.GameLogic.Character.Model;
+using ArchaicQuestII.GameLogic.Character.Status;
+using ArchaicQuestII.GameLogic.Item;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ArchaicQuestII.DataAccess;
-using Microsoft.AspNetCore.Mvc;
-using ArchaicQuestII.Engine.Character.Status;
-using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Equipment;
-using ArchaicQuestII.GameLogic.Item;
- 
+
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -38,7 +39,7 @@ namespace ArchaicQuestII.Controllers
             var newPlayer = new Player()
             {
                 Name = player.Name,
-                Status = Status.Standing,
+                Status = CharacterStatus.Status.Standing,
                 Level = 1,
                 ArmorRating = new ArmourRating()
                 {
@@ -57,9 +58,9 @@ namespace ArchaicQuestII.Controllers
                 Gender = player.Gender,
                 Stats = new Stats(),
                 MaxStats = player.Stats,
-                Money = new GameLogic.Character.Money()
+                Money = new Gold()
                 {
-                    Gold = 100
+                    Amount = 100
                 },
                 Race = player.Race,
                 JoinedDate = new DateTime()

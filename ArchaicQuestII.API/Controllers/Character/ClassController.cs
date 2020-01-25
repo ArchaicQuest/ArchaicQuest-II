@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ArchaicQuestII.DataAccess;
-using ArchaicQuestII.Engine.Character.Class.Commands;
-using ArchaicQuestII.Engine.Character.Class.Model;
+﻿using ArchaicQuestII.DataAccess;
+using ArchaicQuestII.GameLogic.Character.Class;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace ArchaicQuestII.API.Character
 {

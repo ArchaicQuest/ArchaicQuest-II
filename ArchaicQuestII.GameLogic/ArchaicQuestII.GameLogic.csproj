@@ -6,8 +6,11 @@
 
   <ItemGroup>
     <Compile Remove="Character\Equipment\Enum\**" />
+    <Compile Remove="Spell\Type\**" />
     <EmbeddedResource Remove="Character\Equipment\Enum\**" />
+    <EmbeddedResource Remove="Spell\Type\**" />
     <None Remove="Character\Equipment\Enum\**" />
+    <None Remove="Spell\Type\**" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,27 +1,24 @@
-using ArchaicQuestII.GameLogic.Core.Events;
-using System;
-using System.Buffers;
-using System.Collections.Generic;
+using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Character.Status;
+using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Item;
-using ArchaicQuestII.GameLogic.Skill;
 using ArchaicQuestII.GameLogic.Skill.Enum;
 using ArchaicQuestII.GameLogic.Skill.Model;
 using ArchaicQuestII.GameLogic.Spell;
-using ArchaicQuestII.GameLogic.Spell.Interface;
 using ArchaicQuestII.GameLogic.Spell.Model;
-using ArchaicQuestII.GameLogic.World.Room.Model;
+using ArchaicQuestII.GameLogic.World.Room;
 using Moq;
+using System.Collections.Generic;
 using Xunit;
- 
 
-namespace ArchaicQuestII_Tests
+
+namespace ArchaicQuestII.GameLogic.Tests
 {
     public class SpellTests
     {
-        private readonly Spell _Spells;
+        private readonly Spell.Model.Spell _Spells;
         private readonly Player _player;
         private readonly Player _target;
         private readonly Room _room;
@@ -31,10 +28,10 @@ namespace ArchaicQuestII_Tests
         public SpellTests()
         {
            
-            _Spells = new Spell()
+            _Spells = new Spell.Model.Spell()
             { 
                 Name = "Ogre strength",
-                Effect = new Effect()
+                Effect = new Effect.Effect()
                 {
                     Modifier = new EffectModifer()
                     {
@@ -98,7 +95,7 @@ namespace ArchaicQuestII_Tests
             };
             _player = new Player()
             {
-                Status = Status.Standing,
+                Status = CharacterStatus.Status.Standing,
                 Attributes = new Attributes()
                 {
                     Attribute = new Dictionary<EffectLocation, int>

@@ -1,21 +1,21 @@
 
-using System;
-using System.Threading.Tasks;
-using ArchaicQuestII.Engine.Character.Model;
 using Microsoft.AspNetCore.SignalR;
-using ArchaicQuestII.Core.Events;
+using System;
 using System.IO;
+using System.Threading.Tasks;
+using ArchaicQuestII.DataAccess;
+using ArchaicQuestII.GameLogic.Character;
 
 namespace ArchaicQuestII.Hubs
 {
     public class GameHub : Hub
     {
         private Log.Log _logger { get; set; }
-       
-        public GameHub()
+        private IDataBase _db { get; }
+        public GameHub(IDataBase db)
         {
             _logger = new Log.Log();
-            
+            _db = db;
         }
         /// <summary>
         /// Do action when user connects 
@@ -72,7 +72,7 @@ namespace ArchaicQuestII.Hubs
                 Name = name
             };
 
-            DB.Save(newPlayer, "Player");
+            _db.Save(newPlayer, DataBase.Collections.Players);
 
         }
     }

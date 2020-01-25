@@ -30,10 +30,9 @@ namespace ArchaicQuestII.GameLogic.Character.Class
                       to be an rogue but Mau are one of the best due to their agile nature."
                 },
                 new Class()
-                {
+                {   
                     Name = "Cleric",
-                    Description =
-                        @"Cleric power comes from the gods they worship, stronger the devotion, stronger the power,
+                    Description =  @"Cleric power comes from the gods they worship, stronger the devotion, stronger the power,
             Clerical spells focus on healing and preserving life rather than destroy it but don't be fooled clerics
              know powerful offensive spells to rival any mage. They can also wear any armour just like a warrior.
              Important attributes for Clerics are Wisdom, Intelligence and Constitution

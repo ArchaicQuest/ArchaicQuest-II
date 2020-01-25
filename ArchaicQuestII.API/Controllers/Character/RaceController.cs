@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using ArchaicQuestII.DataAccess;
-using ArchaicQuestII.Engine.Character.Race.Model;
+﻿using ArchaicQuestII.DataAccess;
+using ArchaicQuestII.GameLogic.Character.Race;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
-namespace ArchaicQuestII.API.Character
+namespace ArchaicQuestII.API.Controllers.Character
 {
     public class RaceController
     {

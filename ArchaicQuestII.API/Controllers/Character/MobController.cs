@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.Linq;
+using ArchaicQuestII.DataAccess;
 using Microsoft.AspNetCore.Mvc;
 
 using ArchaicQuestII.GameLogic.Character;
-
+using ArchaicQuestII.GameLogic.Item;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -13,6 +14,13 @@ namespace ArchaicQuestII.Controllers
 {
     public class MobController : Controller
     {
+
+        private IDataBase _db { get; }
+        public MobController(IDataBase db)
+        {
+            _db = db;
+        }
+
 
         [HttpPost]
         [Route("api/Character/Mob")]
@@ -57,7 +65,7 @@ namespace ArchaicQuestII.Controllers
             if (!string.IsNullOrEmpty(mob.Id.ToString()) && mob.Id != -1)
             {
 
-                var foundItem = DB.FindById<Character>(mob.Id.ToString(), "Mobs");
+                var foundItem = _db.GetById<Character>(mob.Id, DataBase.Collections.Mobs);
 
                 if (foundItem == null)
                 {
@@ -68,8 +76,7 @@ namespace ArchaicQuestII.Controllers
             }
 
 
-
-            DB.Save(newMob, "Mobs");
+            _db.Save(newMob, DataBase.Collections.Mobs);
 
         }
 
@@ -91,7 +98,7 @@ namespace ArchaicQuestII.Controllers
         public List<Character> Get([FromQuery] string query)
         {
 
-            var mobs =  DB.GetCollection<Character>("Mobs").Where(x => x.Name != null);
+            var mobs =  _db.GetCollection<Character>(DataBase.Collections.Mobs).FindAll().Where(x => x.Name != null);
 
             if (string.IsNullOrEmpty(query))
             {

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ArchaicQuestII.GameLogic.Character.Equipment;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -99,10 +100,10 @@ namespace ArchaicQuestII.Controllers
 
                 newItem.Id = item.Id;
             }
-            
 
 
-            _db.Save()
+
+            _db.Save(newItem, DataBase.Collections.Items);
 
         }
 
@@ -112,9 +113,7 @@ namespace ArchaicQuestII.Controllers
         public List<Item> GetItem()
         {
 
-            var items = DB.GetCollection<Item>("Item");
-
-            return items;
+            return _db.GetList<Item>(DataBase.Collections.Items);
 
         }
 
@@ -124,9 +123,7 @@ namespace ArchaicQuestII.Controllers
         public List<Item> FindItems([FromQuery] string query)
         {
 
-            var items = DB.GetCollection<Item>("Item").Where(x => x.Name != null);
-
-
+            var items = _db.GetCollection<Item>(DataBase.Collections.Items).FindAll().Where(x => x.Name != null);
 
             if (string.IsNullOrEmpty(query))
             {
@@ -139,10 +136,10 @@ namespace ArchaicQuestII.Controllers
 
         [HttpGet]
         [Route("api/item/FindItemsByType")]
-        public List<Item> FindItemsByType([FromQuery] EqSlot query)
+        public List<Item> FindItemsByType([FromQuery] Equipment.EqSlot query)
         {
 
-            var items = DB.GetCollection<Item>("Item").Where(x => x.Slot.Equals(query));
+            var items = _db.GetCollection<Item>(DataBase.Collections.Items).FindAll().Where(x => x.Slot.Equals(query));
             
             return items.ToList();
 
@@ -153,7 +150,7 @@ namespace ArchaicQuestII.Controllers
         public Item FindItemById([FromQuery] int id)
         {
 
-            return DB.GetCollection<Item>("Item").FirstOrDefault(x => x.Id.Equals(id));
+            return _db.GetCollection<Item>(DataBase.Collections.Items).FindById(id);
 
         }
 
@@ -162,7 +159,7 @@ namespace ArchaicQuestII.Controllers
         public Item FindKeyById([FromQuery] string id)
         {
 
-            return DB.GetCollection<Item>("Item").FirstOrDefault(x => x.KeyId.Equals(new Guid(id)) && x.ItemType == ItemTypes.Key);
+            return _db.GetCollection<Item>(DataBase.Collections.Items).FindOne(x => x.KeyId.Equals(new Guid(id)) && x.ItemType == Item.ItemTypes.Key);
 
         }
 
@@ -171,7 +168,7 @@ namespace ArchaicQuestII.Controllers
         public List<Item> FindKeys([FromQuery] string query)
         {
 
-            var items = DB.GetCollection<Item>("Item").Where(x => x.Name != null && x.ItemType == ItemTypes.Key);
+            var items = _db.GetCollection<Item>(DataBase.Collections.Items).FindAll().Where(x => x.Name != null && x.ItemType == Item.ItemTypes.Key);
 
             if (string.IsNullOrEmpty(query))
             {
@@ -188,7 +185,7 @@ namespace ArchaicQuestII.Controllers
         {
             var containerSize = new List<object>();
 
-            foreach (var size in Enum.GetValues(typeof(ContainerSize)))
+            foreach (var size in Enum.GetValues(typeof(Container.ContainerSize)))
             {
 
                 containerSize.Add(new
@@ -206,7 +203,7 @@ namespace ArchaicQuestII.Controllers
         {
             var lockStrength = new List<object>();
 
-            foreach (var lockDifficulty in Enum.GetValues(typeof(LockStrength)))
+            foreach (var lockDifficulty in Enum.GetValues(typeof(Item.LockStrength)))
             {
 
                 lockStrength.Add(new
@@ -265,7 +262,7 @@ namespace ArchaicQuestII.Controllers
 
             var itemTypes = new List<object>();
 
-            foreach (var item in Enum.GetValues(typeof(EqSlot)))
+            foreach (var item in Enum.GetValues(typeof(Equipment.EqSlot)))
             {
 
                 itemTypes.Add(new
