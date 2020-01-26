@@ -24,7 +24,7 @@ namespace ArchaicQuestII.Hubs
         /// <returns></returns>
         public override async Task OnConnectedAsync()
         {
-           // await Clients.All.SendAsync("SendAction", "user", "joined");
+            // await Clients.All.SendAsync("SendAction", "user", "joined");
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace ArchaicQuestII.Hubs
         /// <returns></returns>
         public override async Task OnDisconnectedAsync(Exception ex)
         {
-            await Clients.All.SendAsync("SendAction", "user", "left");
+           // await Clients.All.SendAsync("SendAction", "user", "left");
         }
 
         /// <summary>
