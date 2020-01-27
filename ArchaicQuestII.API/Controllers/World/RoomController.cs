@@ -52,7 +52,7 @@ namespace ArchaicQuestII.API.World
 
         [HttpGet]
         [Route("api/World/Room/{id:int}")]
-        public Room Get(int id)
+        public Room Get(Guid id)
         {
             return _db.GetById<Room>(id, DataBase.Collections.Room);
         }

@@ -7,7 +7,7 @@ namespace ArchaicQuestII.GameLogic.Account
 {
     public class Account
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         [BsonField("n")]
         public string UserName { get; set; }
         [BsonField("p")]
@@ -26,7 +26,7 @@ namespace ArchaicQuestII.GameLogic.Account
         /// Characters associated with account
         /// </summary>
         [BsonField("c")]
-        public List<Player> Characters { get; set; } = new List<Player>();
+        public List<Guid> Characters { get; set; } = new List<Guid>();
         [BsonField("dj")]
         public DateTime DateJoined { get; set; } = DateTime.Now;
         [BsonField("c")]

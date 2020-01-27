@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using ArchaicQuestII.GameLogic.Account;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -38,6 +38,8 @@ namespace ArchaicQuestII.Controllers
 
             var newPlayer = new Player()
             {
+                Aid =  player.Aid,
+                Id = Guid.NewGuid(),
                 Name = player.Name,
                 Status = CharacterStatus.Status.Standing,
                 Level = 1,
@@ -63,12 +65,11 @@ namespace ArchaicQuestII.Controllers
                     Amount = 100
                 },
                 Race = player.Race,
-                JoinedDate = new DateTime()
-                
-            };
+                JoinedDate = DateTime.Now
+        };
 
 
-            if (!string.IsNullOrEmpty(player.Id.ToString()) && player.Id != -1)
+            if (!string.IsNullOrEmpty(player.Id.ToString()) && player.Id.ToString() != "")
             {
 
                 var foundItem = _db.GetById<Character>(player.Id, DataBase.Collections.Players);
@@ -81,8 +82,9 @@ namespace ArchaicQuestII.Controllers
                 newPlayer.Id = player.Id;
             }
 
-
-
+         var account =  _db.GetById<Account>(player.Aid, DataBase.Collections.Account);
+            account.Characters.Add(player.Id);
+            _db.Save(account, DataBase.Collections.Account);
             _db.Save(newPlayer, DataBase.Collections.Players);
 
         }

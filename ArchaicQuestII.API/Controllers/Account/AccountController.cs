@@ -4,6 +4,7 @@ using ArchaicQuestII.GameLogic.Character;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace ArchaicQuestII.API.Controllers
 {
@@ -20,7 +21,6 @@ namespace ArchaicQuestII.API.Controllers
         public IActionResult Post([FromBody] Account account)
         {
 
-
             if (!ModelState.IsValid)
             {
                 var exception = new Exception("Invalid Account details");
@@ -34,12 +34,11 @@ namespace ArchaicQuestII.API.Controllers
                 return BadRequest("An account with that email address already exists.");
             }
 
-
             var data = new Account()
             {
                 UserName = account.UserName,
-                
-                Characters = new List<Player>(),
+                Id = Guid.NewGuid(),
+                Characters = new List<Guid>(),
                 Credits = 0,
                 Email = account.Email,
                 EmailVerified = false,
@@ -47,11 +46,10 @@ namespace ArchaicQuestII.API.Controllers
                 Stats = new AccountStats(),
             };
 
+            var saved = _db.Save(data, DataBase.Collections.Account);
 
-           var saved = _db.Save(data, DataBase.Collections.Account);
-
-            return saved ? (IActionResult) Ok("account created successfully") : BadRequest("Error saving account");
+            string json = JsonConvert.SerializeObject(new { toast = "account created successfully", id = data.Id });
+            return saved ? (IActionResult) Ok(json) : BadRequest("Error saving account");}
         }
 
     }
-}

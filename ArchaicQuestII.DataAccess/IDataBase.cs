@@ -39,6 +39,7 @@ namespace ArchaicQuestII.DataAccess
         /// <param name="id"></param>
         /// <param name="collectionName"></param>
         /// <returns></returns>
+        T GetById<T>(Guid id, DataBase.Collections collectionName);
         T GetById<T>(int id, DataBase.Collections collectionName);
     }
 }

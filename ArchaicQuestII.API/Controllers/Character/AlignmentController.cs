@@ -25,7 +25,7 @@ namespace ArchaicQuestII.API.Character
 
         [HttpGet]
         [Route("api/Character/Alignment/{id:int}")]
-        public Alignment Get(int id)
+        public Alignment Get(Guid id)
         {
             return _db.GetById<Alignment>(id, DataBase.Collections.Alignment);
         }

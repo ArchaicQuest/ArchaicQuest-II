@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Core;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +24,7 @@ namespace ArchaicQuestII.API.Controllers.Character
 
         [HttpGet]
         [Route("api/Character/Status/{id:int}")]
-        public Option Get(int id)
+        public Option Get(Guid id)
         {
             return _db.GetById<Option>(id, DataBase.Collections.Status);
         }

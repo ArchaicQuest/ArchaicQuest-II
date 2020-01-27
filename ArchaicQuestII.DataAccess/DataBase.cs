@@ -52,6 +52,11 @@ namespace ArchaicQuestII.DataAccess
             return _db.GetCollection<T>(GetCollectionName(collectionName));
         }
 
+        public T GetById<T>(Guid id, Collections collectionName)
+        {
+            return _db.GetCollection<T>(GetCollectionName(collectionName)).FindById(id);
+        }
+
         public T GetById<T>(int id, Collections collectionName)
         {
             return _db.GetCollection<T>(GetCollectionName(collectionName)).FindById(id);

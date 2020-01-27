@@ -1,4 +1,5 @@
-﻿using ArchaicQuestII.DataAccess;
+﻿using System;
+using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character.Race;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -23,7 +24,7 @@ namespace ArchaicQuestII.API.Controllers.Character
 
         [HttpGet]
         [Route("api/Character/Race/{id:int}")]
-        public Race Get(int id)
+        public Race Get(Guid id)
         {
             return _db.GetById<Race>(id, DataBase.Collections.Race);
         }

@@ -62,7 +62,7 @@ namespace ArchaicQuestII.Controllers
             };
 
 
-            if (!string.IsNullOrEmpty(mob.Id.ToString()) && mob.Id != -1)
+            if (!string.IsNullOrEmpty(mob.Id.ToString()) && mob.Id.ToString() != "")
             {
 
                 var foundItem = _db.GetById<Character>(mob.Id, DataBase.Collections.Mobs);

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Core;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +23,7 @@ namespace ArchaicQuestII.API.Controllers.Character
 
         [HttpGet]
         [Route("api/Character/AttackType/{id:int}")]
-        public OptionDescriptive Get(int id)
+        public OptionDescriptive Get(Guid id)
         {
             return _db.GetById<OptionDescriptive>(id, DataBase.Collections.AttackType);
         }
