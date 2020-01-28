@@ -16,11 +16,13 @@ namespace ArchaicQuestII.GameLogic.Character
         /// </summary>
         [BsonIgnore]
         public int ConnectionId { get; set; }
+
         /// <summary>
         /// Associated Account Id
         /// </summary>
-        public Guid Aid { get; set; }
-        public Guid Id { get; set; }
+        public Guid AccountId { get; set; } = Guid.Empty;
+
+        public Guid Id { get; set; } = Guid.Empty;
         public string Name { get; set; }
         /// <summary>
         /// Displays short description of the character in the room

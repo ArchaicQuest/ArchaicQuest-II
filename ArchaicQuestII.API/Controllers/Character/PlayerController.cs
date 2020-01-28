@@ -38,7 +38,7 @@ namespace ArchaicQuestII.Controllers
 
             var newPlayer = new Player()
             {
-                Aid =  player.Aid,
+                AccountId =  player.AccountId,
                 Id = Guid.NewGuid(),
                 Name = player.Name,
                 Status = CharacterStatus.Status.Standing,
@@ -69,7 +69,7 @@ namespace ArchaicQuestII.Controllers
         };
 
 
-            if (!string.IsNullOrEmpty(player.Id.ToString()) && player.Id.ToString() != "")
+            if (!string.IsNullOrEmpty(player.Id.ToString()) && player.Id != Guid.Empty)
             {
 
                 var foundItem = _db.GetById<Character>(player.Id, DataBase.Collections.Players);
@@ -82,8 +82,8 @@ namespace ArchaicQuestII.Controllers
                 newPlayer.Id = player.Id;
             }
 
-         var account =  _db.GetById<Account>(player.Aid, DataBase.Collections.Account);
-            account.Characters.Add(player.Id);
+         var account =  _db.GetById<Account>(player.AccountId, DataBase.Collections.Account);
+            account.Characters.Add(newPlayer.Id);
             _db.Save(account, DataBase.Collections.Account);
             _db.Save(newPlayer, DataBase.Collections.Players);
 
