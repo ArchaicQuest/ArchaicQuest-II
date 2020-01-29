@@ -41,5 +41,7 @@ namespace ArchaicQuestII.DataAccess
         /// <returns></returns>
         T GetById<T>(Guid id, DataBase.Collections collectionName);
         T GetById<T>(int id, DataBase.Collections collectionName);
+
+        bool DoesCollectionExist(DataBase.Collections collectionName);
     }
 }

@@ -71,31 +71,46 @@ namespace ArchaicQuestII.API
             {
                 routes.MapHub<GameHub>("/Hubs/game");
             });
- 
-            //foreach (var data in new Alignment().SeedData())
-            //{
-            //    _db.Save(data, DataBase.Collections.Alignment);
-            //}
 
-            //foreach (var data in new AttackTypes().SeedData())
-            //{
-            //    _db.Save(data, DataBase.Collections.AttackType);
-            //}
+            if (!_db.DoesCollectionExist(DataBase.Collections.Alignment))
+            {
+                foreach (var data in new Alignment().SeedData())
+                {
+                    _db.Save(data, DataBase.Collections.Alignment);
+                }
+            }
 
-            //foreach (var data in new Race().SeedData())
-            //{
-            //    _db.Save(data, DataBase.Collections.Race);
-            //}
+            if (!_db.DoesCollectionExist(DataBase.Collections.AttackType))
+            {
+                foreach (var data in new AttackTypes().SeedData())
+                {
+                    _db.Save(data, DataBase.Collections.AttackType);
+                }
+            }
 
-            //foreach (var data in new CharacterStatus().SeedData())
-            //{
-            //    _db.Save(data, DataBase.Collections.Status);
-            //}
+            if (!_db.DoesCollectionExist(DataBase.Collections.Race))
+            {
+                foreach (var data in new Race().SeedData())
+                {
+                    _db.Save(data, DataBase.Collections.Race);
+                }
+            }
 
-            //foreach (var data in new Class().SeedData())
-            //{
-            //    _db.Save(data, DataBase.Collections.Class);
-            //}
+            if (!_db.DoesCollectionExist(DataBase.Collections.Status))
+            {
+                foreach (var data in new CharacterStatus().SeedData())
+                {
+                    _db.Save(data, DataBase.Collections.Status);
+                }
+            }
+
+            if (!_db.DoesCollectionExist(DataBase.Collections.Class))
+            {
+                foreach (var data in new Class().SeedData())
+                {
+                    _db.Save(data, DataBase.Collections.Class);
+                }
+            }
 
         }
     }

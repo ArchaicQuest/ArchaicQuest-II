@@ -49,7 +49,37 @@ namespace ArchaicQuestII.API.Controllers
             var saved = _db.Save(data, DataBase.Collections.Account);
 
             string json = JsonConvert.SerializeObject(new { toast = "account created successfully", id = data.Id });
-            return saved ? (IActionResult) Ok(json) : BadRequest("Error saving account");}
+            return saved ? (IActionResult)Ok(json) : BadRequest("Error saving account");
         }
 
+        [HttpPost]
+        [Route("api/Account/Login")]
+        public IActionResult Login([FromBody] Login login)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                var exception = new Exception("Invalid login details");
+                throw exception;
+            }
+
+            var user = _db.GetCollection<Account>(DataBase.Collections.Account).FindOne(x => x.Email.Equals(login.Username));
+
+            if (user == null)
+            {
+                return BadRequest("Sorry that account does not exist.");
+            }
+
+            if (!BCrypt.Net.BCrypt.Verify(login.Password, user.Password))
+            {
+                return BadRequest("Password is not correct.");
+            }      
+
+            return (IActionResult)Ok(JsonConvert.SerializeObject(new { toast = "logged in successfully", id = user.Id }));
+            
+        }
     }
+
+
+
+}

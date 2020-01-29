@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using ArchaicQuestII.DataAccess.DataModels;
 using LiteDB;
 
 namespace ArchaicQuestII.DataAccess
@@ -36,7 +37,9 @@ namespace ArchaicQuestII.DataAccess
 
         public bool Save<T>(T data, Collections collectionName)
         {
-            _db.GetCollection<T>(GetCollectionName(collectionName)).Upsert(data);
+            var collection = _db.GetCollection<T>(GetCollectionName(collectionName));
+            collection.Upsert(data);
+            SetIndex(collection, collectionName);
 
             return true;
         }
@@ -60,6 +63,11 @@ namespace ArchaicQuestII.DataAccess
         public T GetById<T>(int id, Collections collectionName)
         {
             return _db.GetCollection<T>(GetCollectionName(collectionName)).FindById(id);
+        }
+
+        public bool DoesCollectionExist(Collections collectionName)
+        {
+           return _db.CollectionExists(GetCollectionName(collectionName));
         }
 
         private static string GetCollectionName(Collections collectionName)
@@ -92,6 +100,20 @@ namespace ArchaicQuestII.DataAccess
                     return "error";
 
             }
+        }
+        /// <summary>
+        /// Set index for each collection type
+        /// </summary>
+        private static void SetIndex<T>(LiteCollection<T> collection, Collections collectionName)
+        {
+
+            if (collectionName == Collections.Account)
+            {
+                (collection as LiteCollection<Account>)?.EnsureIndex(x => x.UserName);
+                (collection as LiteCollection<Account>)?.EnsureIndex(x => x.Id);
+                (collection as LiteCollection<Account>)?.EnsureIndex(x => x.Characters);
+            }
+
         }
     }
 }
