@@ -4,7 +4,11 @@ using ArchaicQuestII.GameLogic.Character;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using ArchaicQuestII.DataAccess.DataModels;
 using Newtonsoft.Json;
+using Account = ArchaicQuestII.GameLogic.Account.Account;
+using AccountStats = ArchaicQuestII.GameLogic.Account.AccountStats;
 
 namespace ArchaicQuestII.API.Controllers
 {
@@ -77,6 +81,41 @@ namespace ArchaicQuestII.API.Controllers
 
             return (IActionResult)Ok(JsonConvert.SerializeObject(new { toast = "logged in successfully", id = user.Id }));
             
+        }
+
+        [HttpPost]
+        [Route("api/Account/Profile")]
+        public IActionResult GetProfile([FromBody] Guid id)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                var exception = new Exception("Invalid request");
+                throw exception;
+            }
+
+            var user = _db.GetCollection<Account>(DataBase.Collections.Account).FindOne(x => x.Id.Equals(id));
+
+            if (user == null)
+            {
+                return BadRequest("Sorry that account does not exist.");
+            }
+
+            var characters = _db.GetCollection<Player>(DataBase.Collections.Players)
+                .Find(x => x.AccountId.Equals(user.Id));
+
+            var profile = new AccountViewModel()
+            {
+                Characters = characters.ToList(),
+                Credits = 0,
+                DateJoined = user.DateJoined,
+                Stats = new DataAccess.DataModels.AccountStats()
+            };
+
+           
+
+            return (IActionResult)Ok(JsonConvert.SerializeObject(new { toast = "logged in successfully", profile = profile}));
+
         }
     }
 
