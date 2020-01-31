@@ -65,7 +65,9 @@ namespace ArchaicQuestII.Controllers
                     Amount = 100
                 },
                 Race = player.Race,
-                JoinedDate = DateTime.Now
+                JoinedDate = DateTime.Now,
+                LastLoginTime = DateTime.Now,
+                
         };
 
 
