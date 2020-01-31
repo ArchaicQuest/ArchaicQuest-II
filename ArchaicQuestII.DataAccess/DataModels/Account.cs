@@ -34,18 +34,5 @@ namespace ArchaicQuestII.DataAccess.DataModels
 
     }
 
-    public class AccountViewModel
-    {
-        public AccountStats Stats { get; set; } = new AccountStats();
-        /// <summary>
-        /// Characters associated with account
-        /// </summary>
-        [BsonField("c")]
-       // public List<chara> Characters { get; set; } = new List<Player>();
-        [BsonField("dj")]
-        public DateTime DateJoined { get; set; } = DateTime.Now;
-        [BsonField("c")]
-        public int Credits { get; set; }
 
-    }
 }

@@ -33,4 +33,19 @@ namespace ArchaicQuestII.GameLogic.Account
         public int Credits { get; set; }
 
     }
+
+    public class AccountViewModel
+    {
+        public AccountStats Stats { get; set; } = new AccountStats();
+        /// <summary>
+        /// Characters associated with account
+        /// </summary>
+        [BsonField("c")]
+        public List<Player> Characters { get; set; } = new List<Player>();
+        [BsonField("dj")]
+        public DateTime DateJoined { get; set; } = DateTime.Now;
+        [BsonField("c")]
+        public int Credits { get; set; }
+
+    }
 }

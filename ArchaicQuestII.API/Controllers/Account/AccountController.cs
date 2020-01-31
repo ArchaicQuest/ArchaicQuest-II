@@ -5,19 +5,25 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ArchaicQuestII.API.Entities;
+using ArchaicQuestII.API.Services;
 using ArchaicQuestII.DataAccess.DataModels;
 using Newtonsoft.Json;
 using Account = ArchaicQuestII.GameLogic.Account.Account;
 using AccountStats = ArchaicQuestII.GameLogic.Account.AccountStats;
+using static ArchaicQuestII.API.Services.services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ArchaicQuestII.API.Controllers
 {
     public class AccountController : Controller
     {
         private IDataBase _db { get; }
-        public AccountController(IDataBase db)
+        private IAdminUserService _adminUserService;
+        public AccountController(IDataBase db, IAdminUserService adminUser)
         {
             _db = db;
+            _adminUserService = adminUser;
         }
 
         [HttpPost]
@@ -109,13 +115,36 @@ namespace ArchaicQuestII.API.Controllers
                 Characters = characters.ToList(),
                 Credits = 0,
                 DateJoined = user.DateJoined,
-                Stats = new DataAccess.DataModels.AccountStats()
+                Stats = new AccountStats()
+                {
+                    
+                }
             };
 
            
+            return Ok(JsonConvert.SerializeObject(new { toast = "logged in successfully", profile }));
 
-            return (IActionResult)Ok(JsonConvert.SerializeObject(new { toast = "logged in successfully", profile = profile}));
+        }
 
+
+        //https://jasonwatmore.com/post/2018/08/14/aspnet-core-21-jwt-authentication-tutorial-with-example-api
+        [HttpPost("api/Account/authenticate")]
+        public IActionResult Authenticate([FromBody]AdminUser userParam)
+        {
+            var user = _adminUserService.Authenticate(userParam.Username, userParam.Password);
+
+            if (user == null)
+                return BadRequest(new { message = "Username or password is incorrect" });
+
+            return Ok(user);
+        }
+
+        [Authorize]
+        [HttpGet("api/Account/getusers")]
+        public IActionResult GetAll()
+        {
+            var users = _adminUserService.GetAll();
+            return Ok(users);
         }
     }
 
