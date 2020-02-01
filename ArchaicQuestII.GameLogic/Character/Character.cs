@@ -16,13 +16,14 @@ namespace ArchaicQuestII.GameLogic.Character
         /// used to find player in cached dictionary and to send data directly to player
         /// </summary>
         [BsonIgnore]
-        public int ConnectionId { get; set; }
+        [JsonProperty("connectionId")]
+        public string ConnectionId { get; set; }
 
         /// <summary>
         /// Associated Account Id
         /// </summary>
         public Guid AccountId { get; set; } = Guid.Empty;
-
+        [JsonProperty("id")]
         public Guid Id { get; set; } = Guid.Empty;
         [JsonProperty("name")]
         public string Name { get; set; }

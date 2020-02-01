@@ -5,6 +5,7 @@ using System.IO;
 using System.Threading.Tasks;
 using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Core;
 using Microsoft.Extensions.Logging;
 
 namespace ArchaicQuestII.Hubs
@@ -13,10 +14,12 @@ namespace ArchaicQuestII.Hubs
     {
         private readonly ILogger<GameHub> _logger;
         private IDataBase _db { get; }
-        public GameHub(IDataBase db, ILogger<GameHub> logger)
+        private ICache _cache { get; }
+        public GameHub(IDataBase db, ICache cache, ILogger<GameHub> logger)
         {
             _logger = logger;
             _db = db;
+            _cache = cache;
         }
         /// <summary>
         /// Do action when user connects 
@@ -61,10 +64,11 @@ namespace ArchaicQuestII.Hubs
             var location = System.Reflection.Assembly.GetEntryAssembly().Location;
             var directory = System.IO.Path.GetDirectoryName(location);
 
-            var motd = File.ReadAllText(directory + "/motd");  
-
+            var motd = File.ReadAllText(directory + "/motd");
+ 
            await SendToClient(motd, id);
         }
+ 
 
         public void CreateCharacter(string name = "Liam")
         {
@@ -74,6 +78,24 @@ namespace ArchaicQuestII.Hubs
             };
 
             _db.Save(newPlayer, DataBase.Collections.Players);
+
+        }
+
+        public async void AddCharacter(string hubId, Guid characterId)
+        {
+            var player = _db.GetById<Player>(characterId, DataBase.Collections.Players);
+            player.ConnectionId = hubId;
+
+            if (_cache.PlayerAlreadyExists(characterId))
+            {
+                // log char off
+                // remove from _cache
+                // return
+            }
+
+            _cache.AddPlayer(hubId, player);
+
+            await SendToClient($"Welcome {player.Name}. Your adventure awaits you.", hubId);
 
         }
     }

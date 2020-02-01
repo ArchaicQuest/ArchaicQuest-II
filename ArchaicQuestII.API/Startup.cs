@@ -16,6 +16,7 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IO;
 using System.Text;
+using ArchaicQuestII.GameLogic.Core;
 using static ArchaicQuestII.API.Services.services;
 
 namespace ArchaicQuestII.API
@@ -34,8 +35,10 @@ namespace ArchaicQuestII.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<LiteDatabase>(
-                new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AQ.db")));
+                new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AQ.db")));  
             services.AddScoped<IDataBase, DataBase>();
+            services.AddSingleton<ICache>(new Cache());
+         
             services.AddMvc();
             services.AddSignalR(o =>
             {
