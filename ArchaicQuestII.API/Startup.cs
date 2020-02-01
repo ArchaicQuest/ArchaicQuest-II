@@ -17,6 +17,7 @@ using System;
 using System.IO;
 using System.Text;
 using ArchaicQuestII.GameLogic.Core;
+using ArchaicQuestII.GameLogic.World.Room;
 using static ArchaicQuestII.API.Services.services;
 
 namespace ArchaicQuestII.API
@@ -24,6 +25,7 @@ namespace ArchaicQuestII.API
     public class Startup
     {
         private IDataBase _db;
+        private ICache _cache;
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -76,7 +78,7 @@ namespace ArchaicQuestII.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IDataBase db)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IDataBase db, ICache cache)
         {
             if (env.IsDevelopment())
             {
@@ -110,6 +112,13 @@ namespace ArchaicQuestII.API
                 routes.MapHub<GameHub>("/Hubs/game");
             });
 
+
+            var rooms = _db.GetList<Room>(DataBase.Collections.Room);
+
+            foreach (var room in rooms)
+            {
+                _cache.AddRoom(room.Id, room);
+            }
 
 
             if (!_db.DoesCollectionExist(DataBase.Collections.Alignment))

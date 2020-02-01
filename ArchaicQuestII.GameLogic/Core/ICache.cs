@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Core
 {
@@ -13,5 +14,10 @@ namespace ArchaicQuestII.GameLogic.Core
         bool AddPlayer(string id, Player player);
 
         bool PlayerAlreadyExists(Guid id);
+
+        bool AddRoom(int id, Room room);
+
+        Room GetRoom(int id);
+        bool UpdateRoom(int id, Room room, Player player);
     }
 }
