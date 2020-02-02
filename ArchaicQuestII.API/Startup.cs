@@ -50,7 +50,15 @@ namespace ArchaicQuestII.API
             {
                 o.EnableDetailedErrors = true;
             });
-            services.AddCors();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("client",
+                    builder => builder.WithOrigins("http://localhost:4200")
+                        .AllowAnyMethod().AllowAnyHeader().AllowCredentials());
+                options.AddPolicy("admin",
+                    builder => builder.WithOrigins("http://localhost:1337")
+                        .AllowAnyMethod().AllowAnyHeader().AllowCredentials());
+            });
 
            
 
@@ -103,9 +111,16 @@ namespace ArchaicQuestII.API
             _cache = cache;
             app.UseStaticFiles();
 
-            app.UseCors(
-                options => options.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader().AllowCredentials()   
-            );
+            //app.UseCors(
+            //    options => options.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader().AllowCredentials()   
+            //);
+
+            //app.UseCors(
+            //    options => options.WithOrigins("http://localhost:4").AllowAnyMethod().AllowAnyHeader().AllowCredentials()
+            //);
+
+            app.UseCors("client");
+            app.UseCors("admin");
 
             app.UseAuthentication();
 
