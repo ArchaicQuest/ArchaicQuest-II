@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArchaicQuestII.GameLogic", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArchaicQuestII.API", "ArchaicQuestII.API\ArchaicQuestII.API.csproj", "{714AA7A5-BA64-459F-B402-7FFF067229B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArchaicQuestII.GameLogic.Tests", "ArchaicQuestII.GameLogic.Tests\ArchaicQuestII.GameLogic.Tests.csproj", "{DC45C0AE-72CE-4310-9C8C-0F95337A152D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArchaicQuestII.GameLogic.Tests", "ArchaicQuestII.GameLogic.Tests\ArchaicQuestII.GameLogic.Tests.csproj", "{DC45C0AE-72CE-4310-9C8C-0F95337A152D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

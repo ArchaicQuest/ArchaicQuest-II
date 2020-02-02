@@ -5,22 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Character\Equipment\Enum\**" />
-    <Compile Remove="Spell\Type\**" />
-    <EmbeddedResource Remove="Character\Equipment\Enum\**" />
-    <EmbeddedResource Remove="Spell\Type\**" />
-    <None Remove="Character\Equipment\Enum\**" />
-    <None Remove="Spell\Type\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNet.SignalR.Core" Version="2.2.1" />
-    <PackageReference Include="Serilog" Version="2.9.0" />
-    <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\ArchaicQuestII.DataAccess\ArchaicQuestII.DataAccess.csproj" />
+    <ProjectReference Include="..\ArchaicQuestII.GameLogic\ArchaicQuestII.GameLogic.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,9 +15,6 @@
     </Reference>
     <Reference Include="Microsoft.Extensions.Logging.Abstractions">
       <HintPath>..\..\..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.extensions.logging.abstractions\2.2.0\lib\netstandard2.0\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\newtonsoft.json\9.0.1\lib\netstandard1.0\Newtonsoft.Json.dll</HintPath>
     </Reference>
   </ItemGroup>
 

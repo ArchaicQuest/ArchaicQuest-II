@@ -1,11 +1,36 @@
 ﻿using System;
+
+using ArchaicQuestII.GameLogic.Hubs;
+using Microsoft.AspNetCore.SignalR;
+
 namespace ArchaicQuestII.GameLogic.Core
 {
-    public class WriteToClient: IWriteToClient
+    public class WriteToClient : IWriteToClient
     {
-        public void WriteLine(string message)
+        private readonly IHubContext<GameHub> _hubContext;
+      
+
+        public WriteToClient(IHubContext<GameHub> hubContext)
         {
-            Console.WriteLine(message);
+            _hubContext = hubContext;
+        }
+
+    
+
+        public async void WriteLine(string message, string id)
+        {
+          
+            try
+            {
+                
+                await _hubContext.Clients.Client(id).SendAsync("SendMessage", message, "");
+            }
+            catch (Exception ex)
+            {
+                
+            }
         }
     }
 }
+    
+ 

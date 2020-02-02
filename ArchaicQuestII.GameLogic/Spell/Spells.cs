@@ -32,30 +32,30 @@ namespace ArchaicQuestII.GameLogic.Spell
 
             switch (origin.Status)
             {
-                case CharacterStatus.Status.Sleeping:
-                    _writer.WriteLine("You can't do this while asleep.");
-                    return;
-                case CharacterStatus.Status.Stunned:
-                    _writer.WriteLine("You are stunned.");
-                    return;
-                case CharacterStatus.Status.Dead:
-                case CharacterStatus.Status.Ghost:
-                case CharacterStatus.Status.Incapitated:
-                    _writer.WriteLine("You can't do this while dead.");
-                    return;
-                case CharacterStatus.Status.Resting:
-                case CharacterStatus.Status.Sitting:
-                    _writer.WriteLine("You need to stand up before you do that.");
-                    return;
-                case CharacterStatus.Status.Busy:
-                    _writer.WriteLine("You can't do that right now.");
-                    return;
+                //case CharacterStatus.Status.Sleeping:
+                //    _writer.WriteLine("You can't do this while asleep.");
+                //    return;
+                //case CharacterStatus.Status.Stunned:
+                //    _writer.WriteLine("You are stunned.");
+                //    return;
+                //case CharacterStatus.Status.Dead:
+                //case CharacterStatus.Status.Ghost:
+                //case CharacterStatus.Status.Incapitated:
+                //    _writer.WriteLine("You can't do this while dead.");
+                //    return;
+                //case CharacterStatus.Status.Resting:
+                //case CharacterStatus.Status.Sitting:
+                //    _writer.WriteLine("You need to stand up before you do that.");
+                //    return;
+                //case CharacterStatus.Status.Busy:
+                //    _writer.WriteLine("You can't do that right now.");
+                //    return;
             }
 
 
             if (origin.Attributes.Attribute[EffectLocation.Mana] < spell.Cost.Table[Cost.Mana])
             {
-                _writer.WriteLine("You don't have enough mana.");
+               // _writer.WriteLine("You don't have enough mana.");
                 return;
             }
 
@@ -77,7 +77,7 @@ namespace ArchaicQuestII.GameLogic.Spell
                 return;
             }
 
-            _writer.WriteLine(spell.SkillStart.ToPlayer);
+          //  _writer.WriteLine(spell.SkillStart.ToPlayer);
 
             var skillTarget = new SkillTarget
             {

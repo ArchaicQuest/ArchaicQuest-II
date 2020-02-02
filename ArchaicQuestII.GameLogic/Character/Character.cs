@@ -77,10 +77,14 @@ namespace ArchaicQuestII.GameLogic.Character
         public Affects Affects { get; set; }
         [JsonProperty("config")]
         public Config Config { get; set; }
-        
-        
-        
+        [JsonProperty("roomId")]
+        public int RoomId { get; set; }
+        [JsonProperty("recallId")]
+        public int RecallId { get; set; }
 
-        
+
+
+
+
     }
 }

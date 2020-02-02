@@ -6,21 +6,27 @@ using System.Threading.Tasks;
 using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Core;
+using ArchaicQuestII.GameLogic.World.Room;
+using Microsoft.AspNet.SignalR.Hubs;
 using Microsoft.Extensions.Logging;
 
-namespace ArchaicQuestII.Hubs
+namespace ArchaicQuestII.GameLogic.Hubs
 {
     public class GameHub : Hub
     {
         private readonly ILogger<GameHub> _logger;
         private IDataBase _db { get; }
         private ICache _cache { get; }
-        public GameHub(IDataBase db, ICache cache, ILogger<GameHub> logger)
+        private readonly IWriteToClient _writeToClient;
+        public GameHub(IDataBase db, ICache cache, ILogger<GameHub> logger, IWriteToClient writeToClient)
         {
             _logger = logger;
             _db = db;
             _cache = cache;
+            _writeToClient = writeToClient;
         }
+
+ 
         /// <summary>
         /// Do action when user connects 
         /// </summary>
@@ -83,20 +89,58 @@ namespace ArchaicQuestII.Hubs
 
         public async void AddCharacter(string hubId, Guid characterId)
         {
+
+            var player = GetCharacter(hubId, characterId);
+            AddCharacterToCache(hubId, player);
+
+          
+
+            await SendToClient($"Welcome {player.Name}. Your adventure awaits you.", hubId);
+
+            GetRoom(hubId, player);
+        }
+
+        /// <summary>
+        /// Find Character in DB and add to cache
+        /// Check if player is already in cache 
+        /// if so kick em off
+        /// </summary>
+        /// <param name="hubId">string</param>
+        /// <param name="characterId">guid</param>
+        /// <returns>Player Character</returns>
+        private Player GetCharacter(string hubId, Guid characterId)
+        {
             var player = _db.GetById<Player>(characterId, DataBase.Collections.Players);
             player.ConnectionId = hubId;
+            player.LastCommandTime = DateTime.Now;
+            player.LastLoginTime = DateTime.Now;
 
-            if (_cache.PlayerAlreadyExists(characterId))
+            return player;
+        }
+
+        private void AddCharacterToCache(string hubId, Player character)
+        {
+             
+            if (_cache.PlayerAlreadyExists(character.Id))
             {
                 // log char off
                 // remove from _cache
                 // return
             }
 
-            _cache.AddPlayer(hubId, player);
-
-            await SendToClient($"Welcome {player.Name}. Your adventure awaits you.", hubId);
+            _cache.AddPlayer(hubId, character);
 
         }
+
+        private void GetRoom(string hubId, Player character)
+        {
+           var room = _cache.GetRoom(1);
+
+            new RoomActions(_writeToClient).Look(room, character);
+
+          //  return room;
+        }
+
+
     }
 }

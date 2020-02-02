@@ -5,7 +5,6 @@ using ArchaicQuestII.GameLogic.Character.AttackTypes;
 using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Race;
 using ArchaicQuestII.GameLogic.Character.Status;
-using ArchaicQuestII.Hubs;
 using LiteDB;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -17,7 +16,9 @@ using System;
 using System.IO;
 using System.Text;
 using ArchaicQuestII.GameLogic.Core;
+using ArchaicQuestII.GameLogic.Hubs;
 using ArchaicQuestII.GameLogic.World.Room;
+using Microsoft.AspNetCore.SignalR;
 using static ArchaicQuestII.API.Services.services;
 
 namespace ArchaicQuestII.API
@@ -26,12 +27,15 @@ namespace ArchaicQuestII.API
     {
         private IDataBase _db;
         private ICache _cache;
+        private IHubContext<GameHub> _hubContext;
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
+
+    
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -40,7 +44,7 @@ namespace ArchaicQuestII.API
                 new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AQ.db")));  
             services.AddScoped<IDataBase, DataBase>();
             services.AddSingleton<ICache>(new Cache());
-         
+            //services.AddScoped<IWriteToClient, WriteToClient>();
             services.AddMvc();
             services.AddSignalR(o =>
             {
@@ -48,7 +52,12 @@ namespace ArchaicQuestII.API
             });
             services.AddCors();
 
-             // configure strongly typed settings objects
+           
+
+            services.AddSingleton<IWriteToClient, WriteToClient>((factory) => new WriteToClient(_hubContext));
+
+
+            // configure strongly typed settings objects
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
 
@@ -75,6 +84,8 @@ namespace ArchaicQuestII.API
 
             // configure DI for application services
             services.AddScoped<IAdminUserService, AdminUserService>();
+
+        
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -89,10 +100,11 @@ namespace ArchaicQuestII.API
                 app.UseExceptionHandler("/Play/Error");
             }
             _db = db;
+            _cache = cache;
             app.UseStaticFiles();
 
             app.UseCors(
-                options => options.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader().AllowCredentials()
+                options => options.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader().AllowCredentials()   
             );
 
             app.UseAuthentication();
@@ -110,7 +122,9 @@ namespace ArchaicQuestII.API
             app.UseSignalR(routes =>
             {
                 routes.MapHub<GameHub>("/Hubs/game");
+                
             });
+            _hubContext = app.ApplicationServices.GetService<IHubContext<GameHub>>();
 
 
             var rooms = _db.GetList<Room>(DataBase.Collections.Room);

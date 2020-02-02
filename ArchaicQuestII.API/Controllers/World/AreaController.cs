@@ -21,8 +21,7 @@ namespace ArchaicQuestII.Controllers
         [HttpPost]
         [Route("api/World/Area")]
         public void Post([FromBody] Area area)
-        {
-
+        { 
 
             if (!ModelState.IsValid)
             {
@@ -30,28 +29,33 @@ namespace ArchaicQuestII.Controllers
                 throw exception;
             }
 
+
+            if (area.Id != -1)
+            {
+
+                var data = _db.GetById<Area>(area.Id, DataBase.Collections.Area);
+
+                data.Description = area.Description;
+                data.DateUpdated = DateTime.Now;
+                data.Title = area.Title;
+
+                _db.Save(data, DataBase.Collections.Area);
+            }
+
+
             var newArea = new Area()
             {
+                
                 Title = area.Title,
                 Description = area.Description,
                 DateCreated = DateTime.Now,
                 CreatedBy = "Malleus",
-                DateUpdated = DateTime.Now
-           
+                DateUpdated = DateTime.Now    
              
             };
 
-            var data = _db.GetById<Area>(area.Id, DataBase.Collections.Area);
 
-            data.Description = area.Description;
-            data.DateUpdated = DateTime.Now;
-            data.Title = area.Title;
-
-            _db.Save(data, DataBase.Collections.Area);
-
-
-
-            _db.Save(area, DataBase.Collections.Area);
+            _db.Save(newArea, DataBase.Collections.Area);
 
         }
 

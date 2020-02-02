@@ -8,6 +8,6 @@ namespace ArchaicQuestII.GameLogic.Core
 {
    public interface IWriteToClient
     {
-            void WriteLine(string message);
+            void WriteLine(string message, string id);
     }
 }
