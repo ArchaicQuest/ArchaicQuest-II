@@ -73,47 +73,47 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
             if (room.Exits.NorthWest != null)
             {
-                exits += "North West";
+                exits += room.Exits.NorthWest.Name;
             }
 
             if (room.Exits.North != null)
             {
-                exits += " North";
+                exits += room.Exits.North.Name;
             }
 
             if (room.Exits.NorthEast != null)
             {
-                exits += " North East";
+                exits += room.Exits.NorthEast.Name;
             }
 
             if (room.Exits.East != null)
             {
-                exits += " East";
+                exits += room.Exits.East.Name;
             }
 
             if (room.Exits.SouthEast != null)
             {
-                exits += " South East";
+                exits += room.Exits.SouthEast.Name;
             }
 
             if (room.Exits.South != null)
             {
-                exits += " South";
+                exits += room.Exits.South.Name;
             }
 
             if (room.Exits.SouthWest != null)
             {
-                exits += " South West";
+                exits += room.Exits.SouthWest.Name;
             }
 
             if (room.Exits.West != null)
             {
-                exits += " West";
+                exits += room.Exits.West.Name;
             }
 
             if (string.IsNullOrEmpty(exits))
             {
-                exits = "None";
+                exits = " None";
             }
  
 
