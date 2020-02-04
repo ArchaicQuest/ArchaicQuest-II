@@ -23,6 +23,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
             if (getExitToNextRoom == null)
             {
                 _writeToClient.WriteLine("You can't go that way", character.ConnectionId);
+                return;
             }
 
             var getNextRoom = _cache.GetRoom(getExitToNextRoom.AreaId);

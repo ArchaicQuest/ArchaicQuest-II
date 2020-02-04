@@ -15,6 +15,8 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IO;
 using System.Text;
+using ArchaicQuestII.GameLogic.Commands;
+using ArchaicQuestII.GameLogic.Commands.Movement;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Hubs;
 using ArchaicQuestII.GameLogic.World.Room;
@@ -44,7 +46,9 @@ namespace ArchaicQuestII.API
                 new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AQ.db")));  
             services.AddScoped<IDataBase, DataBase>();
             services.AddSingleton<ICache>(new Cache());
-            //services.AddScoped<IWriteToClient, WriteToClient>();
+            services.AddTransient<IMovement, Movement>();
+            services.AddTransient<ICommands, Commands>();
+
             services.AddMvc();
             services.AddSignalR(o =>
             {
