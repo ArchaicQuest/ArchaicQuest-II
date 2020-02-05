@@ -5,6 +5,7 @@ using System.IO;
 using System.Threading.Tasks;
 using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Commands;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.World.Room;
 using Microsoft.AspNet.SignalR.Hubs;
@@ -18,12 +19,14 @@ namespace ArchaicQuestII.GameLogic.Hubs
         private IDataBase _db { get; }
         private ICache _cache { get; }
         private readonly IWriteToClient _writeToClient;
-        public GameHub(IDataBase db, ICache cache, ILogger<GameHub> logger, IWriteToClient writeToClient)
+        private readonly ICommands _commands;
+        public GameHub(IDataBase db, ICache cache, ILogger<GameHub> logger, IWriteToClient writeToClient, ICommands commands)
         {
             _logger = logger;
             _db = db;
             _cache = cache;
             _writeToClient = writeToClient;
+            _commands = commands;
         }
 
  
@@ -43,6 +46,23 @@ namespace ArchaicQuestII.GameLogic.Hubs
         public override async Task OnDisconnectedAsync(Exception ex)
         {
            // await Clients.All.SendAsync("SendAction", "user", "left");
+        }
+
+        /// <summary>
+        /// get message from client
+        /// </summary>
+        /// <returns></returns>
+        public async Task SendToServer(string message, string connectionId)
+        {
+           // _logger.LogInformation($"Player sent {message}, hub ID{connectionId}");
+            var player = _cache.GetPlayer(connectionId);
+            player.Buffer.Push(message);
+         //   var room = _cache.GetRoom(player.RoomId);
+
+
+            //_commands.ProcessCommand(message, player, room);
+
+          //   await Clients.All.SendAsync("SendMessage", "user x", message);
         }
 
         /// <summary>

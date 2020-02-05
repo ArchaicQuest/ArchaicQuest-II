@@ -11,11 +11,12 @@ namespace ArchaicQuestII.GameLogic.Commands
    public class Commands: ICommands
     {
         private readonly IMovement _movement;
-       
+        private readonly IRoomActions _roomActions;
 
-        public Commands(IMovement movement)
+        public Commands(IMovement movement, IRoomActions roomActions)
         {
             _movement = movement;
+            _roomActions = roomActions;
         }
  
         public void CommandList(string key, string options, Player player, Room room)
@@ -62,6 +63,10 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "d":
                     _movement.Move(room, player, "Down");
                     break;
+                case "look":
+                case "l":
+                    _roomActions.Look(room, player);
+                    break;
             }
         }    
 
@@ -69,7 +74,6 @@ namespace ArchaicQuestII.GameLogic.Commands
         {
 
             var cleanCommand = command.Trim().ToLower();
-
             CommandList(cleanCommand, String.Empty, player, room);
         }
     }

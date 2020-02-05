@@ -18,6 +18,22 @@ namespace ArchaicQuestII.GameLogic.Core
             return _playerCache.TryAdd(id, player);
         }
 
+        public Player GetPlayer(string id)
+        {
+            _playerCache.TryGetValue(id, out Player player);
+
+            return player;
+        }
+
+        /// <summary>
+        /// Only for the main loop
+        /// </summary>
+        /// <returns></returns>
+        public ConcurrentDictionary<string, Player> GetPlayerCache()
+        {
+            return _playerCache;
+        }
+
         public bool PlayerAlreadyExists(Guid id)
         {
             return _playerCache.Values.Any(x => x.Id.Equals(id));
@@ -30,7 +46,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public Room GetRoom(int id)
         {
-            _roomCache.TryGetValue(id, out Room room);
+            _roomCache.TryGetValue(id == 0 ? 1 : id, out Room room);
 
             return room;
         }

@@ -48,6 +48,7 @@ namespace ArchaicQuestII.API
             services.AddSingleton<ICache>(new Cache());
             services.AddTransient<IMovement, Movement>();
             services.AddTransient<ICommands, Commands>();
+            services.AddTransient<IRoomActions, RoomActions>();
 
             services.AddMvc();
             services.AddSignalR(o =>

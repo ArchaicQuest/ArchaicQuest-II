@@ -7,7 +7,7 @@ using ArchaicQuestII.GameLogic.Core;
 
 namespace ArchaicQuestII.GameLogic.World.Room
 {
-    public class RoomActions
+    public class RoomActions:IRoomActions
     {
 
         private readonly IWriteToClient _writeToClient;
