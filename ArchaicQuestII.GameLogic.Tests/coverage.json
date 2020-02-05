@@ -1,0 +1,4793 @@
+{
+  "ArchaicQuestII.DataAccess.dll": {
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.DataAccess\\DataBase.cs": {
+      "ArchaicQuestII.DataAccess.DataBase": {
+        "LiteDB.LiteDatabase ArchaicQuestII.DataAccess.DataBase::get__db()": {
+          "Lines": {
+            "12": 0
+          },
+          "Branches": []
+        },
+        "System.Boolean ArchaicQuestII.DataAccess.DataBase::Save(T,ArchaicQuestII.DataAccess.DataBase/Collections)": {
+          "Lines": {
+            "39": 0,
+            "40": 0,
+            "41": 0,
+            "42": 0,
+            "44": 0,
+            "45": 0
+          },
+          "Branches": []
+        },
+        "System.Collections.Generic.List`1<T> ArchaicQuestII.DataAccess.DataBase::GetList(ArchaicQuestII.DataAccess.DataBase/Collections)": {
+          "Lines": {
+            "48": 0,
+            "50": 0,
+            "51": 0
+          },
+          "Branches": []
+        },
+        "LiteDB.LiteCollection`1<T> ArchaicQuestII.DataAccess.DataBase::GetCollection(ArchaicQuestII.DataAccess.DataBase/Collections)": {
+          "Lines": {
+            "54": 0,
+            "55": 0,
+            "56": 0
+          },
+          "Branches": []
+        },
+        "T ArchaicQuestII.DataAccess.DataBase::GetById(System.Guid,ArchaicQuestII.DataAccess.DataBase/Collections)": {
+          "Lines": {
+            "59": 0,
+            "60": 0,
+            "61": 0
+          },
+          "Branches": []
+        },
+        "T ArchaicQuestII.DataAccess.DataBase::GetById(System.Int32,ArchaicQuestII.DataAccess.DataBase/Collections)": {
+          "Lines": {
+            "64": 0,
+            "65": 0,
+            "66": 0
+          },
+          "Branches": []
+        },
+        "System.Boolean ArchaicQuestII.DataAccess.DataBase::DoesCollectionExist(ArchaicQuestII.DataAccess.DataBase/Collections)": {
+          "Lines": {
+            "69": 0,
+            "70": 0,
+            "71": 0
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.DataAccess.DataBase::GetCollectionName(ArchaicQuestII.DataAccess.DataBase/Collections)": {
+          "Lines": {
+            "74": 0,
+            "75": 0,
+            "78": 0,
+            "80": 0,
+            "82": 0,
+            "84": 0,
+            "86": 0,
+            "88": 0,
+            "90": 0,
+            "92": 0,
+            "94": 0,
+            "96": 0,
+            "98": 0,
+            "100": 0,
+            "103": 0
+          },
+          "Branches": [
+            {
+              "Line": 75,
+              "Offset": 6,
+              "EndOffset": 57,
+              "Path": 2,
+              "Ordinal": 2,
+              "Hits": 0
+            },
+            {
+              "Line": 75,
+              "Offset": 6,
+              "EndOffset": 65,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 0
+            },
+            {
+              "Line": 75,
+              "Offset": 6,
+              "EndOffset": 73,
+              "Path": 3,
+              "Ordinal": 3,
+              "Hits": 0
+            },
+            {
+              "Line": 75,
+              "Offset": 6,
+              "EndOffset": 81,
+              "Path": 4,
+              "Ordinal": 4,
+              "Hits": 0
+            },
+            {
+              "Line": 75,
+              "Offset": 6,
+              "EndOffset": 89,
+              "Path": 5,
+              "Ordinal": 5,
+              "Hits": 0
+            },
+            {
+              "Line": 75,
+              "Offset": 6,
+              "EndOffset": 97,
+              "Path": 6,
+              "Ordinal": 6,
+              "Hits": 0
+            },
+            {
+              "Line": 75,
+              "Offset": 6,
+              "EndOffset": 105,
+              "Path": 7,
+              "Ordinal": 7,
+              "Hits": 0
+            },
+            {
+              "Line": 75,
+              "Offset": 6,
+              "EndOffset": 113,
+              "Path": 8,
+              "Ordinal": 8,
+              "Hits": 0
+            },
+            {
+              "Line": 75,
+              "Offset": 6,
+              "EndOffset": 121,
+              "Path": 9,
+              "Ordinal": 9,
+              "Hits": 0
+            },
+            {
+              "Line": 75,
+              "Offset": 6,
+              "EndOffset": 129,
+              "Path": 10,
+              "Ordinal": 10,
+              "Hits": 0
+            },
+            {
+              "Line": 75,
+              "Offset": 6,
+              "EndOffset": 137,
+              "Path": 11,
+              "Ordinal": 11,
+              "Hits": 0
+            },
+            {
+              "Line": 75,
+              "Offset": 6,
+              "EndOffset": 145,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 0
+            }
+          ]
+        },
+        "System.Void ArchaicQuestII.DataAccess.DataBase::SetIndex(LiteDB.LiteCollection`1<T>,ArchaicQuestII.DataAccess.DataBase/Collections)": {
+          "Lines": {
+            "108": 0,
+            "110": 0,
+            "111": 0,
+            "112": 0,
+            "113": 0,
+            "114": 0,
+            "115": 0,
+            "117": 0
+          },
+          "Branches": [
+            {
+              "Line": 110,
+              "Offset": 7,
+              "EndOffset": 12,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 0
+            },
+            {
+              "Line": 112,
+              "Offset": 20,
+              "EndOffset": 22,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 0
+            },
+            {
+              "Line": 112,
+              "Offset": 20,
+              "EndOffset": 25,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 0
+            },
+            {
+              "Line": 113,
+              "Offset": 96,
+              "EndOffset": 98,
+              "Path": 0,
+              "Ordinal": 4,
+              "Hits": 0
+            },
+            {
+              "Line": 113,
+              "Offset": 96,
+              "EndOffset": 101,
+              "Path": 1,
+              "Ordinal": 5,
+              "Hits": 0
+            },
+            {
+              "Line": 114,
+              "Offset": 172,
+              "EndOffset": 174,
+              "Path": 0,
+              "Ordinal": 6,
+              "Hits": 0
+            },
+            {
+              "Line": 114,
+              "Offset": 172,
+              "EndOffset": 177,
+              "Path": 1,
+              "Ordinal": 7,
+              "Hits": 0
+            },
+            {
+              "Line": 110,
+              "Offset": 7,
+              "EndOffset": 242,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 0
+            }
+          ]
+        },
+        "System.Void ArchaicQuestII.DataAccess.DataBase::.ctor(LiteDB.LiteDatabase)": {
+          "Lines": {
+            "13": 0,
+            "14": 0,
+            "15": 0,
+            "16": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.DataAccess\\DataModels\\Account.cs": {
+      "ArchaicQuestII.DataAccess.DataModels.Account": {
+        "System.Guid ArchaicQuestII.DataAccess.DataModels.Account::get_Id()": {
+          "Lines": {
+            "10": 0
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.DataAccess.DataModels.Account::get_UserName()": {
+          "Lines": {
+            "12": 0
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.DataAccess.DataModels.Account::get_Password()": {
+          "Lines": {
+            "14": 0
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.DataAccess.DataModels.Account::get_Email()": {
+          "Lines": {
+            "16": 0
+          },
+          "Branches": []
+        },
+        "System.Boolean ArchaicQuestII.DataAccess.DataModels.Account::get_EmailVerified()": {
+          "Lines": {
+            "22": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.DataAccess.DataModels.AccountStats ArchaicQuestII.DataAccess.DataModels.Account::get_Stats()": {
+          "Lines": {
+            "24": 0
+          },
+          "Branches": []
+        },
+        "System.Collections.Generic.List`1<System.Guid> ArchaicQuestII.DataAccess.DataModels.Account::get_Characters()": {
+          "Lines": {
+            "29": 0
+          },
+          "Branches": []
+        },
+        "System.DateTime ArchaicQuestII.DataAccess.DataModels.Account::get_DateJoined()": {
+          "Lines": {
+            "31": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 ArchaicQuestII.DataAccess.DataModels.Account::get_Credits()": {
+          "Lines": {
+            "33": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.DataAccess\\DataModels\\AccountStats.cs": {
+      "ArchaicQuestII.DataAccess.DataModels.AccountStats": {
+        "System.Int32 ArchaicQuestII.DataAccess.DataModels.AccountStats::get_MobKills()": {
+          "Lines": {
+            "10": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 ArchaicQuestII.DataAccess.DataModels.AccountStats::get_PlayerKills()": {
+          "Lines": {
+            "11": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 ArchaicQuestII.DataAccess.DataModels.AccountStats::get_Deaths()": {
+          "Lines": {
+            "12": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 ArchaicQuestII.DataAccess.DataModels.AccountStats::get_TotalPlayTime()": {
+          "Lines": {
+            "13": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 ArchaicQuestII.DataAccess.DataModels.AccountStats::get_ExploredRooms()": {
+          "Lines": {
+            "14": 0
+          },
+          "Branches": []
+        }
+      }
+    }
+  },
+  "ArchaicQuestII.GameLogic.dll": {
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\World\\Room\\RoomObject.cs": {
+      "ArchaicQuestII.Core.World.RoomObject": {
+        "System.String ArchaicQuestII.Core.World.RoomObject::get_Name()": {
+          "Lines": {
+            "10": 0
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.Core.World.RoomObject::get_Look()": {
+          "Lines": {
+            "11": 0
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.Core.World.RoomObject::get_Examine()": {
+          "Lines": {
+            "12": 0
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.Core.World.RoomObject::get_Touch()": {
+          "Lines": {
+            "13": 0
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.Core.World.RoomObject::get_Smell()": {
+          "Lines": {
+            "14": 0
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.Core.World.RoomObject::get_Taste()": {
+          "Lines": {
+            "15": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\World\\Room\\Exit.cs": {
+      "ArchaicQuestII.GameLogic.World.Room.Coordinates": {
+        "System.Int32 ArchaicQuestII.GameLogic.World.Room.Coordinates::get_X()": {
+          "Lines": {
+            "7": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 ArchaicQuestII.GameLogic.World.Room.Coordinates::get_Y()": {
+          "Lines": {
+            "8": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 ArchaicQuestII.GameLogic.World.Room.Coordinates::get_Z()": {
+          "Lines": {
+            "9": 0
+          },
+          "Branches": []
+        }
+      },
+      "ArchaicQuestII.GameLogic.World.Room.Exit": {
+        "ArchaicQuestII.GameLogic.World.Room.Coordinates ArchaicQuestII.GameLogic.World.Room.Exit::get_Coords()": {
+          "Lines": {
+            "14": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 ArchaicQuestII.GameLogic.World.Room.Exit::get_AreaId()": {
+          "Lines": {
+            "15": 16
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.GameLogic.World.Room.Exit::get_Name()": {
+          "Lines": {
+            "16": 50
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.GameLogic.World.Room.Exit::get_Keyword()": {
+          "Lines": {
+            "17": 0
+          },
+          "Branches": []
+        },
+        "System.Boolean ArchaicQuestII.GameLogic.World.Room.Exit::get_Door()": {
+          "Lines": {
+            "18": 0
+          },
+          "Branches": []
+        },
+        "System.Boolean ArchaicQuestII.GameLogic.World.Room.Exit::get_Closed()": {
+          "Lines": {
+            "19": 0
+          },
+          "Branches": []
+        },
+        "System.Boolean ArchaicQuestII.GameLogic.World.Room.Exit::get_Locked()": {
+          "Lines": {
+            "20": 0
+          },
+          "Branches": []
+        },
+        "System.Boolean ArchaicQuestII.GameLogic.World.Room.Exit::get_PickProof()": {
+          "Lines": {
+            "21": 0
+          },
+          "Branches": []
+        },
+        "System.Boolean ArchaicQuestII.GameLogic.World.Room.Exit::get_NoPass()": {
+          "Lines": {
+            "22": 0
+          },
+          "Branches": []
+        },
+        "System.Boolean ArchaicQuestII.GameLogic.World.Room.Exit::get_NoScan()": {
+          "Lines": {
+            "23": 0
+          },
+          "Branches": []
+        },
+        "System.Boolean ArchaicQuestII.GameLogic.World.Room.Exit::get_Hidden()": {
+          "Lines": {
+            "24": 0
+          },
+          "Branches": []
+        },
+        "System.Nullable`1<System.Guid> ArchaicQuestII.GameLogic.World.Room.Exit::get_LockId()": {
+          "Lines": {
+            "25": 0
+          },
+          "Branches": []
+        }
+      },
+      "ArchaicQuestII.GameLogic.World.Room.ExitDirections": {
+        "ArchaicQuestII.GameLogic.World.Room.Exit ArchaicQuestII.GameLogic.World.Room.ExitDirections::get_North()": {
+          "Lines": {
+            "30": 31
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.World.Room.Exit ArchaicQuestII.GameLogic.World.Room.ExitDirections::get_NorthEast()": {
+          "Lines": {
+            "31": 16
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.World.Room.Exit ArchaicQuestII.GameLogic.World.Room.ExitDirections::get_East()": {
+          "Lines": {
+            "32": 16
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.World.Room.Exit ArchaicQuestII.GameLogic.World.Room.ExitDirections::get_SouthEast()": {
+          "Lines": {
+            "33": 16
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.World.Room.Exit ArchaicQuestII.GameLogic.World.Room.ExitDirections::get_South()": {
+          "Lines": {
+            "34": 18
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.World.Room.Exit ArchaicQuestII.GameLogic.World.Room.ExitDirections::get_SouthWest()": {
+          "Lines": {
+            "35": 16
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.World.Room.Exit ArchaicQuestII.GameLogic.World.Room.ExitDirections::get_West()": {
+          "Lines": {
+            "36": 16
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.World.Room.Exit ArchaicQuestII.GameLogic.World.Room.ExitDirections::get_NorthWest()": {
+          "Lines": {
+            "37": 18
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.World.Room.Exit ArchaicQuestII.GameLogic.World.Room.ExitDirections::get_Up()": {
+          "Lines": {
+            "38": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.World.Room.Exit ArchaicQuestII.GameLogic.World.Room.ExitDirections::get_Down()": {
+          "Lines": {
+            "39": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\World\\Room\\Room.cs": {
+      "ArchaicQuestII.GameLogic.World.Room.Room": {
+        "System.Int32 ArchaicQuestII.GameLogic.World.Room.Room::get_Id()": {
+          "Lines": {
+            "37": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 ArchaicQuestII.GameLogic.World.Room.Room::get_AreaId()": {
+          "Lines": {
+            "38": 0
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.GameLogic.World.Room.Room::get_Title()": {
+          "Lines": {
+            "39": 16
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.GameLogic.World.Room.Room::get_Description()": {
+          "Lines": {
+            "40": 16
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.World.Room.ExitDirections ArchaicQuestII.GameLogic.World.Room.Room::get_Exits()": {
+          "Lines": {
+            "45": 167
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.World.Room.Coordinates ArchaicQuestII.GameLogic.World.Room.Room::get_Coords()": {
+          "Lines": {
+            "46": 0
+          },
+          "Branches": []
+        },
+        "System.Collections.Generic.List`1<ArchaicQuestII.GameLogic.Character.Player> ArchaicQuestII.GameLogic.World.Room.Room::get_Players()": {
+          "Lines": {
+            "47": 42
+          },
+          "Branches": []
+        },
+        "System.Collections.Generic.List`1<ArchaicQuestII.GameLogic.Character.Character> ArchaicQuestII.GameLogic.World.Room.Room::get_Mobs()": {
+          "Lines": {
+            "48": 0
+          },
+          "Branches": []
+        },
+        "System.Collections.Generic.List`1<ArchaicQuestII.GameLogic.Item.Item> ArchaicQuestII.GameLogic.World.Room.Room::get_Items()": {
+          "Lines": {
+            "49": 0
+          },
+          "Branches": []
+        },
+        "System.Nullable`1<ArchaicQuestII.GameLogic.World.Room.Room/RoomType> ArchaicQuestII.GameLogic.World.Room.Room::get_Type()": {
+          "Lines": {
+            "50": 0
+          },
+          "Branches": []
+        },
+        "System.Collections.Generic.List`1<System.String> ArchaicQuestII.GameLogic.World.Room.Room::get_Emotes()": {
+          "Lines": {
+            "54": 0
+          },
+          "Branches": []
+        },
+        "System.Collections.Generic.List`1<ArchaicQuestII.Core.World.RoomObject> ArchaicQuestII.GameLogic.World.Room.Room::get_RoomObjects()": {
+          "Lines": {
+            "61": 0
+          },
+          "Branches": []
+        },
+        "System.Nullable`1<System.Boolean> ArchaicQuestII.GameLogic.World.Room.Room::get_Clean()": {
+          "Lines": {
+            "65": 0
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.GameLogic.World.Room.Room::get_UpdateMessage()": {
+          "Lines": {
+            "70": 0
+          },
+          "Branches": []
+        },
+        "System.Boolean ArchaicQuestII.GameLogic.World.Room.Room::get_InstantRePop()": {
+          "Lines": {
+            "74": 0
+          },
+          "Branches": []
+        },
+        "System.DateTime ArchaicQuestII.GameLogic.World.Room.Room::get_DateCreated()": {
+          "Lines": {
+            "75": 0
+          },
+          "Branches": []
+        },
+        "System.DateTime ArchaicQuestII.GameLogic.World.Room.Room::get_DateUpdated()": {
+          "Lines": {
+            "76": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\World\\Room\\RoomActions.cs": {
+      "ArchaicQuestII.GameLogic.World.Room.RoomActions": {
+        "System.Void ArchaicQuestII.GameLogic.World.Room.RoomActions::Look(ArchaicQuestII.GameLogic.World.Room.Room,ArchaicQuestII.GameLogic.Character.Player)": {
+          "Lines": {
+            "22": 1,
+            "24": 1,
+            "25": 1,
+            "26": 1,
+            "28": 1,
+            "30": 1,
+            "31": 1,
+            "32": 1,
+            "33": 1,
+            "34": 1,
+            "35": 1,
+            "37": 1,
+            "38": 1
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.GameLogic.World.Room.RoomActions::DisplayItems(ArchaicQuestII.GameLogic.World.Room.Room)": {
+          "Lines": {
+            "41": 1,
+            "42": 1,
+            "44": 0,
+            "45": 0,
+            "46": 0,
+            "47": 0,
+            "49": 1,
+            "51": 1
+          },
+          "Branches": [
+            {
+              "Line": 44,
+              "Offset": 57,
+              "EndOffset": 22,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 0
+            },
+            {
+              "Line": 44,
+              "Offset": 57,
+              "EndOffset": 59,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 1
+            }
+          ]
+        },
+        "System.String ArchaicQuestII.GameLogic.World.Room.RoomActions::DisplayMobs(ArchaicQuestII.GameLogic.World.Room.Room)": {
+          "Lines": {
+            "54": 1,
+            "55": 1,
+            "57": 0,
+            "58": 0,
+            "59": 0,
+            "60": 0,
+            "62": 1,
+            "64": 1
+          },
+          "Branches": [
+            {
+              "Line": 57,
+              "Offset": 57,
+              "EndOffset": 22,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 0
+            },
+            {
+              "Line": 57,
+              "Offset": 57,
+              "EndOffset": 59,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 1
+            }
+          ]
+        },
+        "System.String ArchaicQuestII.GameLogic.World.Room.RoomActions::FindValidExits(ArchaicQuestII.GameLogic.World.Room.Room)": {
+          "Lines": {
+            "71": 12,
+            "72": 12,
+            "74": 12,
+            "75": 3,
+            "76": 3,
+            "77": 3,
+            "79": 12,
+            "80": 3,
+            "81": 3,
+            "82": 3,
+            "84": 12,
+            "85": 2,
+            "86": 2,
+            "87": 2,
+            "89": 12,
+            "90": 2,
+            "91": 2,
+            "92": 2,
+            "94": 12,
+            "95": 2,
+            "96": 2,
+            "97": 2,
+            "99": 12,
+            "100": 2,
+            "101": 2,
+            "102": 2,
+            "104": 12,
+            "105": 2,
+            "106": 2,
+            "107": 2,
+            "109": 12,
+            "110": 2,
+            "111": 2,
+            "112": 2,
+            "114": 12,
+            "115": 1,
+            "116": 1,
+            "117": 1,
+            "120": 12,
+            "122": 12
+          },
+          "Branches": [
+            {
+              "Line": 74,
+              "Offset": 23,
+              "EndOffset": 25,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 3
+            },
+            {
+              "Line": 74,
+              "Offset": 23,
+              "EndOffset": 50,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 12
+            },
+            {
+              "Line": 79,
+              "Offset": 66,
+              "EndOffset": 68,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 3
+            },
+            {
+              "Line": 79,
+              "Offset": 66,
+              "EndOffset": 93,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 12
+            },
+            {
+              "Line": 84,
+              "Offset": 109,
+              "EndOffset": 111,
+              "Path": 0,
+              "Ordinal": 4,
+              "Hits": 2
+            },
+            {
+              "Line": 84,
+              "Offset": 109,
+              "EndOffset": 136,
+              "Path": 1,
+              "Ordinal": 5,
+              "Hits": 12
+            },
+            {
+              "Line": 89,
+              "Offset": 154,
+              "EndOffset": 156,
+              "Path": 0,
+              "Ordinal": 6,
+              "Hits": 2
+            },
+            {
+              "Line": 89,
+              "Offset": 154,
+              "EndOffset": 181,
+              "Path": 1,
+              "Ordinal": 7,
+              "Hits": 12
+            },
+            {
+              "Line": 94,
+              "Offset": 199,
+              "EndOffset": 201,
+              "Path": 0,
+              "Ordinal": 8,
+              "Hits": 2
+            },
+            {
+              "Line": 94,
+              "Offset": 199,
+              "EndOffset": 226,
+              "Path": 1,
+              "Ordinal": 9,
+              "Hits": 12
+            },
+            {
+              "Line": 99,
+              "Offset": 244,
+              "EndOffset": 246,
+              "Path": 0,
+              "Ordinal": 10,
+              "Hits": 2
+            },
+            {
+              "Line": 99,
+              "Offset": 244,
+              "EndOffset": 271,
+              "Path": 1,
+              "Ordinal": 11,
+              "Hits": 12
+            },
+            {
+              "Line": 104,
+              "Offset": 289,
+              "EndOffset": 291,
+              "Path": 0,
+              "Ordinal": 12,
+              "Hits": 2
+            },
+            {
+              "Line": 104,
+              "Offset": 289,
+              "EndOffset": 316,
+              "Path": 1,
+              "Ordinal": 13,
+              "Hits": 12
+            },
+            {
+              "Line": 109,
+              "Offset": 334,
+              "EndOffset": 336,
+              "Path": 0,
+              "Ordinal": 14,
+              "Hits": 2
+            },
+            {
+              "Line": 109,
+              "Offset": 334,
+              "EndOffset": 361,
+              "Path": 1,
+              "Ordinal": 15,
+              "Hits": 12
+            },
+            {
+              "Line": 114,
+              "Offset": 371,
+              "EndOffset": 373,
+              "Path": 0,
+              "Ordinal": 16,
+              "Hits": 1
+            },
+            {
+              "Line": 114,
+              "Offset": 371,
+              "EndOffset": 381,
+              "Path": 1,
+              "Ordinal": 17,
+              "Hits": 12
+            }
+          ]
+        },
+        "System.Void ArchaicQuestII.GameLogic.World.Room.RoomActions::.ctor(ArchaicQuestII.GameLogic.Core.IWriteToClient)": {
+          "Lines": {
+            "14": 12,
+            "15": 12,
+            "16": 12,
+            "17": 12
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\World\\Area\\Area.cs": {
+      "ArchaicQuestII.GameLogic.World.Area.Area": {
+        "System.Int32 ArchaicQuestII.GameLogic.World.Area.Area::get_Id()": {
+          "Lines": {
+            "8": 0
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.GameLogic.World.Area.Area::get_Title()": {
+          "Lines": {
+            "9": 0
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.GameLogic.World.Area.Area::get_Description()": {
+          "Lines": {
+            "10": 0
+          },
+          "Branches": []
+        },
+        "System.Nullable`1<System.DateTime> ArchaicQuestII.GameLogic.World.Area.Area::get_DateCreated()": {
+          "Lines": {
+            "11": 0
+          },
+          "Branches": []
+        },
+        "System.Nullable`1<System.DateTime> ArchaicQuestII.GameLogic.World.Area.Area::get_DateUpdated()": {
+          "Lines": {
+            "12": 0
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.GameLogic.World.Area.Area::get_CreatedBy()": {
+          "Lines": {
+            "13": 0
+          },
+          "Branches": []
+        },
+        "System.String[] ArchaicQuestII.GameLogic.World.Area.Area::get_ModifiedBy()": {
+          "Lines": {
+            "14": 0
+          },
+          "Branches": []
+        },
+        "System.Collections.Generic.List`1<ArchaicQuestII.GameLogic.World.Room.Room> ArchaicQuestII.GameLogic.World.Area.Area::get_Rooms()": {
+          "Lines": {
+            "15": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\Spell\\SpellEffect.cs": {
+      "ArchaicQuestII.GameLogic.Spell.SpellEffect": {
+        "System.Collections.Generic.Dictionary`2<ArchaicQuestII.GameLogic.Skill.Enum.SkillType,System.Action> ArchaicQuestII.GameLogic.Spell.SpellEffect::get_Type()": {
+          "Lines": {
+            "23": 0
+          },
+          "Branches": []
+        },
+        "System.Void ArchaicQuestII.GameLogic.Spell.SpellEffect::.ctor(ArchaicQuestII.GameLogic.Core.IWriteToClient,ArchaicQuestII.GameLogic.Skill.Model.SkillTarget,System.Int32)": {
+          "Lines": {
+            "16": 0,
+            "17": 0,
+            "18": 0,
+            "19": 0,
+            "20": 0,
+            "21": 0,
+            "24": 0,
+            "25": 0,
+            "26": 0
+          },
+          "Branches": [
+            {
+              "Line": 23,
+              "Offset": 14,
+              "EndOffset": 16,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 0
+            },
+            {
+              "Line": 23,
+              "Offset": 14,
+              "EndOffset": 39,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 0
+            }
+          ]
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\Spell\\Spells.cs": {
+      "ArchaicQuestII.GameLogic.Spell.Spells": {
+        "System.Void ArchaicQuestII.GameLogic.Spell.Spells::DoSpell(ArchaicQuestII.GameLogic.Spell.Model.Spell,ArchaicQuestII.GameLogic.Character.Player,ArchaicQuestII.GameLogic.Character.Player,ArchaicQuestII.GameLogic.World.Room.Room)": {
+          "Lines": {
+            "31": 0,
+            "33": 0,
+            "56": 0,
+            "57": 0,
+            "59": 0,
+            "65": 0,
+            "66": 0,
+            "71": 0,
+            "73": 0,
+            "74": 0,
+            "76": 0,
+            "77": 0,
+            "82": 0,
+            "83": 0,
+            "84": 0,
+            "85": 0,
+            "86": 0,
+            "87": 0,
+            "88": 0,
+            "90": 0,
+            "92": 0
+          },
+          "Branches": [
+            {
+              "Line": 56,
+              "Offset": 56,
+              "EndOffset": 58,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 0
+            },
+            {
+              "Line": 56,
+              "Offset": 56,
+              "EndOffset": 64,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 0
+            },
+            {
+              "Line": 73,
+              "Offset": 189,
+              "EndOffset": 191,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 0
+            },
+            {
+              "Line": 73,
+              "Offset": 189,
+              "EndOffset": 209,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 0
+            }
+          ]
+        },
+        "System.Void ArchaicQuestII.GameLogic.Spell.Spells::.ctor(ArchaicQuestII.GameLogic.Core.IWriteToClient)": {
+          "Lines": {
+            "17": 0,
+            "18": 0,
+            "19": 0,
+            "21": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\Spell\\Model\\Spell.cs": {
+      "ArchaicQuestII.GameLogic.Spell.Model.Spell": {
+        "ArchaicQuestII.GameLogic.Spell.Sphere ArchaicQuestII.GameLogic.Spell.Model.Spell::get_SpellGroup()": {
+          "Lines": {
+            "5": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\Skill\\SkillFormula.cs": {
+      "ArchaicQuestII.GameLogic.Skill.SkillFormula": {
+        "System.Int32 ArchaicQuestII.GameLogic.Skill.SkillFormula::CalculateValue(System.Int32,ArchaicQuestII.GameLogic.Skill.Model.Skill,System.Int32)": {
+          "Lines": {
+            "6": 0,
+            "7": 0,
+            "8": 0,
+            "9": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\Skill\\SkillMessage.cs": {
+      "ArchaicQuestII.GameLogic.Skill.SkillMessage": {
+        "System.Void ArchaicQuestII.GameLogic.Skill.SkillMessage::DisplayActionToUser(ArchaicQuestII.GameLogic.Skill.Model.LevelBasedMessages,System.Collections.Generic.List`1<ArchaicQuestII.GameLogic.Skill.Model.Messages>,System.Int32)": {
+          "Lines": {
+            "17": 0,
+            "122": 0
+          },
+          "Branches": []
+        },
+        "System.Void ArchaicQuestII.GameLogic.Skill.SkillMessage::.ctor(ArchaicQuestII.GameLogic.Core.IWriteToClient)": {
+          "Lines": {
+            "11": 0,
+            "12": 0,
+            "13": 0,
+            "14": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\Skill\\Type\\SkillAffect.cs": {
+      "ArchaicQuestII.GameLogic.Skill.Type.SkillAffect": {
+        "System.Void ArchaicQuestII.GameLogic.Skill.Type.SkillAffect::CauseAffect()": {
+          "Lines": {
+            "24": 0,
+            "25": 0,
+            "26": 0,
+            "28": 0,
+            "29": 0,
+            "30": 0,
+            "31": 0,
+            "33": 0,
+            "34": 0,
+            "35": 0,
+            "36": 0
+          },
+          "Branches": [
+            {
+              "Line": 28,
+              "Offset": 92,
+              "EndOffset": 94,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 0
+            },
+            {
+              "Line": 28,
+              "Offset": 92,
+              "EndOffset": 162,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 0
+            }
+          ]
+        },
+        "System.Void ArchaicQuestII.GameLogic.Skill.Type.SkillAffect::.ctor(ArchaicQuestII.GameLogic.Core.IWriteToClient,ArchaicQuestII.GameLogic.Skill.Model.SkillTarget,System.Int32)": {
+          "Lines": {
+            "16": 0,
+            "17": 0,
+            "18": 0,
+            "19": 0,
+            "21": 0,
+            "22": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\Skill\\Model\\LevelBasedMessages.cs": {
+      "ArchaicQuestII.GameLogic.Skill.Model.LevelBasedMessages": {
+        "System.Boolean ArchaicQuestII.GameLogic.Skill.Model.LevelBasedMessages::get_HasLevelBasedMessages()": {
+          "Lines": {
+            "5": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Skill.Model.Messages ArchaicQuestII.GameLogic.Skill.Model.LevelBasedMessages::get_Ten()": {
+          "Lines": {
+            "6": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Skill.Model.Messages ArchaicQuestII.GameLogic.Skill.Model.LevelBasedMessages::get_Twenty()": {
+          "Lines": {
+            "7": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Skill.Model.Messages ArchaicQuestII.GameLogic.Skill.Model.LevelBasedMessages::get_Thirty()": {
+          "Lines": {
+            "8": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Skill.Model.Messages ArchaicQuestII.GameLogic.Skill.Model.LevelBasedMessages::get_Forty()": {
+          "Lines": {
+            "9": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Skill.Model.Messages ArchaicQuestII.GameLogic.Skill.Model.LevelBasedMessages::get_Fifty()": {
+          "Lines": {
+            "10": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\Skill\\Model\\Messages.cs": {
+      "ArchaicQuestII.GameLogic.Skill.Model.Messages": {
+        "System.String ArchaicQuestII.GameLogic.Skill.Model.Messages::get_ToPlayer()": {
+          "Lines": {
+            "5": 0
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.GameLogic.Skill.Model.Messages::get_ToTarget()": {
+          "Lines": {
+            "6": 0
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.GameLogic.Skill.Model.Messages::get_ToRoom()": {
+          "Lines": {
+            "7": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\Skill\\Model\\Requirements.cs": {
+      "ArchaicQuestII.GameLogic.Skill.Model.Requirements": {
+        "System.Int32 ArchaicQuestII.GameLogic.Skill.Model.Requirements::get_MinLevel()": {
+          "Lines": {
+            "8": 0
+          },
+          "Branches": []
+        },
+        "System.Boolean ArchaicQuestII.GameLogic.Skill.Model.Requirements::get_Good()": {
+          "Lines": {
+            "9": 0
+          },
+          "Branches": []
+        },
+        "System.Boolean ArchaicQuestII.GameLogic.Skill.Model.Requirements::get_Neutral()": {
+          "Lines": {
+            "10": 0
+          },
+          "Branches": []
+        },
+        "System.Boolean ArchaicQuestII.GameLogic.Skill.Model.Requirements::get_Evil()": {
+          "Lines": {
+            "11": 0
+          },
+          "Branches": []
+        },
+        "System.Boolean ArchaicQuestII.GameLogic.Skill.Model.Requirements::get_Male()": {
+          "Lines": {
+            "12": 0
+          },
+          "Branches": []
+        },
+        "System.Boolean ArchaicQuestII.GameLogic.Skill.Model.Requirements::get_Female()": {
+          "Lines": {
+            "13": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Character.Model.Attributes ArchaicQuestII.GameLogic.Skill.Model.Requirements::get_MinAttributes()": {
+          "Lines": {
+            "14": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Character.Status.CharacterStatus/Status ArchaicQuestII.GameLogic.Skill.Model.Requirements::get_UsableFromStatus()": {
+          "Lines": {
+            "15": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\Skill\\Model\\Skill.cs": {
+      "ArchaicQuestII.GameLogic.Skill.Model.Skill": {
+        "System.Int32 ArchaicQuestII.GameLogic.Skill.Model.Skill::get_Id()": {
+          "Lines": {
+            "9": 0
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.GameLogic.Skill.Model.Skill::get_Name()": {
+          "Lines": {
+            "10": 0
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.GameLogic.Skill.Model.Skill::get_Description()": {
+          "Lines": {
+            "11": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Item.Dice ArchaicQuestII.GameLogic.Skill.Model.Skill::get_Damage()": {
+          "Lines": {
+            "12": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Effect.Effect ArchaicQuestII.GameLogic.Skill.Model.Skill::get_Effect()": {
+          "Lines": {
+            "13": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Skill.Model.Requirements ArchaicQuestII.GameLogic.Skill.Model.Skill::get_Requirements()": {
+          "Lines": {
+            "14": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Skill.Model.Messages ArchaicQuestII.GameLogic.Skill.Model.Skill::get_SkillStart()": {
+          "Lines": {
+            "15": 0
+          },
+          "Branches": []
+        },
+        "System.Collections.Generic.List`1<ArchaicQuestII.GameLogic.Skill.Model.Messages> ArchaicQuestII.GameLogic.Skill.Model.Skill::get_SkillAction()": {
+          "Lines": {
+            "16": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Skill.Model.Messages ArchaicQuestII.GameLogic.Skill.Model.Skill::get_SkillEnd()": {
+          "Lines": {
+            "17": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Skill.Model.Messages ArchaicQuestII.GameLogic.Skill.Model.Skill::get_SkillFailure()": {
+          "Lines": {
+            "18": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Skill.Model.LevelBasedMessages ArchaicQuestII.GameLogic.Skill.Model.Skill::get_LevelBasedMessages()": {
+          "Lines": {
+            "19": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 ArchaicQuestII.GameLogic.Skill.Model.Skill::get_Rounds()": {
+          "Lines": {
+            "20": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Skill.Model.SkillCost ArchaicQuestII.GameLogic.Skill.Model.Skill::get_Cost()": {
+          "Lines": {
+            "21": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Skill.Enum.SkillType ArchaicQuestII.GameLogic.Skill.Model.Skill::get_Type()": {
+          "Lines": {
+            "22": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\Skill\\Model\\SkillCost.cs": {
+      "ArchaicQuestII.GameLogic.Skill.Model.SkillCost": {
+        "System.Collections.Generic.Dictionary`2<ArchaicQuestII.GameLogic.Skill.Enum.Cost,System.Int32> ArchaicQuestII.GameLogic.Skill.Model.SkillCost::get_Table()": {
+          "Lines": {
+            "8": 0
+          },
+          "Branches": []
+        },
+        "System.Void ArchaicQuestII.GameLogic.Skill.Model.SkillCost::.ctor()": {
+          "Lines": {
+            "9": 0,
+            "10": 0,
+            "11": 0,
+            "12": 0,
+            "13": 0,
+            "14": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\Skill\\Model\\SkillTarget.cs": {
+      "ArchaicQuestII.GameLogic.Skill.Model.SkillTarget": {
+        "ArchaicQuestII.GameLogic.Skill.Model.Skill ArchaicQuestII.GameLogic.Skill.Model.SkillTarget::get_Skill()": {
+          "Lines": {
+            "8": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Character.Player ArchaicQuestII.GameLogic.Skill.Model.SkillTarget::get_Origin()": {
+          "Lines": {
+            "9": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Character.Player ArchaicQuestII.GameLogic.Skill.Model.SkillTarget::get_Target()": {
+          "Lines": {
+            "10": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.World.Room.Room ArchaicQuestII.GameLogic.Skill.Model.SkillTarget::get_Room()": {
+          "Lines": {
+            "11": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\Hubs\\GameHub.cs": {
+      "ArchaicQuestII.GameLogic.Hubs.GameHub": {
+        "ArchaicQuestII.DataAccess.IDataBase ArchaicQuestII.GameLogic.Hubs.GameHub::get__db()": {
+          "Lines": {
+            "18": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Core.ICache ArchaicQuestII.GameLogic.Hubs.GameHub::get__cache()": {
+          "Lines": {
+            "19": 0
+          },
+          "Branches": []
+        },
+        "System.Void ArchaicQuestII.GameLogic.Hubs.GameHub::CreateCharacter(System.String)": {
+          "Lines": {
+            "80": 0,
+            "81": 0,
+            "82": 0,
+            "83": 0,
+            "84": 0,
+            "86": 0,
+            "88": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Character.Player ArchaicQuestII.GameLogic.Hubs.GameHub::GetCharacter(System.String,System.Guid)": {
+          "Lines": {
+            "112": 0,
+            "113": 0,
+            "114": 0,
+            "115": 0,
+            "116": 0,
+            "118": 0,
+            "119": 0
+          },
+          "Branches": []
+        },
+        "System.Void ArchaicQuestII.GameLogic.Hubs.GameHub::AddCharacterToCache(System.String,ArchaicQuestII.GameLogic.Character.Player)": {
+          "Lines": {
+            "122": 0,
+            "124": 0,
+            "125": 0,
+            "129": 0,
+            "131": 0,
+            "133": 0
+          },
+          "Branches": [
+            {
+              "Line": 124,
+              "Offset": 20,
+              "EndOffset": 22,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 0
+            },
+            {
+              "Line": 124,
+              "Offset": 20,
+              "EndOffset": 24,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 0
+            }
+          ]
+        },
+        "System.Void ArchaicQuestII.GameLogic.Hubs.GameHub::GetRoom(System.String,ArchaicQuestII.GameLogic.Character.Player)": {
+          "Lines": {
+            "136": 0,
+            "137": 0,
+            "139": 0,
+            "142": 0
+          },
+          "Branches": []
+        },
+        "System.Void ArchaicQuestII.GameLogic.Hubs.GameHub::.ctor(ArchaicQuestII.DataAccess.IDataBase,ArchaicQuestII.GameLogic.Core.ICache,Microsoft.Extensions.Logging.ILogger`1<ArchaicQuestII.GameLogic.Hubs.GameHub>,ArchaicQuestII.GameLogic.Core.IWriteToClient)": {
+          "Lines": {
+            "21": 0,
+            "22": 0,
+            "23": 0,
+            "24": 0,
+            "25": 0,
+            "26": 0,
+            "27": 0
+          },
+          "Branches": []
+        }
+      },
+      "ArchaicQuestII.GameLogic.Hubs.GameHub/<OnConnectedAsync>d__9": {
+        "System.Void ArchaicQuestII.GameLogic.Hubs.GameHub/<OnConnectedAsync>d__9::MoveNext()": {
+          "Lines": {
+            "35": 0,
+            "37": 0
+          },
+          "Branches": []
+        }
+      },
+      "ArchaicQuestII.GameLogic.Hubs.GameHub/<OnDisconnectedAsync>d__10": {
+        "System.Void ArchaicQuestII.GameLogic.Hubs.GameHub/<OnDisconnectedAsync>d__10::MoveNext()": {
+          "Lines": {
+            "44": 0,
+            "46": 0
+          },
+          "Branches": []
+        }
+      },
+      "ArchaicQuestII.GameLogic.Hubs.GameHub/<Send>d__11": {
+        "System.Void ArchaicQuestII.GameLogic.Hubs.GameHub/<Send>d__11::MoveNext()": {
+          "Lines": {
+            "53": 0,
+            "54": 0,
+            "55": 0,
+            "56": 0
+          },
+          "Branches": []
+        }
+      },
+      "ArchaicQuestII.GameLogic.Hubs.GameHub/<SendToClient>d__12": {
+        "System.Void ArchaicQuestII.GameLogic.Hubs.GameHub/<SendToClient>d__12::MoveNext()": {
+          "Lines": {
+            "63": 0,
+            "64": 0,
+            "65": 0,
+            "66": 0
+          },
+          "Branches": []
+        }
+      },
+      "ArchaicQuestII.GameLogic.Hubs.GameHub/<Welcome>d__13": {
+        "System.Void ArchaicQuestII.GameLogic.Hubs.GameHub/<Welcome>d__13::MoveNext()": {
+          "Lines": {
+            "69": 0,
+            "70": 0,
+            "71": 0,
+            "73": 0,
+            "75": 0,
+            "76": 0
+          },
+          "Branches": []
+        }
+      },
+      "ArchaicQuestII.GameLogic.Hubs.GameHub/<AddCharacter>d__15": {
+        "System.Void ArchaicQuestII.GameLogic.Hubs.GameHub/<AddCharacter>d__15::MoveNext()": {
+          "Lines": {
+            "91": 0,
+            "93": 0,
+            "94": 0,
+            "98": 0,
+            "100": 0,
+            "101": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\Effect\\Effect.cs": {
+      "ArchaicQuestII.GameLogic.Effect.Effect": {
+        "System.Int32 ArchaicQuestII.GameLogic.Effect.Effect::get_Id()": {
+          "Lines": {
+            "9": 0
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.GameLogic.Effect.Effect::get_Name()": {
+          "Lines": {
+            "10": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Effect.EffectModifer ArchaicQuestII.GameLogic.Effect.Effect::get_Duration()": {
+          "Lines": {
+            "14": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Effect.EffectModifer ArchaicQuestII.GameLogic.Effect.Effect::get_Modifier()": {
+          "Lines": {
+            "20": 0
+          },
+          "Branches": []
+        },
+        "System.Boolean ArchaicQuestII.GameLogic.Effect.Effect::get_Accumulate()": {
+          "Lines": {
+            "24": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Effect.EffectLocation ArchaicQuestII.GameLogic.Effect.Effect::get_Location()": {
+          "Lines": {
+            "28": 0
+          },
+          "Branches": []
+        }
+      },
+      "ArchaicQuestII.GameLogic.Effect.EffectModifer": {
+        "System.Int32 ArchaicQuestII.GameLogic.Effect.EffectModifer::get_Value()": {
+          "Lines": {
+            "33": 0
+          },
+          "Branches": []
+        },
+        "System.Boolean ArchaicQuestII.GameLogic.Effect.EffectModifer::get_PositiveEffect()": {
+          "Lines": {
+            "34": 0
+          },
+          "Branches": []
+        }
+      },
+      "ArchaicQuestII.GameLogic.Effect.EffectChecks": {
+        "System.Boolean ArchaicQuestII.GameLogic.Effect.EffectChecks::get_LevelCheck()": {
+          "Lines": {
+            "41": 0
+          },
+          "Branches": []
+        },
+        "System.Boolean ArchaicQuestII.GameLogic.Effect.EffectChecks::get_GoodCheck()": {
+          "Lines": {
+            "42": 0
+          },
+          "Branches": []
+        },
+        "System.Boolean ArchaicQuestII.GameLogic.Effect.EffectChecks::get_EvilCheck()": {
+          "Lines": {
+            "43": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\Core\\Dice.cs": {
+      "ArchaicQuestII.GameLogic.Item.Dice": {
+        "System.Int32 ArchaicQuestII.GameLogic.Item.Dice::get_DiceRoll()": {
+          "Lines": {
+            "20": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 ArchaicQuestII.GameLogic.Item.Dice::get_DiceMinSize()": {
+          "Lines": {
+            "24": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 ArchaicQuestII.GameLogic.Item.Dice::get_DiceMaxSize()": {
+          "Lines": {
+            "25": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 ArchaicQuestII.GameLogic.Item.Dice::Roll(System.Int32,System.Int32,System.Int32)": {
+          "Lines": {
+            "28": 0,
+            "29": 0,
+            "31": 0,
+            "32": 0,
+            "33": 0,
+            "34": 0,
+            "36": 0,
+            "37": 0
+          },
+          "Branches": [
+            {
+              "Line": 31,
+              "Offset": 36,
+              "EndOffset": 7,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 0
+            },
+            {
+              "Line": 31,
+              "Offset": 36,
+              "EndOffset": 38,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 0
+            }
+          ]
+        },
+        "System.Void ArchaicQuestII.GameLogic.Item.Dice::.cctor()": {
+          "Lines": {
+            "11": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\Item\\ArmourRating.cs": {
+      "ArchaicQuestII.GameLogic.Item.ArmourRating": {
+        "System.Int32 ArchaicQuestII.GameLogic.Item.ArmourRating::get_Armour()": {
+          "Lines": {
+            "9": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 ArchaicQuestII.GameLogic.Item.ArmourRating::get_Magic()": {
+          "Lines": {
+            "10": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\Item\\BaseItem.cs": {
+      "ArchaicQuestII.GameLogic.Item.BaseItem": {
+        "System.Nullable`1<System.Guid> ArchaicQuestII.GameLogic.Item.BaseItem::get_Uuid()": {
+          "Lines": {
+            "10": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 ArchaicQuestII.GameLogic.Item.BaseItem::get_Id()": {
+          "Lines": {
+            "11": 0
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.GameLogic.Item.BaseItem::get_Name()": {
+          "Lines": {
+            "13": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 ArchaicQuestII.GameLogic.Item.BaseItem::get_Level()": {
+          "Lines": {
+            "17": 0
+          },
+          "Branches": []
+        },
+        "System.Boolean ArchaicQuestII.GameLogic.Item.BaseItem::get_KnownByName()": {
+          "Lines": {
+            "18": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Item.Description ArchaicQuestII.GameLogic.Item.BaseItem::get_Description()": {
+          "Lines": {
+            "19": 0
+          },
+          "Branches": []
+        },
+        "System.Collections.Generic.List`1<System.String> ArchaicQuestII.GameLogic.Item.BaseItem::get_Keywords()": {
+          "Lines": {
+            "24": 0
+          },
+          "Branches": []
+        },
+        "System.Boolean ArchaicQuestII.GameLogic.Item.BaseItem::get_IsHiddenInRoom()": {
+          "Lines": {
+            "31": 0
+          },
+          "Branches": []
+        },
+        "System.Boolean ArchaicQuestII.GameLogic.Item.BaseItem::get_Hidden()": {
+          "Lines": {
+            "36": 0
+          },
+          "Branches": []
+        },
+        "System.Boolean ArchaicQuestII.GameLogic.Item.BaseItem::get_Stuck()": {
+          "Lines": {
+            "40": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 ArchaicQuestII.GameLogic.Item.BaseItem::get_DecayTimer()": {
+          "Lines": {
+            "45": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 ArchaicQuestII.GameLogic.Item.BaseItem::get_Condition()": {
+          "Lines": {
+            "46": 0
+          },
+          "Branches": []
+        },
+        "System.Boolean ArchaicQuestII.GameLogic.Item.BaseItem::get_QuestItem()": {
+          "Lines": {
+            "47": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\Item\\Book.cs": {
+      "ArchaicQuestII.GameLogic.Item.Book": {
+        "System.Int32 ArchaicQuestII.GameLogic.Item.Book::get_PageCount()": {
+          "Lines": {
+            "9": 0
+          },
+          "Branches": []
+        },
+        "System.Collections.Generic.List`1<System.String> ArchaicQuestII.GameLogic.Item.Book::get_Pages()": {
+          "Lines": {
+            "10": 0
+          },
+          "Branches": []
+        },
+        "System.Boolean ArchaicQuestII.GameLogic.Item.Book::get_Blank()": {
+          "Lines": {
+            "11": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\Item\\Container.cs": {
+      "ArchaicQuestII.GameLogic.Item.Container": {
+        "ArchaicQuestII.GameLogic.Item.Container/ContainerSize ArchaicQuestII.GameLogic.Item.Container::get_Size()": {
+          "Lines": {
+            "19": 0
+          },
+          "Branches": []
+        },
+        "System.Collections.Generic.List`1<ArchaicQuestII.GameLogic.Item.Item> ArchaicQuestII.GameLogic.Item.Container::get_Items()": {
+          "Lines": {
+            "20": 0
+          },
+          "Branches": []
+        },
+        "System.Boolean ArchaicQuestII.GameLogic.Item.Container::get_CanOpen()": {
+          "Lines": {
+            "21": 0
+          },
+          "Branches": []
+        },
+        "System.Boolean ArchaicQuestII.GameLogic.Item.Container::get_IsOpen()": {
+          "Lines": {
+            "22": 0
+          },
+          "Branches": []
+        },
+        "System.Boolean ArchaicQuestII.GameLogic.Item.Container::get_CanLock()": {
+          "Lines": {
+            "23": 0
+          },
+          "Branches": []
+        },
+        "System.Boolean ArchaicQuestII.GameLogic.Item.Container::get_IsLocked()": {
+          "Lines": {
+            "24": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 ArchaicQuestII.GameLogic.Item.Container::get_GoldPieces()": {
+          "Lines": {
+            "25": 0
+          },
+          "Branches": []
+        },
+        "System.Nullable`1<System.Guid> ArchaicQuestII.GameLogic.Item.Container::get_AssociatedKeyId()": {
+          "Lines": {
+            "27": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Item.Item/LockStrength ArchaicQuestII.GameLogic.Item.Container::get_LockDifficulty()": {
+          "Lines": {
+            "28": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\Item\\Damage.cs": {
+      "ArchaicQuestII.GameLogic.Item.Damage": {
+        "System.Int32 ArchaicQuestII.GameLogic.Item.Damage::get_Minimum()": {
+          "Lines": {
+            "9": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 ArchaicQuestII.GameLogic.Item.Damage::get_Maximum()": {
+          "Lines": {
+            "10": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\Item\\Description.cs": {
+      "ArchaicQuestII.GameLogic.Item.Description": {
+        "System.String ArchaicQuestII.GameLogic.Item.Description::get_Taste()": {
+          "Lines": {
+            "9": 0
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.GameLogic.Item.Description::get_Touch()": {
+          "Lines": {
+            "10": 0
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.GameLogic.Item.Description::get_Smell()": {
+          "Lines": {
+            "11": 0
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.GameLogic.Item.Description::get_Look()": {
+          "Lines": {
+            "12": 0
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.GameLogic.Item.Description::get_Exam()": {
+          "Lines": {
+            "13": 0
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.GameLogic.Item.Description::get_Room()": {
+          "Lines": {
+            "14": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\Item\\Item.cs": {
+      "ArchaicQuestII.GameLogic.Item.Item": {
+        "System.Boolean ArchaicQuestII.GameLogic.Item.Item::get_Equipped()": {
+          "Lines": {
+            "143": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Item.Item/DamageTypes ArchaicQuestII.GameLogic.Item.Item::get_DamageType()": {
+          "Lines": {
+            "144": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Item.Item/ArmourTypes ArchaicQuestII.GameLogic.Item.Item::get_ArmourType()": {
+          "Lines": {
+            "145": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Item.Item/ItemFlags ArchaicQuestII.GameLogic.Item.Item::get_ItemFlag()": {
+          "Lines": {
+            "146": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Item.Item/ItemTypes ArchaicQuestII.GameLogic.Item.Item::get_ItemType()": {
+          "Lines": {
+            "147": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Item.Item/AttackTypes ArchaicQuestII.GameLogic.Item.Item::get_AttackType()": {
+          "Lines": {
+            "148": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Character.Equipment.Equipment ArchaicQuestII.GameLogic.Item.Item::get_Slot()": {
+          "Lines": {
+            "149": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Item.Item/WeaponTypes ArchaicQuestII.GameLogic.Item.Item::get_WeaponType()": {
+          "Lines": {
+            "150": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 ArchaicQuestII.GameLogic.Item.Item::get_WeaponSpeed()": {
+          "Lines": {
+            "151": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Item.Damage ArchaicQuestII.GameLogic.Item.Item::get_Damage()": {
+          "Lines": {
+            "152": 0
+          },
+          "Branches": []
+        },
+        "System.Guid ArchaicQuestII.GameLogic.Item.Item::get_KeyId()": {
+          "Lines": {
+            "153": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Item.Container ArchaicQuestII.GameLogic.Item.Item::get_Container()": {
+          "Lines": {
+            "154": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Item.Book ArchaicQuestII.GameLogic.Item.Item::get_Book()": {
+          "Lines": {
+            "155": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Item.Modifier ArchaicQuestII.GameLogic.Item.Item::get_Modifier()": {
+          "Lines": {
+            "156": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Item.ArmourRating ArchaicQuestII.GameLogic.Item.Item::get_ArmourRating()": {
+          "Lines": {
+            "157": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 ArchaicQuestII.GameLogic.Item.Item::get_Weight()": {
+          "Lines": {
+            "158": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 ArchaicQuestII.GameLogic.Item.Item::get_ForageRank()": {
+          "Lines": {
+            "164": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 ArchaicQuestII.GameLogic.Item.Item::get_Uses()": {
+          "Lines": {
+            "168": 0
+          },
+          "Branches": []
+        },
+        "System.Boolean ArchaicQuestII.GameLogic.Item.Item::get_Infinite()": {
+          "Lines": {
+            "172": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\Item\\Modifier.cs": {
+      "ArchaicQuestII.GameLogic.Item.Modifier": {
+        "System.Int32 ArchaicQuestII.GameLogic.Item.Modifier::get_HitRoll()": {
+          "Lines": {
+            "12": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 ArchaicQuestII.GameLogic.Item.Modifier::get_DamRoll()": {
+          "Lines": {
+            "16": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 ArchaicQuestII.GameLogic.Item.Modifier::get_Saves()": {
+          "Lines": {
+            "20": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 ArchaicQuestII.GameLogic.Item.Modifier::get_HP()": {
+          "Lines": {
+            "24": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 ArchaicQuestII.GameLogic.Item.Modifier::get_Mana()": {
+          "Lines": {
+            "28": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 ArchaicQuestII.GameLogic.Item.Modifier::get_Moves()": {
+          "Lines": {
+            "32": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 ArchaicQuestII.GameLogic.Item.Modifier::get_SpellDam()": {
+          "Lines": {
+            "36": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\Item\\Money.cs": {
+      "ArchaicQuestII.GameLogic.Item.Money": {
+        "System.Int32 ArchaicQuestII.GameLogic.Item.Money::get_Amount()": {
+          "Lines": {
+            "9": 0
+          },
+          "Branches": []
+        }
+      },
+      "ArchaicQuestII.GameLogic.Item.Gold": {
+        "ArchaicQuestII.GameLogic.Item.Description ArchaicQuestII.GameLogic.Item.Gold::get_Description()": {
+          "Lines": {
+            "15": 0
+          },
+          "Branches": []
+        },
+        "System.Void ArchaicQuestII.GameLogic.Item.Gold::.ctor()": {
+          "Lines": {
+            "16": 0,
+            "17": 0,
+            "18": 0,
+            "19": 0,
+            "20": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\Core\\Cache.cs": {
+      "ArchaicQuestII.GameLogic.Core.Cache": {
+        "System.Boolean ArchaicQuestII.GameLogic.Core.Cache::AddPlayer(System.String,ArchaicQuestII.GameLogic.Character.Player)": {
+          "Lines": {
+            "17": 0,
+            "18": 0,
+            "19": 0
+          },
+          "Branches": []
+        },
+        "System.Boolean ArchaicQuestII.GameLogic.Core.Cache::PlayerAlreadyExists(System.Guid)": {
+          "Lines": {
+            "22": 0,
+            "23": 0,
+            "24": 0
+          },
+          "Branches": []
+        },
+        "System.Boolean ArchaicQuestII.GameLogic.Core.Cache::AddRoom(System.Int32,ArchaicQuestII.GameLogic.World.Room.Room)": {
+          "Lines": {
+            "27": 0,
+            "28": 0,
+            "29": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.World.Room.Room ArchaicQuestII.GameLogic.Core.Cache::GetRoom(System.Int32)": {
+          "Lines": {
+            "32": 0,
+            "33": 0,
+            "35": 0,
+            "36": 0
+          },
+          "Branches": []
+        },
+        "System.Boolean ArchaicQuestII.GameLogic.Core.Cache::UpdateRoom(System.Int32,ArchaicQuestII.GameLogic.World.Room.Room,ArchaicQuestII.GameLogic.Character.Player)": {
+          "Lines": {
+            "39": 0,
+            "40": 0,
+            "41": 0,
+            "42": 0,
+            "45": 0,
+            "46": 0
+          },
+          "Branches": []
+        },
+        "System.Void ArchaicQuestII.GameLogic.Core.Cache::.ctor()": {
+          "Lines": {
+            "13": 0,
+            "14": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\Core\\Option.cs": {
+      "ArchaicQuestII.GameLogic.Core.Option": {
+        "System.Int32 ArchaicQuestII.GameLogic.Core.Option::get_Id()": {
+          "Lines": {
+            "8": 0
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.GameLogic.Core.Option::get_Name()": {
+          "Lines": {
+            "10": 0
+          },
+          "Branches": []
+        },
+        "System.DateTimeOffset ArchaicQuestII.GameLogic.Core.Option::get_DateCreated()": {
+          "Lines": {
+            "12": 0
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.GameLogic.Core.Option::get_CreatedBy()": {
+          "Lines": {
+            "14": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\Core\\OptionDescriptive.cs": {
+      "ArchaicQuestII.GameLogic.Core.OptionDescriptive": {
+        "System.String ArchaicQuestII.GameLogic.Core.OptionDescriptive::get_Description()": {
+          "Lines": {
+            "8": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\Core\\WriteToClient.cs": {
+      "ArchaicQuestII.GameLogic.Core.WriteToClient": {
+        "System.Void ArchaicQuestII.GameLogic.Core.WriteToClient::.ctor(Microsoft.AspNetCore.SignalR.IHubContext`1<ArchaicQuestII.GameLogic.Hubs.GameHub>)": {
+          "Lines": {
+            "13": 0,
+            "14": 0,
+            "15": 0,
+            "16": 0
+          },
+          "Branches": []
+        }
+      },
+      "ArchaicQuestII.GameLogic.Core.WriteToClient/<WriteLine>d__2": {
+        "System.Void ArchaicQuestII.GameLogic.Core.WriteToClient/<WriteLine>d__2::MoveNext()": {
+          "Lines": {
+            "21": 0,
+            "24": 0,
+            "26": 0,
+            "27": 0,
+            "28": 0,
+            "29": 0,
+            "31": 0,
+            "32": 0
+          },
+          "Branches": [
+            {
+              "Line": 21,
+              "Offset": 15,
+              "EndOffset": 19,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 0
+            },
+            {
+              "Line": 21,
+              "Offset": 15,
+              "EndOffset": 128,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 0
+            }
+          ]
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\Commands\\Commands.cs": {
+      "ArchaicQuestII.GameLogic.Commands.Commands": {
+        "System.Void ArchaicQuestII.GameLogic.Commands.Commands::CommandList(System.String,System.String,ArchaicQuestII.GameLogic.Character.Player,ArchaicQuestII.GameLogic.World.Room.Room)": {
+          "Lines": {
+            "22": 10,
+            "23": 10,
+            "27": 1,
+            "28": 1,
+            "31": 1,
+            "32": 1,
+            "35": 1,
+            "36": 1,
+            "39": 1,
+            "40": 1,
+            "43": 2,
+            "44": 2,
+            "47": 1,
+            "48": 1,
+            "51": 1,
+            "52": 1,
+            "55": 0,
+            "56": 0,
+            "59": 1,
+            "60": 1,
+            "63": 1,
+            "64": 1,
+            "66": 10
+          },
+          "Branches": [
+            {
+              "Line": 23,
+              "Offset": 6,
+              "EndOffset": 11,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 10
+            },
+            {
+              "Line": 23,
+              "Offset": 24,
+              "EndOffset": 29,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 4
+            },
+            {
+              "Line": 23,
+              "Offset": 35,
+              "EndOffset": 37,
+              "Path": 0,
+              "Ordinal": 4,
+              "Hits": 1
+            },
+            {
+              "Line": 23,
+              "Offset": 43,
+              "EndOffset": 45,
+              "Path": 0,
+              "Ordinal": 6,
+              "Hits": 0
+            },
+            {
+              "Line": 23,
+              "Offset": 51,
+              "EndOffset": 58,
+              "Path": 0,
+              "Ordinal": 8,
+              "Hits": 0
+            },
+            {
+              "Line": 23,
+              "Offset": 43,
+              "EndOffset": 74,
+              "Path": 1,
+              "Ordinal": 7,
+              "Hits": 1
+            },
+            {
+              "Line": 23,
+              "Offset": 80,
+              "EndOffset": 87,
+              "Path": 0,
+              "Ordinal": 12,
+              "Hits": 0
+            },
+            {
+              "Line": 23,
+              "Offset": 93,
+              "EndOffset": 100,
+              "Path": 0,
+              "Ordinal": 14,
+              "Hits": 0
+            },
+            {
+              "Line": 23,
+              "Offset": 35,
+              "EndOffset": 116,
+              "Path": 1,
+              "Ordinal": 5,
+              "Hits": 3
+            },
+            {
+              "Line": 23,
+              "Offset": 122,
+              "EndOffset": 124,
+              "Path": 0,
+              "Ordinal": 18,
+              "Hits": 2
+            },
+            {
+              "Line": 23,
+              "Offset": 130,
+              "EndOffset": 137,
+              "Path": 0,
+              "Ordinal": 20,
+              "Hits": 1
+            },
+            {
+              "Line": 23,
+              "Offset": 122,
+              "EndOffset": 153,
+              "Path": 1,
+              "Ordinal": 19,
+              "Hits": 1
+            },
+            {
+              "Line": 23,
+              "Offset": 159,
+              "EndOffset": 166,
+              "Path": 0,
+              "Ordinal": 24,
+              "Hits": 0
+            },
+            {
+              "Line": 23,
+              "Offset": 172,
+              "EndOffset": 179,
+              "Path": 0,
+              "Ordinal": 26,
+              "Hits": 0
+            },
+            {
+              "Line": 23,
+              "Offset": 24,
+              "EndOffset": 195,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 6
+            },
+            {
+              "Line": 23,
+              "Offset": 201,
+              "EndOffset": 203,
+              "Path": 0,
+              "Ordinal": 30,
+              "Hits": 3
+            },
+            {
+              "Line": 23,
+              "Offset": 209,
+              "EndOffset": 211,
+              "Path": 0,
+              "Ordinal": 32,
+              "Hits": 1
+            },
+            {
+              "Line": 23,
+              "Offset": 217,
+              "EndOffset": 224,
+              "Path": 0,
+              "Ordinal": 34,
+              "Hits": 1
+            },
+            {
+              "Line": 23,
+              "Offset": 209,
+              "EndOffset": 240,
+              "Path": 1,
+              "Ordinal": 33,
+              "Hits": 2
+            },
+            {
+              "Line": 23,
+              "Offset": 246,
+              "EndOffset": 253,
+              "Path": 0,
+              "Ordinal": 38,
+              "Hits": 1
+            },
+            {
+              "Line": 23,
+              "Offset": 259,
+              "EndOffset": 266,
+              "Path": 0,
+              "Ordinal": 40,
+              "Hits": 0
+            },
+            {
+              "Line": 23,
+              "Offset": 201,
+              "EndOffset": 282,
+              "Path": 1,
+              "Ordinal": 31,
+              "Hits": 3
+            },
+            {
+              "Line": 23,
+              "Offset": 288,
+              "EndOffset": 290,
+              "Path": 0,
+              "Ordinal": 44,
+              "Hits": 1
+            },
+            {
+              "Line": 23,
+              "Offset": 296,
+              "EndOffset": 303,
+              "Path": 0,
+              "Ordinal": 46,
+              "Hits": 1
+            },
+            {
+              "Line": 23,
+              "Offset": 288,
+              "EndOffset": 319,
+              "Path": 1,
+              "Ordinal": 45,
+              "Hits": 2
+            },
+            {
+              "Line": 23,
+              "Offset": 325,
+              "EndOffset": 332,
+              "Path": 0,
+              "Ordinal": 50,
+              "Hits": 1
+            },
+            {
+              "Line": 23,
+              "Offset": 338,
+              "EndOffset": 345,
+              "Path": 0,
+              "Ordinal": 52,
+              "Hits": 1
+            },
+            {
+              "Line": 23,
+              "Offset": 185,
+              "EndOffset": 361,
+              "Path": 1,
+              "Ordinal": 29,
+              "Hits": 0
+            },
+            {
+              "Line": 23,
+              "Offset": 130,
+              "EndOffset": 382,
+              "Path": 1,
+              "Ordinal": 21,
+              "Hits": 1
+            },
+            {
+              "Line": 23,
+              "Offset": 172,
+              "EndOffset": 403,
+              "Path": 1,
+              "Ordinal": 27,
+              "Hits": 0
+            },
+            {
+              "Line": 23,
+              "Offset": 159,
+              "EndOffset": 424,
+              "Path": 1,
+              "Ordinal": 25,
+              "Hits": 1
+            },
+            {
+              "Line": 23,
+              "Offset": 272,
+              "EndOffset": 445,
+              "Path": 1,
+              "Ordinal": 43,
+              "Hits": 0
+            },
+            {
+              "Line": 23,
+              "Offset": 80,
+              "EndOffset": 466,
+              "Path": 1,
+              "Ordinal": 13,
+              "Hits": 1
+            },
+            {
+              "Line": 23,
+              "Offset": 217,
+              "EndOffset": 487,
+              "Path": 1,
+              "Ordinal": 35,
+              "Hits": 0
+            },
+            {
+              "Line": 23,
+              "Offset": 143,
+              "EndOffset": 508,
+              "Path": 1,
+              "Ordinal": 23,
+              "Hits": 1
+            },
+            {
+              "Line": 23,
+              "Offset": 230,
+              "EndOffset": 529,
+              "Path": 1,
+              "Ordinal": 37,
+              "Hits": 1
+            },
+            {
+              "Line": 23,
+              "Offset": 309,
+              "EndOffset": 550,
+              "Path": 1,
+              "Ordinal": 49,
+              "Hits": 1
+            },
+            {
+              "Line": 23,
+              "Offset": 51,
+              "EndOffset": 571,
+              "Path": 1,
+              "Ordinal": 9,
+              "Hits": 0
+            },
+            {
+              "Line": 23,
+              "Offset": 246,
+              "EndOffset": 592,
+              "Path": 1,
+              "Ordinal": 39,
+              "Hits": 1
+            },
+            {
+              "Line": 23,
+              "Offset": 64,
+              "EndOffset": 613,
+              "Path": 1,
+              "Ordinal": 11,
+              "Hits": 0
+            },
+            {
+              "Line": 23,
+              "Offset": 351,
+              "EndOffset": 634,
+              "Path": 1,
+              "Ordinal": 55,
+              "Hits": 1
+            },
+            {
+              "Line": 23,
+              "Offset": 296,
+              "EndOffset": 655,
+              "Path": 1,
+              "Ordinal": 47,
+              "Hits": 0
+            },
+            {
+              "Line": 23,
+              "Offset": 338,
+              "EndOffset": 676,
+              "Path": 1,
+              "Ordinal": 53,
+              "Hits": 0
+            },
+            {
+              "Line": 23,
+              "Offset": 106,
+              "EndOffset": 697,
+              "Path": 1,
+              "Ordinal": 17,
+              "Hits": 0
+            },
+            {
+              "Line": 23,
+              "Offset": 325,
+              "EndOffset": 718,
+              "Path": 1,
+              "Ordinal": 51,
+              "Hits": 1
+            },
+            {
+              "Line": 23,
+              "Offset": 93,
+              "EndOffset": 739,
+              "Path": 1,
+              "Ordinal": 15,
+              "Hits": 0
+            },
+            {
+              "Line": 23,
+              "Offset": 259,
+              "EndOffset": 760,
+              "Path": 1,
+              "Ordinal": 41,
+              "Hits": 1
+            },
+            {
+              "Line": 23,
+              "Offset": 372,
+              "EndOffset": 781,
+              "Path": 1,
+              "Ordinal": 57,
+              "Hits": 1
+            },
+            {
+              "Line": 23,
+              "Offset": 393,
+              "EndOffset": 781,
+              "Path": 1,
+              "Ordinal": 59,
+              "Hits": 1
+            },
+            {
+              "Line": 23,
+              "Offset": 414,
+              "EndOffset": 806,
+              "Path": 1,
+              "Ordinal": 61,
+              "Hits": 1
+            },
+            {
+              "Line": 23,
+              "Offset": 435,
+              "EndOffset": 806,
+              "Path": 1,
+              "Ordinal": 63,
+              "Hits": 1
+            },
+            {
+              "Line": 23,
+              "Offset": 456,
+              "EndOffset": 831,
+              "Path": 1,
+              "Ordinal": 65,
+              "Hits": 1
+            },
+            {
+              "Line": 23,
+              "Offset": 477,
+              "EndOffset": 831,
+              "Path": 1,
+              "Ordinal": 67,
+              "Hits": 1
+            },
+            {
+              "Line": 23,
+              "Offset": 498,
+              "EndOffset": 856,
+              "Path": 1,
+              "Ordinal": 69,
+              "Hits": 1
+            },
+            {
+              "Line": 23,
+              "Offset": 519,
+              "EndOffset": 856,
+              "Path": 1,
+              "Ordinal": 71,
+              "Hits": 1
+            },
+            {
+              "Line": 23,
+              "Offset": 540,
+              "EndOffset": 881,
+              "Path": 1,
+              "Ordinal": 73,
+              "Hits": 2
+            },
+            {
+              "Line": 23,
+              "Offset": 561,
+              "EndOffset": 881,
+              "Path": 1,
+              "Ordinal": 75,
+              "Hits": 2
+            },
+            {
+              "Line": 23,
+              "Offset": 582,
+              "EndOffset": 903,
+              "Path": 1,
+              "Ordinal": 77,
+              "Hits": 1
+            },
+            {
+              "Line": 23,
+              "Offset": 603,
+              "EndOffset": 903,
+              "Path": 1,
+              "Ordinal": 79,
+              "Hits": 1
+            },
+            {
+              "Line": 23,
+              "Offset": 624,
+              "EndOffset": 925,
+              "Path": 1,
+              "Ordinal": 81,
+              "Hits": 1
+            },
+            {
+              "Line": 23,
+              "Offset": 645,
+              "EndOffset": 925,
+              "Path": 1,
+              "Ordinal": 83,
+              "Hits": 1
+            },
+            {
+              "Line": 23,
+              "Offset": 666,
+              "EndOffset": 947,
+              "Path": 1,
+              "Ordinal": 85,
+              "Hits": 0
+            },
+            {
+              "Line": 23,
+              "Offset": 687,
+              "EndOffset": 947,
+              "Path": 1,
+              "Ordinal": 87,
+              "Hits": 0
+            },
+            {
+              "Line": 23,
+              "Offset": 708,
+              "EndOffset": 969,
+              "Path": 1,
+              "Ordinal": 89,
+              "Hits": 1
+            },
+            {
+              "Line": 23,
+              "Offset": 729,
+              "EndOffset": 969,
+              "Path": 1,
+              "Ordinal": 91,
+              "Hits": 1
+            },
+            {
+              "Line": 23,
+              "Offset": 750,
+              "EndOffset": 991,
+              "Path": 1,
+              "Ordinal": 93,
+              "Hits": 1
+            },
+            {
+              "Line": 23,
+              "Offset": 771,
+              "EndOffset": 991,
+              "Path": 1,
+              "Ordinal": 95,
+              "Hits": 1
+            },
+            {
+              "Line": 23,
+              "Offset": 6,
+              "EndOffset": 1013,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 10
+            },
+            {
+              "Line": 23,
+              "Offset": 64,
+              "EndOffset": 1013,
+              "Path": 0,
+              "Ordinal": 10,
+              "Hits": 10
+            },
+            {
+              "Line": 23,
+              "Offset": 106,
+              "EndOffset": 1013,
+              "Path": 0,
+              "Ordinal": 16,
+              "Hits": 10
+            },
+            {
+              "Line": 23,
+              "Offset": 143,
+              "EndOffset": 1013,
+              "Path": 0,
+              "Ordinal": 22,
+              "Hits": 10
+            },
+            {
+              "Line": 23,
+              "Offset": 185,
+              "EndOffset": 1013,
+              "Path": 0,
+              "Ordinal": 28,
+              "Hits": 10
+            },
+            {
+              "Line": 23,
+              "Offset": 230,
+              "EndOffset": 1013,
+              "Path": 0,
+              "Ordinal": 36,
+              "Hits": 10
+            },
+            {
+              "Line": 23,
+              "Offset": 272,
+              "EndOffset": 1013,
+              "Path": 0,
+              "Ordinal": 42,
+              "Hits": 10
+            },
+            {
+              "Line": 23,
+              "Offset": 309,
+              "EndOffset": 1013,
+              "Path": 0,
+              "Ordinal": 48,
+              "Hits": 10
+            },
+            {
+              "Line": 23,
+              "Offset": 351,
+              "EndOffset": 1013,
+              "Path": 0,
+              "Ordinal": 54,
+              "Hits": 10
+            },
+            {
+              "Line": 23,
+              "Offset": 372,
+              "EndOffset": 1013,
+              "Path": 0,
+              "Ordinal": 56,
+              "Hits": 10
+            },
+            {
+              "Line": 23,
+              "Offset": 393,
+              "EndOffset": 1013,
+              "Path": 0,
+              "Ordinal": 58,
+              "Hits": 10
+            },
+            {
+              "Line": 23,
+              "Offset": 414,
+              "EndOffset": 1013,
+              "Path": 0,
+              "Ordinal": 60,
+              "Hits": 10
+            },
+            {
+              "Line": 23,
+              "Offset": 435,
+              "EndOffset": 1013,
+              "Path": 0,
+              "Ordinal": 62,
+              "Hits": 10
+            },
+            {
+              "Line": 23,
+              "Offset": 456,
+              "EndOffset": 1013,
+              "Path": 0,
+              "Ordinal": 64,
+              "Hits": 10
+            },
+            {
+              "Line": 23,
+              "Offset": 477,
+              "EndOffset": 1013,
+              "Path": 0,
+              "Ordinal": 66,
+              "Hits": 10
+            },
+            {
+              "Line": 23,
+              "Offset": 498,
+              "EndOffset": 1013,
+              "Path": 0,
+              "Ordinal": 68,
+              "Hits": 10
+            },
+            {
+              "Line": 23,
+              "Offset": 519,
+              "EndOffset": 1013,
+              "Path": 0,
+              "Ordinal": 70,
+              "Hits": 10
+            },
+            {
+              "Line": 23,
+              "Offset": 540,
+              "EndOffset": 1013,
+              "Path": 0,
+              "Ordinal": 72,
+              "Hits": 10
+            },
+            {
+              "Line": 23,
+              "Offset": 561,
+              "EndOffset": 1013,
+              "Path": 0,
+              "Ordinal": 74,
+              "Hits": 10
+            },
+            {
+              "Line": 23,
+              "Offset": 582,
+              "EndOffset": 1013,
+              "Path": 0,
+              "Ordinal": 76,
+              "Hits": 10
+            },
+            {
+              "Line": 23,
+              "Offset": 603,
+              "EndOffset": 1013,
+              "Path": 0,
+              "Ordinal": 78,
+              "Hits": 10
+            },
+            {
+              "Line": 23,
+              "Offset": 624,
+              "EndOffset": 1013,
+              "Path": 0,
+              "Ordinal": 80,
+              "Hits": 10
+            },
+            {
+              "Line": 23,
+              "Offset": 645,
+              "EndOffset": 1013,
+              "Path": 0,
+              "Ordinal": 82,
+              "Hits": 10
+            },
+            {
+              "Line": 23,
+              "Offset": 666,
+              "EndOffset": 1013,
+              "Path": 0,
+              "Ordinal": 84,
+              "Hits": 10
+            },
+            {
+              "Line": 23,
+              "Offset": 687,
+              "EndOffset": 1013,
+              "Path": 0,
+              "Ordinal": 86,
+              "Hits": 10
+            },
+            {
+              "Line": 23,
+              "Offset": 708,
+              "EndOffset": 1013,
+              "Path": 0,
+              "Ordinal": 88,
+              "Hits": 10
+            },
+            {
+              "Line": 23,
+              "Offset": 729,
+              "EndOffset": 1013,
+              "Path": 0,
+              "Ordinal": 90,
+              "Hits": 10
+            },
+            {
+              "Line": 23,
+              "Offset": 750,
+              "EndOffset": 1013,
+              "Path": 0,
+              "Ordinal": 92,
+              "Hits": 10
+            },
+            {
+              "Line": 23,
+              "Offset": 771,
+              "EndOffset": 1013,
+              "Path": 0,
+              "Ordinal": 94,
+              "Hits": 10
+            }
+          ]
+        },
+        "System.Void ArchaicQuestII.GameLogic.Commands.Commands::ProcessCommand(System.String,ArchaicQuestII.GameLogic.Character.Player,ArchaicQuestII.GameLogic.World.Room.Room)": {
+          "Lines": {
+            "69": 1,
+            "71": 1,
+            "73": 1,
+            "74": 1
+          },
+          "Branches": []
+        },
+        "System.Void ArchaicQuestII.GameLogic.Commands.Commands::.ctor(ArchaicQuestII.GameLogic.Commands.Movement.IMovement)": {
+          "Lines": {
+            "16": 10,
+            "17": 10,
+            "18": 10,
+            "19": 10
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\Commands\\Movement\\Movement.cs": {
+      "ArchaicQuestII.GameLogic.Commands.Movement.Movement": {
+        "System.Void ArchaicQuestII.GameLogic.Commands.Movement.Movement::Move(ArchaicQuestII.GameLogic.World.Room.Room,ArchaicQuestII.GameLogic.Character.Player,System.String)": {
+          "Lines": {
+            "20": 2,
+            "22": 2,
+            "23": 1,
+            "24": 1,
+            "25": 1,
+            "28": 1,
+            "30": 1,
+            "31": 0,
+            "32": 0,
+            "33": 0,
+            "36": 1,
+            "38": 1,
+            "40": 1,
+            "42": 1,
+            "43": 2
+          },
+          "Branches": [
+            {
+              "Line": 22,
+              "Offset": 13,
+              "EndOffset": 15,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 1
+            },
+            {
+              "Line": 22,
+              "Offset": 13,
+              "EndOffset": 41,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 1
+            },
+            {
+              "Line": 30,
+              "Offset": 56,
+              "EndOffset": 58,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 0
+            },
+            {
+              "Line": 30,
+              "Offset": 56,
+              "EndOffset": 84,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 1
+            }
+          ]
+        },
+        "ArchaicQuestII.GameLogic.World.Room.Exit ArchaicQuestII.GameLogic.Commands.Movement.Movement::FindExit(ArchaicQuestII.GameLogic.World.Room.Room,System.String)": {
+          "Lines": {
+            "46": 1,
+            "47": 1,
+            "50": 1,
+            "52": 0,
+            "54": 0,
+            "56": 0,
+            "58": 0,
+            "60": 0,
+            "62": 0,
+            "64": 0,
+            "66": 0,
+            "68": 0,
+            "69": 0,
+            "71": 1
+          },
+          "Branches": [
+            {
+              "Line": 47,
+              "Offset": 6,
+              "EndOffset": 11,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 1
+            },
+            {
+              "Line": 47,
+              "Offset": 24,
+              "EndOffset": 26,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 1
+            },
+            {
+              "Line": 47,
+              "Offset": 32,
+              "EndOffset": 34,
+              "Path": 0,
+              "Ordinal": 4,
+              "Hits": 0
+            },
+            {
+              "Line": 47,
+              "Offset": 40,
+              "EndOffset": 47,
+              "Path": 0,
+              "Ordinal": 6,
+              "Hits": 0
+            },
+            {
+              "Line": 47,
+              "Offset": 32,
+              "EndOffset": 63,
+              "Path": 1,
+              "Ordinal": 5,
+              "Hits": 1
+            },
+            {
+              "Line": 47,
+              "Offset": 69,
+              "EndOffset": 76,
+              "Path": 0,
+              "Ordinal": 10,
+              "Hits": 1
+            },
+            {
+              "Line": 47,
+              "Offset": 82,
+              "EndOffset": 89,
+              "Path": 0,
+              "Ordinal": 12,
+              "Hits": 1
+            },
+            {
+              "Line": 47,
+              "Offset": 24,
+              "EndOffset": 102,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 0
+            },
+            {
+              "Line": 47,
+              "Offset": 108,
+              "EndOffset": 110,
+              "Path": 0,
+              "Ordinal": 16,
+              "Hits": 0
+            },
+            {
+              "Line": 47,
+              "Offset": 116,
+              "EndOffset": 123,
+              "Path": 0,
+              "Ordinal": 18,
+              "Hits": 0
+            },
+            {
+              "Line": 47,
+              "Offset": 108,
+              "EndOffset": 139,
+              "Path": 1,
+              "Ordinal": 17,
+              "Hits": 0
+            },
+            {
+              "Line": 47,
+              "Offset": 145,
+              "EndOffset": 152,
+              "Path": 0,
+              "Ordinal": 22,
+              "Hits": 0
+            },
+            {
+              "Line": 47,
+              "Offset": 158,
+              "EndOffset": 162,
+              "Path": 0,
+              "Ordinal": 24,
+              "Hits": 0
+            },
+            {
+              "Line": 47,
+              "Offset": 95,
+              "EndOffset": 175,
+              "Path": 1,
+              "Ordinal": 15,
+              "Hits": 1
+            },
+            {
+              "Line": 47,
+              "Offset": 53,
+              "EndOffset": 196,
+              "Path": 1,
+              "Ordinal": 9,
+              "Hits": 0
+            },
+            {
+              "Line": 47,
+              "Offset": 82,
+              "EndOffset": 217,
+              "Path": 1,
+              "Ordinal": 13,
+              "Hits": 0
+            },
+            {
+              "Line": 47,
+              "Offset": 158,
+              "EndOffset": 238,
+              "Path": 1,
+              "Ordinal": 25,
+              "Hits": 0
+            },
+            {
+              "Line": 47,
+              "Offset": 168,
+              "EndOffset": 259,
+              "Path": 1,
+              "Ordinal": 27,
+              "Hits": 0
+            },
+            {
+              "Line": 47,
+              "Offset": 129,
+              "EndOffset": 280,
+              "Path": 1,
+              "Ordinal": 21,
+              "Hits": 0
+            },
+            {
+              "Line": 47,
+              "Offset": 116,
+              "EndOffset": 301,
+              "Path": 1,
+              "Ordinal": 19,
+              "Hits": 0
+            },
+            {
+              "Line": 47,
+              "Offset": 69,
+              "EndOffset": 322,
+              "Path": 1,
+              "Ordinal": 11,
+              "Hits": 0
+            },
+            {
+              "Line": 47,
+              "Offset": 145,
+              "EndOffset": 343,
+              "Path": 1,
+              "Ordinal": 23,
+              "Hits": 0
+            },
+            {
+              "Line": 47,
+              "Offset": 40,
+              "EndOffset": 364,
+              "Path": 1,
+              "Ordinal": 7,
+              "Hits": 0
+            },
+            {
+              "Line": 47,
+              "Offset": 186,
+              "EndOffset": 385,
+              "Path": 1,
+              "Ordinal": 29,
+              "Hits": 1
+            },
+            {
+              "Line": 47,
+              "Offset": 207,
+              "EndOffset": 402,
+              "Path": 1,
+              "Ordinal": 31,
+              "Hits": 0
+            },
+            {
+              "Line": 47,
+              "Offset": 228,
+              "EndOffset": 416,
+              "Path": 1,
+              "Ordinal": 33,
+              "Hits": 0
+            },
+            {
+              "Line": 47,
+              "Offset": 249,
+              "EndOffset": 430,
+              "Path": 1,
+              "Ordinal": 35,
+              "Hits": 0
+            },
+            {
+              "Line": 47,
+              "Offset": 270,
+              "EndOffset": 444,
+              "Path": 1,
+              "Ordinal": 37,
+              "Hits": 0
+            },
+            {
+              "Line": 47,
+              "Offset": 291,
+              "EndOffset": 458,
+              "Path": 1,
+              "Ordinal": 39,
+              "Hits": 0
+            },
+            {
+              "Line": 47,
+              "Offset": 312,
+              "EndOffset": 472,
+              "Path": 1,
+              "Ordinal": 41,
+              "Hits": 0
+            },
+            {
+              "Line": 47,
+              "Offset": 333,
+              "EndOffset": 486,
+              "Path": 1,
+              "Ordinal": 43,
+              "Hits": 0
+            },
+            {
+              "Line": 47,
+              "Offset": 354,
+              "EndOffset": 500,
+              "Path": 1,
+              "Ordinal": 45,
+              "Hits": 0
+            },
+            {
+              "Line": 47,
+              "Offset": 375,
+              "EndOffset": 514,
+              "Path": 1,
+              "Ordinal": 47,
+              "Hits": 0
+            },
+            {
+              "Line": 47,
+              "Offset": 6,
+              "EndOffset": 528,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 0
+            },
+            {
+              "Line": 47,
+              "Offset": 53,
+              "EndOffset": 528,
+              "Path": 0,
+              "Ordinal": 8,
+              "Hits": 0
+            },
+            {
+              "Line": 47,
+              "Offset": 95,
+              "EndOffset": 528,
+              "Path": 0,
+              "Ordinal": 14,
+              "Hits": 0
+            },
+            {
+              "Line": 47,
+              "Offset": 129,
+              "EndOffset": 528,
+              "Path": 0,
+              "Ordinal": 20,
+              "Hits": 0
+            },
+            {
+              "Line": 47,
+              "Offset": 168,
+              "EndOffset": 528,
+              "Path": 0,
+              "Ordinal": 26,
+              "Hits": 0
+            },
+            {
+              "Line": 47,
+              "Offset": 186,
+              "EndOffset": 528,
+              "Path": 0,
+              "Ordinal": 28,
+              "Hits": 0
+            },
+            {
+              "Line": 47,
+              "Offset": 207,
+              "EndOffset": 528,
+              "Path": 0,
+              "Ordinal": 30,
+              "Hits": 0
+            },
+            {
+              "Line": 47,
+              "Offset": 228,
+              "EndOffset": 528,
+              "Path": 0,
+              "Ordinal": 32,
+              "Hits": 0
+            },
+            {
+              "Line": 47,
+              "Offset": 249,
+              "EndOffset": 528,
+              "Path": 0,
+              "Ordinal": 34,
+              "Hits": 0
+            },
+            {
+              "Line": 47,
+              "Offset": 270,
+              "EndOffset": 528,
+              "Path": 0,
+              "Ordinal": 36,
+              "Hits": 0
+            },
+            {
+              "Line": 47,
+              "Offset": 291,
+              "EndOffset": 528,
+              "Path": 0,
+              "Ordinal": 38,
+              "Hits": 0
+            },
+            {
+              "Line": 47,
+              "Offset": 312,
+              "EndOffset": 528,
+              "Path": 0,
+              "Ordinal": 40,
+              "Hits": 0
+            },
+            {
+              "Line": 47,
+              "Offset": 333,
+              "EndOffset": 528,
+              "Path": 0,
+              "Ordinal": 42,
+              "Hits": 0
+            },
+            {
+              "Line": 47,
+              "Offset": 354,
+              "EndOffset": 528,
+              "Path": 0,
+              "Ordinal": 44,
+              "Hits": 0
+            },
+            {
+              "Line": 47,
+              "Offset": 375,
+              "EndOffset": 528,
+              "Path": 0,
+              "Ordinal": 46,
+              "Hits": 0
+            }
+          ]
+        },
+        "System.Void ArchaicQuestII.GameLogic.Commands.Movement.Movement::NotifyRoomLeft(ArchaicQuestII.GameLogic.World.Room.Room,ArchaicQuestII.GameLogic.Character.Player,System.String)": {
+          "Lines": {
+            "74": 1,
+            "75": 7,
+            "76": 2,
+            "77": 2,
+            "78": 1,
+            "79": 1,
+            "80": 1,
+            "81": 2,
+            "82": 1
+          },
+          "Branches": [
+            {
+              "Line": 75,
+              "Offset": 101,
+              "EndOffset": 16,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 2
+            },
+            {
+              "Line": 77,
+              "Offset": 44,
+              "EndOffset": 46,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 1
+            },
+            {
+              "Line": 77,
+              "Offset": 44,
+              "EndOffset": 93,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 2
+            },
+            {
+              "Line": 75,
+              "Offset": 101,
+              "EndOffset": 103,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 1
+            }
+          ]
+        },
+        "System.Void ArchaicQuestII.GameLogic.Commands.Movement.Movement::NotifyRoomEnter(ArchaicQuestII.GameLogic.World.Room.Room,ArchaicQuestII.GameLogic.Character.Player,System.String)": {
+          "Lines": {
+            "85": 1,
+            "86": 0,
+            "87": 0,
+            "88": 0,
+            "89": 0,
+            "90": 0,
+            "91": 0,
+            "92": 0,
+            "93": 1
+          },
+          "Branches": [
+            {
+              "Line": 86,
+              "Offset": 90,
+              "EndOffset": 16,
+              "Path": 1,
+              "Ordinal": 3,
+              "Hits": 0
+            },
+            {
+              "Line": 88,
+              "Offset": 44,
+              "EndOffset": 46,
+              "Path": 0,
+              "Ordinal": 0,
+              "Hits": 0
+            },
+            {
+              "Line": 88,
+              "Offset": 44,
+              "EndOffset": 82,
+              "Path": 1,
+              "Ordinal": 1,
+              "Hits": 0
+            },
+            {
+              "Line": 86,
+              "Offset": 90,
+              "EndOffset": 92,
+              "Path": 0,
+              "Ordinal": 2,
+              "Hits": 1
+            }
+          ]
+        },
+        "System.Void ArchaicQuestII.GameLogic.Commands.Movement.Movement::UpdateCharactersLocation(ArchaicQuestII.GameLogic.World.Room.Exit,ArchaicQuestII.GameLogic.Character.Player)": {
+          "Lines": {
+            "96": 1,
+            "97": 1,
+            "98": 1
+          },
+          "Branches": []
+        },
+        "System.Boolean ArchaicQuestII.GameLogic.Commands.Movement.Movement::CharacterCanMove(ArchaicQuestII.GameLogic.Character.Player)": {
+          "Lines": {
+            "101": 2,
+            "102": 2,
+            "103": 2
+          },
+          "Branches": []
+        },
+        "System.Void ArchaicQuestII.GameLogic.Commands.Movement.Movement::MoveNorth(ArchaicQuestII.GameLogic.World.Room.Room,ArchaicQuestII.GameLogic.Character.Player)": {
+          "Lines": {
+            "106": 0,
+            "107": 0
+          },
+          "Branches": []
+        },
+        "System.Void ArchaicQuestII.GameLogic.Commands.Movement.Movement::.ctor(ArchaicQuestII.GameLogic.Core.IWriteToClient,ArchaicQuestII.GameLogic.Core.ICache)": {
+          "Lines": {
+            "14": 2,
+            "15": 2,
+            "16": 2,
+            "17": 2,
+            "18": 2
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\Character\\Character.cs": {
+      "ArchaicQuestII.GameLogic.Character.Character": {
+        "System.String ArchaicQuestII.GameLogic.Character.Character::get_ConnectionId()": {
+          "Lines": {
+            "20": 18
+          },
+          "Branches": []
+        },
+        "System.Guid ArchaicQuestII.GameLogic.Character.Character::get_AccountId()": {
+          "Lines": {
+            "25": 0
+          },
+          "Branches": []
+        },
+        "System.Guid ArchaicQuestII.GameLogic.Character.Character::get_Id()": {
+          "Lines": {
+            "27": 0
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.GameLogic.Character.Character::get_Name()": {
+          "Lines": {
+            "29": 17
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.GameLogic.Character.Character::get_LongName()": {
+          "Lines": {
+            "36": 0
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.GameLogic.Character.Character::get_Gender()": {
+          "Lines": {
+            "38": 0
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.GameLogic.Character.Character::get_Race()": {
+          "Lines": {
+            "40": 0
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.GameLogic.Character.Character::get_ClassName()": {
+          "Lines": {
+            "42": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 ArchaicQuestII.GameLogic.Character.Character::get_Level()": {
+          "Lines": {
+            "44": 0
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.GameLogic.Character.Character::get_Description()": {
+          "Lines": {
+            "46": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 ArchaicQuestII.GameLogic.Character.Character::get_AlignmentScore()": {
+          "Lines": {
+            "48": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 ArchaicQuestII.GameLogic.Character.Character::get_TotalExperience()": {
+          "Lines": {
+            "50": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 ArchaicQuestII.GameLogic.Character.Character::get_Experience()": {
+          "Lines": {
+            "52": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 ArchaicQuestII.GameLogic.Character.Character::get_ExperienceToNextLevel()": {
+          "Lines": {
+            "54": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Character.Equipment.Equipment ArchaicQuestII.GameLogic.Character.Character::get_Equipped()": {
+          "Lines": {
+            "56": 0
+          },
+          "Branches": []
+        },
+        "System.Collections.Generic.List`1<ArchaicQuestII.GameLogic.Item.Item> ArchaicQuestII.GameLogic.Character.Character::get_Inventory()": {
+          "Lines": {
+            "58": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Character.Model.Stats ArchaicQuestII.GameLogic.Character.Character::get_Stats()": {
+          "Lines": {
+            "60": 4
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Character.Status.CharacterStatus/Status ArchaicQuestII.GameLogic.Character.Character::get_Status()": {
+          "Lines": {
+            "62": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Character.Model.Stats ArchaicQuestII.GameLogic.Character.Character::get_MaxStats()": {
+          "Lines": {
+            "64": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Character.Model.Attributes ArchaicQuestII.GameLogic.Character.Character::get_Attributes()": {
+          "Lines": {
+            "66": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Character.Model.Attributes ArchaicQuestII.GameLogic.Character.Character::get_MaxAttributes()": {
+          "Lines": {
+            "68": 0
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.GameLogic.Character.Character::get_Target()": {
+          "Lines": {
+            "71": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Item.ArmourRating ArchaicQuestII.GameLogic.Character.Character::get_ArmorRating()": {
+          "Lines": {
+            "73": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Item.Money ArchaicQuestII.GameLogic.Character.Character::get_Money()": {
+          "Lines": {
+            "75": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Character.Model.Affects ArchaicQuestII.GameLogic.Character.Character::get_Affects()": {
+          "Lines": {
+            "77": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Character.Model.Config ArchaicQuestII.GameLogic.Character.Character::get_Config()": {
+          "Lines": {
+            "79": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 ArchaicQuestII.GameLogic.Character.Character::get_RoomId()": {
+          "Lines": {
+            "81": 2
+          },
+          "Branches": []
+        },
+        "System.Int32 ArchaicQuestII.GameLogic.Character.Character::get_RecallId()": {
+          "Lines": {
+            "83": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\Character\\Player.cs": {
+      "ArchaicQuestII.GameLogic.Character.Player": {
+        "System.DateTime ArchaicQuestII.GameLogic.Character.Player::get_JoinedDate()": {
+          "Lines": {
+            "7": 0
+          },
+          "Branches": []
+        },
+        "System.DateTime ArchaicQuestII.GameLogic.Character.Player::get_LastLoginTime()": {
+          "Lines": {
+            "8": 0
+          },
+          "Branches": []
+        },
+        "System.DateTime ArchaicQuestII.GameLogic.Character.Player::get_LastCommandTime()": {
+          "Lines": {
+            "9": 0
+          },
+          "Branches": []
+        },
+        "System.Int64 ArchaicQuestII.GameLogic.Character.Player::get_PlayTime()": {
+          "Lines": {
+            "10": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\Character\\Status\\Status.cs": {
+      "ArchaicQuestII.GameLogic.Character.Status.CharacterStatus": {
+        "System.Collections.Generic.List`1<ArchaicQuestII.GameLogic.Core.Option> ArchaicQuestII.GameLogic.Character.Status.CharacterStatus::SeedData()": {
+          "Lines": {
+            "32": 0,
+            "33": 0,
+            "34": 0,
+            "35": 0,
+            "36": 0,
+            "37": 0,
+            "38": 0,
+            "39": 0,
+            "40": 0,
+            "41": 0,
+            "42": 0,
+            "43": 0,
+            "44": 0,
+            "45": 0,
+            "46": 0,
+            "47": 0,
+            "48": 0,
+            "49": 0,
+            "50": 0,
+            "51": 0,
+            "52": 0,
+            "53": 0,
+            "54": 0,
+            "55": 0,
+            "56": 0,
+            "57": 0,
+            "58": 0,
+            "59": 0,
+            "60": 0,
+            "61": 0,
+            "62": 0,
+            "63": 0,
+            "64": 0,
+            "65": 0,
+            "66": 0,
+            "67": 0,
+            "68": 0,
+            "69": 0,
+            "70": 0,
+            "71": 0,
+            "72": 0,
+            "73": 0,
+            "74": 0,
+            "75": 0,
+            "76": 0,
+            "77": 0,
+            "78": 0,
+            "79": 0,
+            "80": 0,
+            "81": 0,
+            "82": 0,
+            "83": 0,
+            "84": 0,
+            "85": 0,
+            "86": 0,
+            "87": 0,
+            "88": 0,
+            "89": 0,
+            "90": 0,
+            "91": 0,
+            "92": 0,
+            "93": 0,
+            "94": 0,
+            "95": 0,
+            "96": 0,
+            "98": 0,
+            "99": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\Character\\Race\\Race.cs": {
+      "ArchaicQuestII.GameLogic.Character.Race.Race": {
+        "System.Boolean ArchaicQuestII.GameLogic.Character.Race.Race::get_Playable()": {
+          "Lines": {
+            "12": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Character.Model.Attributes ArchaicQuestII.GameLogic.Character.Race.Race::get_Attributes()": {
+          "Lines": {
+            "14": 0
+          },
+          "Branches": []
+        },
+        "System.Collections.Generic.List`1<ArchaicQuestII.GameLogic.Character.Race.Race> ArchaicQuestII.GameLogic.Character.Race.Race::SeedData()": {
+          "Lines": {
+            "17": 0,
+            "18": 0,
+            "19": 0,
+            "20": 0,
+            "21": 0,
+            "22": 0,
+            "23": 0,
+            "24": 0,
+            "25": 0,
+            "26": 0,
+            "27": 0,
+            "28": 0,
+            "29": 0,
+            "30": 0,
+            "31": 0,
+            "32": 0,
+            "33": 0,
+            "34": 0,
+            "35": 0,
+            "36": 0,
+            "37": 0,
+            "38": 0,
+            "39": 0,
+            "40": 0,
+            "41": 0,
+            "42": 0,
+            "43": 0,
+            "44": 0,
+            "45": 0,
+            "46": 0,
+            "47": 0,
+            "48": 0,
+            "49": 0,
+            "50": 0,
+            "51": 0,
+            "52": 0,
+            "53": 0,
+            "54": 0,
+            "55": 0,
+            "56": 0,
+            "57": 0,
+            "58": 0,
+            "59": 0,
+            "60": 0,
+            "61": 0,
+            "62": 0,
+            "63": 0,
+            "64": 0,
+            "65": 0,
+            "66": 0,
+            "67": 0,
+            "68": 0,
+            "69": 0,
+            "70": 0,
+            "71": 0,
+            "72": 0,
+            "73": 0,
+            "74": 0,
+            "75": 0,
+            "76": 0,
+            "77": 0,
+            "78": 0,
+            "79": 0,
+            "80": 0,
+            "81": 0,
+            "82": 0,
+            "83": 0,
+            "84": 0,
+            "85": 0,
+            "86": 0,
+            "87": 0,
+            "88": 0,
+            "89": 0,
+            "90": 0,
+            "91": 0,
+            "92": 0,
+            "93": 0,
+            "94": 0,
+            "95": 0,
+            "96": 0,
+            "97": 0,
+            "98": 0,
+            "99": 0,
+            "100": 0,
+            "101": 0,
+            "102": 0,
+            "103": 0,
+            "104": 0,
+            "105": 0,
+            "106": 0,
+            "107": 0,
+            "108": 0,
+            "109": 0,
+            "110": 0,
+            "111": 0,
+            "112": 0,
+            "113": 0,
+            "114": 0,
+            "116": 0,
+            "117": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\Character\\Model\\Affects.cs": {
+      "ArchaicQuestII.GameLogic.Character.Model.Affects": {
+        "System.Boolean ArchaicQuestII.GameLogic.Character.Model.Affects::get_NonDectect()": {
+          "Lines": {
+            "7": 0
+          },
+          "Branches": []
+        },
+        "System.Boolean ArchaicQuestII.GameLogic.Character.Model.Affects::get_Invis()": {
+          "Lines": {
+            "8": 0
+          },
+          "Branches": []
+        },
+        "System.Boolean ArchaicQuestII.GameLogic.Character.Model.Affects::get_DetectInvis()": {
+          "Lines": {
+            "9": 0
+          },
+          "Branches": []
+        },
+        "System.Boolean ArchaicQuestII.GameLogic.Character.Model.Affects::get_Hidden()": {
+          "Lines": {
+            "10": 0
+          },
+          "Branches": []
+        },
+        "System.Boolean ArchaicQuestII.GameLogic.Character.Model.Affects::get_DetectHidden()": {
+          "Lines": {
+            "11": 0
+          },
+          "Branches": []
+        },
+        "System.Boolean ArchaicQuestII.GameLogic.Character.Model.Affects::get_Poisoned()": {
+          "Lines": {
+            "12": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\Character\\Model\\Appearance.cs": {
+      "ArchaicQuestII.GameLogic.Character.Model.Appearance": {
+        "System.String ArchaicQuestII.GameLogic.Character.Model.Appearance::get_Description()": {
+          "Lines": {
+            "10": 0
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.GameLogic.Character.Model.Appearance::get_Eyes()": {
+          "Lines": {
+            "11": 0
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.GameLogic.Character.Model.Appearance::get_Skin()": {
+          "Lines": {
+            "12": 0
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.GameLogic.Character.Model.Appearance::get_Build()": {
+          "Lines": {
+            "13": 0
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.GameLogic.Character.Model.Appearance::get_Face()": {
+          "Lines": {
+            "14": 0
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.GameLogic.Character.Model.Appearance::get_Hair()": {
+          "Lines": {
+            "15": 0
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.GameLogic.Character.Model.Appearance::get_HairLength()": {
+          "Lines": {
+            "16": 0
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.GameLogic.Character.Model.Appearance::get_HairTexture()": {
+          "Lines": {
+            "17": 0
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.GameLogic.Character.Model.Appearance::get_FacialHair()": {
+          "Lines": {
+            "18": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\Character\\Model\\Atrributes.cs": {
+      "ArchaicQuestII.GameLogic.Character.Model.Attributes": {
+        "System.Collections.Generic.Dictionary`2<ArchaicQuestII.GameLogic.Effect.EffectLocation,System.Int32> ArchaicQuestII.GameLogic.Character.Model.Attributes::get_Attribute()": {
+          "Lines": {
+            "10": 0
+          },
+          "Branches": []
+        },
+        "System.Void ArchaicQuestII.GameLogic.Character.Model.Attributes::.ctor()": {
+          "Lines": {
+            "11": 0,
+            "12": 0,
+            "13": 0,
+            "14": 0,
+            "15": 0,
+            "16": 0,
+            "17": 0,
+            "18": 0,
+            "19": 0,
+            "20": 0,
+            "21": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\Character\\Model\\Attribute.cs": {
+      "ArchaicQuestII.GameLogic.Character.Model.Attribute": {
+        "ArchaicQuestII.GameLogic.Effect.EffectLocation ArchaicQuestII.GameLogic.Character.Model.Attribute::get_Location()": {
+          "Lines": {
+            "10": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 ArchaicQuestII.GameLogic.Character.Model.Attribute::get_Value()": {
+          "Lines": {
+            "11": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\Character\\Model\\Config.cs": {
+      "ArchaicQuestII.GameLogic.Character.Model.Config": {
+        "System.Boolean ArchaicQuestII.GameLogic.Character.Model.Config::get_CanFollow()": {
+          "Lines": {
+            "7": 0
+          },
+          "Branches": []
+        },
+        "System.Boolean ArchaicQuestII.GameLogic.Character.Model.Config::get_NewbieChannel()": {
+          "Lines": {
+            "8": 0
+          },
+          "Branches": []
+        },
+        "System.Boolean ArchaicQuestII.GameLogic.Character.Model.Config::get_GossipChannel()": {
+          "Lines": {
+            "9": 0
+          },
+          "Branches": []
+        },
+        "System.Boolean ArchaicQuestII.GameLogic.Character.Model.Config::get_OocChannel()": {
+          "Lines": {
+            "10": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\Character\\Model\\Money.cs": {
+      "ArchaicQuestII.GameLogic.Character.Model.Money": {
+        "System.Int32 ArchaicQuestII.GameLogic.Character.Model.Money::get_Gold()": {
+          "Lines": {
+            "7": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 ArchaicQuestII.GameLogic.Character.Model.Money::get_Silver()": {
+          "Lines": {
+            "8": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 ArchaicQuestII.GameLogic.Character.Model.Money::get_Copper()": {
+          "Lines": {
+            "9": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\Character\\Model\\Stats.cs": {
+      "ArchaicQuestII.GameLogic.Character.Model.Stats": {
+        "System.Int32 ArchaicQuestII.GameLogic.Character.Model.Stats::get_HitPoints()": {
+          "Lines": {
+            "7": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 ArchaicQuestII.GameLogic.Character.Model.Stats::get_ManaPoints()": {
+          "Lines": {
+            "8": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 ArchaicQuestII.GameLogic.Character.Model.Stats::get_MovePoints()": {
+          "Lines": {
+            "9": 4
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\Character\\Equipment\\Equipment.cs": {
+      "ArchaicQuestII.GameLogic.Character.Equipment.Equipment": {
+        "ArchaicQuestII.GameLogic.Item.Item ArchaicQuestII.GameLogic.Character.Equipment.Equipment::get_Light()": {
+          "Lines": {
+            "11": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Item.Item ArchaicQuestII.GameLogic.Character.Equipment.Equipment::get_Finger()": {
+          "Lines": {
+            "12": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Item.Item ArchaicQuestII.GameLogic.Character.Equipment.Equipment::get_Finger2()": {
+          "Lines": {
+            "13": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Item.Item ArchaicQuestII.GameLogic.Character.Equipment.Equipment::get_Neck()": {
+          "Lines": {
+            "14": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Item.Item ArchaicQuestII.GameLogic.Character.Equipment.Equipment::get_Neck2()": {
+          "Lines": {
+            "15": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Item.Item ArchaicQuestII.GameLogic.Character.Equipment.Equipment::get_Eyes()": {
+          "Lines": {
+            "16": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Item.Item ArchaicQuestII.GameLogic.Character.Equipment.Equipment::get_Face()": {
+          "Lines": {
+            "17": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Item.Item ArchaicQuestII.GameLogic.Character.Equipment.Equipment::get_Head()": {
+          "Lines": {
+            "18": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Item.Item ArchaicQuestII.GameLogic.Character.Equipment.Equipment::get_Ear()": {
+          "Lines": {
+            "19": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Item.Item ArchaicQuestII.GameLogic.Character.Equipment.Equipment::get_Torso()": {
+          "Lines": {
+            "20": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Item.Item ArchaicQuestII.GameLogic.Character.Equipment.Equipment::get_Legs()": {
+          "Lines": {
+            "21": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Item.Item ArchaicQuestII.GameLogic.Character.Equipment.Equipment::get_Feet()": {
+          "Lines": {
+            "22": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Item.Item ArchaicQuestII.GameLogic.Character.Equipment.Equipment::get_Hands()": {
+          "Lines": {
+            "23": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Item.Item ArchaicQuestII.GameLogic.Character.Equipment.Equipment::get_Arms()": {
+          "Lines": {
+            "24": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Item.Item ArchaicQuestII.GameLogic.Character.Equipment.Equipment::get_AboutBody()": {
+          "Lines": {
+            "25": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Item.Item ArchaicQuestII.GameLogic.Character.Equipment.Equipment::get_OnBack()": {
+          "Lines": {
+            "26": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Item.Item ArchaicQuestII.GameLogic.Character.Equipment.Equipment::get_Waist()": {
+          "Lines": {
+            "27": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Item.Item ArchaicQuestII.GameLogic.Character.Equipment.Equipment::get_Wrist()": {
+          "Lines": {
+            "28": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Item.Item ArchaicQuestII.GameLogic.Character.Equipment.Equipment::get_Wrist2()": {
+          "Lines": {
+            "29": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Item.Item ArchaicQuestII.GameLogic.Character.Equipment.Equipment::get_Wielded()": {
+          "Lines": {
+            "30": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Item.Item ArchaicQuestII.GameLogic.Character.Equipment.Equipment::get_Shield()": {
+          "Lines": {
+            "31": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Item.Item ArchaicQuestII.GameLogic.Character.Equipment.Equipment::get_Held()": {
+          "Lines": {
+            "32": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Item.Item ArchaicQuestII.GameLogic.Character.Equipment.Equipment::get_Floating()": {
+          "Lines": {
+            "33": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Item.Item ArchaicQuestII.GameLogic.Character.Equipment.Equipment::get_Quiver()": {
+          "Lines": {
+            "34": 0
+          },
+          "Branches": []
+        },
+        "System.Void ArchaicQuestII.GameLogic.Character.Equipment.Equipment::Wear(ArchaicQuestII.GameLogic.Character.Character,ArchaicQuestII.GameLogic.Item.Item)": {
+          "Lines": {
+            "77": 0,
+            "78": 0,
+            "90": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\Character\\Class\\Class.cs": {
+      "ArchaicQuestII.GameLogic.Character.Class.Class": {
+        "System.Collections.Generic.List`1<ArchaicQuestII.GameLogic.Character.Class.Class> ArchaicQuestII.GameLogic.Character.Class.Class::SeedData()": {
+          "Lines": {
+            "9": 0,
+            "10": 0,
+            "11": 0,
+            "12": 0,
+            "13": 0,
+            "14": 0,
+            "15": 0,
+            "16": 0,
+            "17": 0,
+            "18": 0,
+            "19": 0,
+            "20": 0,
+            "21": 0,
+            "22": 0,
+            "23": 0,
+            "24": 0,
+            "25": 0,
+            "26": 0,
+            "27": 0,
+            "28": 0,
+            "29": 0,
+            "30": 0,
+            "31": 0,
+            "32": 0,
+            "33": 0,
+            "34": 0,
+            "35": 0,
+            "36": 0,
+            "37": 0,
+            "38": 0,
+            "39": 0,
+            "40": 0,
+            "41": 0,
+            "42": 0,
+            "43": 0,
+            "44": 0,
+            "45": 0,
+            "46": 0,
+            "47": 0,
+            "48": 0,
+            "49": 0,
+            "50": 0,
+            "51": 0,
+            "52": 0,
+            "54": 0,
+            "55": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\Character\\AttackTypes\\AttackTypes.cs": {
+      "ArchaicQuestII.GameLogic.Character.AttackTypes.AttackTypes": {
+        "System.Collections.Generic.List`1<ArchaicQuestII.GameLogic.Core.Option> ArchaicQuestII.GameLogic.Character.AttackTypes.AttackTypes::SeedData()": {
+          "Lines": {
+            "16": 0,
+            "17": 0,
+            "18": 0,
+            "19": 0,
+            "20": 0,
+            "21": 0,
+            "22": 0,
+            "23": 0,
+            "24": 0,
+            "25": 0,
+            "26": 0,
+            "27": 0,
+            "28": 0,
+            "29": 0,
+            "30": 0,
+            "31": 0,
+            "32": 0,
+            "33": 0,
+            "34": 0,
+            "35": 0,
+            "36": 0,
+            "37": 0,
+            "38": 0,
+            "39": 0,
+            "40": 0,
+            "41": 0,
+            "42": 0,
+            "43": 0,
+            "44": 0,
+            "45": 0,
+            "46": 0,
+            "47": 0,
+            "48": 0,
+            "49": 0,
+            "51": 0,
+            "52": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\Character\\Alignment\\Alignment.cs": {
+      "ArchaicQuestII.GameLogic.Character.Alignment.Alignment": {
+        "System.Int32 ArchaicQuestII.GameLogic.Character.Alignment.Alignment::get_Value()": {
+          "Lines": {
+            "16": 0
+          },
+          "Branches": []
+        },
+        "System.Collections.Generic.List`1<ArchaicQuestII.GameLogic.Character.Alignment.Alignment> ArchaicQuestII.GameLogic.Character.Alignment.Alignment::SeedData()": {
+          "Lines": {
+            "24": 0,
+            "25": 0,
+            "26": 0,
+            "27": 0,
+            "28": 0,
+            "29": 0,
+            "30": 0,
+            "31": 0,
+            "32": 0,
+            "33": 0,
+            "34": 0,
+            "35": 0,
+            "36": 0,
+            "37": 0,
+            "38": 0,
+            "39": 0,
+            "40": 0,
+            "41": 0,
+            "42": 0,
+            "43": 0,
+            "44": 0,
+            "45": 0,
+            "46": 0,
+            "47": 0,
+            "48": 0,
+            "49": 0,
+            "50": 0,
+            "51": 0,
+            "52": 0,
+            "53": 0,
+            "54": 0,
+            "55": 0,
+            "56": 0,
+            "57": 0,
+            "58": 0,
+            "59": 0,
+            "60": 0,
+            "61": 0,
+            "62": 0,
+            "63": 0,
+            "64": 0,
+            "65": 0,
+            "66": 0,
+            "67": 0,
+            "68": 0,
+            "69": 0,
+            "70": 0,
+            "71": 0,
+            "72": 0,
+            "73": 0,
+            "74": 0,
+            "75": 0,
+            "76": 0,
+            "77": 0,
+            "78": 0,
+            "79": 0,
+            "80": 0,
+            "81": 0,
+            "82": 0,
+            "83": 0,
+            "84": 0,
+            "85": 0,
+            "86": 0,
+            "87": 0,
+            "89": 0,
+            "90": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\Account\\Account.cs": {
+      "ArchaicQuestII.GameLogic.Account.Account": {
+        "System.Guid ArchaicQuestII.GameLogic.Account.Account::get_Id()": {
+          "Lines": {
+            "10": 0
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.GameLogic.Account.Account::get_UserName()": {
+          "Lines": {
+            "12": 0
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.GameLogic.Account.Account::get_Password()": {
+          "Lines": {
+            "14": 0
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.GameLogic.Account.Account::get_Email()": {
+          "Lines": {
+            "16": 0
+          },
+          "Branches": []
+        },
+        "System.Boolean ArchaicQuestII.GameLogic.Account.Account::get_EmailVerified()": {
+          "Lines": {
+            "22": 0
+          },
+          "Branches": []
+        },
+        "ArchaicQuestII.GameLogic.Account.AccountStats ArchaicQuestII.GameLogic.Account.Account::get_Stats()": {
+          "Lines": {
+            "24": 0
+          },
+          "Branches": []
+        },
+        "System.Collections.Generic.List`1<System.Guid> ArchaicQuestII.GameLogic.Account.Account::get_Characters()": {
+          "Lines": {
+            "29": 0
+          },
+          "Branches": []
+        },
+        "System.DateTime ArchaicQuestII.GameLogic.Account.Account::get_DateJoined()": {
+          "Lines": {
+            "31": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 ArchaicQuestII.GameLogic.Account.Account::get_Credits()": {
+          "Lines": {
+            "33": 0
+          },
+          "Branches": []
+        }
+      },
+      "ArchaicQuestII.GameLogic.Account.AccountViewModel": {
+        "ArchaicQuestII.GameLogic.Account.AccountStats ArchaicQuestII.GameLogic.Account.AccountViewModel::get_Stats()": {
+          "Lines": {
+            "39": 0
+          },
+          "Branches": []
+        },
+        "System.Collections.Generic.List`1<ArchaicQuestII.GameLogic.Character.Player> ArchaicQuestII.GameLogic.Account.AccountViewModel::get_Characters()": {
+          "Lines": {
+            "44": 0
+          },
+          "Branches": []
+        },
+        "System.DateTime ArchaicQuestII.GameLogic.Account.AccountViewModel::get_DateJoined()": {
+          "Lines": {
+            "46": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 ArchaicQuestII.GameLogic.Account.AccountViewModel::get_Credits()": {
+          "Lines": {
+            "48": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\Account\\AccountStats.cs": {
+      "ArchaicQuestII.GameLogic.Account.AccountStats": {
+        "System.Int32 ArchaicQuestII.GameLogic.Account.AccountStats::get_MobKills()": {
+          "Lines": {
+            "10": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 ArchaicQuestII.GameLogic.Account.AccountStats::get_PlayerKills()": {
+          "Lines": {
+            "11": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 ArchaicQuestII.GameLogic.Account.AccountStats::get_Deaths()": {
+          "Lines": {
+            "12": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 ArchaicQuestII.GameLogic.Account.AccountStats::get_TotalPlayTime()": {
+          "Lines": {
+            "13": 0
+          },
+          "Branches": []
+        },
+        "System.Int32 ArchaicQuestII.GameLogic.Account.AccountStats::get_ExploredRooms()": {
+          "Lines": {
+            "14": 0
+          },
+          "Branches": []
+        }
+      }
+    },
+    "C:\\Dev\\Personal\\AQ2\\ArchaicQuestII\\ArchaicQuestII.GameLogic\\Account\\Login.cs": {
+      "ArchaicQuestII.GameLogic.Account.Login": {
+        "System.String ArchaicQuestII.GameLogic.Account.Login::get_Username()": {
+          "Lines": {
+            "12": 0
+          },
+          "Branches": []
+        },
+        "System.String ArchaicQuestII.GameLogic.Account.Login::get_Password()": {
+          "Lines": {
+            "13": 0
+          },
+          "Branches": []
+        }
+      }
+    }
+  }
+}
