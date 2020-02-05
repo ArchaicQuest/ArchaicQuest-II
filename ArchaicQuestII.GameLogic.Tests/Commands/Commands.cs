@@ -17,14 +17,6 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
         public CommandsTests()
         {
             _movement = new Mock<IMovement>();
-       
-        }
-
-        [Fact]
-        public void Should_call_move_north()
-        {
-            var player2 = new Player();
-            player2.ConnectionId = "2";
 
             _player = new Player();
             _player.ConnectionId = "1";
@@ -45,22 +37,136 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
                 },
                 Players = new List<Player>()
                 {
-                    _player,
-             
-                    player2
+                    _player
                 }
             };
 
+        }
 
-            _movement.Setup(x => x.Move(_room, player2, "North"));
+        [Fact]
+        public void Should_call_process_command()
+        {
+
+            _movement.Setup(x => x.Move(_room, _player, "North"));
+
+            new GameLogic.Commands.Commands(_movement.Object).ProcessCommand(" NoRtH ", _player, _room);
+
+            _movement.Verify(x => x.Move(_room, _player, "North"), Times.Once);
+
+        }
+
+        [Fact]
+        public void Should_call_move_north_east()
+        {
+
+            _movement.Setup(x => x.Move(_room, _player, "North East"));
+
+            new GameLogic.Commands.Commands(_movement.Object).CommandList("ne", string.Empty, _player, _room);
+
+            _movement.Verify(x => x.Move(_room, _player, "North East"), Times.Once);
+
+        }
+
+        [Fact]
+        public void Should_call_move_north_west()
+        {
+
+            _movement.Setup(x => x.Move(_room, _player, "North West"));
+
+            new GameLogic.Commands.Commands(_movement.Object).CommandList("nw", string.Empty, _player, _room);
+
+            _movement.Verify(x => x.Move(_room, _player, "North West"), Times.Once);
+
+        }
 
 
-            new GameLogic.Commands.Commands(_movement.Object).CommandList("n", string.Empty, player2, _room);
+        [Fact]
+        public void Should_call_move_south_west()
+        {
 
-            _movement.Verify(x => x.Move(_room, player2, "North"), Times.Once);
+            _movement.Setup(x => x.Move(_room, _player, "South West"));
+
+            new GameLogic.Commands.Commands(_movement.Object).CommandList("sw", string.Empty, _player, _room);
+
+            _movement.Verify(x => x.Move(_room, _player, "South West"), Times.Once);
+
+        }
+
+        [Fact]
+        public void Should_call_move_south_east()
+        {
+
+            _movement.Setup(x => x.Move(_room, _player, "South East"));
+
+            new GameLogic.Commands.Commands(_movement.Object).CommandList("se", string.Empty, _player, _room);
+
+            _movement.Verify(x => x.Move(_room, _player, "South East"), Times.Once);
+
+        }
+
+
+
+        [Fact]
+        public void Should_call_move_north()
+        {
+       
+            _movement.Setup(x => x.Move(_room, _player, "North"));
+
+            new GameLogic.Commands.Commands(_movement.Object).CommandList("n", string.Empty, _player, _room);
+
+            _movement.Verify(x => x.Move(_room, _player, "North"), Times.Once);
         
         }
 
-       
+        [Fact]
+        public void Should_call_move_east()
+        {
+
+            _movement.Setup(x => x.Move(_room, _player, "East"));
+
+            new GameLogic.Commands.Commands(_movement.Object).CommandList("e", string.Empty, _player, _room);
+
+            _movement.Verify(x => x.Move(_room, _player, "East"), Times.Once);
+
+        }
+
+        [Fact]
+        public void Should_call_move_South()
+        {
+
+            _movement.Setup(x => x.Move(_room, _player, "South"));
+
+            new GameLogic.Commands.Commands(_movement.Object).CommandList("s", string.Empty, _player, _room);
+
+            _movement.Verify(x => x.Move(_room, _player, "South"), Times.Once);
+
+        }
+
+        [Fact]
+        public void Should_call_move_Up()
+        {
+
+            _movement.Setup(x => x.Move(_room, _player, "Up"));
+
+            new GameLogic.Commands.Commands(_movement.Object).CommandList("u", string.Empty, _player, _room);
+
+            _movement.Verify(x => x.Move(_room, _player, "Up"), Times.Once);
+
+        }
+
+        [Fact]
+        public void Should_call_move_Down()
+        {
+
+            _movement.Setup(x => x.Move(_room, _player, "Down"));
+
+            new GameLogic.Commands.Commands(_movement.Object).CommandList("d", string.Empty, _player, _room);
+
+            _movement.Verify(x => x.Move(_room, _player, "Down"), Times.Once);
+
+        }
+
+
+
     }
 }

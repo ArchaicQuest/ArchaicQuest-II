@@ -18,6 +18,13 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
         }
         public void Move(Room room, Player character, string direction)
         {
+
+            if (CharacterCanMove(character) == false)
+            {
+                _writeToClient.WriteLine("You are too exhausted to move", character.ConnectionId);
+                return;
+            }
+
             var getExitToNextRoom = FindExit(room, direction);
 
             if (getExitToNextRoom == null)
@@ -55,6 +62,10 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
                     return room.Exits.West;
                 case "North West":
                     return room.Exits.NorthWest;
+                case "Down":
+                    return room.Exits.Down;
+                case "Up":
+                    return room.Exits.Up;
                 default: {return null;}
             }
         }
@@ -84,6 +95,11 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
         public void UpdateCharactersLocation(Exit exit, Player character)
         {
             character.RoomId = exit.AreaId;
+        }
+
+        public bool CharacterCanMove(Player character)
+        {
+            return character.Stats.MovePoints > 0;
         }
 
         public void MoveNorth(Room room, Player character)
