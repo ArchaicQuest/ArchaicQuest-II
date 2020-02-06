@@ -15,6 +15,7 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IO;
 using System.Text;
+using System.Threading;
 using ArchaicQuestII.GameLogic.Commands;
 using ArchaicQuestII.GameLogic.Commands.Movement;
 using ArchaicQuestII.GameLogic.Core;
@@ -29,6 +30,8 @@ namespace ArchaicQuestII.API
     {
         private IDataBase _db;
         private ICache _cache;
+        private IGameLoop _gameLoop;
+
         private IHubContext<GameHub> _hubContext;
         public Startup(IConfiguration configuration)
         {
@@ -49,6 +52,7 @@ namespace ArchaicQuestII.API
             services.AddTransient<IMovement, Movement>();
             services.AddTransient<ICommands, Commands>();
             services.AddTransient<IRoomActions, RoomActions>();
+            services.AddScoped<IGameLoop, GameLoop>();
 
             services.AddMvc();
             services.AddSignalR(o =>
@@ -102,7 +106,7 @@ namespace ArchaicQuestII.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IDataBase db, ICache cache)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IDataBase db, ICache cache, IGameLoop gameLoop)
         {
             if (env.IsDevelopment())
             {
@@ -114,6 +118,7 @@ namespace ArchaicQuestII.API
             }
             _db = db;
             _cache = cache;
+            _gameLoop = gameLoop;
             app.UseStaticFiles();
 
             //app.UseCors(
@@ -194,6 +199,10 @@ namespace ArchaicQuestII.API
                     _db.Save(data, DataBase.Collections.Class);
                 }
             }
+
+            var gameThread = new Thread(_gameLoop.MainLoop);
+
+            gameThread.Start();
 
         }
     }
