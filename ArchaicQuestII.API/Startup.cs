@@ -23,6 +23,7 @@ using ArchaicQuestII.GameLogic.Hubs;
 using ArchaicQuestII.GameLogic.World.Room;
 using Microsoft.AspNetCore.SignalR;
 using static ArchaicQuestII.API.Services.services;
+using System.Threading.Tasks;
 
 namespace ArchaicQuestII.API
 {
@@ -31,7 +32,7 @@ namespace ArchaicQuestII.API
         private IDataBase _db;
         private ICache _cache;
         private IGameLoop _gameLoop;
-
+        private IWriteToClient _writeToClient;
         private IHubContext<GameHub> _hubContext;
         public Startup(IConfiguration configuration)
         {
@@ -52,7 +53,7 @@ namespace ArchaicQuestII.API
             services.AddTransient<IMovement, Movement>();
             services.AddTransient<ICommands, Commands>();
             services.AddTransient<IRoomActions, RoomActions>();
-            services.AddScoped<IGameLoop, GameLoop>();
+           /// services.AddScoped<IGameLoop, GameLoop>();
 
             services.AddMvc();
             services.AddSignalR(o =>
@@ -106,7 +107,7 @@ namespace ArchaicQuestII.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IDataBase db, ICache cache, IGameLoop gameLoop)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IDataBase db, ICache cache, IGameLoop gameLoop, IWriteToClient writeToClient)
         {
             if (env.IsDevelopment())
             {
@@ -119,6 +120,7 @@ namespace ArchaicQuestII.API
             _db = db;
             _cache = cache;
             _gameLoop = gameLoop;
+            _writeToClient = writeToClient;
             app.UseStaticFiles();
 
             //app.UseCors(
@@ -200,9 +202,9 @@ namespace ArchaicQuestII.API
                 }
             }
 
-            var gameThread = new Thread(_gameLoop.MainLoop);
+         //   var mainLoop = new GameLoop(_writeToClient, _cache);
 
-            gameThread.Start();
+         //   Task.Run(mainLoop.UpdateTime);
 
         }
     }

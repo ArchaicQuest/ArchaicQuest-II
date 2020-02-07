@@ -5,62 +5,55 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ArchaicQuestII.GameLogic.Commands;
+using ArchaicQuestII.GameLogic.Hubs;
+using Microsoft.AspNet.SignalR;
 
 namespace ArchaicQuestII.GameLogic.Core
 {
-    public class GameLoop: IGameLoop
-    {
-        private readonly ICache _cache;
-        private readonly ICommands _commands;
-        const int TICKS_PER_SECOND = 8;
-        const int SKIP_TICKS = 1000 / TICKS_PER_SECOND;
- 
-        public GameLoop(ICache cache, ICommands commands)
+
+    public class GameLoop {
+
+
+        private IWriteToClient _writeToClient;
+        private ICache _cache;
+        public GameLoop(IWriteToClient writeToClient, ICache cache)
         {
+            _writeToClient = writeToClient;
             _cache = cache;
-            _commands = commands;
-        }
-        public void MainLoop()
-        {
-
-            var nextGameTick = Environment.TickCount;
-            var sleepTime = 0;
-            var gameIsRunning = true;
-
-            while (gameIsRunning)
-            { 
-                UpdatePlayers();
-
-                nextGameTick += SKIP_TICKS;
-                sleepTime = nextGameTick - Environment.TickCount;
-
-                if (sleepTime >= 0)
-                {
-                    Thread.Sleep(sleepTime);
-                }
-                else
-                {
-                    // Shit, we are running behind!
-                    
-                }
-
-            }
         }
 
-        public void UpdatePlayers()
-        {
-            var players = _cache.GetPlayerCache();
-            var validPlayers = players.Where(x => x.Value.Buffer.Count > 0);
 
-            foreach (var player in validPlayers)
+        public async Task UpdateTime()
+        {
+            while (true)
             {
-                var command = player.Value.Buffer.Pop();
-                var room = _cache.GetRoom(player.Value.RoomId);
+                await Task.Delay(60000);
 
-                _commands.ProcessCommand(command, player.Value, room);
+                var players = _cache.GetPlayerCache();
+                var validPlayers = players.Where(x => x.Value.Buffer.Count > 0);
 
+                foreach (var player in validPlayers)
+                {
+                    _writeToClient.WriteLine("update", player.Value.ConnectionId);
+
+                }   
             }
-
         }
     }
-}
+
+        //public void UpdatePlayers()
+        //{
+        //    var players = _cache.GetPlayerCache();
+        //    var validPlayers = players.Where(x => x.Value.Buffer.Count > 0);
+
+        //    foreach (var player in validPlayers)
+        //    {
+        //        var command = player.Value.Buffer.Pop();
+        //        var room = _cache.GetRoom(player.Value.RoomId);
+
+        //        _commands.ProcessCommand(command, player.Value, room);
+
+        //    }
+
+ 
+    }
