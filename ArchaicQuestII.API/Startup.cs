@@ -31,7 +31,7 @@ namespace ArchaicQuestII.API
     {
         private IDataBase _db;
         private ICache _cache;
-        private IGameLoop _gameLoop;
+      
         private IWriteToClient _writeToClient;
         private IHubContext<GameHub> _hubContext;
         public Startup(IConfiguration configuration)
@@ -46,14 +46,8 @@ namespace ArchaicQuestII.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<LiteDatabase>(
-                new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AQ.db")));  
-            services.AddScoped<IDataBase, DataBase>();
-            services.AddSingleton<ICache>(new Cache());
-            services.AddTransient<IMovement, Movement>();
-            services.AddTransient<ICommands, Commands>();
-            services.AddTransient<IRoomActions, RoomActions>();
-           /// services.AddScoped<IGameLoop, GameLoop>();
+           
+
 
             services.AddMvc();
             services.AddSignalR(o =>
@@ -72,7 +66,7 @@ namespace ArchaicQuestII.API
 
            
 
-            services.AddSingleton<IWriteToClient, WriteToClient>((factory) => new WriteToClient(_hubContext));
+          
 
 
             // configure strongly typed settings objects
@@ -102,12 +96,20 @@ namespace ArchaicQuestII.API
 
             // configure DI for application services
             services.AddScoped<IAdminUserService, AdminUserService>();
+            services.AddSingleton<LiteDatabase>(
+                new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AQ.db")));
+            services.AddScoped<IDataBase, DataBase>();
+            services.AddSingleton<ICache>(new Cache());
+            services.AddTransient<IMovement, Movement>();
+            services.AddTransient<ICommands, Commands>();
+            services.AddTransient<IGameLoop, GameLoop>();
+            services.AddTransient<IRoomActions, RoomActions>();
+            services.AddSingleton<IWriteToClient, WriteToClient>((factory) => new WriteToClient(_hubContext));
 
-        
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IDataBase db, ICache cache, IGameLoop gameLoop, IWriteToClient writeToClient)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IDataBase db, ICache cache)
         {
             if (env.IsDevelopment())
             {
@@ -119,8 +121,8 @@ namespace ArchaicQuestII.API
             }
             _db = db;
             _cache = cache;
-            _gameLoop = gameLoop;
-            _writeToClient = writeToClient;
+          
+         
             app.UseStaticFiles();
 
             //app.UseCors(
@@ -133,7 +135,7 @@ namespace ArchaicQuestII.API
 
             app.UseCors("client");
             app.UseCors("admin");
-
+        
             app.UseAuthentication();
 
             app.UseMvc(routes =>
@@ -152,6 +154,7 @@ namespace ArchaicQuestII.API
                 
             });
             _hubContext = app.ApplicationServices.GetService<IHubContext<GameHub>>();
+            app.StartLoops();
 
 
             var rooms = _db.GetList<Room>(DataBase.Collections.Room);
@@ -201,11 +204,17 @@ namespace ArchaicQuestII.API
                     _db.Save(data, DataBase.Collections.Class);
                 }
             }
+          
+        }
+    }
 
-         //   var mainLoop = new GameLoop(_writeToClient, _cache);
-
-         //   Task.Run(mainLoop.UpdateTime);
-
+    public static class Loops
+    {
+        public static void StartLoops(this IApplicationBuilder app)
+        {
+            var loop = app.ApplicationServices.GetRequiredService<IGameLoop>();
+            Task.Run(loop.UpdateTime);
+            Task.Run(loop.UpdatePlayers);
         }
     }
 

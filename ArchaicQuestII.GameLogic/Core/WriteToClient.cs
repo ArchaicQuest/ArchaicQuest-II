@@ -30,6 +30,20 @@ namespace ArchaicQuestII.GameLogic.Core
                 
             }
         }
+
+        public async void WriteLine(string message)
+        {
+
+            try
+            {
+
+                await _hubContext.Clients.All.SendAsync("SendMessage", message, "");
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
     }
 }
     

@@ -20,6 +20,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
         private ICache _cache { get; }
         private readonly IWriteToClient _writeToClient;
         private readonly ICommands _commands;
+        private int start = 0;
         public GameHub(IDataBase db, ICache cache, ILogger<GameHub> logger, IWriteToClient writeToClient, ICommands commands)
         {
             _logger = logger;
@@ -36,7 +37,16 @@ namespace ArchaicQuestII.GameLogic.Hubs
         /// <returns></returns>
         public override async Task OnConnectedAsync()
         {
-            // await Clients.All.SendAsync("SendAction", "user", "joined");
+
+            if (start == 0)
+            {
+                start = 1;
+                await Clients.All.SendAsync("SendMessage", "", "Starting loop");
+            
+            }
+    
+            
+            await Clients.All.SendAsync("SendMessage", "", "Someone has entered the realm");
         }
 
         /// <summary>
@@ -57,10 +67,11 @@ namespace ArchaicQuestII.GameLogic.Hubs
            // _logger.LogInformation($"Player sent {message}, hub ID{connectionId}");
             var player = _cache.GetPlayer(connectionId);
             player.Buffer.Push(message);
-         //   var room = _cache.GetRoom(player.RoomId);
+          //   var room = _cache.GetRoom(player.RoomId);
 
+          //  GetRoom(connectionId, player);
 
-            //_commands.ProcessCommand(message, player, room);
+         //   _commands.ProcessCommand(message, player, room);
 
           //   await Clients.All.SendAsync("SendMessage", "user x", message);
         }
