@@ -34,11 +34,11 @@ namespace ArchaicQuestII.Controllers
                 var exception = new Exception("Invalid player");
                 throw exception;
             }
- 
+
 
             var newPlayer = new Player()
             {
-                AccountId =  player.AccountId,
+                AccountId = player.AccountId,
                 Id = Guid.NewGuid(),
                 Name = player.Name,
                 Status = CharacterStatus.Status.Standing,
@@ -58,7 +58,12 @@ namespace ArchaicQuestII.Controllers
                 Config = null,
                 Description = player.Description,
                 Gender = player.Gender,
-                Stats = new Stats(),
+                Stats = new Stats()
+                {
+                    HitPoints = player.Attributes.Attribute[GameLogic.Effect.EffectLocation.Constitution] * 2, //create formula to handle these stats
+                    MovePoints = player.Attributes.Attribute[GameLogic.Effect.EffectLocation.Dexterity] * 2,  // only for testing
+                    ManaPoints = player.Attributes.Attribute[GameLogic.Effect.EffectLocation.Intelligence] * 2,
+                },
                 MaxStats = player.Stats,
                 Money = new Gold()
                 {
@@ -67,8 +72,8 @@ namespace ArchaicQuestII.Controllers
                 Race = player.Race,
                 JoinedDate = DateTime.Now,
                 LastLoginTime = DateTime.Now,
-                
-        };
+
+            };
 
 
             if (!string.IsNullOrEmpty(player.Id.ToString()) && player.Id != Guid.Empty)
@@ -84,13 +89,13 @@ namespace ArchaicQuestII.Controllers
                 newPlayer.Id = player.Id;
             }
 
-         var account =  _db.GetById<Account>(player.AccountId, DataBase.Collections.Account);
+            var account = _db.GetById<Account>(player.AccountId, DataBase.Collections.Account);
             account.Characters.Add(newPlayer.Id);
             _db.Save(account, DataBase.Collections.Account);
             _db.Save(newPlayer, DataBase.Collections.Players);
 
         }
- 
+
         [HttpGet]
         [Route("api/Character/player")]
         public List<Character> Get([FromQuery] string query)
@@ -107,7 +112,7 @@ namespace ArchaicQuestII.Controllers
 
         }
 
- 
+
 
 
 

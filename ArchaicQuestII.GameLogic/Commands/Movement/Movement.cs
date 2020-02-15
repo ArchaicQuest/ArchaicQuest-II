@@ -33,7 +33,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
                 return;
             }
 
-            var getNextRoom = _cache.GetRoom(getExitToNextRoom.AreaId);
+            var getNextRoom = _cache.GetRoom(getExitToNextRoom.RoomId);
 
             NotifyRoomLeft(room, character, direction);
 
