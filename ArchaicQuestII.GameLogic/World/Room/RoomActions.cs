@@ -32,7 +32,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 .Append($"<p class=\"room-description\">{room.Description}</p>")
                 .Append($"<p>{items}</p>")
                 .Append($"<p>{mobs}</p>")
-                .Append($"<p class=\"room-exits\">[Exits: {exits} ]</p>");
+                .Append($"<p class=\"room-exit\"> <span class=\"room-exits\">[</span>Exits: <span class=\"room-exits\">{exits}</span>  <span class=\"room-exits\">]</span></p>");
 
            _writeToClient.WriteLine(roomDesc.ToString(), player.ConnectionId);
         }
@@ -116,6 +116,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 exits = " None";
             }
  
+         
 
             return exits;
 

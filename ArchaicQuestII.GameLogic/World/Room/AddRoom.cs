@@ -42,6 +42,11 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
             MapRoomId(newRoom);
 
+            if(room.Id != -1)
+            {
+                newRoom.Id = room.Id;
+            }
+
             return newRoom;
 
         }
