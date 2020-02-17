@@ -10,18 +10,17 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
     public class Movement : IMovement
     {
         private readonly IWriteToClient _writeToClient;
+        private readonly IRoomActions _roomActions;
         private readonly ICache _cache;
-        private Lazy<ICommands> _commands;
 
 
-
-        public Movement(IWriteToClient writeToClient, ICache cache, Lazy<ICommands> commands)
+        public Movement(IWriteToClient writeToClient, ICache cache, IRoomActions roomActions)
         {
             _writeToClient = writeToClient;
             _cache = cache;
-            _commands = commands;
-
-
+            _roomActions = roomActions;
+   
+           
         }
         public void Move(Room room, Player character, string direction)
         {
@@ -48,9 +47,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
 
             UpdateCharactersLocation(getExitToNextRoom, character);
 
-            _commands.Value.ProcessCommand("look", character, getNextRoom);
-
-            
+             _roomActions.Look(getNextRoom, character);
+          
         }
 
         public Exit FindExit(Room room, string direction)
