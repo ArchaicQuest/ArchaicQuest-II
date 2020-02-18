@@ -32,7 +32,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 .Append($"<p class=\"room-description\">{room.Description}</p>")
                 .Append($"<p>{items}</p>")
                 .Append($"<p>{mobs}</p>")
-                .Append($"<p class=\"room-exit\"> <span class=\"room-exits\">[</span>Exits: <span class=\"room-exits\">{exits}</span>  <span class=\"room-exits\">]</span></p>");
+                .Append($"<p class=\"room-exit\"> <span class=\"room-exits\">[</span>Exits: <span class=\"room-exits\">{exits}</span><span class=\"room-exits\">]</span></p>");
 
            _writeToClient.WriteLine(roomDesc.ToString(), player.ConnectionId);
         }
@@ -69,56 +69,63 @@ namespace ArchaicQuestII.GameLogic.World.Room
         /// </summary>
         public string FindValidExits(Room room)
         {
-            var exits = String.Empty;
+            var exits = new List<string>();
+            var exitList = string.Empty;
 
             if (room.Exits.NorthWest != null)
             {
-                exits += room.Exits.NorthWest.Name;
+                exits.Add(room.Exits.NorthWest.Name);
             }
 
             if (room.Exits.North != null)
             {
-                exits += room.Exits.North.Name;
+                exits.Add(room.Exits.North.Name);
             }
 
             if (room.Exits.NorthEast != null)
             {
-                exits += room.Exits.NorthEast.Name;
+                exits.Add(room.Exits.NorthEast.Name);
             }
 
             if (room.Exits.East != null)
             {
-                exits += room.Exits.East.Name;
+                exits.Add(room.Exits.East.Name);
             }
 
             if (room.Exits.SouthEast != null)
             {
-                exits += room.Exits.SouthEast.Name;
+                exits.Add(room.Exits.SouthEast.Name);
             }
 
             if (room.Exits.South != null)
             {
-                exits += room.Exits.South.Name;
+                exits.Add(room.Exits.South.Name);
             }
 
             if (room.Exits.SouthWest != null)
             {
-                exits += room.Exits.SouthWest.Name;
+                exits.Add(room.Exits.SouthWest.Name);
             }
 
             if (room.Exits.West != null)
             {
-                exits += room.Exits.West.Name;
+                exits.Add(room.Exits.West.Name);
             }
 
-            if (string.IsNullOrEmpty(exits))
+            if (exits.Count <= 0)
             {
-                exits = " None";
+                exits.Add("None");
             }
- 
-         
 
-            return exits;
+            foreach (var exit in exits)
+            {
+                exitList += exit + ", ";
+            }
+
+            exitList = exitList.Remove(exitList.Length - 2);
+
+
+            return exitList;
 
         }
 

@@ -46,5 +46,12 @@ namespace ArchaicQuestII.API.World
             _db.Save(updateRoom, DataBase.Collections.Room);
 
         }
+
+        [HttpGet("{x}/{y}/{z}/{areaId}")]
+        [Route("api/World/Room/{x:int}/{y:int}/{z:int}/{areaId:int}")]
+        public bool validExit(int x, int y, int z, int areaId)
+        {
+            return _addRoom.GetRoomFromCoords(new Coordinates { X = x, Y = y, Z = z }) != null;
+        }
     }
 }

@@ -62,7 +62,42 @@ namespace ArchaicQuestII.GameLogic.World.Room
             if (eastRoom != null)
             {
                 room.Exits.East.RoomId = GetRoomFromCoords(eastRoom) != null ? GetRoomFromCoords(eastRoom).Id : -1;
+            }
 
+            var southRoom = room.Exits.South?.Coords;
+            if (southRoom != null)
+            {
+                room.Exits.South.RoomId = GetRoomFromCoords(southRoom) != null ? GetRoomFromCoords(southRoom).Id : -1;
+            }
+
+            var westRoom = room.Exits.West?.Coords;
+            if (westRoom != null)
+            {
+                room.Exits.West.RoomId = GetRoomFromCoords(westRoom) != null ? GetRoomFromCoords(westRoom).Id : -1;
+            }
+
+            var NWRoom = room.Exits.NorthWest?.Coords;
+            if (NWRoom != null)
+            {
+                room.Exits.NorthWest.RoomId = GetRoomFromCoords(NWRoom) != null ? GetRoomFromCoords(NWRoom).Id : -1;
+            }
+
+            var NERoom = room.Exits.NorthEast?.Coords;
+            if (NERoom != null)
+            {
+                room.Exits.NorthEast.RoomId = GetRoomFromCoords(NERoom) != null ? GetRoomFromCoords(NERoom).Id : -1;
+            }
+
+            var SERoom = room.Exits.SouthEast?.Coords;
+            if (SERoom != null)
+            {
+                room.Exits.SouthEast.RoomId = GetRoomFromCoords(SERoom) != null ? GetRoomFromCoords(SERoom).Id : -1;
+            }
+
+            var SWRoom = room.Exits.SouthWest?.Coords;
+            if (SWRoom != null)
+            {
+                room.Exits.SouthWest.RoomId = GetRoomFromCoords(SWRoom) != null ? GetRoomFromCoords(SWRoom).Id : -1;
             }
         }
 

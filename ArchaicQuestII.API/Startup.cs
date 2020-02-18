@@ -57,11 +57,11 @@ namespace ArchaicQuestII.API
             services.AddCors(options =>
             {
                 options.AddPolicy("client",
-                    builder => builder.WithOrigins("http://localhost:4200")
+                    builder => builder.WithOrigins("http://localhost:4200", "http://localhost:1337")
                         .AllowAnyMethod().AllowAnyHeader().AllowCredentials());
-                options.AddPolicy("admin",
-                    builder => builder.WithOrigins("http://localhost:1337")
-                        .AllowAnyMethod().AllowAnyHeader().AllowCredentials());
+                //options.AddPolicy("admin",
+                //    builder => builder.WithOrigins("http://localhost:1337")
+                //        .AllowAnyMethod().AllowAnyHeader().AllowCredentials());
             });
 
            
@@ -135,7 +135,7 @@ namespace ArchaicQuestII.API
             //);
 
             app.UseCors("client");
-            app.UseCors("admin");
+           // app.UseCors("admin");
         
             app.UseAuthentication();
 
