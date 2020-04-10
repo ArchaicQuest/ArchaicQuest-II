@@ -61,5 +61,12 @@ namespace ArchaicQuestII.GameLogic.Core
             return _roomCache.TryUpdate(id, existingRoom, newRoom);
         }
 
+        public void ClearRoomCache()
+        {
+            _roomCache.Clear();
+
+        }
+
+
     }
 }

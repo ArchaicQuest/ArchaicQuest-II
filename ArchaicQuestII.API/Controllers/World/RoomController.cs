@@ -2,6 +2,9 @@
 using ArchaicQuestII.GameLogic.World.Room;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Diagnostics;
+using ArchaicQuestII.GameLogic.Core;
+using Newtonsoft.Json;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -13,10 +16,12 @@ namespace ArchaicQuestII.API.World
 
         private IDataBase _db { get; }
         private IAddRoom _addRoom { get; }
-        public RoomController(IDataBase db, IAddRoom addRoom)
+        private ICache _cache { get; }
+        public RoomController(IDataBase db, IAddRoom addRoom, ICache cache)
         {
             _db = db;
             _addRoom = addRoom;
+            _cache = cache;
         }
 
         [HttpPost]
@@ -53,5 +58,28 @@ namespace ArchaicQuestII.API.World
         {
             return _addRoom.GetRoomFromCoords(new Coordinates { X = x, Y = y, Z = z }) != null;
         }
-    }
+
+        [HttpPost]
+        [Route("api/World/Room/updateCache")]
+        public IActionResult UpdateRoomCache()
+        {
+
+            Stopwatch s = Stopwatch.StartNew();
+
+            _cache.ClearRoomCache();
+
+            var rooms = _db.GetList<Room>(DataBase.Collections.Room);
+
+            foreach (var room in rooms)
+            {
+                _cache.AddRoom(room.Id, room);
+            }
+
+            s.Stop();
+
+            return Ok(JsonConvert.SerializeObject(new { toast = $"Room cache updated successfully. Elapsed Time: {s.ElapsedMilliseconds} ms" }));
+        }
+
+      
+}
 }
