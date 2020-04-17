@@ -59,10 +59,11 @@ namespace ArchaicQuestII.Controllers
                 MaxStats = mob.Stats,
                 Money = mob.Money,
                 Race = mob.Race,
+                DefaultAttack = mob.DefaultAttack
             };
 
 
-            if (!string.IsNullOrEmpty(mob.Id.ToString()) && mob.Id.ToString() != "")
+            if (mob.Id != Guid.Empty)
             {
 
                 var foundItem = _db.GetById<Character>(mob.Id, DataBase.Collections.Mobs);
@@ -81,16 +82,16 @@ namespace ArchaicQuestII.Controllers
         }
 
 
-        //[HttpGet]
-        //[Route("api/mob/Get")]
-        //public List<Character> GetMob()
-        //{
+        [HttpGet]
+        [Route("api/mob/Get")]
+        public List<Character> GetMob()
+        {
 
-        //    var mobs = DB.GetItems();
+            var mobs = _db.GetCollection<Character>(DataBase.Collections.Mobs).FindAll().ToList();
 
-        //    return mobs;
+            return mobs;
 
-        //}
+        }
 
 
         [HttpGet]
@@ -109,14 +110,14 @@ namespace ArchaicQuestII.Controllers
 
         }
 
-        //[HttpGet]
-        //[Route("api/mob/FindMobById")]
-        //public Character FindMobById([FromQuery] int id)
-        //{
+        [HttpGet]
+        [Route("api/mob/FindMobById")]
+        public Character FindMobById([FromQuery] Guid id)
+        {
 
-        //    return DB.GetItems().FirstOrDefault(x => x.Id.Equals(id));
+            return _db.GetById<Character>(id, DataBase.Collections.Mobs);
 
-        //}
+        }
 
 
 

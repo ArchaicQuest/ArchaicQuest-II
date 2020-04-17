@@ -81,6 +81,8 @@ namespace ArchaicQuestII.GameLogic.Character
         public int RoomId { get; set; }
         [JsonProperty("recallId")]
         public int RecallId { get; set; }
+        [JsonProperty("defaultAttack")]
+        public string DefaultAttack { get; set; }
         [JsonIgnore]
         public Stack<string> Buffer { get; set; } = new Stack<string>();
 

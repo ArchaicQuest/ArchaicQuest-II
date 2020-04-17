@@ -35,3 +35,4 @@ msbuild.wrn
 .vs/
 
 node_modules/
+ArchaicQuestII.API/log.txt
