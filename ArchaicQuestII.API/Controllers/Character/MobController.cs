@@ -25,7 +25,7 @@ namespace ArchaicQuestII.Controllers
         [HttpPost]
         [Route("api/Character/Mob")]
         public void Post([FromBody] Character mob)
-        {
+           {
 
 
             if (!ModelState.IsValid)

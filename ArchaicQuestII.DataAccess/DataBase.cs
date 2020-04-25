@@ -46,7 +46,6 @@ namespace ArchaicQuestII.DataAccess
 
         public List<T> GetList<T>(Collections collectionName)
         {
-
             return _db.GetCollection<T>(GetCollectionName(collectionName)).FindAll().ToList();
         }
 
