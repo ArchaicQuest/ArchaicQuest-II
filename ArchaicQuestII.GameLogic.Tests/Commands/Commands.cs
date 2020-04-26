@@ -13,10 +13,12 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
         private GameLogic.World.Room.Room _room;
         private Player _player;
         private readonly Mock<IMovement> _movement;
-       
+        private readonly Mock<IRoomActions> _roomActions;
+
         public CommandsTests()
         {
             _movement = new Mock<IMovement>();
+            _roomActions = new Mock<IRoomActions>();
 
             _player = new Player();
             _player.ConnectionId = "1";
@@ -49,7 +51,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
 
             _movement.Setup(x => x.Move(_room, _player, "North"));
 
-            new GameLogic.Commands.Commands(_movement.Object).ProcessCommand(" NoRtH ", _player, _room);
+            new GameLogic.Commands.Commands(_movement.Object, _roomActions.Object).ProcessCommand(" NoRtH ", _player, _room);
 
             _movement.Verify(x => x.Move(_room, _player, "North"), Times.Once);
 
@@ -61,7 +63,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
 
             _movement.Setup(x => x.Move(_room, _player, "North East"));
 
-            new GameLogic.Commands.Commands(_movement.Object).CommandList("ne", string.Empty, _player, _room);
+            new GameLogic.Commands.Commands(_movement.Object, _roomActions.Object).CommandList("ne", string.Empty, _player, _room);
 
             _movement.Verify(x => x.Move(_room, _player, "North East"), Times.Once);
 
@@ -73,7 +75,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
 
             _movement.Setup(x => x.Move(_room, _player, "North West"));
 
-            new GameLogic.Commands.Commands(_movement.Object).CommandList("nw", string.Empty, _player, _room);
+            new GameLogic.Commands.Commands(_movement.Object, _roomActions.Object).CommandList("nw", string.Empty, _player, _room);
 
             _movement.Verify(x => x.Move(_room, _player, "North West"), Times.Once);
 
@@ -86,7 +88,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
 
             _movement.Setup(x => x.Move(_room, _player, "South West"));
 
-            new GameLogic.Commands.Commands(_movement.Object).CommandList("sw", string.Empty, _player, _room);
+            new GameLogic.Commands.Commands(_movement.Object, _roomActions.Object).CommandList("sw", string.Empty, _player, _room);
 
             _movement.Verify(x => x.Move(_room, _player, "South West"), Times.Once);
 
@@ -98,7 +100,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
 
             _movement.Setup(x => x.Move(_room, _player, "South East"));
 
-            new GameLogic.Commands.Commands(_movement.Object).CommandList("se", string.Empty, _player, _room);
+            new GameLogic.Commands.Commands(_movement.Object, _roomActions.Object).CommandList("se", string.Empty, _player, _room);
 
             _movement.Verify(x => x.Move(_room, _player, "South East"), Times.Once);
 
@@ -112,7 +114,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
        
             _movement.Setup(x => x.Move(_room, _player, "North"));
 
-            new GameLogic.Commands.Commands(_movement.Object).CommandList("n", string.Empty, _player, _room);
+            new GameLogic.Commands.Commands(_movement.Object, _roomActions.Object).CommandList("n", string.Empty, _player, _room);
 
             _movement.Verify(x => x.Move(_room, _player, "North"), Times.Once);
         
@@ -124,7 +126,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
 
             _movement.Setup(x => x.Move(_room, _player, "East"));
 
-            new GameLogic.Commands.Commands(_movement.Object).CommandList("e", string.Empty, _player, _room);
+            new GameLogic.Commands.Commands(_movement.Object, _roomActions.Object).CommandList("e", string.Empty, _player, _room);
 
             _movement.Verify(x => x.Move(_room, _player, "East"), Times.Once);
 
@@ -136,7 +138,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
 
             _movement.Setup(x => x.Move(_room, _player, "South"));
 
-            new GameLogic.Commands.Commands(_movement.Object).CommandList("s", string.Empty, _player, _room);
+            new GameLogic.Commands.Commands(_movement.Object, _roomActions.Object).CommandList("s", string.Empty, _player, _room);
 
             _movement.Verify(x => x.Move(_room, _player, "South"), Times.Once);
 
@@ -148,7 +150,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
 
             _movement.Setup(x => x.Move(_room, _player, "Up"));
 
-            new GameLogic.Commands.Commands(_movement.Object).CommandList("u", string.Empty, _player, _room);
+            new GameLogic.Commands.Commands(_movement.Object, _roomActions.Object).CommandList("u", string.Empty, _player, _room);
 
             _movement.Verify(x => x.Move(_room, _player, "Up"), Times.Once);
 
@@ -160,7 +162,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
 
             _movement.Setup(x => x.Move(_room, _player, "Down"));
 
-            new GameLogic.Commands.Commands(_movement.Object).CommandList("d", string.Empty, _player, _room);
+            new GameLogic.Commands.Commands(_movement.Object, _roomActions.Object).CommandList("d", string.Empty, _player, _room);
 
             _movement.Verify(x => x.Move(_room, _player, "Down"), Times.Once);
 
