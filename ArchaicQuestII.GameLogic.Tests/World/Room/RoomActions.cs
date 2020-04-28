@@ -27,7 +27,11 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
             _room = new GameLogic.World.Room.Room()
             {
                 Title = "Room 1",
-                Description = "room descriptions",
+                Description = "<p class=\"room-title\">Room 1<br /></p>" +
+                           "<p class=\"room-description\">room descriptions</p>" +
+                           "<p></p>" +
+                           "<p></p>" +
+                           "<p class=\"room-exits\">[Exits: North ]</p>",
                 Exits = new ExitDirections()
                 {
                     North = new Exit()
@@ -215,7 +219,7 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
 
             var exits = new RoomActions(_writer.Object).FindValidExits(_room);
 
-            Assert.Equal(" None", exits);
+            Assert.Equal("None", exits);
         }
 
         [Fact]
@@ -264,7 +268,7 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
 
             var exits = new RoomActions(_writer.Object).FindValidExits(_room);
 
-            Assert.Equal(" North West North North East East South East South South West West", exits);
+            Assert.Equal(" North West,  North,  North East,  East,  South East,  South,  South West,  West", exits);
         }
 
         [Fact]

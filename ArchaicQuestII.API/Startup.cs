@@ -24,6 +24,7 @@ using ArchaicQuestII.GameLogic.World.Room;
 using Microsoft.AspNetCore.SignalR;
 using static ArchaicQuestII.API.Services.services;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace ArchaicQuestII.API
 {
@@ -138,6 +139,13 @@ namespace ArchaicQuestII.API
            // app.UseCors("admin");
         
             app.UseAuthentication();
+
+            // Forward headers for Ngnix
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
+
 
             app.UseMvc(routes =>
             {
