@@ -2,7 +2,10 @@
 
  orbs:
   win: circleci/windows@2.2.0
-
+general:
+  artifacts:
+    - "../artifacts"
+    - "../artifacts/*.*"
  jobs:
    build:
      executor: win/default     
@@ -11,8 +14,9 @@
        - checkout
        - run: dotnet build -c Release -o ../artifacts
        - run: dotnet publish -c Release -o ../artifacts
+       
        - run:
             name: Deploy 
             command: 
-             rsync -va --delete ../artifacts ssh $SSH_USER@${SSH_HOST}:/var/www/html/archaicquest
+                scp -r ../artifacts ssh $SSH_USER@${SSH_HOST}:~/var/www/html/archaicquest
              
