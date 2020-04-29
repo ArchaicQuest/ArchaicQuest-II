@@ -9,9 +9,10 @@
     
      steps:
        - checkout
-       - run: dotnet build -c Release
+       - run: dotnet build -c Release -o ../artifacts
        - run: dotnet publish -c Release -o ../artifacts
        - run:
             name: Deploy 
             command: 
-             scp -r ../artifacts ssh $SSH_USER@${SSH_HOST}:~/archaicquest
+             rsync -va --delete ../artifacts ssh $SSH_USER@${SSH_HOST}:/var/www/html/archaicquest
+             
