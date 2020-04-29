@@ -6,9 +6,9 @@
  jobs:
    build:
      executor: win/default     
-      artifacts:
-        - "../artifacts"
-        - "../artifacts/*.*"
+        -artifacts:
+            - "../artifacts"
+            - "../artifacts/*.*"
      steps:
        - checkout
        - run: dotnet build -c Release -o ../artifacts
