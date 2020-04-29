@@ -2,14 +2,13 @@
 
  orbs:
   win: circleci/windows@2.2.0
-general:
-  artifacts:
-    - "../artifacts"
-    - "../artifacts/*.*"
+
  jobs:
    build:
      executor: win/default     
-    
+      artifacts:
+        - "../artifacts"
+        - "../artifacts/*.*"
      steps:
        - checkout
        - run: dotnet build -c Release -o ../artifacts
