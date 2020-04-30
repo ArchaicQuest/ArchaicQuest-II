@@ -16,6 +16,7 @@
             name: Deploy 
             command:
                 echo $home
+                echo $SSH_HOST
                 echo ${SSH_USER}
                 echo ${SSH_HOST}
                 echo ${SSH_USER}@${SSH_HOST}:${SSH_PATH}
