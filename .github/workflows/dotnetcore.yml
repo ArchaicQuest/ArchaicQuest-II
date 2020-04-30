@@ -19,6 +19,8 @@ jobs:
         dotnet-version: 2.2.103
     - name: Install dependencies
       run: dotnet restore
+    - name: Test
+      run: dotnet test --verbosity normal
     - name: Build
       run: dotnet build --configuration Release -o ../artifacts
   
