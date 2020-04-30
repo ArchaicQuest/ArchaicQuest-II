@@ -2,11 +2,16 @@
 
  orbs:
   win: circleci/windows@2.2.0
+  
+ workflows:
+  test-env-vars:
+    jobs:
+      - build:
+          context: AQ
 
  jobs:
    build:
      executor: win/default
-     context: AQ     
 
      steps:
        - checkout
