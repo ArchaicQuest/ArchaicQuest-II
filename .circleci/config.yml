@@ -11,11 +11,10 @@
        - checkout
        - run: dotnet build -c Release -o ../artifacts
        - run: dotnet publish -c Release -o ../artifacts
-       
+       - run: echo ${SSH_USER}
        - run:
             name: Deploy 
-            command:
-                echo <%= ENV[$SSH_HOST'] %>
+            command: |
                 echo ${SSH_USER}
                 echo ${SSH_HOST}
                 echo ${SSH_USER}@${SSH_HOST}:${SSH_PATH}
