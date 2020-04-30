@@ -6,7 +6,7 @@
  jobs:
    build:
      executor: win/default
-     context: aq     
+     context: AQ     
 
      steps:
        - checkout
