@@ -16,6 +16,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Core" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions"/>
     <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="Microsoft.AspNet.SignalR.Core" Version="2.2.1" />
     <PackageReference Include="Serilog" Version="2.9.0" />

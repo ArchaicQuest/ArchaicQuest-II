@@ -20,7 +20,7 @@ jobs:
     - name: Install dependencies
       run: dotnet restore
     - name: Test
-      run: dotnet test --verbosity detailed
+      run: dotnet test --verbosity normal
     - name: Build
       run: dotnet build --configuration Release -o ../artifacts
   
