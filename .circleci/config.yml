@@ -5,13 +5,15 @@
 
  jobs:
    build:
-     executor: win/default     
+     executor: win/default
+     context: aq     
 
      steps:
        - checkout
        - run: dotnet build -c Release -o ../artifacts
        - run: dotnet publish -c Release -o ../artifacts
        - run: echo $SSH_USER
+       - run: echo $test
        - run:
             name: Deploy 
             command: |
