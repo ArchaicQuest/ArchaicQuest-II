@@ -11,7 +11,7 @@
        - checkout
        - run: dotnet build -c Release -o ../artifacts
        - run: dotnet publish -c Release -o ../artifacts
-       - run: echo ${SSH_USER}
+       - run: echo $SSH_USER
        - run:
             name: Deploy 
             command: |
