@@ -14,9 +14,9 @@
        
        - run:
             name: Deploy 
-            command: 
-            echo $home
-            echo $SSH_USER@${SSH_HOST}
-            echo $SSH_USER@${SSH_HOST}:$SSH_PATH
+            command: |
+                echo $home
+                echo $SSH_USER@${SSH_HOST}
+                echo $SSH_USER@${SSH_HOST}:$SSH_PATH
                 scp -r ../artifacts ssh $SSH_USER@${SSH_HOST}:$SSH_PATH
              
