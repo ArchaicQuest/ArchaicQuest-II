@@ -15,5 +15,5 @@
        - run:
             name: Deploy 
             command: 
-                scp -r ../artifacts ssh $SSH_USER@${SSH_HOST}:~/var/www/html/archaicquest
+                scp -r ../artifacts ssh $SSH_USER@${SSH_HOST}:/var/www/html/archaicquest/
              
