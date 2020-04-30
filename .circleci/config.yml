@@ -14,7 +14,7 @@
        
        - run:
             name: Deploy 
-            command: |
+            command:
                 echo $home
                 echo $SSH_USER@${SSH_HOST}
                 echo $SSH_USER@${SSH_HOST}:$SSH_PATH
