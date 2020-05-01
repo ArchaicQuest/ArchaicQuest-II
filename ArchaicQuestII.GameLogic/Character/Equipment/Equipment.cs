@@ -75,15 +75,6 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
 
         public void Wear(Character character, Item.Item item)
         {
-            switch (item.Slot)
-            {
-                //case 0:
-                //    character.Equipped.Arms = item;
-                //    break;
-                //default:
-                //    character.Equipped.Held = item;
-                //    break;
-            }
 
 
 

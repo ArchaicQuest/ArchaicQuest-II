@@ -6,7 +6,6 @@ using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Race;
 using ArchaicQuestII.GameLogic.Character.Status;
 using LiteDB;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -25,15 +24,14 @@ using Microsoft.AspNetCore.SignalR;
 using static ArchaicQuestII.API.Services.services;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace ArchaicQuestII.API
 {
     public class Startup
     {
         private IDataBase _db;
-        private ICache _cache;
-      
-        private IWriteToClient _writeToClient;
+        private ICache _cache;   
         private IHubContext<GameHub> _hubContext;
         public Startup(IConfiguration configuration)
         {
@@ -111,9 +109,9 @@ namespace ArchaicQuestII.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IDataBase db, ICache cache)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IDataBase db, ICache cache)
         {
-            if (env.IsDevelopment())
+            if (env.EnvironmentName == "dev")
             {
                 app.UseDeveloperExceptionPage();
             }
@@ -146,25 +144,23 @@ namespace ArchaicQuestII.API
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
 
+            app.UseRouting();
 
-            app.UseMvc(routes =>
+
+            app.UseEndpoints(routes =>
             {
-
-                routes.MapRoute(
+                routes.MapControllerRoute(
                     name: "default",
-                    template: "{controller=Play}/{action=Index}/{id?}");
-
+                    pattern: "{controller=Play}/{action=Index}/{id?}");
             });
 
-
-            app.UseSignalR(routes =>
+            app.UseEndpoints(endpoints =>
             {
-                routes.MapHub<GameHub>("/Hubs/game");
-                
+                endpoints.MapHub<GameHub>("/Hubs/game");
             });
+
             _hubContext = app.ApplicationServices.GetService<IHubContext<GameHub>>();
             app.StartLoops();
-
 
             var rooms = _db.GetList<Room>(DataBase.Collections.Room);
 

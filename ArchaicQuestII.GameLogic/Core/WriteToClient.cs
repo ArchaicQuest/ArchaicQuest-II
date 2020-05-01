@@ -27,7 +27,7 @@ namespace ArchaicQuestII.GameLogic.Core
             }
             catch (Exception ex)
             {
-                
+                Console.WriteLine(ex.Message);
             }
         }
 
@@ -41,7 +41,7 @@ namespace ArchaicQuestII.GameLogic.Core
             }
             catch (Exception ex)
             {
-
+                Console.WriteLine(ex.Message);
             }
         }
     }

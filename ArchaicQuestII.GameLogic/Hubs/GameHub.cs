@@ -8,7 +8,6 @@ using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Commands;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.World.Room;
-using Microsoft.AspNet.SignalR.Hubs;
 using Microsoft.Extensions.Logging;
 
 namespace ArchaicQuestII.GameLogic.Hubs
@@ -55,25 +54,19 @@ namespace ArchaicQuestII.GameLogic.Hubs
         /// <returns></returns>
         public override async Task OnDisconnectedAsync(Exception ex)
         {
-           // await Clients.All.SendAsync("SendAction", "user", "left");
+            await Clients.All.SendAsync("SendMessage", "Someone", " hase left the realm");
         }
 
         /// <summary>
         /// get message from client
         /// </summary>
         /// <returns></returns>
-        public async Task SendToServer(string message, string connectionId)
+        public void SendToServer(string message, string connectionId)
         {
-           // _logger.LogInformation($"Player sent {message}, hub ID{connectionId}");
+           
             var player = _cache.GetPlayer(connectionId);
             player.Buffer.Push(message);
-          //   var room = _cache.GetRoom(player.RoomId);
-
-          //  GetRoom(connectionId, player);
-
-         //   _commands.ProcessCommand(message, player, room);
-
-          //   await Clients.All.SendAsync("SendMessage", "user x", message);
+          
         }
 
         /// <summary>

@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using ArchaicQuestII.GameLogic.Commands;
 using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using ArchaicQuestII.GameLogic.Commands;
-using ArchaicQuestII.GameLogic.Hubs;
-using Microsoft.AspNet.SignalR;
 
 namespace ArchaicQuestII.GameLogic.Core
 {

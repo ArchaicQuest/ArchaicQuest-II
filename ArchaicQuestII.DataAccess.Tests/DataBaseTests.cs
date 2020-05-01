@@ -9,7 +9,7 @@ namespace ArchaicQuestII.DataAccess.Tests
     public class DataBaseTests
     {
         private readonly Mock<IDataBase> _database;
-        private readonly Mock<LiteCollection<string>> _collection;
+
 
         public DataBaseTests()
         {
