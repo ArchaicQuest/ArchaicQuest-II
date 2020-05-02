@@ -29,6 +29,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Movement
         {
             var player2 = new Player();
             player2.ConnectionId = "2";
+            player2.Name = "Jane";
 
             _player = new Player();
             _player.ConnectionId = "1";
@@ -41,6 +42,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Movement
             _room = new Room()
             {
                 AreaId = 1,
+                Id= 1,
                 Title = "Room 1",
                 Description = "room 1",
                 Exits = new ExitDirections()
@@ -48,6 +50,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Movement
                     North = new Exit()
                     {
                         AreaId = 2,
+                        RoomId = 2,
                         Name = "North"
                     }
                 },
@@ -61,7 +64,8 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Movement
 
             var room2 = new Room()
             {
-                AreaId = 2,
+                AreaId = 1,
+                Id = 2,
                 Title = "Room 2",
                 Description = "room 2",
                 Exits = new ExitDirections()
