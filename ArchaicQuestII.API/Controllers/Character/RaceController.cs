@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace ArchaicQuestII.API.Controllers.Character
 {
-    public class RaceController
+    public class RaceController : Controller
     {
 
         private IDataBase _db { get; }
@@ -24,7 +24,7 @@ namespace ArchaicQuestII.API.Controllers.Character
 
         [HttpGet]
         [Route("api/Character/Race/{id:int}")]
-        public Race Get(Guid id)
+        public Race Get(int id)
         {
             return _db.GetById<Race>(id, DataBase.Collections.Race);
         }
@@ -32,8 +32,9 @@ namespace ArchaicQuestII.API.Controllers.Character
         [HttpGet]
         [Route("api/Character/Race")]
         public List<Race> Get()
-        {
+        { 
             return _db.GetList<Race>(DataBase.Collections.Race);
+          
         }
     }
 }

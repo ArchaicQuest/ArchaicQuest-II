@@ -10,8 +10,8 @@ namespace ArchaicQuestII.GameLogic.Character.Race
     {
         [BsonField("p")]
         public bool Playable { get; set; }
-        [BsonField("a")]
-        public Attributes Attributes { get; set; } = new Attributes();
+       // [BsonField("a")]
+      //  public Attributes Attributes { get; set; } = new Attributes();
 
         public List<Race> SeedData()
         {
@@ -22,7 +22,7 @@ namespace ArchaicQuestII.GameLogic.Character.Race
                             Name = "Human",
                             CreatedBy = "Malleus",
                             Description = @"`Humans are highly adaptable and the most common race in the world.
-        They come in a wide range of skin, eye and hair colours as well as different shapes and sizes."
+        They come in a wide range of skin, eye and hair colours as well as different shapes and sizes.",
                         },
                         new Race()
                         {

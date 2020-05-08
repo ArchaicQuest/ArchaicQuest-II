@@ -34,5 +34,6 @@ namespace ArchaicQuestII.API.Character
         {
             return _db.GetList<Class>(DataBase.Collections.Class);
         }
+
     }
 }
