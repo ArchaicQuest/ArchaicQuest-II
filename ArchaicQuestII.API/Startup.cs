@@ -46,9 +46,8 @@ namespace ArchaicQuestII.API
         public void ConfigureServices(IServiceCollection services)
         {
            
-
-
-            services.AddMvc();
+       //     services.AddMvc();
+            services.AddControllers().AddNewtonsoftJson();
             services.AddSignalR(o =>
             {
                 o.EnableDetailedErrors = true;
@@ -58,15 +57,10 @@ namespace ArchaicQuestII.API
                 options.AddPolicy("client",
                     builder => builder.WithOrigins("http://localhost:4200", "http://localhost:1337")
                         .AllowAnyMethod().AllowAnyHeader().AllowCredentials());
-                //options.AddPolicy("admin",
-                //    builder => builder.WithOrigins("http://localhost:1337")
-                //        .AllowAnyMethod().AllowAnyHeader().AllowCredentials());
+           
             });
 
-           
-
           
-
 
             // configure strongly typed settings objects
             var appSettingsSection = Configuration.GetSection("AppSettings");
@@ -121,44 +115,30 @@ namespace ArchaicQuestII.API
             }
             _db = db;
             _cache = cache;
-          
-         
+            
             app.UseStaticFiles();
 
-            //app.UseCors(
-            //    options => options.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader().AllowCredentials()   
-            //);
-
-            //app.UseCors(
-            //    options => options.WithOrigins("http://localhost:4").AllowAnyMethod().AllowAnyHeader().AllowCredentials()
-            //);
-
             app.UseCors("client");
-           // app.UseCors("admin");
+          
         
             app.UseAuthentication();
 
-            // Forward headers for Ngnix
-            app.UseForwardedHeaders(new ForwardedHeadersOptions
-            {
-                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-            });
+           // Forward headers for Ngnix
 
-            app.UseRouting();
+           app.UseForwardedHeaders(new ForwardedHeadersOptions
+           {
+               ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+           });
 
-
-            app.UseEndpoints(routes =>
-            {
-                routes.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Play}/{action=Index}/{id?}");
-            });
+           app.UseRouting();
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllers();
                 endpoints.MapHub<GameHub>("/Hubs/game");
             });
 
+          
             _hubContext = app.ApplicationServices.GetService<IHubContext<GameHub>>();
             app.StartLoops();
 

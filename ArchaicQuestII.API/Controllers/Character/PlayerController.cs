@@ -14,9 +14,11 @@ using ArchaicQuestII.GameLogic.Account;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace ArchaicQuestII.Controllers
+namespace ArchaicQuestII.Controllers.character
 {
-    public class PlayerController : Controller
+    [ApiController]
+    [Route("api/character/[controller]")]
+    public class PlayerController : ControllerBase
     {
         private IDataBase _db { get; }
         public PlayerController(IDataBase db)
@@ -24,7 +26,6 @@ namespace ArchaicQuestII.Controllers
             _db = db;
         }
         [HttpPost]
-        [Route("api/Character/Player")]
         public void Post([FromBody] Player player)
         {
 
@@ -34,6 +35,8 @@ namespace ArchaicQuestII.Controllers
                 var exception = new Exception("Invalid player");
                 throw exception;
             }
+
+
 
 
             var newPlayer = new Player()
@@ -96,8 +99,9 @@ namespace ArchaicQuestII.Controllers
 
         }
 
+  
+
         [HttpGet]
-        [Route("api/Character/player")]
         public List<Character> Get([FromQuery] string query)
         {
 

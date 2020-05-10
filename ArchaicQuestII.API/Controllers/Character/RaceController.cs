@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 namespace ArchaicQuestII.API.Controllers.Character
 {
+    [ApiController]
     public class RaceController : Controller
     {
 
