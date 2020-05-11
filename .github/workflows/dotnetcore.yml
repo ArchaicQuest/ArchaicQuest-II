@@ -20,6 +20,17 @@ jobs:
     - name: Install dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet buld --no-restore --verbosity normal
+      run: dotnet build --no-restore --verbosity normal
     - name: Test
       run: dotnet test --configuration Release --no-restore
+    - name: dotnet publish
+      run: dotnet publish src -c Release -o deploy
+    - name: Copy via ssh
+      uses: garygrossgarten/github-action-scp@v0.5.3
+      with:
+        local: test
+        remote: scp/test
+        host: ${{ SSH_HOST }}
+        username: ${{ SSH_USER }}
+        privateKey: ${{ SSH_KEY }}
+    
