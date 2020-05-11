@@ -30,7 +30,7 @@ jobs:
       with:
         local: test
         remote: scp/test
-        host: ${{ SSH_HOST }}
-        username: ${{ SSH_USER }}
-        privateKey: ${{ SSH_KEY }}
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        privateKey: ${{ secrets.SSH_KEY }}
     
