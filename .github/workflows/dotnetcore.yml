@@ -24,7 +24,7 @@ jobs:
     - name: Test
       run: dotnet test --configuration Release --no-restore
     - name: dotnet publish
-      run: dotnet publish src -c Release -o deploy
+      run: dotnet publish -c Release -o deploy
     - name: Copy via ssh
       uses: garygrossgarten/github-action-scp@v0.5.3
       with:
