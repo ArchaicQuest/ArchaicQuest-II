@@ -24,7 +24,7 @@ jobs:
     - name: Test
       run: dotnet test --configuration Release --no-restore
     - name: dotnet publish
-      run: dotnet publish -c Release -o deploy
+      run: dotnet publish ArchaicQuestII.API/ArchaicQuestII.API.csproj -c Release -o deploy
     - name: Copy via ssh
       uses: garygrossgarten/github-action-scp@v0.5.3
       with:
