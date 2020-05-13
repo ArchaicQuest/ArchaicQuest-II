@@ -25,6 +25,13 @@ jobs:
       run: dotnet test --configuration Release --no-restore
     - name: dotnet publish
       run: dotnet publish ArchaicQuestII.API/ArchaicQuestII.API.csproj -c Release -o deploy
+    - name: Delete folder
+      uses: garygrossgarten/github-action-ssh@v0.3.0
+      with:
+        command: sudo rm -v ${{secrets.REMOTE_TARGET}}/*
+        host: ${{ secrets.SSH_HOST  }}
+        username: ${{ secrets.SSH_USER }}
+        privateKey: ${{ secrets.SSH_KEY }}
     - name: Copy via ssh
       uses: garygrossgarten/github-action-scp@v0.5.3
       with:
