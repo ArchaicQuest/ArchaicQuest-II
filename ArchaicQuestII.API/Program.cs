@@ -16,7 +16,8 @@ namespace ArchaicQuestII.API
     {
         public static void Main(string[] args)
         {
-            var configuration = new ConfigurationBuilder().Build();
+
+            BuildWebHost(args).Run();
 
             Serilog.Log.Logger = new LoggerConfiguration()
                 .Enrich.FromLogContext()
@@ -42,15 +43,19 @@ namespace ArchaicQuestII.API
         public static IWebHost BuildWebHost(string[] args)
         {
 
-            var configuration = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory())
-              .AddJsonFile("hosting.json", optional: true)
-              .Build();
+            var config = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("hosting.json")
+            .AddCommandLine(args)
+            .Build();
+
 
             return WebHost.CreateDefaultBuilder(args)
-                          .UseConfiguration(configuration)
-                            .UseSerilog()
-                            .UseStartup<Startup>()
-                            .Build();
+                .UseUrls("http://*:62640")
+                .UseConfiguration(config).Build();
+              
+            
+                         
         }
     }
 }
