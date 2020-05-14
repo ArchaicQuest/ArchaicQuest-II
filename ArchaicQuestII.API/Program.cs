@@ -53,7 +53,10 @@ namespace ArchaicQuestII.API
             return WebHost.CreateDefaultBuilder(args)
                 .UseKestrel()
                 .UseUrls("http://*:62640")
-                .UseConfiguration(config).Build();
+                .UseConfiguration(config)
+                .UseContentRoot(Directory.GetCurrentDirectory())
+                .UseStartup<Startup>()
+                .Build();
 
         }
     }
