@@ -55,7 +55,7 @@ namespace ArchaicQuestII.API
             services.AddCors(options =>
             {
                 options.AddPolicy("client",
-                    builder => builder.WithOrigins("http://localhost:4200", "http://localhost:1337")
+                    builder => builder.WithOrigins("http://localhost:4200", "http://localhost:1337", "https://admin.archaicquest.com")
                         .AllowAnyMethod().AllowAnyHeader().AllowCredentials());
            
             });
