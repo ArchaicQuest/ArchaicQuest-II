@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Formatting.Compact;
@@ -48,6 +49,20 @@ namespace ArchaicQuestII.API
             .AddJsonFile("hosting.json")
             .AddCommandLine(args)
             .Build();
+
+            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            var isDevelopment = environment == Environments.Development;
+
+            if (isDevelopment)
+            {
+                return WebHost.CreateDefaultBuilder(args)
+               .UseUrls("http://*:62640")
+               .UseConfiguration(config)
+               .UseContentRoot(Directory.GetCurrentDirectory())
+               .UseStartup<Startup>()
+               .Build();
+            }
+          
 
 
             return WebHost.CreateDefaultBuilder(args)

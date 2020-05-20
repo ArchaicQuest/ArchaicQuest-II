@@ -26,7 +26,7 @@ namespace ArchaicQuestII.Controllers.character
             _db = db;
         }
         [HttpPost]
-        public void Post([FromBody] Player player)
+        public ObjectResult Post([FromBody] Player player)
         {
 
 
@@ -96,6 +96,8 @@ namespace ArchaicQuestII.Controllers.character
             account.Characters.Add(newPlayer.Id);
             _db.Save(account, DataBase.Collections.Account);
             _db.Save(newPlayer, DataBase.Collections.Players);
+
+            return Ok(newPlayer.Id);
 
         }
 
