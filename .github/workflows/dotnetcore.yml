@@ -33,4 +33,11 @@ jobs:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USER }}
         privateKey: ${{ secrets.SSH_KEY }}
+     - name: Run SSH command
+      uses: garygrossgarten/github-action-ssh@v0.3.0
+      with:
+        command: sudo systemctl start archaicquest_api.service
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        privateKey: ${{ secrets.SSH_KEY }}
     
