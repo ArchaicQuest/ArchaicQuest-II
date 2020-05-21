@@ -20,7 +20,7 @@ jobs:
     - name: Install dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore --verbosity normal --runtime linux-x64 /p:PublishReadyToRun=true --no-self-contained
+      run: dotnet build --no-restore --verbosity normal --runtime linux-x64 --no-contained false /p:PublishReadyToRun=true 
     - name: Test
       run: dotnet test --configuration Release --no-restore
     - name: dotnet publish
