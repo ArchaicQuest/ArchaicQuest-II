@@ -115,7 +115,10 @@ namespace ArchaicQuestII.API
             }
             _db = db;
             _cache = cache;
-            
+
+            //first handle any websocket requests
+            app.UseWebSockets();
+
             app.UseStaticFiles();
 
             app.UseCors("client");
@@ -136,6 +139,7 @@ namespace ArchaicQuestII.API
             {
                 endpoints.MapControllers();
                 endpoints.MapHub<GameHub>("/Hubs/game");
+              
             });
 
           
