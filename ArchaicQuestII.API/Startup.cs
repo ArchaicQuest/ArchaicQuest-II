@@ -116,9 +116,8 @@ namespace ArchaicQuestII.API
             _db = db;
             _cache = cache;
 
-            //first handle any websocket requests
-            app.UseWebSockets();
-
+   
+            app.UseDefaultFiles();
             app.UseStaticFiles();
 
             app.UseCors("client");
@@ -134,6 +133,7 @@ namespace ArchaicQuestII.API
            });
 
            app.UseRouting();
+
 
             app.UseEndpoints(endpoints =>
             {

@@ -165,6 +165,11 @@ namespace ArchaicQuestII.GameLogic.Hubs
           //  return room;
         }
 
+        public string GetConnectionId()
+        {
+            return Context.ConnectionId;
+        }
+
 
     }
 }
