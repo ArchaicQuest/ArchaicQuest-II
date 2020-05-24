@@ -41,7 +41,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
                 foreach (var player in players)
                 {
-                    _writeToClient.WriteLine("update", player.Value.ConnectionId);
+                   // _writeToClient.WriteLine("update", player.Value.ConnectionId);
 
                 }
             }

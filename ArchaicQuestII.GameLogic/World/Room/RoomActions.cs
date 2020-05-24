@@ -24,6 +24,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
             var exits = FindValidExits(room);
             var items = DisplayItems(room);
             var mobs = DisplayMobs(room);
+            var players = DisplayPlayers(room);
 
             var roomDesc = new StringBuilder();
 
@@ -32,6 +33,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 .Append($"<p class=\"room-description\">{room.Description}</p>")
                 .Append($"<p>{items}</p>")
                 .Append($"<p>{mobs}</p>")
+                .Append($"<p>{players}</p>")
                 .Append($"<p class=\"room-exit\"> <span class=\"room-exits\">[</span>Exits: <span class=\"room-exits\">{exits}</span><span class=\"room-exits\">]</span></p>");
 
            _writeToClient.WriteLine(roomDesc.ToString(), player.ConnectionId);
@@ -60,6 +62,19 @@ namespace ArchaicQuestII.GameLogic.World.Room
             }
 
             return mobs;
+
+        }
+
+        public string DisplayPlayers(Room room)
+        {
+            var players = string.Empty;
+
+            foreach (var player in room.Players)
+            {
+                players += player.Name + " is here.";
+            }
+
+            return players;
 
         }
 
