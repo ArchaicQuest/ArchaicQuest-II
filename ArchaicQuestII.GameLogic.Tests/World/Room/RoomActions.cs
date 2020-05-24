@@ -48,6 +48,7 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
                            "<p class=\"room-description\">room descriptions</p>" +
                            "<p></p>" +
                            "<p></p>" +
+                           "<p></p>" +
                            "<p class=\"room-exit\"> <span class=\"room-exits\">[</span>Exits: <span class=\"room-exits\">North</span><span class=\"room-exits\">]</span></p>";
 
             _writer.Verify(w => w.WriteLine(It.Is<string>(s => s == roomDesc), "1"), Times.Once);
