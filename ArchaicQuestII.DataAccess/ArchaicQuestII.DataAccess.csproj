@@ -1,11 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netcoreapp31</TargetFramework>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>netcoreapp31</TargetFramework>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="LiteDB" Version="4.1.4" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="LiteDB" Version="4.1.4" />
+    </ItemGroup>
 
 </Project>

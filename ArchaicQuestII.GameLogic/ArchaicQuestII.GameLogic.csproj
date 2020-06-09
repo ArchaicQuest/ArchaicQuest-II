@@ -1,27 +1,28 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netcoreapp31</TargetFramework>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>netcoreapp31</TargetFramework>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Character\Equipment\Enum\**" />
-    <Compile Remove="Spell\Type\**" />
-    <EmbeddedResource Remove="Character\Equipment\Enum\**" />
-    <EmbeddedResource Remove="Spell\Type\**" />
-    <None Remove="Character\Equipment\Enum\**" />
-    <None Remove="Spell\Type\**" />
-  </ItemGroup>
+    <ItemGroup>
+        <Compile Remove="Character\Equipment\Enum\**" />
+        <Compile Remove="Spell\Type\**" />
+        <EmbeddedResource Remove="Character\Equipment\Enum\**" />
+        <EmbeddedResource Remove="Spell\Type\**" />
+        <None Remove="Character\Equipment\Enum\**" />
+        <None Remove="Spell\Type\**" />
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Core" Version="1.1.0" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Core" Version="1.1.0" />
+    </ItemGroup>
 
- 
 
-  <ItemGroup>
-    <ProjectReference Include="..\ArchaicQuestII.DataAccess\ArchaicQuestII.DataAccess.csproj" />
-  </ItemGroup>
- 
+
+    <ItemGroup>
+        <ProjectReference Include="..\ArchaicQuestII.DataAccess\ArchaicQuestII.DataAccess.csproj" />
+    </ItemGroup>
+
 
 </Project>

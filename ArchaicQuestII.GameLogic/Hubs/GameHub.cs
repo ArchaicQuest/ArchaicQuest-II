@@ -57,11 +57,13 @@ namespace ArchaicQuestII.GameLogic.Hubs
             await Clients.All.SendAsync("SendMessage", "Someone", " hase left the realm");
         }
 
-        /// <summary>
-        /// get message from client
-        /// </summary>
-        /// <returns></returns>
-        public void SendToServer(string message, string connectionId)
+ 
+
+    /// <summary>
+    /// get message from client
+    /// </summary>
+    /// <returns></returns>
+    public void SendToServer(string message, string connectionId)
         {
            
             var player = _cache.GetPlayer(connectionId);
@@ -159,6 +161,9 @@ namespace ArchaicQuestII.GameLogic.Hubs
         private void GetRoom(string hubId, Player character)
         {
            var room = _cache.GetRoom(1);
+
+            room.Players.Add(character);
+
 
             new RoomActions(_writeToClient).Look(room, character);
 
