@@ -64,6 +64,11 @@ namespace ArchaicQuestII.DataAccess
             return _db.GetCollection<T>(GetCollectionName(collectionName)).FindById(id);
         }
 
+        public bool Delete<T>(int id, Collections collectionName)
+        {
+            return _db.GetCollection<T>(GetCollectionName(collectionName)).Delete(id);
+        }
+
         public bool DoesCollectionExist(Collections collectionName)
         {
            return _db.CollectionExists(GetCollectionName(collectionName));

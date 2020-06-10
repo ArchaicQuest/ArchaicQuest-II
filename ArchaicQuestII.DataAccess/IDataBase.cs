@@ -41,6 +41,15 @@ namespace ArchaicQuestII.DataAccess
         /// <returns></returns>
         T GetById<T>(Guid id, DataBase.Collections collectionName);
         T GetById<T>(int id, DataBase.Collections collectionName);
+        /// <summary>
+        /// Deletes an item by id
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="id"></param>
+        /// <param name="collectionName"></param>
+        /// <returns></returns>
+        bool Delete<T>(int id, DataBase.Collections collectionName);
+
 
         bool DoesCollectionExist(DataBase.Collections collectionName);
     }

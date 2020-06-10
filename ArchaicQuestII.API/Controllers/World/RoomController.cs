@@ -35,6 +35,21 @@ namespace ArchaicQuestII.API.World
 
         }
 
+        [HttpDelete]
+        [Route("api/World/Room/{id:int}")]
+        public IActionResult Delete(int id)
+        {
+          var deleted = _db.Delete<Room>(id, DataBase.Collections.Room);
+
+            if (deleted == false)
+            {
+                return Ok(JsonConvert.SerializeObject(new { toast = $"ERROR: Room ${id} failed to delete." }));
+            }
+
+            return Ok(JsonConvert.SerializeObject(new { toast = $"Room deleted successfully." }));
+
+        }
+
 
         [HttpGet("{id}")]
         [Route("api/World/Room/{id:int}")]
