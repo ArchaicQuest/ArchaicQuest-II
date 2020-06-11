@@ -61,9 +61,9 @@ namespace ArchaicQuestII.GameLogic.Core
         /// <returns></returns>
         public Room GetRoom(int id, Coordinates coords)
         {
-            var room = _roomCache.FirstOrDefault(x => x.Value.AreaId == id && x.Value.Coords.X == coords.X && x.Value.Coords.Y == coords.Y && x.Value.Coords.Z == coords.Z);
+            var room = _roomCache.Values.FirstOrDefault(x => x.AreaId == id && x.Coords.X == coords.X && x.Coords.Y == coords.Y && x.Coords.Z == coords.Z);
 
-            return room.Value;
+            return room;
         }
 
         public bool UpdateRoom(int id, Room room, Player player)

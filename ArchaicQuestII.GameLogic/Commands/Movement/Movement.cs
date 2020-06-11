@@ -46,6 +46,13 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
             };
             var getNextRoom = _cache.GetRoom(getExitToNextRoom.AreaId, newRoomCoords);
 
+            if (getNextRoom == null)
+            {
+                _writeToClient.WriteLine("A mysterious force prevents you from going that way.", character.ConnectionId);
+                //TODO: log bug that the new room could not be found
+                return;
+            }
+
             NotifyRoomLeft(room, character, direction);
 
             NotifyRoomEnter(getNextRoom, character, direction);

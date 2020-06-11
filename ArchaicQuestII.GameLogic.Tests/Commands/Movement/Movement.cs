@@ -14,12 +14,12 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Movement
         private Player _player;
         private readonly Mock<IWriteToClient> _writer;
         private readonly Mock<IRoomActions> _roomActions;
-        private readonly Mock<ICache> _cache;
+        private readonly Cache _cache;
 
         public MovementTests()
         {
             _writer = new Mock<IWriteToClient>();
-            _cache = new Mock<ICache>();
+            _cache =  new Cache();
             _roomActions = new Mock<IRoomActions>();
 
         }
@@ -45,13 +45,25 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Movement
                 Id= 1,
                 Title = "Room 1",
                 Description = "room 1",
+                Coords = new Coordinates {
+                            X = 0,
+                            Y = 0,
+                            Z = 0
+                        },
                 Exits = new ExitDirections()
                 {
+                    
                     North = new Exit()
                     {
-                        AreaId = 2,
+                        AreaId = 1,
                         RoomId = 2,
-                        Name = "North"
+                        Name = "North",
+                        Coords = new Coordinates
+                        {
+                            X = 0,
+                            Y = 1,
+                            Z = 0
+                        }
                     }
                 },
                 Players = new List<Player>()
@@ -68,21 +80,40 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Movement
                 Id = 2,
                 Title = "Room 2",
                 Description = "room 2",
+                Coords = new Coordinates {
+                            X = 0,
+                            Y = 1,
+                            Z = 0
+                        },
                 Exits = new ExitDirections()
                 {
                     South = new Exit()
                     {
                         AreaId = 1,
-                        Name = "South"
+                        Name = "South",
+                        Coords =
+                        new Coordinates {
+                            X = 0,
+                            Y = 0,
+                            Z = 0
+                        }
                     }
                 },
                 Players = new List<Player>()
             };
 
-            _cache.Setup(x => x.GetRoom(2)).Returns(room2);
+            var newRoomCoords = new Coordinates
+            {
+                X = 0,
+                Y = 1,
+                Z = 0
+            };
 
 
-            new GameLogic.Commands.Movement.Movement(_writer.Object, _cache.Object, _roomActions.Object).Move(_room, _player, "North");
+            _cache.AddRoom(2, room2);
+          //  _cache.AddRoom(1, _room);
+           
+            new GameLogic.Commands.Movement.Movement(_writer.Object, _cache, _roomActions.Object).Move(_room, _player, "North");
 
             _writer.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("Bob walks north.")), "1"), Times.Never);
             _writer.Verify(w => w.WriteLine(It.Is<string>(s => s == "Bob walks north."), "2"), Times.Once);
@@ -140,10 +171,11 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Movement
                 Players = new List<Player>()
             };
 
-            _cache.Setup(x => x.GetRoom(2)).Returns(room2);
+            //  _cache.Setup(x => x.GetRoom(2)).Returns(room2);
+            _cache.AddRoom(2, room2);
+           // _cache.AddRoom(1, _room);
 
-
-            new GameLogic.Commands.Movement.Movement(_writer.Object, _cache.Object, _roomActions.Object).Move(_room, _player, "North");
+            new GameLogic.Commands.Movement.Movement(_writer.Object, _cache, _roomActions.Object).Move(_room, _player, "North");
 
  
             _writer.Verify(w => w.WriteLine(It.Is<string>(s => s == "You are too exhausted to move"), "1"), Times.Once);
