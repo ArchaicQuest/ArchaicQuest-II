@@ -50,6 +50,21 @@ namespace ArchaicQuestII.GameLogic.Core
 
             return room;
         }
+        /// <summary>
+        /// This is not as efficient as get by id
+        /// Won't be an issue for a long time so can be revisted.
+        /// to fix, need a field in the admin exit modal for roomId
+        /// of the room you want to move to from your current position
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="coords"></param>
+        /// <returns></returns>
+        public Room GetRoom(int id, Coordinates coords)
+        {
+            var room = _roomCache.FirstOrDefault(x => x.Value.AreaId == id && x.Value.Coords.X == coords.X && x.Value.Coords.Y == coords.Y && x.Value.Coords.Z == coords.Z);
+
+            return room.Value;
+        }
 
         public bool UpdateRoom(int id, Room room, Player player)
         {

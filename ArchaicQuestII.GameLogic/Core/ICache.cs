@@ -19,6 +19,7 @@ namespace ArchaicQuestII.GameLogic.Core
         bool AddRoom(int id, Room room);
 
         Room GetRoom(int id);
+        Room GetRoom(int id, Coordinates coords);
         bool UpdateRoom(int id, Room room, Player player);
         void ClearRoomCache();
     }

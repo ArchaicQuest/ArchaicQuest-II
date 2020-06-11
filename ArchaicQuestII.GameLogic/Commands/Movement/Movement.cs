@@ -38,8 +38,13 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
                 _writeToClient.WriteLine("You can't go that way", character.ConnectionId);
                 return;
             }
-
-            var getNextRoom = _cache.GetRoom(getExitToNextRoom.RoomId);
+ 
+            var newRoomCoords = new Coordinates {
+                X = getExitToNextRoom.Coords.X,
+                Y = getExitToNextRoom.Coords.Y,
+                Z = getExitToNextRoom.Coords.Z
+            };
+            var getNextRoom = _cache.GetRoom(getExitToNextRoom.AreaId, newRoomCoords);
 
             NotifyRoomLeft(room, character, direction);
 
