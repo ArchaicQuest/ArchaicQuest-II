@@ -5,6 +5,7 @@ using System.Text;
 using ArchaicQuestII.GameLogic.Commands.Movement;
 using ArchaicQuestII.GameLogic.World.Room;
 using System.Linq;
+using ArchaicQuestII.GameLogic.Commands.Debug;
 
 namespace ArchaicQuestII.GameLogic.Commands
 {
@@ -12,11 +13,13 @@ namespace ArchaicQuestII.GameLogic.Commands
     {
         private readonly IMovement _movement;
         private readonly IRoomActions _roomActions;
+        private readonly IDebug _debug;
 
-        public Commands(IMovement movement, IRoomActions roomActions)
+        public Commands(IMovement movement, IRoomActions roomActions, IDebug debug)
         {
             _movement = movement;
             _roomActions = roomActions;
+            _debug = debug;
         }
  
         public void CommandList(string key, string options, Player player, Room room)
@@ -66,6 +69,9 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "look":
                 case "l":
                     _roomActions.Look(room, player);
+                    break;
+                case "/debug":
+                    _debug.DebugRoom(room, player);
                     break;
             }
         }    

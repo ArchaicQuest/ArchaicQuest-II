@@ -17,6 +17,7 @@ using System.Text;
 using System.Threading;
 using ArchaicQuestII.GameLogic.Commands;
 using ArchaicQuestII.GameLogic.Commands.Movement;
+using ArchaicQuestII.GameLogic.Commands.Debug;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Hubs;
 using ArchaicQuestII.GameLogic.World.Room;
@@ -94,6 +95,7 @@ namespace ArchaicQuestII.API
             services.AddScoped<IDataBase, DataBase>();
             services.AddSingleton<ICache>(new Cache());
             services.AddTransient<IMovement, Movement>();
+            services.AddTransient<IDebug, Debug>();
             services.AddSingleton<ICommands, Commands>();
             services.AddSingleton<IGameLoop, GameLoop>();
             services.AddTransient<IRoomActions, RoomActions>();
