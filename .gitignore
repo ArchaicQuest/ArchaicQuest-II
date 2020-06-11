@@ -16,7 +16,7 @@ nupkg/
 *.log
 
 # Build results
-[Dd]ebug/
+[Dd]ebug/*
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/
@@ -30,6 +30,7 @@ bld/
 msbuild.log
 msbuild.err
 msbuild.wrn
+!commands/*
 
 # Visual Studio 2015
 .vs/
