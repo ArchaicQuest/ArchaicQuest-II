@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ArchaicQuestII.GameLogic.Character.Equipment;
+using Newtonsoft.Json;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -22,7 +23,7 @@ namespace ArchaicQuestII.Controllers
         public void PostItem([FromBody] Item item)
         {
 
- 
+
             if (!ModelState.IsValid)
             {
                 var exception = new Exception("Invalid object");
@@ -79,7 +80,8 @@ namespace ArchaicQuestII.Controllers
                 Uses = item.Uses,
                 WeaponSpeed = item.WeaponSpeed,
                 WeaponType = item.WeaponType,
-                Weight = item.Weight
+                Weight = item.Weight,
+
             };
 
             if (item.ItemType == Item.ItemTypes.Key)
@@ -107,13 +109,13 @@ namespace ArchaicQuestII.Controllers
 
         }
 
- 
+
         [HttpGet]
         [Route("api/item/Get")]
         public List<Item> GetItem()
         {
 
-            return _db.GetList<Item>(DataBase.Collections.Items);
+            return _db.GetList<Item>(DataBase.Collections.Items).Where(x => x.Deleted == false).ToList();
 
         }
 
@@ -140,7 +142,7 @@ namespace ArchaicQuestII.Controllers
         {
 
             var items = _db.GetCollection<Item>(DataBase.Collections.Items).FindAll().Where(x => x.Slot.Equals(query));
-            
+
             return items.ToList();
 
         }
@@ -219,7 +221,7 @@ namespace ArchaicQuestII.Controllers
         [Route("api/item/ReturnItemTypes")]
         public JsonResult ReturnItemTypes()
         {
-           
+
             var itemTypes = new List<object>();
 
             foreach (var item in Enum.GetValues(typeof(Item.ItemTypes)))
@@ -232,7 +234,7 @@ namespace ArchaicQuestII.Controllers
                 });
             }
             return Json(itemTypes);
-            
+
         }
 
         [HttpGet]
@@ -357,6 +359,24 @@ namespace ArchaicQuestII.Controllers
 
         }
 
-      
+        [HttpDelete]
+        [Route("api/item/delete/{id:int}")]
+        public IActionResult Delete(int id)
+        {
+            var item = _db.GetCollection<Item>(DataBase.Collections.Items).FindById(id);
+            item.Deleted = true;
+            var saved = _db.Save(item, DataBase.Collections.Items);
+
+            if (saved)
+            {
+                return Ok(JsonConvert.SerializeObject(new { toast = $"{item.Name} deleted successfully." }));
+            }
+            return Ok(JsonConvert.SerializeObject(new { toast = $"{item.Name} deletion failed." }));
+
+
+
+        }
+
+
     }
 }

@@ -171,5 +171,7 @@ namespace ArchaicQuestII.GameLogic.Item
         /// Infinite uses
         /// </summary>
         public bool Infinite { get; set; }
+
+        public bool Deleted { get; set; }
     }
 }

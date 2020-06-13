@@ -63,7 +63,15 @@ namespace ArchaicQuestII.Controllers
         [Route("api/World/Area")]
         public List<Area> Get()
         {
-            return _db.GetList<Area>(DataBase.Collections.Area);
+            var areas = _db.GetList<Area>(DataBase.Collections.Area);
+           
+            foreach (var area in areas)
+            {
+                var rooms = _db.GetCollection<Room>(DataBase.Collections.Room).Find(x => x.AreaId == area.Id);
+                area.Rooms = rooms.ToList();
+            }
+ 
+            return areas;
         }
 
         [HttpGet]
@@ -71,9 +79,9 @@ namespace ArchaicQuestII.Controllers
         public Area Get(int id)
         {
             var area = _db.GetById<Area>(id, DataBase.Collections.Area);
-            var rooms = _db.GetCollection<Room>(DataBase.Collections.Room).Find(x => x.AreaId == id).ToList();
+            var rooms = _db.GetCollection<Room>(DataBase.Collections.Room).Find(x => x.AreaId == id);
 
-            area.Rooms = rooms;
+            area.Rooms = rooms.ToList();
 
             return area;
         }

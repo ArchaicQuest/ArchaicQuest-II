@@ -45,5 +45,6 @@ namespace ArchaicQuestII.GameLogic.Item
         public int DecayTimer { get; set; } = 0;
         public int Condition { get; set; } = 5;// Helpers.Rand(75, 100);
         public bool QuestItem { get; set; }
+        public DateTime DateUpdated { get; set; } = DateTime.Now;
     }
 }

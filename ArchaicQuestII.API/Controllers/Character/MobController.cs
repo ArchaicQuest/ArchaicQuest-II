@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Item;
+using Newtonsoft.Json;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -59,7 +60,9 @@ namespace ArchaicQuestII.Controllers
                 MaxStats = mob.Stats,
                 Money = mob.Money,
                 Race = mob.Race,
-                DefaultAttack = mob.DefaultAttack
+                DefaultAttack = mob.DefaultAttack,
+                DateCreated = mob.DateCreated ?? DateTime.Now,
+                DateUpdated = DateTime.Now
             };
 
 
@@ -87,7 +90,7 @@ namespace ArchaicQuestII.Controllers
         public List<Character> GetMob()
         {
 
-            var mobs = _db.GetCollection<Character>(DataBase.Collections.Mobs).FindAll().ToList();
+            var mobs = _db.GetCollection<Character>(DataBase.Collections.Mobs).FindAll().Where(x => x.Deleted == false).ToList();
 
             return mobs;
 
@@ -119,6 +122,24 @@ namespace ArchaicQuestII.Controllers
 
         }
 
+
+        [HttpDelete]
+        [Route("api/mob/delete/{id:guid}")]
+        public IActionResult Delete(Guid id)
+        {
+            var item = _db.GetCollection<Character>(DataBase.Collections.Mobs).FindById(id);
+            item.Deleted = true;
+            var saved = _db.Save(item, DataBase.Collections.Mobs);
+
+            if (saved)
+            {
+                return Ok(JsonConvert.SerializeObject(new { toast = $"{item.Name} deleted successfully." }));
+            }
+            return Ok(JsonConvert.SerializeObject(new { toast = $"{item.Name} deletion failed." }));
+
+
+
+        }
 
 
 
