@@ -160,10 +160,12 @@ namespace ArchaicQuestII.GameLogic.Hubs
 
         private void GetRoom(string hubId, Player character)
         {
-           var room = _cache.GetRoom(1);
+            //add to DB, configure from admin
+            var startingRoom = _cache.GetConfig().StartingRoom;
+            var room = _cache.GetRoom(startingRoom);
+           character.RoomId = startingRoom;
 
             room.Players.Add(character);
-
 
             new RoomActions(_writeToClient).Look(room, character);
 

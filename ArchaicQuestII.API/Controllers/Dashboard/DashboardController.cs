@@ -10,6 +10,7 @@ using ArchaicQuestII.GameLogic.World.Area;
 using ArchaicQuestII.GameLogic.World.Room;
 using ArchaicQuestII.GameLogic.Account;
 using System.Globalization;
+using ArchaicQuestII.GameLogic.Core;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -45,9 +46,11 @@ namespace ArchaicQuestII.Controllers.Dashboard
     public class DashboardController : Controller
     {
         private IDataBase _db { get; }
-        public DashboardController(IDataBase db)
+        private ICache _cache { get; }
+        public DashboardController(IDataBase db, ICache cache)
         {
             _db = db;
+            _cache = cache;
         }
 
         [HttpGet]
@@ -64,6 +67,16 @@ namespace ArchaicQuestII.Controllers.Dashboard
             };
 
             return Json(stats);
+
+        }
+
+
+        [HttpGet]
+        [Route("api/dashboard/who")]
+        public JsonResult WhoList()
+        {
+           var playingPlayers = _cache.GetPlayerCache().ToList();
+            return Json(playingPlayers);
 
         }
 

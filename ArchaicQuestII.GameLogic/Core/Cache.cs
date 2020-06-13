@@ -12,6 +12,7 @@ namespace ArchaicQuestII.GameLogic.Core
     {
         private readonly ConcurrentDictionary<string, Player> _playerCache = new ConcurrentDictionary<string, Player>();
         private readonly ConcurrentDictionary<int, Room> _roomCache = new ConcurrentDictionary<int, Room>();
+        private Config _configCache = new Config();
 
         public bool AddPlayer(string id, Player player)
         {
@@ -74,6 +75,16 @@ namespace ArchaicQuestII.GameLogic.Core
 
 
             return _roomCache.TryUpdate(id, existingRoom, newRoom);
+        }
+
+        public void SetConfig(Config config)
+        {
+            _configCache = config;
+        }
+
+        public Config GetConfig()
+        {
+            return _configCache;
         }
 
         public void ClearRoomCache()

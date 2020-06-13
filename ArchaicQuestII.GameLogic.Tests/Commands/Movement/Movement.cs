@@ -183,5 +183,95 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Movement
         }
 
 
+        [Fact]
+        public void Should_return_error_if_room_not_found()
+        {
+            var player2 = new Player();
+            player2.ConnectionId = "2";
+
+            _player = new Player();
+            _player.ConnectionId = "1";
+            _player.Name = "Bob";
+            _player.Stats = new Stats()
+            {
+                MovePoints = 110
+            };
+
+            _room = new Room()
+            {
+                AreaId = 1,
+                Id = 1,
+                Title = "Room 1",
+                Description = "room 1",
+                Coords = new Coordinates
+                {
+                    X = 0,
+                    Y = 0,
+                    Z = 0
+                },
+                Exits = new ExitDirections()
+                {
+
+                    North = new Exit()
+                    {
+                        AreaId = 1,
+                        RoomId = 2,
+                        Name = "North",
+                        Coords = new Coordinates
+                        {
+                            X = 0,
+                            Y = 1,
+                            Z = 0
+                        }
+                    }
+                },
+                Players = new List<Player>()
+                {
+                    _player,
+
+                    player2
+                }
+            };
+
+            var room2 = new Room()
+            {
+                AreaId = 1,
+                Id = 2,
+                Title = "Room 2",
+                Description = "room 2",
+                Coords = new Coordinates
+                {
+                    X = 0,
+                    Y = 2,
+                    Z = 0
+                },
+                Exits = new ExitDirections()
+                {
+                    South = new Exit()
+                    {
+                        AreaId = 1,
+                        Name = "South",
+                        Coords =
+                        new Coordinates
+                        {
+                            X = 0,
+                            Y = 0,
+                            Z = 0
+                        }
+                    }
+                },
+                Players = new List<Player>()
+            };
+
+            _cache.AddRoom(2, room2);
+
+            new GameLogic.Commands.Movement.Movement(_writer.Object, _cache, _roomActions.Object).Move(_room, _player, "North");
+
+
+            _writer.Verify(w => w.WriteLine(It.Is<string>(s => s == "A mysterious force prevents you from going that way."), "1"), Times.Once);
+
+        }
+
+
     }
 }

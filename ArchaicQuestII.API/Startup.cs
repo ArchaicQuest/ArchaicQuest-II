@@ -195,7 +195,15 @@ namespace ArchaicQuestII.API
                     _db.Save(data, DataBase.Collections.Class);
                 }
             }
-          
+
+            if (!_db.DoesCollectionExist(DataBase.Collections.Config))
+            {
+                _db.Save(new Config(), DataBase.Collections.Config);
+            }
+
+            var config = _db.GetById<Config>(1, DataBase.Collections.Config);
+            _cache.SetConfig(config);
+
         }
     }
 

@@ -32,7 +32,8 @@ namespace ArchaicQuestII.DataAccess
             Players,
             Race,
             Room,
-            Status
+            Status,
+            Config
         }
 
         public bool Save<T>(T data, Collections collectionName)
@@ -76,34 +77,22 @@ namespace ArchaicQuestII.DataAccess
 
         private static string GetCollectionName(Collections collectionName)
         {
-            switch (collectionName)
+            return collectionName switch
             {
-                case Collections.Alignment:
-                    return "Alignment";
-                case Collections.Account:
-                    return "Account";
-                case Collections.Area:
-                    return "Area";
-                case Collections.AttackType:
-                    return "AttackType";
-                case Collections.Class:
-                    return "Class";
-                case Collections.Items:
-                    return "Items";
-                case Collections.Mobs:
-                    return "Mobs";
-                case Collections.Players:
-                    return "Players";
-                case Collections.Race:
-                    return "Race";
-                case Collections.Room:
-                    return "Room";
-                case Collections.Status:
-                    return "Status";
-                default:
-                    return "error";
-
-            }
+                Collections.Alignment => "Alignment",
+                Collections.Account => "Account",
+                Collections.Area => "Area",
+                Collections.AttackType => "AttackType",
+                Collections.Class => "Class",
+                Collections.Items => "Items",
+                Collections.Mobs => "Mobs",
+                Collections.Players => "Players",
+                Collections.Race => "Race",
+                Collections.Room => "Room",
+                Collections.Status => "Status",
+                Collections.Config => "Config",
+                _ => "error",
+            };
         }
         /// <summary>
         /// Set index for each collection type
