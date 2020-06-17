@@ -32,6 +32,7 @@ namespace ArchaicQuestII.DataAccess
             Players,
             Race,
             Room,
+            Skill,
             Status,
             Config
         }
