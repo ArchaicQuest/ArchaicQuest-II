@@ -70,6 +70,10 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "l":
                     _roomActions.Look(room, player);
                     break;
+                case "cast":
+                case "c":
+                    _roomActions.Look(room, player);
+                    break;
                 case "/debug":
                     _debug.DebugRoom(room, player);
                     break;

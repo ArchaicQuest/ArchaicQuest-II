@@ -5,7 +5,7 @@ namespace ArchaicQuestII.GameLogic.Spell.Interface
 {
     public interface ISpells
     {
-        void DoSpell(Model.Spell spell, Player origin, Player target, Room room = null);
+        void DoSpell(string spellName, Player origin, string targetName, Room room = null);
     }
 }
 

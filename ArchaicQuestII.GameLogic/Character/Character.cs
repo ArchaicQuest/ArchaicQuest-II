@@ -86,6 +86,8 @@ namespace ArchaicQuestII.GameLogic.Character
         [JsonIgnore]
         public Stack<string> Buffer { get; set; } = new Stack<string>();
 
+        public List<Spell.Model.Spell> Spells { get; set; }
+
         public bool Deleted { get; set; }
         public DateTime? DateCreated { get; set; } = DateTime.Now;
         public DateTime? DateUpdated { get; set; } = DateTime.Now;
