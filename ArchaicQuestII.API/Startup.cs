@@ -24,6 +24,8 @@ using ArchaicQuestII.GameLogic.World.Room;
 using Microsoft.AspNetCore.SignalR;
 using static ArchaicQuestII.API.Services.services;
 using System.Threading.Tasks;
+using ArchaicQuestII.GameLogic.Spell;
+using ArchaicQuestII.GameLogic.Spell.Interface;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
@@ -97,6 +99,7 @@ namespace ArchaicQuestII.API
             services.AddTransient<IMovement, Movement>();
             services.AddTransient<IDebug, Debug>();
             services.AddSingleton<ICommands, Commands>();
+            services.AddSingleton<ISpellTargetCharacter, SpellTargetCharacter>();
             services.AddSingleton<IGameLoop, GameLoop>();
             services.AddTransient<IRoomActions, RoomActions>();
             services.AddTransient<IAddRoom, AddRoom>();

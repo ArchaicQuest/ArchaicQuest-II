@@ -73,6 +73,16 @@ namespace ArchaicQuestII.GameLogic.Spell
             return true;
         }
 
+        public bool SpellAffectsCharacter(Model.Spell spell)
+        {
+            
+            return (spell.ValidTargets & ValidTargets.TargetPlayerWorld) != 0 || 
+                   (spell.ValidTargets & ValidTargets.TargetFightVictim) != 0 || 
+                   (spell.ValidTargets & ValidTargets.TargetSelfOnly)    != 0 || 
+                   (spell.ValidTargets & ValidTargets.TargetPlayerRoom)  != 0 || 
+                   (spell.ValidTargets & ValidTargets.TargetFightSelf)   != 0;
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -100,13 +110,12 @@ namespace ArchaicQuestII.GameLogic.Spell
                 return;
             }
 
+            if(spe)
+
             // target check (shrugs)
             Player target = null;
 
-            if ((targetName == "self" || targetName == "me" || targetName == origin.Name) && spell.ValidTargets == ValidTargets.TargetFightSelf)
-            {
-                target = origin;
-            }
+          
 
             if (origin.Status == CharacterStatus.Status.Fighting && spell.StartsCombat && string.IsNullOrEmpty(targetName))
             {
