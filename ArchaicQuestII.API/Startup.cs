@@ -99,7 +99,7 @@ namespace ArchaicQuestII.API
             services.AddTransient<IMovement, Movement>();
             services.AddTransient<IDebug, Debug>();
             services.AddSingleton<ICommands, Commands>();
-            services.AddSingleton<ISpellTargetCharacter, SpellTargetCharacter>();
+            services.AddTransient<ISpellTargetCharacter, SpellTargetCharacter>();
             services.AddSingleton<IGameLoop, GameLoop>();
             services.AddTransient<IRoomActions, RoomActions>();
             services.AddTransient<IAddRoom, AddRoom>();

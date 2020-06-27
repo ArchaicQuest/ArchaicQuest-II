@@ -26,7 +26,7 @@ namespace ArchaicQuestII.GameLogic.Tests
         private readonly Room _room;
         private readonly Spells _spell;
         private readonly Mock<IWriteToClient> _writer;
-        private readonly ISpellTargetCharacter _spellTargetCharacter;
+        private readonly Mock<ISpellTargetCharacter> _spellTargetCharacter;
 
         public SpellTests()
         {
@@ -97,14 +97,16 @@ namespace ArchaicQuestII.GameLogic.Tests
                 {
                     Attribute = new Dictionary<EffectLocation, int>
                    {
-                       { EffectLocation.Strength, 0 }
+                       { EffectLocation.Strength, 0 },
+                       {EffectLocation.Hitpoints, 2500},
                    }
                 }
 
             };
             _room = new Room();
             _writer = new Mock<IWriteToClient>();
-            _spell = new Spells(_writer.Object, _spellTargetCharacter);
+            _spellTargetCharacter = new Mock<ISpellTargetCharacter>();
+            _spell = new Spells(_writer.Object, _spellTargetCharacter.Object);
         }
 
         [Fact]
@@ -351,7 +353,57 @@ namespace ArchaicQuestII.GameLogic.Tests
 
         }
 
-     
+
+        [Fact]
+        public void Should_cast_spell()
+        {
+
+            var spell = new Spell.Model.Spell()
+            {
+                Name = "Fireball",
+                Cost = new SkillCost()
+                {
+                    Table = new Dictionary<Cost, int>()
+                    {
+                        {Cost.Mana, 5}
+                    }
+                },
+                Damage = new Dice()
+                {
+                    DiceMaxSize = 8,
+                    DiceMinSize = 1,
+                    DiceRoll = 4
+                },
+                Rounds = 1,
+                StartsCombat = true,
+                Type = SkillType.None,
+                ValidTargets = ValidTargets.TargetPlayerRoom | ValidTargets.TargetFightVictim
+            };
+
+            _player.Status = CharacterStatus.Status.Standing;
+            _player.Gender = "Male";
+            _player.Spells = new List<Spell.Model.Spell>()
+            {
+                spell
+            };
+
+            _target.Name = "Bob";
+
+            _target.Id = Guid.NewGuid();
+            _player.Id = Guid.NewGuid();
+
+            _room.Players.Add(_player);
+            _room.Players.Add(_target);
+
+            _spellTargetCharacter.Setup(r => r.ReturnTarget(spell, "Bob", _room, _player)).Returns(_target);
+
+            _spell.DoSpell("Fireball", _player, "Bob", _room);
+            Assert.True(_target.Attributes.Attribute[EffectLocation.Hitpoints] < 2500);
+            //_writer.Verify(w => w.WriteLine(It.Is<string>(s => s.StartsWith("Your Fireball"))), Times.Once);
+
+        }
+
+
 
 
 

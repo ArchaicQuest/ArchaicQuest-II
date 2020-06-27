@@ -189,7 +189,18 @@ namespace ArchaicQuestII.GameLogic.Spell
               };
 
               _writer.WriteLine($"Your {spell.Name} hits for {formula}", origin.ConnectionId);
-              new SpellEffect(_writer, skillTarget, formula).Type[skillTarget.Skill.Type].Invoke();
+
+              // If no effect assume, negative spell and deduct HP
+              if (spell.Effect == null)
+              {
+                  skillTarget.Target.Attributes.Attribute[EffectLocation.Hitpoints] -= formula;
+              }
+              else
+              {
+                  new SpellEffect(_writer, skillTarget, formula).Type[skillTarget.Skill.Type].Invoke();
+              }
+
+             
 
           }
 
