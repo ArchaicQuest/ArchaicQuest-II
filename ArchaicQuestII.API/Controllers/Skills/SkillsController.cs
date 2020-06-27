@@ -38,13 +38,7 @@ namespace ArchaicQuestII.Controllers.Skills
                 Damage = skill.Damage,
                 Description = skill.Description,
                 Effect = skill.Effect,
-                LevelBasedMessages = skill.LevelBasedMessages,
-                Requirements = skill.Requirements,
                 Rounds = skill.Rounds,
-                SkillAction = skill.SkillAction,
-                SkillEnd = skill.SkillEnd,
-                SkillFailure = skill.SkillFailure,
-                SkillStart = skill.SkillStart,
                 Type = skill.Type
             };
 

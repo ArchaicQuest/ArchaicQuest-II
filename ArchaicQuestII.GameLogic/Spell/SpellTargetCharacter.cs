@@ -6,11 +6,12 @@ using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Skill.Enum;
+using ArchaicQuestII.GameLogic.Spell.Interface;
 using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Spell
 {
-    public class SpellTargetCharacter
+    public class SpellTargetCharacter : ISpellTargetCharacter
     {
 
         private readonly IWriteToClient _writer;

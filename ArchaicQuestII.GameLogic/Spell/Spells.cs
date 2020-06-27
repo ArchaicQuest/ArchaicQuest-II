@@ -16,10 +16,11 @@ namespace ArchaicQuestII.GameLogic.Spell
     public class Spells : ISpells
     {
         private readonly IWriteToClient _writer;
-
-        public Spells(IWriteToClient writer)
+        private readonly ISpellTargetCharacter _spellTargetCharacter;
+        public Spells(IWriteToClient writer, ISpellTargetCharacter spellTargetCharacter)
         {
             _writer = writer;
+            _spellTargetCharacter = spellTargetCharacter;
 
         }
 
@@ -83,6 +84,44 @@ namespace ArchaicQuestII.GameLogic.Spell
                    (spell.ValidTargets & ValidTargets.TargetFightSelf)   != 0;
         }
 
+        public void ReciteSpellCharacter(Player origin, Player target, Model.Spell spell)
+        {
+            // not correct need to send to room 
+            if (origin.Id == target.Id)
+            {
+                _writer.WriteLine(
+                    $"{origin.Name} closes {Helpers.GetPronoun(origin.Gender)} eyes and utters the words, '{spell.Name}'.");
+            }
+            else if (origin != target)
+            {
+                _writer.WriteLine($"{origin.Name} stares at {target.Name} and utters the words, '{spell.Name}'.");
+            }
+
+        }
+
+        public bool SpellSuccess(Player origin, Player target, Model.Spell spell)
+        {
+            var spellSkill = 5;
+
+            var success = spell.Damage.Roll(1, 1,
+                101);
+
+            if (success == 1 || success == 101)
+            {
+                _writer.WriteLine($"You lost concentration.");
+                return false;
+            }
+
+            if (spellSkill < success)
+            {
+                _writer.WriteLine($"You lost concentration.");
+                return false;
+            }
+
+            return true;
+
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -110,65 +149,49 @@ namespace ArchaicQuestII.GameLogic.Spell
                 return;
             }
 
-            if(spe)
-
-            // target check (shrugs)
-            Player target = null;
-
           
+          if (SpellAffectsCharacter(spell)) {
+              Player target = null;
+              target =  _spellTargetCharacter.ReturnTarget(spell, targetName, room, origin);
 
-            if (origin.Status == CharacterStatus.Status.Fighting && spell.StartsCombat && string.IsNullOrEmpty(targetName))
-            {
-                // target equals the target of the player
-            }
+              if (target == null)
+              {
+                  return;
+              }
 
-            if((spell.ValidTargets & ValidTargets.TargetObjectRoom) != 0)
+              ReciteSpellCharacter(origin, target, spell);
 
+              var formula = spell.Damage.Roll(spell.Damage.DiceRoll, spell.Damage.DiceMinSize,
+                                spell.Damage.DiceMaxSize) + (origin.Level + 1) / 2; //+ mod
 
+              
 
-            // not correct need to send to room 
-            if (origin == target)
-            {
-                _writer.WriteLine($"{origin.Name} closes {Helpers.GetPronoun(origin.Gender)} eyes and utters the words, '{spell.Name}'.");
-            }
-            else if(origin != target)
-            {
-                _writer.WriteLine($"{origin.Name} stares at {target.Name} and utters the words, '{spell.Name}'.");
-            }
-            else
-            {
-                _writer.WriteLine($"{origin.Name} utters the words, '{spell.Name}'.");
-            }
+              //deduct mana
+              origin.Attributes.Attribute[EffectLocation.Mana] -= spell.Cost.Table[Cost.Mana];
 
+             // spell lag
+             // add lag property to player
+             // lag == spell round
+             // stops spell/skill spam
+             // applies after spell is cast
+             // is it needed?
 
-            var formula = spell.Damage.Roll(spell.Damage.DiceRoll, spell.Damage.DiceMinSize,
-                              spell.Damage.DiceMaxSize) + (origin.Level + 1) / 2; //+ mod
+              // hit / miss messages
 
-            //Fire skill start message to player, room, target
+              //  _writer.WriteLine(spell.SkillStart.ToPlayer);
 
-            //deduct mana
-            origin.Attributes.Attribute[EffectLocation.Mana] -= spell.Cost.Table[Cost.Mana];
+              var skillTarget = new SkillTarget
+              {
+                  Origin = origin,
+                  Target = target,
+                  Room = room,
+                  Skill = spell
+              };
 
-            if (spell.Rounds > 1)
-            {
-                // prob needs to be on player
-                spell.Rounds -= 1;
-                return;
-            }
+              _writer.WriteLine($"Your {spell.Name} hits for {formula}", origin.ConnectionId);
+              new SpellEffect(_writer, skillTarget, formula).Type[skillTarget.Skill.Type].Invoke();
 
-            // hit / miss messages
-
-          //  _writer.WriteLine(spell.SkillStart.ToPlayer);
-
-            var skillTarget = new SkillTarget
-            {
-                Origin = origin,
-                Target = target,
-                Room = room,
-                Skill = spell
-            };
-
-            new SpellEffect(_writer, skillTarget, formula).Type[skillTarget.Skill.Type].Invoke();
+          }
 
         }
 

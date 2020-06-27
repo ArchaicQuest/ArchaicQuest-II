@@ -23,7 +23,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Type
         public void CauseAffect()
         {
             var action = new SkillMessage(_writer);
-              action.DisplayActionToUser(_skillTarget.Skill.LevelBasedMessages, _skillTarget.Skill.SkillAction, _skillTarget.Origin.Level);
+              
 
             if (_skillTarget.Skill.Effect.Modifier.PositiveEffect)
             {
