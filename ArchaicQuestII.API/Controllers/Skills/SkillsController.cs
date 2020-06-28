@@ -62,14 +62,14 @@ namespace ArchaicQuestII.Controllers.Skills
         }
 
 
-        //[HttpGet]
-        //[Route("api/skill/Get")]
-        //public List<Item> GetSkill()
-        //{
+        [HttpGet]
+        [Route("api/skill/Get")]
+        public List<Skill> GetSkill()
+        {
 
-        //    return _db.GetList<Item>(DataBase.Collections.Items).Where(x => x.Deleted == false).ToList();
+            return _db.GetList<Skill>(DataBase.Collections.Skill).ToList();
 
-        //}
+        }
 
 
         //[HttpGet]
@@ -312,18 +312,18 @@ namespace ArchaicQuestII.Controllers.Skills
         //}
 
         //[HttpDelete]
-        //[Route("api/item/delete/{id:int}")]
+        //[Route("api/skill/delete/{id:int}")]
         //public IActionResult Delete(int id)
         //{
-        //    var item = _db.GetCollection<Item>(DataBase.Collections.Items).FindById(id);
-        //    item.Deleted = true;
-        //    var saved = _db.Save(item, DataBase.Collections.Items);
+        //    //var item = _db.GetCollection<Skill>(DataBase.Collections.Skill).FindById(id);
+        //    //item.Deleted = true;
+        //    //var saved = _db.Save(item, DataBase.Collections.Items);
 
-        //    if (saved)
-        //    {
-        //        return Ok(JsonConvert.SerializeObject(new { toast = $"{item.Name} deleted successfully." }));
-        //    }
-        //    return Ok(JsonConvert.SerializeObject(new { toast = $"{item.Name} deletion failed." }));
+        //    //if (saved)
+        //    //{
+        //    //    return Ok(JsonConvert.SerializeObject(new { toast = $"{item.Name} deleted successfully." }));
+        //    //}
+        //    //return Ok(JsonConvert.SerializeObject(new { toast = $"{item.Name} deletion failed." }));
 
 
 

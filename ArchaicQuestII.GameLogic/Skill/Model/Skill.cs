@@ -19,6 +19,8 @@ namespace ArchaicQuestII.GameLogic.Skill.Model
         public ValidTargets ValidTargets { get; set; }
         public SkillType Type { get; set; }
         public bool StartsCombat { get; set; } = false;
+        public DateTime DateCreated { get; set; } = DateTime.Now;
+        public DateTime DateUpdated { get; set; } = DateTime.Now;
 
     }
 }
