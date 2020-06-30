@@ -72,41 +72,14 @@ namespace ArchaicQuestII.Controllers.Skills
         }
 
 
-        //[HttpGet]
-        //[Route("api/item/FindItems")]
-        //public List<Item> FindItems([FromQuery] string query)
-        //{
+        [HttpGet]
+        [Route("api/skill/FindSkillById")]
+        public Skill FindSkillById([FromQuery] int id)
+        {
 
-        //    var items = _db.GetCollection<Item>(DataBase.Collections.Items).FindAll().Where(x => x.Name != null);
+            return _db.GetCollection<Skill>(DataBase.Collections.Skill).FindById(id);
 
-        //    if (string.IsNullOrEmpty(query))
-        //    {
-        //        return items.ToList();
-        //    }
-
-        //    return items.Where(x => x.Name.IndexOf(query, StringComparison.OrdinalIgnoreCase) != -1).ToList();
-
-        //}
-
-        //[HttpGet]
-        //[Route("api/item/FindItemsByType")]
-        //public List<Item> FindItemsByType([FromQuery] Equipment.EqSlot query)
-        //{
-
-        //    var items = _db.GetCollection<Item>(DataBase.Collections.Items).FindAll().Where(x => x.Slot.Equals(query));
-
-        //    return items.ToList();
-
-        //}
-
-        //[HttpGet]
-        //[Route("api/item/FindItemById")]
-        //public Item FindItemById([FromQuery] int id)
-        //{
-
-        //    return _db.GetCollection<Item>(DataBase.Collections.Items).FindById(id);
-
-        //}
+        }
 
         //[HttpGet]
         //[Route("api/item/FindKeyById")]
