@@ -39,7 +39,8 @@ namespace ArchaicQuestII.Controllers.Skills
                 Description = skill.Description,
                 Effect = skill.Effect,
                 Rounds = skill.Rounds,
-                Type = skill.Type
+                Type = skill.Type,
+                ValidTargets = skill.ValidTargets
             };
 
             if (!string.IsNullOrEmpty(skill.Id.ToString()) && skill.Id != -1)
@@ -67,7 +68,7 @@ namespace ArchaicQuestII.Controllers.Skills
         public List<Skill> GetSkill()
         {
 
-            return _db.GetList<Skill>(DataBase.Collections.Skill).ToList();
+            return _db.GetList<Skill>(DataBase.Collections.Skill).Where(x => x.Deleted.Equals(false)).ToList();
 
         }
 
@@ -284,23 +285,23 @@ namespace ArchaicQuestII.Controllers.Skills
 
         //}
 
-        //[HttpDelete]
-        //[Route("api/skill/delete/{id:int}")]
-        //public IActionResult Delete(int id)
-        //{
-        //    //var item = _db.GetCollection<Skill>(DataBase.Collections.Skill).FindById(id);
-        //    //item.Deleted = true;
-        //    //var saved = _db.Save(item, DataBase.Collections.Items);
+        [HttpDelete]
+        [Route("api/skill/delete/{id:int}")]
+        public IActionResult Delete(int id)
+        {
+            var skill = _db.GetCollection<Skill>(DataBase.Collections.Skill).FindById(id);
+            skill.Deleted = true;
+            var saved = _db.Save(skill, DataBase.Collections.Skill);
 
-        //    //if (saved)
-        //    //{
-        //    //    return Ok(JsonConvert.SerializeObject(new { toast = $"{item.Name} deleted successfully." }));
-        //    //}
-        //    //return Ok(JsonConvert.SerializeObject(new { toast = $"{item.Name} deletion failed." }));
+            if (saved)
+            {
+                return Ok(JsonConvert.SerializeObject(new { toast = $"{skill.Name} deleted successfully." }));
+            }
+            return Ok(JsonConvert.SerializeObject(new { toast = $"{skill.Name} deletion failed." }));
 
 
 
-        //}
+        }
 
 
     }

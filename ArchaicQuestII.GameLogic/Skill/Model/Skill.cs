@@ -21,6 +21,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Model
         public bool StartsCombat { get; set; } = false;
         public DateTime DateCreated { get; set; } = DateTime.Now;
         public DateTime DateUpdated { get; set; } = DateTime.Now;
+        public bool Deleted { get; set; } = false;
 
     }
 }
