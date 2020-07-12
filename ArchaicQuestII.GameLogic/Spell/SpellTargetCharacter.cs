@@ -26,7 +26,7 @@ namespace ArchaicQuestII.GameLogic.Spell
            return room.Players.FirstOrDefault(x => x.Name.StartsWith(target, StringComparison.CurrentCultureIgnoreCase));
         }
 
-        public Player CheckTarget(Spell.Model.Spell spell, string target, Room room, Player player)
+        public Player CheckTarget(Skill.Model.Skill spell, string target, Room room, Player player)
         {
             var victim = GetTarget(target, room);
 
@@ -50,7 +50,7 @@ namespace ArchaicQuestII.GameLogic.Spell
         }
 
 
-        public Player ReturnTarget(Spell.Model.Spell spell, string target, Room room, Player player)
+        public Player ReturnTarget(Skill.Model.Skill spell, string target, Room room, Player player)
         {
             
          

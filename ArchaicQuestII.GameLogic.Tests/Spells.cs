@@ -26,6 +26,7 @@ namespace ArchaicQuestII.GameLogic.Tests
         private readonly Room _room;
         private readonly Spells _spell;
         private readonly Mock<IWriteToClient> _writer;
+        private readonly Mock<ICache> _cache;
         private readonly Mock<ISpellTargetCharacter> _spellTargetCharacter;
 
         public SpellTests()
@@ -65,6 +66,7 @@ namespace ArchaicQuestII.GameLogic.Tests
             _player = new Player()
             {
                 Name = "Malleus",
+                ClassName = "Paladin",
                 Status = CharacterStatus.Status.Standing,
                 Attributes = new Attributes()
                 {
@@ -106,7 +108,8 @@ namespace ArchaicQuestII.GameLogic.Tests
             _room = new Room();
             _writer = new Mock<IWriteToClient>();
             _spellTargetCharacter = new Mock<ISpellTargetCharacter>();
-            _spell = new Spells(_writer.Object, _spellTargetCharacter.Object);
+            _cache = new Mock<ICache>();
+            _spell = new Spells(_writer.Object, _spellTargetCharacter.Object, _cache.Object);
         }
 
         [Fact]
@@ -206,7 +209,7 @@ namespace ArchaicQuestII.GameLogic.Tests
         {
 
             _player.Status = CharacterStatus.Status.Standing;
-            var foundSpell = _spell.FindSpell("acid blast", _player);
+            var foundSpell = _spell.FindSpell("magic", _player);
 
             _writer.Verify(w => w.WriteLine(It.Is<string>(s => s == "You don't know a spell that begins with acid blast")), Times.Once);
             Assert.True(foundSpell == null);
@@ -217,7 +220,7 @@ namespace ArchaicQuestII.GameLogic.Tests
         {
 
             _player.Status = CharacterStatus.Status.Standing;
-            _player.Spells.Add(new Spell.Model.Spell()
+            _player.Skills.Add(new Spell.Model.Spell()
             {
                 Name = "Magic missile",
             });
@@ -360,7 +363,7 @@ namespace ArchaicQuestII.GameLogic.Tests
 
             var spell = new Spell.Model.Spell()
             {
-                Name = "Fireball",
+                Name = "magic",
                 Cost = new SkillCost()
                 {
                     Table = new Dictionary<Cost, int>()

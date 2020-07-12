@@ -6,23 +6,29 @@ using ArchaicQuestII.GameLogic.Commands.Movement;
 using ArchaicQuestII.GameLogic.World.Room;
 using System.Linq;
 using ArchaicQuestII.GameLogic.Commands.Debug;
+using ArchaicQuestII.GameLogic.Commands.Skills;
+using ArchaicQuestII.GameLogic.Spell.Interface;
 
 namespace ArchaicQuestII.GameLogic.Commands
 {
    public class Commands: ICommands
     {
         private readonly IMovement _movement;
+        private readonly ISkills _skills;
+        private readonly ISpells _spells;
         private readonly IRoomActions _roomActions;
         private readonly IDebug _debug;
 
-        public Commands(IMovement movement, IRoomActions roomActions, IDebug debug)
+        public Commands(IMovement movement, IRoomActions roomActions, IDebug debug, ISkills skills, ISpells spells)
         {
             _movement = movement;
             _roomActions = roomActions;
             _debug = debug;
+            _skills = skills;
+            _spells = spells;
         }
  
-        public void CommandList(string key, string options, Player player, Room room)
+        public void CommandList(string key, string[] options, Player player, Room room)
         {
             switch (key)
             {
@@ -72,12 +78,13 @@ namespace ArchaicQuestII.GameLogic.Commands
                     break;
                 case "cast":
                 case "c":
-                    _roomActions.Look(room, player);
+                    _spells.DoSpell(options[1], player, options[2], room);
+                    break;
                 case "skill":
                 case "skills":
                 case "slist":
                 case "spells":
-                    _roomActions.Look(room, player);
+                    _skills.ShowSkills(player);
                     break;
                 case "/debug":
                     _debug.DebugRoom(room, player);
@@ -89,7 +96,8 @@ namespace ArchaicQuestII.GameLogic.Commands
         {
 
             var cleanCommand = command.Trim().ToLower();
-            CommandList(cleanCommand, String.Empty, player, room);
+            var commandParts = cleanCommand.Split(' ');
+            CommandList(commandParts[0], commandParts, player, room);
         }
     }
 

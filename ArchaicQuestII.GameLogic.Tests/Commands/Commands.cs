@@ -2,6 +2,8 @@
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Commands.Debug;
 using ArchaicQuestII.GameLogic.Commands.Movement;
+using ArchaicQuestII.GameLogic.Commands.Skills;
+using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.World.Room;
 using Moq;
 using Xunit;
@@ -16,12 +18,14 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
         private readonly Mock<IMovement> _movement;
         private readonly Mock<IRoomActions> _roomActions;
         private readonly Mock<IDebug> _debug;
+        private readonly Mock<ISkills> _skill;
 
         public CommandsTests()
         {
             _movement = new Mock<IMovement>();
             _roomActions = new Mock<IRoomActions>();
             _debug = new Mock<IDebug>();
+            _skill = new Mock<ISkills>();
 
             _player = new Player();
             _player.ConnectionId = "1";
@@ -46,7 +50,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
                 }
             };
 
-            _commands = new GameLogic.Commands.Commands(_movement.Object, _roomActions.Object, _debug.Object);
+            _commands = new GameLogic.Commands.Commands(_movement.Object, _roomActions.Object, _debug.Object, _skill.Object);
 
         }
 

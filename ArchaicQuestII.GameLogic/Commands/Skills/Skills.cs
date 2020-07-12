@@ -24,7 +24,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
 
             foreach (var skill in player.Skills)
             {
-                _writeToClient.WriteLine($"Level {skill.Level} : {skill.SkillName}  {skill.Proficiency}");
+                _writeToClient.WriteLine($"Level {skill.Level} : {skill.SkillName} {skill.Proficiency * 100}%");
             }
         }
     }

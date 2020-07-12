@@ -10,7 +10,7 @@ namespace ArchaicQuestII.GameLogic.Spell.Interface
     {
 
         public Player GetTarget(string target, Room room);
-        public Player CheckTarget(Spell.Model.Spell spell, string target, Room room, Player player);
-        public Player ReturnTarget(Spell.Model.Spell spell, string target, Room room, Player player);
+        public Player CheckTarget(Skill.Model.Skill spell, string target, Room room, Player player);
+        public Player ReturnTarget(Skill.Model.Skill spell, string target, Room room, Player player);
     }
 }

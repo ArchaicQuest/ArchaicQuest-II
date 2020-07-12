@@ -17,11 +17,12 @@ namespace ArchaicQuestII.GameLogic.Spell
     {
         private readonly IWriteToClient _writer;
         private readonly ISpellTargetCharacter _spellTargetCharacter;
-        public Spells(IWriteToClient writer, ISpellTargetCharacter spellTargetCharacter)
+        private readonly ICache _cache;
+        public Spells(IWriteToClient writer, ISpellTargetCharacter spellTargetCharacter, ICache cache)
         {
             _writer = writer;
             _spellTargetCharacter = spellTargetCharacter;
-
+            _cache = cache;
         }
 
         public bool ValidStatus(Player player)
@@ -51,19 +52,22 @@ namespace ArchaicQuestII.GameLogic.Spell
             }
         }
 
-        public Model.Spell FindSpell(string spell, Player player)
+        public Skill.Model.Skill FindSpell(string skill, Player player)
         {
-             var foundSpell = player.Spells.FirstOrDefault(x => x.Name.StartsWith(spell, StringComparison.CurrentCultureIgnoreCase));
+             var foundSpell = player.Skills.FirstOrDefault(x => x.SkillName.StartsWith(skill, StringComparison.CurrentCultureIgnoreCase));
 
              if (foundSpell == null)
              {
-                 _writer.WriteLine($"You don't know a spell that begins with {spell}");
+                 _writer.WriteLine($"You don't know a spell that begins with {skill}");
+                 return null;
              }
 
-             return foundSpell;
+             var spell = _cache.GetSkill(foundSpell.SkillId);
+
+             return spell;
         }
 
-        public bool ManaCheck(Model.Spell spell, Player player)
+        public bool ManaCheck(Skill.Model.Skill spell, Player player)
         {
             if (player.Attributes.Attribute[EffectLocation.Mana] < spell.Cost.Table[Cost.Mana])
             {
@@ -74,7 +78,7 @@ namespace ArchaicQuestII.GameLogic.Spell
             return true;
         }
 
-        public bool SpellAffectsCharacter(Model.Spell spell)
+        public bool SpellAffectsCharacter(Skill.Model.Skill spell)
         {
             
             return (spell.ValidTargets & ValidTargets.TargetPlayerWorld) != 0 || 
@@ -84,7 +88,7 @@ namespace ArchaicQuestII.GameLogic.Spell
                    (spell.ValidTargets & ValidTargets.TargetFightSelf)   != 0;
         }
 
-        public void ReciteSpellCharacter(Player origin, Player target, Model.Spell spell)
+        public void ReciteSpellCharacter(Player origin, Player target, Skill.Model.Skill spell)
         {
             // not correct need to send to room 
             if (origin.Id == target.Id)
@@ -99,7 +103,7 @@ namespace ArchaicQuestII.GameLogic.Spell
 
         }
 
-        public bool SpellSuccess(Player origin, Player target, Model.Spell spell)
+        public bool SpellSuccess(Player origin, Player target, Skill.Model.Skill spell)
         {
             var spellSkill = 5;
 

@@ -24,6 +24,7 @@ using ArchaicQuestII.GameLogic.World.Room;
 using Microsoft.AspNetCore.SignalR;
 using static ArchaicQuestII.API.Services.services;
 using System.Threading.Tasks;
+using ArchaicQuestII.GameLogic.Commands.Skills;
 using ArchaicQuestII.GameLogic.Skill.Model;
 using ArchaicQuestII.GameLogic.Spell;
 using ArchaicQuestII.GameLogic.Spell.Interface;
@@ -98,6 +99,8 @@ namespace ArchaicQuestII.API
             services.AddScoped<IDataBase, DataBase>();
             services.AddSingleton<ICache>(new Cache());
             services.AddTransient<IMovement, Movement>();
+            services.AddTransient<ISkills, Skills>();
+            services.AddTransient<ISpells, Spells>();
             services.AddTransient<IDebug, Debug>();
             services.AddSingleton<ICommands, Commands>();
             services.AddTransient<ISpellTargetCharacter, SpellTargetCharacter>();
