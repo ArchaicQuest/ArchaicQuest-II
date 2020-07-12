@@ -4,6 +4,7 @@ using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Item;
 using LiteDB;
 using System.Collections.Generic;
+using ArchaicQuestII.GameLogic.Character.Class;
 using Newtonsoft.Json;
 using Money = ArchaicQuestII.GameLogic.Item.Money;
 
@@ -87,7 +88,7 @@ namespace ArchaicQuestII.GameLogic.Character
         public Stack<string> Buffer { get; set; } = new Stack<string>();
 
         public List<Spell.Model.Spell> Spells { get; set; }
-
+        public List<SkillList> Skills { get; set; }
         public bool Deleted { get; set; }
         public DateTime? DateCreated { get; set; } = DateTime.Now;
         public DateTime? DateUpdated { get; set; } = DateTime.Now;

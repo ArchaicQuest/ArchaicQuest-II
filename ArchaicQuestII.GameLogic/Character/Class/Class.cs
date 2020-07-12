@@ -6,10 +6,18 @@ using ArchaicQuestII.GameLogic.Item;
 
 namespace ArchaicQuestII.GameLogic.Character.Class
 {
+    public class SkillList
+    {
+        public int SkillId { get; set; }
+        public string SkillName { get; set; }
+        public int Level { get; set; }
+        public double? Proficiency { get; set; } = 0.1;
+    }
+
+
     public class Class : OptionDescriptive
     {
-        public List<Skill.Model.Skill> Skills { get; set; } = new List<Skill.Model.Skill>();
-        public List<Spell.Model.Spell> Spells { get; set; } = new List<Spell.Model.Spell>();
+        public List<SkillList> Skills { get; set; } = new List<SkillList>();
         public Dice HitDice { get; set; } = new Dice();
         public int ExperiencePointsCost { get; set; } = 0;
         public Attributes AttributeBonus { get; set; } = new Attributes();

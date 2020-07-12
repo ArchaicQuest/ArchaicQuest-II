@@ -21,6 +21,11 @@ namespace ArchaicQuestII.GameLogic.Core
         Room GetRoom(int id);
         Room GetRoom(int id, Coordinates coords);
         bool UpdateRoom(int id, Room room, Player player);
+
+
+        bool AddSkill(int id, Skill.Model.Skill skill);
+
+        Skill.Model.Skill GetSkill(int id);
         void ClearRoomCache();
         void SetConfig(Config config);
         Config GetConfig();

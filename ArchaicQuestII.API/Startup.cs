@@ -24,6 +24,7 @@ using ArchaicQuestII.GameLogic.World.Room;
 using Microsoft.AspNetCore.SignalR;
 using static ArchaicQuestII.API.Services.services;
 using System.Threading.Tasks;
+using ArchaicQuestII.GameLogic.Skill.Model;
 using ArchaicQuestII.GameLogic.Spell;
 using ArchaicQuestII.GameLogic.Spell.Interface;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -206,6 +207,16 @@ namespace ArchaicQuestII.API
 
             var config = _db.GetById<Config>(1, DataBase.Collections.Config);
             _cache.SetConfig(config);
+
+            //add skills
+            var skills = _db.GetList<Skill>(DataBase.Collections.Skill);
+
+            foreach (var skill in skills)
+            {
+                _cache.AddSkill(skill.Id, skill);
+            }
+
+
 
         }
     }
