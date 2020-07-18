@@ -28,7 +28,7 @@ namespace ArchaicQuestII.GameLogic.Commands
             _spells = spells;
         }
  
-        public void CommandList(string key, string[] options, Player player, Room room)
+        public void CommandList(string key, string obj, string target, Player player, Room room)
         {
             switch (key)
             {
@@ -78,7 +78,7 @@ namespace ArchaicQuestII.GameLogic.Commands
                     break;
                 case "cast":
                 case "c":
-                    _spells.DoSpell(options[1], player, options[2], room);
+                    _spells.DoSpell(obj, player, target, room);
                     break;
                 case "skill":
                 case "skills":
@@ -97,8 +97,33 @@ namespace ArchaicQuestII.GameLogic.Commands
 
             var cleanCommand = command.Trim().ToLower();
             var commandParts = cleanCommand.Split(' ');
-            CommandList(commandParts[0], commandParts, player, room);
+           var parameters = MakeCommandPartsSafe(commandParts);
+            CommandList(commandParts[0], parameters.Item1,  parameters.Item2, player, room);
         }
+
+        public Tuple<string, string> MakeCommandPartsSafe(string[] commands)
+        {
+
+            var cmdCount = commands.Length;
+
+            if (cmdCount == 1)
+            {
+                return new Tuple<string, string>(commands[0], string.Empty);
+            }
+
+            if (cmdCount == 2)
+            {
+               return new Tuple<string, string>(commands[1], string.Empty);
+            }
+
+            if (cmdCount == 3)
+            {
+                return new Tuple<string, string>(commands[1], commands[2]);
+            }
+
+            return null;
+        }
+
     }
 
 

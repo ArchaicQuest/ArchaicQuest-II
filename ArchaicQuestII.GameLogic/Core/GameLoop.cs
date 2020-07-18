@@ -1,4 +1,5 @@
-﻿using ArchaicQuestII.GameLogic.Commands;
+﻿using System;
+using ArchaicQuestII.GameLogic.Commands;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -32,12 +33,13 @@ namespace ArchaicQuestII.GameLogic.Core
             //    _writeToClient.WriteLine("update", player.Value.ConnectionId);
 
             //}
+            Console.WriteLine("started loop");
             while (true)
             {
                 await Task.Delay(1000);
-
+                Console.WriteLine(" loop");
                 var players = _cache.GetPlayerCache();
-                var validPlayers = players.Where(x => x.Value.Buffer.Count > 0);
+                 
 
                 foreach (var player in players)
                 {
@@ -52,18 +54,27 @@ namespace ArchaicQuestII.GameLogic.Core
         {
             while (true)
             {
-                await Task.Delay(125);
-                var players = _cache.GetPlayerCache();
-                var validPlayers = players.Where(x => x.Value.Buffer.Count > 0);
 
-                foreach (var player in validPlayers)
+                try
                 {
+                    await Task.Delay(125);
+                    var players = _cache.GetPlayerCache();
+                    var validPlayers = players.Where(x => x.Value.Buffer.Count > 0);
 
-                    var command = player.Value.Buffer.Pop();
-                    var room = _cache.GetRoom(player.Value.RoomId);
+                    foreach (var player in validPlayers)
+                    {
 
-                    _commands.ProcessCommand(command, player.Value, room);
+                        var command = player.Value.Buffer.Pop();
+                        var room = _cache.GetRoom(player.Value.RoomId);
 
+                        _commands.ProcessCommand(command, player.Value, room);
+
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
                 }
             }
         }

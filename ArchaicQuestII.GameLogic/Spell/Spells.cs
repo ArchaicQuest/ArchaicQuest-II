@@ -18,11 +18,13 @@ namespace ArchaicQuestII.GameLogic.Spell
         private readonly IWriteToClient _writer;
         private readonly ISpellTargetCharacter _spellTargetCharacter;
         private readonly ICache _cache;
-        public Spells(IWriteToClient writer, ISpellTargetCharacter spellTargetCharacter, ICache cache)
+        private readonly IDamage _damage;
+        public Spells(IWriteToClient writer, ISpellTargetCharacter spellTargetCharacter, ICache cache, IDamage damage)
         {
             _writer = writer;
             _spellTargetCharacter = spellTargetCharacter;
             _cache = cache;
+            _damage = damage;
         }
 
         public bool ValidStatus(Player player)
@@ -133,7 +135,7 @@ namespace ArchaicQuestII.GameLogic.Spell
         /// <param name="origin"></param>
         /// <param name="target"></param>
         /// <param name="room"></param>
-        public void DoSpell(string spellName, Player origin, string targetName, Room room = null)
+        public void DoSpell(string spellName, Player origin, string targetName = "", Room room = null)
         {
 
             if (!ValidStatus(origin))
@@ -192,10 +194,11 @@ namespace ArchaicQuestII.GameLogic.Spell
                   Skill = spell
               };
 
-              _writer.WriteLine($"Your {spell.Name} hits for {formula}", origin.ConnectionId);
+              _writer.WriteLine($"<p>Your {spell.Name} {_damage.DamageText(formula).Value} {target.Name} ({formula})</p>", origin.ConnectionId);
+              _writer.WriteLine($"<p>{origin.Name}'s {spell.Name} {_damage.DamageText(formula).Value} you! ({formula})</p>", target.ConnectionId);
 
               // If no effect assume, negative spell and deduct HP
-              if (spell.Effect == null)
+                if (spell.Effect == null)
               {
                   skillTarget.Target.Attributes.Attribute[EffectLocation.Hitpoints] -= formula;
               }
