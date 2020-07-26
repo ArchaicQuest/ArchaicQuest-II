@@ -1,7 +1,9 @@
-﻿using ArchaicQuestII.DataAccess;
+﻿using System;
+using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character.Class;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using ArchaicQuestII.GameLogic.Item;
 
 namespace ArchaicQuestII.API.Character
 {
@@ -18,7 +20,45 @@ namespace ArchaicQuestII.API.Character
         [Route("api/Character/Class")]
         public void Post([FromBody] Class charClass)
         {
-            _db.Save(charClass, DataBase.Collections.Class);
+            if (!ModelState.IsValid)
+            {
+                var exception = new Exception("Invalid object");
+                throw exception;
+            }
+
+            var newClass = new Class()
+            {
+                Name = charClass.Name,
+                AttributeBonus = charClass.AttributeBonus,
+                DateCreated = charClass.Id == -1 ? DateTime.Now : charClass.DateCreated,
+                DateUpdated = charClass.Id == -1 ? DateTime.Now : charClass.DateUpdated,
+                CreatedBy = "Malleus",
+                Description = charClass.Description,
+                ExperiencePointsCost = charClass.ExperiencePointsCost,
+                HitDice = new Dice()
+                {
+                    DiceMinSize = 1,
+                    DiceMaxSize = charClass.HitDice.DiceMaxSize,
+                    DiceRoll = 1
+                },
+                Skills = charClass.Skills
+            };
+
+            if (!string.IsNullOrEmpty(charClass.Id.ToString()) && charClass.Id != -1)
+            {
+
+                var foundClass = _db.GetById<Class>(charClass.Id, DataBase.Collections.Class);
+
+                if (foundClass == null)
+                {
+                    throw new Exception("Item Id does not exist");
+                }
+
+                newClass.DateUpdated = DateTime.Now;
+                newClass.Id = charClass.Id;
+            }
+
+            _db.Save(newClass, DataBase.Collections.Class);
         }
 
         [HttpGet]
