@@ -19,12 +19,14 @@ namespace ArchaicQuestII.GameLogic.Spell
         private readonly ISpellTargetCharacter _spellTargetCharacter;
         private readonly ICache _cache;
         private readonly IDamage _damage;
-        public Spells(IWriteToClient writer, ISpellTargetCharacter spellTargetCharacter, ICache cache, IDamage damage)
+        private readonly IUpdateClientUI _updateClientUi;
+        public Spells(IWriteToClient writer, ISpellTargetCharacter spellTargetCharacter, ICache cache, IDamage damage, IUpdateClientUI updateClientUi)
         {
             _writer = writer;
             _spellTargetCharacter = spellTargetCharacter;
             _cache = cache;
             _damage = damage;
+            _updateClientUi = updateClientUi;
         }
 
         public bool ValidStatus(Player player)
@@ -201,6 +203,10 @@ namespace ArchaicQuestII.GameLogic.Spell
                 if (spell.Effect == null)
               {
                   skillTarget.Target.Attributes.Attribute[EffectLocation.Hitpoints] -= formula;
+                  //update UI
+                  _updateClientUi.UpdateHP(skillTarget.Target);
+
+
               }
               else
               {

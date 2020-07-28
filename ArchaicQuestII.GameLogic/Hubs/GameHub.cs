@@ -81,6 +81,15 @@ namespace ArchaicQuestII.GameLogic.Hubs
             await Clients.Client(hubId).SendAsync("SendMessage", message);
         }
 
+        /// <summary>
+        /// Send message to specific client
+        /// </summary>
+        /// <returns></returns>
+        public async Task UpdatePlayerHP(int hp, string hubId)
+        {
+            await Clients.Client(hubId).SendAsync("UpdatePlayerHP", hp);
+        }
+
         public async void Welcome(string id)
         {
             var location = System.Reflection.Assembly.GetEntryAssembly().Location;

@@ -12,6 +12,7 @@ using ArchaicQuestII.GameLogic.Spell.Model;
 using ArchaicQuestII.GameLogic.World.Room;
 using Moq;
 using System.Collections.Generic;
+using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Spell.Interface;
 using Xunit;
 
@@ -26,6 +27,7 @@ namespace ArchaicQuestII.GameLogic.Tests
         private readonly Room _room;
         private readonly Spells _spell;
         private readonly Mock<IWriteToClient> _writer;
+        private readonly Mock<IDamage> _damage;
         private readonly Mock<ICache> _cache;
         private readonly Mock<ISpellTargetCharacter> _spellTargetCharacter;
 
@@ -107,9 +109,10 @@ namespace ArchaicQuestII.GameLogic.Tests
             };
             _room = new Room();
             _writer = new Mock<IWriteToClient>();
+            _damage = new Mock<IDamage>();
             _spellTargetCharacter = new Mock<ISpellTargetCharacter>();
             _cache = new Mock<ICache>();
-            _spell = new Spells(_writer.Object, _spellTargetCharacter.Object, _cache.Object);
+            _spell = new Spells(_writer.Object, _spellTargetCharacter.Object, _cache.Object, _damage.Object);
         }
 
         [Fact]
@@ -220,10 +223,10 @@ namespace ArchaicQuestII.GameLogic.Tests
         {
 
             _player.Status = CharacterStatus.Status.Standing;
-            _player.Skills.Add(new Spell.Model.Spell()
-            {
-                Name = "Magic missile",
-            });
+            _player.Skills.Add(new SkillList() {
+                SkillName = "magic missile",
+                Level = 1
+                });
             var foundSpell = _spell.FindSpell("magic missile", _player);
 
             Assert.True(foundSpell != null);

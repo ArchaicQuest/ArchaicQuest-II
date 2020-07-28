@@ -108,6 +108,7 @@ namespace ArchaicQuestII.API
             services.AddSingleton<IGameLoop, GameLoop>();
             services.AddTransient<IRoomActions, RoomActions>();
             services.AddTransient<IAddRoom, AddRoom>();
+            services.AddSingleton<IUpdateClientUI, UpdateClientUI>();
             services.AddSingleton<IWriteToClient, WriteToClient>((factory) => new WriteToClient(_hubContext));
 
         }

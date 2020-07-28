@@ -19,4 +19,9 @@
         <ProjectReference Include="..\ArchaicQuestII.GameLogic\ArchaicQuestII.GameLogic.csproj" />
     </ItemGroup>
 
+
+    <ItemGroup>
+      <Folder Include="Core\" />
+    </ItemGroup>
+
 </Project>
