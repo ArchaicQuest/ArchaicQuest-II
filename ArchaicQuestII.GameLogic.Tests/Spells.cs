@@ -30,6 +30,7 @@ namespace ArchaicQuestII.GameLogic.Tests
         private readonly Mock<IDamage> _damage;
         private readonly Mock<ICache> _cache;
         private readonly Mock<ISpellTargetCharacter> _spellTargetCharacter;
+        private readonly Mock<IUpdateClientUI> _updateClientUI;
 
         public SpellTests()
         {
@@ -112,7 +113,8 @@ namespace ArchaicQuestII.GameLogic.Tests
             _damage = new Mock<IDamage>();
             _spellTargetCharacter = new Mock<ISpellTargetCharacter>();
             _cache = new Mock<ICache>();
-            _spell = new Spells(_writer.Object, _spellTargetCharacter.Object, _cache.Object, _damage.Object);
+            _updateClientUI = new Mock<IUpdateClientUI>();
+            _spell = new Spells(_writer.Object, _spellTargetCharacter.Object, _cache.Object, _damage.Object, _updateClientUI.Object);
         }
 
         [Fact]
