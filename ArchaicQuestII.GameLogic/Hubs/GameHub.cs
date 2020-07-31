@@ -18,8 +18,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
         private IDataBase _db { get; }
         private ICache _cache { get; }
         private readonly IWriteToClient _writeToClient;
-        private readonly ICommands _commands;
-        private int start = 0;
+        private readonly ICommands _commands; 
         public GameHub(IDataBase db, ICache cache, ILogger<GameHub> logger, IWriteToClient writeToClient, ICommands commands)
         {
             _logger = logger;
@@ -36,16 +35,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
         /// <returns></returns>
         public override async Task OnConnectedAsync()
         {
-
-            if (start == 0)
-            {
-                start = 1;
-                await Clients.All.SendAsync("SendMessage", "", "Starting loop");
-            
-            }
-    
-            
-            await Clients.All.SendAsync("SendMessage", "", "Someone has entered the realm");
+            await Clients.All.SendAsync("SendMessage", "", "<p>Someone has entered the realm.</p>");
         }
 
         /// <summary>
@@ -54,7 +44,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
         /// <returns></returns>
         public override async Task OnDisconnectedAsync(Exception ex)
         {
-            await Clients.All.SendAsync("SendMessage", "Someone", " hase left the realm");
+            await Clients.All.SendAsync("SendMessage", "", "<p>Someone has left the realm.</p>");
         }
 
  
@@ -91,6 +81,15 @@ namespace ArchaicQuestII.GameLogic.Hubs
             await Clients.Client(hubId).SendAsync("SendMessage", message);
         }
 
+        /// <summary>
+        /// Send message to specific client
+        /// </summary>
+        /// <returns></returns>
+        public async Task UpdatePlayerHP(int hp, string hubId)
+        {
+            await Clients.Client(hubId).SendAsync("UpdatePlayerHP", hp);
+        }
+
         public async void Welcome(string id)
         {
             var location = System.Reflection.Assembly.GetEntryAssembly().Location;
@@ -121,7 +120,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
 
           
 
-            await SendToClient($"Welcome {player.Name}. Your adventure awaits you.", hubId);
+            await SendToClient($"<p>Welcome {player.Name}. Your adventure awaits you.</p>", hubId);
 
             GetRoom(hubId, player);
         }

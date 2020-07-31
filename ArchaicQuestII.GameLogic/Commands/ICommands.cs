@@ -8,7 +8,7 @@ namespace ArchaicQuestII.GameLogic.Commands
 {
     public interface ICommands
     {
-        void CommandList(string key, string options, Player player, Room room);
+        void CommandList(string key, string obj, string target, Player player, Room room);
         void ProcessCommand(string command, Player player, Room room);
     }
 }

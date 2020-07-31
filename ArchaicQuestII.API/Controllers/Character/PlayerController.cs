@@ -10,6 +10,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ArchaicQuestII.GameLogic.Account;
+using ArchaicQuestII.GameLogic.Character.Class;
+using ArchaicQuestII.GameLogic.Skill.Model;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -36,9 +38,8 @@ namespace ArchaicQuestII.Controllers.character
                 throw exception;
             }
 
-
-
-
+            var playerClass = _db.GetList<Class>(DataBase.Collections.Class).FirstOrDefault(x => x.Name.Equals(player.ClassName));
+         
             var newPlayer = new Player()
             {
                 AccountId = player.AccountId,
@@ -75,9 +76,10 @@ namespace ArchaicQuestII.Controllers.character
                 Race = player.Race,
                 JoinedDate = DateTime.Now,
                 LastLoginTime = DateTime.Now,
-
+                Skills = new List<SkillList>()
             };
 
+            newPlayer.Skills = playerClass?.Skills ?? new List<SkillList>();
 
             if (!string.IsNullOrEmpty(player.Id.ToString()) && player.Id != Guid.Empty)
             {

@@ -6,23 +6,29 @@ using ArchaicQuestII.GameLogic.Commands.Movement;
 using ArchaicQuestII.GameLogic.World.Room;
 using System.Linq;
 using ArchaicQuestII.GameLogic.Commands.Debug;
+using ArchaicQuestII.GameLogic.Commands.Skills;
+using ArchaicQuestII.GameLogic.Spell.Interface;
 
 namespace ArchaicQuestII.GameLogic.Commands
 {
    public class Commands: ICommands
     {
         private readonly IMovement _movement;
+        private readonly ISkills _skills;
+        private readonly ISpells _spells;
         private readonly IRoomActions _roomActions;
         private readonly IDebug _debug;
 
-        public Commands(IMovement movement, IRoomActions roomActions, IDebug debug)
+        public Commands(IMovement movement, IRoomActions roomActions, IDebug debug, ISkills skills, ISpells spells)
         {
             _movement = movement;
             _roomActions = roomActions;
             _debug = debug;
+            _skills = skills;
+            _spells = spells;
         }
  
-        public void CommandList(string key, string options, Player player, Room room)
+        public void CommandList(string key, string obj, string target, Player player, Room room)
         {
             switch (key)
             {
@@ -70,6 +76,16 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "l":
                     _roomActions.Look(room, player);
                     break;
+                case "cast":
+                case "c":
+                    _spells.DoSpell(obj, player, target, room);
+                    break;
+                case "skill":
+                case "skills":
+                case "slist":
+                case "spells":
+                    _skills.ShowSkills(player);
+                    break;
                 case "/debug":
                     _debug.DebugRoom(room, player);
                     break;
@@ -80,8 +96,34 @@ namespace ArchaicQuestII.GameLogic.Commands
         {
 
             var cleanCommand = command.Trim().ToLower();
-            CommandList(cleanCommand, String.Empty, player, room);
+            var commandParts = cleanCommand.Split(' ');
+           var parameters = MakeCommandPartsSafe(commandParts);
+            CommandList(commandParts[0], parameters.Item1,  parameters.Item2, player, room);
         }
+
+        public Tuple<string, string> MakeCommandPartsSafe(string[] commands)
+        {
+
+            var cmdCount = commands.Length;
+
+            if (cmdCount == 1)
+            {
+                return new Tuple<string, string>(commands[0], string.Empty);
+            }
+
+            if (cmdCount == 2)
+            {
+               return new Tuple<string, string>(commands[1], string.Empty);
+            }
+
+            if (cmdCount == 3)
+            {
+                return new Tuple<string, string>(commands[1], commands[2]);
+            }
+
+            return null;
+        }
+
     }
 
 

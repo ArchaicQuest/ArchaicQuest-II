@@ -1,6 +1,8 @@
-﻿using ArchaicQuestII.GameLogic.Item;
+﻿using System;
+using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.Skill.Enum;
 using System.Collections.Generic;
+using ArchaicQuestII.GameLogic.Character.Status;
 
 namespace ArchaicQuestII.GameLogic.Skill.Model
 {
@@ -11,15 +13,15 @@ namespace ArchaicQuestII.GameLogic.Skill.Model
         public string Description { get; set; }
         public Dice Damage { get; set; }
         public Effect.Effect Effect { get; set; }
-        public Requirements Requirements { get; set; }
-        public Messages SkillStart { get; set; }
-        public List<Messages> SkillAction { get; set; }
-        public Messages SkillEnd { get; set; }
-        public Messages SkillFailure { get; set; }
-        public LevelBasedMessages LevelBasedMessages { get; set; }
+        public CharacterStatus.Status UsableFromStatus { get; set; } = CharacterStatus.Status.Standing;
         public int Rounds { get; set; }
         public SkillCost Cost { get; set; } = new SkillCost();
+        public ValidTargets ValidTargets { get; set; }
         public SkillType Type { get; set; }
+        public bool StartsCombat { get; set; } = false;
+        public DateTime DateCreated { get; set; } = DateTime.Now;
+        public DateTime DateUpdated { get; set; } = DateTime.Now;
+        public bool Deleted { get; set; } = false;
 
     }
 }

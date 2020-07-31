@@ -24,6 +24,10 @@ using ArchaicQuestII.GameLogic.World.Room;
 using Microsoft.AspNetCore.SignalR;
 using static ArchaicQuestII.API.Services.services;
 using System.Threading.Tasks;
+using ArchaicQuestII.GameLogic.Commands.Skills;
+using ArchaicQuestII.GameLogic.Skill.Model;
+using ArchaicQuestII.GameLogic.Spell;
+using ArchaicQuestII.GameLogic.Spell.Interface;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
@@ -94,12 +98,17 @@ namespace ArchaicQuestII.API
                 new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AQ.db")));
             services.AddScoped<IDataBase, DataBase>();
             services.AddSingleton<ICache>(new Cache());
+            services.AddSingleton<IDamage, Damage>();
             services.AddTransient<IMovement, Movement>();
+            services.AddTransient<ISkills, Skills>();
+            services.AddTransient<ISpells, Spells>();
             services.AddTransient<IDebug, Debug>();
             services.AddSingleton<ICommands, Commands>();
+            services.AddTransient<ISpellTargetCharacter, SpellTargetCharacter>();
             services.AddSingleton<IGameLoop, GameLoop>();
             services.AddTransient<IRoomActions, RoomActions>();
             services.AddTransient<IAddRoom, AddRoom>();
+            services.AddSingleton<IUpdateClientUI, UpdateClientUI>();
             services.AddSingleton<IWriteToClient, WriteToClient>((factory) => new WriteToClient(_hubContext));
 
         }
@@ -203,6 +212,16 @@ namespace ArchaicQuestII.API
 
             var config = _db.GetById<Config>(1, DataBase.Collections.Config);
             _cache.SetConfig(config);
+
+            //add skills
+            var skills = _db.GetList<Skill>(DataBase.Collections.Skill);
+
+            foreach (var skill in skills)
+            {
+                _cache.AddSkill(skill.Id, skill);
+            }
+
+
 
         }
     }

@@ -9,7 +9,8 @@ namespace ArchaicQuestII.GameLogic.Core
         [BsonField("n")]
         public string Name { get; set; }
         [BsonField("dc")]
-        public DateTimeOffset DateCreated { get; set; } = new DateTimeOffset();
+        public DateTime DateCreated { get; set; }
+        public DateTime DateUpdated { get; set; }
         [BsonField("cb")]
         public string CreatedBy { get; set; } = "Malleus";
     }

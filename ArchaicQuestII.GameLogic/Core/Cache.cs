@@ -6,13 +6,22 @@ using System.Text;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.World.Room;
 
+
 namespace ArchaicQuestII.GameLogic.Core
 {
+
+    /// <summary>
+    /// Refactor me
+    /// TODO: refactor cache
+    /// </summary>
     public class Cache : ICache
     {
         private readonly ConcurrentDictionary<string, Player> _playerCache = new ConcurrentDictionary<string, Player>();
         private readonly ConcurrentDictionary<int, Room> _roomCache = new ConcurrentDictionary<int, Room>();
+        private readonly ConcurrentDictionary<int, Skill.Model.Skill> _skillCache = new ConcurrentDictionary<int, Skill.Model.Skill>();
         private Config _configCache = new Config();
+
+        #region PlayerCache
 
         public bool AddPlayer(string id, Player player)
         {
@@ -39,6 +48,11 @@ namespace ArchaicQuestII.GameLogic.Core
         {
             return _playerCache.Values.Any(x => x.Id.Equals(id));
         }
+
+        #endregion
+
+        #region RoomCache
+
 
         public bool AddRoom(int id, Room room)
         {
@@ -76,6 +90,26 @@ namespace ArchaicQuestII.GameLogic.Core
 
             return _roomCache.TryUpdate(id, existingRoom, newRoom);
         }
+
+        #endregion
+
+        #region SkillCache
+
+
+        public bool AddSkill(int id, Skill.Model.Skill skill)
+        {
+            return _skillCache.TryAdd(id, skill);
+        }
+
+        public Skill.Model.Skill GetSkill(int id)
+        {
+            _skillCache.TryGetValue(id == 0 ? 1 : id, out var skill);
+
+            return skill;
+        }
+         
+ 
+        #endregion
 
         public void SetConfig(Config config)
         {

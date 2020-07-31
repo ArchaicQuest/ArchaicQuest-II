@@ -38,14 +38,9 @@ namespace ArchaicQuestII.Controllers.Skills
                 Damage = skill.Damage,
                 Description = skill.Description,
                 Effect = skill.Effect,
-                LevelBasedMessages = skill.LevelBasedMessages,
-                Requirements = skill.Requirements,
                 Rounds = skill.Rounds,
-                SkillAction = skill.SkillAction,
-                SkillEnd = skill.SkillEnd,
-                SkillFailure = skill.SkillFailure,
-                SkillStart = skill.SkillStart,
-                Type = skill.Type
+                Type = skill.Type,
+                ValidTargets = skill.ValidTargets
             };
 
             if (!string.IsNullOrEmpty(skill.Id.ToString()) && skill.Id != -1)
@@ -68,51 +63,24 @@ namespace ArchaicQuestII.Controllers.Skills
         }
 
 
-        //[HttpGet]
-        //[Route("api/skill/Get")]
-        //public List<Item> GetSkill()
-        //{
+        [HttpGet]
+        [Route("api/skill/Get")]
+        public List<Skill> GetSkill()
+        {
 
-        //    return _db.GetList<Item>(DataBase.Collections.Items).Where(x => x.Deleted == false).ToList();
+            return _db.GetList<Skill>(DataBase.Collections.Skill).Where(x => x.Deleted.Equals(false)).ToList();
 
-        //}
+        }
 
 
-        //[HttpGet]
-        //[Route("api/item/FindItems")]
-        //public List<Item> FindItems([FromQuery] string query)
-        //{
+        [HttpGet]
+        [Route("api/skill/FindSkillById")]
+        public Skill FindSkillById([FromQuery] int id)
+        {
 
-        //    var items = _db.GetCollection<Item>(DataBase.Collections.Items).FindAll().Where(x => x.Name != null);
+            return _db.GetCollection<Skill>(DataBase.Collections.Skill).FindById(id);
 
-        //    if (string.IsNullOrEmpty(query))
-        //    {
-        //        return items.ToList();
-        //    }
-
-        //    return items.Where(x => x.Name.IndexOf(query, StringComparison.OrdinalIgnoreCase) != -1).ToList();
-
-        //}
-
-        //[HttpGet]
-        //[Route("api/item/FindItemsByType")]
-        //public List<Item> FindItemsByType([FromQuery] Equipment.EqSlot query)
-        //{
-
-        //    var items = _db.GetCollection<Item>(DataBase.Collections.Items).FindAll().Where(x => x.Slot.Equals(query));
-
-        //    return items.ToList();
-
-        //}
-
-        //[HttpGet]
-        //[Route("api/item/FindItemById")]
-        //public Item FindItemById([FromQuery] int id)
-        //{
-
-        //    return _db.GetCollection<Item>(DataBase.Collections.Items).FindById(id);
-
-        //}
+        }
 
         //[HttpGet]
         //[Route("api/item/FindKeyById")]
@@ -317,23 +285,23 @@ namespace ArchaicQuestII.Controllers.Skills
 
         //}
 
-        //[HttpDelete]
-        //[Route("api/item/delete/{id:int}")]
-        //public IActionResult Delete(int id)
-        //{
-        //    var item = _db.GetCollection<Item>(DataBase.Collections.Items).FindById(id);
-        //    item.Deleted = true;
-        //    var saved = _db.Save(item, DataBase.Collections.Items);
+        [HttpDelete]
+        [Route("api/skill/delete/{id:int}")]
+        public IActionResult Delete(int id)
+        {
+            var skill = _db.GetCollection<Skill>(DataBase.Collections.Skill).FindById(id);
+            skill.Deleted = true;
+            var saved = _db.Save(skill, DataBase.Collections.Skill);
 
-        //    if (saved)
-        //    {
-        //        return Ok(JsonConvert.SerializeObject(new { toast = $"{item.Name} deleted successfully." }));
-        //    }
-        //    return Ok(JsonConvert.SerializeObject(new { toast = $"{item.Name} deletion failed." }));
+            if (saved)
+            {
+                return Ok(JsonConvert.SerializeObject(new { toast = $"{skill.Name} deleted successfully." }));
+            }
+            return Ok(JsonConvert.SerializeObject(new { toast = $"{skill.Name} deletion failed." }));
 
 
 
-        //}
+        }
 
 
     }
