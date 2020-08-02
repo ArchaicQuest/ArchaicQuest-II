@@ -71,7 +71,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
             foreach (var player in room.Players)
             {
-                players += player.Name + " is here.";
+                players += "<p>" + player.Name + " is here.</p>";
             }
 
             return players;

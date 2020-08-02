@@ -14,7 +14,7 @@ namespace ArchaicQuestII.GameLogic.Core
         bool AddPlayer(string id, Player player);
         Player GetPlayer(string id);
         ConcurrentDictionary<string, Player> GetPlayerCache();
-        bool PlayerAlreadyExists(Guid id);
+        Player PlayerAlreadyExists(Guid id);
 
         bool AddRoom(int id, Room room);
 

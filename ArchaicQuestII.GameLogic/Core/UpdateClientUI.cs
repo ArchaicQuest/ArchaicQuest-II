@@ -21,7 +21,43 @@ namespace ArchaicQuestII.GameLogic.Core
         {
             try
             {
-                await _hubContext.Clients.Client(player.ConnectionId).SendAsync("SendMessage", player.Attributes.Attribute[EffectLocation.Hitpoints], "");
+                await _hubContext.Clients.Client(player.ConnectionId).SendAsync("UpdatePlayerHP", player.Attributes.Attribute[EffectLocation.Hitpoints], player.MaxAttributes.Attribute[EffectLocation.Hitpoints]);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        public async void UpdateMana(Player player)
+        {
+            try
+            {
+                await _hubContext.Clients.Client(player.ConnectionId).SendAsync("UpdatePlayerMana", player.Attributes.Attribute[EffectLocation.Mana], player.MaxAttributes.Attribute[EffectLocation.Mana]);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        public async void UpdateMoves(Player player)
+        {
+            try
+            {
+                await _hubContext.Clients.Client(player.ConnectionId).SendAsync("UpdatePlayerMoves", player.Attributes.Attribute[EffectLocation.Moves], player.MaxAttributes.Attribute[EffectLocation.Moves]);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        public async void UpdateExp(Player player)
+        {
+            try
+            {
+                await _hubContext.Clients.Client(player.ConnectionId).SendAsync("UpdatePlayerExp", player.ExperienceToNextLevel, player.ExperienceToNextLevel);
             }
             catch (Exception ex)
             {

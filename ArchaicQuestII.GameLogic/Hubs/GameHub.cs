@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.SignalR;
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
@@ -18,14 +19,16 @@ namespace ArchaicQuestII.GameLogic.Hubs
         private IDataBase _db { get; }
         private ICache _cache { get; }
         private readonly IWriteToClient _writeToClient;
-        private readonly ICommands _commands; 
-        public GameHub(IDataBase db, ICache cache, ILogger<GameHub> logger, IWriteToClient writeToClient, ICommands commands)
+        private readonly ICommands _commands;
+        private readonly IUpdateClientUI _updateClientUi;
+        public GameHub(IDataBase db, ICache cache, ILogger<GameHub> logger, IWriteToClient writeToClient, ICommands commands, IUpdateClientUI updateClientUi)
         {
             _logger = logger;
             _db = db;
             _cache = cache;
             _writeToClient = writeToClient;
             _commands = commands;
+            _updateClientUi = updateClientUi;
         }
 
  
@@ -81,14 +84,11 @@ namespace ArchaicQuestII.GameLogic.Hubs
             await Clients.Client(hubId).SendAsync("SendMessage", message);
         }
 
-        /// <summary>
-        /// Send message to specific client
-        /// </summary>
-        /// <returns></returns>
-        public async Task UpdatePlayerHP(int hp, string hubId)
+        public async Task CloseConnection(string message, string hubId)
         {
-            await Clients.Client(hubId).SendAsync("UpdatePlayerHP", hp);
+            await Clients.Client(hubId).SendAsync("Close", message);
         }
+
 
         public async void Welcome(string id)
         {
@@ -143,14 +143,21 @@ namespace ArchaicQuestII.GameLogic.Hubs
             return player;
         }
 
-        private void AddCharacterToCache(string hubId, Player character)
+        private async void AddCharacterToCache(string hubId, Player character)
         {
-             
-            if (_cache.PlayerAlreadyExists(character.Id))
+            var playerExist = _cache.PlayerAlreadyExists(character.Id);
+
+
+            if (playerExist != null)
             {
                 // log char off
+                await this.CloseConnection("You have logged in elsewhere.", playerExist.ConnectionId);
+             
                 // remove from _cache
-                // return
+                playerExist.ConnectionId = character.ConnectionId;
+                // room.Players.Add(character);
+
+              //  _cache.p
             }
 
             _cache.AddPlayer(hubId, character);
@@ -164,7 +171,16 @@ namespace ArchaicQuestII.GameLogic.Hubs
             var room = _cache.GetRoom(startingRoom);
            character.RoomId = startingRoom;
 
-            room.Players.Add(character);
+           var playerAlreadyInRoom = room.Players.FirstOrDefault(x => x.Id.Equals(character.Id)) != null;
+           if (!playerAlreadyInRoom)
+           {
+               room.Players.Add(character);
+           }
+
+           _updateClientUi.UpdateHP(character);
+            _updateClientUi.UpdateMana(character);
+            _updateClientUi.UpdateMoves(character);
+            _updateClientUi.UpdateExp(character);
 
             new RoomActions(_writeToClient).Look(room, character);
 

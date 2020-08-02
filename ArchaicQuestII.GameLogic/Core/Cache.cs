@@ -44,9 +44,9 @@ namespace ArchaicQuestII.GameLogic.Core
             return _playerCache;
         }
 
-        public bool PlayerAlreadyExists(Guid id)
+        public Player PlayerAlreadyExists(Guid id)
         {
-            return _playerCache.Values.Any(x => x.Id.Equals(id));
+            return _playerCache.Values.FirstOrDefault(x => x.Id.Equals(id));
         }
 
         #endregion

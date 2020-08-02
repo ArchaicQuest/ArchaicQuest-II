@@ -49,10 +49,10 @@ namespace ArchaicQuestII.GameLogic.Character
         public int AlignmentScore { get; set; } = 0;
         [JsonProperty("totalExperience")]
         public int TotalExperience { get; set; }
-        [JsonProperty("experience")]
+        [JsonProperty("experience")] 
         public int Experience { get; set; }
         [JsonProperty("experienceToNextLevel")]
-        public int ExperienceToNextLevel { get; set; }
+        public int ExperienceToNextLevel { get; set; } = 1000;
         [JsonProperty("equipped")]
         public Equipment.Equipment Equipped { get; set; } = new Equipment.Equipment();
         [JsonProperty("inventory")]

@@ -7,6 +7,26 @@ namespace ArchaicQuestII.GameLogic.Core
 {
    public interface IUpdateClientUI
    {
+       /// <summary>
+       /// Update HP UI
+       /// </summary>
+       /// <param name="player"></param>
       void UpdateHP(Player player);
-   }
+       /// <summary>
+       /// Update mana UI
+       /// </summary>
+       /// <param name="player"></param>
+       void UpdateMana(Player player);
+       /// <summary>
+       /// Update moves UI
+       /// </summary>
+       /// <param name="player"></param>
+       void UpdateMoves(Player player);
+       /// <summary>
+       /// Update Exp UI
+       /// </summary>
+       /// <param name="player"></param>
+       void UpdateExp(Player player);
+
+    }
 }
