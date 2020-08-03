@@ -31,10 +31,12 @@ namespace ArchaicQuestII.GameLogic.World.Room
             roomDesc
                 .Append($"<p class=\"room-title\">{room.Title}<br /></p>")
                 .Append($"<p class=\"room-description\">{room.Description}</p>")
+                .Append(
+                    $"<p class=\"room-exit\"> <span class=\"room-exits\">[</span>Exits: <span class=\"room-exits\">{exits}</span><span class=\"room-exits\">]</span></p>")
                 .Append($"<p>{items}</p>")
                 .Append($"<p>{mobs}</p>")
-                .Append($"<p>{players}</p>")
-                .Append($"<p class=\"room-exit\"> <span class=\"room-exits\">[</span>Exits: <span class=\"room-exits\">{exits}</span><span class=\"room-exits\">]</span></p>");
+                .Append($"<p>{players}</p>");
+               
 
            _writeToClient.WriteLine(roomDesc.ToString(), player.ConnectionId);
         }
@@ -45,7 +47,14 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
             foreach (var item in room.Items)
             {
-                items += item.Name + " lies here.";
+                if (!string.IsNullOrEmpty(item.Description.Room))
+                {
+                    items += "<p class='item'>" + item.Description.Room + "</p>";
+                }
+                else
+                {
+                    items += item.Name + " lies here.";
+                }
             }
 
             return items;
@@ -58,7 +67,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
             foreach (var mob in room.Mobs)
             {
-                mobs += mob.Name + " is here.";
+                mobs += "<p class='mob'>" + mob.Name + " is here.</p>";
             }
 
             return mobs;
@@ -71,7 +80,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
             foreach (var player in room.Players)
             {
-                players += "<p>" + player.Name + " is here.</p>";
+                players += "<p class='player'>" + player.Name + " is here.</p>";
             }
 
             return players;
