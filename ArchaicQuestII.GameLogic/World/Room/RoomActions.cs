@@ -24,7 +24,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
             var exits = FindValidExits(room);
             var items = DisplayItems(room);
             var mobs = DisplayMobs(room);
-            var players = DisplayPlayers(room);
+            var players = DisplayPlayers(room, player);
 
             var roomDesc = new StringBuilder();
 
@@ -82,13 +82,17 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
         }
 
-        public string DisplayPlayers(Room room)
+        public string DisplayPlayers(Room room, Player player)
         {
             var players = string.Empty;
 
-            foreach (var player in room.Players)
+            foreach (var pc in room.Players)
             {
-                players += "<p class='player'>" + player.Name + " is here.</p>";
+                if (pc.Name == player.Name)
+                {
+                    continue;
+                }
+                players += "<p class='player'>" + pc.Name + " is here.</p>";
             }
 
             return players;

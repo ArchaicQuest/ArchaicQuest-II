@@ -121,7 +121,12 @@ namespace ArchaicQuestII.GameLogic.Commands
                 return new Tuple<string, string>(commands[1], commands[2]);
             }
 
-            return null;
+            if (cmdCount > 3)
+            {
+                return new Tuple<string, string>(commands[1], commands[2]);
+            }
+
+                return null;
         }
 
     }

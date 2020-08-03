@@ -115,7 +115,16 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
 
         public void UpdateCharactersLocation(Exit exit, Player character)
         {
+            //Refactor?
+
+            // remove player from room
+            var oldRoom = _cache.GetRoom(character.RoomId);
+            oldRoom.Players.Remove(character);
+
+            //add player to room
             character.RoomId = exit.RoomId;
+            var room = _cache.GetRoom(exit.RoomId);
+            room.Players.Add(character);
         }
 
         public bool CharacterCanMove(Player character)
