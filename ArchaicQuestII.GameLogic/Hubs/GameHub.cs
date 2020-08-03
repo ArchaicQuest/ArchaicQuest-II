@@ -151,13 +151,15 @@ namespace ArchaicQuestII.GameLogic.Hubs
             if (playerExist != null)
             {
                 // log char off
-                await this.CloseConnection("You have logged in elsewhere.", playerExist.ConnectionId);
+                await SendToClient($"<p style='color:red'>*** You have logged in elsewhere. ***</p>", playerExist.ConnectionId);
+                await this.CloseConnection(string.Empty, playerExist.ConnectionId);
              
                 // remove from _cache
-                playerExist.ConnectionId = character.ConnectionId;
-                // room.Players.Add(character);
+                _cache.RemovePlayer(playerExist.ConnectionId);
 
-              //  _cache.p
+                playerExist.ConnectionId = hubId;
+
+                await SendToClient($"<p style='color:red'>*** You have been reconnected ***</p>", hubId);
             }
 
             _cache.AddPlayer(hubId, character);

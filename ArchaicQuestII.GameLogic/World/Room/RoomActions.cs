@@ -67,7 +67,15 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
             foreach (var mob in room.Mobs)
             {
-                mobs += "<p class='mob'>" + mob.Name + " is here.</p>";
+                if (!string.IsNullOrEmpty(mob.LongName))
+                {
+                    mobs += "<p class='mob'>" + mob.LongName + "</p>";
+                }
+                else
+                {
+                    mobs += "<p class='mob'>" + mob.Name + " is here.</p>";
+                }
+               
             }
 
             return mobs;

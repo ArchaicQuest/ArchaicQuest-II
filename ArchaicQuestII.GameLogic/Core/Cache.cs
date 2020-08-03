@@ -35,6 +35,12 @@ namespace ArchaicQuestII.GameLogic.Core
             return player;
         }
 
+        public Player RemovePlayer(string id)
+        {
+            _playerCache.TryRemove(id, out Player player);
+            return player;
+        }
+
         /// <summary>
         /// Only for the main loop
         /// </summary>
