@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Core;
@@ -43,21 +44,19 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
         public string DisplayItems(Room room)
         {
-            var items = string.Empty;
-
-            foreach (var item in room.Items)
+            var items = room.Items.List();
+            var x = string.Empty;
+            foreach (var item in items)
             {
-                if (!string.IsNullOrEmpty(item.Description.Room))
+                if (!string.IsNullOrEmpty(item))
                 {
-                    items += "<p class='item'>" + item.Description.Room + "</p>";
+                   
+                        x += "<p class='item'>" + item + "</p>";
                 }
-                else
-                {
-                    items += item.Name + " lies here.";
-                }
+             
             }
 
-            return items;
+            return x;
 
         }
 

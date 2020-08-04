@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using ArchaicQuestII.Core.World;
 using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Item;
 
 namespace ArchaicQuestII.GameLogic.World.Room
 {
@@ -46,7 +47,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
         public Coordinates Coords { get; set; } = new Coordinates();
         public List<Player> Players { get; set; } = new List<Player>();
         public List<Player> Mobs { get; set; } = new List<Player>();
-        public List<Item.Item> Items { get; set; } = new List<Item.Item>();
+        public ItemList Items { get; set; } = new ItemList();
         public RoomType? Type { get; set; } = RoomType.Standard;
         /// <summary>
         /// List of emotes that will be randomly played on tick
