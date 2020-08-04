@@ -6,6 +6,7 @@ using ArchaicQuestII.GameLogic.Commands.Movement;
 using ArchaicQuestII.GameLogic.World.Room;
 using System.Linq;
 using ArchaicQuestII.GameLogic.Commands.Debug;
+using ArchaicQuestII.GameLogic.Commands.Objects;
 using ArchaicQuestII.GameLogic.Commands.Skills;
 using ArchaicQuestII.GameLogic.Spell.Interface;
 
@@ -18,14 +19,16 @@ namespace ArchaicQuestII.GameLogic.Commands
         private readonly ISpells _spells;
         private readonly IRoomActions _roomActions;
         private readonly IDebug _debug;
+        private readonly IObject _object;
 
-        public Commands(IMovement movement, IRoomActions roomActions, IDebug debug, ISkills skills, ISpells spells)
+        public Commands(IMovement movement, IRoomActions roomActions, IDebug debug, ISkills skills, ISpells spells, IObject objects)
         {
             _movement = movement;
             _roomActions = roomActions;
             _debug = debug;
             _skills = skills;
             _spells = spells;
+            _object = objects;
         }
  
         public void CommandList(string key, string obj, string target, Player player, Room room)
@@ -75,6 +78,9 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "look":
                 case "l":
                     _roomActions.Look(room, player);
+                    break;
+                case "get":
+                    _object.Get(obj, room, player);
                     break;
                 case "cast":
                 case "c":

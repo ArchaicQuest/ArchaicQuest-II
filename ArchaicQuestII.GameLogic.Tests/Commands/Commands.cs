@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Commands.Debug;
 using ArchaicQuestII.GameLogic.Commands.Movement;
+using ArchaicQuestII.GameLogic.Commands.Objects;
 using ArchaicQuestII.GameLogic.Commands.Skills;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Spell.Interface;
@@ -22,6 +23,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
         private readonly Mock<IDebug> _debug;
         private readonly Mock<ISkills> _skill;
         private readonly Mock<ISpells> _spell;
+        private readonly Mock<IObject> _object;
 
         public CommandsTests()
         {
@@ -30,6 +32,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
             _debug = new Mock<IDebug>();
             _skill = new Mock<ISkills>();
             _spell = new Mock<ISpells>();
+            _object = new Mock<IObject>();
 
             _player = new Player();
             _player.ConnectionId = "1";
@@ -54,7 +57,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
                 }
             };
 
-            _commands = new GameLogic.Commands.Commands(_movement.Object, _roomActions.Object, _debug.Object, _skill.Object, _spell.Object);
+            _commands = new GameLogic.Commands.Commands(_movement.Object, _roomActions.Object, _debug.Object, _skill.Object, _spell.Object, _object.Object);
 
         }
 

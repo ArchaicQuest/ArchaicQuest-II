@@ -10,7 +10,7 @@ namespace ArchaicQuestII.GameLogic.Item
     public class ItemList: List<Item>, IItemList
     {
         public string Name { get; set; }
-        public int Count { get; set; }
+        public int CountOfItems { get; set; }
         public IEnumerable<string> List()
         {
             return List(this);
@@ -25,10 +25,10 @@ namespace ArchaicQuestII.GameLogic.Item
             }).Select(groupedItem => new ItemList()
             {
                 Name = groupedItem.Key.Room.Replace("{name}", groupedItem.Key.Name),
-                Count = groupedItem.Count()
+                CountOfItems = groupedItem.Count()
             }).Select(x =>
             {
-                var itemString = x.Count > 1 ? $"({x.Count}) {x.Name}" : x.Name;
+                var itemString = x.CountOfItems > 1 ? $"({x.CountOfItems}) {x.Name}" : x.Name;
 
                 return itemString;
             });
