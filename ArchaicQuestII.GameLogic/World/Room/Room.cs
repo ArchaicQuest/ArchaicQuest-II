@@ -45,7 +45,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
         public ExitDirections Exits { get; set; } = new ExitDirections();
         public Coordinates Coords { get; set; } = new Coordinates();
         public List<Player> Players { get; set; } = new List<Player>();
-        public List<Character.Character> Mobs { get; set; } = new List<Character.Character>();
+        public List<Player> Mobs { get; set; } = new List<Player>();
         public List<Item.Item> Items { get; set; } = new List<Item.Item>();
         public RoomType? Type { get; set; } = RoomType.Standard;
         /// <summary>

@@ -106,10 +106,10 @@ namespace ArchaicQuestII.Controllers.character
   
 
         [HttpGet]
-        public List<Character> Get([FromQuery] string query)
+        public List<Player> Get([FromQuery] string query)
         {
 
-            var mobs = _db.GetCollection<Character>(DataBase.Collections.Mobs).FindAll().Where(x => x.Name != null);
+            var mobs = _db.GetCollection<Player>(DataBase.Collections.Mobs).FindAll().Where(x => x.Name != null);
 
             if (string.IsNullOrEmpty(query))
             {

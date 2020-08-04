@@ -19,6 +19,11 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public async void UpdateHP(Player player)
         {
+            if (string.IsNullOrEmpty(player.ConnectionId))
+            {
+                return;
+            }
+
             try
             {
                 await _hubContext.Clients.Client(player.ConnectionId).SendAsync("UpdatePlayerHP", player.Attributes.Attribute[EffectLocation.Hitpoints], player.MaxAttributes.Attribute[EffectLocation.Hitpoints]);
@@ -31,6 +36,11 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public async void UpdateMana(Player player)
         {
+            if (string.IsNullOrEmpty(player.ConnectionId))
+            {
+                return;
+            }
+
             try
             {
                 await _hubContext.Clients.Client(player.ConnectionId).SendAsync("UpdatePlayerMana", player.Attributes.Attribute[EffectLocation.Mana], player.MaxAttributes.Attribute[EffectLocation.Mana]);
@@ -43,6 +53,11 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public async void UpdateMoves(Player player)
         {
+            if (string.IsNullOrEmpty(player.ConnectionId))
+            {
+                return;
+            }
+
             try
             {
                 await _hubContext.Clients.Client(player.ConnectionId).SendAsync("UpdatePlayerMoves", player.Attributes.Attribute[EffectLocation.Moves], player.MaxAttributes.Attribute[EffectLocation.Moves]);
@@ -55,6 +70,11 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public async void UpdateExp(Player player)
         {
+            if (string.IsNullOrEmpty(player.ConnectionId))
+            {
+                return;
+            }
+
             try
             {
                 await _hubContext.Clients.Client(player.ConnectionId).SendAsync("UpdatePlayerExp", player.ExperienceToNextLevel, player.ExperienceToNextLevel);

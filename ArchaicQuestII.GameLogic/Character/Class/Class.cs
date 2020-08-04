@@ -11,7 +11,7 @@ namespace ArchaicQuestII.GameLogic.Character.Class
         public int SkillId { get; set; }
         public string SkillName { get; set; }
         public int Level { get; set; }
-        public double? Proficiency { get; set; } = 0.1;
+        public int? Proficiency { get; set; } = 1;
     }
 
 

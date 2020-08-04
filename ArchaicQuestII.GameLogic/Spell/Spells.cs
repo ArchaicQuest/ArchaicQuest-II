@@ -5,6 +5,7 @@ using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
+using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.Skill.Enum;
 using ArchaicQuestII.GameLogic.Skill.Model;
 using ArchaicQuestII.GameLogic.Spell.Interface;
@@ -109,8 +110,15 @@ namespace ArchaicQuestII.GameLogic.Spell
 
         public bool SpellSuccess(Player origin, Player target, Skill.Model.Skill spell)
         {
-            var spellSkill = origin.Skills.FirstOrDefault(x => x.SkillId.Equals(spell.Id)).Proficiency * 100;
+            var spellSkill = origin.Skills.FirstOrDefault(x => x.SkillId.Equals(spell.Id));
+          
+            if (spellSkill == null)
+            {
+                // TODO: log error, we should never get here.
+                return false;
+            }
 
+            var spellProficiency = spellSkill.Proficiency;
             var success = spell.Damage.Roll(1, 1,
                 101);
 
@@ -120,7 +128,7 @@ namespace ArchaicQuestII.GameLogic.Spell
                 return false;
             }
 
-            if (spellSkill < success)
+            if (spellProficiency < success)
             {
                 _writer.WriteLine($"<p>You lost concentration.</p>", origin.ConnectionId);
                 return false;
@@ -229,13 +237,43 @@ namespace ArchaicQuestII.GameLogic.Spell
                   {
                       var skill = origin.Skills.FirstOrDefault(x => x.SkillId.Equals(spell.Id));
 
-                      skill.Proficiency += (double)origin.Level - skill.Level;
+                      if (skill == null)
+                      {
+                          return;
+                      }
 
+                      if (skill.Proficiency == 95)
+                      {
+                          return;
+                      }
+
+                      var increase = new Dice().Roll(1, 1, 3);
+
+                       skill.Proficiency += increase;
+
+                       origin.Experience += 100;
+                       origin.ExperienceToNextLevel -= 100;
+
+                       _updateClientUi.UpdateExp(origin);
+                       
+                      _writer.WriteLine(
+                          $"<p class='improve'>You learn from your mistakes and gain 100 experience points.</p>",
+                          origin.ConnectionId);
+                      _writer.WriteLine(
+                          $"<p class='improve'>Your {skill.SkillName} skill increases by {increase}%.</p>",
+                          origin.ConnectionId);
                 }
 
             }
+          else
+          {
+              _writer.WriteLine(
+                  $"<p>You cannot cast this spell upon another.</p>",
+                  origin.ConnectionId);
+            }
 
         }
+        
 
     }
 

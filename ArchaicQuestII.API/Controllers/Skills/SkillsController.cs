@@ -21,7 +21,7 @@ namespace ArchaicQuestII.Controllers.Skills
         }
         [HttpPost]
         [Route("api/skill/postSkill")]
-        public void PostItem([FromBody] Skill skill)
+        public IActionResult PostItem([FromBody] Skill skill)
         {
 
 
@@ -58,7 +58,11 @@ namespace ArchaicQuestII.Controllers.Skills
 
 
 
-            _db.Save(newSkill, DataBase.Collections.Skill);
+            var saved = _db.Save(newSkill, DataBase.Collections.Skill);
+
+
+            string json = JsonConvert.SerializeObject(new { toast = "account created successfully", id = newSkill.Id });
+            return saved ? (IActionResult)Ok(json) : BadRequest("Error saving skill");
 
         }
 
