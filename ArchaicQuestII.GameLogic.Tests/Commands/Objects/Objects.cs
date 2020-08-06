@@ -48,6 +48,33 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
             Assert.True(room.Items.FirstOrDefault(x => x.Name == "apple") == null);
         }
 
+
+        [Fact]
+        public void Get_all_from_room()
+        {
+            var apple = new GameLogic.Item.Item();
+            apple.Name = "apple";
+            apple.Description = new Description()
+            {
+                Room = "apple"
+            };
+
+            var room = new Room();
+            room.Items.Add(apple);
+
+            var player = new Player();
+            player.ConnectionId = "1";
+            player.Name = "Gary";
+            player.Inventory = new List<GameLogic.Item.Item>();
+
+            var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object);
+
+            objects.Get("all", room, player);
+
+
+            Assert.True(room.Items.FirstOrDefault(x => x.Name == "apple") == null);
+        }
+
         [Fact]
         public void Add_item_to_inventory()
         {

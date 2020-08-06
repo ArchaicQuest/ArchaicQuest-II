@@ -19,6 +19,12 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
         public void Get(string target, Room room, Player player)
         {
             //TODO: Get all, get nth (get 2.apple)
+            if (target == "all")
+            {
+                GetAll(room, player);
+                return;
+            }
+
             //Check room first
             var item = room.Items.Where(x => x.Stuck == false).FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
 
@@ -42,6 +48,44 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
             player.Inventory.Add(item);
             _writer.WriteLine($"<p>You pick up {item.Name.ToLower()}.</p>", player.ConnectionId);
+
+            // TODO: You are over encumbered 
+
+        }
+
+        public void GetAll(Room room, Player player)
+        {
+           
+            //Check room first
+
+            if (room.Items.Count == 0)
+            {
+                _writer.WriteLine("<p>You don't see anything here.</p>", player.ConnectionId);
+                return;
+            }
+
+            for (var i = room.Items.Count - 1; i >= 0; i--)
+            {
+                if (room.Items[i].Stuck == false)
+                {
+
+                    player.Inventory.Add(room.Items[i]);
+                    _writer.WriteLine($"<p>You pick up {room.Items[i].Name.ToLower()}.</p>", player.ConnectionId);
+
+                    foreach (var pc in room.Players)
+                    {
+                        if (pc.Name == player.Name)
+                        {
+                            continue;
+                        }
+
+                        _writer.WriteLine($"<p>{player.Name} picks up {room.Items[i].Name.ToLower()}.</p>",
+                            pc.ConnectionId);
+                    }
+                    room.Items.RemoveAt(i);
+
+                }
+            }
 
             // TODO: You are over encumbered 
 
