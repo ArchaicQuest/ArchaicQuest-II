@@ -56,7 +56,7 @@ namespace ArchaicQuestII.GameLogic.Character
         [JsonProperty("equipped")]
         public Equipment.Equipment Equipped { get; set; } = new Equipment.Equipment();
         [JsonProperty("inventory")]
-        public List<Item.Item> Inventory { get; set; } = new List<Item.Item>();
+        public ItemList Inventory { get; set; } = new ItemList();
         [JsonProperty("stats")]
         public Stats Stats { get; set; }
         [JsonProperty("status")]

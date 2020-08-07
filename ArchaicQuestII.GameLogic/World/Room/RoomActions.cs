@@ -19,8 +19,14 @@ namespace ArchaicQuestII.GameLogic.World.Room
         /// <summary>
         /// Displays current room 
         /// </summary>
-        public void Look(Room room, Player player)
+        public void Look(string target, Room room, Player player)
         {
+
+            //if (!string.IsNullOrEmpty(target))
+            //{
+            //    LookInContainer(target, room, player);
+            //    return;
+            //}
 
             var exits = FindValidExits(room);
             var items = DisplayItems(room);
@@ -40,6 +46,22 @@ namespace ArchaicQuestII.GameLogic.World.Room
                
 
            _writeToClient.WriteLine(roomDesc.ToString(), player.ConnectionId);
+        }
+
+        public void LookInContainer(string target, Room room, Player player)
+        {
+
+            //check room, then check player if no match
+
+ 
+            var container = room.Items.FirstOrDefault(x => x.Container != null && x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+
+            _writeToClient.WriteLine($"<p>You look inside {container.Name}", player.ConnectionId);
+            foreach (var obj in container.Container.Items.List())
+            {
+                _writeToClient.WriteLine(obj, player.ConnectionId);
+            }
+
         }
 
         public string DisplayItems(Room room)

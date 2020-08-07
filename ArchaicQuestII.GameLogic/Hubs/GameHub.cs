@@ -184,7 +184,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
             _updateClientUi.UpdateMoves(character);
             _updateClientUi.UpdateExp(character);
 
-            new RoomActions(_writeToClient).Look(room, character);
+            new RoomActions(_writeToClient).Look("", room, character);
 
           //  return room;
         }

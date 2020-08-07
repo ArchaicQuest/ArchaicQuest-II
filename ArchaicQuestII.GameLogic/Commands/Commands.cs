@@ -6,6 +6,7 @@ using ArchaicQuestII.GameLogic.Commands.Movement;
 using ArchaicQuestII.GameLogic.World.Room;
 using System.Linq;
 using ArchaicQuestII.GameLogic.Commands.Debug;
+using ArchaicQuestII.GameLogic.Commands.Inventory;
 using ArchaicQuestII.GameLogic.Commands.Objects;
 using ArchaicQuestII.GameLogic.Commands.Skills;
 using ArchaicQuestII.GameLogic.Spell.Interface;
@@ -20,8 +21,9 @@ namespace ArchaicQuestII.GameLogic.Commands
         private readonly IRoomActions _roomActions;
         private readonly IDebug _debug;
         private readonly IObject _object;
+        private readonly IInventory _inventory;
 
-        public Commands(IMovement movement, IRoomActions roomActions, IDebug debug, ISkills skills, ISpells spells, IObject objects)
+        public Commands(IMovement movement, IRoomActions roomActions, IDebug debug, ISkills skills, ISpells spells, IObject objects, IInventory inventory)
         {
             _movement = movement;
             _roomActions = roomActions;
@@ -29,6 +31,7 @@ namespace ArchaicQuestII.GameLogic.Commands
             _skills = skills;
             _spells = spells;
             _object = objects;
+            _inventory = inventory;
         }
  
         public void CommandList(string key, string obj, string target, Player player, Room room)
@@ -77,10 +80,22 @@ namespace ArchaicQuestII.GameLogic.Commands
                     break;
                 case "look":
                 case "l":
-                    _roomActions.Look(room, player);
+                    _roomActions.Look(obj, room, player);
+                    break;
+                case "look in":
+                case "l in":
+                    _roomActions.LookInContainer(obj, room, player);
+                    break;
+                case "i":
+                case "inv":
+                case "inventory":
+                    _inventory.List(player);
                     break;
                 case "get":
                     _object.Get(obj, room, player);
+                    break;
+                case "drop":
+                    _object.Drop(obj, room, player);
                     break;
                 case "cast":
                 case "c":
@@ -103,8 +118,21 @@ namespace ArchaicQuestII.GameLogic.Commands
 
             var cleanCommand = command.Trim().ToLower();
             var commandParts = cleanCommand.Split(' ');
-           var parameters = MakeCommandPartsSafe(commandParts);
-            CommandList(commandParts[0], parameters.Item1,  parameters.Item2, player, room);
+            var key = commandParts[0];
+            if (commandParts.Length >= 2)
+            {
+                if (commandParts[1] == "in")
+                {
+                    key = commandParts[0] + " " + commandParts[1];
+                  commandParts =  commandParts.Where(x => x != "in").ToArray();
+                }
+            }
+            var parameters = MakeCommandPartsSafe(commandParts);
+         
+
+   
+
+            CommandList(key, parameters.Item1,  parameters.Item2, player, room);
         }
 
         public Tuple<string, string> MakeCommandPartsSafe(string[] commands)

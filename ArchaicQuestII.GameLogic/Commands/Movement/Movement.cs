@@ -59,7 +59,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
 
             UpdateCharactersLocation(getExitToNextRoom, character);
 
-             _roomActions.Look(getNextRoom, character);
+             _roomActions.Look("", getNextRoom, character);
           
         }
 

@@ -38,7 +38,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
             var player = new Player();
             player.ConnectionId = "1";
             player.Name = "Gary";
-            player.Inventory = new List<GameLogic.Item.Item>();
+            player.Inventory = new ItemList();
 
             var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object);
 
@@ -65,7 +65,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
             var player = new Player();
             player.ConnectionId = "1";
             player.Name = "Gary";
-            player.Inventory = new List<GameLogic.Item.Item>();
+            player.Inventory = new ItemList();
 
             var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object);
 
@@ -91,7 +91,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
             var player = new Player();
             player.ConnectionId = "1";
             player.Name = "Gary";
-            player.Inventory = new List<GameLogic.Item.Item>();
+            player.Inventory = new ItemList();
 
             var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object);
 
