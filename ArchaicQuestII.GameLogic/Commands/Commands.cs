@@ -86,10 +86,31 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "l in":
                     _roomActions.LookInContainer(obj, room, player);
                     break;
+                case "examine":
+                case "exam":
+                    _roomActions.ExamineObject(obj, room, player);
+                    break;
+                case "taste":
+                case "lick":
+                    _roomActions.TasteObject(obj, room, player);
+                    break;
+                case "touch":
+                case "feel":
+                    _roomActions.TouchObject(obj, room, player);
+                    break;
+                case "smell":
+                    _roomActions.SmellObject(obj, room, player);
+                    break;
                 case "i":
                 case "inv":
                 case "inventory":
                     _inventory.List(player);
+                    break;
+                case "close":
+                    _object.Close(obj, room, player);
+                    break; ;
+                case "open":
+                    _object.Open(obj, room, player);
                     break;
                 case "get":
                     _object.Get(obj, room, player);

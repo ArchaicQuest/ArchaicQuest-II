@@ -22,11 +22,11 @@ namespace ArchaicQuestII.GameLogic.World.Room
         public void Look(string target, Room room, Player player)
         {
 
-            //if (!string.IsNullOrEmpty(target))
-            //{
-            //    LookInContainer(target, room, player);
-            //    return;
-            //}
+            if (!string.IsNullOrEmpty(target) && target != "look" || !string.IsNullOrEmpty(target) && target != "l")
+            {
+                LookObject(target, room, player);
+                return;
+            }
 
             var exits = FindValidExits(room);
             var items = DisplayItems(room);
@@ -54,13 +54,121 @@ namespace ArchaicQuestII.GameLogic.World.Room
             //check room, then check player if no match
 
  
-            var container = room.Items.FirstOrDefault(x => x.Container != null && x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+            var container = room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ?? player.Inventory.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
 
-            _writeToClient.WriteLine($"<p>You look inside {container.Name}", player.ConnectionId);
-            foreach (var obj in container.Container.Items.List())
+            if (container != null && container.ItemType != Item.Item.ItemTypes.Container)
             {
-                _writeToClient.WriteLine(obj, player.ConnectionId);
+                _writeToClient.WriteLine($"<p>{container.Name} is not a container", player.ConnectionId);
+                return;
             }
+
+            if (container == null)
+            {
+                _writeToClient.WriteLine("<p>You don't see that here.", player.ConnectionId);
+                return;
+            }
+
+            if (container.Container.IsOpen == false)
+            {
+                _writeToClient.WriteLine("<p>You need to open it first..", player.ConnectionId);
+                return;
+            }
+
+            _writeToClient.WriteLine($"<p>You look inside {container.Name.ToLower()}:</p>", player.ConnectionId);
+            foreach (var obj in container.Container.Items.List(false))
+            {
+                _writeToClient.WriteLine($"<p>{obj}</p>", player.ConnectionId);
+            }
+
+        }
+
+        public void LookObject(string target, Room room, Player player)
+        {
+
+            var item = room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ?? player.Inventory.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+
+            if (item == null)
+            {
+                _writeToClient.WriteLine("<p>You don't see that here.", player.ConnectionId);
+                return;
+            }
+
+            _writeToClient.WriteLine($"<p>{item.Description.Look}", player.ConnectionId);
+
+            if (item.ItemType == Item.Item.ItemTypes.Container)
+            {
+                _writeToClient.WriteLine($"<p>You look inside {item.Name}", player.ConnectionId);
+                foreach (var obj in item.Container.Items.List(false))
+                {
+                    _writeToClient.WriteLine($"<p>{obj}</p>", player.ConnectionId);
+                }
+            }
+        }
+
+        public void ExamineObject(string target, Room room, Player player)
+        {
+
+            var item = room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ?? player.Inventory.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+
+            if (item == null)
+            {
+                _writeToClient.WriteLine("<p>You don't see that here.", player.ConnectionId);
+                return;
+            }
+
+            _writeToClient.WriteLine($"<p>{item.Description.Exam}", player.ConnectionId);
+
+            if (item.ItemType == Item.Item.ItemTypes.Container)
+            {
+                _writeToClient.WriteLine($"<p>You look inside {item.Name}", player.ConnectionId);
+                foreach (var obj in item.Container.Items.List(false))
+                {
+                    _writeToClient.WriteLine($"<p>{obj}</p>", player.ConnectionId);
+                }
+            }
+        }
+
+        public void SmellObject(string target, Room room, Player player)
+        {
+
+            var item = room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ?? player.Inventory.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+
+            if (item == null)
+            {
+                _writeToClient.WriteLine("<p>You don't see that here.", player.ConnectionId);
+                return;
+            }
+
+            _writeToClient.WriteLine($"<p>{item.Description.Smell}", player.ConnectionId);
+        }
+
+        public void TasteObject(string target, Room room, Player player)
+        {
+
+            var item = room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ?? player.Inventory.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+
+            if (item == null)
+            {
+                _writeToClient.WriteLine("<p>You don't see that here.", player.ConnectionId);
+                return;
+            }
+
+            _writeToClient.WriteLine($"<p>{item.Description.Taste}", player.ConnectionId);
+
+        }
+
+        public void TouchObject(string target, Room room, Player player)
+        {
+
+            var item = room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ?? player.Inventory.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+
+            if (item == null)
+            {
+                _writeToClient.WriteLine("<p>You don't see that here.", player.ConnectionId);
+                return;
+            }
+
+            _writeToClient.WriteLine($"<p>{item.Description.Touch}", player.ConnectionId);
 
         }
 

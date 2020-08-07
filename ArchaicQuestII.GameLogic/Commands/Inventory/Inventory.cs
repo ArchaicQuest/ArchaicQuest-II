@@ -24,7 +24,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Inventory
                 inventory.Append("<ul>");
 
 
-                foreach (var item in player.Inventory.List())
+                foreach (var item in player.Inventory.List(false))
                 {
                     inventory.Append($"<li>{item}</li>");
                 }

@@ -169,12 +169,62 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
         public void Open(string target, Room room, Player player)
         {
-            throw new NotImplementedException();
+            var item = room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ?? player.Inventory.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+
+            if (item != null && item.Container.CanOpen != true)
+            {
+                _writer.WriteLine($"<p>{item.Name} cannot be opened", player.ConnectionId);
+                return;
+            }
+
+            if (item == null)
+            {
+                _writer.WriteLine("<p>You don't see that here.", player.ConnectionId);
+                return;
+            }
+
+            _writer.WriteLine($"<p>You open {item.Name.ToLower()}.</p>", player.ConnectionId);
+
+            item.Container.IsOpen = true;
+            foreach (var obj in room.Players)
+            {
+                if (obj.Name == player.Name)
+                {
+                    continue;
+                }
+                _writer.WriteLine($"<p>{player.Name} opens {item.Name.ToLower()}</p>", obj.ConnectionId);
+            }
         }
 
         public void Close(string target, Room room, Player player)
         {
-            throw new NotImplementedException();
+
+            var item = room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ?? player.Inventory.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+
+                if (item != null && item.Container.CanOpen != true)
+                {
+                    _writer.WriteLine($"<p>{item.Name} cannot be closed", player.ConnectionId);
+                    return;
+                }
+
+                if (item == null)
+                {
+                    _writer.WriteLine("<p>You don't see that here.", player.ConnectionId);
+                    return;
+                }
+
+                _writer.WriteLine($"<p>You close {item.Name.ToLower()}.</p>", player.ConnectionId);
+
+                item.Container.IsOpen = false;
+                foreach (var obj in room.Players)
+                {
+                    if (obj.Name == player.Name)
+                    {
+                        continue;
+                    }
+                    _writer.WriteLine($"<p>{player.Name} closes {item.Name.ToLower()}</p>", obj.ConnectionId);
+                }
+
         }
 
         public void Delete(string target, Room room, Player player)

@@ -11,12 +11,12 @@ namespace ArchaicQuestII.GameLogic.Item
     {
         public string Name { get; set; }
         public int CountOfItems { get; set; }
-        public IEnumerable<string> List()
+        public IEnumerable<string> List(bool isRoom = true)
         {
-            return List(this);
+            return List(this, isRoom);
         }
 
-        public IEnumerable<string> List(IEnumerable<Item> items)
+        public IEnumerable<string> List(IEnumerable<Item> items, params object[] args)
         {
             return items.GroupBy(t => new
             {
@@ -24,7 +24,8 @@ namespace ArchaicQuestII.GameLogic.Item
                 t.Description.Room
             }).Select(groupedItem => new ItemList()
             {
-                Name = groupedItem.Key.Room.Replace("{name}", groupedItem.Key.Name),
+                Name = (bool)args[0] ? groupedItem.Key.Room.Replace("{name}", groupedItem.Key.Name) 
+                : groupedItem.Key.Name,
                 CountOfItems = groupedItem.Count()
             }).Select(x =>
             {
