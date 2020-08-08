@@ -113,10 +113,10 @@ namespace ArchaicQuestII.GameLogic.Commands
                     _object.Open(obj, room, player);
                     break;
                 case "get":
-                    _object.Get(obj, room, player);
+                    _object.Get(obj, target, room, player);
                     break;
                 case "drop":
-                    _object.Drop(obj, room, player);
+                    _object.Drop(obj, target, room, player);
                     break;
                 case "cast":
                 case "c":

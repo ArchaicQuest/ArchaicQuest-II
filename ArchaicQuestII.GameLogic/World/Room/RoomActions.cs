@@ -22,7 +22,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
         public void Look(string target, Room room, Player player)
         {
 
-            if (!string.IsNullOrEmpty(target) && target != "look" || !string.IsNullOrEmpty(target) && target != "l")
+            if (!string.IsNullOrEmpty(target) && !target.Equals("look", StringComparison.CurrentCultureIgnoreCase) && !string.IsNullOrEmpty(target) && !target.Equals("l", StringComparison.CurrentCultureIgnoreCase))
             {
                 LookObject(target, room, player);
                 return;
@@ -70,16 +70,29 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
             if (container.Container.IsOpen == false)
             {
-                _writeToClient.WriteLine("<p>You need to open it first..", player.ConnectionId);
+                _writeToClient.WriteLine("<p>You need to open it first.", player.ConnectionId);
                 return;
             }
 
             _writeToClient.WriteLine($"<p>You look inside {container.Name.ToLower()}:</p>", player.ConnectionId);
+            if (container.Container.Items.Count == 0)
+            {
+                _writeToClient.WriteLine($"<p>Nothing.</p>", player.ConnectionId);
+            }
             foreach (var obj in container.Container.Items.List(false))
             {
                 _writeToClient.WriteLine($"<p>{obj}</p>", player.ConnectionId);
             }
 
+            foreach (var pc in room.Players)
+            {
+                if (pc.Name == player.Name)
+                {
+                    continue;
+                }
+
+                _writeToClient.WriteLine($"<p>{player.Name} looks inside {container.Name.ToLower()}.</p>", pc.ConnectionId);
+            }
         }
 
         public void LookObject(string target, Room room, Player player)
@@ -95,14 +108,20 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
             _writeToClient.WriteLine($"<p>{item.Description.Look}", player.ConnectionId);
 
-            if (item.ItemType == Item.Item.ItemTypes.Container)
+            foreach (var pc in room.Players)
             {
-                _writeToClient.WriteLine($"<p>You look inside {item.Name}", player.ConnectionId);
-                foreach (var obj in item.Container.Items.List(false))
+                if (pc.Name == player.Name)
                 {
-                    _writeToClient.WriteLine($"<p>{obj}</p>", player.ConnectionId);
+                    continue;
                 }
+
+                _writeToClient.WriteLine($"<p>{player.Name} looks at {item.Name.ToLower()}.</p>", pc.ConnectionId);
             }
+
+            //if (item.ItemType == Item.Item.ItemTypes.Container)
+            //{
+            //  LookInContainer(target, room, player);
+            //}
         }
 
         public void ExamineObject(string target, Room room, Player player)
@@ -118,14 +137,24 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
             _writeToClient.WriteLine($"<p>{item.Description.Exam}", player.ConnectionId);
 
-            if (item.ItemType == Item.Item.ItemTypes.Container)
+            foreach (var pc in room.Players)
             {
-                _writeToClient.WriteLine($"<p>You look inside {item.Name}", player.ConnectionId);
-                foreach (var obj in item.Container.Items.List(false))
+                if (pc.Name == player.Name)
                 {
-                    _writeToClient.WriteLine($"<p>{obj}</p>", player.ConnectionId);
+                    continue;
                 }
+
+                _writeToClient.WriteLine($"<p>{player.Name} examines {item.Name.ToLower()}.</p>", pc.ConnectionId);
             }
+
+            //if (item.ItemType == Item.Item.ItemTypes.Container)
+            //{
+            //    _writeToClient.WriteLine($"<p>You look inside {item.Name}", player.ConnectionId);
+            //    foreach (var obj in item.Container.Items.List(false))
+            //    {
+            //        _writeToClient.WriteLine($"<p>{obj}</p>", player.ConnectionId);
+            //    }
+            //}
         }
 
         public void SmellObject(string target, Room room, Player player)
@@ -140,6 +169,16 @@ namespace ArchaicQuestII.GameLogic.World.Room
             }
 
             _writeToClient.WriteLine($"<p>{item.Description.Smell}", player.ConnectionId);
+
+            foreach (var pc in room.Players)
+            {
+                if (pc.Name == player.Name)
+                {
+                    continue;
+                }
+
+                _writeToClient.WriteLine($"<p>{player.Name} smells {item.Name.ToLower()}.</p>", pc.ConnectionId);
+            }
         }
 
         public void TasteObject(string target, Room room, Player player)
@@ -155,6 +194,17 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
             _writeToClient.WriteLine($"<p>{item.Description.Taste}", player.ConnectionId);
 
+
+            foreach (var pc in room.Players)
+            {
+                if (pc.Name == player.Name)
+                {
+                    continue;
+                }
+
+                _writeToClient.WriteLine($"<p>{player.Name} tastes {item.Name.ToLower()}.</p>", pc.ConnectionId);
+            }
+
         }
 
         public void TouchObject(string target, Room room, Player player)
@@ -169,6 +219,16 @@ namespace ArchaicQuestII.GameLogic.World.Room
             }
 
             _writeToClient.WriteLine($"<p>{item.Description.Touch}", player.ConnectionId);
+
+            foreach (var pc in room.Players)
+            {
+                if (pc.Name == player.Name)
+                {
+                    continue;
+                }
+
+                _writeToClient.WriteLine($"<p>{player.Name} feels {item.Name.ToLower()}.</p>", pc.ConnectionId);
+            }
 
         }
 

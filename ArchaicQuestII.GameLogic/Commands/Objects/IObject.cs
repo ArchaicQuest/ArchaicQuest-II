@@ -12,9 +12,9 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
     /// </summary>
    public interface IObject
     {
-        void Get(string target, Room room, Player player);
+        void Get(string target, string container, Room room, Player player);
         void GetAll(Room room, Player player);
-        void Drop(string target, Room room, Player player);
+        void Drop(string target, string container, Room room, Player player);
         void Open(string target, Room room, Player player);
         void Close(string target, Room room, Player player);
         void Delete(string target, Room room, Player player);
