@@ -42,7 +42,7 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
             _player = new Player();
             _player.ConnectionId = "1";
 
-            new RoomActions(_writer.Object).Look(_room, _player);
+            new RoomActions(_writer.Object).Look("", _room, _player);
 
             var roomDesc = "<p class=\"room-title\">Room 1<br /></p>" +
                            "<p class=\"room-description\">room descriptions</p>" +

@@ -5,6 +5,7 @@ using System.Text;
 using ArchaicQuestII.GameLogic.Commands.Movement;
 using ArchaicQuestII.GameLogic.World.Room;
 using System.Linq;
+using ArchaicQuestII.GameLogic.Commands.Communication;
 using ArchaicQuestII.GameLogic.Commands.Debug;
 using ArchaicQuestII.GameLogic.Commands.Inventory;
 using ArchaicQuestII.GameLogic.Commands.Objects;
@@ -22,8 +23,10 @@ namespace ArchaicQuestII.GameLogic.Commands
         private readonly IDebug _debug;
         private readonly IObject _object;
         private readonly IInventory _inventory;
+        private readonly Icommunication _communication;
 
-        public Commands(IMovement movement, IRoomActions roomActions, IDebug debug, ISkills skills, ISpells spells, IObject objects, IInventory inventory)
+
+        public Commands(IMovement movement, IRoomActions roomActions, IDebug debug, ISkills skills, ISpells spells, IObject objects, IInventory inventory, Icommunication communication)
         {
             _movement = movement;
             _roomActions = roomActions;
@@ -32,6 +35,7 @@ namespace ArchaicQuestII.GameLogic.Commands
             _spells = spells;
             _object = objects;
             _inventory = inventory;
+            _communication = communication;
         }
  
         public void CommandList(string key, string obj, string target, Player player, Room room)
@@ -112,7 +116,9 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "open":
                     _object.Open(obj, room, player);
                     break;
+                case "loot":
                 case "get":
+                case "take":
                     _object.Get(obj, target, room, player);
                     break;
                 case "drop":
@@ -131,6 +137,11 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "/debug":
                     _debug.DebugRoom(room, player);
                     break;
+                case "say":
+                case "'":
+                    _communication.Say(obj, room, player);
+                    break;
+                    
             }
         }    
 
@@ -160,6 +171,21 @@ namespace ArchaicQuestII.GameLogic.Commands
         {
 
             var cmdCount = commands.Length;
+
+            if (commands[0] == "say" || commands[0] == "'")
+            {
+                var say = string.Join(" ", commands);
+
+                if (commands[0] == "say")
+                {
+                    say = say.Remove(0, 4);
+                }
+                else
+                {
+                    say = say.Remove(0, 2);
+                }
+                return new Tuple<string, string>(say, string.Empty);
+            }
 
             if (cmdCount == 1)
             {

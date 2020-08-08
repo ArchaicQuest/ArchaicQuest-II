@@ -113,7 +113,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
                 player.Inventory.Add(container.Container.Items[i]);
 
-                    _writer.WriteLine($"<p>You pick up {container.Container.Items.Name.ToLower()}.</p>", player.ConnectionId);
+                    _writer.WriteLine($"<p>You pick up {container.Container.Items[i].Name.ToLower()} from {container.Name.ToLower()}.</p>", player.ConnectionId);
 
                     foreach (var pc in room.Players)
                     {
@@ -122,7 +122,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                             continue;
                         }
 
-                        _writer.WriteLine($"<p>{player.Name} picks up {container.Container.Items.Name.ToLower()}.</p>",
+                        _writer.WriteLine($"<p>{player.Name} picks up {container.Container.Items.Name.ToLower()} from {container.Name.ToLower()}.</p>",
                             pc.ConnectionId);
                     }
                     container.Container.Items.RemoveAt(i);
@@ -136,7 +136,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
         public void Drop(string target, string container, Room room, Player player)
         {
 
-            if (target == "all")
+            if (target == "all" && string.IsNullOrEmpty(container))
             {
                 DropAll(room, player);
                 return;
@@ -191,6 +191,12 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                 return;
             }
 
+            if (target == "all")
+            {
+                DropAllContainer(containerObj, room, player);
+                return;
+            }
+
             var item = player.Inventory.Where(x => x.Stuck == false).FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
 
             if (item == null)
@@ -216,6 +222,42 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
             _writer.WriteLine($"<p>You put {item.Name.ToLower()} into {containerObj.Name.ToLower()}.</p>", player.ConnectionId);
         }
+
+        public void DropAllContainer(Item.Item container, Room room, Player player)
+        {
+
+
+            if (player.Inventory.Count == 0)
+            {
+                _writer.WriteLine("<p>You don't see anything here.</p>", player.ConnectionId);
+                return;
+            }
+
+            for (var i = player.Inventory.Count - 1; i >= 0; i--)
+            {
+
+                container.Container.Items.Add(player.Inventory[i]);
+
+                _writer.WriteLine($"<p>You place {player.Inventory[i].Name.ToLower()} into {container.Name.ToLower()}.</p>", player.ConnectionId);
+
+                foreach (var pc in room.Players)
+                {
+                    if (pc.Name == player.Name)
+                    {
+                        continue;
+                    }
+
+                    _writer.WriteLine($"<p>{player.Name} puts {player.Inventory.Name.ToLower()} into {container.Name.ToLower()}.</p>",
+                        pc.ConnectionId);
+                }
+                player.Inventory.RemoveAt(i);
+
+            }
+
+            // TODO: You are over encumbered 
+
+        }
+
 
         public void GetFromContainer(string target, string container, Room room, Player player)
         {
