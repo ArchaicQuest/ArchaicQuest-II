@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.World.Room;
@@ -87,6 +88,13 @@ namespace ArchaicQuestII.GameLogic.Core
             return room;
         }
 
+
+        public List<Room> GetAllRoomsInArea(int id)
+        {
+            var room = _roomCache.Values.Where(x =>x.AreaId.Equals(id)).ToList();
+
+            return room;
+        }
         public bool UpdateRoom(int id, Room room, Player player)
         {
             var existingRoom = room;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.Commands;
 using ArchaicQuestII.GameLogic.Commands.Communication;
 using ArchaicQuestII.GameLogic.Commands.Debug;
@@ -29,6 +30,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
         private readonly Mock<IObject> _object;
         private readonly Mock<IInventory> _inventory;
         private readonly Mock<Icommunication> _communication;
+        private readonly Mock<IEquip> _equipment;
 
         public CommandsTests()
         {
@@ -40,6 +42,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
             _object = new Mock<IObject>();
             _inventory = new Mock<IInventory>();
             _communication = new Mock<Icommunication>();
+            _equipment = new Mock<IEquip>();
 
             _player = new Player();
             _player.ConnectionId = "1";
@@ -64,7 +67,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
                 }
             };
 
-            _commands = new GameLogic.Commands.Commands(_movement.Object, _roomActions.Object, _debug.Object, _skill.Object, _spell.Object, _object.Object, _inventory.Object, _communication.Object);
+            _commands = new GameLogic.Commands.Commands(_movement.Object, _roomActions.Object, _debug.Object, _skill.Object, _spell.Object, _object.Object, _inventory.Object, _communication.Object, _equipment.Object);
 
         }
 

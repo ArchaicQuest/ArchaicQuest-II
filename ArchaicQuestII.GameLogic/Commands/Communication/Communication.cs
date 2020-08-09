@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Core;
@@ -11,13 +12,15 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
     {
 
         private readonly IWriteToClient _writer;
-        public Communication(IWriteToClient writer)
+        private readonly ICache _cache;
+        public Communication(IWriteToClient writer, ICache cache)
         {
             _writer = writer;
+            _cache = cache;  
         }
         public void Say(string text, Room room, Player player)
         {
-            _writer.WriteLine($"<p>You say {text}</p>", player.ConnectionId);
+            _writer.WriteLine($"<p class='say'>You say {text}</p>", player.ConnectionId);
             foreach (var pc in room.Players)
             {
                 if (pc.Name == player.Name)
@@ -25,14 +28,39 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
                     continue;
                 }
 
-                _writer.WriteLine($"<p>{pc.Name} says {text}</p>", pc.ConnectionId);
+                _writer.WriteLine($"<p class='say'>{player.Name} says {text}</p>", pc.ConnectionId);
             }
 
         }
 
         public void SayTo(string text, string target, Room room, Player player)
         {
-            throw new NotImplementedException();
+            //find target
+            var sayTo = room.Players.FirstOrDefault(x => x.Name.StartsWith(target, StringComparison.CurrentCultureIgnoreCase));
+
+            if (sayTo == null)
+            {
+                _writer.WriteLine("<p>They are not here.</p>", player.ConnectionId);
+                return;
+            }
+
+            _writer.WriteLine($"<p class='say'>You say to {sayTo.Name}, {text}</p>", player.ConnectionId);
+            foreach (var pc in room.Players)
+            {
+                if (pc.Name == player.Name)
+                {
+                    continue;
+                }
+
+                if (pc.Name == sayTo.Name)
+                {
+                    _writer.WriteLine($"<p class='say'>{player.Name} says to you, {text}</p>", pc.ConnectionId);
+                }
+                else
+                {
+                    _writer.WriteLine($"<p class='say'>{player.Name} says to {sayTo.Name}, {text}</p>", pc.ConnectionId);
+                }
+            }
         }
 
         public void Whisper(string text, string target, Room room, Player player)
@@ -42,7 +70,23 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
 
         public void Yell(string text, Room room, Player player)
         {
-            throw new NotImplementedException();
+         
+            var rooms = _cache.GetAllRoomsInArea(room.AreaId);
+            _writer.WriteLine($"<p class='yell'>You yell, {text.ToUpper()}</p>", player.ConnectionId);
+
+            foreach (var rm in rooms)
+            {
+                foreach (var pc in rm.Players)
+                {
+                    if (pc.Name == player.Name)
+                    {
+                        continue;
+                    }
+
+                    _writer.WriteLine($"<p class='yell'>{player.Name} yells, {text.ToUpper()}</p>", pc.ConnectionId);
+                }
+              
+            }
         }
     }
 }

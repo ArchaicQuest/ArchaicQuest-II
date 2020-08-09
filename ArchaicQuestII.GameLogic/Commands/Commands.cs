@@ -5,6 +5,7 @@ using System.Text;
 using ArchaicQuestII.GameLogic.Commands.Movement;
 using ArchaicQuestII.GameLogic.World.Room;
 using System.Linq;
+using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.Commands.Communication;
 using ArchaicQuestII.GameLogic.Commands.Debug;
 using ArchaicQuestII.GameLogic.Commands.Inventory;
@@ -14,7 +15,7 @@ using ArchaicQuestII.GameLogic.Spell.Interface;
 
 namespace ArchaicQuestII.GameLogic.Commands
 {
-   public class Commands: ICommands
+    public class Commands : ICommands
     {
         private readonly IMovement _movement;
         private readonly ISkills _skills;
@@ -24,9 +25,20 @@ namespace ArchaicQuestII.GameLogic.Commands
         private readonly IObject _object;
         private readonly IInventory _inventory;
         private readonly Icommunication _communication;
+        private readonly IEquip _equipment;
 
 
-        public Commands(IMovement movement, IRoomActions roomActions, IDebug debug, ISkills skills, ISpells spells, IObject objects, IInventory inventory, Icommunication communication)
+        public Commands(
+            IMovement movement,
+            IRoomActions roomActions,
+            IDebug debug,
+            ISkills skills,
+            ISpells spells,
+            IObject objects,
+            IInventory inventory,
+            Icommunication communication,
+            IEquip equipment
+            )
         {
             _movement = movement;
             _roomActions = roomActions;
@@ -36,8 +48,9 @@ namespace ArchaicQuestII.GameLogic.Commands
             _object = objects;
             _inventory = inventory;
             _communication = communication;
+            _equipment = equipment;
         }
- 
+
         public void CommandList(string key, string obj, string target, Player player, Room room)
         {
             switch (key)
@@ -141,9 +154,23 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "'":
                     _communication.Say(obj, room, player);
                     break;
-                    
+                case "sayto":
+                case ">":
+                    _communication.SayTo(obj, target, room, player);
+                    break;
+                case "yell":
+                    _communication.Yell(obj, room, player);
+                    break;
+                case "wear":
+                    _equipment.Wear(obj, room, player);
+                    break;
+                case "eq":
+                case "equipment":
+                    _equipment.ShowEquipment(player);
+                    break;
+
             }
-        }    
+        }
 
         public void ProcessCommand(string command, Player player, Room room)
         {
@@ -156,15 +183,15 @@ namespace ArchaicQuestII.GameLogic.Commands
                 if (commandParts[1] == "in")
                 {
                     key = commandParts[0] + " " + commandParts[1];
-                  commandParts =  commandParts.Where(x => x != "in").ToArray();
+                    commandParts = commandParts.Where(x => x != "in").ToArray();
                 }
             }
             var parameters = MakeCommandPartsSafe(commandParts);
-         
 
-   
 
-            CommandList(key, parameters.Item1,  parameters.Item2, player, room);
+
+
+            CommandList(key, parameters.Item1, parameters.Item2, player, room);
         }
 
         public Tuple<string, string> MakeCommandPartsSafe(string[] commands)
@@ -187,6 +214,24 @@ namespace ArchaicQuestII.GameLogic.Commands
                 return new Tuple<string, string>(say, string.Empty);
             }
 
+            if (commands[0] == "sayto" || commands[0] == ">")
+            {
+                var say = string.Join(" ", commands);
+
+                say = say.Remove(0, commands[0].Length + 1 + commands[1].Length);
+
+                return new Tuple<string, string>(say, commands[1]);
+
+            }
+
+            if (commands[0] == "yell")
+            {
+                var say = string.Join(" ", commands);
+
+                say = say.Remove(0, 5);
+                return new Tuple<string, string>(say, string.Empty);
+            }
+
             if (cmdCount == 1)
             {
                 return new Tuple<string, string>(commands[0], string.Empty);
@@ -194,7 +239,7 @@ namespace ArchaicQuestII.GameLogic.Commands
 
             if (cmdCount == 2)
             {
-               return new Tuple<string, string>(commands[1], string.Empty);
+                return new Tuple<string, string>(commands[1], string.Empty);
             }
 
             if (cmdCount == 3)
@@ -207,7 +252,7 @@ namespace ArchaicQuestII.GameLogic.Commands
                 return new Tuple<string, string>(commands[1], commands[2]);
             }
 
-                return null;
+            return null;
         }
 
     }

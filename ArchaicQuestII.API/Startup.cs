@@ -24,6 +24,7 @@ using ArchaicQuestII.GameLogic.World.Room;
 using Microsoft.AspNetCore.SignalR;
 using static ArchaicQuestII.API.Services.services;
 using System.Threading.Tasks;
+using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.Commands.Communication;
 using ArchaicQuestII.GameLogic.Commands.Inventory;
 using ArchaicQuestII.GameLogic.Commands.Objects;
@@ -110,6 +111,7 @@ namespace ArchaicQuestII.API
             services.AddTransient<IInventory, Inventory>();
             services.AddSingleton<Icommunication, Communication>();
             services.AddTransient<IObject, Object>();
+            services.AddTransient<IEquip, Equip>();
             services.AddSingleton<ICommands, Commands>();
             services.AddTransient<ISpellTargetCharacter, SpellTargetCharacter>();
             services.AddSingleton<IGameLoop, GameLoop>();
