@@ -183,6 +183,8 @@ namespace ArchaicQuestII.GameLogic.Hubs
             _updateClientUi.UpdateMana(character);
             _updateClientUi.UpdateMoves(character);
             _updateClientUi.UpdateExp(character);
+            _updateClientUi.UpdateEquipment(character);
+            _updateClientUi.UpdateInventory(character);
 
             new RoomActions(_writeToClient).Look("", room, character);
 

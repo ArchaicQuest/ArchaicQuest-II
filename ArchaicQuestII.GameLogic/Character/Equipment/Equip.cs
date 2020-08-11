@@ -10,18 +10,19 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
    public class Equip: IEquip
     {
         private readonly IWriteToClient _writer;
+        private readonly IUpdateClientUI _clientUi;
 
-        public Equip(IWriteToClient writer)
+        public Equip(IWriteToClient writer, IUpdateClientUI clientUi)
         {
             _writer = writer;
+            _clientUi = clientUi;
         }
 
-
-        public void ShowEquipment(Player player)
+        public string ShowEquipmentUI(Player player)
         {
-            _writer.WriteLine("<p>You are using:</p>", player.ConnectionId);
             var displayEquipment = new StringBuilder();
-            displayEquipment.Append("<table>")
+            displayEquipment.Append("<p>You are using:</p>")
+                .Append("<table>")
                .Append("<tr><td style='width:175px;' title='Worn as light'>").Append("&lt;used as light&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Light?.Name ?? "(nothing)").Append("</td></tr>")
                 .Append("<tr><td title='Worn on finger'>").Append(" &lt;worn on finger&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Finger?.Name ?? "(nothing)").Append("</td></tr>")
                 .Append("<tr><td  title='Worn on finger'>").Append(" &lt;worn on finger&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Finger2?.Name ?? "(nothing)").Append("</td></tr>")
@@ -43,9 +44,17 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
                 .Append("<tr><td  title='Held'>").Append(" &lt;Held&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Held?.Name ?? "(nothing)").Append("</td></tr>")
                 .Append("<tr><td  title='Floating Nearby'>").Append(" &lt;Floating nearby&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Floating?.Name ?? "(nothing)").Append("</td></tr>").Append("</table");
 
-             
 
-            _writer.WriteLine(displayEquipment.ToString(), player.ConnectionId);
+            return displayEquipment.ToString();
+        }
+
+
+
+        public void ShowEquipment(Player player)
+        {
+
+            var displayEquipment = ShowEquipmentUI(player);
+            _writer.WriteLine(displayEquipment, player.ConnectionId);
         }
 
 
@@ -137,6 +146,7 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
                     break;
             }
 
+            _clientUi.UpdateEquipment(player);
         }
 
     }

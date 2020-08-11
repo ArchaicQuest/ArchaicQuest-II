@@ -28,5 +28,9 @@ namespace ArchaicQuestII.GameLogic.Core
        /// <param name="player"></param>
        void UpdateExp(Player player);
 
-    }
+       void UpdateEquipment(Player player);
+
+       void UpdateInventory(Player player);
+
+   }
 }

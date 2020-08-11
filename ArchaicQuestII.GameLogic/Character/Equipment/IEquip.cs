@@ -9,5 +9,6 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
     {
         void Wear(string item, Room room, Player player);
         void ShowEquipment(Player player);
+        string ShowEquipmentUI(Player player);
     }
 }

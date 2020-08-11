@@ -12,9 +12,11 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
    public class Object: IObject
     {
         private readonly IWriteToClient _writer;
-        public Object(IWriteToClient writer)
+        private readonly IUpdateClientUI _updateUi;
+        public Object(IWriteToClient writer, IUpdateClientUI updateUi)
         {
             _writer = writer;
+            _updateUi = updateUi;
         }
         public void Get(string target, string container, Room room, Player player)
         {
@@ -54,7 +56,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
             player.Inventory.Add(item);
             _writer.WriteLine($"<p>You pick up {item.Name.ToLower()}.</p>", player.ConnectionId);
-
+            _updateUi.UpdateInventory(player);
             // TODO: You are over encumbered 
 
         }
@@ -92,7 +94,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
                 }
             }
-
+            _updateUi.UpdateInventory(player);
             // TODO: You are over encumbered 
 
         }
@@ -128,6 +130,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                     container.Container.Items.RemoveAt(i);
 
             }
+            _updateUi.UpdateInventory(player);
 
             // TODO: You are over encumbered 
 
@@ -172,6 +175,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
             room.Items.Add(item);
 
             _writer.WriteLine($"<p>You drop {item.Name.ToLower()}.</p>", player.ConnectionId);
+            _updateUi.UpdateInventory(player);
         }
 
         public void DropInContainer(string target, string container, Room room, Player player)
@@ -221,6 +225,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
             containerObj.Container.Items.Add(item);
 
             _writer.WriteLine($"<p>You put {item.Name.ToLower()} into {containerObj.Name.ToLower()}.</p>", player.ConnectionId);
+            _updateUi.UpdateInventory(player);
         }
 
         public void DropAllContainer(Item.Item container, Room room, Player player)
@@ -253,6 +258,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                 player.Inventory.RemoveAt(i);
 
             }
+            _updateUi.UpdateInventory(player);
 
             // TODO: You are over encumbered 
 
@@ -310,6 +316,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
             player.Inventory.Add(item);
 
             _writer.WriteLine($"<p>You get {item.Name.ToLower()} from {containerObj.Name.ToLower()}.</p>", player.ConnectionId);
+            _updateUi.UpdateInventory(player);
         }
 
         public void DropAll(Room room, Player player)
@@ -348,7 +355,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
                 }
             }
-
+            _updateUi.UpdateInventory(player);
             // TODO: You are over encumbered 
 
         }

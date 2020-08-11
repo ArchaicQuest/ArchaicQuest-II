@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Hubs;
 using Microsoft.AspNetCore.SignalR;
@@ -11,6 +12,7 @@ namespace ArchaicQuestII.GameLogic.Core
    public class UpdateClientUI: IUpdateClientUI
     {
         private readonly IHubContext<GameHub> _hubContext;
+      
 
         public UpdateClientUI(IHubContext<GameHub> hubContext)
         {
@@ -78,6 +80,89 @@ namespace ArchaicQuestII.GameLogic.Core
             try
             {
                 await _hubContext.Clients.Client(player.ConnectionId).SendAsync("UpdatePlayerExp", player.ExperienceToNextLevel, player.ExperienceToNextLevel);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        public async void UpdateEquipment(Player player)
+        {
+            if (string.IsNullOrEmpty(player.ConnectionId))
+            {
+                return;
+            }
+
+            try
+            {
+                // Copy Pasta from Equip.cs
+                // Sorry
+                var displayEquipment = new StringBuilder();
+                displayEquipment.Append("<p>You are using:</p>")
+                    .Append("<table>")
+                   .Append("<tr><td style='width:175px;' title='Worn as light'>").Append("&lt;used as light&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Light?.Name ?? "(nothing)").Append("</td></tr>")
+                    .Append("<tr><td title='Worn on finger'>").Append(" &lt;worn on finger&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Finger?.Name ?? "(nothing)").Append("</td></tr>")
+                    .Append("<tr><td  title='Worn on finger'>").Append(" &lt;worn on finger&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Finger2?.Name ?? "(nothing)").Append("</td></tr>")
+                    .Append("<tr><td  title='Worn around neck'>").Append(" &lt;worn around neck&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Neck?.Name ?? "(nothing)").Append("</td></tr>")
+                    .Append("<tr><td title='Worn around neck'>").Append(" &lt;worn around neck&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Neck2?.Name ?? "(nothing)").Append("</td></tr>")
+                    .Append("<tr><td  title='Worn on face'>").Append(" &lt;worn on face&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Face?.Name ?? "(nothing)").Append("</td></tr>")
+                    .Append("<tr><td  title='Worn on head'>").Append(" &lt;worn on head&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Head?.Name ?? "(nothing)").Append("</td></tr>")
+                    .Append("<tr><td  title='Worn on torso'>").Append(" &lt;worn on torso&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Torso?.Name ?? "(nothing)").Append("</td></tr>")
+                    .Append("<tr><td  title='Worn on legs'>").Append(" &lt;worn on legs&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Legs?.Name ?? "(nothing)").Append("</td></tr>")
+                    .Append("<tr><td  title='Worn on feet'>").Append(" &lt;worn on feet&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Feet?.Name ?? "(nothing)").Append("</td></tr>")
+                    .Append("<tr><td  title='Worn on hands'>").Append(" &lt;worn on hands&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Hands?.Name ?? "(nothing)").Append("</td></tr>")
+                    .Append("<tr><td  title='Worn on arms'>").Append(" &lt;worn on arms&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Arms?.Name ?? "(nothing)").Append("</td></tr>")
+                    .Append("<tr><td  title='Worn about body'>").Append(" &lt;worn about body&gt;").Append("</td>").Append("<td>").Append(player.Equipped.AboutBody?.Name ?? "(nothing)").Append("</td></tr>")
+                    .Append("<tr><td  title='Worn on waist'>").Append(" &lt;worn about waist&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Waist?.Name ?? "(nothing)").Append("</td></tr>")
+                    .Append("<tr><td  title='Worn on wrist'>").Append(" &lt;worn around wrist&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Wrist?.Name ?? "(nothing)").Append("</td></tr>")
+                    .Append("<tr><td  title='Worn on wrist'>").Append(" &lt;worn around wrist&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Wrist2?.Name ?? "(nothing)").Append("</td></tr>")
+                    .Append("<tr><td  title='worn as weapon'>").Append(" &lt;wielded&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Wielded?.Name ?? "(nothing)").Append("</td></tr>")
+                    .Append("<tr><td  title='Worn as shield'>").Append(" &lt;worn as shield&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Shield?.Name ?? "(nothing)").Append("</td></tr>")
+                    .Append("<tr><td  title='Held'>").Append(" &lt;Held&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Held?.Name ?? "(nothing)").Append("</td></tr>")
+                    .Append("<tr><td  title='Floating Nearby'>").Append(" &lt;Floating nearby&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Floating?.Name ?? "(nothing)").Append("</td></tr>").Append("</table");
+
+                await _hubContext.Clients.Client(player.ConnectionId).SendAsync("EquipmentUpdate", displayEquipment.ToString());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        public async void UpdateInventory(Player player)
+        {
+            if (string.IsNullOrEmpty(player.ConnectionId))
+            {
+                return;
+            }
+
+            try
+            {
+                // Copy Pasta from inventory.cs
+                // Sorry
+                var inventory = new StringBuilder();
+                inventory.Append("<p>You are carrying:</p>");
+
+                if (player.Inventory.Count > 0)
+                {
+                    inventory.Append("<ul>");
+
+
+                    foreach (var item in player.Inventory.List(false))
+                    {
+                        inventory.Append($"<li>{item}</li>");
+                    }
+
+                    inventory.Append("</ul>");
+                }
+                else
+                {
+                    inventory.Append("<p>Nothing.</p>");
+                }
+
+
+                await _hubContext.Clients.Client(player.ConnectionId).SendAsync("InventoryUpdate", inventory.ToString());
             }
             catch (Exception ex)
             {
