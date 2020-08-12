@@ -37,6 +37,23 @@ namespace ArchaicQuestII.GameLogic.Core
             }
         }
 
+        public async void UpdateCommunication(Player player, string message, string type)
+        {
+            if (string.IsNullOrEmpty(player.ConnectionId))
+            {
+                return;
+            }
+
+            try
+            {
+                await _hubContext.Clients.Client(player.ConnectionId).SendAsync("CommUpdate", message, type);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
         public async void UpdateHP(Player player)
         {
             if (string.IsNullOrEmpty(player.ConnectionId))
