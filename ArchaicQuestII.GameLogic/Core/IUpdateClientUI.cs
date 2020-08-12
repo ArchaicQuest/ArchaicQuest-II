@@ -32,5 +32,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
        void UpdateInventory(Player player);
 
+       void UpdateScore(Player player);
+
    }
 }

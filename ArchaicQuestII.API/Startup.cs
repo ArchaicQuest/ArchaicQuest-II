@@ -28,6 +28,7 @@ using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.Commands.Communication;
 using ArchaicQuestII.GameLogic.Commands.Inventory;
 using ArchaicQuestII.GameLogic.Commands.Objects;
+using ArchaicQuestII.GameLogic.Commands.Score;
 using ArchaicQuestII.GameLogic.Commands.Skills;
 using ArchaicQuestII.GameLogic.Skill.Model;
 using ArchaicQuestII.GameLogic.Spell;
@@ -113,6 +114,7 @@ namespace ArchaicQuestII.API
             services.AddTransient<IObject, Object>();
             services.AddTransient<IEquip, Equip>();
             services.AddSingleton<ICommands, Commands>();
+            services.AddSingleton<IScore, Score>();
             services.AddTransient<ISpellTargetCharacter, SpellTargetCharacter>();
             services.AddSingleton<IGameLoop, GameLoop>();
             services.AddTransient<IRoomActions, RoomActions>();
