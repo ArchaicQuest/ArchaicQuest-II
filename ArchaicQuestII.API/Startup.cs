@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using ArchaicQuestII.GameLogic.Commands;
@@ -33,6 +34,7 @@ using ArchaicQuestII.GameLogic.Commands.Skills;
 using ArchaicQuestII.GameLogic.Skill.Model;
 using ArchaicQuestII.GameLogic.Spell;
 using ArchaicQuestII.GameLogic.Spell.Interface;
+using ArchaicQuestII.GameLogic.World.Area;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Object = ArchaicQuestII.GameLogic.Commands.Objects.Object;
@@ -42,7 +44,8 @@ namespace ArchaicQuestII.API
     public class Startup
     {
         private IDataBase _db;
-        private ICache _cache;   
+        private ICache _cache;
+      
         private IHubContext<GameHub> _hubContext;
         public Startup(IConfiguration configuration)
         {
@@ -232,6 +235,13 @@ namespace ArchaicQuestII.API
                 _cache.AddSkill(skill.Id, skill);
             }
 
+            var areas = _db.GetList<Area>(DataBase.Collections.Area);
+           
+            foreach (var area in areas)
+            {
+                var roomList = rooms.FindAll(x => x.AreaId == area.Id);
+                _cache.AddMap(area.Id, Map.DrawMap(roomList));
+            }
 
 
         }

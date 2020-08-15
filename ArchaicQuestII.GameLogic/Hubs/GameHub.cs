@@ -1,6 +1,7 @@
 
 using Microsoft.AspNetCore.SignalR;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -171,13 +172,15 @@ namespace ArchaicQuestII.GameLogic.Hubs
             //add to DB, configure from admin
             var startingRoom = _cache.GetConfig().StartingRoom;
             var room = _cache.GetRoom(startingRoom);
-           character.RoomId = startingRoom;
+           character.RoomId = 1;
 
            var playerAlreadyInRoom = room.Players.FirstOrDefault(x => x.Id.Equals(character.Id)) != null;
            if (!playerAlreadyInRoom)
            {
                room.Players.Add(character);
            }
+
+           var rooms = _cache.GetAllRoomsInArea(1);
 
            _updateClientUi.UpdateHP(character);
             _updateClientUi.UpdateMana(character);
@@ -186,6 +189,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
             _updateClientUi.UpdateEquipment(character);
             _updateClientUi.UpdateInventory(character);
             _updateClientUi.UpdateScore(character);
+            _updateClientUi.GetMap(character,_cache.GetMap(1));
 
             new RoomActions(_writeToClient).Look("", room, character);
 

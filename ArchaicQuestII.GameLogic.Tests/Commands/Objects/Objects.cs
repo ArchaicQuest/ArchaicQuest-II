@@ -15,10 +15,13 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
    public class Objects
    {
        private readonly Mock<IWriteToClient> _IWriteToClient;
+       private readonly Mock<IUpdateClientUI> _IUpdateUI;
 
-       public Objects()
+        public Objects()
        {
            _IWriteToClient = new Mock<IWriteToClient>();
+           _IUpdateUI = new Mock<IUpdateClientUI>();
+
        }
 
 
@@ -40,7 +43,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
             player.Name = "Gary";
             player.Inventory = new ItemList();
 
-            var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object);
+            var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object);
 
             objects.Get("apple", "", room, player);
 
@@ -67,7 +70,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
             player.Name = "Gary";
             player.Inventory = new ItemList();
 
-            var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object);
+            var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object);
 
             objects.Get("all", "", room, player);
 
@@ -99,7 +102,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
             player.Name = "Gary";
             player.Inventory = new ItemList();
 
-            var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object);
+            var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object);
 
             objects.Get("apple", "chest", room, player);
 
@@ -127,7 +130,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
             player.Name = "Gary";
             player.Inventory = new ItemList();
 
-            var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object);
+            var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object);
 
             objects.Get("apple", "", room, player);
 

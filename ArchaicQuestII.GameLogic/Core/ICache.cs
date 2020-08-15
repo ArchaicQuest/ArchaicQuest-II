@@ -32,5 +32,8 @@ namespace ArchaicQuestII.GameLogic.Core
         void ClearRoomCache();
         void SetConfig(Config config);
         Config GetConfig();
+
+        void AddMap(int areaId, string room);
+        string GetMap(int areaId);
     }
 }

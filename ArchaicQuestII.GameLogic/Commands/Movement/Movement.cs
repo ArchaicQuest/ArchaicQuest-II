@@ -12,15 +12,17 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
         private readonly IWriteToClient _writeToClient;
         private readonly IRoomActions _roomActions;
         private readonly ICache _cache;
+        private readonly IUpdateClientUI _updateUi;
 
 
-        public Movement(IWriteToClient writeToClient, ICache cache, IRoomActions roomActions)
+        public Movement(IWriteToClient writeToClient, ICache cache, IRoomActions roomActions, IUpdateClientUI updateUI)
         {
             _writeToClient = writeToClient;
             _cache = cache;
             _roomActions = roomActions;
-   
-           
+            _updateUi = updateUI;
+
+
         }
         public void Move(Room room, Player character, string direction)
         {
@@ -60,7 +62,9 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
             UpdateCharactersLocation(getExitToNextRoom, character);
 
              _roomActions.Look("", getNextRoom, character);
-          
+
+             _updateUi.GetMap(character, _cache.GetMap(getExitToNextRoom.AreaId));
+
         }
 
         public Exit FindExit(Room room, string direction)

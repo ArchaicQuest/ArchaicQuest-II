@@ -20,6 +20,7 @@ namespace ArchaicQuestII.GameLogic.Core
         private readonly ConcurrentDictionary<string, Player> _playerCache = new ConcurrentDictionary<string, Player>();
         private readonly ConcurrentDictionary<int, Room> _roomCache = new ConcurrentDictionary<int, Room>();
         private readonly ConcurrentDictionary<int, Skill.Model.Skill> _skillCache = new ConcurrentDictionary<int, Skill.Model.Skill>();
+        private readonly ConcurrentDictionary<int, string> _mapCache = new ConcurrentDictionary<int, string>();
         private Config _configCache = new Config();
 
         #region PlayerCache
@@ -121,9 +122,10 @@ namespace ArchaicQuestII.GameLogic.Core
 
             return skill;
         }
-         
- 
+
+
         #endregion
+
 
         public void SetConfig(Config config)
         {
@@ -135,12 +137,24 @@ namespace ArchaicQuestII.GameLogic.Core
             return _configCache;
         }
 
+       
         public void ClearRoomCache()
         {
             _roomCache.Clear();
 
         }
 
+        public void AddMap(int areaId, string map)
+        {
+             _mapCache.TryAdd(areaId, map);
+        }
+
+        public string GetMap(int areaId)
+        {
+            _mapCache.TryGetValue(areaId, out var map);
+
+            return map;
+        }
 
     }
 }

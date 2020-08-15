@@ -5,6 +5,7 @@ using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Hubs;
+using ArchaicQuestII.GameLogic.World.Room;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
 
@@ -162,6 +163,20 @@ namespace ArchaicQuestII.GameLogic.Core
 
                 await _hubContext.Clients.Client(player.ConnectionId).SendAsync("EquipmentUpdate", displayEquipment.ToString());
                // UpdateScore(player);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        public async void GetMap(Player player, string map)
+        {
+
+            try
+            {
+     
+                await _hubContext.Clients.Client(player.ConnectionId).SendAsync("MapUpdate", map, player.RoomId);
             }
             catch (Exception ex)
             {

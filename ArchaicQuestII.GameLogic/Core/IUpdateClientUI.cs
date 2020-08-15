@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Core
 {
@@ -35,5 +36,7 @@ namespace ArchaicQuestII.GameLogic.Core
        void UpdateScore(Player player);
        void UpdateCommunication(Player player, string message, string type);
 
-   }
+       void GetMap(Player player, string rooms);
+
+    }
 }
