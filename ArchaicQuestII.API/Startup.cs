@@ -108,6 +108,7 @@ namespace ArchaicQuestII.API
             services.AddScoped<IDataBase, DataBase>();
             services.AddSingleton<ICache>(new Cache());
             services.AddSingleton<IDamage, Damage>();
+
             services.AddTransient<IMovement, Movement>();
             services.AddTransient<ISkills, Skills>();
             services.AddTransient<ISpells, Spells>();
