@@ -26,6 +26,7 @@ using Microsoft.AspNetCore.SignalR;
 using static ArchaicQuestII.API.Services.services;
 using System.Threading.Tasks;
 using ArchaicQuestII.GameLogic.Character.Equipment;
+using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Commands.Communication;
 using ArchaicQuestII.GameLogic.Commands.Inventory;
 using ArchaicQuestII.GameLogic.Commands.Objects;
@@ -123,6 +124,8 @@ namespace ArchaicQuestII.API
             services.AddSingleton<IGameLoop, GameLoop>();
             services.AddTransient<IRoomActions, RoomActions>();
             services.AddTransient<IAddRoom, AddRoom>();
+            services.AddSingleton<ICombat, Combat>();
+            services.AddSingleton<IFormulas, Formulas>();
             services.AddSingleton<IUpdateClientUI, UpdateClientUI>();
             services.AddSingleton<IWriteToClient, WriteToClient>((factory) => new WriteToClient(_hubContext));
 

@@ -11,14 +11,18 @@ using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Combat
 {
-   public class Combat
+   public class Combat: ICombat
     {
         private readonly IWriteToClient _writer;
         private readonly IUpdateClientUI _clientUi;
-        public Combat(IWriteToClient writer, IUpdateClientUI clientUi)
+        private readonly IDamage _damage;
+        private readonly IFormulas _formulas;
+        public Combat(IWriteToClient writer, IUpdateClientUI clientUi, IDamage damage, IFormulas formulas)
         {
             _writer = writer;
             _clientUi = clientUi;
+            _damage = damage;
+            _formulas = formulas;
         }
 
         public Player FindTarget(string target, Room room, bool isMurder)
@@ -32,132 +36,46 @@ namespace ArchaicQuestII.GameLogic.Combat
             return (Player)room.Players.FirstOrDefault(x => x.Name.StartsWith(target));
         }
 
-        public int OffensivePoints(Player player)
-        {
-            var offensePoints = player.Attributes.Attribute[EffectLocation.Strength] / 5
-                                   + player.Attributes.Attribute[EffectLocation.Dexterity] / 10
-                                   + player.Attributes.Attribute[EffectLocation.HitRoll];
-            var weaponSkill = 100; //weapon types are hardcoded so make hardcoded skills for weapon types
-
-             return offensePoints + offensePoints * weaponSkill / 100;
-        }
-
-        public int DefensivePoints(Player player)
-        {
-            return player.Attributes.Attribute[EffectLocation.Dexterity] / 5 + player.Attributes.Attribute[EffectLocation.Strength] / 10;
-        }
-
-        public int BlockPoints(Player player)
-        {
-            var offensePoints = player.Attributes.Attribute[EffectLocation.Strength] / 5
-                                + player.Attributes.Attribute[EffectLocation.Dexterity] / 10;
-                                
-            var blockSkill = 100; //weapon types are hardcoded so make hardcoded skills for weapon types
-
-            return offensePoints + offensePoints * blockSkill / 100;
-        }
-
-        public int ToBlockChance(Player player, Player target)
-        {
-            return BlockPoints(player) * 100 / (BlockPoints(player) + DefensivePoints(target));
-        }
-
-        public int ToHitChance(Player player, Player target)
-        {
-            return OffensivePoints(player) * 100 / (OffensivePoints(player) + DefensivePoints(target));
-        }
-
-        public int DamageReduction(Player defender, int damage)
-        {
-            var ArRating = defender.ArmorRating.Armour + 1;
-            var armourReduction = ArRating / (double)damage;
-
-            if (armourReduction > 4)
-            {
-                armourReduction = 4;
-            }
-            else if (armourReduction <= 0)
-            {
-                armourReduction = 1;
-            }
-
-            return (int)armourReduction;
-        }
-
-        public int CalculateDamage(Player player, Player target)
-        {
-            var weapon = GetWeapon(player);
-            var damage = 0;
-
-            if (weapon != null)
-            {
-                damage = Dice.Roll(1, weapon.Damage.Minimum, weapon.Damage.Maximum);
-
-            }
-            else
-            {
-                //Hand to hand
-                damage = Dice.Roll(1, 1, 6);
-            }
-
-            // Enhanced Damage Skill check
-            // increase damage is player has enhanced damage skill
-            if (false)
-            {
-            }
-
-            // calculate damage reduction based on target armour
-             var armourReduction = DamageReduction(target, damage);
-
-             //refactor this shit
-             var strengthMod = 0.5 + player.Attributes.Attribute[EffectLocation.Strength] / (double)100;
-             var levelDif = player.Level - target.Level <= 0 ? 1 : player.Level - target.Level;
-             var levelMod = levelDif / 2 <= 0 ? 1 : levelDif / 2;
-             var enduranceMod = player.Attributes.Attribute[EffectLocation.Moves]/ (double)player.MaxAttributes.Attribute[EffectLocation.Moves];
-             var criticalHit = 0;
-            
-             if (target.Status == CharacterStatus.Status.Sleeping || target.Status == CharacterStatus.Status.Stunned || target.Status == CharacterStatus.Status.Resting)
-             {
-                 criticalHit = 2;
-             }
-
-
-             int totalDamage = (int)(damage * strengthMod * criticalHit * levelMod);
-
-             if (armourReduction > 0)
-             {
-                 totalDamage = totalDamage / armourReduction;
-             }
-
-             if (totalDamage <= 0)
-             {
-                 totalDamage = 1;
-             }
-
-
-             return totalDamage;
-        }
+    
 
         public Item.Item GetWeapon(Player player)
         {
             return player.Equipped.Wielded;
         }
 
-        public bool IsCriticalHit()
+
+        public void HarmTarget(Player victim, int damage)
         {
-            return Dice.Roll(1, 1, 20) == 20;
+            victim.Attributes.Attribute[EffectLocation.Hitpoints] -= damage;
+
+            if (victim.Attributes.Attribute[EffectLocation.Hitpoints] < 0)
+            {
+                victim.Attributes.Attribute[EffectLocation.Hitpoints] = 0;
+            }
+
         }
 
-        public bool DoesHit(int chance)
+        public bool IsTargetAlive(Player victim)
         {
-            var roll = Dice.Roll(1, 1, 100);
+           return victim.Attributes.Attribute[EffectLocation.Hitpoints] > 0;
+        }
 
-            return roll switch
+        public void DisplayDamage(Player player, Player target, Room room, Item.Item weapon, int damage)
+        {
+            var damText = _damage.DamageText(damage);
+
+            _writer.WriteLine($"Your {weapon.AttackType} {damText.Value} {target.Name}.", player.ConnectionId);
+            _writer.WriteLine($"{player.Name} {weapon.AttackType} {damText.Value} you.", target.ConnectionId);
+
+            foreach (var pc in room.Players)
             {
-                1 => false,
-                100 => true,
-                _ => roll > chance
-            };
+                if (pc.Name == player.Name || pc.Name == target.Name)
+                {
+                    continue;
+                }
+
+                _writer.WriteLine($"{player.Name}'s {weapon.AttackType} {damText.Value} {target.Name}.", pc.ConnectionId);
+            }
         }
 
         public void Fight(Player player, string victim, Room room, bool isMurder)
@@ -170,8 +88,8 @@ namespace ArchaicQuestII.GameLogic.Combat
                 return;
             }
 
-            var chanceToHit = ToHitChance(player, target);
-            var doesHit = DoesHit(chanceToHit);
+            var chanceToHit = _formulas.ToHitChance(player, target);
+            var doesHit = _formulas.DoesHit(chanceToHit);
 
             if (doesHit)
             {
@@ -182,23 +100,26 @@ namespace ArchaicQuestII.GameLogic.Combat
                 // such as improved parry, acrobatic etc 
                 // instead of rolling a D10, roll a D6 for a close to 15% increase in chance
 
+                var avoidanceRoll = Dice.Roll(1, 1, 10);
+
+
                 //10% chance to attempt a dodge
-                if(Dice.Roll(1,1,10) == 1)
+                if (avoidanceRoll == 1)
                 {
 
                 }
 
                 //10% chance to parry
-                if (!hasEvadedDamage && Dice.Roll(1, 1, 10) == 2)
+                if (!hasEvadedDamage && avoidanceRoll == 2)
                 {
 
                 }
 
                 // Block
-                if (!hasEvadedDamage && Dice.Roll(1, 1, 10) == 3)
+                if (!hasEvadedDamage && avoidanceRoll == 3)
                 {
-                    var chanceToBlock = ToBlockChance(target, player);
-                    var doesBlock = DoesHit(chanceToBlock);
+                    var chanceToBlock = _formulas.ToBlockChance(target, player);
+                    var doesBlock = _formulas.DoesHit(chanceToBlock);
 
                     if (doesBlock)
                     {
@@ -209,23 +130,27 @@ namespace ArchaicQuestII.GameLogic.Combat
                         // block fail
                     }
                 }
+ 
 
-                //dodge
-                //parry
+                var damage = _formulas.CalculateDamage(player, target, weapon);
 
-                var damage = CalculateDamage(player, target);
-
-                if (IsCriticalHit())
+                if (_formulas.IsCriticalHit())
                 {
                     // double damage
                     damage *= 2;
                 }
 
 
+                HarmTarget(target, damage);
+                DisplayDamage(player, target, room, weapon, damage);
+
+                if (!IsTargetAlive(target))
+                {
+
+                }
+
 
                  
-                // do damage
-                // check if target is dead or alive
                 // award xp if dead
                 // create corpse container holding targets inventory and money
                 // end combat
