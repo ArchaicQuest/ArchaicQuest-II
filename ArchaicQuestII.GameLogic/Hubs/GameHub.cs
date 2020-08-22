@@ -9,6 +9,7 @@ using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Commands;
 using ArchaicQuestII.GameLogic.Core;
+using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.World.Room;
 using Microsoft.Extensions.Logging;
 
@@ -140,7 +141,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
             player.ConnectionId = hubId;
             player.LastCommandTime = DateTime.Now;
             player.LastLoginTime = DateTime.Now;
-
+          
             return player;
         }
 

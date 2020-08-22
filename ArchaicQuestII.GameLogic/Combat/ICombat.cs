@@ -23,5 +23,7 @@ namespace ArchaicQuestII.GameLogic.Combat
         public void DisplayDamage(Player player, Player target, Room room, Item.Item weapon, int damage);
 
         public void Fight(Player player, string victim, Room room, bool isMurder);
+
+       // public void AutoAttack(Player player, Player target, Room room, bool isMurder);
     }
 }

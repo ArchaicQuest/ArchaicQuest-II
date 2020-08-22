@@ -24,7 +24,7 @@ namespace ArchaicQuestII.GameLogic.Item
         public int DiceMinSize { get; set; }
         public int DiceMaxSize { get; set; }
 
-        public static int Roll(int roll, int minSize, int maxSize)
+        public int Roll(int roll, int minSize, int maxSize)
         {
             int total = 0;
 

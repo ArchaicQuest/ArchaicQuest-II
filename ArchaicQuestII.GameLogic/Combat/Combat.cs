@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
@@ -15,14 +16,16 @@ namespace ArchaicQuestII.GameLogic.Combat
     {
         private readonly IWriteToClient _writer;
         private readonly IUpdateClientUI _clientUi;
+        private readonly IGain _gain;
         private readonly IDamage _damage;
         private readonly IFormulas _formulas;
-        public Combat(IWriteToClient writer, IUpdateClientUI clientUi, IDamage damage, IFormulas formulas)
+        public Combat(IWriteToClient writer, IUpdateClientUI clientUi, IDamage damage, IFormulas formulas, IGain gain)
         {
             _writer = writer;
             _clientUi = clientUi;
             _damage = damage;
             _formulas = formulas;
+            _gain = gain;
         }
 
         public Player FindTarget(string target, Room room, bool isMurder)
@@ -63,9 +66,19 @@ namespace ArchaicQuestII.GameLogic.Combat
         public void DisplayDamage(Player player, Player target, Room room, Item.Item weapon, int damage)
         {
             var damText = _damage.DamageText(damage);
+            var attackType = "";
+            if (weapon == null)
+            {
+                attackType = "punch";
+            }
+            else
+            {
+                attackType = nameof(weapon.AttackType);
+            }
 
-            _writer.WriteLine($"Your {weapon.AttackType} {damText.Value} {target.Name}.", player.ConnectionId);
-            _writer.WriteLine($"{player.Name} {weapon.AttackType} {damText.Value} you.", target.ConnectionId);
+
+            _writer.WriteLine($"<p>Your {attackType} {damText.Value} {target.Name}.</p>", player.ConnectionId);
+            _writer.WriteLine($"<p>{player.Name} {attackType} {damText.Value} you.</p>", target.ConnectionId);
 
             foreach (var pc in room.Players)
             {
@@ -74,7 +87,33 @@ namespace ArchaicQuestII.GameLogic.Combat
                     continue;
                 }
 
-                _writer.WriteLine($"{player.Name}'s {weapon.AttackType} {damText.Value} {target.Name}.", pc.ConnectionId);
+                _writer.WriteLine($"<p>{player.Name}'s {attackType} {damText.Value} {target.Name}.</p>", pc.ConnectionId);
+            }
+        }
+
+        public void DisplayMiss(Player player, Player target, Room room, Item.Item weapon)
+        {
+            var attackType = "";
+            if (weapon == null)
+            {
+                attackType = "punch";
+            }
+            else
+            {
+                attackType = nameof(weapon.AttackType);
+            }
+            
+            _writer.WriteLine($"<p>Your {attackType} misses {target.Name}.</p>", player.ConnectionId);
+            _writer.WriteLine($"<p>{player.Name} {attackType} misses you.</p>", target.ConnectionId);
+
+            foreach (var pc in room.Players)
+            {
+                if (pc.Name == player.Name || pc.Name == target.Name)
+                {
+                    continue;
+                }
+
+                _writer.WriteLine($"<p>{player.Name}'s {attackType} misses {target.Name}.</p>", pc.ConnectionId);
             }
         }
 
@@ -84,23 +123,27 @@ namespace ArchaicQuestII.GameLogic.Combat
 
             if (target == null)
             {
-                _writer.WriteLine("They are not here.", player.ConnectionId);
+                _writer.WriteLine("<p>They are not here.</p>", player.ConnectionId);
                 return;
             }
 
+            player.Target = target.Name;
+            player.Status = CharacterStatus.Status.Fighting;
+            target.Status = CharacterStatus.Status.Fighting;
+            target.Target = player.Name;
             var chanceToHit = _formulas.ToHitChance(player, target);
             var doesHit = _formulas.DoesHit(chanceToHit);
-
+            var weapon = GetWeapon(player);
             if (doesHit)
             {
-                var weapon = GetWeapon(player);
+             
                 var hasEvadedDamage = false;
 
                 // avoidance percentage can be improved by core skills 
                 // such as improved parry, acrobatic etc 
                 // instead of rolling a D10, roll a D6 for a close to 15% increase in chance
 
-                var avoidanceRoll = Dice.Roll(1, 1, 10);
+                var avoidanceRoll = new Dice().Roll(1, 1, 10);
 
 
                 //10% chance to attempt a dodge
@@ -146,7 +189,7 @@ namespace ArchaicQuestII.GameLogic.Combat
 
                 if (!IsTargetAlive(target))
                 {
-
+                    _gain.GainExperiencePoints(player, target);
                 }
 
 
@@ -157,6 +200,7 @@ namespace ArchaicQuestII.GameLogic.Combat
             }
             else
             {
+                DisplayMiss(player, target, room, weapon);
                 // miss message
                 // gain improvements on weapon skill
             }

@@ -6,6 +6,7 @@ using ArchaicQuestII.GameLogic.Commands.Movement;
 using ArchaicQuestII.GameLogic.World.Room;
 using System.Linq;
 using ArchaicQuestII.GameLogic.Character.Equipment;
+using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Commands.Communication;
 using ArchaicQuestII.GameLogic.Commands.Debug;
 using ArchaicQuestII.GameLogic.Commands.Inventory;
@@ -28,7 +29,7 @@ namespace ArchaicQuestII.GameLogic.Commands
         private readonly Icommunication _communication;
         private readonly IEquip _equipment;
         private readonly IScore _score;
-
+        private readonly ICombat _combat;
 
         public Commands(
             IMovement movement,
@@ -40,7 +41,8 @@ namespace ArchaicQuestII.GameLogic.Commands
             IInventory inventory,
             Icommunication communication,
             IEquip equipment,
-            IScore score
+            IScore score,
+            ICombat combat
             )
         {
             _movement = movement;
@@ -53,6 +55,7 @@ namespace ArchaicQuestII.GameLogic.Commands
             _communication = communication;
             _equipment = equipment;
             _score = score;
+            _combat = combat;
         }
 
         public void CommandList(string key, string obj, string target, Player player, Room room)
@@ -174,6 +177,10 @@ namespace ArchaicQuestII.GameLogic.Commands
                     break;
                 case "score":
                     _score.DisplayScore(player);
+                    break;
+                case "kill":
+                case "k":
+                    _combat.Fight(player, obj, room, false);
                     break;
 
             }

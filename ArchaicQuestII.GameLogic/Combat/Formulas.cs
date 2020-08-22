@@ -13,8 +13,8 @@ namespace ArchaicQuestII.GameLogic.Combat
         public int OffensivePoints(Player player)
         {
             var offensePoints = player.Attributes.Attribute[EffectLocation.Strength] / 5
-                                   + player.Attributes.Attribute[EffectLocation.Dexterity] / 10
-                                   + player.Attributes.Attribute[EffectLocation.HitRoll];
+                                + player.Attributes.Attribute[EffectLocation.Dexterity] / 10
+                                + player.Attributes.Attribute[EffectLocation.HitRoll];
             var weaponSkill = 100; //weapon types are hardcoded so make hardcoded skills for weapon types
 
             return offensePoints + offensePoints * weaponSkill / 100;
@@ -69,13 +69,13 @@ namespace ArchaicQuestII.GameLogic.Combat
 
             if (weapon != null)
             {
-                damage = Dice.Roll(1, weapon.Damage.Minimum, weapon.Damage.Maximum);
+                damage = new Dice().Roll(1, weapon.Damage.Minimum, weapon.Damage.Maximum);
 
             }
             else
             {
                 //Hand to hand
-                damage = Dice.Roll(1, 1, 6);
+                damage = new Dice().Roll(1, 1, 6);
             }
 
             // Enhanced Damage Skill check
@@ -118,12 +118,12 @@ namespace ArchaicQuestII.GameLogic.Combat
 
         public bool IsCriticalHit()
         {
-            return Dice.Roll(1, 1, 20) == 20;
+            return new Dice().Roll(1, 1, 20) == 20;
         }
 
         public bool DoesHit(int chance)
         {
-            var roll = Dice.Roll(1, 1, 100);
+            var roll = new Dice().Roll(1, 1, 100);
 
             return roll switch
             {

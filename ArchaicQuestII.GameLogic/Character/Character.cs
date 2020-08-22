@@ -10,7 +10,8 @@ using Money = ArchaicQuestII.GameLogic.Item.Money;
 
 namespace ArchaicQuestII.GameLogic.Character
 {
-    public class Character
+
+  public class Character
     {
         /// <summary>
         /// Assigned when player logs in.
