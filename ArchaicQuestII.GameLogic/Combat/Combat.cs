@@ -19,21 +19,28 @@ namespace ArchaicQuestII.GameLogic.Combat
         private readonly IGain _gain;
         private readonly IDamage _damage;
         private readonly IFormulas _formulas;
-        public Combat(IWriteToClient writer, IUpdateClientUI clientUi, IDamage damage, IFormulas formulas, IGain gain)
+        private readonly ICache _cache;
+        public Combat(IWriteToClient writer, IUpdateClientUI clientUi, IDamage damage, IFormulas formulas, IGain gain, ICache cache)
         {
             _writer = writer;
             _clientUi = clientUi;
             _damage = damage;
             _formulas = formulas;
             _gain = gain;
+            _cache = cache;
         }
 
-        public Player FindTarget(string target, Room room, bool isMurder)
+        public Player FindTarget(Player attacker, string target, Room room, bool isMurder)
         {
             // If mob
-            if (!isMurder)
+            if (!isMurder && attacker.ConnectionId != "mob")
             {
                 return (Player)room.Mobs.FirstOrDefault(x => x.Name.Contains(target));
+            }
+
+            if (attacker.ConnectionId == "mob")
+            {
+                return (Player)room.Players.FirstOrDefault(x => x.Name.Equals(target));
             }
 
             return (Player)room.Players.FirstOrDefault(x => x.Name.StartsWith(target));
@@ -119,7 +126,7 @@ namespace ArchaicQuestII.GameLogic.Combat
 
         public void Fight(Player player, string victim, Room room, bool isMurder)
         {
-            var target = FindTarget(victim, room, isMurder);
+            var target = FindTarget(player, victim, room, isMurder);
 
             if (target == null)
             {
@@ -131,6 +138,16 @@ namespace ArchaicQuestII.GameLogic.Combat
             player.Status = CharacterStatus.Status.Fighting;
             target.Status = CharacterStatus.Status.Fighting;
             target.Target = player.Name;
+
+           if(!_cache.IsCharInCombat(player.Id.ToString()))
+            {
+                _cache.AddCharToCombat(player.Id.ToString(), player);
+            }
+
+            if(!_cache.IsCharInCombat(target.Id.ToString()))
+            {
+                _cache.AddCharToCombat(target.Id.ToString(), target);
+            }
             var chanceToHit = _formulas.ToHitChance(player, target);
             var doesHit = _formulas.DoesHit(chanceToHit);
             var weapon = GetWeapon(player);

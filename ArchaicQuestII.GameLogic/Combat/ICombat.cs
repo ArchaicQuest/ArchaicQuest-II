@@ -12,7 +12,7 @@ namespace ArchaicQuestII.GameLogic.Combat
 {
     public interface ICombat
     {
-        public Player FindTarget(string target, Room room, bool isMurder);
+        public Player FindTarget(Player attacker, string target, Room room, bool isMurder);
 
         public Item.Item GetWeapon(Player player);
 

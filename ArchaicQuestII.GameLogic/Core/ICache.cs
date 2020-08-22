@@ -35,5 +35,11 @@ namespace ArchaicQuestII.GameLogic.Core
 
         void AddMap(int areaId, string room);
         string GetMap(int areaId);
+
+        bool IsCharInCombat(string id);
+        bool AddCharToCombat(string id, Player character);
+        Player GetCharFromCombat(string id);
+        Player RemoveCharFromCombat(string id);
+        List<Player> GetCombatList();
     }
 }

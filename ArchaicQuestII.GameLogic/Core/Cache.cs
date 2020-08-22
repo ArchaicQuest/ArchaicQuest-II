@@ -21,6 +21,7 @@ namespace ArchaicQuestII.GameLogic.Core
         private readonly ConcurrentDictionary<int, Room> _roomCache = new ConcurrentDictionary<int, Room>();
         private readonly ConcurrentDictionary<int, Skill.Model.Skill> _skillCache = new ConcurrentDictionary<int, Skill.Model.Skill>();
         private readonly ConcurrentDictionary<int, string> _mapCache = new ConcurrentDictionary<int, string>();
+        private readonly ConcurrentDictionary<string, Player> _combatCache = new ConcurrentDictionary<string, Player>();
         private Config _configCache = new Config();
 
         #region PlayerCache
@@ -155,6 +156,39 @@ namespace ArchaicQuestII.GameLogic.Core
 
             return map;
         }
+
+        #region mobs or players fighting
+
+        public bool IsCharInCombat(string id)
+        {
+            return _combatCache.ContainsKey(id);
+        }
+
+
+        public bool AddCharToCombat(string id, Player character)
+        {
+            return _combatCache.TryAdd(id, character);
+        }
+
+        public Player GetCharFromCombat(string id)
+        {
+            _combatCache.TryGetValue(id, out Player character);
+
+            return character;
+        }
+
+        public Player RemoveCharFromCombat(string id)
+        {
+            _combatCache.TryRemove(id, out Player character);
+            return character;
+        }
+
+        public List<Player> GetCombatList()
+        {
+           return _combatCache.Values.ToList();
+        }
+
+        #endregion
 
     }
 }

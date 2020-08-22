@@ -12,14 +12,14 @@ namespace ArchaicQuestII.GameLogic.Character
 {
 
   public class Character
-    {
-        /// <summary>
-        /// Assigned when player logs in.
-        /// used to find player in cached dictionary and to send data directly to player
-        /// </summary>
-        [BsonIgnore]
-        [JsonProperty("connectionId")]
-        public string ConnectionId { get; set; }
+  {
+      /// <summary>
+      /// Assigned when player logs in.
+      /// used to find player in cached dictionary and to send data directly to player
+      /// </summary>
+      [BsonIgnore]
+      [JsonProperty("connectionId")]
+      public string ConnectionId { get; set; } = "mob";
 
         /// <summary>
         /// Associated Account Id
