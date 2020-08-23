@@ -112,7 +112,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Movement
 
 
             _cache.AddRoom(2, room2);
-          //  _cache.AddRoom(1, _room);
+            _cache.AddRoom(1, _room);
            
             new GameLogic.Commands.Movement.Movement(_writer.Object, _cache, _roomActions.Object, _clientui.Object).Move(_room, _player, "North");
 
