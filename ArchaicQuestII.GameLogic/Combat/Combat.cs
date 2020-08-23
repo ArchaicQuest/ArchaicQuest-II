@@ -84,8 +84,8 @@ namespace ArchaicQuestII.GameLogic.Combat
             }
 
 
-            _writer.WriteLine($"<p>Your {attackType} {damText.Value} {target.Name}.</p>", player.ConnectionId);
-            _writer.WriteLine($"<p>{player.Name} {attackType} {damText.Value} you.</p>", target.ConnectionId);
+            _writer.WriteLine($"<p>Your {attackType} {damText.Value} {target.Name}. <span>[{damage}]</span></p>", player.ConnectionId);
+            _writer.WriteLine($"<p>{player.Name} {attackType} {damText.Value} you. <span>[{damage}]</span></p></p>", target.ConnectionId);
 
             foreach (var pc in room.Players)
             {

@@ -24,7 +24,7 @@ namespace ArchaicQuestII.Controllers
 
 
         [HttpPost]
-        [Route("api/Player/Mob")]
+        [Route("api/Character/Mob")]
         public void Post([FromBody] Player mob)
            {
 
@@ -48,7 +48,7 @@ namespace ArchaicQuestII.Controllers
                 },
                 Affects = mob.Affects,
                 AlignmentScore = mob.AlignmentScore,
-                Attributes = mob.Attributes,
+                Attributes =  mob.Attributes,
                 MaxAttributes = mob.Attributes,
                 Inventory = mob.Inventory,
                 Equipped = mob.Equipped,

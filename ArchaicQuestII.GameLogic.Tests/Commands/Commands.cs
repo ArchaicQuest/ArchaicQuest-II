@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Equipment;
+using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Commands;
 using ArchaicQuestII.GameLogic.Commands.Communication;
 using ArchaicQuestII.GameLogic.Commands.Debug;
 using ArchaicQuestII.GameLogic.Commands.Inventory;
 using ArchaicQuestII.GameLogic.Commands.Movement;
 using ArchaicQuestII.GameLogic.Commands.Objects;
+using ArchaicQuestII.GameLogic.Commands.Score;
 using ArchaicQuestII.GameLogic.Commands.Skills;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Spell.Interface;
@@ -31,6 +33,8 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
         private readonly Mock<IInventory> _inventory;
         private readonly Mock<Icommunication> _communication;
         private readonly Mock<IEquip> _equipment;
+        private readonly Mock<IScore> _score;
+        private readonly Mock<ICombat> _combat;
 
         public CommandsTests()
         {
@@ -43,7 +47,8 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
             _inventory = new Mock<IInventory>();
             _communication = new Mock<Icommunication>();
             _equipment = new Mock<IEquip>();
-
+            _score = new Mock<IScore>();
+            _combat = new Mock<ICombat>();
             _player = new Player();
             _player.ConnectionId = "1";
             _player.Name = "Bob";
@@ -67,7 +72,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
                 }
             };
 
-            _commands = new GameLogic.Commands.Commands(_movement.Object, _roomActions.Object, _debug.Object, _skill.Object, _spell.Object, _object.Object, _inventory.Object, _communication.Object, _equipment.Object);
+            _commands = new GameLogic.Commands.Commands(_movement.Object, _roomActions.Object, _debug.Object, _skill.Object, _spell.Object, _object.Object, _inventory.Object, _communication.Object, _equipment.Object, _score.Object, _combat.Object);
 
         }
 

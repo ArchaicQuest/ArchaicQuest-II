@@ -5,6 +5,7 @@ using ArchaicQuestII.GameLogic.Item;
 using LiteDB;
 using System.Collections.Generic;
 using ArchaicQuestII.GameLogic.Character.Class;
+using ArchaicQuestII.GameLogic.Effect;
 using Newtonsoft.Json;
 using Money = ArchaicQuestII.GameLogic.Item.Money;
 
@@ -64,8 +65,9 @@ namespace ArchaicQuestII.GameLogic.Character
         public CharacterStatus.Status Status { get; set; }
         [JsonProperty("maxStats")]
         public Stats MaxStats { get; set; }
+
         [JsonProperty("attributes")]
-        public Attributes Attributes {get; set; }
+        public Attributes Attributes { get; set; }
         [JsonProperty("maxAttributes")]
         public Attributes MaxAttributes {get; set; }
         [BsonIgnore]

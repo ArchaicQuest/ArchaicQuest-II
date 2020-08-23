@@ -271,7 +271,7 @@ namespace ArchaicQuestII.GameLogic.Tests
                     Table = new Dictionary<Cost, int>
                     {
 
-                        {Cost.Mana, 10}
+                        {Cost.Mana, 100}
 
                     }
                 }
@@ -280,7 +280,7 @@ namespace ArchaicQuestII.GameLogic.Tests
 
            
             Assert.False(_spell.ManaCheck(spell, _player));
-            _writer.Verify(w => w.WriteLine(It.Is<string>(s => s == "You don't have enough mana.")), Times.Once);
+            _writer.Verify(w => w.WriteLine(It.Is<string>(s => s == "You don't have enough mana."), "mob"), Times.Once);
 
         }
 

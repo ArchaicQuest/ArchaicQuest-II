@@ -8,7 +8,7 @@ using ArchaicQuestII.GameLogic.Core;
 
 namespace ArchaicQuestII.GameLogic.World.Room
 {
-    public class RoomActions:IRoomActions
+    public class RoomActions : IRoomActions
     {
 
         private readonly IWriteToClient _writeToClient;
@@ -43,9 +43,9 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 .Append($"<p>{items}</p>")
                 .Append($"<p>{mobs}</p>")
                 .Append($"<p>{players}</p>");
-               
 
-           _writeToClient.WriteLine(roomDesc.ToString(), player.ConnectionId);
+
+            _writeToClient.WriteLine(roomDesc.ToString(), player.ConnectionId);
         }
 
         public void LookInContainer(string target, Room room, Player player)
@@ -53,7 +53,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
             //check room, then check player if no match
 
- 
+
             var container = room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ?? player.Inventory.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
 
             if (container != null && container.ItemType != Item.Item.ItemTypes.Container)
@@ -98,15 +98,46 @@ namespace ArchaicQuestII.GameLogic.World.Room
         public void LookObject(string target, Room room, Player player)
         {
 
-            var item = room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ?? player.Inventory.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+            var item =
+                room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ??
+                player.Inventory.FirstOrDefault(x =>
+                    x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
 
-            if (item == null)
+            var character =
+                room.Mobs.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ??
+                room.Players.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+
+
+            if (item == null && character != null)
             {
                 _writeToClient.WriteLine("<p>You don't see that here.", player.ConnectionId);
                 return;
             }
 
-            _writeToClient.WriteLine($"<p>{item.Description.Look}", player.ConnectionId);
+            if (item != null && character == null)
+            {
+                _writeToClient.WriteLine($"<p>{item.Description.Look}", player.ConnectionId);
+
+                foreach (var pc in room.Players)
+                {
+                    if (pc.Name == player.Name)
+                    {
+                        continue;
+                    }
+
+                    _writeToClient.WriteLine($"<p>{player.Name} looks at {item.Name.ToLower()}.</p>", pc.ConnectionId);
+                }
+
+                return;
+            }
+
+            if (character == null)
+            {
+                _writeToClient.WriteLine("<p>You don't see them here.", player.ConnectionId);
+                return;
+            }
+
+            _writeToClient.WriteLine($"<p>{character.Description}", player.ConnectionId);
 
             foreach (var pc in room.Players)
             {
@@ -115,8 +146,11 @@ namespace ArchaicQuestII.GameLogic.World.Room
                     continue;
                 }
 
-                _writeToClient.WriteLine($"<p>{player.Name} looks at {item.Name.ToLower()}.</p>", pc.ConnectionId);
+                _writeToClient.WriteLine($"<p>{player.Name} looks at {character.Name.ToLower()}.</p>", pc.ConnectionId);
             }
+
+
+
 
             //if (item.ItemType == Item.Item.ItemTypes.Container)
             //{
@@ -240,10 +274,10 @@ namespace ArchaicQuestII.GameLogic.World.Room
             {
                 if (!string.IsNullOrEmpty(item))
                 {
-                   
-                        x += "<p class='item'>" + item + "</p>";
+
+                    x += "<p class='item'>" + item + "</p>";
                 }
-             
+
             }
 
             return x;
@@ -264,7 +298,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 {
                     mobs += "<p class='mob'>" + mob.Name + " is here.</p>";
                 }
-               
+
             }
 
             return mobs;

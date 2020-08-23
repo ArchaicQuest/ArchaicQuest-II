@@ -62,7 +62,7 @@ namespace ArchaicQuestII.GameLogic.Core
             Console.WriteLine("started combat loop");
             while (true)
             {
-                await Task.Delay(2000);
+                await Task.Delay(4000);
                 Console.WriteLine("combat loop");
                 var players = _cache.GetCombatList();
                 var validPlayers = players.Where(x => x.Status == CharacterStatus.Status.Fighting);

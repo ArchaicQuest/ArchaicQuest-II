@@ -14,6 +14,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Movement
         private Player _player;
         private readonly Mock<IWriteToClient> _writer;
         private readonly Mock<IRoomActions> _roomActions;
+        private readonly Mock<IUpdateClientUI> _clientui;
         private readonly Cache _cache;
 
         public MovementTests()
@@ -21,7 +22,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Movement
             _writer = new Mock<IWriteToClient>();
             _cache =  new Cache();
             _roomActions = new Mock<IRoomActions>();
-
+            _clientui = new Mock<IUpdateClientUI>();
         }
 
         [Fact]
@@ -113,7 +114,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Movement
             _cache.AddRoom(2, room2);
           //  _cache.AddRoom(1, _room);
            
-            new GameLogic.Commands.Movement.Movement(_writer.Object, _cache, _roomActions.Object).Move(_room, _player, "North");
+            new GameLogic.Commands.Movement.Movement(_writer.Object, _cache, _roomActions.Object, _clientui.Object).Move(_room, _player, "North");
 
             _writer.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("Bob walks north.")), "1"), Times.Never);
             _writer.Verify(w => w.WriteLine(It.Is<string>(s => s == "Bob walks north."), "2"), Times.Once);
@@ -175,7 +176,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Movement
             _cache.AddRoom(2, room2);
            // _cache.AddRoom(1, _room);
 
-            new GameLogic.Commands.Movement.Movement(_writer.Object, _cache, _roomActions.Object).Move(_room, _player, "North");
+            new GameLogic.Commands.Movement.Movement(_writer.Object, _cache, _roomActions.Object, _clientui.Object).Move(_room, _player, "North");
 
  
             _writer.Verify(w => w.WriteLine(It.Is<string>(s => s == "You are too exhausted to move"), "1"), Times.Once);
@@ -265,7 +266,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Movement
 
             _cache.AddRoom(2, room2);
 
-            new GameLogic.Commands.Movement.Movement(_writer.Object, _cache, _roomActions.Object).Move(_room, _player, "North");
+            new GameLogic.Commands.Movement.Movement(_writer.Object, _cache, _roomActions.Object, _clientui.Object).Move(_room, _player, "North");
 
 
             _writer.Verify(w => w.WriteLine(It.Is<string>(s => s == "A mysterious force prevents you from going that way."), "1"), Times.Once);
