@@ -60,7 +60,7 @@ namespace ArchaicQuestII.Controllers.Dashboard
             var stats = new QuickStats
             {
                 ItemCount = _db.GetCollection<Item>(DataBase.Collections.Items).Count(),
-                MobCount = _db.GetCollection<Character>(DataBase.Collections.Mobs).Count(),
+                MobCount = _db.GetCollection<Player>(DataBase.Collections.Mobs).Count(),
                 AreaCount = _db.GetCollection<Area>(DataBase.Collections.Area).Count(),
                 RoomCount = _db.GetCollection<Room>(DataBase.Collections.Room).Count(),
                 QuestCount = 0

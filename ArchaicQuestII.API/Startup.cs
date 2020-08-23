@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using ArchaicQuestII.GameLogic.Commands;
@@ -24,19 +25,29 @@ using ArchaicQuestII.GameLogic.World.Room;
 using Microsoft.AspNetCore.SignalR;
 using static ArchaicQuestII.API.Services.services;
 using System.Threading.Tasks;
+using ArchaicQuestII.GameLogic.Character.Equipment;
+using ArchaicQuestII.GameLogic.Character.Gain;
+using ArchaicQuestII.GameLogic.Combat;
+using ArchaicQuestII.GameLogic.Commands.Communication;
+using ArchaicQuestII.GameLogic.Commands.Inventory;
+using ArchaicQuestII.GameLogic.Commands.Objects;
+using ArchaicQuestII.GameLogic.Commands.Score;
 using ArchaicQuestII.GameLogic.Commands.Skills;
 using ArchaicQuestII.GameLogic.Skill.Model;
 using ArchaicQuestII.GameLogic.Spell;
 using ArchaicQuestII.GameLogic.Spell.Interface;
+using ArchaicQuestII.GameLogic.World.Area;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Object = ArchaicQuestII.GameLogic.Commands.Objects.Object;
 
 namespace ArchaicQuestII.API
 {
     public class Startup
     {
         private IDataBase _db;
-        private ICache _cache;   
+        private ICache _cache;
+      
         private IHubContext<GameHub> _hubContext;
         public Startup(IConfiguration configuration)
         {
@@ -99,15 +110,24 @@ namespace ArchaicQuestII.API
             services.AddScoped<IDataBase, DataBase>();
             services.AddSingleton<ICache>(new Cache());
             services.AddSingleton<IDamage, Damage>();
+
             services.AddTransient<IMovement, Movement>();
             services.AddTransient<ISkills, Skills>();
             services.AddTransient<ISpells, Spells>();
             services.AddTransient<IDebug, Debug>();
+            services.AddTransient<IInventory, Inventory>();
+            services.AddSingleton<Icommunication, Communication>();
+            services.AddTransient<IObject, Object>();
+            services.AddTransient<IEquip, Equip>();
             services.AddSingleton<ICommands, Commands>();
+            services.AddSingleton<IScore, Score>();
             services.AddTransient<ISpellTargetCharacter, SpellTargetCharacter>();
             services.AddSingleton<IGameLoop, GameLoop>();
             services.AddTransient<IRoomActions, RoomActions>();
             services.AddTransient<IAddRoom, AddRoom>();
+            services.AddSingleton<ICombat, Combat>();
+            services.AddSingleton<IGain, Gain>();
+            services.AddSingleton<IFormulas, Formulas>();
             services.AddSingleton<IUpdateClientUI, UpdateClientUI>();
             services.AddSingleton<IWriteToClient, WriteToClient>((factory) => new WriteToClient(_hubContext));
 
@@ -221,6 +241,13 @@ namespace ArchaicQuestII.API
                 _cache.AddSkill(skill.Id, skill);
             }
 
+            var areas = _db.GetList<Area>(DataBase.Collections.Area);
+           
+            foreach (var area in areas)
+            {
+                var roomList = rooms.FindAll(x => x.AreaId == area.Id);
+                _cache.AddMap(area.Id, Map.DrawMap(roomList));
+            }
 
 
         }
@@ -232,6 +259,7 @@ namespace ArchaicQuestII.API
         {
             var loop = app.ApplicationServices.GetRequiredService<IGameLoop>();
             Task.Run(loop.UpdateTime);
+            Task.Run(loop.UpdateCombat);
             Task.Run(loop.UpdatePlayers);
         }
     }

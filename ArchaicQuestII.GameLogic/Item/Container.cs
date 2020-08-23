@@ -17,7 +17,7 @@ namespace ArchaicQuestII.GameLogic.Item
         }
 
         public ContainerSize Size { get; set; }
-        public List<Item> Items { get; set; } = new List<Item>();
+        public ItemList Items { get; set; } = new ItemList();
         public bool CanOpen { get; set; }
         public bool IsOpen { get; set; }
         public bool CanLock { get; set; }

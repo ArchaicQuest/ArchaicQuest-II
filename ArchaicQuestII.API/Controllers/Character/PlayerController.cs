@@ -56,7 +56,7 @@ namespace ArchaicQuestII.Controllers.character
                 AlignmentScore = 0,
                 Attributes = player.Attributes,
                 MaxAttributes = player.Attributes,
-                Inventory = new List<Item>(),
+                Inventory = new ItemList(),
                 Equipped = new Equipment(),
                 ClassName = player.ClassName,
                 Config = null,
@@ -106,10 +106,10 @@ namespace ArchaicQuestII.Controllers.character
   
 
         [HttpGet]
-        public List<Character> Get([FromQuery] string query)
+        public List<Player> Get([FromQuery] string query)
         {
 
-            var mobs = _db.GetCollection<Character>(DataBase.Collections.Mobs).FindAll().Where(x => x.Name != null);
+            var mobs = _db.GetCollection<Player>(DataBase.Collections.Mobs).FindAll().Where(x => x.Name != null);
 
             if (string.IsNullOrEmpty(query))
             {

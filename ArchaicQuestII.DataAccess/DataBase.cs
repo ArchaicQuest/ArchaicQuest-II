@@ -41,7 +41,7 @@ namespace ArchaicQuestII.DataAccess
         {
             var collection = _db.GetCollection<T>(GetCollectionName(collectionName));
             collection.Upsert(data);
-            SetIndex(collection, collectionName);
+            SetIndex((LiteCollection<T>)collection, collectionName);
 
             return true;
         }
@@ -53,7 +53,7 @@ namespace ArchaicQuestII.DataAccess
 
         public LiteCollection<T> GetCollection<T>(Collections collectionName)
         {
-            return _db.GetCollection<T>(GetCollectionName(collectionName));
+            return (LiteCollection<T>)_db.GetCollection<T>(GetCollectionName(collectionName));
         }
 
         public T GetById<T>(Guid id, Collections collectionName)
@@ -90,6 +90,7 @@ namespace ArchaicQuestII.DataAccess
                 Collections.Players => "Players",
                 Collections.Race => "Race",
                 Collections.Room => "Room",
+                Collections.Skill => "Skill",
                 Collections.Status => "Status",
                 Collections.Config => "Config",
                 _ => "error",

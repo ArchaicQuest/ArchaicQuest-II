@@ -5,20 +5,22 @@ using ArchaicQuestII.GameLogic.Item;
 using LiteDB;
 using System.Collections.Generic;
 using ArchaicQuestII.GameLogic.Character.Class;
+using ArchaicQuestII.GameLogic.Effect;
 using Newtonsoft.Json;
 using Money = ArchaicQuestII.GameLogic.Item.Money;
 
 namespace ArchaicQuestII.GameLogic.Character
 {
-    public class Character
-    {
-        /// <summary>
-        /// Assigned when player logs in.
-        /// used to find player in cached dictionary and to send data directly to player
-        /// </summary>
-        [BsonIgnore]
-        [JsonProperty("connectionId")]
-        public string ConnectionId { get; set; }
+
+  public class Character
+  {
+      /// <summary>
+      /// Assigned when player logs in.
+      /// used to find player in cached dictionary and to send data directly to player
+      /// </summary>
+      [BsonIgnore]
+      [JsonProperty("connectionId")]
+      public string ConnectionId { get; set; } = "mob";
 
         /// <summary>
         /// Associated Account Id
@@ -49,22 +51,23 @@ namespace ArchaicQuestII.GameLogic.Character
         public int AlignmentScore { get; set; } = 0;
         [JsonProperty("totalExperience")]
         public int TotalExperience { get; set; }
-        [JsonProperty("experience")]
+        [JsonProperty("experience")] 
         public int Experience { get; set; }
         [JsonProperty("experienceToNextLevel")]
-        public int ExperienceToNextLevel { get; set; }
+        public int ExperienceToNextLevel { get; set; } = 1000;
         [JsonProperty("equipped")]
         public Equipment.Equipment Equipped { get; set; } = new Equipment.Equipment();
         [JsonProperty("inventory")]
-        public List<Item.Item> Inventory { get; set; } = new List<Item.Item>();
+        public ItemList Inventory { get; set; } = new ItemList();
         [JsonProperty("stats")]
         public Stats Stats { get; set; }
         [JsonProperty("status")]
         public CharacterStatus.Status Status { get; set; }
         [JsonProperty("maxStats")]
         public Stats MaxStats { get; set; }
+
         [JsonProperty("attributes")]
-        public Attributes Attributes {get; set; }
+        public Attributes Attributes { get; set; }
         [JsonProperty("maxAttributes")]
         public Attributes MaxAttributes {get; set; }
         [BsonIgnore]

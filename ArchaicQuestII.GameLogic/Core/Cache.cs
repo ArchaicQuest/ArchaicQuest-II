@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.World.Room;
@@ -19,6 +20,8 @@ namespace ArchaicQuestII.GameLogic.Core
         private readonly ConcurrentDictionary<string, Player> _playerCache = new ConcurrentDictionary<string, Player>();
         private readonly ConcurrentDictionary<int, Room> _roomCache = new ConcurrentDictionary<int, Room>();
         private readonly ConcurrentDictionary<int, Skill.Model.Skill> _skillCache = new ConcurrentDictionary<int, Skill.Model.Skill>();
+        private readonly ConcurrentDictionary<int, string> _mapCache = new ConcurrentDictionary<int, string>();
+        private readonly ConcurrentDictionary<string, Player> _combatCache = new ConcurrentDictionary<string, Player>();
         private Config _configCache = new Config();
 
         #region PlayerCache
@@ -35,6 +38,12 @@ namespace ArchaicQuestII.GameLogic.Core
             return player;
         }
 
+        public Player RemovePlayer(string id)
+        {
+            _playerCache.TryRemove(id, out Player player);
+            return player;
+        }
+
         /// <summary>
         /// Only for the main loop
         /// </summary>
@@ -44,9 +53,9 @@ namespace ArchaicQuestII.GameLogic.Core
             return _playerCache;
         }
 
-        public bool PlayerAlreadyExists(Guid id)
+        public Player PlayerAlreadyExists(Guid id)
         {
-            return _playerCache.Values.Any(x => x.Id.Equals(id));
+            return _playerCache.Values.FirstOrDefault(x => x.Id.Equals(id));
         }
 
         #endregion
@@ -81,6 +90,13 @@ namespace ArchaicQuestII.GameLogic.Core
             return room;
         }
 
+
+        public List<Room> GetAllRoomsInArea(int id)
+        {
+            var room = _roomCache.Values.Where(x =>x.AreaId.Equals(id)).ToList();
+
+            return room;
+        }
         public bool UpdateRoom(int id, Room room, Player player)
         {
             var existingRoom = room;
@@ -107,9 +123,10 @@ namespace ArchaicQuestII.GameLogic.Core
 
             return skill;
         }
-         
- 
+
+
         #endregion
+
 
         public void SetConfig(Config config)
         {
@@ -121,12 +138,57 @@ namespace ArchaicQuestII.GameLogic.Core
             return _configCache;
         }
 
+       
         public void ClearRoomCache()
         {
             _roomCache.Clear();
 
         }
 
+        public void AddMap(int areaId, string map)
+        {
+             _mapCache.TryAdd(areaId, map);
+        }
+
+        public string GetMap(int areaId)
+        {
+            _mapCache.TryGetValue(areaId, out var map);
+
+            return map;
+        }
+
+        #region mobs or players fighting
+
+        public bool IsCharInCombat(string id)
+        {
+            return _combatCache.ContainsKey(id);
+        }
+
+
+        public bool AddCharToCombat(string id, Player character)
+        {
+            return _combatCache.TryAdd(id, character);
+        }
+
+        public Player GetCharFromCombat(string id)
+        {
+            _combatCache.TryGetValue(id, out Player character);
+
+            return character;
+        }
+
+        public Player RemoveCharFromCombat(string id)
+        {
+            _combatCache.TryRemove(id, out Player character);
+            return character;
+        }
+
+        public List<Player> GetCombatList()
+        {
+           return _combatCache.Values.ToList();
+        }
+
+        #endregion
 
     }
 }

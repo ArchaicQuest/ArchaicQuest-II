@@ -10,6 +10,6 @@ namespace ArchaicQuestII.GameLogic.Core
           Task UpdateTime();
 
         Task UpdatePlayers();
-        //  void UpdatePlayers();
+        Task UpdateCombat();
     }
 }

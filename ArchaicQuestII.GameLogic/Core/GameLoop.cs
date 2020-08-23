@@ -2,6 +2,8 @@
 using ArchaicQuestII.GameLogic.Commands;
 using System.Linq;
 using System.Threading.Tasks;
+using ArchaicQuestII.GameLogic.Character.Status;
+using ArchaicQuestII.GameLogic.Combat;
 
 namespace ArchaicQuestII.GameLogic.Core
 {
@@ -13,12 +15,14 @@ namespace ArchaicQuestII.GameLogic.Core
         private IWriteToClient _writeToClient;
         private ICache _cache;
         private ICommands _commands;
+        private ICombat _combat;
 
-        public GameLoop(IWriteToClient writeToClient, ICache cache, ICommands commands)
+        public GameLoop(IWriteToClient writeToClient, ICache cache, ICommands commands, ICombat combat)
         {
             _writeToClient = writeToClient;
             _cache = cache;
             _commands = commands;
+            _combat = combat;
         }
 
 
@@ -48,6 +52,30 @@ namespace ArchaicQuestII.GameLogic.Core
                 }
             }
         }
+
+        public async Task UpdateCombat()
+        {
+ // create a combat cache to add mobs too so they can fight back
+ // block movement while fighting
+ // end fight if target is not there / dead
+ // create flee commant
+            Console.WriteLine("started combat loop");
+            while (true)
+            {
+                await Task.Delay(4000);
+                Console.WriteLine("combat loop");
+                var players = _cache.GetCombatList();
+                var validPlayers = players.Where(x => x.Status == CharacterStatus.Status.Fighting);
+
+                foreach (var player in validPlayers)
+                {
+                    Console.WriteLine(player.Name);
+                    _combat.Fight(player, player.Target, _cache.GetRoom(player.RoomId), false);
+
+                }
+            }
+        }
+
 
 
         public async Task UpdatePlayers()

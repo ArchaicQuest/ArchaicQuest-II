@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using ArchaicQuestII.DataAccess;
+using ArchaicQuestII.GameLogic.Character;
 using Microsoft.AspNetCore.Mvc;
 
-using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Item;
 using Newtonsoft.Json;
 
@@ -25,7 +25,7 @@ namespace ArchaicQuestII.Controllers
 
         [HttpPost]
         [Route("api/Character/Mob")]
-        public void Post([FromBody] Character mob)
+        public void Post([FromBody] Player mob)
            {
 
 
@@ -35,7 +35,7 @@ namespace ArchaicQuestII.Controllers
                 throw exception;
             }
 
-            var newMob = new Character()
+            var newMob = new Player()
             {
                 Name = mob.Name,
                 LongName = mob.LongName,
@@ -48,7 +48,7 @@ namespace ArchaicQuestII.Controllers
                 },
                 Affects = mob.Affects,
                 AlignmentScore = mob.AlignmentScore,
-                Attributes = mob.Attributes,
+                Attributes =  mob.Attributes,
                 MaxAttributes = mob.Attributes,
                 Inventory = mob.Inventory,
                 Equipped = mob.Equipped,
@@ -69,7 +69,7 @@ namespace ArchaicQuestII.Controllers
             if (mob.Id != Guid.Empty)
             {
 
-                var foundItem = _db.GetById<Character>(mob.Id, DataBase.Collections.Mobs);
+                var foundItem = _db.GetById<Player>(mob.Id, DataBase.Collections.Mobs);
 
                 if (foundItem == null)
                 {
@@ -87,10 +87,10 @@ namespace ArchaicQuestII.Controllers
 
         [HttpGet]
         [Route("api/mob/Get")]
-        public List<Character> GetMob()
+        public List<Player> GetMob()
         {
 
-            var mobs = _db.GetCollection<Character>(DataBase.Collections.Mobs).FindAll().Where(x => x.Deleted == false).ToList();
+            var mobs = _db.GetCollection<Player>(DataBase.Collections.Mobs).FindAll().Where(x => x.Deleted == false).ToList();
 
             return mobs;
 
@@ -99,10 +99,10 @@ namespace ArchaicQuestII.Controllers
 
         [HttpGet]
         [Route("api/Character/Mob")]
-        public List<Character> Get([FromQuery] string query)
+        public List<Player> Get([FromQuery] string query)
         {
 
-            var mobs =  _db.GetCollection<Character>(DataBase.Collections.Mobs).FindAll().Where(x => x.Name != null);
+            var mobs =  _db.GetCollection<Player>(DataBase.Collections.Mobs).FindAll().Where(x => x.Name != null);
 
             if (string.IsNullOrEmpty(query))
             {
@@ -115,10 +115,10 @@ namespace ArchaicQuestII.Controllers
 
         [HttpGet]
         [Route("api/mob/FindMobById")]
-        public Character FindMobById([FromQuery] Guid id)
+        public Player FindMobById([FromQuery] Guid id)
         {
 
-            return _db.GetById<Character>(id, DataBase.Collections.Mobs);
+            return _db.GetById<Player>(id, DataBase.Collections.Mobs);
 
         }
 
@@ -127,7 +127,7 @@ namespace ArchaicQuestII.Controllers
         [Route("api/mob/delete/{id:guid}")]
         public IActionResult Delete(Guid id)
         {
-            var item = _db.GetCollection<Character>(DataBase.Collections.Mobs).FindById(id);
+            var item = _db.GetCollection<Player>(DataBase.Collections.Mobs).FindById(id);
             item.Deleted = true;
             var saved = _db.Save(item, DataBase.Collections.Mobs);
 

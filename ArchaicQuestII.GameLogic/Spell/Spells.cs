@@ -5,6 +5,7 @@ using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
+using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.Skill.Enum;
 using ArchaicQuestII.GameLogic.Skill.Model;
 using ArchaicQuestII.GameLogic.Spell.Interface;
@@ -75,7 +76,7 @@ namespace ArchaicQuestII.GameLogic.Spell
         {
             if (player.Attributes.Attribute[EffectLocation.Mana] < spell.Cost.Table[Cost.Mana])
             {
-                _writer.WriteLine("You don't have enough mana.");
+                _writer.WriteLine("You don't have enough mana.", player.ConnectionId);
                 return false;
             }
 
@@ -109,20 +110,27 @@ namespace ArchaicQuestII.GameLogic.Spell
 
         public bool SpellSuccess(Player origin, Player target, Skill.Model.Skill spell)
         {
-            var spellSkill = 5;
+            var spellSkill = origin.Skills.FirstOrDefault(x => x.SkillId.Equals(spell.Id));
+          
+            if (spellSkill == null)
+            {
+                // TODO: log error, we should never get here.
+                return false;
+            }
 
+            var spellProficiency = spellSkill.Proficiency;
             var success = spell.Damage.Roll(1, 1,
                 101);
 
             if (success == 1 || success == 101)
             {
-                _writer.WriteLine($"You lost concentration.");
+                _writer.WriteLine($"<p>You got distracted.</p>", origin.ConnectionId);
                 return false;
             }
 
-            if (spellSkill < success)
+            if (spellProficiency < success)
             {
-                _writer.WriteLine($"You lost concentration.");
+                _writer.WriteLine($"<p>You lost concentration.</p>", origin.ConnectionId);
                 return false;
             }
 
@@ -175,49 +183,97 @@ namespace ArchaicQuestII.GameLogic.Spell
               
 
               //deduct mana
-              origin.Attributes.Attribute[EffectLocation.Mana] -= spell.Cost.Table[Cost.Mana];
+              origin.Attributes.Attribute[EffectLocation.Mana] -= spell.Cost.Table[Cost.Mana] == 0 ? 5 : spell.Cost.Table[Cost.Mana];
+              _updateClientUi.UpdateMana(origin);
 
-             // spell lag
-             // add lag property to player
-             // lag == spell round
-             // stops spell/skill spam
-             // applies after spell is cast
-             // is it needed?
+               
+                  // spell lag
+                  // add lag property to player
+                  // lag == spell round
+                  // stops spell/skill spam
+                  // applies after spell is cast
+                  // is it needed?
 
-              // hit / miss messages
+                  // hit / miss messages
 
-              //  _writer.WriteLine(spell.SkillStart.ToPlayer);
+                  //  _writer.WriteLine(spell.SkillStart.ToPlayer);
 
-              var skillTarget = new SkillTarget
-              {
-                  Origin = origin,
-                  Target = target,
-                  Room = room,
-                  Skill = spell
-              };
+                  if (SpellSuccess(origin, target, spell))
+                  {
 
-              _writer.WriteLine($"<p>Your {spell.Name} {_damage.DamageText(formula).Value} {target.Name} ({formula})</p>", origin.ConnectionId);
-              _writer.WriteLine($"<p>{origin.Name}'s {spell.Name} {_damage.DamageText(formula).Value} you! ({formula})</p>", target.ConnectionId);
+                      
 
-              // If no effect assume, negative spell and deduct HP
-                if (spell.Effect == null)
-              {
-                  skillTarget.Target.Attributes.Attribute[EffectLocation.Hitpoints] -= formula;
-                  //update UI
-                  _updateClientUi.UpdateHP(skillTarget.Target);
+                      var skillTarget = new SkillTarget
+                      {
+                          Origin = origin,
+                          Target = target,
+                          Room = room,
+                          Skill = spell
+                      };
+
+                      _writer.WriteLine(
+                          $"<p>Your {spell.Name} {_damage.DamageText(formula).Value} {target.Name} ({formula})</p>",
+                          origin.ConnectionId);
+                      _writer.WriteLine(
+                          $"<p>{origin.Name}'s {spell.Name} {_damage.DamageText(formula).Value} you! ({formula})</p>",
+                          target.ConnectionId);
+
+                      // If no effect assume, negative spell and deduct HP
+                      if (spell.Effect == null)
+                      {
+                          skillTarget.Target.Attributes.Attribute[EffectLocation.Hitpoints] -= formula;
+                          //update UI
+                          _updateClientUi.UpdateHP(skillTarget.Target);
 
 
-              }
-              else
-              {
-                  new SpellEffect(_writer, skillTarget, formula).Type[skillTarget.Skill.Type].Invoke();
-              }
+                      }
+                      else
+                      {
+                          new SpellEffect(_writer, skillTarget, formula).Type[skillTarget.Skill.Type].Invoke();
+                      }
 
-             
+                  }
+                  else
+                  {
+                      var skill = origin.Skills.FirstOrDefault(x => x.SkillId.Equals(spell.Id));
 
-          }
+                      if (skill == null)
+                      {
+                          return;
+                      }
+
+                      if (skill.Proficiency == 95)
+                      {
+                          return;
+                      }
+
+                      var increase = new Dice().Roll(1, 1, 3);
+
+                       skill.Proficiency += increase;
+
+                       origin.Experience += 100;
+                       origin.ExperienceToNextLevel -= 100;
+
+                       _updateClientUi.UpdateExp(origin);
+                       
+                      _writer.WriteLine(
+                          $"<p class='improve'>You learn from your mistakes and gain 100 experience points.</p>",
+                          origin.ConnectionId);
+                      _writer.WriteLine(
+                          $"<p class='improve'>Your {skill.SkillName} skill increases by {increase}%.</p>",
+                          origin.ConnectionId);
+                }
+
+            }
+          else
+          {
+              _writer.WriteLine(
+                  $"<p>You cannot cast this spell upon another.</p>",
+                  origin.ConnectionId);
+            }
 
         }
+        
 
     }
 

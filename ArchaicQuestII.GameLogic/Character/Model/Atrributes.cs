@@ -18,6 +18,8 @@ namespace ArchaicQuestII.GameLogic.Character.Model
             {EffectLocation.Hitpoints, 0},
             {EffectLocation.Mana, 0},
             {EffectLocation.Moves, 0},
+            {EffectLocation.HitRoll, 0},
+            {EffectLocation.DamageRoll, 0},
         };
       
     }

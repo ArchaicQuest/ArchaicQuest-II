@@ -23,7 +23,9 @@ namespace ArchaicQuestII.GameLogic.Spell
 
         public Player GetTarget(string target, Room room)
         {
-           return room.Players.FirstOrDefault(x => x.Name.StartsWith(target, StringComparison.CurrentCultureIgnoreCase));
+            return room.Mobs.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ??
+                   room.Players.FirstOrDefault(
+                       x => x.Name.StartsWith(target, StringComparison.CurrentCultureIgnoreCase));
         }
 
         public Player CheckTarget(Skill.Model.Skill spell, string target, Room room, Player player)
