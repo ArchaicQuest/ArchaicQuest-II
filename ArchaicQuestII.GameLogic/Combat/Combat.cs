@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.AttackTypes;
 using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
@@ -72,20 +74,24 @@ namespace ArchaicQuestII.GameLogic.Combat
 
         public void DisplayDamage(Player player, Player target, Room room, Item.Item weapon, int damage)
         {
+            CultureInfo cc = CultureInfo.CurrentCulture;
             var damText = _damage.DamageText(damage);
             var attackType = "";
             if (weapon == null)
             {
-                attackType = "punch";
+                attackType = target.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase) ? target.DefaultAttack?.ToLower(cc): "punch";
             }
             else
             {
-                attackType = nameof(weapon.AttackType);
+                attackType = Enum.GetName(typeof(Item.Item.AttackTypes), weapon.AttackType)?.ToLower(cc);
             }
+    
+            _writer.WriteLine($"<p>Your {attackType} {damText.Value} {target.Name.ToLower(cc)}. <span class='damage'>[{damage}]</span></p>", player.ConnectionId);
+            _writer.WriteLine($"<p>{target.Name} {_formulas.TargetHealth(player, target)}</p>", player.ConnectionId);
 
-
-            _writer.WriteLine($"<p>Your {attackType} {damText.Value} {target.Name}. <span>[{damage}]</span></p>", player.ConnectionId);
-            _writer.WriteLine($"<p>{player.Name} {attackType} {damText.Value} you. <span>[{damage}]</span></p></p>", target.ConnectionId);
+            _writer.WriteLine($"<p>{player.Name}'s {attackType} {damText.Value} you. <span class='damage'>[{damage}]</span></p></p>", target.ConnectionId);
+           
+          
 
             foreach (var pc in room.Players)
             {
@@ -94,24 +100,25 @@ namespace ArchaicQuestII.GameLogic.Combat
                     continue;
                 }
 
-                _writer.WriteLine($"<p>{player.Name}'s {attackType} {damText.Value} {target.Name}.</p>", pc.ConnectionId);
+                _writer.WriteLine($"<p>{player.Name}'s {attackType} {damText.Value} {target.Name.ToLower(cc)}.</p>", pc.ConnectionId);
             }
         }
 
         public void DisplayMiss(Player player, Player target, Room room, Item.Item weapon)
         {
+            CultureInfo cc = CultureInfo.CurrentCulture;
             var attackType = "";
             if (weapon == null)
             {
-                attackType = "punch";
+                attackType = target.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase) ? target.DefaultAttack?.ToLower(cc) : "punch";
             }
             else
             {
-                attackType = nameof(weapon.AttackType);
+                attackType = Enum.GetName(typeof(Item.Item.AttackTypes), weapon.AttackType)?.ToLower(cc);
             }
             
-            _writer.WriteLine($"<p>Your {attackType} misses {target.Name}.</p>", player.ConnectionId);
-            _writer.WriteLine($"<p>{player.Name} {attackType} misses you.</p>", target.ConnectionId);
+            _writer.WriteLine($"<p>Your {attackType} misses {target.Name.ToLower(cc)}.</p>", player.ConnectionId);
+            _writer.WriteLine($"<p>{player.Name}'s {attackType} misses you.</p>", target.ConnectionId);
 
             foreach (var pc in room.Players)
             {
@@ -120,7 +127,7 @@ namespace ArchaicQuestII.GameLogic.Combat
                     continue;
                 }
 
-                _writer.WriteLine($"<p>{player.Name}'s {attackType} misses {target.Name}.</p>", pc.ConnectionId);
+                _writer.WriteLine($"<p>{player.Name}'s {attackType} misses {target.Name.ToLower(cc)}.</p>", pc.ConnectionId);
             }
         }
 
@@ -137,7 +144,7 @@ namespace ArchaicQuestII.GameLogic.Combat
             player.Target = target.Name;
             player.Status = CharacterStatus.Status.Fighting;
             target.Status = CharacterStatus.Status.Fighting;
-            target.Target = player.Name;
+            target.Target = string.IsNullOrEmpty(target.Target) ? player.Name : target.Target; //for group combat, if target is ganged, there target should not be changed when combat is initiated.
 
            if(!_cache.IsCharInCombat(player.Id.ToString()))
             {
@@ -201,22 +208,42 @@ namespace ArchaicQuestII.GameLogic.Combat
                 }
 
 
-                HarmTarget(target, damage);
+                HarmTarget(target, damage); 
+                _writer.WriteLine("chance to hit: " + chanceToHit, player.ConnectionId);
                 DisplayDamage(player, target, room, weapon, damage);
+
+                _clientUi.UpdateHP(target);
 
                 if (!IsTargetAlive(target))
                 {
+                  
+                    player.Target = String.Empty;
+                    player.Status = CharacterStatus.Status.Standing;
+                    target.Status = CharacterStatus.Status.Ghost;
+                    target.Target = string.Empty;
+
+
+                    foreach (var pc in room.Players)
+                    {
+                        if (pc.Name.Equals(target.Name, StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            continue;
+                        }
+                        _writer.WriteLine($"<p>Your blood freezes as you hear {target.Name}'s death cry.</p>", pc.ConnectionId);
+                    }
                     _gain.GainExperiencePoints(player, target);
+                    // death cry to nearby rooms
                 }
 
+               
 
-                 
                 // award xp if dead
                 // create corpse container holding targets inventory and money
                 // end combat
             }
             else
             {
+                _writer.WriteLine("chance to hit: " + chanceToHit, player.ConnectionId);
                 DisplayMiss(player, target, room, weapon);
                 // miss message
                 // gain improvements on weapon skill

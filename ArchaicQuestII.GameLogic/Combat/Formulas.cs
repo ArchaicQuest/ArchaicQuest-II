@@ -42,6 +42,10 @@ namespace ArchaicQuestII.GameLogic.Combat
 
         public int ToHitChance(Player player, Player target)
         {
+
+            //var x = OffensivePoints(player);
+            //var y = DefensivePoints(target);
+            //var z = OffensivePoints(player) * 100 / (OffensivePoints(player) + DefensivePoints(target));
             return OffensivePoints(player) * 100 / (OffensivePoints(player) + DefensivePoints(target));
         }
 
@@ -54,7 +58,8 @@ namespace ArchaicQuestII.GameLogic.Combat
             {
                 armourReduction = 4;
             }
-            else if (armourReduction <= 0)
+            
+            if (armourReduction <= 0)
             {
                 armourReduction = 1;
             }
@@ -92,7 +97,7 @@ namespace ArchaicQuestII.GameLogic.Combat
             var levelDif = player.Level - target.Level <= 0 ? 1 : player.Level - target.Level;
             var levelMod = levelDif / 2 <= 0 ? 1 : levelDif / 2;
             var enduranceMod = player.Attributes.Attribute[EffectLocation.Moves] / (double)player.MaxAttributes.Attribute[EffectLocation.Moves];
-            var criticalHit = 0;
+            var criticalHit = 1;
 
             if (target.Status == CharacterStatus.Status.Sleeping || target.Status == CharacterStatus.Status.Stunned || target.Status == CharacterStatus.Status.Resting)
             {
@@ -116,6 +121,111 @@ namespace ArchaicQuestII.GameLogic.Combat
             return totalDamage;
         }
 
+        public string TargetHealth(Player player, Player target)
+        {
+            var percentageOfHP = (100 * target.Attributes.Attribute[EffectLocation.Hitpoints]) /
+                                 target.MaxAttributes.Attribute[EffectLocation.Hitpoints];
+
+            if (percentageOfHP >= 50)
+            {
+                if (percentageOfHP >= 100)
+                {
+                    return "is in excellent condition.";
+                }
+                if (percentageOfHP >= 95)
+                {
+                    return "has a few scratches.";
+                }
+                if (percentageOfHP >= 85)
+                {
+                    return "has some small wounds and bruises.";
+                }
+                if (percentageOfHP >= 75)
+                {
+                    return "has some minor wounds.";
+                }
+                if (percentageOfHP >= 63)
+                {
+                    return "has quite a few wounds.";
+                }
+
+                if (percentageOfHP >= 50)
+                {
+                    return "has some big nasty wounds and scratches.";
+                }
+            }
+
+            if (percentageOfHP >= 40)
+            {
+                return "looks pretty hurt.";
+            }
+            if (percentageOfHP >= 30)
+            {
+                return "has some large wounds.";
+            }
+            if (percentageOfHP >= 20)
+            {
+                return "is in bad condition.";
+            }
+            if (percentageOfHP >= 10)
+            {
+                return "is nearly dead.";
+            }
+
+            return percentageOfHP >= 0 ? "is in awful condition." : "is bleeding awfully from big wounds.";
+
+
+            //if (percentageOfHP >= 100)
+            //{
+            //    return "is in excellent condition.";
+            //}
+
+            //if (percentageOfHP >= 95)
+            //{
+            //    return "has a few scratches.";
+            //}
+
+            //if (percentageOfHP >= 85)
+            //{
+            //    return "has some small wounds and bruises.";
+            //}
+            //if (percentageOfHP >= 75)
+            //{
+            //    return "has some minor wounds.";
+            //}
+            //if (percentageOfHP >= 63)
+            //{
+            //    return "has quite a few wounds.";
+            //}
+            //if (percentageOfHP >= 50)
+            //{
+            //    return "has some big nasty wounds and scratches.";
+            //}
+            //if (percentageOfHP >= 40)
+            //{
+            //    return "looks pretty hurt.";
+            //}
+            //if (percentageOfHP >= 30)
+            //{
+            //    return "has some large wounds.";
+            //}
+            //if (percentageOfHP >= 20)
+            //{
+            //    return "is in bad condition.";
+            //}
+            //if (percentageOfHP >= 10)
+            //{
+            //    return "is nearly dead.";
+            //}
+            //if (percentageOfHP >= 0)
+            //{
+            //    return "is in awful condition.";
+            //}
+
+
+
+        }
+
         public bool IsCriticalHit()
         {
             return new Dice().Roll(1, 1, 20) == 20;
@@ -124,12 +234,12 @@ namespace ArchaicQuestII.GameLogic.Combat
         public bool DoesHit(int chance)
         {
             var roll = new Dice().Roll(1, 1, 100);
-
+            
             return roll switch
             {
                 1 => false,
                 100 => true,
-                _ => roll > chance
+                _ => chance > roll
             };
         }
     }

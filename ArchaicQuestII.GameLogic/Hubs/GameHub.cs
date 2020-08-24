@@ -116,11 +116,8 @@ namespace ArchaicQuestII.GameLogic.Hubs
 
         public async void AddCharacter(string hubId, Guid characterId)
         {
-
             var player = GetCharacter(hubId, characterId);
             AddCharacterToCache(hubId, player);
-
-          
 
             await SendToClient($"<p>Welcome {player.Name}. Your adventure awaits you.</p>", hubId);
 

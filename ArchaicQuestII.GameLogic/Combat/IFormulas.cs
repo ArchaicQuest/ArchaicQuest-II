@@ -21,6 +21,8 @@ namespace ArchaicQuestII.GameLogic.Combat
 
         public int CalculateDamage(Player player, Player target, Item.Item weapon);
 
+        public string TargetHealth(Player player, Player target);
+
         public bool IsCriticalHit();
         public bool DoesHit(int chance);
     }
