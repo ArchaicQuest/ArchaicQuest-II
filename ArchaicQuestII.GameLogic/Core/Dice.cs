@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ArchaicQuestII.GameLogic.Core;
 
 namespace ArchaicQuestII.GameLogic.Item
 {
-    public class Dice
+    public class Dice: IDice
     {
 
         public static Random Throws = new Random((int)DateTime.Now.Ticks);

@@ -33,12 +33,14 @@ using ArchaicQuestII.GameLogic.Commands.Inventory;
 using ArchaicQuestII.GameLogic.Commands.Objects;
 using ArchaicQuestII.GameLogic.Commands.Score;
 using ArchaicQuestII.GameLogic.Commands.Skills;
+using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.Skill.Model;
 using ArchaicQuestII.GameLogic.Spell;
 using ArchaicQuestII.GameLogic.Spell.Interface;
 using ArchaicQuestII.GameLogic.World.Area;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Damage = ArchaicQuestII.GameLogic.Core.Damage;
 using Object = ArchaicQuestII.GameLogic.Commands.Objects.Object;
 
 namespace ArchaicQuestII.API
@@ -110,7 +112,7 @@ namespace ArchaicQuestII.API
             services.AddScoped<IDataBase, DataBase>();
             services.AddSingleton<ICache>(new Cache());
             services.AddSingleton<IDamage, Damage>();
-
+            services.AddSingleton<IDice, Dice>();
             services.AddTransient<IMovement, Movement>();
             services.AddTransient<ISkills, Skills>();
             services.AddTransient<ISpells, Spells>();

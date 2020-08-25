@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
+using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Item;
 
@@ -10,12 +11,18 @@ namespace ArchaicQuestII.GameLogic.Combat
 {
    public class Formulas: IFormulas
     {
+        private readonly IDice _dice;
+        public Formulas(IDice dice)
+        {
+            _dice = dice;
+        }
         public int OffensivePoints(Player player)
         {
             var offensePoints = player.Attributes.Attribute[EffectLocation.Strength] / 5
                                 + player.Attributes.Attribute[EffectLocation.Dexterity] / 10
                                 + player.Attributes.Attribute[EffectLocation.HitRoll];
-            var weaponSkill = 100; //weapon types are hardcoded so make hardcoded skills for weapon types
+            // mob always have 100% skills
+            var weaponSkill = player.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase) ? 100 : 1; //weapon types are hardcoded so make hardcoded skills for weapon types
 
             return offensePoints + offensePoints * weaponSkill / 100;
         }
@@ -74,13 +81,13 @@ namespace ArchaicQuestII.GameLogic.Combat
 
             if (weapon != null)
             {
-                damage = new Dice().Roll(1, weapon.Damage.Minimum, weapon.Damage.Maximum);
+                damage = _dice.Roll(1, weapon.Damage.Minimum, weapon.Damage.Maximum);
 
             }
             else
             {
                 //Hand to hand
-                damage = new Dice().Roll(1, 1, 6);
+                damage = _dice.Roll(1, 1, 6);
             }
 
             // Enhanced Damage Skill check
@@ -174,66 +181,17 @@ namespace ArchaicQuestII.GameLogic.Combat
 
             return percentageOfHP >= 0 ? "is in awful condition." : "is bleeding awfully from big wounds.";
 
-
-            //if (percentageOfHP >= 100)
-            //{
-            //    return "is in excellent condition.";
-            //}
-
-            //if (percentageOfHP >= 95)
-            //{
-            //    return "has a few scratches.";
-            //}
-
-            //if (percentageOfHP >= 85)
-            //{
-            //    return "has some small wounds and bruises.";
-            //}
-            //if (percentageOfHP >= 75)
-            //{
-            //    return "has some minor wounds.";
-            //}
-            //if (percentageOfHP >= 63)
-            //{
-            //    return "has quite a few wounds.";
-            //}
-            //if (percentageOfHP >= 50)
-            //{
-            //    return "has some big nasty wounds and scratches.";
-            //}
-            //if (percentageOfHP >= 40)
-            //{
-            //    return "looks pretty hurt.";
-            //}
-            //if (percentageOfHP >= 30)
-            //{
-            //    return "has some large wounds.";
-            //}
-            //if (percentageOfHP >= 20)
-            //{
-            //    return "is in bad condition.";
-            //}
-            //if (percentageOfHP >= 10)
-            //{
-            //    return "is nearly dead.";
-            //}
-            //if (percentageOfHP >= 0)
-            //{
-            //    return "is in awful condition.";
-            //}
-
-
-
         }
 
         public bool IsCriticalHit()
         {
-            return new Dice().Roll(1, 1, 20) == 20;
+            return _dice.Roll(1, 1, 20) == 20;
         }
 
         public bool DoesHit(int chance)
         {
-            var roll = new Dice().Roll(1, 1, 100);
+            var roll = _dice.Roll(1, 1, 100);
+            
             
             return roll switch
             {

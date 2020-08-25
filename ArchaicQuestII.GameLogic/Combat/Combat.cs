@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.AttackTypes;
+using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
@@ -79,7 +80,7 @@ namespace ArchaicQuestII.GameLogic.Combat
             var attackType = "";
             if (weapon == null)
             {
-                attackType = target.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase) ? target.DefaultAttack?.ToLower(cc): "punch";
+                attackType = player.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase) ? player.DefaultAttack?.ToLower(cc): "punch";
             }
             else
             {
@@ -110,7 +111,7 @@ namespace ArchaicQuestII.GameLogic.Combat
             var attackType = "";
             if (weapon == null)
             {
-                attackType = target.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase) ? target.DefaultAttack?.ToLower(cc) : "punch";
+                attackType = player.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase) ? player.DefaultAttack?.ToLower(cc) : "punch";
             }
             else
             {
@@ -131,6 +132,83 @@ namespace ArchaicQuestII.GameLogic.Combat
             }
         }
 
+        public void DeathCry(Room room, Player target)
+        {
+
+            foreach (var pc in room.Players)
+            {
+                if (pc.Name.Equals(target.Name, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    continue;
+                }
+
+                _writer.WriteLine($"<p>Your blood freezes as you hear {target.Name}'s death cry.</p>", pc.ConnectionId);
+            }
+
+
+            // Exit checks
+            var rooms = new List<Room>();
+
+
+            if (room.Exits.NorthWest != null)
+            {
+               rooms.Add(_cache.GetRoom(room.Exits.NorthWest.RoomId));
+            }
+
+            if (room.Exits.North != null)
+            {
+                rooms.Add(_cache.GetRoom(room.Exits.North.RoomId));
+            }
+
+            if (room.Exits.NorthEast != null)
+            {
+                rooms.Add(_cache.GetRoom(room.Exits.NorthEast.RoomId));
+            }
+
+            if (room.Exits.East != null)
+            {
+                rooms.Add(_cache.GetRoom(room.Exits.East.RoomId));
+            }
+
+            if (room.Exits.SouthEast != null)
+            {
+                rooms.Add(_cache.GetRoom(room.Exits.SouthEast.RoomId));
+            }
+
+            if (room.Exits.South != null)
+            {
+                rooms.Add(_cache.GetRoom(room.Exits.South.RoomId));
+            }
+
+            if (room.Exits.SouthWest != null)
+            {
+                rooms.Add(_cache.GetRoom(room.Exits.SouthWest.RoomId));
+            }
+
+            if (room.Exits.West != null)
+            {
+                rooms.Add(_cache.GetRoom(room.Exits.West.RoomId));
+            }
+
+            if (room.Exits.Up != null)
+            {
+                rooms.Add(_cache.GetRoom(room.Exits.Up.RoomId));
+            }
+
+            if (room.Exits.Down != null)
+            {
+                rooms.Add(_cache.GetRoom(room.Exits.Down.RoomId));
+            }
+
+            foreach (var adjacentRoom in rooms)
+            {
+                foreach (var pc in adjacentRoom.Players)
+                {
+                    _writer.WriteLine($"<p>Your blood freezes as you hear someone's death cry.</p>", pc.ConnectionId);
+                }
+            }
+        }
+
         public void Fight(Player player, string victim, Room room, bool isMurder)
         {
             var target = FindTarget(player, victim, room, isMurder);
@@ -140,7 +218,7 @@ namespace ArchaicQuestII.GameLogic.Combat
                 _writer.WriteLine("<p>They are not here.</p>", player.ConnectionId);
                 return;
             }
-
+           
             player.Target = target.Name;
             player.Status = CharacterStatus.Status.Fighting;
             target.Status = CharacterStatus.Status.Fighting;
@@ -209,7 +287,7 @@ namespace ArchaicQuestII.GameLogic.Combat
 
 
                 HarmTarget(target, damage); 
-                _writer.WriteLine("chance to hit: " + chanceToHit, player.ConnectionId);
+                
                 DisplayDamage(player, target, room, weapon, damage);
 
                 _clientUi.UpdateHP(target);
@@ -222,28 +300,63 @@ namespace ArchaicQuestII.GameLogic.Combat
                     target.Status = CharacterStatus.Status.Ghost;
                     target.Target = string.Empty;
 
+                     DeathCry(room, target);
 
-                    foreach (var pc in room.Players)
-                    {
-                        if (pc.Name.Equals(target.Name, StringComparison.CurrentCultureIgnoreCase))
-                        {
-                            continue;
-                        }
-                        _writer.WriteLine($"<p>Your blood freezes as you hear {target.Name}'s death cry.</p>", pc.ConnectionId);
-                    }
                     _gain.GainExperiencePoints(player, target);
-                    // death cry to nearby rooms
+
+                    _writer.WriteLine("<p class='dead'>You are dead. R.I.P.</p>", target.ConnectionId);
+
+                    var targetName =  target.Name.ToLower(CultureInfo.CurrentCulture);
+                    var corpse = new Item.Item()
+                    {
+                        Name = $"The corpse of {targetName}.",
+                        Description = new Description()
+                        {
+                            Room = $"The corpse of {targetName} is laying here.",
+                            Exam = $"The corpse of {targetName} is laying here.",
+                            Look = $"The corpse of {targetName} is laying here.",
+
+                        },
+                        Slot = Equipment.EqSlot.Held,
+                        Level = 1,
+                        Stuck = true,
+                        Container = new Container()
+                        {
+                            Items = new ItemList()
+                        },
+                        ItemType = Item.Item.ItemTypes.Container,
+                        DecayTimer = 300 // 5 minutes
+                    };
+
+                    foreach (var item in target.Inventory)
+                    {
+                        corpse.Container.Items.Add(item);
+                    }
+
+                    // clear list
+                    target.Inventory = new ItemList();
+
+                    // add corpse to room
+                    room.Items.Add(corpse);
+                    _clientUi.UpdateInventory(target);
+                    _clientUi.UpdateEquipment(target);
+                    _clientUi.UpdateScore(target);
+
+                    if (target.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        room.Mobs.Remove(target);
+                    }
+                    else
+                    {
+                        room.Players.Remove(target);
+                    }
+                    // take player to Temple / recall area
                 }
-
-               
-
-                // award xp if dead
-                // create corpse container holding targets inventory and money
-                // end combat
+ 
             }
             else
             {
-                _writer.WriteLine("chance to hit: " + chanceToHit, player.ConnectionId);
+               
                 DisplayMiss(player, target, room, weapon);
                 // miss message
                 // gain improvements on weapon skill
