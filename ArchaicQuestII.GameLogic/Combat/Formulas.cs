@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
@@ -21,8 +23,20 @@ namespace ArchaicQuestII.GameLogic.Combat
             var offensePoints = player.Attributes.Attribute[EffectLocation.Strength] / 5
                                 + player.Attributes.Attribute[EffectLocation.Dexterity] / 10
                                 + player.Attributes.Attribute[EffectLocation.HitRoll];
+
+            var weapon = player.Equipped.Wielded;
+
+           SkillList getWeaponSkill = null;
+            if (weapon != null && !player.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
+            {
+                // urgh this is ugly
+                 getWeaponSkill = player.Skills.FirstOrDefault(x =>
+                    x.SkillName.Replace(" ", string.Empty)
+                        .Equals(Enum.GetName(typeof(Item.Item.WeaponTypes), weapon.WeaponType)));
+            }
+
             // mob always have 100% skills
-            var weaponSkill = player.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase) ? 100 : 1; //weapon types are hardcoded so make hardcoded skills for weapon types
+            var weaponSkill = player.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase) ? 100 : getWeaponSkill?.Proficiency ?? 1; //weapon types are hardcoded so make hardcoded skills for weapon types
 
             return offensePoints + offensePoints * weaponSkill / 100;
         }

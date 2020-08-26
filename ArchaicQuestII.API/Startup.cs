@@ -34,6 +34,7 @@ using ArchaicQuestII.GameLogic.Commands.Objects;
 using ArchaicQuestII.GameLogic.Commands.Score;
 using ArchaicQuestII.GameLogic.Commands.Skills;
 using ArchaicQuestII.GameLogic.Item;
+using ArchaicQuestII.GameLogic.Skill.Core;
 using ArchaicQuestII.GameLogic.Skill.Model;
 using ArchaicQuestII.GameLogic.Spell;
 using ArchaicQuestII.GameLogic.Spell.Interface;
@@ -193,6 +194,13 @@ namespace ArchaicQuestII.API
                 {
                     _db.Save(data, DataBase.Collections.Alignment);
                 }
+            }
+
+            if (!_db.DoesCollectionExist(DataBase.Collections.Skill))
+            {
+                var weaponTypes = new WeaponTypeSkills();
+                    _db.Save(weaponTypes.LongBlade(), DataBase.Collections.Skill);
+                
             }
 
             if (!_db.DoesCollectionExist(DataBase.Collections.AttackType))

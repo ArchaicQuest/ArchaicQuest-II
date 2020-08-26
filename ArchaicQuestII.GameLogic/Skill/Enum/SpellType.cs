@@ -7,5 +7,6 @@
         Travel = 1 << 1,
         Creation = 1 << 2,
         Summon = 1 << 3,
+        Passive = 1 << 4
     }
 }

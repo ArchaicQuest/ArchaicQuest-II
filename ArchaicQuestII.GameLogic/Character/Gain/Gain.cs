@@ -44,6 +44,20 @@ namespace ArchaicQuestII.GameLogic.Character.Gain
          
         }
 
+        public void GainExperiencePoints(Player player, int value)
+        {
+
+            player.Experience += value;
+            player.ExperienceToNextLevel -= value;
+
+            _clientUi.UpdateExp(player);
+
+            _writer.WriteLine(
+                $"<p class='improve'>You receive {value} experience points.</p>",
+                player.ConnectionId);
+
+        }
+
         public int GetExpWorth(Player character)
         {
             var maxEXP = 10000;

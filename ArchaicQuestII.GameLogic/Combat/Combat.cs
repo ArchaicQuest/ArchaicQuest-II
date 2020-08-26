@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.AttackTypes;
+using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Status;
@@ -87,8 +88,8 @@ namespace ArchaicQuestII.GameLogic.Combat
                 attackType = Enum.GetName(typeof(Item.Item.AttackTypes), weapon.AttackType)?.ToLower(cc);
             }
     
-            _writer.WriteLine($"<p>Your {attackType} {damText.Value} {target.Name.ToLower(cc)}. <span class='damage'>[{damage}]</span></p>", player.ConnectionId);
-            _writer.WriteLine($"<p>{target.Name} {_formulas.TargetHealth(player, target)}</p>", player.ConnectionId);
+            _writer.WriteLine($"<p class='combat'>Your {attackType} {damText.Value} {target.Name.ToLower(cc)}. <span class='damage'>[{damage}]</span></p>", player.ConnectionId);
+            _writer.WriteLine($"<p class='combat'>{target.Name} {_formulas.TargetHealth(player, target)}</p>", player.ConnectionId);
 
             _writer.WriteLine($"<p>{player.Name}'s {attackType} {damText.Value} you. <span class='damage'>[{damage}]</span></p></p>", target.ConnectionId);
            
@@ -118,8 +119,8 @@ namespace ArchaicQuestII.GameLogic.Combat
                 attackType = Enum.GetName(typeof(Item.Item.AttackTypes), weapon.AttackType)?.ToLower(cc);
             }
             
-            _writer.WriteLine($"<p>Your {attackType} misses {target.Name.ToLower(cc)}.</p>", player.ConnectionId);
-            _writer.WriteLine($"<p>{player.Name}'s {attackType} misses you.</p>", target.ConnectionId);
+            _writer.WriteLine($"<p class='combat'>Your {attackType} misses {target.Name.ToLower(cc)}.</p>", player.ConnectionId);
+            _writer.WriteLine($"<p class='combat'>{player.Name}'s {attackType} misses you.</p>", target.ConnectionId);
 
             foreach (var pc in room.Players)
             {
@@ -132,6 +133,7 @@ namespace ArchaicQuestII.GameLogic.Combat
             }
         }
 
+ 
         public void DeathCry(Room room, Player target)
         {
 
@@ -142,7 +144,7 @@ namespace ArchaicQuestII.GameLogic.Combat
                     continue;
                 }
 
-                _writer.WriteLine($"<p>Your blood freezes as you hear {target.Name}'s death cry.</p>", pc.ConnectionId);
+                _writer.WriteLine($"<p class='combat'>Your blood freezes as you hear {target.Name}'s death cry.</p>", pc.ConnectionId);
             }
 
 
@@ -218,7 +220,22 @@ namespace ArchaicQuestII.GameLogic.Combat
                 _writer.WriteLine("<p>They are not here.</p>", player.ConnectionId);
                 return;
             }
-           
+
+            if (player.Attributes.Attribute[EffectLocation.Hitpoints] <= 0)
+            {
+                _writer.WriteLine("<p>You cannot do that while dead.</p>", player.ConnectionId);
+                return;
+            }
+
+            if (target.Attributes.Attribute[EffectLocation.Hitpoints] <= 0)
+            {
+                _writer.WriteLine("<p>They are already dead.</p>", player.ConnectionId);
+                return;
+            }
+
+            // For the UI to create a nice gap between rounds of auto attacks
+            _writer.WriteLine($"<p class='combat-start'></p>", player.ConnectionId);
+
             player.Target = target.Name;
             player.Status = CharacterStatus.Status.Fighting;
             target.Status = CharacterStatus.Status.Fighting;
@@ -313,8 +330,8 @@ namespace ArchaicQuestII.GameLogic.Combat
                         Description = new Description()
                         {
                             Room = $"The corpse of {targetName} is laying here.",
-                            Exam = $"The corpse of {targetName} is laying here.",
-                            Look = $"The corpse of {targetName} is laying here.",
+                            Exam = $"The corpse of {targetName} is laying here. {target.Description}",
+                            Look = $"The corpse of {targetName} is laying here. {target.Description}",
 
                         },
                         Slot = Equipment.EqSlot.Held,
@@ -322,7 +339,11 @@ namespace ArchaicQuestII.GameLogic.Combat
                         Stuck = true,
                         Container = new Container()
                         {
-                            Items = new ItemList()
+                            Items = new ItemList(),
+                            CanLock = false,
+                            IsOpen = true,
+                            CanOpen = false,
+                            
                         },
                         ItemType = Item.Item.ItemTypes.Container,
                         DecayTimer = 300 // 5 minutes
@@ -335,6 +356,8 @@ namespace ArchaicQuestII.GameLogic.Combat
 
                     // clear list
                     target.Inventory = new ItemList();
+                    // clear equipped
+                    target.Equipped = new Equipment();
 
                     // add corpse to room
                     room.Items.Add(corpse);
@@ -360,6 +383,26 @@ namespace ArchaicQuestII.GameLogic.Combat
                 DisplayMiss(player, target, room, weapon);
                 // miss message
                 // gain improvements on weapon skill
+
+
+                SkillList getWeaponSkill = null;
+                if (weapon != null && !player.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    // urgh this is ugly
+                    getWeaponSkill = player.Skills.FirstOrDefault(x =>
+                        x.SkillName.Replace(" ", string.Empty)
+                            .Equals(Enum.GetName(typeof(Item.Item.WeaponTypes), weapon.WeaponType)));
+                }
+
+                if (getWeaponSkill != null)
+                {
+                    getWeaponSkill.Proficiency += 1;
+                    _writer.WriteLine($"<p class='improve'>Your proficiency in {getWeaponSkill.SkillName} has increased.</p>");
+               
+                    _gain.GainExperiencePoints(player, getWeaponSkill.Level * 50);
+                }
+
+              
             }
 
         }
