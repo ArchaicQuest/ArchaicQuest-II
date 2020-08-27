@@ -40,16 +40,11 @@ namespace ArchaicQuestII.GameLogic.Core
             Console.WriteLine("started loop");
             while (true)
             {
-                await Task.Delay(1000);
+                //2 mins
+                await Task.Delay(120000);
                 Console.WriteLine(" loop");
-                var players = _cache.GetPlayerCache();
-                 
-
-                foreach (var player in players)
-                {
-                   // _writeToClient.WriteLine("update", player.Value.ConnectionId);
-
-                }
+                
+                // repop code here
             }
         }
 
@@ -69,9 +64,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
                 foreach (var player in validPlayers)
                 {
-                    Console.WriteLine(player.Name);
                     _combat.Fight(player, player.Target, _cache.GetRoom(player.RoomId), false);
-
                 }
             }
         }

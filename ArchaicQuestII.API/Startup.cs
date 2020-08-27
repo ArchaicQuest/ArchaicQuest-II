@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -136,6 +137,53 @@ namespace ArchaicQuestII.API
 
         }
 
+        /// <summary>
+        /// MOB SKILLS
+        /// ----------
+        /// I don't want to manually update mobs in each room
+        /// if there is a change so this will run at startup to make changes
+        /// to mobs. not a big deal if this takes while as it's a one time cost at startup
+        ///
+        /// This will mean we need special classes for mobs, can't have a shop keeper using skills
+        /// that they should not know. Ok for an old mage in a magic shop casting spells at a player
+        /// but can't have a mob selling socks drop kicking the player and going HAM with 2nd, 3rd attack
+        /// and finishing off with a bash and a cleave to the skull. A tad unrealistic.
+        ///
+        /// Basic Mob class should be added with the essentials
+        /// dodge, blunt, staves, and short blade skills
+        /// probably others to add. maybe parry
+        /// </summary>
+        /// <param name="room"></param>
+        public void AddSkillsToMobs(Room room)
+        {
+            foreach (var mob in room.Mobs)
+            {
+
+                mob.Skills = new List<SkillList>();
+             
+                var classSkill = _db.GetCollection<Class>(DataBase.Collections.Class).FindOne(x =>
+                    x.Name.Equals(mob.ClassName, StringComparison.CurrentCultureIgnoreCase));
+
+                foreach (var skill in classSkill.Skills)
+                {
+                    // skill doesn't exist and should be added
+                    if (mob.Skills.FirstOrDefault(x =>
+                        x.SkillName.Equals(skill.SkillName, StringComparison.CurrentCultureIgnoreCase)) == null)
+                    {
+                        mob.Skills.Add(
+                            new SkillList()
+                            {
+                                Proficiency = 100,
+                                Level = skill.Level,
+                                SkillName = skill.SkillName,
+                                SkillId = skill.SkillId
+                            }
+                        );
+                    }
+                }
+            }
+        }
+
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IDataBase db, ICache cache)
         {
@@ -184,6 +232,7 @@ namespace ArchaicQuestII.API
 
             foreach (var room in rooms)
             {
+                AddSkillsToMobs(room);
                 _cache.AddRoom(room.Id, room);
             }
 

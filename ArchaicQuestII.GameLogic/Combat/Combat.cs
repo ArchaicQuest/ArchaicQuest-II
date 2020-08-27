@@ -264,13 +264,13 @@ namespace ArchaicQuestII.GameLogic.Combat
             var weapon = GetWeapon(player);
             if (doesHit)
             {
-             
-                var hasEvadedDamage = false;
+
 
                 // avoidance percentage can be improved by core skills 
                 // such as improved parry, acrobatic etc 
                 // instead of rolling a D10, roll a D6 for a close to 15% increase in chance
 
+                // Move to formula, needs to use _dice instead of making a new instance
                 var avoidanceRoll = new Dice().Roll(1, 1, 10);
 
 
@@ -283,11 +283,14 @@ namespace ArchaicQuestII.GameLogic.Combat
                     {
                         _writer.WriteLine($"<p>You dodge {target.Name}'s attack.</p>", player.ConnectionId);
                         _writer.WriteLine($"<p>{player.Name} dodges your attack.</p>", target.ConnectionId);
+                        return;
                     }
+
+                   
                 }
 
                 //10% chance to parry
-                if (!hasEvadedDamage && avoidanceRoll == 2)
+                if (avoidanceRoll == 2)
                 {
                     var skill = GetSkill("parry", player);
 
@@ -295,11 +298,12 @@ namespace ArchaicQuestII.GameLogic.Combat
                     {
                         _writer.WriteLine($"<p>You parry {target.Name}'s attack.</p>", player.ConnectionId);
                         _writer.WriteLine($"<p>{player.Name} parries your attack.</p>", target.ConnectionId);
+                        return;
                     }
                 }
 
                 // Block
-                if (!hasEvadedDamage && avoidanceRoll == 3)
+                if (avoidanceRoll == 3)
                 {
                     //var chanceToBlock = _formulas.ToBlockChance(target, player);
                     //var doesBlock = _formulas.DoesHit(chanceToBlock);
@@ -391,6 +395,11 @@ namespace ArchaicQuestII.GameLogic.Combat
                     _clientUi.UpdateInventory(target);
                     _clientUi.UpdateEquipment(target);
                     _clientUi.UpdateScore(target);
+
+                    room.Clean = false;
+
+                    _cache.RemoveCharFromCombat(target.Id.ToString());
+                    _cache.RemoveCharFromCombat(player.Id.ToString());
 
                     if (target.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
                     {
