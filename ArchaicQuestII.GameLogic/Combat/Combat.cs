@@ -106,6 +106,15 @@ namespace ArchaicQuestII.GameLogic.Combat
             }
         }
 
+        public SkillList GetSkill(string skillName, Player player)
+        {
+            //this is breaking
+
+            var skill =  player.Skills.FirstOrDefault(x =>
+                x.SkillName.Replace(" ", "").Equals(skillName.Replace(" ", ""), StringComparison.CurrentCultureIgnoreCase));
+            return skill;
+        }
+
         public void DisplayMiss(Player player, Player target, Room room, Item.Item weapon)
         {
             CultureInfo cc = CultureInfo.CurrentCulture;
@@ -268,29 +277,47 @@ namespace ArchaicQuestII.GameLogic.Combat
                 //10% chance to attempt a dodge
                 if (avoidanceRoll == 1)
                 {
+                    var dodge = GetSkill("dodge", player);
 
+                    if (dodge != null)
+                    {
+                        _writer.WriteLine($"<p>You dodge {target.Name}'s attack.</p>", player.ConnectionId);
+                        _writer.WriteLine($"<p>{player.Name} dodges your attack.</p>", target.ConnectionId);
+                    }
                 }
 
                 //10% chance to parry
                 if (!hasEvadedDamage && avoidanceRoll == 2)
                 {
+                    var skill = GetSkill("parry", player);
 
+                    if (skill != null)
+                    {
+                        _writer.WriteLine($"<p>You parry {target.Name}'s attack.</p>", player.ConnectionId);
+                        _writer.WriteLine($"<p>{player.Name} parries your attack.</p>", target.ConnectionId);
+                    }
                 }
 
                 // Block
                 if (!hasEvadedDamage && avoidanceRoll == 3)
                 {
-                    var chanceToBlock = _formulas.ToBlockChance(target, player);
-                    var doesBlock = _formulas.DoesHit(chanceToBlock);
+                    //var chanceToBlock = _formulas.ToBlockChance(target, player);
+                    //var doesBlock = _formulas.DoesHit(chanceToBlock);
 
-                    if (doesBlock)
-                    {
+                    //if (doesBlock)
+                    //{
+                    //    var skill = GetSkill("shieldblock", player);
 
-                    }
-                    else
-                    {
-                        // block fail
-                    }
+                    //    if (skill != null)
+                    //    {
+                    //        _writer.WriteLine($"You block {target.Name}'s attack with your shield.", player.ConnectionId);
+                    //        _writer.WriteLine($"{player.Name} blocks your attack with their shield.", player.ConnectionId);
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    // block fail
+                    //}
                 }
  
 
@@ -392,6 +419,12 @@ namespace ArchaicQuestII.GameLogic.Combat
                     getWeaponSkill = player.Skills.FirstOrDefault(x =>
                         x.SkillName.Replace(" ", string.Empty)
                             .Equals(Enum.GetName(typeof(Item.Item.WeaponTypes), weapon.WeaponType)));
+                }
+
+                if (weapon == null && !player.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    getWeaponSkill = player.Skills.FirstOrDefault(x =>
+                        x.SkillName.Equals("Hand To Hand", StringComparison.CurrentCultureIgnoreCase));
                 }
 
                 if (getWeaponSkill != null)

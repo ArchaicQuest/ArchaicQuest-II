@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Commands;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
@@ -117,12 +118,51 @@ namespace ArchaicQuestII.GameLogic.Hubs
         public async void AddCharacter(string hubId, Guid characterId)
         {
             var player = GetCharacter(hubId, characterId);
+            UpdatePlayerSkills(player);
             AddCharacterToCache(hubId, player);
 
             await SendToClient($"<p>Welcome {player.Name}. Your adventure awaits you.</p>", hubId);
 
             GetRoom(hubId, player);
         }
+
+
+        public void UpdatePlayerSkills(Player player)
+        {
+            var classSkill = _db.GetCollection<Class>(DataBase.Collections.Class).FindOne(x =>
+                x.Name.Equals(player.ClassName, StringComparison.CurrentCultureIgnoreCase));
+
+            foreach (var skill in classSkill.Skills)
+            {
+                // skill doesn't exist and should be added
+                if (player.Skills.FirstOrDefault(x =>
+                    x.SkillName.Equals(skill.SkillName, StringComparison.CurrentCultureIgnoreCase)) == null)
+                {
+                    player.Skills.Add(
+                    new SkillList()
+                    {
+                        Proficiency = 1,
+                        Level = skill.Level,
+                        SkillName = skill.SkillName,
+                        SkillId = skill.SkillId
+                    }
+                    );
+                }
+            }
+
+            foreach (var skill in player.Skills)
+            {
+                // skill doesn't exist and should be removed from player
+                if (classSkill.Skills.FirstOrDefault(x =>
+                    x.SkillName.Equals(skill.SkillName, StringComparison.CurrentCultureIgnoreCase)) == null)
+                {
+                    player.Skills.Remove(skill);
+                }
+            }
+
+
+        }
+
 
         /// <summary>
         /// Find Character in DB and add to cache

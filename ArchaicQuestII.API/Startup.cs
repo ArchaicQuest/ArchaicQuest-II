@@ -198,9 +198,11 @@ namespace ArchaicQuestII.API
 
             if (!_db.DoesCollectionExist(DataBase.Collections.Skill))
             {
-                var weaponTypes = new WeaponTypeSkills();
-                    _db.Save(weaponTypes.LongBlade(), DataBase.Collections.Skill);
-                
+                foreach (var data in new SeedCoreSkills().SeedData())
+                {
+                    _db.Save(data, DataBase.Collections.Skill);
+                }
+
             }
 
             if (!_db.DoesCollectionExist(DataBase.Collections.AttackType))

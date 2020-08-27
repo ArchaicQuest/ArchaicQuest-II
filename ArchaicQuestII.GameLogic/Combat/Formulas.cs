@@ -35,6 +35,12 @@ namespace ArchaicQuestII.GameLogic.Combat
                         .Equals(Enum.GetName(typeof(Item.Item.WeaponTypes), weapon.WeaponType)));
             }
 
+            if (weapon == null && !player.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
+            {
+                getWeaponSkill = player.Skills.FirstOrDefault(x =>
+                    x.SkillName.Equals("Hand To Hand", StringComparison.CurrentCultureIgnoreCase));
+            }
+
             // mob always have 100% skills
             var weaponSkill = player.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase) ? 100 : getWeaponSkill?.Proficiency ?? 1; //weapon types are hardcoded so make hardcoded skills for weapon types
 
