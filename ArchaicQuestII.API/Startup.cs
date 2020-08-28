@@ -111,7 +111,7 @@ namespace ArchaicQuestII.API
             services.AddScoped<IAdminUserService, AdminUserService>();
             services.AddSingleton<LiteDatabase>(
                 new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AQ.db")));
-            services.AddScoped<IDataBase, DataBase>();
+            services.AddSingleton<IDataBase, DataBase>();
             services.AddSingleton<ICache>(new Cache());
             services.AddSingleton<IDamage, Damage>();
             services.AddSingleton<IDice, Dice>();

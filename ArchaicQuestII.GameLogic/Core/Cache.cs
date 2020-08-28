@@ -97,6 +97,14 @@ namespace ArchaicQuestII.GameLogic.Core
 
             return room;
         }
+
+        public List<Room> GetAllRoomsToRepop()
+        {
+            var room = _roomCache.Values.Where(x => x.Clean.Equals(false)).ToList();
+
+            return room;
+        }
+
         public bool UpdateRoom(int id, Room room, Player player)
         {
             var existingRoom = room;

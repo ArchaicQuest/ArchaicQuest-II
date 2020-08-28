@@ -7,7 +7,7 @@ using ArchaicQuestII.GameLogic.World.Room;
 namespace ArchaicQuestII.GameLogic.Core
 {
     public interface ICache
-    {     
+    {
         /// <summary>
         /// Add player to cache
         /// </summary>
@@ -21,6 +21,7 @@ namespace ArchaicQuestII.GameLogic.Core
         bool AddRoom(int id, Room room);
 
         Room GetRoom(int id);
+        List<Room> GetAllRoomsToRepop();
         List<Room> GetAllRoomsInArea(int id);
         Room GetRoom(int id, Coordinates coords);
         bool UpdateRoom(int id, Room room, Player player);

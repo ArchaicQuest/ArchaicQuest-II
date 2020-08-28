@@ -2,8 +2,10 @@
 using ArchaicQuestII.GameLogic.Commands;
 using System.Linq;
 using System.Threading.Tasks;
+using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Combat;
+using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Core
 {
@@ -16,13 +18,15 @@ namespace ArchaicQuestII.GameLogic.Core
         private ICache _cache;
         private ICommands _commands;
         private ICombat _combat;
+        private IDataBase _db;
 
-        public GameLoop(IWriteToClient writeToClient, ICache cache, ICommands commands, ICombat combat)
+        public GameLoop(IWriteToClient writeToClient, ICache cache, ICommands commands, ICombat combat, IDataBase database)
         {
             _writeToClient = writeToClient;
             _cache = cache;
             _commands = commands;
             _combat = combat;
+            _db = database;
         }
 
 
@@ -42,9 +46,31 @@ namespace ArchaicQuestII.GameLogic.Core
             {
                 //2 mins
                 await Task.Delay(120000);
-                Console.WriteLine(" loop");
-                
-                // repop code here
+                var rooms = _cache.GetAllRoomsToRepop();
+
+                foreach (var room in rooms)
+                {
+                    var originalRoom = _db.GetById<Room>(room.Id, DataBase.Collections.Room);
+
+                    foreach (var mob in originalRoom.Mobs)
+                    {
+                        // need to check if mob exists before adding
+                        room.Mobs.Add(mob);
+                    }
+
+                    foreach (var item in originalRoom.Items)
+                    {
+                        // need to check if item exists before adding
+                        room.Items.Add(item);
+                    }
+
+                    // reset doors
+                    room.Exits = originalRoom.Exits;
+
+                    //set room clean
+                    room.Clean = false;
+                }
+               
             }
         }
 
