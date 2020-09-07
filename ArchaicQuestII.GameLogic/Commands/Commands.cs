@@ -102,6 +102,10 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "d":
                     _movement.Move(room, player, "Down");
                     break;
+                case "flee":
+                case "fle":
+                    _movement.Flee(room, player, "");
+                    break;
                 case "look":
                 case "l":
                     _roomActions.Look(obj, room, player);

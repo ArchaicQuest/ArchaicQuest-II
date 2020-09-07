@@ -226,6 +226,14 @@ namespace ArchaicQuestII.GameLogic.Combat
 
             if (target == null)
             {
+                if (player.Status == CharacterStatus.Status.Fighting)
+                {
+                    player.Target = "";
+                    player.Status = CharacterStatus.Status.Standing;
+
+                    _cache.RemoveCharFromCombat(player.Id.ToString());
+                }
+
                 _writer.WriteLine("<p>They are not here.</p>", player.ConnectionId);
                 return;
             }

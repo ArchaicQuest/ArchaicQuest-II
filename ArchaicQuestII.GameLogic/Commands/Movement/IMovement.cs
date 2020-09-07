@@ -10,6 +10,6 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
     {
         void Move(Room room, Player character, string direction);
 
-        void MoveNorth(Room room, Player character);
+        void Flee(Room room, Player character, string direction);
     }
 }

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Combat;
+using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Core
@@ -19,14 +20,18 @@ namespace ArchaicQuestII.GameLogic.Core
         private ICommands _commands;
         private ICombat _combat;
         private IDataBase _db;
+        private IDice _dice;
+        private IUpdateClientUI _client;
 
-        public GameLoop(IWriteToClient writeToClient, ICache cache, ICommands commands, ICombat combat, IDataBase database)
+        public GameLoop(IWriteToClient writeToClient, ICache cache, ICommands commands, ICombat combat, IDataBase database, IDice dice, IUpdateClientUI client)
         {
             _writeToClient = writeToClient;
             _cache = cache;
             _commands = commands;
             _combat = combat;
             _db = database;
+            _dice = dice;
+            _client = client;
         }
 
 
@@ -47,6 +52,7 @@ namespace ArchaicQuestII.GameLogic.Core
                 //2 mins
                 await Task.Delay(120000);
                 var rooms = _cache.GetAllRoomsToRepop();
+                var players = _cache.GetPlayerCache().Values.ToList();
 
                 foreach (var room in rooms)
                 {
@@ -55,20 +61,55 @@ namespace ArchaicQuestII.GameLogic.Core
                     foreach (var mob in originalRoom.Mobs)
                     {
                         // need to check if mob exists before adding
-                        room.Mobs.Add(mob);
+                        var mobExist = room.Mobs.FirstOrDefault(x => x.Id.Equals(mob.Id));
+
+                        if (mobExist == null)
+                        {
+                            room.Mobs.Add(mob);
+                        }
+                        else
+                        {
+                            mobExist.Attributes.Attribute[EffectLocation.Hitpoints] += _dice.Roll(1, 2, 5) * mobExist.Level;
+                            mobExist.Attributes.Attribute[EffectLocation.Mana] += _dice.Roll(1, 2, 5) * mobExist.Level;
+                            mobExist.Attributes.Attribute[EffectLocation.Moves] += _dice.Roll(1, 2, 5) * mobExist.Level;
+                        }
                     }
 
                     foreach (var item in originalRoom.Items)
                     {
                         // need to check if item exists before adding
-                        room.Items.Add(item);
+                        var itemExist = room.Items.FirstOrDefault(x => x.Id.Equals(item.Id));
+
+                        if (itemExist == null)
+                        {
+                            room.Items.Add(item);
+                        }
                     }
 
                     // reset doors
                     room.Exits = originalRoom.Exits;
 
                     //set room clean
-                    room.Clean = false;
+                    room.Clean = true;
+
+                    foreach (var player in originalRoom.Players)
+                    {
+                        _writeToClient.WriteLine("<p>The hairs on your neck stand up.</p>", player.ConnectionId);
+                    }
+
+                }
+
+                foreach (var player in players)
+                {
+                    player.Attributes.Attribute[EffectLocation.Hitpoints] += _dice.Roll(1, 2, 5) * player.Level;
+                    player.Attributes.Attribute[EffectLocation.Mana] += _dice.Roll(1, 2, 5) * player.Level;
+                    player.Attributes.Attribute[EffectLocation.Moves] += _dice.Roll(1, 2, 5) * player.Level;
+
+                    _client.UpdateHP(player);
+                    _client.UpdateMana(player);
+                    _client.UpdateMoves(player);
+                    _client.UpdateScore(player);
+
                 }
                
             }
