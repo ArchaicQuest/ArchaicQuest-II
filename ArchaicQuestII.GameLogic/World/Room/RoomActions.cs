@@ -108,7 +108,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 room.Players.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
 
 
-            if (item == null && character != null)
+            if (item == null && character == null)
             {
                 _writeToClient.WriteLine("<p>You don't see that here.", player.ConnectionId);
                 return;

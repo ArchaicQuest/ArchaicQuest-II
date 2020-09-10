@@ -156,7 +156,7 @@ namespace ArchaicQuestII.GameLogic.Core
                     {
                         Id = "edge" + node.Id + node.Exits.West.RoomId,
                         Source = "node" + node.Id,
-                        Target = "node" + node.Exits.North.RoomId,
+                        Target = "node" + node.Exits.West.RoomId,
 
                     };
 

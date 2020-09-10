@@ -9,6 +9,6 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
         Room MapRoom(Room room);
         void MapRoomId(Room room);
-        Room GetRoomFromCoords(Coordinates coords);
+        Room GetRoomFromCoords(Coordinates coords, int areaId);
     }
 }

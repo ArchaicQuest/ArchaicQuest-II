@@ -52,7 +52,6 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
                 return;
             }
 
-
             var getExitToNextRoom = FindExit(room, direction);
 
             if (getExitToNextRoom == null)

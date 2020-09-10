@@ -55,55 +55,55 @@ namespace ArchaicQuestII.GameLogic.World.Room
             var northRoom = room.Exits.North?.Coords;
             if (northRoom != null)
             {
-                room.Exits.North.RoomId = GetRoomFromCoords(northRoom) != null ? GetRoomFromCoords(northRoom).Id : -1;
+                room.Exits.North.RoomId = GetRoomFromCoords(northRoom, room.AreaId) != null ? GetRoomFromCoords(northRoom, room.AreaId).Id : -1;
             }
 
             var eastRoom = room.Exits.East?.Coords;
             if (eastRoom != null)
             {
-                room.Exits.East.RoomId = GetRoomFromCoords(eastRoom) != null ? GetRoomFromCoords(eastRoom).Id : -1;
+                room.Exits.East.RoomId = GetRoomFromCoords(eastRoom, room.AreaId) != null ? GetRoomFromCoords(eastRoom, room.AreaId).Id : -1;
             }
 
             var southRoom = room.Exits.South?.Coords;
             if (southRoom != null)
             {
-                room.Exits.South.RoomId = GetRoomFromCoords(southRoom) != null ? GetRoomFromCoords(southRoom).Id : -1;
+                room.Exits.South.RoomId = GetRoomFromCoords(southRoom, room.AreaId) != null ? GetRoomFromCoords(southRoom, room.AreaId).Id : -1;
             }
 
             var westRoom = room.Exits.West?.Coords;
             if (westRoom != null)
             {
-                room.Exits.West.RoomId = GetRoomFromCoords(westRoom) != null ? GetRoomFromCoords(westRoom).Id : -1;
+                room.Exits.West.RoomId = GetRoomFromCoords(westRoom, room.AreaId) != null ? GetRoomFromCoords(westRoom, room.AreaId).Id : -1;
             }
 
             var NWRoom = room.Exits.NorthWest?.Coords;
             if (NWRoom != null)
             {
-                room.Exits.NorthWest.RoomId = GetRoomFromCoords(NWRoom) != null ? GetRoomFromCoords(NWRoom).Id : -1;
+                room.Exits.NorthWest.RoomId = GetRoomFromCoords(NWRoom, room.AreaId) != null ? GetRoomFromCoords(NWRoom, room.AreaId).Id : -1;
             }
 
             var NERoom = room.Exits.NorthEast?.Coords;
             if (NERoom != null)
             {
-                room.Exits.NorthEast.RoomId = GetRoomFromCoords(NERoom) != null ? GetRoomFromCoords(NERoom).Id : -1;
+                room.Exits.NorthEast.RoomId = GetRoomFromCoords(NERoom, room.AreaId) != null ? GetRoomFromCoords(NERoom, room.AreaId).Id : -1;
             }
 
             var SERoom = room.Exits.SouthEast?.Coords;
             if (SERoom != null)
             {
-                room.Exits.SouthEast.RoomId = GetRoomFromCoords(SERoom) != null ? GetRoomFromCoords(SERoom).Id : -1;
+                room.Exits.SouthEast.RoomId = GetRoomFromCoords(SERoom, room.AreaId) != null ? GetRoomFromCoords(SERoom, room.AreaId).Id : -1;
             }
 
             var SWRoom = room.Exits.SouthWest?.Coords;
             if (SWRoom != null)
             {
-                room.Exits.SouthWest.RoomId = GetRoomFromCoords(SWRoom) != null ? GetRoomFromCoords(SWRoom).Id : -1;
+                room.Exits.SouthWest.RoomId = GetRoomFromCoords(SWRoom, room.AreaId) != null ? GetRoomFromCoords(SWRoom, room.AreaId).Id : -1;
             }
         }
 
-        public Room GetRoomFromCoords(Coordinates coords)
+        public Room GetRoomFromCoords(Coordinates coords, int areaId)
         {
-            return _db.GetCollection<Room>(DataBase.Collections.Room).FindOne(x => x.Coords.X.Equals(coords.X) && x.Coords.Y.Equals(coords.Y) && x.Coords.Z.Equals(coords.Z));
+            return _db.GetCollection<Room>(DataBase.Collections.Room).FindOne(x => x.AreaId.Equals(areaId) && x.Coords.X.Equals(coords.X) && x.Coords.Y.Equals(coords.Y) && x.Coords.Z.Equals(coords.Z));
         }
     }
 }

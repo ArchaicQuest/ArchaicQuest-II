@@ -37,15 +37,8 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public async Task UpdateTime()
         {
-            _writeToClient.WriteLine("start looper ");
-            //var players = _cache.GetPlayerCache();
-            //var validPlayers = players.Where(x => x.Value.Buffer.Count > 0);
-
-            //foreach (var player in validPlayers)
-            //{
-            //    _writeToClient.WriteLine("update", player.Value.ConnectionId);
-
-            //}
+             
+  
             Console.WriteLine("started loop");
             while (true)
             {
@@ -92,7 +85,7 @@ namespace ArchaicQuestII.GameLogic.Core
                     //set room clean
                     room.Clean = true;
 
-                    foreach (var player in originalRoom.Players)
+                    foreach (var player in room.Players)
                     {
                         _writeToClient.WriteLine("<p>The hairs on your neck stand up.</p>", player.ConnectionId);
                     }
@@ -101,9 +94,25 @@ namespace ArchaicQuestII.GameLogic.Core
 
                 foreach (var player in players)
                 {
+                  
                     player.Attributes.Attribute[EffectLocation.Hitpoints] += _dice.Roll(1, 2, 5) * player.Level;
                     player.Attributes.Attribute[EffectLocation.Mana] += _dice.Roll(1, 2, 5) * player.Level;
                     player.Attributes.Attribute[EffectLocation.Moves] += _dice.Roll(1, 2, 5) * player.Level;
+
+                    if (player.Attributes.Attribute[EffectLocation.Hitpoints] > player.MaxAttributes.Attribute[EffectLocation.Hitpoints])
+                    {
+                        player.Attributes.Attribute[EffectLocation.Hitpoints] = player.MaxAttributes.Attribute[EffectLocation.Hitpoints];
+                    }
+
+                    if (player.Attributes.Attribute[EffectLocation.Mana] > player.MaxAttributes.Attribute[EffectLocation.Mana])
+                    {
+                        player.Attributes.Attribute[EffectLocation.Mana] = player.MaxAttributes.Attribute[EffectLocation.Mana];
+                    }
+
+                    if (player.Attributes.Attribute[EffectLocation.Moves] > player.MaxAttributes.Attribute[EffectLocation.Moves])
+                    {
+                        player.Attributes.Attribute[EffectLocation.Moves] = player.MaxAttributes.Attribute[EffectLocation.Moves];
+                    }
 
                     _client.UpdateHP(player);
                     _client.UpdateMana(player);

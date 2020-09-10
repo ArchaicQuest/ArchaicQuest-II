@@ -71,7 +71,7 @@ namespace ArchaicQuestII.API.World
         [Route("api/World/Room/{x:int}/{y:int}/{z:int}/{areaId:int}")]
         public bool validExit(int x, int y, int z, int areaId)
         {
-            return _addRoom.GetRoomFromCoords(new Coordinates { X = x, Y = y, Z = z }) != null;
+            return _addRoom.GetRoomFromCoords(new Coordinates { X = x, Y = y, Z = z }, areaId) != null;
         }
 
         [HttpPost]

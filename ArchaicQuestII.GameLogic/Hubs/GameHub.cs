@@ -210,7 +210,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
             //add to DB, configure from admin
             var startingRoom = _cache.GetConfig().StartingRoom;
             var room = _cache.GetRoom(startingRoom);
-           character.RoomId = 1;
+           character.RoomId = startingRoom;
 
            var playerAlreadyInRoom = room.Players.FirstOrDefault(x => x.Id.Equals(character.Id)) != null;
            if (!playerAlreadyInRoom)
@@ -227,7 +227,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
             _updateClientUi.UpdateEquipment(character);
             _updateClientUi.UpdateInventory(character);
             _updateClientUi.UpdateScore(character);
-            _updateClientUi.GetMap(character,_cache.GetMap(1));
+            _updateClientUi.GetMap(character,_cache.GetMap(room.AreaId));
 
             new RoomActions(_writeToClient).Look("", room, character);
 
