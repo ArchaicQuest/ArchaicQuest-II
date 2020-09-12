@@ -142,7 +142,18 @@ namespace ArchaicQuestII.Controllers
                   {
                       room.Id = _db.GetList<Room>(DataBase.Collections.Room).Count + 1;
                       room.AreaId = editExistingArea.Id;
-                      _db.Save(room, DataBase.Collections.Room);
+                      room.Exits.Down.AreaId = editExistingArea.Id;
+                      room.Exits.Up.AreaId = editExistingArea.Id;
+                      room.Exits.NorthEast.AreaId = editExistingArea.Id;
+                      room.Exits.NorthWest.AreaId = editExistingArea.Id;
+                      room.Exits.North.AreaId = editExistingArea.Id;
+                      room.Exits.East.AreaId = editExistingArea.Id;
+                      room.Exits.SouthEast.AreaId = editExistingArea.Id;
+                      room.Exits.South.AreaId = editExistingArea.Id;
+                      room.Exits.SouthWest.AreaId = editExistingArea.Id;
+                      room.Exits.West.AreaId = editExistingArea.Id;
+
+                        _db.Save(room, DataBase.Collections.Room);
                   }
 
 
