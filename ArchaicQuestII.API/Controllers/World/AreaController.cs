@@ -27,7 +27,7 @@ namespace ArchaicQuestII.Controllers
         [HttpPost]
         [Route("api/World/Area")]
         public void Post([FromBody] Area area)
-        { 
+        {
 
             if (!ModelState.IsValid)
             {
@@ -51,13 +51,13 @@ namespace ArchaicQuestII.Controllers
 
             var newArea = new Area()
             {
-                
+
                 Title = area.Title,
                 Description = area.Description,
                 DateCreated = DateTime.Now,
                 CreatedBy = "Malleus",
-                DateUpdated = DateTime.Now    
-             
+                DateUpdated = DateTime.Now
+
             };
 
 
@@ -70,13 +70,13 @@ namespace ArchaicQuestII.Controllers
         public List<Area> Get()
         {
             var areas = _db.GetList<Area>(DataBase.Collections.Area);
-           
+
             foreach (var area in areas)
             {
                 var rooms = _db.GetCollection<Room>(DataBase.Collections.Room).Find(x => x.AreaId == area.Id);
                 area.Rooms = rooms.ToList();
             }
- 
+
             return areas;
         }
 
@@ -97,7 +97,7 @@ namespace ArchaicQuestII.Controllers
         private bool CheckIfValidFile(IFormFile file)
         {
             var extension = "." + file.FileName.Split('.')[file.FileName.Split('.').Length - 1];
-            return (extension == ".json"); 
+            return (extension == ".json");
         }
         public async Task<string> ReadAsStringAsync(IFormFile file)
         {
@@ -124,7 +124,7 @@ namespace ArchaicQuestII.Controllers
                     var x = await reader.ReadToEndAsync();
 
                     var exitingArea = JsonConvert.DeserializeObject<Area>(x);
-                    var editExistingArea =  JsonConvert.DeserializeObject<Area>(x);
+                    var editExistingArea = JsonConvert.DeserializeObject<Area>(x);
 
                     // server may already issued the ids
                     // so we will remove them and have 
@@ -134,27 +134,59 @@ namespace ArchaicQuestII.Controllers
                     editExistingArea.DateCreated = DateTime.Now;
                     editExistingArea.Rooms = new List<Room>();
 
-                  // Add the new area first
-                  _db.Save(editExistingArea, DataBase.Collections.Area);
- 
+                    // Add the new area first
+                    _db.Save(editExistingArea, DataBase.Collections.Area);
 
-                  foreach (var room in exitingArea.Rooms)
-                  {
-                      room.Id = _db.GetList<Room>(DataBase.Collections.Room).Count + 1;
-                      room.AreaId = editExistingArea.Id;
-                      room.Exits.Down.AreaId = editExistingArea.Id;
-                      room.Exits.Up.AreaId = editExistingArea.Id;
-                      room.Exits.NorthEast.AreaId = editExistingArea.Id;
-                      room.Exits.NorthWest.AreaId = editExistingArea.Id;
-                      room.Exits.North.AreaId = editExistingArea.Id;
-                      room.Exits.East.AreaId = editExistingArea.Id;
-                      room.Exits.SouthEast.AreaId = editExistingArea.Id;
-                      room.Exits.South.AreaId = editExistingArea.Id;
-                      room.Exits.SouthWest.AreaId = editExistingArea.Id;
-                      room.Exits.West.AreaId = editExistingArea.Id;
+
+                    foreach (var room in exitingArea.Rooms)
+                    {
+                        room.Id = _db.GetList<Room>(DataBase.Collections.Room).Count + 1;
+                        room.AreaId = editExistingArea.Id;
+                        if (room.Exits.Down != null)
+                        {
+                            room.Exits.Down.AreaId = editExistingArea.Id;
+                        }
+                        if (room.Exits.Up != null)
+                        {
+                            room.Exits.Up.AreaId = editExistingArea.Id;
+                        }
+                        if (room.Exits.North != null)
+                        {
+                            room.Exits.North.AreaId = editExistingArea.Id;
+                        }
+                        if (room.Exits.NorthEast != null)
+                        {
+                            room.Exits.NorthEast.AreaId = editExistingArea.Id;
+                        }
+                        if (room.Exits.NorthWest != null)
+                        {
+                            room.Exits.NorthWest.AreaId = editExistingArea.Id;
+                        }
+                        if (room.Exits.East != null)
+                        {
+                            room.Exits.East.AreaId = editExistingArea.Id;
+                        }
+                        if (room.Exits.SouthEast != null)
+                        {
+                            room.Exits.SouthEast.AreaId = editExistingArea.Id;
+                        }
+                        if (room.Exits.South != null)
+                        {
+                            room.Exits.South.AreaId = editExistingArea.Id;
+                        }
+                        if (room.Exits.SouthWest != null)
+                        {
+                            room.Exits.SouthWest.AreaId = editExistingArea.Id;
+                        }
+                        if (room.Exits.West != null)
+                        {
+                            room.Exits.West.AreaId = editExistingArea.Id;
+                        }
+
+                     
 
                         _db.Save(room, DataBase.Collections.Room);
-                  }
+                    }
 
 
                 }
