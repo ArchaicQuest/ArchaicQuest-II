@@ -137,7 +137,7 @@ namespace ArchaicQuestII.Controllers
                     // Add the new area first
                     _db.Save(editExistingArea, DataBase.Collections.Area);
 
-
+                    //create rooms
                     foreach (var room in exitingArea.Rooms)
                     {
                         room.Id = _db.GetList<Room>(DataBase.Collections.Room).Count + 1;
@@ -183,7 +183,71 @@ namespace ArchaicQuestII.Controllers
                             room.Exits.West.AreaId = editExistingArea.Id;
                         }
 
-                     
+                        //do exits
+                        var newRooms = _db.GetCollection<Room>(DataBase.Collections.Room).FindAll().Where(x => x.AreaId == editExistingArea.Id);
+                        foreach (var rm in newRooms)
+                        {
+                            if (room.Exits.Down != null)
+                            {
+                                rm.Exits.Down.RoomId = newRooms.FirstOrDefault(x =>
+                                    x.Coords.X == rm.Exits.Down.Coords.X && x.Coords.Y == rm.Exits.Down.Coords.Y &&
+                                    x.Coords.Z == rm.Exits.Down.Coords.Z).Id;
+                            }
+                            if (room.Exits.Up != null)
+                            {
+                                rm.Exits.Up.RoomId = newRooms.FirstOrDefault(x =>
+                                    x.Coords.X == rm.Exits.Up.Coords.X && x.Coords.Y == rm.Exits.Up.Coords.Y &&
+                                    x.Coords.Z == rm.Exits.Up.Coords.Z).Id;
+                            }
+                            if (room.Exits.North != null)
+                            {
+                                rm.Exits.North.RoomId = newRooms.FirstOrDefault(x =>
+                                    x.Coords.X == rm.Exits.North.Coords.X && x.Coords.Y == rm.Exits.North.Coords.Y &&
+                                    x.Coords.Z == rm.Exits.North.Coords.Z).Id;
+                            }
+                            if (room.Exits.NorthEast != null)
+                            {
+                                rm.Exits.NorthEast.RoomId = newRooms.FirstOrDefault(x =>
+                                    x.Coords.X == rm.Exits.NorthEast.Coords.X && x.Coords.Y == rm.Exits.NorthEast.Coords.Y &&
+                                    x.Coords.Z == rm.Exits.NorthEast.Coords.Z).Id;
+                            }
+                            if (room.Exits.NorthWest != null)
+                            {
+                                rm.Exits.NorthWest.RoomId = newRooms.FirstOrDefault(x =>
+                                    x.Coords.X == rm.Exits.NorthWest.Coords.X && x.Coords.Y == rm.Exits.NorthWest.Coords.Y &&
+                                    x.Coords.Z == rm.Exits.NorthWest.Coords.Z).Id;
+                            }
+                            if (room.Exits.East != null)
+                            {
+                                rm.Exits.East.RoomId = newRooms.FirstOrDefault(x =>
+                                    x.Coords.X == rm.Exits.East.Coords.X && x.Coords.Y == rm.Exits.East.Coords.Y &&
+                                    x.Coords.Z == rm.Exits.East.Coords.Z).Id;
+                            }
+                            if (room.Exits.SouthEast != null)
+                            {
+                                rm.Exits.SouthEast.RoomId = newRooms.FirstOrDefault(x =>
+                                    x.Coords.X == rm.Exits.SouthEast.Coords.X && x.Coords.Y == rm.Exits.SouthEast.Coords.Y &&
+                                    x.Coords.Z == rm.Exits.SouthEast.Coords.Z).Id;
+                            }
+                            if (room.Exits.South != null)
+                            {
+                                rm.Exits.South.RoomId = newRooms.FirstOrDefault(x =>
+                                    x.Coords.X == rm.Exits.South.Coords.X && x.Coords.Y == rm.Exits.South.Coords.Y &&
+                                    x.Coords.Z == rm.Exits.South.Coords.Z).Id;
+                            }
+                            if (room.Exits.SouthWest != null)
+                            {
+                                rm.Exits.SouthWest.RoomId = newRooms.FirstOrDefault(x =>
+                                    x.Coords.X == rm.Exits.SouthWest.Coords.X && x.Coords.Y == rm.Exits.SouthWest.Coords.Y &&
+                                    x.Coords.Z == rm.Exits.SouthWest.Coords.Z).Id;
+                            }
+                            if (room.Exits.West != null)
+                            {
+                                rm.Exits.West.RoomId = newRooms.FirstOrDefault(x =>
+                                    x.Coords.X == rm.Exits.West.Coords.X && x.Coords.Y == rm.Exits.West.Coords.Y &&
+                                    x.Coords.Z == rm.Exits.West.Coords.Z).Id;
+                            }
+                        }
 
                         _db.Save(room, DataBase.Collections.Room);
                     }

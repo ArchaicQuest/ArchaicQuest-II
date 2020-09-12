@@ -43,6 +43,7 @@ namespace ArchaicQuestII.DataAccess
             collection.Upsert(data);
             SetIndex((LiteCollection<T>)collection, collectionName);
 
+            _db.Dispose();
             return true;
         }
 
