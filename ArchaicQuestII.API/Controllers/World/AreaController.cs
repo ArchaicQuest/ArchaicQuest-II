@@ -2,9 +2,15 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using ArchaicQuestII.GameLogic.World.Area;
 using ArchaicQuestII.GameLogic.World.Room;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -85,6 +91,73 @@ namespace ArchaicQuestII.Controllers
 
             return area;
         }
+
+
+
+        private bool CheckIfValidFile(IFormFile file)
+        {
+            var extension = "." + file.FileName.Split('.')[file.FileName.Split('.').Length - 1];
+            return (extension == ".json"); 
+        }
+        public async Task<string> ReadAsStringAsync(IFormFile file)
+        {
+            var result = new StringBuilder();
+            using (var reader = new StreamReader(file.OpenReadStream()))
+            {
+                while (reader.Peek() >= 0)
+                {
+                    result.AppendLine(await reader.ReadLineAsync());
+                }
+            }
+            return result.ToString();
+        }
+
+        [HttpPost]
+        [Route("api/World/Area/UploadArea")]
+        public async Task<IActionResult> UploadArea([FromForm(Name = "file")] IFormFile jsonString)
+        {
+
+            if (CheckIfValidFile(jsonString))
+            {
+                using (var reader = new StreamReader(jsonString.OpenReadStream()))
+                {
+                    var x = await reader.ReadToEndAsync();
+
+                    var exitingArea = JsonConvert.DeserializeObject<Area>(x);
+                    var editExistingArea =  JsonConvert.DeserializeObject<Area>(x);
+
+                    // server may already issued the ids
+                    // so we will remove them and have 
+                    // the DB issue new ones
+
+                    editExistingArea.Id = _db.GetList<Area>(DataBase.Collections.Area).Count + 1;
+                    editExistingArea.DateCreated = DateTime.Now;
+                    editExistingArea.Rooms = new List<Room>();
+
+                  // Add the new area first
+                  _db.Save(editExistingArea, DataBase.Collections.Area);
+ 
+
+                  foreach (var room in exitingArea.Rooms)
+                  {
+                      room.Id = _db.GetList<Room>(DataBase.Collections.Room).Count + 1;
+                      room.AreaId = editExistingArea.Id;
+                      _db.Save(room, DataBase.Collections.Room);
+                  }
+
+
+                }
+
+            }
+            else
+            {
+                return BadRequest(new { message = "Invalid file extension" });
+            }
+
+            return Ok();
+
+        }
+
 
         [HttpPut]
         [Route("api/World/Area/{id:int}")]

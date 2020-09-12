@@ -102,6 +102,22 @@ namespace ArchaicQuestII.GameLogic.Core
 
                 nodes.Add(mapNode);
 
+                if (node.Exits.NorthWest != null)
+                {
+                    var mapEdge = new SigmaMapEdge()
+                    {
+                        Id = "edge" + node.Id + node.Exits.NorthWest.RoomId,
+                        Source = "node" + node.Id,
+                        Target = "node" + node.Exits.NorthWest.RoomId,
+
+                    };
+
+                    if (edges.FirstOrDefault(x => x.Source == mapEdge.Source && x.Target == mapEdge.Target) == null)
+                    {
+                        edges.Add(mapEdge);
+                    }
+                }
+
                 if (node.Exits.North != null)
                 {
                     var mapEdge = new SigmaMapEdge()
@@ -109,6 +125,22 @@ namespace ArchaicQuestII.GameLogic.Core
                         Id = "edge" + node.Id + node.Exits.North.RoomId,
                         Source = "node" + node.Id,
                         Target = "node" + node.Exits.North.RoomId,
+
+                    };
+
+                    if (edges.FirstOrDefault(x => x.Source == mapEdge.Source && x.Target == mapEdge.Target) == null)
+                    {
+                        edges.Add(mapEdge);
+                    }
+                }
+
+                if (node.Exits.NorthEast != null)
+                {
+                    var mapEdge = new SigmaMapEdge()
+                    {
+                        Id = "edge" + node.Id + node.Exits.NorthEast.RoomId,
+                        Source = "node" + node.Id,
+                        Target = "node" + node.Exits.NorthEast.RoomId,
 
                     };
 
@@ -145,6 +177,38 @@ namespace ArchaicQuestII.GameLogic.Core
                     };
 
                      if (edges.FirstOrDefault(x => x.Source == mapEdge.Source && x.Target == mapEdge.Target) == null)
+                    {
+                        edges.Add(mapEdge);
+                    }
+                }
+
+                if (node.Exits.SouthEast != null)
+                {
+                    var mapEdge = new SigmaMapEdge()
+                    {
+                        Id = "edge" + node.Id + node.Exits.SouthEast.RoomId,
+                        Source = "node" + node.Id,
+                        Target = "node" + node.Exits.SouthEast.RoomId,
+
+                    };
+
+                    if (edges.FirstOrDefault(x => x.Source == mapEdge.Source && x.Target == mapEdge.Target) == null)
+                    {
+                        edges.Add(mapEdge);
+                    }
+                }
+
+                if (node.Exits.SouthWest != null)
+                {
+                    var mapEdge = new SigmaMapEdge()
+                    {
+                        Id = "edge" + node.Id + node.Exits.SouthWest.RoomId,
+                        Source = "node" + node.Id,
+                        Target = "node" + node.Exits.SouthWest.RoomId,
+
+                    };
+
+                    if (edges.FirstOrDefault(x => x.Source == mapEdge.Source && x.Target == mapEdge.Target) == null)
                     {
                         edges.Add(mapEdge);
                     }
@@ -189,7 +253,6 @@ namespace ArchaicQuestII.GameLogic.Core
 
             }
 
-            
            
           return  JsonConvert.SerializeObject(json);
                 
