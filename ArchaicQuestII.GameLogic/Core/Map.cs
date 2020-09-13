@@ -25,6 +25,8 @@ namespace ArchaicQuestII.GameLogic.Core
         public int DefaultLabelSize { get; set; } = 12;
         [JsonProperty("color")]
         public string Color { get; set; } = "#ccc";
+        [JsonProperty("type")]
+        public Room.RoomType Type { get; set; } = Room.RoomType.Standard;
     }
 
     public class SigmaMapEdge
@@ -89,7 +91,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
                 };
 
-                var room = list.Distinct().FirstOrDefault(z => z.AreaId == node.AreaId);
+                var room = list.FirstOrDefault(z => z.AreaId == node.AreaId);
 
                 //if (room.needsBoat)
                 //{
@@ -99,7 +101,14 @@ namespace ArchaicQuestII.GameLogic.Core
                 //{
                 //    mapNode.color = "#fed967";
                 //}
+                mapNode.Type = room.Type;
+ 
 
+                if (room.Type == Room.RoomType.Water || room.Type == Room.RoomType.River || room.Type == Room.RoomType.Sea)
+                {
+                    mapNode.Color = "#446CB3";
+                }
+      
                 nodes.Add(mapNode);
 
                 if (node.Exits.NorthWest != null)
@@ -232,6 +241,14 @@ namespace ArchaicQuestII.GameLogic.Core
 
             }
 
+
+            foreach (var node in nodes)
+            {
+                if (node.Type == Room.RoomType.Water)
+                {
+                    node.Color = "#446CB3";
+                }
+            }
 
             var json = new SigmaMapJSON()
             {

@@ -23,6 +23,7 @@ namespace ArchaicQuestII.GameLogic.Core
         Room GetRoom(int id);
         List<Room> GetAllRoomsToRepop();
         List<Room> GetAllRoomsInArea(int id);
+        List<Room> GetAllRooms();
         Room GetRoom(int id, Coordinates coords);
         bool UpdateRoom(int id, Room room, Player player);
 

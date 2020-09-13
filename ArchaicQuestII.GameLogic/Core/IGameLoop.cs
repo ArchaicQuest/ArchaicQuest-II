@@ -8,7 +8,8 @@ namespace ArchaicQuestII.GameLogic.Core
    public interface IGameLoop
     {
           Task UpdateTime();
-
+        Task UpdateRoomEmote();
+        Task UpdateMobEmote();
         Task UpdatePlayers();
         Task UpdateCombat();
     }

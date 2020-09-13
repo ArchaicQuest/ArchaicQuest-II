@@ -241,6 +241,16 @@ namespace ArchaicQuestII.Controllers
                         _db.Save(room, DataBase.Collections.Room);
                     }
 
+                    //save mobs
+                    foreach (var room in newRooms)
+                    {
+                        // if a room has 4 goblins don't add 4 goblins to the mob list
+                        foreach (var mob in room.Mobs.GroupBy(x => x.Name).Select(x => x.First()).ToList())
+                        {
+                            _db.Save(mob, DataBase.Collections.Mobs);
+                        }
+                    }
+
                 }
 
             }

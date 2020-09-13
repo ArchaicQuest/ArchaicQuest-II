@@ -95,6 +95,7 @@ namespace ArchaicQuestII.GameLogic.Character
         public bool Deleted { get; set; }
         public DateTime? DateCreated { get; set; } = DateTime.Now;
         public DateTime? DateUpdated { get; set; } = DateTime.Now;
+        public List<string> Emotes { get; set; } = new List<string>();
 
 
 

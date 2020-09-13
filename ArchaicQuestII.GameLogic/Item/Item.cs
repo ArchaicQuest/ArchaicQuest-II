@@ -23,6 +23,8 @@ namespace ArchaicQuestII.GameLogic.Item
             Potion,
             Repair,
             Weapon,
+            Seating,
+            Inanimate
         }
 
         [Flags]

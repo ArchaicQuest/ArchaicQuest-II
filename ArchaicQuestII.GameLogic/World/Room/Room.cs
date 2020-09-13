@@ -29,10 +29,14 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
         public enum RoomType
         {
-            Standard,
-            Shop,
-            Guild,
-            Town
+            Standard = 0,
+            Shop = 1 << 1,
+            Guild = 1 << 2,
+            Town = 1 << 3,
+            Water = 1 << 4,
+            River = 1 << 5,
+            Sea = 1 << 6,
+            PointOfInterest = 1 << 7
         }
 
         public int Id { get; set; }
@@ -48,7 +52,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
         public List<Player> Players { get; set; } = new List<Player>();
         public List<Player> Mobs { get; set; } = new List<Player>();
         public ItemList Items { get; set; } = new ItemList();
-        public RoomType? Type { get; set; } = RoomType.Standard;
+        public RoomType Type { get; set; }
         /// <summary>
         /// List of emotes that will be randomly played on tick
         /// </summary>
