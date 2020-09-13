@@ -34,6 +34,7 @@ using ArchaicQuestII.GameLogic.Commands.Inventory;
 using ArchaicQuestII.GameLogic.Commands.Objects;
 using ArchaicQuestII.GameLogic.Commands.Score;
 using ArchaicQuestII.GameLogic.Commands.Skills;
+using ArchaicQuestII.GameLogic.Hubs.Telnet;
 using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.Skill.Core;
 using ArchaicQuestII.GameLogic.Skill.Model;
@@ -133,7 +134,7 @@ namespace ArchaicQuestII.API
             services.AddSingleton<IGain, Gain>();
             services.AddSingleton<IFormulas, Formulas>();
             services.AddSingleton<IUpdateClientUI, UpdateClientUI>();
-            services.AddSingleton<IWriteToClient, WriteToClient>((factory) => new WriteToClient(_hubContext));
+            services.AddSingleton<IWriteToClient, WriteToClient>((factory) => new WriteToClient(_hubContext, TelnetHub.Instance));
 
         }
 
@@ -319,6 +320,7 @@ namespace ArchaicQuestII.API
         public static void StartLoops(this IApplicationBuilder app)
         {
             var loop = app.ApplicationServices.GetRequiredService<IGameLoop>();
+            TelnetHub.Instance.Start();
             Task.Run(loop.UpdateTime);
             Task.Run(loop.UpdateCombat);
             Task.Run(loop.UpdatePlayers);

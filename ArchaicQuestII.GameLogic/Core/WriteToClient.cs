@@ -1,6 +1,7 @@
 ﻿using System;
 
 using ArchaicQuestII.GameLogic.Hubs;
+using ArchaicQuestII.GameLogic.Hubs.Telnet;
 using Microsoft.AspNetCore.SignalR;
 
 namespace ArchaicQuestII.GameLogic.Core
@@ -8,11 +9,13 @@ namespace ArchaicQuestII.GameLogic.Core
     public class WriteToClient : IWriteToClient
     {
         private readonly IHubContext<GameHub> _hubContext;
+        private readonly TelnetHub _telnetHub;
       
 
-        public WriteToClient(IHubContext<GameHub> hubContext)
+        public WriteToClient(IHubContext<GameHub> hubContext, TelnetHub telnetHub)
         {
             _hubContext = hubContext;
+            _telnetHub = telnetHub;
         }
 
     

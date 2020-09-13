@@ -8,6 +8,6 @@ namespace ArchaicQuestII.GameLogic.Character
         public DateTime LastLoginTime { get; set; }
         public DateTime LastCommandTime { get; set; }
         public long PlayTime { get; set; } = 0;
-        
+        public bool IsTelnet { get; set; }
     }
 }

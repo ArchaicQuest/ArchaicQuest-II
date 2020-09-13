@@ -23,7 +23,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public async void UpdateScore(Player player)
         {
-            if (string.IsNullOrEmpty(player.ConnectionId))
+            if (string.IsNullOrEmpty(player.ConnectionId) || !player.IsTelnet)
             {
                 return;
             }
@@ -40,7 +40,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public async void UpdateCommunication(Player player, string message, string type)
         {
-            if (string.IsNullOrEmpty(player.ConnectionId))
+            if (string.IsNullOrEmpty(player.ConnectionId) || !player.IsTelnet)
             {
                 return;
             }
@@ -57,7 +57,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public async void UpdateHP(Player player)
         {
-            if (string.IsNullOrEmpty(player.ConnectionId))
+            if (string.IsNullOrEmpty(player.ConnectionId) || !player.IsTelnet)
             {
                 return;
             }
@@ -75,7 +75,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public async void UpdateMana(Player player)
         {
-            if (string.IsNullOrEmpty(player.ConnectionId))
+            if (string.IsNullOrEmpty(player.ConnectionId) || !player.IsTelnet)
             {
                 return;
             }
@@ -93,7 +93,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public async void UpdateMoves(Player player)
         {
-            if (string.IsNullOrEmpty(player.ConnectionId))
+            if (string.IsNullOrEmpty(player.ConnectionId) || !player.IsTelnet)
             {
                 return;
             }
@@ -110,7 +110,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public async void UpdateExp(Player player)
         {
-            if (string.IsNullOrEmpty(player.ConnectionId))
+            if (string.IsNullOrEmpty(player.ConnectionId) || !player.IsTelnet)
             {
                 return;
             }
@@ -128,7 +128,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public async void UpdateEquipment(Player player)
         {
-            if (string.IsNullOrEmpty(player.ConnectionId))
+            if (string.IsNullOrEmpty(player.ConnectionId) || !player.IsTelnet)
             {
                 return;
             }
@@ -186,7 +186,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public async void UpdateInventory(Player player)
         {
-            if (string.IsNullOrEmpty(player.ConnectionId))
+            if (string.IsNullOrEmpty(player.ConnectionId) || !player.IsTelnet)
             {
                 return;
             }
