@@ -320,7 +320,7 @@ namespace ArchaicQuestII.API
         public static void StartLoops(this IApplicationBuilder app)
         {
             var loop = app.ApplicationServices.GetRequiredService<IGameLoop>();
-            TelnetHub.Instance.Start();
+            Task.Run(TelnetHub.Instance.ProcessConnections);
             Task.Run(loop.UpdateTime);
             Task.Run(loop.UpdateCombat);
             Task.Run(loop.UpdatePlayers);

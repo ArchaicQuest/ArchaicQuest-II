@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -13,9 +14,6 @@ namespace ArchaicQuestII.GameLogic.Hubs.Telnet
     public sealed class TelnetHub
     {
         private static TelnetHub _instance;
-
-        private Thread _connectionLoop;
-
         private Dictionary<string, TelnetClient> _telnetClients;
         TcpListener _telnetServer;
 
@@ -26,20 +24,8 @@ namespace ArchaicQuestII.GameLogic.Hubs.Telnet
         /// </summary>
         private TelnetHub()
         {
-
-        }
-
-        /// <summary>
-        /// Initializes and starts the telnet service
-        /// </summary>
-        public void Start()
-        {
-            if (_running is false)
-            {
-                _connectionLoop = new Thread(new ThreadStart(ProcessConnections));
-            }
-
-            _running = true;
+            _telnetClients = new Dictionary<string, TelnetClient>();
+            _telnetServer = new TcpListener(IPAddress.Parse(TelnetConfig.SERVER_LISTEN_IP), TelnetConfig.SERVER_LISTEN_PORT);
         }
 
         /// <summary>
@@ -47,6 +33,8 @@ namespace ArchaicQuestII.GameLogic.Hubs.Telnet
         /// </summary>
         public void ProcessConnections()
 		{
+            Console.WriteLine("started processing telnet connections");
+            _telnetServer.Start();
             do
             {
                 // Accept connections
@@ -78,7 +66,7 @@ namespace ArchaicQuestII.GameLogic.Hubs.Telnet
 				}
 
                 Thread.Sleep(10);
-            } while (_running);
+            } while (true);
 		}
 
         /// <summary>

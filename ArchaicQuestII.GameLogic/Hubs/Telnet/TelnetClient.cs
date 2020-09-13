@@ -9,8 +9,8 @@ namespace ArchaicQuestII.GameLogic.Hubs.Telnet
 {
     public class TelnetClient
     {
-        private readonly NetworkStream stream;
-        private string output = "";
+        private readonly NetworkStream _stream;
+        private string _output = "";
         private TcpClient _tcpClient;
         private string _connectionID;
 
@@ -26,22 +26,23 @@ namespace ArchaicQuestII.GameLogic.Hubs.Telnet
 
         private TelnetClient()
         {
-
+            
         }
 
         public TelnetClient(TcpClient tcpClient, string connectionID)
         {
             _tcpClient = tcpClient;
             _connectionID = connectionID;
+            _stream = _tcpClient.GetStream();
         }
 
         public TelnetRetrievelData RetrieveInput()
         {
             // Read from the stream until done
-            while (stream.DataAvailable)
+            while (_stream.DataAvailable)
             {
                 byte[] streamread = new byte[BUF_SIZE];
-                int bytesread = stream.Read(streamread, 0, BUF_SIZE);
+                int bytesread = _stream.Read(streamread, 0, BUF_SIZE);
 
                 // Modify existing buffer to fit read data exactly, fill buffer with read data, don't copy NULs
                 if (streamreadbuffer == null)
@@ -169,28 +170,28 @@ namespace ArchaicQuestII.GameLogic.Hubs.Telnet
             if (output == null || output == "")
                 return;
 
-            this.output += "\n" + ((output == "\n") ? "" : output);
+            this._output += "\n" + ((output == "\n") ? "" : output);
         }
 
         public void SendOutput()
         {
-            if (output != "")
+            if (_output != "")
             {
 
                 // TODO: Strip HTML, process color
 
 
-                byte[] send = Encoding.ASCII.GetBytes(output.TrimEnd('\n').ToCharArray());
-                stream.Write(send, 0, send.Length);
-                stream.Write(writelineterminate, 0, 1);
-                output = "";
+                byte[] send = Encoding.ASCII.GetBytes(_output.TrimEnd('\n').ToCharArray());
+                _stream.Write(send, 0, send.Length);
+                _stream.Write(writelineterminate, 0, 1);
+                _output = "";
             }
         }
 
         public void CloseConnection()
         {
             SendOutput();
-            stream.Close();
+            _stream.Close();
         }
     }
 }
