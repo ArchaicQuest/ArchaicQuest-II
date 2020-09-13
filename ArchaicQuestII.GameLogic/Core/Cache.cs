@@ -90,6 +90,12 @@ namespace ArchaicQuestII.GameLogic.Core
             return room;
         }
 
+        public List<Room> GetAllRooms()
+        {
+            var room = _roomCache.Values.ToList();
+
+            return room;
+        }
 
         public List<Room> GetAllRoomsInArea(int id)
         {

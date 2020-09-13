@@ -2,8 +2,10 @@
 using ArchaicQuestII.GameLogic.World.Room;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using ArchaicQuestII.GameLogic.Core;
+using ArchaicQuestII.GameLogic.Item;
 using Newtonsoft.Json;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -58,6 +60,27 @@ namespace ArchaicQuestII.API.World
             return _db.GetById<Room>(id, DataBase.Collections.Room);
         }
 
+        ///
+        
+        [HttpGet]
+        [Route("api/World/Room/returnRoomTypes")]
+        public JsonResult ReturnRoomTypes()
+        {
+
+            var roomTypes = new List<object>();
+
+            foreach (var item in Enum.GetValues(typeof(Room.RoomType)))
+            {
+
+                roomTypes.Add(new
+                {
+                    id = (int)item,
+                    name = item.ToString()
+                });
+            }
+            return Json(roomTypes);
+
+        }
         [HttpPut]
         [Route("api/World/Room/{id:int}")]
         public void Put([FromBody] Room data)

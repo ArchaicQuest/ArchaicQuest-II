@@ -322,6 +322,8 @@ namespace ArchaicQuestII.API
             Task.Run(loop.UpdateTime);
             Task.Run(loop.UpdateCombat);
             Task.Run(loop.UpdatePlayers);
+            Task.Run(loop.UpdateRoomEmote);
+            Task.Run(loop.UpdateMobEmote);
         }
     }
 

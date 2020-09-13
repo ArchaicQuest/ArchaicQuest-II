@@ -145,7 +145,90 @@ namespace ArchaicQuestII.GameLogic.Core
             }
         }
 
+        public async Task UpdateRoomEmote()
+        {
 
+
+            while (true)
+            {
+                try
+                {
+                    await Task.Delay(45000);
+
+                    var rooms = _cache.GetAllRooms();
+
+                    if (!rooms.Any())
+                    {
+                        continue;
+                    }
+
+                    foreach (var room in rooms)
+                    {
+                        if (!room.Emotes.Any())
+                        {
+                            continue;
+                        }
+
+                        foreach (var player in room.Players)
+                        {
+                            _writeToClient.WriteLine($"<p>{room.Emotes[_dice.Roll(1, 0, room.Emotes.Count - 1)]}</p>",
+                                player.ConnectionId);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                }
+
+            }
+            
+        }
+
+        public async Task UpdateMobEmote()
+        {
+
+
+            while (true)
+            {
+                try
+                {
+                    await Task.Delay(30000);
+
+                    var rooms = _cache.GetAllRooms().Where(x => x.Mobs.Any());
+
+                    if (!rooms.Any())
+                    {
+                        continue;
+                    }
+
+                    foreach (var room in rooms)
+                    {
+                       
+                        foreach (var mob in room.Mobs)
+                        {
+                            if (!mob.Emotes.Any())
+                            {
+                                continue;
+                            }
+
+                            foreach (var player in room.Players)
+                            {
+                                //example mob emote: Larissa flicks through her journal.
+                                _writeToClient.WriteLine($"<p>{mob.Name} {mob.Emotes[_dice.Roll(1, 0, room.Emotes.Count - 1)]}</p>",
+                                    player.ConnectionId);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                }
+
+            }
+
+        }
 
         public async Task UpdatePlayers()
         {

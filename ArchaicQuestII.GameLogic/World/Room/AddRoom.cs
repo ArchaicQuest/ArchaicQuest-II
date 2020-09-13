@@ -37,7 +37,8 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 RoomObjects = room.RoomObjects,
                 Type = room.Type,
                 DateUpdated = DateTime.Now,
-                DateCreated = DateTime.Now
+                DateCreated = DateTime.Now,
+                
             };
 
             MapRoomId(newRoom);
