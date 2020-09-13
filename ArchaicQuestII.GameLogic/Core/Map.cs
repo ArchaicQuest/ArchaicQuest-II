@@ -91,22 +91,10 @@ namespace ArchaicQuestII.GameLogic.Core
 
                 };
 
-                var room = list.FirstOrDefault(z => z.AreaId == node.AreaId);
-
-                //if (room.needsBoat)
-                //{
-                //    mapNode.color = "#446CB3";
-                //}
-                //else if (room.type == Room.RoomType.Shop)
-                //{
-                //    mapNode.color = "#fed967";
-                //}
-                mapNode.Type = room.Type;
- 
-
-                if (room.Type == Room.RoomType.Water || room.Type == Room.RoomType.River || room.Type == Room.RoomType.Sea)
+                
+                if (node.Type == Room.RoomType.Water || node.Type == Room.RoomType.River || node.Type == Room.RoomType.Sea)
                 {
-                    mapNode.Color = "#446CB3";
+                    mapNode.Color = "#22A7F0";
                 }
       
                 nodes.Add(mapNode);
@@ -240,15 +228,7 @@ namespace ArchaicQuestII.GameLogic.Core
                 }
 
             }
-
-
-            foreach (var node in nodes)
-            {
-                if (node.Type == Room.RoomType.Water)
-                {
-                    node.Color = "#446CB3";
-                }
-            }
+ 
 
             var json = new SigmaMapJSON()
             {

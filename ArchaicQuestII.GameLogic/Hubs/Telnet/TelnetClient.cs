@@ -38,36 +38,43 @@ namespace ArchaicQuestII.GameLogic.Hubs.Telnet
 
         public TelnetRetrievelData RetrieveInput()
         {
-            // Read from the stream until done
-            while (_stream.DataAvailable)
+            try
             {
-                byte[] streamread = new byte[BUF_SIZE];
-                int bytesread = _stream.Read(streamread, 0, BUF_SIZE);
-
-                // Modify existing buffer to fit read data exactly, fill buffer with read data, don't copy NULs
-                if (streamreadbuffer == null)
+                // Read from the stream until done
+                while (_stream.DataAvailable)
                 {
-                    // Use buffer position to properly insert characters in case a NUL is skipped
-                    int bufpos = 0;
-                    streamreadbuffer = new byte[bytesread];
-                    for (int i = 0; i < bytesread; i++)
+                    byte[] streamread = new byte[BUF_SIZE];
+                    int bytesread = _stream.Read(streamread, 0, BUF_SIZE);
+
+                    // Modify existing buffer to fit read data exactly, fill buffer with read data, don't copy NULs
+                    if (streamreadbuffer == null)
                     {
-                        if ((char)streamread[i] != NUL)
+                        // Use buffer position to properly insert characters in case a NUL is skipped
+                        int bufpos = 0;
+                        streamreadbuffer = new byte[bytesread];
+                        for (int i = 0; i < bytesread; i++)
                         {
-                            streamreadbuffer[bufpos] = streamread[i];
-                            bufpos += 1;
+                            if ((char) streamread[i] != NUL)
+                            {
+                                streamreadbuffer[bufpos] = streamread[i];
+                                bufpos += 1;
+                            }
                         }
-                    }
 
+                    }
+                    else
+                    {
+                        // Set buffer to (buffer + bytes read)
+                        byte[] newbuffer = new byte[streamreadbuffer.Length + bytesread];
+                        Buffer.BlockCopy(streamreadbuffer, 0, newbuffer, 0, streamreadbuffer.Length);
+                        Buffer.BlockCopy(streamread, 0, newbuffer, streamreadbuffer.Length + 1, streamread.Length);
+                        streamreadbuffer = newbuffer;
+                    }
                 }
-                else
-                {
-                    // Set buffer to (buffer + bytes read)
-                    byte[] newbuffer = new byte[streamreadbuffer.Length + bytesread];
-                    Buffer.BlockCopy(streamreadbuffer, 0, newbuffer, 0, streamreadbuffer.Length);
-                    Buffer.BlockCopy(streamread, 0, newbuffer, streamreadbuffer.Length + 1, streamread.Length);
-                    streamreadbuffer = newbuffer;
-                }
+            }
+            catch(Exception ex)
+            {
+
             }
 
             // Process buffer
@@ -180,11 +187,17 @@ namespace ArchaicQuestII.GameLogic.Hubs.Telnet
 
                 // TODO: Strip HTML, process color
 
+                try
+                {
+                    byte[] send = Encoding.ASCII.GetBytes(_output.TrimEnd('\n').ToCharArray());
+                    _stream.Write(send, 0, send.Length);
+                    _stream.Write(writelineterminate, 0, 1);
+                    _output = "";
+                }
+                catch (Exception ex)
+                {
 
-                byte[] send = Encoding.ASCII.GetBytes(_output.TrimEnd('\n').ToCharArray());
-                _stream.Write(send, 0, send.Length);
-                _stream.Write(writelineterminate, 0, 1);
-                _output = "";
+                }
             }
         }
 

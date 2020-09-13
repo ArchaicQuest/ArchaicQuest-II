@@ -8,12 +8,17 @@
 
     <ItemGroup>
         <None Remove="motd" />
+        <None Remove="motd-telnet" />
     </ItemGroup>
 
     <ItemGroup>
         <EmbeddedResource Include="motd">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
             <Generator>MSBuild:Compile</Generator>
+        </EmbeddedResource>
+        <EmbeddedResource Include="motd-telnet">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+          <Generator>MSBuild:Compile</Generator>
         </EmbeddedResource>
     </ItemGroup>
 

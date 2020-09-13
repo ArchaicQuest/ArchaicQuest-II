@@ -186,6 +186,9 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "k":
                     _combat.Fight(player, obj, room, false);
                     break;
+                case "sit":
+                    _movement.Sit(player, room, obj);
+                    break;
 
             }
         }

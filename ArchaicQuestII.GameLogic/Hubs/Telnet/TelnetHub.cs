@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -28,6 +29,13 @@ namespace ArchaicQuestII.GameLogic.Hubs.Telnet
             _telnetServer = new TcpListener(IPAddress.Parse(TelnetConfig.SERVER_LISTEN_IP), TelnetConfig.SERVER_LISTEN_PORT);
         }
 
+        public string GetMotd()
+        {
+            var location = System.Reflection.Assembly.GetEntryAssembly().Location;
+            var directory = System.IO.Path.GetDirectoryName(location);
+            return File.ReadAllText(directory + "/motd-telnet");
+        }
+
         /// <summary>
         /// Processes accepting/closing telnet connections and telnet input/outpit
         /// </summary>
@@ -44,7 +52,9 @@ namespace ArchaicQuestII.GameLogic.Hubs.Telnet
                     TelnetClient client = new TelnetClient(_telnetServer.AcceptTcpClient(), connectionID);
                     _telnetClients.Add(connectionID, client);
 
-                    client.QueueOutput("Welcome!");
+                    client.QueueOutput(GetMotd());
+                    client.QueueOutput("Welcome! Telnet is work in progress\r\nTo play visit \u001B[32mplay.archaicquest.com\u001b[0m");
+                    client.CloseConnection();
                 }
 
                 // Process input
@@ -56,7 +66,11 @@ namespace ArchaicQuestII.GameLogic.Hubs.Telnet
 
                     // ... for now, echo input
                     if (read.StatusCode == TelnetConfig.IO_READ.SUCCESSREAD)
+                    {
                         client.Value.QueueOutput(read.Data);
+                        client.Value.QueueOutput("To play visit \u001B[32mplay.archaicquest.com\u001b[0m");
+                       
+                    }
                 }
 
                 // Process output

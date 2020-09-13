@@ -25,4 +25,10 @@
     </ItemGroup>
 
 
+
+    <ItemGroup>
+      <Folder Include="Commands\Character\" />
+    </ItemGroup>
+
+
 </Project>

@@ -11,5 +11,10 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
         void Move(Room room, Player character, string direction);
 
         void Flee(Room room, Player character, string direction);
+
+        public void Sit(Player player, Room room, string target);
+        public void Stand(Player player, Room room, string target);
+        public void Sleep(Player player, Room room, string target);
+        public void Wake(Player player, Room room,  string target);
     }
 }

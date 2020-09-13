@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
@@ -241,6 +242,75 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
             //this could be buggy
             Move(room, character, validExits[getExitIndex].Name);
 
+        }
+
+        public void Sit(Player player, Room room, string target)
+        {
+            if (string.IsNullOrEmpty(target))
+            {
+                _writeToClient.WriteLine("<p>You sit down.</p>", player.ConnectionId);
+                player.Status = CharacterStatus.Status.Sitting;
+                player.LongName = "is sitting down.";
+                foreach (var pc in room.Players)
+                {
+
+                    if (pc.Id.Equals(player.Id))
+                    {
+                        _writeToClient.WriteLine($"<p>You sit down.</p>", player.ConnectionId);
+                    }
+                    else
+                    {
+                        _writeToClient.WriteLine($"<p>{player.Name} sits down.</p>", player.ConnectionId);
+                    }
+                }
+
+            }
+            else
+            {
+
+                var obj = room.Items.FirstOrDefault(x =>
+                    x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+
+                if (obj == null)
+                {
+                    _writeToClient.WriteLine("<p>You can't sit on that.</p>", player.ConnectionId);
+                    return;
+                }
+
+                _writeToClient.WriteLine($"<p>You sit down on a {obj.Name}</p>", player.ConnectionId);
+                player.Status = CharacterStatus.Status.Sitting;
+                player.LongName = $"is sitting down on a {obj.Name}.";
+                foreach (var pc in room.Players)
+                {
+
+                    if (pc.Id.Equals(player.Id))
+                    {
+                        _writeToClient.WriteLine($"<p>You sit down on a {obj.Name}</p>", player.ConnectionId);
+                    }
+                    else
+                    {
+                        _writeToClient.WriteLine($"<p>{player.Name} sits down on a {obj.Name}.</p>",
+                            player.ConnectionId);
+                    }
+                }
+            }
+
+        }
+
+        public void Stand(Player player, Room room, string target)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Sleep(Player player, Room room,  string target)
+        {
+            _writeToClient.WriteLine("<p>You collapse into a deep sleep.</p>", player.ConnectionId);
+            player.Status = CharacterStatus.Status.Sitting;
+        }
+
+        public void Wake(Player player, Room room, string target)
+        {
+            throw new NotImplementedException();
         }
     }
 }
