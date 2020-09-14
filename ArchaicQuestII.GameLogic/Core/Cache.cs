@@ -22,6 +22,7 @@ namespace ArchaicQuestII.GameLogic.Core
         private readonly ConcurrentDictionary<int, Skill.Model.Skill> _skillCache = new ConcurrentDictionary<int, Skill.Model.Skill>();
         private readonly ConcurrentDictionary<int, string> _mapCache = new ConcurrentDictionary<int, string>();
         private readonly ConcurrentDictionary<string, Player> _combatCache = new ConcurrentDictionary<string, Player>();
+        private readonly Dictionary<string, Action> _commands = new Dictionary<string, Action>();
         private Config _configCache = new Config();
 
         #region PlayerCache
@@ -200,6 +201,16 @@ namespace ArchaicQuestII.GameLogic.Core
         public List<Player> GetCombatList()
         {
            return _combatCache.Values.ToList();
+        }
+ 
+        public void AddCommand(string key, Action action)
+        {
+           _commands.Add(key, action);
+        }
+
+        public Dictionary<string, Action> GetCommands()
+        {
+            return _commands;
         }
 
         #endregion

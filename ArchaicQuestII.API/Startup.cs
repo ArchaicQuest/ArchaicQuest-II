@@ -311,6 +311,7 @@ namespace ArchaicQuestII.API
                 _cache.AddMap(area.Id, Map.DrawMap(roomList));
             }
 
+            
 
         }
     }
@@ -324,8 +325,8 @@ namespace ArchaicQuestII.API
             Task.Run(loop.UpdateTime);
             Task.Run(loop.UpdateCombat);
             Task.Run(loop.UpdatePlayers);
-            Task.Run(loop.UpdateRoomEmote);
-            Task.Run(loop.UpdateMobEmote);
+            Task.Run(loop.UpdateRoomEmote).ConfigureAwait(false);
+            Task.Run(loop.UpdateMobEmote).ConfigureAwait(false);
         }
     }
 

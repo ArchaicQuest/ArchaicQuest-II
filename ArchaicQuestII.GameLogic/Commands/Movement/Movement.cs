@@ -246,21 +246,27 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
 
         public void Sit(Player player, Room room, string target)
         {
-            if (string.IsNullOrEmpty(target))
+
+            if (player.Status == CharacterStatus.Status.Sitting)
             {
-                _writeToClient.WriteLine("<p>You sit down.</p>", player.ConnectionId);
-                player.Status = CharacterStatus.Status.Sitting;
-                player.LongName = "is sitting down.";
+                _writeToClient.WriteLine("<p>You are already sitting!</p>", player.ConnectionId);
+                return;
+            }
+
+            if (target.Equals("sit", StringComparison.CurrentCultureIgnoreCase))
+            {
+
+                SetCharacterStatus(player, "is sitting here.", CharacterStatus.Status.Sitting);
                 foreach (var pc in room.Players)
                 {
 
                     if (pc.Id.Equals(player.Id))
                     {
-                        _writeToClient.WriteLine($"<p>You sit down.</p>", player.ConnectionId);
+                        _writeToClient.WriteLine("<p>You sit down.</p>", player.ConnectionId);
                     }
                     else
                     {
-                        _writeToClient.WriteLine($"<p>{player.Name} sits down.</p>", player.ConnectionId);
+                        _writeToClient.WriteLine($"<p>{player.Name} sits down.</p>", pc.ConnectionId);
                     }
                 }
 
@@ -277,20 +283,18 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
                     return;
                 }
 
-                _writeToClient.WriteLine($"<p>You sit down on a {obj.Name}</p>", player.ConnectionId);
-                player.Status = CharacterStatus.Status.Sitting;
-                player.LongName = $"is sitting down on a {obj.Name}.";
+                SetCharacterStatus(player, $"is sitting down on {obj.Name.ToLower()}", CharacterStatus.Status.Resting);
                 foreach (var pc in room.Players)
                 {
 
                     if (pc.Id.Equals(player.Id))
                     {
-                        _writeToClient.WriteLine($"<p>You sit down on a {obj.Name}</p>", player.ConnectionId);
+                        _writeToClient.WriteLine($"<p>You sit down on {obj.Name.ToLower()}.</p>", player.ConnectionId);
                     }
                     else
                     {
-                        _writeToClient.WriteLine($"<p>{player.Name} sits down on a {obj.Name}.</p>",
-                            player.ConnectionId);
+                        _writeToClient.WriteLine($"<p>{player.Name} sits down on {obj.Name.ToLower()}.</p>",
+                            pc.ConnectionId);
                     }
                 }
             }
@@ -299,18 +303,116 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
 
         public void Stand(Player player, Room room, string target)
         {
-            throw new NotImplementedException();
+            if (player.Status == CharacterStatus.Status.Standing)
+            {
+                _writeToClient.WriteLine("<p>You are already standing!</p>", player.ConnectionId);
+                return;
+            }
+
+            var standMessage = "rises up.";
+            if (player.Status == CharacterStatus.Status.Resting)
+            {
+                standMessage = $"arises from {(player.Gender == "Male" ? "his" : "her")} rest.";
+            }
+            else if (player.Status == CharacterStatus.Status.Sleeping)
+            {
+                standMessage = $"arises from {(player.Gender == "Male" ? "his" : "her")} slumber.";
+            }
+
+            SetCharacterStatus(player, "", CharacterStatus.Status.Standing);
+
+
+            foreach (var pc in room.Players)
+            {
+
+                if (pc.Id.Equals(player.Id))
+                {
+                    _writeToClient.WriteLine("<p>You move quickly to your feet.</p>", player.ConnectionId);
+                }
+                else
+                {
+                    _writeToClient.WriteLine($"<p>{player.Name} {standMessage}</p>", pc.ConnectionId);
+                }
+            }
         }
 
         public void Sleep(Player player, Room room,  string target)
         {
-            _writeToClient.WriteLine("<p>You collapse into a deep sleep.</p>", player.ConnectionId);
-            player.Status = CharacterStatus.Status.Sitting;
+
+            if (player.Status == CharacterStatus.Status.Sleeping)
+            {
+                _writeToClient.WriteLine("<p>You are already sleeping!</p>", player.ConnectionId);
+                return;
+            }
+
+            SetCharacterStatus(player, "is sleeping nearby", CharacterStatus.Status.Sleeping);
+
+            foreach (var pc in room.Players)
+            {
+
+                if (pc.Id.Equals(player.Id))
+                {
+                    _writeToClient.WriteLine("<p>You collapse into a deep sleep.</p>", player.ConnectionId);
+                }
+                else
+                {
+                    _writeToClient.WriteLine($"<p>{player.Name} collapses into a deep sleep.</p>", pc.ConnectionId);
+                }
+            }
         }
 
         public void Wake(Player player, Room room, string target)
         {
-            throw new NotImplementedException();
+            if (player.Status != CharacterStatus.Status.Sleeping)
+            {
+                _writeToClient.WriteLine("<p>You are already standing!</p>", player.ConnectionId);
+                return;
+            }
+
+            SetCharacterStatus(player, "", CharacterStatus.Status.Standing);
+
+            foreach (var pc in room.Players)
+            {
+
+                if (pc.Id.Equals(player.Id))
+                {
+                    _writeToClient.WriteLine("<p>You move quickly to your feet.</p>", player.ConnectionId);
+                }
+                else
+                {
+                    _writeToClient.WriteLine($"<p>{player.Name} arises from {(player.Gender == "Male" ? "his" : "her")} slumber.</p>", pc.ConnectionId);
+                }
+            }
+        }
+
+        public void Rest(Player player, Room room, string target)
+        {
+            if (player.Status == CharacterStatus.Status.Resting)
+            {
+                _writeToClient.WriteLine("<p>You are already resting!</p>", player.ConnectionId);
+                return;
+            }
+
+            SetCharacterStatus(player, "is sprawled out here", CharacterStatus.Status.Resting);
+
+            foreach (var pc in room.Players)
+            {
+
+                if (pc.Id.Equals(player.Id))
+                {
+                    _writeToClient.WriteLine("<p>You sprawl out haphazardly.</p>", player.ConnectionId);
+                }
+                else
+                {
+                    _writeToClient.WriteLine($"<p>{player.Name} sprawls out haphazardly.</p>", pc.ConnectionId);
+                }
+            }
+        }
+
+        public void SetCharacterStatus(Player player, string longName, CharacterStatus.Status status)
+        {
+            player.Status = status;
+            player.LongName = longName;
         }
     }
 }

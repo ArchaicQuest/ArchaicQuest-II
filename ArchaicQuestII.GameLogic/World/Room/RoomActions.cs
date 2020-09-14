@@ -315,7 +315,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 {
                     continue;
                 }
-                players += "<p class='player'>" + pc.Name + " is here.</p>";
+                players += string.IsNullOrEmpty(pc.LongName) ? $"<p class='player'>{pc.Name} is here.</p>" : $"<p class='player'>{pc.Name} {pc.LongName}.</p>";
             }
 
             return players;

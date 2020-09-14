@@ -43,5 +43,13 @@ namespace ArchaicQuestII.GameLogic.Core
         Player GetCharFromCombat(string id);
         Player RemoveCharFromCombat(string id);
         List<Player> GetCombatList();
+        /// <summary>
+        /// Experiment, Need to generate the commands list on start up
+        /// So things like socials & skills can work dynamically without
+        /// needing to change the backend code
+        /// </summary>
+        /// <returns></returns>
+        Dictionary<string, Action> GetCommands();
+       void AddCommand(string key, Action action);
     }
 }

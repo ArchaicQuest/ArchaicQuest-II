@@ -1,5 +1,6 @@
 ﻿using ArchaicQuestII.GameLogic.Character;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
 using ArchaicQuestII.GameLogic.Commands.Movement;
@@ -57,6 +58,14 @@ namespace ArchaicQuestII.GameLogic.Commands
             _score = score;
             _combat = combat;
         }
+
+        //public void CommandListTest(string key, string obj, string target, Player player, Room room)
+        //{
+        //    var commands = new Dictionary<string, Action>
+        //    {
+        //        {"debug", () => _debug.DebugRoom(room, player)},
+        //    };
+        //}
 
         public void CommandList(string key, string obj, string target, Player player, Room room)
         {
@@ -189,9 +198,26 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "sit":
                     _movement.Sit(player, room, obj);
                     break;
+                case "stand":
+                case "st":
+                    _movement.Stand(player, room, obj);
+                    break;
+                case "sleep":
+                case "sl":
+                    _movement.Sleep(player, room, obj);
+                    break;
+                case "wake":
+                case "wa":
+                    _movement.Wake(player, room, obj);
+                    break;
+                case "rest":
+                case "re":
+                    _movement.Rest(player, room, obj);
+                    break;
 
             }
         }
+ 
 
         public void ProcessCommand(string command, Player player, Room room)
         {
@@ -199,6 +225,8 @@ namespace ArchaicQuestII.GameLogic.Commands
             var cleanCommand = command.Trim().ToLower();
             var commandParts = cleanCommand.Split(' ');
             var key = commandParts[0];
+            
+            
             if (commandParts.Length >= 2)
             {
                 if (commandParts[1] == "in")

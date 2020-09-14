@@ -148,12 +148,11 @@ namespace ArchaicQuestII.GameLogic.Core
         public async Task UpdateRoomEmote()
         {
 
-
             while (true)
             {
                 try
                 {
-                    await Task.Delay(45000);
+                    await Task.Delay(45000).ConfigureAwait(false);
 
                     var rooms = _cache.GetAllRooms();
 
@@ -169,9 +168,11 @@ namespace ArchaicQuestII.GameLogic.Core
                             continue;
                         }
 
+                        var emote = room.Emotes[_dice.Roll(1, 0, room.Emotes.Count - 1)];
+
                         foreach (var player in room.Players)
                         {
-                            _writeToClient.WriteLine($"<p>{room.Emotes[_dice.Roll(1, 0, room.Emotes.Count - 1)]}</p>",
+                            _writeToClient.WriteLine($"<p class='room-emote'>{emote}</p>",
                                 player.ConnectionId);
                         }
                     }
@@ -193,7 +194,7 @@ namespace ArchaicQuestII.GameLogic.Core
             {
                 try
                 {
-                    await Task.Delay(30000);
+                    await Task.Delay(30000).ConfigureAwait(false);
 
                     var rooms = _cache.GetAllRooms().Where(x => x.Mobs.Any());
 
@@ -212,10 +213,11 @@ namespace ArchaicQuestII.GameLogic.Core
                                 continue;
                             }
 
+                            var emote = mob.Emotes[_dice.Roll(1, 0, room.Emotes.Count - 1)];
                             foreach (var player in room.Players)
                             {
                                 //example mob emote: Larissa flicks through her journal.
-                                _writeToClient.WriteLine($"<p>{mob.Name} {mob.Emotes[_dice.Roll(1, 0, room.Emotes.Count - 1)]}</p>",
+                                _writeToClient.WriteLine($"<p class='mob-emote'>{mob.Name} {emote}</p>",
                                     player.ConnectionId);
                             }
                         }
