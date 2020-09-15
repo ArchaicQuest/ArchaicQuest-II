@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Emote;
 using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Core
@@ -51,5 +52,8 @@ namespace ArchaicQuestII.GameLogic.Core
         /// <returns></returns>
         Dictionary<string, Action> GetCommands();
        void AddCommand(string key, Action action);
+
+       public void AddSocial(string key, Emote emote);
+       public Dictionary<string, Emote> GetSocials();
     }
 }

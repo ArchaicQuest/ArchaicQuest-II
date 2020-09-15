@@ -14,12 +14,15 @@ using ArchaicQuestII.GameLogic.Commands.Inventory;
 using ArchaicQuestII.GameLogic.Commands.Objects;
 using ArchaicQuestII.GameLogic.Commands.Score;
 using ArchaicQuestII.GameLogic.Commands.Skills;
+using ArchaicQuestII.GameLogic.Core;
+using ArchaicQuestII.GameLogic.Socials;
 using ArchaicQuestII.GameLogic.Spell.Interface;
 
 namespace ArchaicQuestII.GameLogic.Commands
 {
     public class Commands : ICommands
     {
+
         private readonly IMovement _movement;
         private readonly ISkills _skills;
         private readonly ISpells _spells;
@@ -31,6 +34,9 @@ namespace ArchaicQuestII.GameLogic.Commands
         private readonly IEquip _equipment;
         private readonly IScore _score;
         private readonly ICombat _combat;
+        private readonly ICache _cache;
+        private readonly ISocials _socials;
+        private readonly ICommandHandler _commandHandler;
 
         public Commands(
             IMovement movement,
@@ -43,7 +49,10 @@ namespace ArchaicQuestII.GameLogic.Commands
             Icommunication communication,
             IEquip equipment,
             IScore score,
-            ICombat combat
+            ICombat combat,
+            ICache cache,
+            ISocials socials,
+            ICommandHandler commandHandler
             )
         {
             _movement = movement;
@@ -57,16 +66,11 @@ namespace ArchaicQuestII.GameLogic.Commands
             _equipment = equipment;
             _score = score;
             _combat = combat;
+            _cache = cache;
+            _socials = socials;
+            _commandHandler = commandHandler;
         }
-
-        //public void CommandListTest(string key, string obj, string target, Player player, Room room)
-        //{
-        //    var commands = new Dictionary<string, Action>
-        //    {
-        //        {"debug", () => _debug.DebugRoom(room, player)},
-        //    };
-        //}
-
+ 
         public void CommandList(string key, string obj, string target, Player player, Room room)
         {
             switch (key)
@@ -214,9 +218,13 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "re":
                     _movement.Rest(player, room, obj);
                     break;
+                default:
+                        _commandHandler.HandleCommand(key,obj,target, player, room);
+                    break;
 
             }
         }
+
  
 
         public void ProcessCommand(string command, Player player, Room room)
@@ -237,8 +245,7 @@ namespace ArchaicQuestII.GameLogic.Commands
             }
             var parameters = MakeCommandPartsSafe(commandParts);
 
-
-
+ 
 
             CommandList(key, parameters.Item1, parameters.Item2, player, room);
         }

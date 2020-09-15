@@ -26,6 +26,7 @@ using ArchaicQuestII.GameLogic.World.Room;
 using Microsoft.AspNetCore.SignalR;
 using static ArchaicQuestII.API.Services.services;
 using System.Threading.Tasks;
+using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Combat;
@@ -38,6 +39,7 @@ using ArchaicQuestII.GameLogic.Hubs.Telnet;
 using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.Skill.Core;
 using ArchaicQuestII.GameLogic.Skill.Model;
+using ArchaicQuestII.GameLogic.Socials;
 using ArchaicQuestII.GameLogic.Spell;
 using ArchaicQuestII.GameLogic.Spell.Interface;
 using ArchaicQuestII.GameLogic.World.Area;
@@ -132,6 +134,8 @@ namespace ArchaicQuestII.API
             services.AddTransient<IAddRoom, AddRoom>();
             services.AddSingleton<ICombat, Combat>();
             services.AddSingleton<IGain, Gain>();
+            services.AddSingleton<ISocials, Social>();
+            services.AddSingleton<ICommandHandler, CommandHandler>();
             services.AddSingleton<IFormulas, Formulas>();
             services.AddSingleton<IUpdateClientUI, UpdateClientUI>();
             services.AddSingleton<IWriteToClient, WriteToClient>((factory) => new WriteToClient(_hubContext, TelnetHub.Instance));
@@ -311,7 +315,14 @@ namespace ArchaicQuestII.API
                 _cache.AddMap(area.Id, Map.DrawMap(roomList));
             }
 
-            
+
+            var socials = new SocialSeedData().SeedData();
+
+            foreach (var social in socials)
+            {
+                _cache.AddSocial(social.Key, social.Value);
+            }
+
 
         }
     }
