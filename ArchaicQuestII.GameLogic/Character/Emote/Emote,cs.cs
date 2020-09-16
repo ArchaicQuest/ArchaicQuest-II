@@ -6,22 +6,23 @@ namespace ArchaicQuestII.GameLogic.Character.Emote
 {
    public class Emote
     {
+
         /// <summary>
-        /// Can this emote be aimed at someone
+        /// What the player sees when they emote without a target
         /// </summary>
-        public bool CanTarget { get; set; }
+        public string CharNoTarget { get; set; }
         /// <summary>
-        /// What the player sees when they emote
+        ///What the room sees when the player emotes without a target
         /// </summary>
-        public string ToSender { get; set; }
+        public string RoomNoTarget { get; set; }
         /// <summary>
-        /// What the player sees when they emote @ someone
+        /// What the player sees when they emote at a target
         /// </summary>
-        public string ToSenderAtTarget { get; set; }
+        public string TargetFound { get; set; }
         /// <summary>
-        /// What the room sees when a player emotes
+        /// What the room sees when a player emotes at a target
         /// </summary>
-        public string ToRoomTarget { get; set; }
+        public string RoomTarget { get; set; }
         /// <summary>
         /// What the target sees if a player emotes @ them.
         /// </summary>
@@ -29,7 +30,9 @@ namespace ArchaicQuestII.GameLogic.Character.Emote
         /// <summary>
         /// What the room sees if a player emotes @ someone
         /// </summary>
-        public string ToRoom { get; set; }
-        
+        public string TargetSelf { get; set; }
+        public string RoomSelf { get; set; }
+  
+
     }
 }

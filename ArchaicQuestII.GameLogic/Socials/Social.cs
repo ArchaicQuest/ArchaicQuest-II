@@ -22,7 +22,7 @@ namespace ArchaicQuestII.GameLogic.Socials
 
             if (string.IsNullOrEmpty(target))
             {
-                _writeToClient.WriteLine($"<p>{social.ToSender}</p>", player.ConnectionId);
+                _writeToClient.WriteLine($"<p>{social.CharNoTarget}</p>", player.ConnectionId);
               
                 foreach (var pc in room.Players)
                 {
@@ -30,7 +30,7 @@ namespace ArchaicQuestII.GameLogic.Socials
                     {
                         continue;
                     }
-                    _writeToClient.WriteLine($"<p>{social.ToRoom.Replace("#", player.Name)}</p>", pc.ConnectionId);
+                    _writeToClient.WriteLine($"<p>{social.RoomNoTarget.Replace("#player#", player.Name).Replace("#pgender#", Helpers.GetPronoun(player.Gender)).Replace("#pgender2#", Helpers.GetSubjectPronoun(player.Gender)).Replace("#pgender3#", Helpers.GetObjectPronoun(player.Gender))}</p>", pc.ConnectionId);
                 }
 
                 return;
@@ -39,15 +39,27 @@ namespace ArchaicQuestII.GameLogic.Socials
             var getTarget = (room.Players.FirstOrDefault(x => x.Name.StartsWith(target, StringComparison.CurrentCultureIgnoreCase)));
             if (getTarget != null)
             {
-                _writeToClient.WriteLine($"<p>{social.ToSenderAtTarget.Replace("@", getTarget.Name)}<p>", player.ConnectionId);
-                _writeToClient.WriteLine($"<p>{social.ToTarget.Replace("#", player.Name)}</p>", getTarget.ConnectionId);
+                if (getTarget.Id == player.Id)
+                {
+                    foreach (var pc in room.Players)
+                    {
+                        if (pc.Id == player.Id)
+                        {
+                            _writeToClient.WriteLine($"<p>{social.TargetSelf.Replace("#player#", getTarget.Name).Replace("#player#", player.Name).Replace("#pgender#", Helpers.GetPronoun(player.Gender)).Replace("#pgender#", Helpers.GetPronoun(player.Gender)).Replace("#pgender3#", Helpers.GetSubjectPronoun(player.Gender))}</p>", pc.ConnectionId);
+                        }
+                        _writeToClient.WriteLine($"<p>{social.RoomSelf.Replace("#player#", getTarget.Name).Replace("#player#", player.Name).Replace("#pgender#", Helpers.GetPronoun(player.Gender)).Replace("#pgender#", Helpers.GetPronoun(player.Gender)).Replace("#pgender3#", Helpers.GetSubjectPronoun(player.Gender))}</p>", pc.ConnectionId);
+                    }
+                    return;
+                }
+                _writeToClient.WriteLine($"<p>{social.TargetFound.Replace("#target#", getTarget.Name).Replace("#tgender#", Helpers.GetPronoun(getTarget.Gender))}<p>", player.ConnectionId);
+                _writeToClient.WriteLine($"<p>{social.ToTarget.Replace("#player#", player.Name).Replace("#pgender#", Helpers.GetPronoun(player.Gender)).Replace("#pgender2#", Helpers.GetObjectPronoun(player.Gender))}</p>", getTarget.ConnectionId);
                 foreach (var pc in room.Players)
                 {
                     if (pc.Id == player.Id || pc.Id == getTarget.Id)
                     {
                         continue;
                     }
-                    _writeToClient.WriteLine($"<p>{social.ToRoomTarget.Replace("@", getTarget.Name).Replace("#", player.Name)}</p>", pc.ConnectionId);
+                    _writeToClient.WriteLine($"<p>{social.RoomTarget.Replace("#target#", getTarget.Name).Replace("#player#", player.Name).Replace("#pgender#", Helpers.GetPronoun(player.Gender)).Replace("#pgender#", Helpers.GetPronoun(player.Gender)).Replace("#pgender3#", Helpers.GetSubjectPronoun(player.Gender))}</p>", pc.ConnectionId);
                 }
             }
             else

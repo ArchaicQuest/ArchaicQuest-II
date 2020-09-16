@@ -15,6 +15,11 @@ namespace ArchaicQuestII.GameLogic.Core
     /// </summary>
    public static class Helpers
     {
+        /// <summary>
+        /// Her / His
+        /// </summary>
+        /// <param name="gender"></param>
+        /// <returns></returns>
         public static string GetPronoun(string gender)
         {
             return gender switch
@@ -22,6 +27,34 @@ namespace ArchaicQuestII.GameLogic.Core
                 "Female" => "her",
                 "Male" => "his",
                 _ => "their",
+            };
+        }
+        /// <summary>
+        /// She / He
+        /// </summary>
+        /// <param name="gender"></param>
+        /// <returns></returns>
+        public static string GetSubjectPronoun(string gender)
+        {
+            return gender switch
+            {
+                "Female" => "she",
+                "Male" => "he",
+                _ => "it",
+            };
+        }
+        /// <summary>
+        /// Her / Him
+        /// </summary>
+        /// <param name="gender"></param>
+        /// <returns></returns>
+        public static string GetObjectPronoun(string gender)
+        {
+            return gender switch
+            {
+                "Female" => "her",
+                "Male" => "him",
+                _ => "it",
             };
         }
 
