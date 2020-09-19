@@ -218,6 +218,11 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "re":
                     _movement.Rest(player, room, obj);
                     break;
+                case "social":
+                case "socials":
+                case "soc":
+                    _socials.DisplaySocials(player);
+                    break;
                 default:
                         _commandHandler.HandleCommand(key,obj,target, player, room);
                     break;

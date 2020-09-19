@@ -46,4 +46,10 @@
         </Content>
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="socials.txt">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>

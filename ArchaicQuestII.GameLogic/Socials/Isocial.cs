@@ -10,5 +10,6 @@ namespace ArchaicQuestII.GameLogic.Socials
     public interface ISocials
     {
         public void EmoteSocial(Player player, Room room, Emote social, string target);
+        public void DisplaySocials(Player player);
     }
 }

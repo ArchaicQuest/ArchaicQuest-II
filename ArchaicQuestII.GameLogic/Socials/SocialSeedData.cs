@@ -9,108 +9,159 @@ namespace ArchaicQuestII.GameLogic.Socials
     {
         public Dictionary<string, Emote> SeedData()
         {
-            var seed = new Dictionary<string, Emote>
+            var location = System.Reflection.Assembly.GetEntryAssembly().Location;
+            var directory = System.IO.Path.GetDirectoryName(location);
+            System.IO.StreamReader file =
+                new System.IO.StreamReader(directory + "/socials.txt");
+            string line;
+
+            // var socials = new List<Emote>();
+            var socialObject = new Dictionary<string, Emote>();
+            var emote = new Emote();
+            var key = string.Empty;
+            while ((line = file.ReadLine()) != null)
             {
-                {"accuse", new Emote()
+                System.Console.WriteLine(line);
+
+                var x = line.Split(" ");
+
+                if (x[0] == "Name")
                 {
-                    CharNoTarget = "Accuse whom?",
-                    RoomNoTarget = "#player# is in an accusing mood.",
-                    TargetFound = "You look accusingly at #target#.",
-                    ToTarget = "#player# looks accusingly at you.",
-                    RoomTarget = "#player# looks accusingly at #target#.",
-                    TargetSelf = "#player# seems to have a bad conscience.",
-                    RoomSelf = "You accuse yourself."
-                }},
-                {"ack", new Emote()
+                    key = x[8].Replace("~", "");
+                }
+
+                if (x[0] == "OthersNoArg")
                 {
-                    CharNoTarget = "You gasp and say 'ACK!' at your mistake.",
-                    RoomNoTarget = "#player# ACKS at #pgender# big mistake.",
-                    TargetFound = "You ACKS #target#.",
-                    ToTarget = "#player# ACKS you.",
-                    RoomTarget = "#player# ACKS #target#.",
-                    TargetSelf = "#player# ACKS #pgender2#self. Must be a bad day.",
-                    RoomSelf = "You ACKS yourself."
-                }},
-            //    {"adore", new Emote()
-            //    {
+                    var s = string.Join(" ", x);
+                    var indexOfFirstSpace = s.IndexOf(" ");
 
-            //        CharNoTarget = "#player# is looking for someone to adore!",
-            //        ToSender = "You are looking for someone to adore!",
-            //        ToSenderAtTarget = "You look at #target# with adoring eyes.",
-            //        ToTarget = "#player# looks at you with adoring eyes.",
-            //        ToRoomTarget = "#player# looks at #target# with adoring eyes."
-            //    }},
-            //    {"agree", new Emote()
-            //    {
-            //        CharNoTarget = "#player# seems to agree.",
-            //        ToSender = "You seem to be in an agreeable mood.",
-            //        ToSenderAtTarget = "You agree with #target#.",
-            //        ToTarget = "#player# agrees with you.",
-            //        ToRoomTarget = "#player# agrees with #target#."
-            //    }},
-            //    {"amused", new Emote()
-            //    {
-            //        CharNoTarget = "#player# gives an amused look.",
-            //        ToSender = "You seem amused about something.",
-            //        ToSenderAtTarget = "You give #target# an amused grin.",
-            //        ToTarget = "#player# gives you an amused grin.",
-            //        ToRoomTarget = "#player# gives an amused grin at #target#."
-            //    }},
-            //    {"arf", new Emote()
-            //    {
-            //        CharNoTarget = "#player# exclaims, \"Arf! Arf! Arf!\"",
-            //        ToSender = "You exclaim, \"Arf! Arf! Arf!\"",
-            //        ToSenderAtTarget = "You look at #target# and exclaim, \"Arf! Arf! Arf!\"",
-            //        ToTarget = "#player# looks at you and exclaims, \"Arf! Arf! Arf!\"",
-            //        ToRoomTarget = "#player# at #target# and exclaims, \"Arf! Arf! Arf!\""
-            //    }},
-            //    {"baffle", new Emote()
-            //    {
-            //        CharNoTarget = "#player# scrunches up % face because ? is totally baffled!",
-            //        ToSender = "You scrunch up your face because you are totally baffled!",
-            //        ToSenderAtTarget = "You scrunch up your face at #target# because ^ behavior totally baffles you!",
-            //        ToTarget = "#player#player# scrunches up #pgender# face at you because you totally baffle #pgender2#!",
-            //        ToRoomTarget = "#player# scrunches up % face at #target# because ^ totally baffle %!"
-            //    }},
-            //    {"bashful", new Emote()
-            //    {
-            //        CharNoTarget = "#player# begins looking quite bashful.",
-            //        ToSender = "For some reason, you start feeling very bashful.",
-            //        ToSenderAtTarget = "You look up at #target#, look at the ground and bashfully trace figure eights with your foot.",
-            //        ToTarget = "#player# looks up at you, then bashfully traces figure eights with her foot.",
-            //        ToRoomTarget = "#player# looks up at #, then bashfully traces figure eights with her foot."
-            //    }},
-            //    {"blank", new Emote()
-            //    {
-            //        CharNoTarget = "#player# gets a blank look on #% face.",
-            //        ToSender = "You get a blank look on your face.",
-            //        ToSenderAtTarget = "You look at #target# but draw a complete blank.",
-            //        ToTarget = "#player# looks at you and draws a total blank.",
-            //        ToRoomTarget = "#player# looks at #target# and draws a total blank."
-            //    }},
-            //    {"clap", new Emote()
-            //    {
-            //        CharNoTarget = "#player# claps.",
-            //        ToSender = "You clap.",
-            //        ToSenderAtTarget = "You clap for #target#.",
-            //        ToTarget = "#player# claps for you.",
-            //        ToRoomTarget = "#player# claps for #target#."
+                    emote.RoomNoTarget = s.Substring(indexOfFirstSpace + 1).Replace("$n", "#player#")
+                        .Replace("$N", "#target#")
+                        .Replace("$n", "#player#")
+                        .Replace("$e", "#pgender2#")
+                        .Replace("$E", "#tgender2#")
+                        .Replace("$s", "#pgender#")
+                        .Replace("$S", "#tgender#")
+                        .Replace("$M", "#tgender3#")
+                        .Replace("$m", "#pgender3#").Replace("~", "").Trim();
+                }
 
-            //    }},
-            //        {"smile", new Emote()
-            //        {
+                if (x[0] == "CharNoArg")
+                {
+                    var s = string.Join(" ", x);
+                    var indexOfFirstSpace = s.IndexOf(" ");
 
-            //            CharNoTarget = "#player# smiles.",
-            //            ToSender = "You smile.",
-            //            ToSenderAtTarget = "You smile at #target#.",
-            //            ToTarget = "#player# smiles at you.",
-            //            ToRoomTarget = "#player# smiles at #target#."
+                    emote.CharNoTarget = s.Substring(indexOfFirstSpace + 1).Replace("$n", "#player#")
+                        .Replace("$N", "#target#")
+                        .Replace("$n", "#player#")
+                        .Replace("$e", "#pgender2#")
+                        .Replace("$E", "#tgender2#")
+                        .Replace("$s", "#pgender#")
+                        .Replace("$S", "#tgender#")
+                        .Replace("$M", "#tgender3#")
+                        .Replace("$m", "#pgender3#").Replace("~", "").Trim();
+                }
 
-            //        }
-            //    }
-            };
 
-            return seed;
+                if (x[0] == "CharFound")
+                {
+                    var s = string.Join(" ", x);
+                    var indexOfFirstSpace = s.IndexOf(" ");
+                    emote.TargetFound = s.Substring(indexOfFirstSpace + 1).Replace("$n", "#player#")
+                        .Replace("$N", "#target#")
+                        .Replace("$n", "#player#")
+                        .Replace("$e", "#pgender2#")
+                        .Replace("$E", "#tgender2#")
+                        .Replace("$s", "#pgender#")
+                        .Replace("$S", "#tgender#")
+                        .Replace("$M", "#tgender3#")
+                        .Replace("$m", "#pgender3#").Replace("~", "").Trim();
+                }
+
+                if (x[0] == "OthersFound")
+                {
+                    var s = string.Join(" ", x);
+                    var indexOfFirstSpace = s.IndexOf(" ");
+                    emote.RoomTarget = s.Substring(indexOfFirstSpace + 1).Replace("$n", "#player#")
+                        .Replace("$N", "#target#")
+                        .Replace("$n", "#player#")
+                        .Replace("$e", "#pgender2#")
+                        .Replace("$E", "#tgender2#")
+                        .Replace("$s", "#pgender#")
+                        .Replace("$S", "#tgender#")
+                        .Replace("$M", "#tgender3#")
+                        .Replace("$m", "#pgender3#").Replace("~", "").Trim();
+                }
+
+                if (x[0] == "VictFound")
+                {
+                    var s = string.Join(" ", x);
+                    var indexOfFirstSpace = s.IndexOf(" ");
+                    emote.ToTarget = s.Substring(indexOfFirstSpace + 1).Replace("$n", "#player#")
+                        .Replace("$N", "#target#")
+                        .Replace("$n", "#player#")
+                        .Replace("$e", "#pgender2#")
+                        .Replace("$E", "#tgender2#")
+                        .Replace("$s", "#pgender#")
+                        .Replace("$S", "#tgender#")
+                        .Replace("$M", "#tgender3#")
+                        .Replace("$m", "#pgender3#").Replace("~", "").Trim();
+                }
+
+                if (x[0] == "CharAuto")
+                {
+                    var s = string.Join(" ", x);
+                    var indexOfFirstSpace = s.IndexOf(" ");
+                    emote.TargetSelf = s.Substring(indexOfFirstSpace + 1).Replace("$n", "#player#")
+                        .Replace("$N", "#target#")
+                        .Replace("$n", "#player#")
+                        .Replace("$e", "#pgender2#")
+                        .Replace("$E", "#tgender2#")
+                        .Replace("$s", "#pgender#")
+                        .Replace("$S", "#tgender#")
+                        .Replace("$M", "#tgender3#")
+                        .Replace("$m", "#pgender3#").Replace("~", "").Trim();
+                }
+
+                if (x[0] == "CharAuto")
+                {
+                    var s = string.Join(" ", x);
+                    var indexOfFirstSpace = s.IndexOf(" ");
+                    emote.TargetSelf = s.Substring(indexOfFirstSpace + 1).Replace("$n", "#player#")
+                        .Replace("$N", "#target#")
+                        .Replace("$n", "#player#")
+                        .Replace("$e", "#pgender2#")
+                        .Replace("$E", "#tgender2#")
+                        .Replace("$s", "#pgender#")
+                        .Replace("$S", "#tgender#")
+                        .Replace("$M", "#tgender3#")
+                        .Replace("$m", "#pgender3#").Replace("~", "").Trim();
+                }
+
+                if (x[0] == "OthersAuto")
+                {
+                    var s = string.Join(" ", x);
+                    var indexOfFirstSpace = s.IndexOf(" ");
+                    emote.RoomSelf = s.Substring(indexOfFirstSpace + 1).Replace("$n", "#player#")
+                        .Replace("$N", "#target#")
+                        .Replace("$n", "#player#")
+                        .Replace("$e", "#pgender2#")
+                        .Replace("$E", "#tgender2#")
+                        .Replace("$s", "#pgender#")
+                        .Replace("$S", "#tgender#")
+                        .Replace("$M", "#tgender3#")
+                        .Replace("$m", "#pgender3#").Replace("~", "").Trim();
+                }
+
+                if (x[0] == "End")
+                {
+                    socialObject.Add(key, emote);
+                    emote = new Emote();
+                }
+            }
+            file.Close();
+
+            return socialObject;
         }
     }
 }
