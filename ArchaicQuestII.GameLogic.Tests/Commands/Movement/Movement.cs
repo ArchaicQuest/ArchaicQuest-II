@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Character.Status;
@@ -281,8 +282,10 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Movement
         {
             var player2 = new Player();
             player2.ConnectionId = "2";
+            player2.Id = new Guid();
 
             _player = new Player();
+            _player.Id = Guid.NewGuid();
             _player.ConnectionId = "1";
             _player.Name = "Bob";
             _player.Stats = new Stats()

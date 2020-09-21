@@ -63,7 +63,8 @@ namespace ArchaicQuestII.Controllers
                 DefaultAttack = mob.DefaultAttack,
                 DateCreated = mob.DateCreated ?? DateTime.Now,
                 DateUpdated = DateTime.Now,
-                Emotes = mob.Emotes
+                Emotes = mob.Emotes,
+                Commands = mob.Commands
             };
 
 

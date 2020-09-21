@@ -52,7 +52,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
         public List<Player> Players { get; set; } = new List<Player>();
         public List<Player> Mobs { get; set; } = new List<Player>();
         public ItemList Items { get; set; } = new ItemList();
-        public RoomType Type { get; set; }
+        public RoomType? Type { get; set; } = RoomType.Standard;
         /// <summary>
         /// List of emotes that will be randomly played on tick
         /// </summary>

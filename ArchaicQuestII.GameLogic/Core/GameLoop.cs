@@ -194,7 +194,7 @@ namespace ArchaicQuestII.GameLogic.Core
             {
                 try
                 {
-                    await Task.Delay(30000).ConfigureAwait(false);
+                    await Task.Delay(3000).ConfigureAwait(false);
 
                     var rooms = _cache.GetAllRooms().Where(x => x.Mobs.Any());
 
@@ -208,17 +208,39 @@ namespace ArchaicQuestII.GameLogic.Core
                        
                         foreach (var mob in room.Mobs)
                         {
-                            if (!mob.Emotes.Any())
+                            if (mob.Emotes.Any())
                             {
-                                continue;
+
+                                var emote = mob.Emotes[_dice.Roll(1, 0, room.Emotes.Count - 1)];
+                                foreach (var player in room.Players)
+                                {
+                                    //example mob emote: Larissa flicks through her journal.
+                                    if (emote == null)
+                                    {
+                                        continue;
+                                    }
+                                    _writeToClient.WriteLine($"<p class='mob-emote'>{mob.Name} {emote}</p>",
+                                        player.ConnectionId);
+                                }
                             }
 
-                            var emote = mob.Emotes[_dice.Roll(1, 0, room.Emotes.Count - 1)];
-                            foreach (var player in room.Players)
+ 
+                            if (!string.IsNullOrEmpty(mob.Commands) && mob.Buffer.Count == 0)
                             {
-                                //example mob emote: Larissa flicks through her journal.
-                                _writeToClient.WriteLine($"<p class='mob-emote'>{mob.Name} {emote}</p>",
-                                    player.ConnectionId);
+                                mob.RoomId = room.Id;
+                                var commands = mob.Commands.Split(";");
+
+                                foreach (var command in commands)
+                                {
+                                    mob.Buffer.Push(command);
+                                }
+
+                            }
+
+                            if (mob.Buffer.Count > 0)
+                            {
+                                var mobCommand = mob.Buffer.Pop();
+                                _commands.ProcessCommand(mobCommand, mob, room);
                             }
                         }
                     }

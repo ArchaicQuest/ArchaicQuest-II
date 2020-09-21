@@ -324,8 +324,16 @@ namespace ArchaicQuestII.API
                 _cache.AddSocial(social.Key, social.Value);
             }
 
+            
+            if (!_db.DoesCollectionExist(DataBase.Collections.Socials))
+            {
+                foreach (var social in socials)
+                {
+                    _db.Save(social, DataBase.Collections.Socials);
+                }
+            }
 
- 
+
 
         }
     }

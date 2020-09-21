@@ -89,13 +89,13 @@ namespace ArchaicQuestII.GameLogic.Character
         public string DefaultAttack { get; set; }
         [JsonIgnore]
         public Stack<string> Buffer { get; set; } = new Stack<string>();
-
         public List<Spell.Model.Spell> Spells { get; set; }
         public List<SkillList> Skills { get; set; }
         public bool Deleted { get; set; }
         public DateTime? DateCreated { get; set; } = DateTime.Now;
         public DateTime? DateUpdated { get; set; } = DateTime.Now;
         public List<string> Emotes { get; set; } = new List<string>();
+        public string Commands { get; set; }
 
 
 

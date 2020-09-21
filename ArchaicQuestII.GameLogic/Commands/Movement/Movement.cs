@@ -84,6 +84,12 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
 
             UpdateCharactersLocation(getExitToNextRoom, character);
 
+            if (character.ConnectionId == "mob")
+            {
+                return;
+
+            }
+
              _roomActions.Look("", getNextRoom, character);
 
              _updateUi.GetMap(character, _cache.GetMap(getExitToNextRoom.AreaId));
@@ -143,20 +149,33 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
         public void UpdateCharactersLocation(Exit exit, Player character)
         {
             //Refactor?
+            if (character.ConnectionId != "mob")
+            {
+                // remove player from room
+                var oldRoom = _cache.GetRoom(character.RoomId);
+                oldRoom.Players.Remove(character);
 
-            // remove player from room
-            var oldRoom = _cache.GetRoom(character.RoomId);
-            oldRoom.Players.Remove(character);
+                //add player to room
+                character.RoomId = exit.RoomId;
+                var room = _cache.GetRoom(exit.RoomId);
+                room.Players.Add(character);
+            }
+            else
+            {
+                // remove mob from room
+                var oldRoom = _cache.GetRoom(character.RoomId);
+                oldRoom.Mobs.Remove(character);
 
-            //add player to room
-            character.RoomId = exit.RoomId;
-            var room = _cache.GetRoom(exit.RoomId);
-            room.Players.Add(character);
+                //add mob to room
+                character.RoomId = exit.RoomId;
+                var room = _cache.GetRoom(exit.RoomId);
+                room.Mobs.Add(character);
+            }
         }
 
         public bool CharacterCanMove(Player character)
         {
-            return character.Stats.MovePoints > 0;
+            return character.ConnectionId == "mob" || character.Stats.MovePoints > 0;
         }
 
         public void Flee(Room room, Player character, string direction = "")
