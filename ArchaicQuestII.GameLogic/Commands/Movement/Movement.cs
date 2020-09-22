@@ -4,11 +4,49 @@ using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
+using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Core;
+using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.World.Room;
+using MoonSharp.Interpreter;
 
 namespace ArchaicQuestII.GameLogic.Commands.Movement
 {
+
+
+   public  class MyClass
+   {
+       public Player _player;
+       public Player _mob;
+       public Room _room;
+       public ICombat _combat;
+        private readonly ICache _cache;
+        public MyClass(Player player, Player mob, Room room, ICache cache, ICombat
+             combat)
+        {
+            _player = player;
+            _mob = mob;
+            _cache = cache;
+            _combat = combat;
+            _room = room;
+
+        }
+        public string GetName()
+        {
+
+            return this._player.Name;
+        }
+
+        public void UpdateInv()
+        {
+            _player.Inventory.Add(new Item.Item() {Name = "test",  Description = new Description() {Room = "A test LUA item"}, Id = 9999});
+        }
+
+        public void AttackPlayer()
+        {
+            _combat.Fight(_mob, GetName(), _room, true);
+        }
+    }
     public class Movement : IMovement
     {
         private readonly IWriteToClient _writeToClient;
@@ -17,15 +55,19 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
         private readonly IUpdateClientUI _updateUi;
         private readonly IDice _dice;
 
+        //test
+        private readonly ICombat _combat;
 
 
-        public Movement(IWriteToClient writeToClient, ICache cache, IRoomActions roomActions, IUpdateClientUI updateUI, IDice dice)
+
+        public Movement(IWriteToClient writeToClient, ICache cache, IRoomActions roomActions, IUpdateClientUI updateUI, IDice dice, ICombat combat)
         {
             _writeToClient = writeToClient;
             _cache = cache;
             _roomActions = roomActions;
             _updateUi = updateUI;
             _dice = dice;
+            _combat = combat;
 
         }
         public void Move(Room room, Player character, string direction)
@@ -60,8 +102,9 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
                 _writeToClient.WriteLine("<p>You can't go that way.</p>", character.ConnectionId);
                 return;
             }
- 
-            var newRoomCoords = new Coordinates {
+
+            var newRoomCoords = new Coordinates
+            {
                 X = getExitToNextRoom.Coords.X,
                 Y = getExitToNextRoom.Coords.Y,
                 Z = getExitToNextRoom.Coords.Z
@@ -90,9 +133,11 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
 
             }
 
-             _roomActions.Look("", getNextRoom, character);
+            _roomActions.Look("", getNextRoom, character);
 
-             _updateUi.GetMap(character, _cache.GetMap(getExitToNextRoom.AreaId));
+            OnPlayerEnterEvent(getNextRoom, character); 
+
+            _updateUi.GetMap(character, _cache.GetMap(getExitToNextRoom.AreaId));
 
         }
 
@@ -120,7 +165,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
                     return room.Exits.Down;
                 case "Up":
                     return room.Exits.Up;
-                default: {return null;}
+                default: { return null; }
             }
         }
 
@@ -142,7 +187,50 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
                 if (character.Name != player.Name)
                 {
                     _writeToClient.WriteLine($"{character.Name} walks in.", player.ConnectionId);
-                }            
+                }
+            }
+
+          
+        }
+
+        public string GetName(Player player)
+        {
+            return player.Name;
+        }
+
+        private static int Mul(int a, int b)
+        {
+            return a * b;
+        }
+
+        public void OnPlayerEnterEvent(Room room, Player character)
+        {
+            foreach (var mob in room.Mobs)
+            {
+
+                string scriptCode = @"    
+		                    -- defines a function
+		                    function greet ()
+                               obj.updateInv()
+                               obj.attackPlayer()
+			                  return ('Hello there ' .. obj.getName() .. ' check your inventory')
+		                    end
+
+		                    return greet()";
+
+
+                UserData.RegisterType<MyClass>();
+
+                Script script = new Script();
+
+                DynValue obj = UserData.Create(new MyClass(character, mob, room, _cache, _combat));
+
+                script.Globals.Set("obj", obj);
+
+                DynValue res = script.DoString(scriptCode);
+
+                _writeToClient.WriteLine(res.String);
+
             }
         }
 
@@ -255,7 +343,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
                 {
                     character.Status = CharacterStatus.Status.Standing;
                     _cache.RemoveCharFromCombat(mob.Id.ToString());
-                } 
+                }
             }
 
             //this could be buggy
@@ -355,7 +443,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
             }
         }
 
-        public void Sleep(Player player, Room room,  string target)
+        public void Sleep(Player player, Room room, string target)
         {
 
             if (player.Status == CharacterStatus.Status.Sleeping)

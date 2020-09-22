@@ -240,6 +240,7 @@ namespace ArchaicQuestII.GameLogic.Core
                             if (mob.Buffer.Count > 0)
                             {
                                 var mobCommand = mob.Buffer.Pop();
+                                
                                 _commands.ProcessCommand(mobCommand, mob, room);
                             }
                         }
