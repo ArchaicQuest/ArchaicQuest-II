@@ -12,41 +12,7 @@ using MoonSharp.Interpreter;
 
 namespace ArchaicQuestII.GameLogic.Commands.Movement
 {
-
-
-   public  class MyClass
-   {
-       public Player _player;
-       public Player _mob;
-       public Room _room;
-       public ICombat _combat;
-        private readonly ICache _cache;
-        public MyClass(Player player, Player mob, Room room, ICache cache, ICombat
-             combat)
-        {
-            _player = player;
-            _mob = mob;
-            _cache = cache;
-            _combat = combat;
-            _room = room;
-
-        }
-        public string GetName()
-        {
-
-            return this._player.Name;
-        }
-
-        public void UpdateInv()
-        {
-            _player.Inventory.Add(new Item.Item() {Name = "test",  Description = new Description() {Room = "A test LUA item"}, Id = 9999});
-        }
-
-        public void AttackPlayer()
-        {
-            _combat.Fight(_mob, GetName(), _room, true);
-        }
-    }
+ 
     public class Movement : IMovement
     {
         private readonly IWriteToClient _writeToClient;
@@ -54,13 +20,14 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
         private readonly ICache _cache;
         private readonly IUpdateClientUI _updateUi;
         private readonly IDice _dice;
+        private readonly IMobScripts _mobScripts;
 
         //test
         private readonly ICombat _combat;
 
 
 
-        public Movement(IWriteToClient writeToClient, ICache cache, IRoomActions roomActions, IUpdateClientUI updateUI, IDice dice, ICombat combat)
+        public Movement(IWriteToClient writeToClient, ICache cache, IRoomActions roomActions, IUpdateClientUI updateUI, IDice dice, ICombat combat, IMobScripts mobScripts)
         {
             _writeToClient = writeToClient;
             _cache = cache;
@@ -68,8 +35,9 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
             _updateUi = updateUI;
             _dice = dice;
             _combat = combat;
-
+            _mobScripts = mobScripts;
         }
+
         public void Move(Room room, Player character, string direction)
         {
             switch (character.Status)
@@ -210,22 +178,37 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
 
                 string scriptCode = @"    
 		                    -- defines a function
-		                    function greet ()
-                               obj.updateInv()
-                               obj.attackPlayer()
-			                  return ('Hello there ' .. obj.getName() .. ' check your inventory')
+		                    function greet (room, player, mob)
+ 
+                               obj.updateInv(player)
+                                obj.Say('hello', 0, room, player)
+                                if obj.isInRoom(room, player) then obj.Say('I have a quest for you', 1000, room, player) end
+                                obj.Say('you have to kill some goblins', 1000, room, player)
+                                obj.Say('you have to kill some goblins', 10000, room, player)
+   obj.Say('What you say', 5000, room, player)
+			                  return ('Hello there ' .. obj.getName(player) .. ' check your inventory')
 		                    end
 
-		                    return greet()";
+                return greet(room, player, mob)
+
+		                     ";
 
 
-                UserData.RegisterType<MyClass>();
+                UserData.RegisterType<MobScripts>();
 
                 Script script = new Script();
 
-                DynValue obj = UserData.Create(new MyClass(character, mob, room, _cache, _combat));
-
+                DynValue obj = UserData.Create(_mobScripts);
                 script.Globals.Set("obj", obj);
+                UserData.RegisterProxyType<MyProxy, Room>(r => new MyProxy(room));
+                UserData.RegisterProxyType<ProxyPlayer, Player>(r => new ProxyPlayer(character));
+
+
+                script.Globals["room"] = room;
+
+                script.Globals["player"] = character;
+                script.Globals["mob"] = mob;
+
 
                 DynValue res = script.DoString(scriptCode);
 

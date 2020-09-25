@@ -39,15 +39,15 @@ namespace ArchaicQuestII.GameLogic.Combat
             // If mob
             if (!isMurder && attacker.ConnectionId != "mob")
             {
-                return (Player)room.Mobs.FirstOrDefault(x => x.Name.Contains(target));
+                return (Player)room.Mobs.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
             }
 
             if (attacker.ConnectionId == "mob")
             {
-                return (Player)room.Players.FirstOrDefault(x => x.Name.Equals(target));
+                return (Player)room.Players.FirstOrDefault(x => x.Name.Equals(target, StringComparison.CurrentCultureIgnoreCase));
             }
 
-            return (Player)room.Players.FirstOrDefault(x => x.Name.StartsWith(target));
+            return (Player)room.Players.FirstOrDefault(x => x.Name.StartsWith(target, StringComparison.CurrentCultureIgnoreCase));
         }
 
     
@@ -76,6 +76,7 @@ namespace ArchaicQuestII.GameLogic.Combat
 
         public void DisplayDamage(Player player, Player target, Room room, Item.Item weapon, int damage)
         {
+
             CultureInfo cc = CultureInfo.CurrentCulture;
             var damText = _damage.DamageText(damage);
             var attackType = "";
@@ -222,6 +223,11 @@ namespace ArchaicQuestII.GameLogic.Combat
 
         public void Fight(Player player, string victim, Room room, bool isMurder)
         {
+
+            try
+            {
+
+         
             var target = FindTarget(player, victim, room, isMurder);
 
             if (target == null)
@@ -453,6 +459,12 @@ namespace ArchaicQuestII.GameLogic.Combat
                 }
 
               
+            }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
             }
 
         }

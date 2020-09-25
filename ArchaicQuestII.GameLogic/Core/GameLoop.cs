@@ -133,14 +133,23 @@ namespace ArchaicQuestII.GameLogic.Core
             Console.WriteLine("started combat loop");
             while (true)
             {
-                await Task.Delay(4000);
-                Console.WriteLine("combat loop");
-                var players = _cache.GetCombatList();
-                var validPlayers = players.Where(x => x.Status == CharacterStatus.Status.Fighting);
 
-                foreach (var player in validPlayers)
+                try
                 {
-                    _combat.Fight(player, player.Target, _cache.GetRoom(player.RoomId), false);
+                    await Task.Delay(4000);
+                    Console.WriteLine("combat loop");
+
+                    var players = _cache.GetCombatList();
+                    var validPlayers = players.Where(x => x.Status == CharacterStatus.Status.Fighting);
+                    Console.WriteLine("Number of fighters " + players.Count + " valid " + validPlayers.Count());
+                    foreach (var player in validPlayers)
+                    {
+                        _combat.Fight(player, player.Target, _cache.GetRoom(player.RoomId), false);
+                    }
+                }
+                catch (Exception ex)
+                {
+
                 }
             }
         }
@@ -206,12 +215,12 @@ namespace ArchaicQuestII.GameLogic.Core
                     foreach (var room in rooms)
                     {
                        
-                        foreach (var mob in room.Mobs)
+                        foreach (var mob in room.Mobs.ToList())
                         {
-                            if (mob.Emotes.Any())
+                            if (mob.Emotes.Any() && mob.Emotes[0] != null)
                             {
 
-                                var emote = mob.Emotes[_dice.Roll(1, 0, room.Emotes.Count - 1)];
+                                var emote = mob.Emotes[_dice.Roll(1, 0, mob.Emotes.Count - 1)];
                                 foreach (var player in room.Players)
                                 {
                                     //example mob emote: Larissa flicks through her journal.

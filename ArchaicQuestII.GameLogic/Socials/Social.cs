@@ -6,6 +6,7 @@ using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Emote;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.World.Room;
+using MoonSharp.Interpreter;
 
 namespace ArchaicQuestII.GameLogic.Socials
 {
@@ -14,10 +15,12 @@ namespace ArchaicQuestII.GameLogic.Socials
  
         private readonly IWriteToClient _writeToClient;
         private readonly ICache _cache;
-        public Social(IWriteToClient writeToClient, ICache cache)
+        private readonly IMobScripts _mobScripts;
+        public Social(IWriteToClient writeToClient, ICache cache, IMobScripts mobScripts)
         {
             _writeToClient = writeToClient;
             _cache = cache;
+            _mobScripts = mobScripts;
         }
 
         public string ReplaceSocialTags(string text, Player player, Player target)
@@ -63,7 +66,7 @@ namespace ArchaicQuestII.GameLogic.Socials
             var getTarget = target.Equals("self", StringComparison.CurrentCultureIgnoreCase) ? player : room.Players.FirstOrDefault(x => x.Name.StartsWith(target, StringComparison.CurrentCultureIgnoreCase));
             if (getTarget == null)
             {
-                getTarget = room.Mobs.FirstOrDefault(x => x.Name.StartsWith(target, StringComparison.CurrentCultureIgnoreCase));
+                getTarget = room.Mobs.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
             }
             if (getTarget != null)
             {
@@ -73,7 +76,7 @@ namespace ArchaicQuestII.GameLogic.Socials
                     {
                         if (pc.Id == player.Id)
                         {
-                            _writeToClient.WriteLine($"<p>{ReplaceSocialTags(social.TargetSelf, player, getTarget)}</p>", pc.ConnectionId);
+                            _writeToClient.WriteLine($"<p>{ReplaceSocialTags(social.TargetSelf, player, getTarget)}</p>", player.ConnectionId);
                             continue;
                         }
                         _writeToClient.WriteLine($"<p>{ReplaceSocialTags(social.RoomSelf, player, getTarget)}</p>", pc.ConnectionId);
@@ -90,6 +93,28 @@ namespace ArchaicQuestII.GameLogic.Socials
                     }
                     _writeToClient.WriteLine($"<p>{ReplaceSocialTags(social.RoomTarget, player,getTarget)}</p>", pc.ConnectionId);
                 }
+ 
+
+                UserData.RegisterType<MobScripts>();
+
+                Script script = new Script();
+
+                DynValue obj = UserData.Create(_mobScripts);
+                script.Globals.Set("obj", obj);
+                UserData.RegisterProxyType<MyProxy, Room>(r => new MyProxy(room));
+                UserData.RegisterProxyType<ProxyPlayer, Player>(r => new ProxyPlayer(player));
+
+
+                script.Globals["room"] = room;
+                script.Globals["player"] = player;
+                script.Globals["mob"] = getTarget;
+                script.Globals["text"] = ReplaceSocialTags(social.ToTarget, player, getTarget);
+
+
+                DynValue res = script.DoString(getTarget.Events.Act);
+
+                //_writeToClient.WriteLine(res.String);
+
             }
             else
             {
