@@ -6,6 +6,7 @@ using ArchaicQuestII.GameLogic.Character;
 using Microsoft.AspNetCore.Mvc;
 
 using ArchaicQuestII.GameLogic.Item;
+using ArchaicQuestII.GameLogic.World.Room;
 using Newtonsoft.Json;
 
 
@@ -64,7 +65,8 @@ namespace ArchaicQuestII.Controllers
                 DateCreated = mob.DateCreated ?? DateTime.Now,
                 DateUpdated = DateTime.Now,
                 Emotes = mob.Emotes,
-                Commands = mob.Commands
+                Commands = mob.Commands,
+                Events = mob.Events
             };
 
 
@@ -79,6 +81,23 @@ namespace ArchaicQuestII.Controllers
                 }
 
                 newMob.Id = mob.Id;
+
+
+                // If you update a mob, Update all the objects where it exists in a room
+                // save yourself alot of work huh
+                var rooms = _db.GetList<Room>(DataBase.Collections.Room);
+
+                foreach (var room in rooms)
+                {
+                    foreach (var roomMob in room.Mobs.ToList())
+                    {
+                       if(roomMob.Id.Equals(newMob.Id)) {
+                           room.Mobs[room.Mobs.FindIndex(x => x.Id.Equals(newMob.Id))] = newMob;
+                       }
+                    }
+                   
+                    _db.Save(room, DataBase.Collections.Room);
+                }
             }
 
 

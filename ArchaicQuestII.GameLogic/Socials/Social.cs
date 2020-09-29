@@ -93,28 +93,29 @@ namespace ArchaicQuestII.GameLogic.Socials
                     }
                     _writeToClient.WriteLine($"<p>{ReplaceSocialTags(social.RoomTarget, player,getTarget)}</p>", pc.ConnectionId);
                 }
- 
 
-                UserData.RegisterType<MobScripts>();
+                if (!string.IsNullOrEmpty(getTarget.Events.Act))
+                {
+                    UserData.RegisterType<MobScripts>();
 
-                Script script = new Script();
+                    Script script = new Script();
 
-                DynValue obj = UserData.Create(_mobScripts);
-                script.Globals.Set("obj", obj);
-                UserData.RegisterProxyType<MyProxy, Room>(r => new MyProxy(room));
-                UserData.RegisterProxyType<ProxyPlayer, Player>(r => new ProxyPlayer(player));
-
-
-                script.Globals["room"] = room;
-                script.Globals["player"] = player;
-                script.Globals["mob"] = getTarget;
-                script.Globals["text"] = ReplaceSocialTags(social.ToTarget, player, getTarget);
+                    DynValue obj = UserData.Create(_mobScripts);
+                    script.Globals.Set("obj", obj);
+                    UserData.RegisterProxyType<MyProxy, Room>(r => new MyProxy(room));
+                    UserData.RegisterProxyType<ProxyPlayer, Player>(r => new ProxyPlayer(player));
 
 
-                DynValue res = script.DoString(getTarget.Events.Act);
+                    script.Globals["room"] = room;
+                    script.Globals["player"] = player;
+                    script.Globals["mob"] = getTarget;
+                    script.Globals["text"] = ReplaceSocialTags(social.ToTarget, player, getTarget);
 
-                //_writeToClient.WriteLine(res.String);
 
+                    DynValue res = script.DoString(getTarget.Events.Act);
+                }
+   
+  
             }
             else
             {

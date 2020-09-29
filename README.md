@@ -1,6 +1,7 @@
-![alt ArchaicQuest II](https://i.imgur.com/LJo8K4h.png)
+# ArchaicQuest II - MUD codebase written in C#
+![alt ArchaicQuest II](https://i.imgur.com/LUv3vGm.png)
 
-# ArchaicQuest II - Multi User Dungeon
+## A multiplayer text based RPG, also known a Multi User Dungeon (MUD)
 
 This project contains:
 * The Web API that powers the Admin tool

@@ -18,7 +18,7 @@ namespace ArchaicQuestII.GameLogic.Character
 		                    -- defines a function
 function act(room, player, mob, text)
     if string.match(text, ' pokes you in the') then
-        obj.Say(obj.getName(mob) .. ' says don\'t poke me.', 5, room, player)
+        
 
         if obj.HasEventState(player, 'larisaPoke')
             then
@@ -43,8 +43,8 @@ end
 
   act(room, player, mob, text)";
         public string Look { get; set; }
-        public string OnEnter { get; set; }
-        public string BeforeExit { get; set; }
+        public string Enter { get; set; }
+        public string Leave { get; set; }
         public string Emote { get; set; }
         public string UponDeath { get; set; }
         public string CombatMessages { get; set; }

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.Skill.Model;
 using Newtonsoft.Json;
@@ -54,6 +55,15 @@ namespace ArchaicQuestII.Controllers.Skills
                 }
 
                 newSkill.Id = skill.Id;
+
+                //// if we change the skill name it should be reflected on the player
+                //var classes = _db.GetList<Class>(DataBase.Collections.Class);
+
+                //foreach (var classType in classes)
+                //{
+                //    classType.Skills[classType.Skills.FindIndex(x => x.SkillId.Equals(skill.Id))].SkillName =
+                //        newSkill.Name;
+                //}
             }
 
 

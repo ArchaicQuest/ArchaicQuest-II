@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using ArchaicQuestII.GameLogic.Commands;
 using System.Linq;
 using System.Threading.Tasks;
@@ -203,7 +204,7 @@ namespace ArchaicQuestII.GameLogic.Core
             {
                 try
                 {
-                    await Task.Delay(3000).ConfigureAwait(false);
+                    await Task.Delay(30000).ConfigureAwait(false);
 
                     var rooms = _cache.GetAllRooms().Where(x => x.Mobs.Any());
 
@@ -211,11 +212,11 @@ namespace ArchaicQuestII.GameLogic.Core
                     {
                         continue;
                     }
-
+                    var mobIds = new List<Guid>();
                     foreach (var room in rooms)
                     {
-                       
-                        foreach (var mob in room.Mobs.ToList())
+                      
+                        foreach (var mob in room.Mobs.Where(x => x.Status != CharacterStatus.Status.Fighting).ToList())
                         {
                             if (mob.Emotes.Any() && mob.Emotes[0] != null)
                             {
@@ -233,7 +234,11 @@ namespace ArchaicQuestII.GameLogic.Core
                                 }
                             }
 
- 
+                            if (mobIds.Contains(mob.Id))
+                            {
+                                continue;
+                            }
+
                             if (!string.IsNullOrEmpty(mob.Commands) && mob.Buffer.Count == 0)
                             {
                                 mob.RoomId = room.Id;
@@ -252,6 +257,8 @@ namespace ArchaicQuestII.GameLogic.Core
                                 
                                 _commands.ProcessCommand(mobCommand, mob, room);
                             }
+
+                            mobIds.Add(mob.Id);
                         }
                     }
                 }

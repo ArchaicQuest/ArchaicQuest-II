@@ -89,6 +89,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
             //flee bug 
             character.Status = CharacterStatus.Status.Standing;
 
+            OnPlayerLeaveEvent(room, character);
             NotifyRoomLeft(room, character, direction);
 
             NotifyRoomEnter(getNextRoom, character, direction);
@@ -161,14 +162,34 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
           
         }
 
-        public string GetName(Player player)
+        public void OnPlayerLeaveEvent(Room room, Player character)
         {
-            return player.Name;
-        }
+            foreach (var mob in room.Mobs)
+            {
 
-        private static int Mul(int a, int b)
-        {
-            return a * b;
+                if (!string.IsNullOrEmpty(mob.Events.Leave))
+                {
+                    UserData.RegisterType<MobScripts>();
+
+                    Script script = new Script();
+
+                    DynValue obj = UserData.Create(_mobScripts);
+                    script.Globals.Set("obj", obj);
+                    UserData.RegisterProxyType<MyProxy, Room>(r => new MyProxy(room));
+                    UserData.RegisterProxyType<ProxyPlayer, Player>(r => new ProxyPlayer(character));
+
+
+                    script.Globals["room"] = room;
+
+                    script.Globals["player"] = character;
+                    script.Globals["mob"] = mob;
+
+
+                    DynValue res = script.DoString(mob.Events.Leave);
+                }
+
+
+            }
         }
 
         public void OnPlayerEnterEvent(Room room, Player character)
@@ -176,43 +197,44 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
             foreach (var mob in room.Mobs)
             {
 
-                string scriptCode = @"    
-		                    -- defines a function
-		                    function greet (room, player, mob)
- 
-                               obj.updateInv(player)
-                                obj.Say('hello', 0, room, player)
-                                if obj.isInRoom(room, player) then obj.Say('I have a quest for you', 1000, room, player) end
-                                obj.Say('you have to kill some goblins', 1000, room, player)
-                                obj.Say('you have to kill some goblins', 10000, room, player)
-   obj.Say('What you say', 5000, room, player)
-			                  return ('Hello there ' .. obj.getName(player) .. ' check your inventory')
-		                    end
+                //             string scriptCode = @"    
+                //                   -- defines a function
+                //                   function greet (room, player, mob)
 
-                return greet(room, player, mob)
+                //                            obj.updateInv(player)
+                //                             obj.Say('hello', 0, room, player)
+                //                             if obj.isInRoom(room, player) then obj.Say('I have a quest for you', 1000, room, player) end
+                //                             obj.Say('you have to kill some goblins', 1000, room, player)
+                //                             obj.Say('you have to kill some goblins', 10000, room, player)
+                //obj.Say('What you say', 5000, room, player)
+                //                  return ('Hello there ' .. obj.getName(player) .. ' check your inventory')
+                //                   end
 
-		                     ";
+                //             return greet(room, player, mob)
 
+                //                    ";
 
-                UserData.RegisterType<MobScripts>();
+                if (!string.IsNullOrEmpty(mob.Events.Enter))
+                {
+                    UserData.RegisterType<MobScripts>();
 
-                Script script = new Script();
+                    Script script = new Script();
 
-                DynValue obj = UserData.Create(_mobScripts);
-                script.Globals.Set("obj", obj);
-                UserData.RegisterProxyType<MyProxy, Room>(r => new MyProxy(room));
-                UserData.RegisterProxyType<ProxyPlayer, Player>(r => new ProxyPlayer(character));
-
-
-                script.Globals["room"] = room;
-
-                script.Globals["player"] = character;
-                script.Globals["mob"] = mob;
+                    DynValue obj = UserData.Create(_mobScripts);
+                    script.Globals.Set("obj", obj);
+                    UserData.RegisterProxyType<MyProxy, Room>(r => new MyProxy(room));
+                    UserData.RegisterProxyType<ProxyPlayer, Player>(r => new ProxyPlayer(character));
 
 
-                DynValue res = script.DoString(scriptCode);
+                    script.Globals["room"] = room;
 
-                _writeToClient.WriteLine(res.String);
+                    script.Globals["player"] = character;
+                    script.Globals["mob"] = mob;
+
+
+                    DynValue res = script.DoString(mob.Events.Enter);
+                }
+
 
             }
         }
