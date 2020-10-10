@@ -46,6 +46,7 @@ end
         public string Enter { get; set; }
         public string Leave { get; set; }
         public string Emote { get; set; }
+        public string Give { get; set; }
         public string UponDeath { get; set; }
         public string CombatMessages { get; set; }
     }
@@ -137,6 +138,10 @@ end
         /// for Mob path, e.g n,e,s,w
         /// </summary>
         public string Commands { get; set; }
+        /// <summary>
+        /// moves around randomly
+        /// </summary>
+        public bool Roam { get; set; }
         public MobEvents Events { get; set; } = new MobEvents();
         public Dictionary<string, int> EventState { get; set; } = new Dictionary<string, int>();
 

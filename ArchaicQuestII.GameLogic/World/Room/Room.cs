@@ -36,7 +36,10 @@ namespace ArchaicQuestII.GameLogic.World.Room
             Water = 1 << 4,
             River = 1 << 5,
             Sea = 1 << 6,
-            PointOfInterest = 1 << 7
+            PointOfInterest = 1 << 7,
+            Field = 1 << 8,
+            Forest = 1 << 9,
+            Desert = 1 << 10,
         }
 
         public int Id { get; set; }

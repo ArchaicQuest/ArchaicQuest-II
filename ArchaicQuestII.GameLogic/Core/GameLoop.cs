@@ -239,6 +239,23 @@ namespace ArchaicQuestII.GameLogic.Core
                                 continue;
                             }
 
+
+                            else
+                            {
+                                
+                            }
+
+                            if (mob.Roam && _dice.Roll(1, 1, 100) >= 50)
+                            {
+                                var exits = Helpers.GetListOfExits(room.Exits);
+                                if (exits != null)
+                                {
+                                    var direction = exits[_dice.Roll(1, 0, exits.Count - 1)];
+
+                                    mob.Buffer.Push(direction);
+                                }
+                            }
+
                             if (!string.IsNullOrEmpty(mob.Commands) && mob.Buffer.Count == 0)
                             {
                                 mob.RoomId = room.Id;

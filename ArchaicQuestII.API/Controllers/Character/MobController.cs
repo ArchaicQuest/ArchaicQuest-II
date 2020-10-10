@@ -66,7 +66,8 @@ namespace ArchaicQuestII.Controllers
                 DateUpdated = DateTime.Now,
                 Emotes = mob.Emotes,
                 Commands = mob.Commands,
-                Events = mob.Events
+                Events = mob.Events,
+                Roam = mob.Roam
             };
 
 
@@ -123,7 +124,7 @@ namespace ArchaicQuestII.Controllers
         public List<Player> Get([FromQuery] string query)
         {
 
-            var mobs =  _db.GetCollection<Player>(DataBase.Collections.Mobs).FindAll().Where(x => x.Name != null);
+            var mobs =  _db.GetCollection<Player>(DataBase.Collections.Mobs).FindAll().Where(x => x.Name != null && x.Deleted == false);
 
             if (string.IsNullOrEmpty(query))
             {

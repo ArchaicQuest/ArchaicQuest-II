@@ -41,7 +41,8 @@ namespace ArchaicQuestII.Controllers.Skills
                 Effect = skill.Effect,
                 Rounds = skill.Rounds,
                 Type = skill.Type,
-                ValidTargets = skill.ValidTargets
+                ValidTargets = skill.ValidTargets,
+                Formula = skill.Formula
             };
 
             if (!string.IsNullOrEmpty(skill.Id.ToString()) && skill.Id != -1)

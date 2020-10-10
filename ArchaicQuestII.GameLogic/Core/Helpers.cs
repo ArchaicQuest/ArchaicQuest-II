@@ -78,7 +78,43 @@ namespace ArchaicQuestII.GameLogic.Core
             return room.Items.FirstOrDefault(x => x.Name.StartsWith(target, StringComparison.CurrentCultureIgnoreCase));
         }
 
-       
+        public static List<string> GetListOfExits(ExitDirections exits)
+        {
+            var exitList = new List<string>();
+
+            if (exits.North != null)
+            {
+                exitList.Add(exits.North.Name);
+            }
+
+            if (exits.East != null)
+            {
+                exitList.Add(exits.East.Name);
+            }
+
+            if (exits.South != null)
+            {
+                exitList.Add(exits.South.Name);
+            }
+
+            if (exits.West != null)
+            {
+                exitList.Add(exits.West.Name);
+            }
+
+            if (exits.Up != null)
+            {
+                exitList.Add(exits.Up.Name);
+            }
+
+            if (exits.Down != null)
+            {
+                exitList.Add(exits.Down.Name);
+            }
+
+            return exitList;
+        }
+
 
     }
 

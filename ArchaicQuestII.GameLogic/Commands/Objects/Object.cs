@@ -5,6 +5,7 @@ using System.Text;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.World.Room;
+using MoonSharp.Interpreter;
 
 namespace ArchaicQuestII.GameLogic.Commands.Objects
 {
@@ -13,10 +14,12 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
     {
         private readonly IWriteToClient _writer;
         private readonly IUpdateClientUI _updateUi;
-        public Object(IWriteToClient writer, IUpdateClientUI updateUi)
+        private readonly IMobScripts _mobScripts;
+        public Object(IWriteToClient writer, IUpdateClientUI updateUi, IMobScripts mobScripts)
         {
             _writer = writer;
             _updateUi = updateUi;
+            _mobScripts = mobScripts;
         }
         public void Get(string target, string container, Room room, Player player)
         {
@@ -54,6 +57,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                 _writer.WriteLine($"<p>{player.Name} picks up {item.Name.ToLower()}.</p>", pc.ConnectionId);
             }
 
+            item.IsHiddenInRoom = false;
             player.Inventory.Add(item);
             _writer.WriteLine($"<p>You pick up {item.Name.ToLower()}.</p>", player.ConnectionId);
             _updateUi.UpdateInventory(player);
@@ -61,6 +65,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
             // TODO: You are over encumbered 
 
         }
+
+ 
 
         public void GetAll(Room room, Player player)
         {
@@ -77,7 +83,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
             {
                 if (room.Items[i].Stuck == false)
                 {
-
+                    room.Items[i].IsHiddenInRoom = false;
                     player.Inventory.Add(room.Items[i]);
                     _writer.WriteLine($"<p>You pick up {room.Items[i].Name.ToLower()}.</p>", player.ConnectionId);
 
@@ -91,6 +97,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                         _writer.WriteLine($"<p>{player.Name} picks up {room.Items[i].Name.ToLower()}.</p>",
                             pc.ConnectionId);
                     }
+
                     room.Items.RemoveAt(i);
 
                 }
@@ -114,7 +121,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
             for (var i = container.Container.Items.Count - 1; i >= 0; i--)
             {
-
+                container.Container.Items[i].IsHiddenInRoom = false;
                 player.Inventory.Add(container.Container.Items[i]);
 
                     _writer.WriteLine($"<p>You pick up {container.Container.Items[i].Name.ToLower()} from {container.Name.ToLower()}.</p>", player.ConnectionId);
@@ -315,6 +322,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                     pc.ConnectionId);
             }
 
+            item.IsHiddenInRoom = false;
             player.Inventory.Add(item);
 
             _writer.WriteLine($"<p>You get {item.Name.ToLower()} from {containerObj.Name.ToLower()}.</p>", player.ConnectionId);
@@ -339,6 +347,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
             {
                 if (player.Inventory[i].Stuck == false)
                 {
+
                     room.Items.Add(player.Inventory[i]);
 
                    
@@ -438,6 +447,89 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                 }
 
                 room.Clean = false;
+        }
+
+        public void Give(string itemName, string targetName, Room room, Player player)
+        {
+
+            if (string.IsNullOrEmpty(itemName))
+            {
+                _writer.WriteLine("<p>Give what to whom?</p>", player.ConnectionId);
+                return;
+            }
+
+            if (string.IsNullOrEmpty(targetName))
+            {
+                _writer.WriteLine("<p>Give to whom?</p>", player.ConnectionId);
+                return;
+            }
+
+            var target =
+                room.Players.FirstOrDefault(x =>
+                    x.Name.Contains(targetName, StringComparison.CurrentCultureIgnoreCase)) ??
+                room.Mobs.FirstOrDefault(x => x.Name.Contains(targetName, StringComparison.CurrentCultureIgnoreCase));
+
+            if (target == null)
+            {
+                _writer.WriteLine("<p>They aren't here.</p>", player.ConnectionId);
+                return;
+            }
+           
+    
+            //Check room first
+            var item = player.Inventory.FirstOrDefault(x => x.Name.Contains(itemName, StringComparison.CurrentCultureIgnoreCase));
+
+            if (item == null)
+            {
+                _writer.WriteLine("<p>You do not have that item.</p>", player.ConnectionId);
+                return;
+            }
+
+            player.Inventory.Remove(item);
+
+            foreach (var pc in room.Players)
+            {
+                if (pc.Name == player.Name)
+                {
+                    _writer.WriteLine($"<p>You give {item.Name.ToLower()} to {target.Name.ToLower()}.</p>", pc.ConnectionId);
+                    continue;
+                }
+
+                if (pc.Name == target.Name)
+                {
+                    continue;
+                }
+
+                _writer.WriteLine($"<p>{player.Name} gives {item.Name.ToLower()} to {target.Name.ToLower()}.</p>", pc.ConnectionId);
+            }
+
+            target.Inventory.Add(item);
+            _writer.WriteLine($"<p>{player.Name} gives you {item.Name.ToLower()}.</p>", target .ConnectionId);
+            _updateUi.UpdateInventory(player);
+
+            if (!string.IsNullOrEmpty(target.Events.Give))
+            {
+                UserData.RegisterType<MobScripts>();
+
+                Script script = new Script();
+
+                DynValue obj = UserData.Create(_mobScripts);
+                script.Globals.Set("obj", obj);
+                UserData.RegisterProxyType<MyProxy, Room>(r => new MyProxy(room));
+                UserData.RegisterProxyType<ProxyPlayer, Player>(r => new ProxyPlayer(player));
+
+
+                script.Globals["room"] = room;
+
+                script.Globals["player"] = player;
+                script.Globals["mob"] = target;
+
+                DynValue res = script.DoString(target.Events.Give);
+            }
+
+
+            // TODO: You are over encumbered 
+
         }
 
         public void Delete(string target, Room room, Player player)

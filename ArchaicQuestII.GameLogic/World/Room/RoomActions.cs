@@ -107,14 +107,18 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 room.Mobs.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ??
                 room.Players.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
 
+            var roomObjects =
+                room.RoomObjects.FirstOrDefault(x =>
+                    x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
 
-            if (item == null && character == null)
+
+            if (item == null && character == null && roomObjects == null)
             {
                 _writeToClient.WriteLine("<p>You don't see that here.", player.ConnectionId);
                 return;
             }
 
-            if (item != null && character == null)
+            if (item != null && character == null && roomObjects == null)
             {
                 _writeToClient.WriteLine($"<p>{item.Description.Look}", player.ConnectionId);
 
@@ -126,6 +130,23 @@ namespace ArchaicQuestII.GameLogic.World.Room
                     }
 
                     _writeToClient.WriteLine($"<p>{player.Name} looks at {item.Name.ToLower()}.</p>", pc.ConnectionId);
+                }
+
+                return;
+            }
+
+            if (roomObjects != null && character == null && item == null)
+            {
+                _writeToClient.WriteLine($"<p>{roomObjects.Look}", player.ConnectionId);
+
+                foreach (var pc in room.Players)
+                {
+                    if (pc.Name == player.Name)
+                    {
+                        continue;
+                    }
+
+                    _writeToClient.WriteLine($"<p>{player.Name} looks at {roomObjects.Name.ToLower()}.</p>", pc.ConnectionId);
                 }
 
                 return;
