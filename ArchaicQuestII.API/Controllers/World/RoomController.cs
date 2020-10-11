@@ -28,13 +28,14 @@ namespace ArchaicQuestII.API.World
 
         [HttpPost]
         [Route("api/World/Room")]
-        public void Post([FromBody] Room room)
+        public IActionResult Post([FromBody] Room room)
         {
             var newRoom = _addRoom.MapRoom(room);
 
 
             _db.Save(newRoom, DataBase.Collections.Room);
 
+            return Ok(JsonConvert.SerializeObject(new { toast = $"Room saved successfully." }));
         }
 
         [HttpDelete]

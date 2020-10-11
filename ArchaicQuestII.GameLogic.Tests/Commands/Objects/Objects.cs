@@ -16,13 +16,15 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
    {
        private readonly Mock<IWriteToClient> _IWriteToClient;
        private readonly Mock<IUpdateClientUI> _IUpdateUI;
+       private readonly Mock<IMobScripts> _IMobScripts;
 
         public Objects()
        {
            _IWriteToClient = new Mock<IWriteToClient>();
            _IUpdateUI = new Mock<IUpdateClientUI>();
+           _IMobScripts = new Mock<IMobScripts>();
 
-       }
+        }
 
 
         [Fact]
@@ -43,7 +45,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
             player.Name = "Gary";
             player.Inventory = new ItemList();
 
-            var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object);
+            var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object, _IMobScripts.Object);
 
             objects.Get("apple", "", room, player);
 
@@ -70,7 +72,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
             player.Name = "Gary";
             player.Inventory = new ItemList();
 
-            var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object);
+            var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object, _IMobScripts.Object);
 
             objects.Get("all", "", room, player);
 
@@ -102,7 +104,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
             player.Name = "Gary";
             player.Inventory = new ItemList();
 
-            var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object);
+            var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object, _IMobScripts.Object);
 
             objects.Get("apple", "chest", room, player);
 
@@ -130,7 +132,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
             player.Name = "Gary";
             player.Inventory = new ItemList();
 
-            var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object);
+            var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object, _IMobScripts.Object);
 
             objects.Get("apple", "", room, player);
 
@@ -164,7 +166,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
             room.Players.Add(player);
             room.Players.Add(mob);
 
-            var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object);
+            var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object, _IMobScripts.Object);
 
             objects.Give("apple", "mob", room, player);
 
@@ -199,7 +201,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
             room.Players.Add(player);
             room.Players.Add(mob);
 
-            var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object);
+            var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object, _IMobScripts.Object);
 
             objects.Give("bread", "mob", room, player);
 
@@ -232,7 +234,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
             room.Players.Add(player);
             room.Players.Add(mob);
 
-            var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object);
+            var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object, _IMobScripts.Object);
 
             objects.Give("apple", "max", room, player);
 

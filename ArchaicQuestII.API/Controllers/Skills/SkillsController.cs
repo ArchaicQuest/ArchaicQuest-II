@@ -72,7 +72,7 @@ namespace ArchaicQuestII.Controllers.Skills
             var saved = _db.Save(newSkill, DataBase.Collections.Skill);
 
 
-            string json = JsonConvert.SerializeObject(new { toast = "account created successfully", id = newSkill.Id });
+            string json = JsonConvert.SerializeObject(new { toast = "skill created successfully", id = newSkill.Id });
             return saved ? (IActionResult)Ok(json) : BadRequest("Error saving skill");
 
         }

@@ -20,7 +20,7 @@ namespace ArchaicQuestII.Controllers
         }
         [HttpPost]
         [Route("api/item/PostItem")]
-        public void PostItem([FromBody] Item item)
+        public IActionResult PostItem([FromBody] Item item)
         {
 
 
@@ -106,7 +106,7 @@ namespace ArchaicQuestII.Controllers
 
 
             _db.Save(newItem, DataBase.Collections.Items);
-
+            return Ok(JsonConvert.SerializeObject(new { toast = $"Item saved successfully." }));
         }
 
 

@@ -26,7 +26,7 @@ namespace ArchaicQuestII.Controllers
 
         [HttpPost]
         [Route("api/Character/Mob")]
-        public void Post([FromBody] Player mob)
+        public IActionResult Post([FromBody] Player mob)
            {
 
 
@@ -103,7 +103,7 @@ namespace ArchaicQuestII.Controllers
 
 
             _db.Save(newMob, DataBase.Collections.Mobs);
-
+            return Ok(JsonConvert.SerializeObject(new { toast = $"Mob saved successfully." }));
         }
 
 

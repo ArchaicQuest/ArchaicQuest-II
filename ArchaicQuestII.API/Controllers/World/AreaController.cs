@@ -26,7 +26,7 @@ namespace ArchaicQuestII.Controllers
         }
         [HttpPost]
         [Route("api/World/Area")]
-        public void Post([FromBody] Area area)
+        public IActionResult Post([FromBody] Area area)
         {
 
             if (!ModelState.IsValid)
@@ -62,6 +62,24 @@ namespace ArchaicQuestII.Controllers
 
 
             _db.Save(newArea, DataBase.Collections.Area);
+            return Ok(JsonConvert.SerializeObject(new { toast = $"Area saved successfully." }));
+
+        }
+
+
+        [HttpDelete]
+        [Route("api/World/Area/{id:int}")]
+        public IActionResult Delete(int id)
+        {
+            var deleted = _db.Delete<Area>(id, DataBase.Collections.Area);
+           // var deletedRooms = _db.Delete<Room>(id, DataBase.Collections.Area);
+
+            if (deleted == false)
+            {
+                return Ok(JsonConvert.SerializeObject(new { toast = $"ERROR: Room ${id} failed to delete." }));
+            }
+
+            return Ok(JsonConvert.SerializeObject(new { toast = $"Room deleted successfully." }));
 
         }
 
