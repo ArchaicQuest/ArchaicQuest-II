@@ -11,6 +11,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Model
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        public string Formula { get; set; }
         public Dice Damage { get; set; }
         public Effect.Effect Effect { get; set; }
         public CharacterStatus.Status UsableFromStatus { get; set; } = CharacterStatus.Status.Standing;

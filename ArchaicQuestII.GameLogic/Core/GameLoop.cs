@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using ArchaicQuestII.GameLogic.Commands;
 using System.Linq;
 using System.Threading.Tasks;
@@ -133,14 +134,23 @@ namespace ArchaicQuestII.GameLogic.Core
             Console.WriteLine("started combat loop");
             while (true)
             {
-                await Task.Delay(4000);
-                Console.WriteLine("combat loop");
-                var players = _cache.GetCombatList();
-                var validPlayers = players.Where(x => x.Status == CharacterStatus.Status.Fighting);
 
-                foreach (var player in validPlayers)
+                try
                 {
-                    _combat.Fight(player, player.Target, _cache.GetRoom(player.RoomId), false);
+                    await Task.Delay(4000);
+                    Console.WriteLine("combat loop");
+
+                    var players = _cache.GetCombatList();
+                    var validPlayers = players.Where(x => x.Status == CharacterStatus.Status.Fighting);
+                    Console.WriteLine("Number of fighters " + players.Count + " valid " + validPlayers.Count());
+                    foreach (var player in validPlayers)
+                    {
+                        _combat.Fight(player, player.Target, _cache.GetRoom(player.RoomId), false);
+                    }
+                }
+                catch (Exception ex)
+                {
+
                 }
             }
         }
@@ -194,7 +204,7 @@ namespace ArchaicQuestII.GameLogic.Core
             {
                 try
                 {
-                    await Task.Delay(3000).ConfigureAwait(false);
+                    await Task.Delay(30000).ConfigureAwait(false);
 
                     var rooms = _cache.GetAllRooms().Where(x => x.Mobs.Any());
 
@@ -202,16 +212,16 @@ namespace ArchaicQuestII.GameLogic.Core
                     {
                         continue;
                     }
-
+                    var mobIds = new List<Guid>();
                     foreach (var room in rooms)
                     {
-                       
-                        foreach (var mob in room.Mobs)
+                      
+                        foreach (var mob in room.Mobs.Where(x => x.Status != CharacterStatus.Status.Fighting).ToList())
                         {
-                            if (mob.Emotes.Any())
+                            if (mob.Emotes.Any() && mob.Emotes[0] != null)
                             {
 
-                                var emote = mob.Emotes[_dice.Roll(1, 0, room.Emotes.Count - 1)];
+                                var emote = mob.Emotes[_dice.Roll(1, 0, mob.Emotes.Count - 1)];
                                 foreach (var player in room.Players)
                                 {
                                     //example mob emote: Larissa flicks through her journal.
@@ -224,7 +234,28 @@ namespace ArchaicQuestII.GameLogic.Core
                                 }
                             }
 
- 
+                            if (mobIds.Contains(mob.Id))
+                            {
+                                continue;
+                            }
+
+
+                            else
+                            {
+                                
+                            }
+
+                            if (mob.Roam && _dice.Roll(1, 1, 100) >= 50)
+                            {
+                                var exits = Helpers.GetListOfExits(room.Exits);
+                                if (exits != null)
+                                {
+                                    var direction = exits[_dice.Roll(1, 0, exits.Count - 1)];
+
+                                    mob.Buffer.Push(direction);
+                                }
+                            }
+
                             if (!string.IsNullOrEmpty(mob.Commands) && mob.Buffer.Count == 0)
                             {
                                 mob.RoomId = room.Id;
@@ -240,8 +271,11 @@ namespace ArchaicQuestII.GameLogic.Core
                             if (mob.Buffer.Count > 0)
                             {
                                 var mobCommand = mob.Buffer.Pop();
+                                
                                 _commands.ProcessCommand(mobCommand, mob, room);
                             }
+
+                            mobIds.Add(mob.Id);
                         }
                     }
                 }

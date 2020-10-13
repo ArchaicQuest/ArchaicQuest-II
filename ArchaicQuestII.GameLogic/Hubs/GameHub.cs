@@ -13,6 +13,7 @@ using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.World.Room;
 using Microsoft.Extensions.Logging;
+using MoonSharp.Interpreter;
 
 namespace ArchaicQuestII.GameLogic.Hubs
 {
@@ -24,7 +25,8 @@ namespace ArchaicQuestII.GameLogic.Hubs
         private readonly IWriteToClient _writeToClient;
         private readonly ICommands _commands;
         private readonly IUpdateClientUI _updateClientUi;
-        public GameHub(IDataBase db, ICache cache, ILogger<GameHub> logger, IWriteToClient writeToClient, ICommands commands, IUpdateClientUI updateClientUi)
+        private readonly IMobScripts _mobScripts;
+        public GameHub(IDataBase db, ICache cache, ILogger<GameHub> logger, IWriteToClient writeToClient, ICommands commands, IUpdateClientUI updateClientUi, IMobScripts mobScripts)
         {
             _logger = logger;
             _db = db;
@@ -32,6 +34,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
             _writeToClient = writeToClient;
             _commands = commands;
             _updateClientUi = updateClientUi;
+            _mobScripts = mobScripts;
         }
 
  
@@ -231,7 +234,33 @@ namespace ArchaicQuestII.GameLogic.Hubs
 
             new RoomActions(_writeToClient).Look("", room, character);
 
-          //  return room;
+            foreach (var mob in room.Mobs)
+            {
+                if (!string.IsNullOrEmpty(mob.Events.Enter))
+                {
+                    UserData.RegisterType<MobScripts>();
+
+                    Script script = new Script();
+
+                    DynValue obj = UserData.Create(_mobScripts);
+                    script.Globals.Set("obj", obj);
+                    UserData.RegisterProxyType<MyProxy, Room>(r => new MyProxy(room));
+                    UserData.RegisterProxyType<ProxyPlayer, Player>(r => new ProxyPlayer(character));
+
+
+                    script.Globals["room"] = room;
+
+                    script.Globals["player"] = character;
+                    script.Globals["mob"] = mob;
+
+
+                    DynValue res = script.DoString(mob.Events.Enter);
+                }
+            }
+
+
+
+            //  return room;
         }
 
         public string GetConnectionId()

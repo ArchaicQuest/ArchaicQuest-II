@@ -139,6 +139,7 @@ namespace ArchaicQuestII.API
             services.AddSingleton<ICommandHandler, CommandHandler>();
             services.AddSingleton<IFormulas, Formulas>();
             services.AddSingleton<IUpdateClientUI, UpdateClientUI>();
+            services.AddSingleton<IMobScripts, MobScripts>();
             services.AddSingleton<IWriteToClient, WriteToClient>((factory) => new WriteToClient(_hubContext, TelnetHub.Instance));
 
         }
@@ -187,6 +188,15 @@ namespace ArchaicQuestII.API
                         );
                     }
                 }
+            }
+        }
+
+        public void MapMobRoomId(Room room)
+        {
+            foreach (var mob in room.Mobs)
+            {
+
+                mob.RoomId = room.Id;
             }
         }
 
@@ -239,6 +249,7 @@ namespace ArchaicQuestII.API
             foreach (var room in rooms)
             {
                 AddSkillsToMobs(room);
+                MapMobRoomId(room);
                 _cache.AddRoom(room.Id, room);
             }
 
@@ -333,6 +344,7 @@ namespace ArchaicQuestII.API
                 }
             }
 
+        
 
 
         }

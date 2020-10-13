@@ -76,7 +76,8 @@ namespace ArchaicQuestII.Controllers.character
                 Race = player.Race,
                 JoinedDate = DateTime.Now,
                 LastLoginTime = DateTime.Now,
-                Skills = new List<SkillList>()
+                Skills = new List<SkillList>(),
+                Roam = player.Roam
             };
 
             newPlayer.Skills = playerClass?.Skills ?? new List<SkillList>();

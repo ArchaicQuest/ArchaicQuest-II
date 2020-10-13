@@ -11,6 +11,7 @@ using ArchaicQuestII.GameLogic.Skill.Model;
 using ArchaicQuestII.GameLogic.Spell.Interface;
 using ArchaicQuestII.GameLogic.World.Room;
 using LiteDB;
+using MoonSharp.Interpreter;
 
 namespace ArchaicQuestII.GameLogic.Spell
 {
@@ -21,13 +22,15 @@ namespace ArchaicQuestII.GameLogic.Spell
         private readonly ICache _cache;
         private readonly IDamage _damage;
         private readonly IUpdateClientUI _updateClientUi;
-        public Spells(IWriteToClient writer, ISpellTargetCharacter spellTargetCharacter, ICache cache, IDamage damage, IUpdateClientUI updateClientUi)
+        private readonly IMobScripts _mobScripts;
+        public Spells(IWriteToClient writer, ISpellTargetCharacter spellTargetCharacter, ICache cache, IDamage damage, IUpdateClientUI updateClientUi, IMobScripts mobScripts)
         {
             _writer = writer;
             _spellTargetCharacter = spellTargetCharacter;
             _cache = cache;
             _damage = damage;
             _updateClientUi = updateClientUi;
+            _mobScripts = mobScripts;
         }
 
         public bool ValidStatus(Player player)
@@ -59,17 +62,17 @@ namespace ArchaicQuestII.GameLogic.Spell
 
         public Skill.Model.Skill FindSpell(string skill, Player player)
         {
-             var foundSpell = player.Skills.FirstOrDefault(x => x.SkillName.StartsWith(skill, StringComparison.CurrentCultureIgnoreCase));
+            var foundSpell = player.Skills.FirstOrDefault(x => x.SkillName.StartsWith(skill, StringComparison.CurrentCultureIgnoreCase));
 
-             if (foundSpell == null)
-             {
-                 _writer.WriteLine($"You don't know a spell that begins with {skill}");
-                 return null;
-             }
+            if (foundSpell == null)
+            {
+                _writer.WriteLine($"You don't know a spell that begins with {skill}");
+                return null;
+            }
 
-             var spell = _cache.GetSkill(foundSpell.SkillId);
+            var spell = _cache.GetSkill(foundSpell.SkillId);
 
-             return spell;
+            return spell;
         }
 
         public bool ManaCheck(Skill.Model.Skill spell, Player player)
@@ -85,12 +88,12 @@ namespace ArchaicQuestII.GameLogic.Spell
 
         public bool SpellAffectsCharacter(Skill.Model.Skill spell)
         {
-            
-            return (spell.ValidTargets & ValidTargets.TargetPlayerWorld) != 0 || 
-                   (spell.ValidTargets & ValidTargets.TargetFightVictim) != 0 || 
-                   (spell.ValidTargets & ValidTargets.TargetSelfOnly)    != 0 || 
-                   (spell.ValidTargets & ValidTargets.TargetPlayerRoom)  != 0 || 
-                   (spell.ValidTargets & ValidTargets.TargetFightSelf)   != 0;
+
+            return (spell.ValidTargets & ValidTargets.TargetPlayerWorld) != 0 ||
+                   (spell.ValidTargets & ValidTargets.TargetFightVictim) != 0 ||
+                   (spell.ValidTargets & ValidTargets.TargetSelfOnly) != 0 ||
+                   (spell.ValidTargets & ValidTargets.TargetPlayerRoom) != 0 ||
+                   (spell.ValidTargets & ValidTargets.TargetFightSelf) != 0;
         }
 
         public void ReciteSpellCharacter(Player origin, Player target, Skill.Model.Skill spell)
@@ -111,7 +114,7 @@ namespace ArchaicQuestII.GameLogic.Spell
         public bool SpellSuccess(Player origin, Player target, Skill.Model.Skill spell)
         {
             var spellSkill = origin.Skills.FirstOrDefault(x => x.SkillId.Equals(spell.Id));
-          
+
             if (spellSkill == null)
             {
                 // TODO: log error, we should never get here.
@@ -165,115 +168,142 @@ namespace ArchaicQuestII.GameLogic.Spell
                 return;
             }
 
-          
-          if (SpellAffectsCharacter(spell)) {
-              Player target = null;
-              target =  _spellTargetCharacter.ReturnTarget(spell, targetName, room, origin);
 
-              if (target == null)
-              {
-                  return;
-              }
+            if (SpellAffectsCharacter(spell))
+            {
+                Player target = null;
+                target = _spellTargetCharacter.ReturnTarget(spell, targetName, room, origin);
 
-              ReciteSpellCharacter(origin, target, spell);
+                if (target == null)
+                {
+                    return;
+                }
 
-              var formula = spell.Damage.Roll(spell.Damage.DiceRoll, spell.Damage.DiceMinSize,
-                                spell.Damage.DiceMaxSize) + (origin.Level + 1) / 2; //+ mod
+                ReciteSpellCharacter(origin, target, spell);
 
-              
+                var formula = spell.Damage.Roll(spell.Damage.DiceRoll, spell.Damage.DiceMinSize,
+                                  spell.Damage.DiceMaxSize) + (origin.Level + 1) / 2; //+ mod
 
-              //deduct mana
-              origin.Attributes.Attribute[EffectLocation.Mana] -= spell.Cost.Table[Cost.Mana] == 0 ? 5 : spell.Cost.Table[Cost.Mana];
-              _updateClientUi.UpdateMana(origin);
+                try
+                {
+                    DynValue res = null;
+                    if (!string.IsNullOrEmpty(spell.Formula))
+                    {
+                        UserData.RegisterType<MobScripts>();
 
-               
-                  // spell lag
-                  // add lag property to player
-                  // lag == spell round
-                  // stops spell/skill spam
-                  // applies after spell is cast
-                  // is it needed?
+                        Script script = new Script();
 
-                  // hit / miss messages
+                        DynValue obj = UserData.Create(_mobScripts);
+                        script.Globals.Set("obj", obj);
+                        UserData.RegisterProxyType<MyProxy, Room>(r => new MyProxy(room));
+                        UserData.RegisterProxyType<ProxyPlayer, Player>(r => new ProxyPlayer(origin));
 
-                  //  _writer.WriteLine(spell.SkillStart.ToPlayer);
+                        script.Globals["room"] = room;
+                        script.Globals["player"] = origin;
+                        script.Globals["mob"] = target;
 
-                  if (SpellSuccess(origin, target, spell))
-                  {
+                        res = script.DoString(spell.Formula);
+                    }
 
-                      
+                }
+                catch (Exception ex)
+                {
 
-                      var skillTarget = new SkillTarget
-                      {
-                          Origin = origin,
-                          Target = target,
-                          Room = room,
-                          Skill = spell
-                      };
-
-                      _writer.WriteLine(
-                          $"<p>Your {spell.Name} {_damage.DamageText(formula).Value} {target.Name} ({formula})</p>",
-                          origin.ConnectionId);
-                      _writer.WriteLine(
-                          $"<p>{origin.Name}'s {spell.Name} {_damage.DamageText(formula).Value} you! ({formula})</p>",
-                          target.ConnectionId);
-
-                      // If no effect assume, negative spell and deduct HP
-                      if (spell.Effect == null)
-                      {
-                          skillTarget.Target.Attributes.Attribute[EffectLocation.Hitpoints] -= formula;
-                          //update UI
-                          _updateClientUi.UpdateHP(skillTarget.Target);
+                }
 
 
-                      }
-                      else
-                      {
-                          new SpellEffect(_writer, skillTarget, formula).Type[skillTarget.Skill.Type].Invoke();
-                      }
+                //deduct mana
+                origin.Attributes.Attribute[EffectLocation.Mana] -= spell.Cost.Table[Cost.Mana] == 0 ? 5 : spell.Cost.Table[Cost.Mana];
+                _updateClientUi.UpdateMana(origin);
 
-                  }
-                  else
-                  {
-                      var skill = origin.Skills.FirstOrDefault(x => x.SkillId.Equals(spell.Id));
 
-                      if (skill == null)
-                      {
-                          return;
-                      }
+                // spell lag
+                // add lag property to player
+                // lag == spell round
+                // stops spell/skill spam
+                // applies after spell is cast
+                // is it needed?
 
-                      if (skill.Proficiency == 95)
-                      {
-                          return;
-                      }
+                // hit / miss messages
 
-                      var increase = new Dice().Roll(1, 1, 3);
+                //  _writer.WriteLine(spell.SkillStart.ToPlayer);
 
-                       skill.Proficiency += increase;
+                if (SpellSuccess(origin, target, spell))
+                {
 
-                       origin.Experience += 100;
-                       origin.ExperienceToNextLevel -= 100;
 
-                       _updateClientUi.UpdateExp(origin);
-                       
-                      _writer.WriteLine(
-                          $"<p class='improve'>You learn from your mistakes and gain 100 experience points.</p>",
-                          origin.ConnectionId);
-                      _writer.WriteLine(
-                          $"<p class='improve'>Your {skill.SkillName} skill increases by {increase}%.</p>",
-                          origin.ConnectionId);
+
+                    var skillTarget = new SkillTarget
+                    {
+                        Origin = origin,
+                        Target = target,
+                        Room = room,
+                        Skill = spell
+                    };
+
+                    _writer.WriteLine(
+                        $"<p>Your {spell.Name} {_damage.DamageText(formula).Value} {target.Name} ({formula})</p>",
+                        origin.ConnectionId);
+                    _writer.WriteLine(
+                        $"<p>{origin.Name}'s {spell.Name} {_damage.DamageText(formula).Value} you! ({formula})</p>",
+                        target.ConnectionId);
+
+                    // If no effect assume, negative spell and deduct HP
+                    if (spell.Effect == null)
+                    {
+                        skillTarget.Target.Attributes.Attribute[EffectLocation.Hitpoints] -= formula;
+                        //update UI
+                        _updateClientUi.UpdateHP(skillTarget.Target);
+
+
+                    }
+                    else
+                    {
+                        new SpellEffect(_writer, skillTarget, formula).Type[skillTarget.Skill.Type].Invoke();
+                    }
+
+                }
+                else
+                {
+                    var skill = origin.Skills.FirstOrDefault(x => x.SkillId.Equals(spell.Id));
+
+                    if (skill == null)
+                    {
+                        return;
+                    }
+
+                    if (skill.Proficiency == 95)
+                    {
+                        return;
+                    }
+
+                    var increase = new Dice().Roll(1, 1, 3);
+
+                    skill.Proficiency += increase;
+
+                    origin.Experience += 100;
+                    origin.ExperienceToNextLevel -= 100;
+
+                    _updateClientUi.UpdateExp(origin);
+
+                    _writer.WriteLine(
+                        $"<p class='improve'>You learn from your mistakes and gain 100 experience points.</p>",
+                        origin.ConnectionId);
+                    _writer.WriteLine(
+                        $"<p class='improve'>Your {skill.SkillName} skill increases by {increase}%.</p>",
+                        origin.ConnectionId);
                 }
 
             }
-          else
-          {
-              _writer.WriteLine(
-                  $"<p>You cannot cast this spell upon another.</p>",
-                  origin.ConnectionId);
+            else
+            {
+                _writer.WriteLine(
+                    $"<p>You cannot cast this spell upon another.</p>",
+                    origin.ConnectionId);
             }
 
         }
-        
+
 
     }
 

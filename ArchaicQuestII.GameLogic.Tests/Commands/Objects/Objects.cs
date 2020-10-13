@@ -16,13 +16,15 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
    {
        private readonly Mock<IWriteToClient> _IWriteToClient;
        private readonly Mock<IUpdateClientUI> _IUpdateUI;
+       private readonly Mock<IMobScripts> _IMobScripts;
 
         public Objects()
        {
            _IWriteToClient = new Mock<IWriteToClient>();
            _IUpdateUI = new Mock<IUpdateClientUI>();
+           _IMobScripts = new Mock<IMobScripts>();
 
-       }
+        }
 
 
         [Fact]
@@ -43,7 +45,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
             player.Name = "Gary";
             player.Inventory = new ItemList();
 
-            var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object);
+            var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object, _IMobScripts.Object);
 
             objects.Get("apple", "", room, player);
 
@@ -70,7 +72,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
             player.Name = "Gary";
             player.Inventory = new ItemList();
 
-            var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object);
+            var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object, _IMobScripts.Object);
 
             objects.Get("all", "", room, player);
 
@@ -102,7 +104,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
             player.Name = "Gary";
             player.Inventory = new ItemList();
 
-            var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object);
+            var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object, _IMobScripts.Object);
 
             objects.Get("apple", "chest", room, player);
 
@@ -130,12 +132,113 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
             player.Name = "Gary";
             player.Inventory = new ItemList();
 
-            var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object);
+            var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object, _IMobScripts.Object);
 
             objects.Get("apple", "", room, player);
 
 
             Assert.True(player.Inventory.FirstOrDefault(x => x.Name == "apple") != null);
+        }
+
+        [Fact]
+        public void give_item_to_mob()
+        {
+            var apple = new GameLogic.Item.Item();
+            apple.Name = "apple";
+            apple.Description = new Description()
+            {
+                Room = "apple"
+            };
+
+            var room = new Room();
+
+            var player = new Player();
+            player.ConnectionId = "1";
+            player.Name = "Gary";
+            player.Inventory = new ItemList();
+            player.Inventory.Add(apple);
+
+            var mob = new Player();
+            mob.ConnectionId = "mob";
+            mob.Name = "Mob";
+            mob.Inventory = new ItemList();
+
+            room.Players.Add(player);
+            room.Players.Add(mob);
+
+            var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object, _IMobScripts.Object);
+
+            objects.Give("apple", "mob", room, player);
+
+
+            Assert.True(player.Inventory.FirstOrDefault(x => x.Name == "apple") == null);
+            Assert.True(mob.Inventory.FirstOrDefault(x => x.Name == "apple") != null);
+        }
+
+        [Fact]
+        public void show_error_if_item_not_found_to_give()
+        {
+            var apple = new GameLogic.Item.Item();
+            apple.Name = "apple";
+            apple.Description = new Description()
+            {
+                Room = "apple"
+            };
+
+            var room = new Room();
+
+            var player = new Player();
+            player.ConnectionId = "1";
+            player.Name = "Gary";
+            player.Inventory = new ItemList();
+            player.Inventory.Add(apple);
+
+            var mob = new Player();
+            mob.ConnectionId = "mob";
+            mob.Name = "Mob";
+            mob.Inventory = new ItemList();
+
+            room.Players.Add(player);
+            room.Players.Add(mob);
+
+            var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object, _IMobScripts.Object);
+
+            objects.Give("bread", "mob", room, player);
+
+            _IWriteToClient.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("You do not have that item.")), "1"), Times.Once());
+        }
+
+        [Fact]
+        public void show_error_if_char_not_found_to_give()
+        {
+            var apple = new GameLogic.Item.Item();
+            apple.Name = "apple";
+            apple.Description = new Description()
+            {
+                Room = "apple"
+            };
+
+            var room = new Room();
+
+            var player = new Player();
+            player.ConnectionId = "1";
+            player.Name = "Gary";
+            player.Inventory = new ItemList();
+            player.Inventory.Add(apple);
+
+            var mob = new Player();
+            mob.ConnectionId = "mob";
+            mob.Name = "Mob";
+            mob.Inventory = new ItemList();
+
+            room.Players.Add(player);
+            room.Players.Add(mob);
+
+            var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object, _IMobScripts.Object);
+
+            objects.Give("apple", "max", room, player);
+
+            _IWriteToClient.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("They aren't here.")), "1"), Times.Once());
         }
     }
 }

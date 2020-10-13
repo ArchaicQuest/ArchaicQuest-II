@@ -18,7 +18,7 @@ namespace ArchaicQuestII.GameLogic.Item
 
         public IEnumerable<string> List(IEnumerable<Item> items, params object[] args)
         {
-            return items.GroupBy(t => new
+            return items.Where(x => x.IsHiddenInRoom == false).GroupBy(t => new
             {
                 t.Name,
                 t.Description.Room

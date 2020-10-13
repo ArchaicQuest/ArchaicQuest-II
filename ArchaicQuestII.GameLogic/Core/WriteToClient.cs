@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Threading.Tasks;
 using ArchaicQuestII.GameLogic.Hubs;
 using ArchaicQuestII.GameLogic.Hubs.Telnet;
 using Microsoft.AspNetCore.SignalR;
@@ -25,7 +25,12 @@ namespace ArchaicQuestII.GameLogic.Core
           
             try
             {
-                
+                if (id.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    return;
+
+                }
+ 
                 await _hubContext.Clients.Client(id).SendAsync("SendMessage", message, "");
             }
             catch (Exception ex)
@@ -33,6 +38,21 @@ namespace ArchaicQuestII.GameLogic.Core
                 Console.WriteLine(ex.Message);
             }
         }
+
+        public async void WriteLine(string message, string id, int delay)
+        {
+
+            try
+            {
+               await Task.Delay(delay);
+                await  _hubContext.Clients.Client(id).SendAsync("SendMessage", message, "");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
 
         public async void WriteLine(string message)
         {

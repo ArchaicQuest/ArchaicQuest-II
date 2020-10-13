@@ -153,6 +153,10 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "open":
                     _object.Open(obj, room, player);
                     break;
+                case "give":
+                case "hand":
+                    _object.Give(obj, target, room, player);
+                    break;
                 case "loot":
                 case "get":
                 case "take":

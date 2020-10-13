@@ -6,6 +6,7 @@ using ArchaicQuestII.GameLogic.Character;
 using Microsoft.AspNetCore.Mvc;
 
 using ArchaicQuestII.GameLogic.Item;
+using ArchaicQuestII.GameLogic.World.Room;
 using Newtonsoft.Json;
 
 
@@ -25,7 +26,7 @@ namespace ArchaicQuestII.Controllers
 
         [HttpPost]
         [Route("api/Character/Mob")]
-        public void Post([FromBody] Player mob)
+        public IActionResult Post([FromBody] Player mob)
            {
 
 
@@ -64,7 +65,9 @@ namespace ArchaicQuestII.Controllers
                 DateCreated = mob.DateCreated ?? DateTime.Now,
                 DateUpdated = DateTime.Now,
                 Emotes = mob.Emotes,
-                Commands = mob.Commands
+                Commands = mob.Commands,
+                Events = mob.Events,
+                Roam = mob.Roam
             };
 
 
@@ -79,11 +82,28 @@ namespace ArchaicQuestII.Controllers
                 }
 
                 newMob.Id = mob.Id;
+
+
+                // If you update a mob, Update all the objects where it exists in a room
+                // save yourself alot of work huh
+                var rooms = _db.GetList<Room>(DataBase.Collections.Room);
+
+                foreach (var room in rooms)
+                {
+                    foreach (var roomMob in room.Mobs.ToList())
+                    {
+                       if(roomMob.Id.Equals(newMob.Id)) {
+                           room.Mobs[room.Mobs.FindIndex(x => x.Id.Equals(newMob.Id))] = newMob;
+                       }
+                    }
+                   
+                    _db.Save(room, DataBase.Collections.Room);
+                }
             }
 
 
             _db.Save(newMob, DataBase.Collections.Mobs);
-
+            return Ok(JsonConvert.SerializeObject(new { toast = $"Mob saved successfully." }));
         }
 
 
@@ -104,7 +124,7 @@ namespace ArchaicQuestII.Controllers
         public List<Player> Get([FromQuery] string query)
         {
 
-            var mobs =  _db.GetCollection<Player>(DataBase.Collections.Mobs).FindAll().Where(x => x.Name != null);
+            var mobs =  _db.GetCollection<Player>(DataBase.Collections.Mobs).FindAll().Where(x => x.Name != null && x.Deleted == false);
 
             if (string.IsNullOrEmpty(query))
             {

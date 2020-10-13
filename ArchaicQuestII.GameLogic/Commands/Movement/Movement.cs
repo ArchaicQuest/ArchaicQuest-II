@@ -4,11 +4,15 @@ using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
+using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Core;
+using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.World.Room;
+using MoonSharp.Interpreter;
 
 namespace ArchaicQuestII.GameLogic.Commands.Movement
 {
+ 
     public class Movement : IMovement
     {
         private readonly IWriteToClient _writeToClient;
@@ -16,18 +20,24 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
         private readonly ICache _cache;
         private readonly IUpdateClientUI _updateUi;
         private readonly IDice _dice;
+        private readonly IMobScripts _mobScripts;
+
+        //test
+        private readonly ICombat _combat;
 
 
 
-        public Movement(IWriteToClient writeToClient, ICache cache, IRoomActions roomActions, IUpdateClientUI updateUI, IDice dice)
+        public Movement(IWriteToClient writeToClient, ICache cache, IRoomActions roomActions, IUpdateClientUI updateUI, IDice dice, ICombat combat, IMobScripts mobScripts)
         {
             _writeToClient = writeToClient;
             _cache = cache;
             _roomActions = roomActions;
             _updateUi = updateUI;
             _dice = dice;
-
+            _combat = combat;
+            _mobScripts = mobScripts;
         }
+
         public void Move(Room room, Player character, string direction)
         {
             switch (character.Status)
@@ -60,8 +70,9 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
                 _writeToClient.WriteLine("<p>You can't go that way.</p>", character.ConnectionId);
                 return;
             }
- 
-            var newRoomCoords = new Coordinates {
+
+            var newRoomCoords = new Coordinates
+            {
                 X = getExitToNextRoom.Coords.X,
                 Y = getExitToNextRoom.Coords.Y,
                 Z = getExitToNextRoom.Coords.Z
@@ -78,6 +89,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
             //flee bug 
             character.Status = CharacterStatus.Status.Standing;
 
+            OnPlayerLeaveEvent(room, character);
             NotifyRoomLeft(room, character, direction);
 
             NotifyRoomEnter(getNextRoom, character, direction);
@@ -90,9 +102,11 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
 
             }
 
-             _roomActions.Look("", getNextRoom, character);
+            _roomActions.Look("", getNextRoom, character);
 
-             _updateUi.GetMap(character, _cache.GetMap(getExitToNextRoom.AreaId));
+            OnPlayerEnterEvent(getNextRoom, character); 
+
+            _updateUi.GetMap(character, _cache.GetMap(getExitToNextRoom.AreaId));
 
         }
 
@@ -120,7 +134,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
                     return room.Exits.Down;
                 case "Up":
                     return room.Exits.Up;
-                default: {return null;}
+                default: { return null; }
             }
         }
 
@@ -142,7 +156,86 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
                 if (character.Name != player.Name)
                 {
                     _writeToClient.WriteLine($"{character.Name} walks in.", player.ConnectionId);
-                }            
+                }
+            }
+
+          
+        }
+
+        public void OnPlayerLeaveEvent(Room room, Player character)
+        {
+            foreach (var mob in room.Mobs)
+            {
+
+                if (!string.IsNullOrEmpty(mob.Events.Leave))
+                {
+                    UserData.RegisterType<MobScripts>();
+
+                    Script script = new Script();
+
+                    DynValue obj = UserData.Create(_mobScripts);
+                    script.Globals.Set("obj", obj);
+                    UserData.RegisterProxyType<MyProxy, Room>(r => new MyProxy(room));
+                    UserData.RegisterProxyType<ProxyPlayer, Player>(r => new ProxyPlayer(character));
+
+
+                    script.Globals["room"] = room;
+
+                    script.Globals["player"] = character;
+                    script.Globals["mob"] = mob;
+
+
+                    DynValue res = script.DoString(mob.Events.Leave);
+                }
+
+
+            }
+        }
+
+        public void OnPlayerEnterEvent(Room room, Player character)
+        {
+            foreach (var mob in room.Mobs)
+            {
+
+                //             string scriptCode = @"    
+                //                   -- defines a function
+                //                   function greet (room, player, mob)
+
+                //                            obj.updateInv(player)
+                //                             obj.Say('hello', 0, room, player)
+                //                             if obj.isInRoom(room, player) then obj.Say('I have a quest for you', 1000, room, player) end
+                //                             obj.Say('you have to kill some goblins', 1000, room, player)
+                //                             obj.Say('you have to kill some goblins', 10000, room, player)
+                //obj.Say('What you say', 5000, room, player)
+                //                  return ('Hello there ' .. obj.getName(player) .. ' check your inventory')
+                //                   end
+
+                //             return greet(room, player, mob)
+
+                //                    ";
+
+                if (!string.IsNullOrEmpty(mob.Events.Enter))
+                {
+                    UserData.RegisterType<MobScripts>();
+
+                    Script script = new Script();
+
+                    DynValue obj = UserData.Create(_mobScripts);
+                    script.Globals.Set("obj", obj);
+                    UserData.RegisterProxyType<MyProxy, Room>(r => new MyProxy(room));
+                    UserData.RegisterProxyType<ProxyPlayer, Player>(r => new ProxyPlayer(character));
+
+
+                    script.Globals["room"] = room;
+
+                    script.Globals["player"] = character;
+                    script.Globals["mob"] = mob;
+
+
+                    DynValue res = script.DoString(mob.Events.Enter);
+                }
+
+
             }
         }
 
@@ -255,7 +348,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
                 {
                     character.Status = CharacterStatus.Status.Standing;
                     _cache.RemoveCharFromCombat(mob.Id.ToString());
-                } 
+                }
             }
 
             //this could be buggy
@@ -355,7 +448,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
             }
         }
 
-        public void Sleep(Player player, Room room,  string target)
+        public void Sleep(Player player, Room room, string target)
         {
 
             if (player.Status == CharacterStatus.Status.Sleeping)

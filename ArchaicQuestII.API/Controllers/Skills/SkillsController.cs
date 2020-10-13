@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.Skill.Model;
 using Newtonsoft.Json;
@@ -40,7 +41,8 @@ namespace ArchaicQuestII.Controllers.Skills
                 Effect = skill.Effect,
                 Rounds = skill.Rounds,
                 Type = skill.Type,
-                ValidTargets = skill.ValidTargets
+                ValidTargets = skill.ValidTargets,
+                Formula = skill.Formula
             };
 
             if (!string.IsNullOrEmpty(skill.Id.ToString()) && skill.Id != -1)
@@ -54,6 +56,15 @@ namespace ArchaicQuestII.Controllers.Skills
                 }
 
                 newSkill.Id = skill.Id;
+
+                //// if we change the skill name it should be reflected on the player
+                //var classes = _db.GetList<Class>(DataBase.Collections.Class);
+
+                //foreach (var classType in classes)
+                //{
+                //    classType.Skills[classType.Skills.FindIndex(x => x.SkillId.Equals(skill.Id))].SkillName =
+                //        newSkill.Name;
+                //}
             }
 
 
@@ -61,7 +72,7 @@ namespace ArchaicQuestII.Controllers.Skills
             var saved = _db.Save(newSkill, DataBase.Collections.Skill);
 
 
-            string json = JsonConvert.SerializeObject(new { toast = "account created successfully", id = newSkill.Id });
+            string json = JsonConvert.SerializeObject(new { toast = "skill created successfully", id = newSkill.Id });
             return saved ? (IActionResult)Ok(json) : BadRequest("Error saving skill");
 
         }
