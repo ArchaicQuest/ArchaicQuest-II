@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 
 namespace ArchaicQuestII.GameLogic.World.Room
@@ -21,6 +22,11 @@ namespace ArchaicQuestII.GameLogic.World.Room
         /// </summary>
         public void Look(string target, Room room, Player player)
         {
+            if (player.Status == CharacterStatus.Status.Sleeping)
+            {
+                _writeToClient.WriteLine("You can't do that while asleep.", player.ConnectionId);
+                return;
+            }
 
             if (!string.IsNullOrEmpty(target) && !target.Equals("look", StringComparison.CurrentCultureIgnoreCase) && !string.IsNullOrEmpty(target) && !target.Equals("l", StringComparison.CurrentCultureIgnoreCase))
             {

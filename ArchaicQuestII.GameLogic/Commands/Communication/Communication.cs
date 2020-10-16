@@ -20,6 +20,9 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
             _cache = cache;
             _updateClient = updateClient;
         }
+
+        // TODO: newbie, OOC, Gossip,
+
         public void Say(string text, Room room, Player player)
         {
             _writer.WriteLine($"<p class='say'>You say {text}</p>", player.ConnectionId);

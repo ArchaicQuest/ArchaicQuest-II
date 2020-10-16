@@ -269,6 +269,15 @@ namespace ArchaicQuestII.Controllers
                         }
                     }
 
+                    //save items
+                    foreach (var room in newRooms)
+                    {
+                        foreach (var item in room.Items.GroupBy(x => x.Name).Select(x => x.First()).ToList())
+                        {
+                            _db.Save(item, DataBase.Collections.Items);
+                        }
+                    }
+
                 }
 
             }

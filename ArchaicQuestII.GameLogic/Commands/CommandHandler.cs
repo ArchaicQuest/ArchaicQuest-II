@@ -46,7 +46,7 @@ namespace ArchaicQuestII.GameLogic.Commands
                 return;
             }
 
-            _writeToClient.WriteLine("That is not a command.");
+            _writeToClient.WriteLine("That is not a command.", player.ConnectionId);
         }
     }
 }
