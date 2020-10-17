@@ -58,6 +58,12 @@ namespace ArchaicQuestII.GameLogic.World.Room
         {
 
             //check room, then check player if no match
+            if (player.Status == CharacterStatus.Status.Sleeping)
+            {
+                _writeToClient.WriteLine("You can't do that while asleep.", player.ConnectionId);
+                return;
+            }
+
 
 
             var container = room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ?? player.Inventory.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
@@ -103,6 +109,12 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
         public void LookObject(string target, Room room, Player player)
         {
+            if (player.Status == CharacterStatus.Status.Sleeping)
+            {
+                _writeToClient.WriteLine("You can't do that while asleep.", player.ConnectionId);
+                return;
+            }
+
 
             var item =
                 room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ??
@@ -116,6 +128,11 @@ namespace ArchaicQuestII.GameLogic.World.Room
             var roomObjects =
                 room.RoomObjects.FirstOrDefault(x =>
                     x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+
+            if (target.Equals("self", StringComparison.CurrentCultureIgnoreCase))
+            {
+                character = player;
+            }
 
 
             if (item == null && character == null && roomObjects == null)
@@ -164,7 +181,22 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 return;
             }
 
-            _writeToClient.WriteLine($"<p>{character.Description}", player.ConnectionId);
+        
+
+            var sb = new StringBuilder();
+            if (character.ConnectionId != "mob")
+            {
+                sb.Append(
+                    $"<table class='char-look'><tr><td><span class='cell-title'>Eyes:</span> {character.Eyes}</td><td><span class='cell-title'>Hair:</span> {character.HairColour}</td></tr>");
+                sb.Append(
+                    $"<tr><td><span class='cell-title'>Skin:</span> {character.Skin}</td><td><span class='cell-title'>Hair Length:</span> {character.HairLength}</td></tr>");
+                sb.Append(
+                    $"<tr><td><span class='cell-title'>Build:</span> {character.Build}</td><td><span class='cell-title'>Hair Texture:</span> {character.HairTexture}</td></tr>");
+                sb.Append(
+                    $"<tr><td><span class='cell-title'>Face:</span> {character.Face}</td><td><span class='cell-title'>Hair Facial:</span> {character.FacialHair}</td></tr><table>");
+            }
+
+            _writeToClient.WriteLine($"{sb}<p>{character.Description}", player.ConnectionId);
 
             foreach (var pc in room.Players)
             {
@@ -187,6 +219,12 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
         public void ExamineObject(string target, Room room, Player player)
         {
+            if (player.Status == CharacterStatus.Status.Sleeping)
+            {
+                _writeToClient.WriteLine("You can't do that while asleep.", player.ConnectionId);
+                return;
+            }
+
 
             var item = room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ?? player.Inventory.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
 
@@ -220,6 +258,12 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
         public void SmellObject(string target, Room room, Player player)
         {
+            if (player.Status == CharacterStatus.Status.Sleeping)
+            {
+                _writeToClient.WriteLine("You can't do that while asleep.", player.ConnectionId);
+                return;
+            }
+
 
             var item = room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ?? player.Inventory.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
 
@@ -244,6 +288,11 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
         public void TasteObject(string target, Room room, Player player)
         {
+            if (player.Status == CharacterStatus.Status.Sleeping)
+            {
+                _writeToClient.WriteLine("You can't do that while asleep.", player.ConnectionId);
+                return;
+            }
 
             var item = room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ?? player.Inventory.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
 
@@ -270,6 +319,12 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
         public void TouchObject(string target, Room room, Player player)
         {
+            if (player.Status == CharacterStatus.Status.Sleeping)
+            {
+                _writeToClient.WriteLine("You can't do that while asleep.", player.ConnectionId);
+                return;
+            }
+
 
             var item = room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ?? player.Inventory.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
 

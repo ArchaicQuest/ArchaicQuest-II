@@ -77,7 +77,16 @@ namespace ArchaicQuestII.Controllers.character
                 JoinedDate = DateTime.Now,
                 LastLoginTime = DateTime.Now,
                 Skills = new List<SkillList>(),
-                Roam = player.Roam
+                Roam = player.Roam,
+                Build = player.Build,
+                Face = player.Face,
+                Skin = player.Skin,
+                Eyes = player.Eyes,
+                FacialHair = player.FacialHair,
+                HairColour = player.HairColour,
+                HairLength = player.HairLength,
+                HairTexture = player.HairTexture
+                
             };
 
             newPlayer.Skills = playerClass?.Skills ?? new List<SkillList>();
@@ -106,6 +115,25 @@ namespace ArchaicQuestII.Controllers.character
 
   
 
+
+
+        [HttpGet]
+        [Route("api/Character/Player/NameAllowed/{name:string}")]
+        public bool NameAllowed(string name)
+        {
+
+            var nameExists = _db.GetCollection<Player>(DataBase.Collections.Players).FindOne(x => x.Name == name);
+
+            if (nameExists == null)
+            {
+                return true;
+            }
+
+            return false;
+
+        }
+
+
         [HttpGet]
         public List<Player> Get([FromQuery] string query)
         {
@@ -120,8 +148,6 @@ namespace ArchaicQuestII.Controllers.character
             return mobs.Where(x => x.Name.IndexOf(query, StringComparison.OrdinalIgnoreCase) != -1).ToList();
 
         }
-
-
 
 
 

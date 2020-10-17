@@ -44,6 +44,7 @@ namespace ArchaicQuestII.GameLogic.Character.Race
                         {
                             Name = "Elf",
                             CreatedBy = "Malleus",
+                            Playable = true,
                             Description = @"`Elves are shorter and slimmer than humans, they are also more in tune with nature and magic.
                      They have an innate ability of Sneaking, Infrasion and resistance to charm spells.",
                             Attributes = new Attributes()
@@ -63,6 +64,7 @@ namespace ArchaicQuestII.GameLogic.Character.Race
                         {
                             Name = "Wood-elf",
                             CreatedBy = "Malleus",
+                            Playable = true,
                             Description = @"wood elf",
                             Attributes = new Attributes()
                             {
@@ -81,6 +83,7 @@ namespace ArchaicQuestII.GameLogic.Character.Race
                         {
                             Name = "Half Elf",
                             CreatedBy = "Malleus",
+                            Playable = true,
                             Description = @"`Elves are shorter and slimmer than humans, they are also more in tune with nature and magic.
                      They have an innate ability of Sneaking, Infrasion and resistance to charm spells.",
                             Attributes = new Attributes()
@@ -100,6 +103,7 @@ namespace ArchaicQuestII.GameLogic.Character.Race
                         {
                             Name = "Dark Elf",
                             CreatedBy = "Malleus",
+                            Playable = true,
                             Description = @"`Dark Elves are identical to their elven brethren except their skin ranges from dark pale blue to black.
                      They too have an innate ability of Sneaking, Infrasion and resistance to charm spells.",
                             Attributes = new Attributes()
@@ -119,6 +123,7 @@ namespace ArchaicQuestII.GameLogic.Character.Race
                         {
                             Name = "Half Drow",
                             CreatedBy = "Malleus",
+                            Playable = true,
                             Description = @"`Dark Elves are identical to their elven brethren except their skin ranges from dark pale blue to black.
                      They too have an innate ability of Sneaking, Infrasion and resistance to charm spells.",
                             Attributes = new Attributes()
@@ -138,6 +143,7 @@ namespace ArchaicQuestII.GameLogic.Character.Race
                         {
                             Name = "Dwarves",
                             CreatedBy = "Malleus",
+                            Playable = true,
                             Description = @"`Dwarves are a short muscular humanoids who prefer the mountains and the underdark where they enjoy
                      digging for gold. A lot of dwarves do venture out of the caves and can be found in human settlements in the local
                       tavern with a mug of Ale. They are powerful Warriors and Clerics",
@@ -158,6 +164,7 @@ namespace ArchaicQuestII.GameLogic.Character.Race
                         {
                             Name = "Gnome",
                             CreatedBy = "Malleus",
+                            Playable = true,
                             Description = @"`Dwarves are a short muscular humanoids who prefer the mountains and the underdark where they enjoy
                      digging for gold. A lot of dwarves do venture out of the caves and can be found in human settlements in the local
                       tavern with a mug of Ale. They are powerful Warriors and Clerics",
@@ -178,6 +185,7 @@ namespace ArchaicQuestII.GameLogic.Character.Race
                         {
                             Name = "Ariel",
                             CreatedBy = "Malleus",
+                            Playable = true,
                             Description = @"`Dwarves are a short muscular humanoids who prefer the mountains and the underdark where they enjoy
                      digging for gold. A lot of dwarves do venture out of the caves and can be found in human settlements in the local
                       tavern with a mug of Ale. They are powerful Warriors and Clerics",
@@ -198,6 +206,7 @@ namespace ArchaicQuestII.GameLogic.Character.Race
                         {
                             Name = "Mau",
                             CreatedBy = "Malleus",
+                            Playable = true,
                             Description = @"`Mau, Cat like humanoid race. Info coming soon",
                             Attributes = new Attributes()
                             {
@@ -216,6 +225,7 @@ namespace ArchaicQuestII.GameLogic.Character.Race
                         {
                             Name = "Tlaloc",
                             CreatedBy = "Malleus",
+                            Playable = true,
                             Description = @"`Tlaloc, Reptilian lizard like humanoid race. Info coming soon",
                             Attributes = new Attributes()
                             {
@@ -235,6 +245,7 @@ namespace ArchaicQuestII.GameLogic.Character.Race
                         {
                             Name = "Minotaur",
                             CreatedBy = "Malleus",
+                            Playable = true,
                             Description = @"`Tlaloc, Reptilian lizard like humanoid race. Info coming soon",
                             Attributes = new Attributes()
                             {
