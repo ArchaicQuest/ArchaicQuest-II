@@ -19,7 +19,6 @@ using ArchaicQuestII.GameLogic.Skill.Model;
 namespace ArchaicQuestII.Controllers.character
 {
     [ApiController]
-    [Route("api/character/[controller]")]
     public class PlayerController : ControllerBase
     {
         private IDataBase _db { get; }
@@ -28,6 +27,7 @@ namespace ArchaicQuestII.Controllers.character
             _db = db;
         }
         [HttpPost]
+        [Route("api/character/Player")]
         public ObjectResult Post([FromBody] Player player)
         {
 
@@ -77,7 +77,16 @@ namespace ArchaicQuestII.Controllers.character
                 JoinedDate = DateTime.Now,
                 LastLoginTime = DateTime.Now,
                 Skills = new List<SkillList>(),
-                Roam = player.Roam
+                Roam = player.Roam,
+                Build = player.Build,
+                Face = player.Face,
+                Skin = player.Skin,
+                Eyes = player.Eyes,
+                FacialHair = player.FacialHair,
+                HairColour = player.HairColour,
+                HairLength = player.HairLength,
+                HairTexture = player.HairTexture
+                
             };
 
             newPlayer.Skills = playerClass?.Skills ?? new List<SkillList>();
@@ -104,9 +113,33 @@ namespace ArchaicQuestII.Controllers.character
 
         }
 
-  
+
+
+        //[HttpGet]
+        //[Route("api/mob/FindMobById")]
+        //public Player FindMobById([FromQuery] Guid id)
+        //{
+
 
         [HttpGet]
+        [Route("api/player/NameAllowed")]
+        public bool NameAllowed([FromQuery] string name)
+        {
+
+            var nameExists = _db.GetCollection<Player>(DataBase.Collections.Players).FindOne(x => x.Name == name);
+
+            if (nameExists == null)
+            {
+                return true;
+            }
+
+            return false;
+
+        }
+
+
+        [HttpGet]
+        [Route("api/character/Player")]
         public List<Player> Get([FromQuery] string query)
         {
 
@@ -120,8 +153,6 @@ namespace ArchaicQuestII.Controllers.character
             return mobs.Where(x => x.Name.IndexOf(query, StringComparison.OrdinalIgnoreCase) != -1).ToList();
 
         }
-
-
 
 
 

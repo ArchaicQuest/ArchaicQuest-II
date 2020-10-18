@@ -6,6 +6,7 @@ using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Core;
+using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.World.Room;
 using MoonSharp.Interpreter;
@@ -96,6 +97,13 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
 
             UpdateCharactersLocation(getExitToNextRoom, character);
 
+            character.Attributes.Attribute[EffectLocation.Moves] -= 1;
+
+            if (character.Attributes.Attribute[EffectLocation.Moves] < 0)
+            {
+                character.Attributes.Attribute[EffectLocation.Moves] = 0;
+            }
+
             if (character.ConnectionId == "mob")
             {
                 return;
@@ -106,8 +114,9 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
 
             OnPlayerEnterEvent(getNextRoom, character); 
 
+         
             _updateUi.GetMap(character, _cache.GetMap(getExitToNextRoom.AreaId));
-
+            _updateUi.UpdateMoves(character);
         }
 
         public Exit FindExit(Room room, string direction)
@@ -268,7 +277,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
 
         public bool CharacterCanMove(Player character)
         {
-            return character.ConnectionId == "mob" || character.Stats.MovePoints > 0;
+            return character.ConnectionId == "mob" || character.Attributes.Attribute[EffectLocation.Moves] > 0;
         }
 
         public void Flee(Room room, Player character, string direction = "")

@@ -151,6 +151,7 @@ namespace ArchaicQuestII.GameLogic.Spell
         public void DoSpell(string spellName, Player origin, string targetName = "", Room room = null)
         {
 
+
             if (!ValidStatus(origin))
             {
                 return;

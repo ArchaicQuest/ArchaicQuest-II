@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Emote;
+using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.World.Room;
 using MoonSharp.Interpreter;
@@ -46,6 +47,12 @@ namespace ArchaicQuestII.GameLogic.Socials
         }
         public void EmoteSocial(Player player, Room room, Emote social, string target)
         {
+            if (player.Status == CharacterStatus.Status.Sleeping)
+            {
+                _writeToClient.WriteLine("You can't do this while asleep.", player.ConnectionId);
+                return;
+            }
+
 
             if (string.IsNullOrEmpty(target))
             {

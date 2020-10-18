@@ -4,6 +4,7 @@ using ArchaicQuestII.GameLogic.Commands;
 using System.Linq;
 using System.Threading.Tasks;
 using ArchaicQuestII.DataAccess;
+using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Effect;
@@ -35,16 +36,25 @@ namespace ArchaicQuestII.GameLogic.Core
             _client = client;
         }
 
+        public int GainAmount(int value, Player player)
+        {
+            return player.Status switch
+            {
+                CharacterStatus.Status.Sleeping => value *= 3,
+                CharacterStatus.Status.Resting => value *= 2,
+                _ => value
+            };
+        }
 
         public async Task UpdateTime()
         {
-             
-  
+
+
             Console.WriteLine("started loop");
             while (true)
             {
                 //2 mins
-                await Task.Delay(120000);
+                await Task.Delay(30000);
                 var rooms = _cache.GetAllRoomsToRepop();
                 var players = _cache.GetPlayerCache().Values.ToList();
 
@@ -95,10 +105,13 @@ namespace ArchaicQuestII.GameLogic.Core
 
                 foreach (var player in players)
                 {
-                  
-                    player.Attributes.Attribute[EffectLocation.Hitpoints] += _dice.Roll(1, 2, 5) * player.Level;
-                    player.Attributes.Attribute[EffectLocation.Mana] += _dice.Roll(1, 2, 5) * player.Level;
-                    player.Attributes.Attribute[EffectLocation.Moves] += _dice.Roll(1, 2, 5) * player.Level;
+
+                    var hP = (_dice.Roll(1, 2, 5) * player.Level);
+                    var mana = (_dice.Roll(1, 2, 5) * player.Level);
+                    var moves = (_dice.Roll(1, 2, 5) * player.Level);
+                    player.Attributes.Attribute[EffectLocation.Hitpoints] += GainAmount(hP, player);
+                    player.Attributes.Attribute[EffectLocation.Mana] += GainAmount(mana, player);
+                    player.Attributes.Attribute[EffectLocation.Moves] += GainAmount(moves, player);
 
                     if (player.Attributes.Attribute[EffectLocation.Hitpoints] > player.MaxAttributes.Attribute[EffectLocation.Hitpoints])
                     {
@@ -121,16 +134,16 @@ namespace ArchaicQuestII.GameLogic.Core
                     _client.UpdateScore(player);
 
                 }
-               
+
             }
         }
 
         public async Task UpdateCombat()
         {
- // create a combat cache to add mobs too so they can fight back
- // block movement while fighting
- // end fight if target is not there / dead
- // create flee commant
+            // create a combat cache to add mobs too so they can fight back
+            // block movement while fighting
+            // end fight if target is not there / dead
+            // create flee commant
             Console.WriteLine("started combat loop");
             while (true)
             {
@@ -193,7 +206,7 @@ namespace ArchaicQuestII.GameLogic.Core
                 }
 
             }
-            
+
         }
 
         public async Task UpdateMobEmote()
@@ -215,7 +228,7 @@ namespace ArchaicQuestII.GameLogic.Core
                     var mobIds = new List<Guid>();
                     foreach (var room in rooms)
                     {
-                      
+
                         foreach (var mob in room.Mobs.Where(x => x.Status != CharacterStatus.Status.Fighting).ToList())
                         {
                             if (mob.Emotes.Any() && mob.Emotes[0] != null)
@@ -242,7 +255,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
                             else
                             {
-                                
+
                             }
 
                             if (mob.Roam && _dice.Roll(1, 1, 100) >= 50)
@@ -271,7 +284,7 @@ namespace ArchaicQuestII.GameLogic.Core
                             if (mob.Buffer.Count > 0)
                             {
                                 var mobCommand = mob.Buffer.Pop();
-                                
+
                                 _commands.ProcessCommand(mobCommand, mob, room);
                             }
 
