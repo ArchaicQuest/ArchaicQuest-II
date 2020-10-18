@@ -19,7 +19,6 @@ using ArchaicQuestII.GameLogic.Skill.Model;
 namespace ArchaicQuestII.Controllers.character
 {
     [ApiController]
-    [Route("api/character/[controller]")]
     public class PlayerController : ControllerBase
     {
         private IDataBase _db { get; }
@@ -28,6 +27,7 @@ namespace ArchaicQuestII.Controllers.character
             _db = db;
         }
         [HttpPost]
+        [Route("api/character/Player")]
         public ObjectResult Post([FromBody] Player player)
         {
 
@@ -113,13 +113,17 @@ namespace ArchaicQuestII.Controllers.character
 
         }
 
-  
 
+
+        //[HttpGet]
+        //[Route("api/mob/FindMobById")]
+        //public Player FindMobById([FromQuery] Guid id)
+        //{
 
 
         [HttpGet]
-        [Route("api/Character/Player/NameAllowed/{name:string}")]
-        public bool NameAllowed(string name)
+        [Route("api/player/NameAllowed")]
+        public bool NameAllowed([FromQuery] string name)
         {
 
             var nameExists = _db.GetCollection<Player>(DataBase.Collections.Players).FindOne(x => x.Name == name);
@@ -135,6 +139,7 @@ namespace ArchaicQuestII.Controllers.character
 
 
         [HttpGet]
+        [Route("api/character/Player")]
         public List<Player> Get([FromQuery] string query)
         {
 
