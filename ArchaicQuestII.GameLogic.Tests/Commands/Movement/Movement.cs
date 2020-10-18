@@ -5,6 +5,7 @@ using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Core;
+using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.World.Room;
 using Moq;
 using Xunit;
@@ -48,6 +49,9 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Movement
             {
                 MovePoints = 110
             };
+            _player.Attributes = new Attributes();
+                
+                _player.Attributes.Attribute[EffectLocation.Moves] = 100;
 
             _room = new Room()
             {
@@ -143,7 +147,9 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Movement
             {
                 MovePoints = 0
             };
+            _player.Attributes = new Attributes();
 
+            _player.Attributes.Attribute[EffectLocation.Moves] = 0;
             _room = new Room()
             {
                 AreaId = 1,
@@ -206,7 +212,9 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Movement
             {
                 MovePoints = 110
             };
+            _player.Attributes = new Attributes();
 
+            _player.Attributes.Attribute[EffectLocation.Moves] = 100;
             _room = new Room()
             {
                 AreaId = 1,
