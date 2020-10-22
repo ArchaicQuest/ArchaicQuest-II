@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character.Class;
+using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Skill.Model;
 
 
@@ -22,9 +23,11 @@ namespace ArchaicQuestII.Controllers.character
     public class PlayerController : ControllerBase
     {
         private IDataBase _db { get; }
-        public PlayerController(IDataBase db)
+        private ICache _cache { get; }
+        public PlayerController(IDataBase db, ICache cache)
         {
             _db = db;
+            _cache = cache;
         }
         [HttpPost]
         [Route("api/character/Player")]
@@ -85,8 +88,9 @@ namespace ArchaicQuestII.Controllers.character
                 FacialHair = player.FacialHair,
                 HairColour = player.HairColour,
                 HairLength = player.HairLength,
-                HairTexture = player.HairTexture
-                
+                HairTexture = player.HairTexture,
+                RoomId = _cache.GetConfig().StartingRoom
+
             };
 
             newPlayer.Skills = playerClass?.Skills ?? new List<SkillList>();

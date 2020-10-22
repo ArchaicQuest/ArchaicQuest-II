@@ -122,11 +122,24 @@ namespace ArchaicQuestII.GameLogic.Hubs
         {
             var player = GetCharacter(hubId, characterId);
             UpdatePlayerSkills(player);
-            AddCharacterToCache(hubId, player);
+
+         
+                AddCharacterToCache(hubId, player);
+
+            var playerExist = _cache.PlayerAlreadyExists(player.Id);
 
             await SendToClient($"<p>Welcome {player.Name}. Your adventure awaits you.</p>", hubId);
 
-            GetRoom(hubId, player);
+            if (playerExist != null)
+            {
+                GetRoom(hubId, playerExist, playerExist.RoomId);
+            }
+            else
+            {
+                GetRoom(hubId, player);
+            }
+
+            
         }
 
 
@@ -200,20 +213,28 @@ namespace ArchaicQuestII.GameLogic.Hubs
                 _cache.RemovePlayer(playerExist.ConnectionId);
 
                 playerExist.ConnectionId = hubId;
+                _cache.AddPlayer(hubId, playerExist);
 
                 await SendToClient($"<p style='color:red'>*** You have been reconnected ***</p>", hubId);
-            }
 
-            _cache.AddPlayer(hubId, character);
+              
+            }
+            else
+            {
+                _cache.AddPlayer(hubId, character);
+            }
+            
+
+          
 
         }
 
-        private void GetRoom(string hubId, Player character)
+        private void GetRoom(string hubId, Player character, int startingRoom = -1)
         {
             //add to DB, configure from admin
-            var startingRoom = _cache.GetConfig().StartingRoom;
-            var room = _cache.GetRoom(startingRoom);
-           character.RoomId = startingRoom;
+              var roomid = startingRoom != _cache.GetConfig().StartingRoom ? startingRoom : _cache.GetConfig().StartingRoom;
+            var room = _cache.GetRoom(roomid);
+           character.RoomId = roomid;
 
            var playerAlreadyInRoom = room.Players.FirstOrDefault(x => x.Id.Equals(character.Id)) != null;
            if (!playerAlreadyInRoom)

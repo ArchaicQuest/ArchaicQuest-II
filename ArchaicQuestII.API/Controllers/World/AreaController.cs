@@ -256,6 +256,7 @@ namespace ArchaicQuestII.Controllers
                                 x.Coords.X == room.Exits.West.Coords.X && x.Coords.Y == room.Exits.West.Coords.Y &&
                                 x.Coords.Z == room.Exits.West.Coords.Z).Id;
                         }
+                        room.RoomObjects.RemoveAll(x => x.Name == null);
                         _db.Save(room, DataBase.Collections.Room);
                     }
 

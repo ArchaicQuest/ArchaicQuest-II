@@ -16,7 +16,7 @@ namespace ArchaicQuestII.GameLogic.Core
         /// Min level required to use Yell, gossip, channels
         /// </summary>
         public int MinLevelCanShout { get; set; } = 3;
-        public int StartingRoom { get; set; } = 0;
+        public int StartingRoom { get; set; } = 1;
         public int DefaultRecallRoom { get; set; } = 0;
 
         /// <summary>
