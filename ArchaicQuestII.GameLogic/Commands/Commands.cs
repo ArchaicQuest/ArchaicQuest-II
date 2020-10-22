@@ -178,6 +178,15 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "/debug":
                     _debug.DebugRoom(room, player);
                     break;
+                 case "newbie":
+                     _communication.Newbie(obj, room, player);
+                    break;
+                case "ooc":
+                    _communication.OOC(obj, room, player);
+                    break;
+                case "gossip":
+                    _communication.Gossip(obj, room, player);
+                    break;
                 case "say":
                 case "'":
                     _communication.Say(obj, room, player);
@@ -294,6 +303,30 @@ namespace ArchaicQuestII.GameLogic.Commands
                 var say = string.Join(" ", commands);
 
                 say = say.Remove(0, 5);
+                return new Tuple<string, string>(say, string.Empty);
+            }
+
+            if (commands[0] == "newbie")
+            {
+                var say = string.Join(" ", commands);
+
+                say = say.Remove(0, 7);
+                return new Tuple<string, string>(say, string.Empty);
+            }
+
+            if (commands[0] == "ooc")
+            {
+                var say = string.Join(" ", commands);
+
+                say = say.Remove(0, 4);
+                return new Tuple<string, string>(say, string.Empty);
+            }
+
+            if (commands[0] == "gossip")
+            {
+                var say = string.Join(" ", commands);
+
+                say = say.Remove(0, 7);
                 return new Tuple<string, string>(say, string.Empty);
             }
 

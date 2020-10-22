@@ -11,6 +11,11 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
        void Say(string text, Room room, Player player);
        void SayTo(string text, string target, Room room, Player player);
        void Whisper(string text, string target, Room room, Player player);
+       void Newbie(string text, Room room, Player player);
        void Yell(string text, Room room, Player player);
+        void Gossip(string text, Room room, Player player);
+       void Tells(string text, Room room, Player player);
+       void OOC(string text, Room room, Player player);
+    
     }
 }
