@@ -295,10 +295,10 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
             {
                 _writer.WriteLine($"<p>You don't see that here.</p>", player.ConnectionId);
                 return;
-            }
+            } 
 
 
-            if (!containerObj.Container.IsOpen)
+            if (containerObj.Container.CanOpen && !containerObj.Container.IsOpen)
             {
                 _writer.WriteLine($"<p>You need to open it first.</p>", player.ConnectionId);
                 return;
