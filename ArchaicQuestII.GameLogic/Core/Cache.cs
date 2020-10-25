@@ -159,6 +159,7 @@ namespace ArchaicQuestII.GameLogic.Core
         public void ClearRoomCache()
         {
             _roomCache.Clear();
+            _mapCache.Clear();
 
         }
 

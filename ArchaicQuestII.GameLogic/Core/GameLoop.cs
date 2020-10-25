@@ -88,6 +88,13 @@ namespace ArchaicQuestII.GameLogic.Core
                         {
                             room.Items.Add(item);
                         }
+
+                        if (itemExist.Container.Items.Count < item.Container.Items.Count)
+                        {
+                            itemExist.Container.Items = item.Container.Items;
+                            itemExist.Container.IsOpen = item.Container.IsOpen;
+                            itemExist.Container.IsLocked = item.Container.IsLocked;
+                        }
                     }
 
                     // reset doors
@@ -186,7 +193,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
                     foreach (var room in rooms)
                     {
-                        if (!room.Emotes.Any())
+                        if (!room.Emotes.Any() || _dice.Roll(1, 1, 10) < 7)
                         {
                             continue;
                         }

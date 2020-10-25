@@ -37,12 +37,18 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
             }
 
             //Check room first
-            var item = room.Items.Where(x => x.Stuck == false).FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+            var item = room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
 
             if (item == null)
             {
                _writer.WriteLine("<p>You don't see that here.</p>", player.ConnectionId);
                return;
+            }
+
+            if (item.Stuck)
+            {
+                _writer.WriteLine("<p>You can't pick that up.</p>", player.ConnectionId);
+                return;
             }
 
             room.Items.Remove(item);
@@ -100,6 +106,10 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
                     room.Items.RemoveAt(i);
 
+                }
+                else
+                {
+                    _writer.WriteLine("<p>You can't get that.</p>", player.ConnectionId);
                 }
             }
             room.Clean = false;
@@ -190,7 +200,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
         public void DropInContainer(string target, string container, Room room, Player player)
         {
 
-            var containerObj = room.Items.Where(x => x.Stuck == false).FirstOrDefault(x => x.Name.Contains(container, StringComparison.CurrentCultureIgnoreCase))  ?? player.Inventory.Where(x => x.Stuck == false).FirstOrDefault(x => x.Name.Contains(container, StringComparison.CurrentCultureIgnoreCase));
+            var containerObj = room.Items.FirstOrDefault(x => x.Name.Contains(container, StringComparison.CurrentCultureIgnoreCase))  ?? player.Inventory.Where(x => x.Stuck == false).FirstOrDefault(x => x.Name.Contains(container, StringComparison.CurrentCultureIgnoreCase));
 
             if (containerObj == null)
             {
@@ -279,7 +289,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
           
 
-            var containerObj = room.Items.Where(x => x.Stuck == false).FirstOrDefault(x => x.Name.Contains(container, StringComparison.CurrentCultureIgnoreCase)) ?? player.Inventory.Where(x => x.Stuck == false).FirstOrDefault(x => x.Name.Contains(container, StringComparison.CurrentCultureIgnoreCase));
+            var containerObj = room.Items.FirstOrDefault(x => x.Name.Contains(container, StringComparison.CurrentCultureIgnoreCase)) ?? player.Inventory.Where(x => x.Stuck == false).FirstOrDefault(x => x.Name.Contains(container, StringComparison.CurrentCultureIgnoreCase));
 
             if (containerObj == null)
             {

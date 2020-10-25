@@ -163,6 +163,7 @@ namespace ArchaicQuestII.GameLogic.Commands
                     _object.Get(obj, target, room, player);
                     break;
                 case "drop":
+                case "put":
                     _object.Drop(obj, target, room, player);
                     break;
                 case "cast":

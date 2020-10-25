@@ -43,6 +43,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
         }
 
         public int Id { get; set; }
+        public bool Deleted { get; set; }
         public int AreaId { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }

@@ -7,6 +7,7 @@ using System.Diagnostics;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Item;
 using Newtonsoft.Json;
+using ArchaicQuestII.GameLogic.World.Area;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -38,20 +39,20 @@ namespace ArchaicQuestII.API.World
             return Ok(JsonConvert.SerializeObject(new { toast = $"Room saved successfully." }));
         }
 
-        [HttpDelete]
-        [Route("api/World/Room/{id:int}")]
-        public IActionResult Delete(int id)
-        {
-          var deleted = _db.Delete<Room>(id, DataBase.Collections.Room);
+        //[HttpDelete]
+        //[Route("api/World/Room/{id:int}")]
+        //public IActionResult Delete(int id)
+        //{
+        //  var deleted = _db.Delete<Room>(id, DataBase.Collections.Room);
 
-            if (deleted == false)
-            {
-                return Ok(JsonConvert.SerializeObject(new { toast = $"ERROR: Room ${id} failed to delete." }));
-            }
+        //    if (deleted == false)
+        //    {
+        //        return Ok(JsonConvert.SerializeObject(new { toast = $"ERROR: Room ${id} failed to delete." }));
+        //    }
 
-            return Ok(JsonConvert.SerializeObject(new { toast = $"Room deleted successfully." }));
+        //    return Ok(JsonConvert.SerializeObject(new { toast = $"Room deleted successfully." }));
 
-        }
+        //}
 
 
         [HttpGet("{id}")]
@@ -106,6 +107,7 @@ namespace ArchaicQuestII.API.World
             Stopwatch s = Stopwatch.StartNew();
 
             _cache.ClearRoomCache();
+            
 
             var rooms = _db.GetList<Room>(DataBase.Collections.Room);
 
@@ -114,11 +116,35 @@ namespace ArchaicQuestII.API.World
                 _cache.AddRoom(room.Id, room);
             }
 
+            var areas = _db.GetList<Area>(DataBase.Collections.Area);
+
+            foreach (var area in areas)
+            {
+                var roomList = rooms.FindAll(x => x.AreaId == area.Id);
+                _cache.AddMap(area.Id, Map.DrawMap(roomList));
+            }
+
             s.Stop();
 
-            return Ok(JsonConvert.SerializeObject(new { toast = $"Room cache updated successfully. Elapsed Time: {s.ElapsedMilliseconds} ms" }));
+            return Ok(JsonConvert.SerializeObject(new { toast = $"Room and Map cache updated successfully. Elapsed Time: {s.ElapsedMilliseconds} ms" }));
         }
 
-      
-}
+        [HttpDelete]
+        [Route("api/World/Room/delete/{id:int}")]
+        public IActionResult Delete(int id)
+        {
+            var room = _db.GetCollection<Room>(DataBase.Collections.Room).FindById(id);
+            room.Deleted = true;
+            var saved = _db.Save(room, DataBase.Collections.Room);
+
+            if (saved)
+            {
+                return Ok(JsonConvert.SerializeObject(new { toast = $"{room.Title} deleted successfully." }));
+            }
+            return Ok(JsonConvert.SerializeObject(new { toast = $"{room.Title} deletion failed." }));
+
+        }
+
+
+    }
 }

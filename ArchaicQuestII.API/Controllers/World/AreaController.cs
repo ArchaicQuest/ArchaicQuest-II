@@ -67,21 +67,21 @@ namespace ArchaicQuestII.Controllers
         }
 
 
-        [HttpDelete]
-        [Route("api/World/Area/{id:int}")]
-        public IActionResult Delete(int id)
-        {
-            var deleted = _db.Delete<Area>(id, DataBase.Collections.Area);
-           // var deletedRooms = _db.Delete<Room>(id, DataBase.Collections.Area);
+        //[HttpDelete]
+        //[Route("api/World/Area/{id:int}")]
+        //public IActionResult Delete(int id)
+        //{
+        //    var deleted = _db.Delete<Area>(id, DataBase.Collections.Area);
+        //   // var deletedRooms = _db.Delete<Room>(id, DataBase.Collections.Area);
 
-            if (deleted == false)
-            {
-                return Ok(JsonConvert.SerializeObject(new { toast = $"ERROR: Room ${id} failed to delete." }));
-            }
+        //    if (deleted == false)
+        //    {
+        //        return Ok(JsonConvert.SerializeObject(new { toast = $"ERROR: Room ${id} failed to delete." }));
+        //    }
 
-            return Ok(JsonConvert.SerializeObject(new { toast = $"Room deleted successfully." }));
+        //    return Ok(JsonConvert.SerializeObject(new { toast = $"Room deleted successfully." }));
 
-        }
+        //}
 
         [HttpGet]
         [Route("api/World/Area")]
@@ -303,6 +303,22 @@ namespace ArchaicQuestII.Controllers
             area.Title = area.Title;
 
             _db.Save(data, DataBase.Collections.Area);
+
+        }
+
+        [HttpDelete]
+        [Route("api/World/Area/delete/{id:int}")]
+        public IActionResult Delete(int id)
+        {
+            var area = _db.GetCollection<Area>(DataBase.Collections.Area).FindById(id);
+            area.Deleted = true;
+            var saved = _db.Save(area, DataBase.Collections.Mobs);
+
+            if (saved)
+            {
+                return Ok(JsonConvert.SerializeObject(new { toast = $"{area.Title} deleted successfully." }));
+            }
+            return Ok(JsonConvert.SerializeObject(new { toast = $"{area.Title} deletion failed." }));
 
         }
 

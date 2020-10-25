@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using ArchaicQuestII.Core.World;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
@@ -125,9 +126,14 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 room.Mobs.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ??
                 room.Players.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
 
-            var roomObjects =
-                room.RoomObjects.FirstOrDefault(x =>
-                    x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+
+            RoomObject roomObjects = null;
+            if (room.RoomObjects.Count >= 1 && room.RoomObjects[0].Name != null)
+            {
+                 roomObjects =
+                    room.RoomObjects.FirstOrDefault(x =>
+                        x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+            }
 
             if (target.Equals("self", StringComparison.CurrentCultureIgnoreCase))
             {
