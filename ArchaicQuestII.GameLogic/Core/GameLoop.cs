@@ -278,7 +278,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
                             if (!string.IsNullOrEmpty(mob.Commands) && mob.Buffer.Count == 0)
                             {
-                                mob.RoomId = room.Id;
+                                mob.RoomId = $"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}";
                                 var commands = mob.Commands.Split(";");
 
                                 foreach (var command in commands)

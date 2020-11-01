@@ -19,7 +19,7 @@ namespace ArchaicQuestII.GameLogic.Core
     public class Cache : ICache
     {
         private readonly ConcurrentDictionary<string, Player> _playerCache = new ConcurrentDictionary<string, Player>();
-        private readonly ConcurrentDictionary<int, Room> _roomCache = new ConcurrentDictionary<int, Room>();
+        private readonly ConcurrentDictionary<string, Room> _roomCache = new ConcurrentDictionary<string, Room>();
         private readonly ConcurrentDictionary<int, Skill.Model.Skill> _skillCache = new ConcurrentDictionary<int, Skill.Model.Skill>();
         private readonly ConcurrentDictionary<int, string> _mapCache = new ConcurrentDictionary<int, string>();
         private readonly ConcurrentDictionary<string, Player> _combatCache = new ConcurrentDictionary<string, Player>();
@@ -66,17 +66,17 @@ namespace ArchaicQuestII.GameLogic.Core
         #region RoomCache
 
 
-        public bool AddRoom(int id, Room room)
+        public bool AddRoom(string id, Room room)
         {
             return _roomCache.TryAdd(id, room);
         }
 
-        public Room GetRoom(int id)
-        {
-            _roomCache.TryGetValue(id == 0 ? 1 : id, out Room room);
+        //public Room GetRoom(int id)
+        //{
+        //    _roomCache.TryGetValue(id == 0 ? 1 : id, out Room room);
 
-            return room;
-        }
+        //    return room;
+        //}
         /// <summary>
         /// This is not as efficient as get by id
         /// Won't be an issue for a long time so can be revisted.
@@ -86,9 +86,9 @@ namespace ArchaicQuestII.GameLogic.Core
         /// <param name="id"></param>
         /// <param name="coords"></param>
         /// <returns></returns>
-        public Room GetRoom(int id, Coordinates coords)
+        public Room GetRoom(string id)
         {
-            var room = _roomCache.Values.FirstOrDefault(x => x.AreaId == id && x.Coords.X == coords.X && x.Coords.Y == coords.Y && x.Coords.Z == coords.Z);
+            _roomCache.TryGetValue(id, out var room);
 
             return room;
         }
@@ -114,7 +114,7 @@ namespace ArchaicQuestII.GameLogic.Core
             return room;
         }
 
-        public bool UpdateRoom(int id, Room room, Player player)
+        public bool UpdateRoom(string id, Room room, Player player)
         {
             var existingRoom = room;
             var newRoom = room;

@@ -121,7 +121,8 @@ end
         [JsonProperty("config")]
         public Config Config { get; set; }
         [JsonProperty("roomId")]
-        public int RoomId { get; set; }
+        /// arearID + X + Y + z e,g "1000"
+        public string RoomId { get; set; }
         [JsonProperty("recallId")]
         public int RecallId { get; set; }
         [JsonProperty("defaultAttack")]

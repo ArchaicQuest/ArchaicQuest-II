@@ -72,13 +72,10 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
                 return;
             }
 
-            var newRoomCoords = new Coordinates
-            {
-                X = getExitToNextRoom.Coords.X,
-                Y = getExitToNextRoom.Coords.Y,
-                Z = getExitToNextRoom.Coords.Z
-            };
-            var getNextRoom = _cache.GetRoom(getExitToNextRoom.AreaId, newRoomCoords);
+            
+            var nextRoomKey =
+                $"{getExitToNextRoom.AreaId}{getExitToNextRoom.Coords.X}{getExitToNextRoom.Coords.Y}{getExitToNextRoom.Coords.Z}";
+            var getNextRoom = _cache.GetRoom(nextRoomKey);
 
             if (getNextRoom == null)
             {
@@ -95,7 +92,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
 
             NotifyRoomEnter(getNextRoom, character, direction);
 
-            UpdateCharactersLocation(getExitToNextRoom, character);
+            UpdateCharactersLocation(getExitToNextRoom, character, room);
 
             character.Attributes.Attribute[EffectLocation.Moves] -= 1;
 
@@ -248,29 +245,29 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
             }
         }
 
-        public void UpdateCharactersLocation(Exit exit, Player character)
+        public void UpdateCharactersLocation(Exit exit, Player character, Room currentRoom)
         {
             //Refactor?
             if (character.ConnectionId != "mob")
             {
                 // remove player from room
-                var oldRoom = _cache.GetRoom(character.RoomId);
+                var oldRoom = _cache.GetRoom($"{currentRoom.AreaId}{currentRoom.Coords.X}{currentRoom.Coords.Y}{currentRoom.Coords.Z}");
                 oldRoom.Players.Remove(character);
 
                 //add player to room
-                character.RoomId = exit.RoomId;
-                var room = _cache.GetRoom(exit.RoomId);
+                character.RoomId = $"{exit.AreaId}{exit.Coords.X}{exit.Coords.Y}{exit.Coords.Z}"; 
+                var room = _cache.GetRoom($"{exit.AreaId}{exit.Coords.X}{exit.Coords.Y}{exit.Coords.Z}");
                 room.Players.Add(character);
             }
             else
             {
                 // remove mob from room
-                var oldRoom = _cache.GetRoom(character.RoomId);
+                var oldRoom = _cache.GetRoom($"{currentRoom.AreaId}{currentRoom.Coords.X}{currentRoom.Coords.Y}{currentRoom.Coords.Z}");
                 oldRoom.Mobs.Remove(character);
 
                 //add mob to room
-                character.RoomId = exit.RoomId;
-                var room = _cache.GetRoom(exit.RoomId);
+                character.RoomId = $"{exit.AreaId}{exit.Coords.X}{exit.Coords.Y}{exit.Coords.Z}"; 
+                var room = _cache.GetRoom($"{exit.AreaId}{exit.Coords.X}{exit.Coords.Y}{exit.Coords.Z}");
                 room.Mobs.Add(character);
             }
         }

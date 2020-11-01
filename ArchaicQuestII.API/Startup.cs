@@ -196,7 +196,7 @@ namespace ArchaicQuestII.API
             foreach (var mob in room.Mobs)
             {
 
-                mob.RoomId = room.Id;
+                mob.RoomId = $"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}";
             }
         }
 
@@ -250,7 +250,7 @@ namespace ArchaicQuestII.API
             {
                 AddSkillsToMobs(room);
                 MapMobRoomId(room);
-                _cache.AddRoom(room.Id, room);
+                _cache.AddRoom($"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}", room);
             }
 
 

@@ -84,7 +84,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
                 var mapNode = new SigmaMapNode()
                 {
-                    Id = "node" + node.Id,
+                    Id = $"node{node.AreaId}{node.Coords.X}{node.Coords.Y}{node.Coords.Z}",
                     Label = node.Title,
                     X = node.Coords.X,
                     Y = y,
@@ -108,9 +108,9 @@ namespace ArchaicQuestII.GameLogic.Core
                 {
                     var mapEdge = new SigmaMapEdge()
                     {
-                        Id = "edge" + node.Id + node.Exits.NorthWest.RoomId,
-                        Source = "node" + node.Id,
-                        Target = "node" + node.Exits.NorthWest.RoomId,
+                        Id = $"edge{node.AreaId}{node.Coords.X}{node.Coords.Y}{node.Coords.Z}{node.Exits.NorthWest.Coords.X}{node.Exits.NorthWest.Coords.Y}{node.Exits.NorthWest.Coords.Z}",
+                        Source = $"node{node.AreaId}{node.Coords.X}{node.Coords.Y}{node.Coords.Z}",
+                        Target = $"node{node.Exits.NorthWest.AreaId}{node.Exits.NorthWest.Coords.X}{node.Exits.NorthWest.Coords.Y}{node.Exits.NorthWest.Coords.Z}",
 
                     };
 
@@ -124,9 +124,9 @@ namespace ArchaicQuestII.GameLogic.Core
                 {
                     var mapEdge = new SigmaMapEdge()
                     {
-                        Id = "edge" + node.Id + node.Exits.North.RoomId,
-                        Source = "node" + node.Id,
-                        Target = "node" + node.Exits.North.RoomId,
+                        Id = $"edge{node.AreaId}{node.Exits.North.Coords.X}{node.Exits.North.Coords.Y}{node.Exits.North.Coords.Z}",
+                        Source = $"node{node.AreaId}{node.Coords.X}{node.Coords.Y}{node.Coords.Z}",
+                        Target = $"node{node.AreaId}{node.Exits.North.Coords.X}{node.Exits.North.Coords.Y}{node.Exits.North.Coords.Z}",
 
                     };
 
@@ -140,9 +140,9 @@ namespace ArchaicQuestII.GameLogic.Core
                 {
                     var mapEdge = new SigmaMapEdge()
                     {
-                        Id = "edge" + node.Id + node.Exits.NorthEast.RoomId,
-                        Source = "node" + node.Id,
-                        Target = "node" + node.Exits.NorthEast.RoomId,
+                        Id = $"edge{node.AreaId}{node.Coords.X}{node.Coords.Y}{node.Coords.Z}{node.Exits.NorthEast.Coords.X}{node.Exits.NorthEast.Coords.Y}{node.Exits.NorthEast.Coords.Z}",
+                        Source = $"node{node.AreaId}{node.Coords.X}{node.Coords.Y}{node.Coords.Z}",
+                        Target = $"node{node.Exits.NorthEast.AreaId}{node.Exits.NorthEast.Coords.X}{node.Exits.NorthEast.Coords.Y}{node.Exits.NorthEast.Coords.Z}",
 
                     };
 
@@ -156,9 +156,9 @@ namespace ArchaicQuestII.GameLogic.Core
                 {
                     var mapEdge = new SigmaMapEdge()
                     {
-                        Id = "edge" + node.Id + node.Exits.East.RoomId,
-                        Source = "node" + node.Id,
-                        Target = "node" + node.Exits.East.RoomId,
+                        Id = $"edge{node.AreaId}{node.Coords.X}{node.Coords.Y}{node.Coords.Z}{node.Exits.East.Coords.X}{node.Exits.East.Coords.Y}{node.Exits.East.Coords.Z}",
+                        Source = $"node{node.AreaId}{node.Coords.X}{node.Coords.Y}{node.Coords.Z}",
+                        Target = $"node{node.Exits.East.AreaId}{node.Exits.East.Coords.X}{node.Exits.East.Coords.Y}{node.Exits.East.Coords.Z}",
 
                     };
 
@@ -172,9 +172,9 @@ namespace ArchaicQuestII.GameLogic.Core
                 {
                     var mapEdge = new SigmaMapEdge()
                     {
-                        Id = "edge" + node.Id + node.Exits.South.RoomId,
-                        Source = "node" + node.Id,
-                        Target = "node" + node.Exits.South.RoomId,
+                        Id = $"edge{node.AreaId}{node.Coords.X}{node.Coords.Y}{node.Coords.Z}{node.Exits.South.Coords.X}{node.Exits.South.Coords.Y}{node.Exits.South.Coords.Z}",
+                        Source = $"node{node.AreaId}{node.Coords.X}{node.Coords.Y}{node.Coords.Z}",
+                        Target = $"node{node.Exits.South.AreaId}{node.Exits.South.Coords.X}{node.Exits.South.Coords.Y}{node.Exits.South.Coords.Z}",
 
                     };
 
@@ -188,9 +188,9 @@ namespace ArchaicQuestII.GameLogic.Core
                 {
                     var mapEdge = new SigmaMapEdge()
                     {
-                        Id = "edge" + node.Id + node.Exits.SouthEast.RoomId,
-                        Source = "node" + node.Id,
-                        Target = "node" + node.Exits.SouthEast.RoomId,
+                        Id = $"edge{node.AreaId}{node.Coords.X}{node.Coords.Y}{node.Coords.Z}{node.Exits.SouthEast.Coords.X}{node.Exits.SouthEast.Coords.Y}{node.Exits.SouthEast.Coords.Z}",
+                        Source = $"node{node.AreaId}{node.Coords.X}{node.Coords.Y}{node.Coords.Z}",
+                        Target = $"node{node.Exits.SouthEast.AreaId}{node.Exits.SouthEast.Coords.X}{node.Exits.SouthEast.Coords.Y}{node.Exits.SouthEast.Coords.Z}",
 
                     };
 
@@ -204,9 +204,9 @@ namespace ArchaicQuestII.GameLogic.Core
                 {
                     var mapEdge = new SigmaMapEdge()
                     {
-                        Id = "edge" + node.Id + node.Exits.SouthWest.RoomId,
-                        Source = "node" + node.Id,
-                        Target = "node" + node.Exits.SouthWest.RoomId,
+                        Id = $"edge{node.AreaId}{node.Coords.X}{node.Coords.Y}{node.Coords.Z}{node.Exits.SouthWest.Coords.X}{node.Exits.SouthWest.Coords.Y}{node.Exits.SouthWest.Coords.Z}",
+                        Source = $"node{node.AreaId}{node.Coords.X}{node.Coords.Y}{node.Coords.Z}",
+                        Target = $"node{node.Exits.SouthWest.AreaId}{node.Exits.SouthWest.Coords.X}{node.Exits.SouthWest.Coords.Y}{node.Exits.SouthWest.Coords.Z}",
 
                     };
 
@@ -220,9 +220,9 @@ namespace ArchaicQuestII.GameLogic.Core
                 {
                     var mapEdge = new SigmaMapEdge()
                     {
-                        Id = "edge" + node.Id + node.Exits.West.RoomId,
-                        Source = "node" + node.Id,
-                        Target = "node" + node.Exits.West.RoomId,
+                        Id = $"edge{node.AreaId}{node.Coords.X}{node.Coords.Y}{node.Coords.Z}{node.Exits.West.Coords.X}{node.Exits.West.Coords.Y}{node.Exits.West.Coords.Z}",
+                        Source = $"node{node.AreaId}{node.Coords.X}{node.Coords.Y}{node.Coords.Z}",
+                        Target = $"node{node.Exits.West.AreaId}{node.Exits.West.Coords.X}{node.Exits.West.Coords.Y}{node.Exits.West.Coords.Z}",
 
                     };
 
@@ -243,9 +243,8 @@ namespace ArchaicQuestII.GameLogic.Core
 
             var brokenEdges = new List<string>();
 
-            foreach (var e in edges.ToList())
+            foreach (var e in edges.Distinct().ToList())
             {
-
 
                 if (nodes.FirstOrDefault(x => x.Id == e.Target) == null)
                 {

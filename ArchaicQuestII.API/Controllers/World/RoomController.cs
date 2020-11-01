@@ -113,7 +113,7 @@ namespace ArchaicQuestII.API.World
 
             foreach (var room in rooms)
             {
-                _cache.AddRoom(room.Id, room);
+                _cache.AddRoom($"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}", room);
             }
 
             var areas = _db.GetList<Area>(DataBase.Collections.Area);

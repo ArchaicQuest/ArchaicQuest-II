@@ -229,12 +229,12 @@ namespace ArchaicQuestII.GameLogic.Hubs
 
         }
 
-        private void GetRoom(string hubId, Player character, int startingRoom = -1)
+        private void GetRoom(string hubId, Player character, string startingRoom = "")
         {
             //add to DB, configure from admin
-              var roomid = startingRoom != _cache.GetConfig().StartingRoom ? startingRoom : _cache.GetConfig().StartingRoom;
+              var roomid = !string.IsNullOrEmpty(startingRoom) ? startingRoom : _cache.GetConfig().StartingRoom;
             var room = _cache.GetRoom(roomid);
-           character.RoomId = roomid;
+           character.RoomId = $"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}";
 
            var playerAlreadyInRoom = room.Players.FirstOrDefault(x => x.Id.Equals(character.Id)) != null;
            if (!playerAlreadyInRoom)

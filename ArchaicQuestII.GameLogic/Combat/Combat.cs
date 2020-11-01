@@ -164,52 +164,52 @@ namespace ArchaicQuestII.GameLogic.Combat
 
             if (room.Exits.NorthWest != null)
             {
-               rooms.Add(_cache.GetRoom(room.Exits.NorthWest.RoomId));
+               rooms.Add(_cache.GetRoom($"{room.Exits.NorthWest.AreaId}{room.Exits.NorthWest.Coords.X}{room.Exits.NorthWest.Coords.Y}{room.Exits.NorthWest.Coords.Z}"));
             }
 
             if (room.Exits.North != null)
             {
-                rooms.Add(_cache.GetRoom(room.Exits.North.RoomId));
+                rooms.Add(_cache.GetRoom($"{room.Exits.North.AreaId}{room.Exits.North.Coords.X}{room.Exits.North.Coords.Y}{room.Exits.North.Coords.Z}"));
             }
 
             if (room.Exits.NorthEast != null)
             {
-                rooms.Add(_cache.GetRoom(room.Exits.NorthEast.RoomId));
+                rooms.Add(_cache.GetRoom($"{room.Exits.NorthEast.AreaId}{room.Exits.NorthEast.Coords.X}{room.Exits.NorthEast.Coords.Y}{room.Exits.NorthEast.Coords.Z}"));
             }
 
             if (room.Exits.East != null)
             {
-                rooms.Add(_cache.GetRoom(room.Exits.East.RoomId));
+                rooms.Add(_cache.GetRoom($"{room.Exits.East.AreaId}{room.Exits.East.Coords.X}{room.Exits.East.Coords.Y}{room.Exits.East.Coords.Z}"));
             }
 
             if (room.Exits.SouthEast != null)
             {
-                rooms.Add(_cache.GetRoom(room.Exits.SouthEast.RoomId));
+                rooms.Add(_cache.GetRoom($"{room.Exits.SouthEast.AreaId}{room.Exits.SouthEast.Coords.X}{room.Exits.SouthEast.Coords.Y}{room.Exits.SouthEast.Coords.Z}"));
             }
 
             if (room.Exits.South != null)
             {
-                rooms.Add(_cache.GetRoom(room.Exits.South.RoomId));
+                rooms.Add(_cache.GetRoom($"{room.Exits.South.AreaId}{room.Exits.South.Coords.X}{room.Exits.South.Coords.Y}{room.Exits.South.Coords.Z}"));
             }
 
             if (room.Exits.SouthWest != null)
             {
-                rooms.Add(_cache.GetRoom(room.Exits.SouthWest.RoomId));
+                rooms.Add(_cache.GetRoom($"{room.Exits.SouthWest.AreaId}{room.Exits.SouthWest.Coords.X}{room.Exits.SouthWest.Coords.Y}{room.Exits.SouthWest.Coords.Z}"));
             }
 
             if (room.Exits.West != null)
             {
-                rooms.Add(_cache.GetRoom(room.Exits.West.RoomId));
+                rooms.Add(_cache.GetRoom($"{room.Exits.West.AreaId}{room.Exits.West.Coords.X}{room.Exits.West.Coords.Y}{room.Exits.West.Coords.Z}"));
             }
 
             if (room.Exits.Up != null)
             {
-                rooms.Add(_cache.GetRoom(room.Exits.Up.RoomId));
+                rooms.Add(_cache.GetRoom($"{room.Exits.Up.AreaId}{room.Exits.Up.Coords.X}{room.Exits.Up.Coords.Y}{room.Exits.Up.Coords.Z}"));
             }
 
             if (room.Exits.Down != null)
             {
-                rooms.Add(_cache.GetRoom(room.Exits.Down.RoomId));
+                rooms.Add(_cache.GetRoom($"{room.Exits.Down.AreaId}{room.Exits.Down.Coords.X}{room.Exits.Down.Coords.Y}{room.Exits.Down.Coords.Z}"));
             }
 
             foreach (var adjacentRoom in rooms)

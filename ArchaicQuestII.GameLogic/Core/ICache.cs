@@ -19,14 +19,13 @@ namespace ArchaicQuestII.GameLogic.Core
         ConcurrentDictionary<string, Player> GetPlayerCache();
         Player PlayerAlreadyExists(Guid id);
 
-        bool AddRoom(int id, Room room);
+        bool AddRoom(string id, Room room);
 
-        Room GetRoom(int id);
         List<Room> GetAllRoomsToRepop();
         List<Room> GetAllRoomsInArea(int id);
         List<Room> GetAllRooms();
-        Room GetRoom(int id, Coordinates coords);
-        bool UpdateRoom(int id, Room room, Player player);
+        Room GetRoom(string id);
+        bool UpdateRoom(string id, Room room, Player player);
 
 
         bool AddSkill(int id, Skill.Model.Skill skill);
