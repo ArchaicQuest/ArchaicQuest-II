@@ -24,8 +24,9 @@ namespace ArchaicQuestII.GameLogic.Core
         private IDataBase _db;
         private IDice _dice;
         private IUpdateClientUI _client;
+        private ITime _time;
 
-        public GameLoop(IWriteToClient writeToClient, ICache cache, ICommands commands, ICombat combat, IDataBase database, IDice dice, IUpdateClientUI client)
+        public GameLoop(IWriteToClient writeToClient, ICache cache, ICommands commands, ICombat combat, IDataBase database, IDice dice, IUpdateClientUI client, ITime time)
         {
             _writeToClient = writeToClient;
             _cache = cache;
@@ -34,6 +35,7 @@ namespace ArchaicQuestII.GameLogic.Core
             _db = database;
             _dice = dice;
             _client = client;
+            _time = time;
         }
 
         public int GainAmount(int value, Player player)
@@ -171,6 +173,24 @@ namespace ArchaicQuestII.GameLogic.Core
                 catch (Exception ex)
                 {
 
+                }
+            }
+        }
+
+        public async Task UpdateWorldTime()
+        {
+            Console.WriteLine("started world time loop");
+            while (true)
+            {
+                try
+                {
+                    await Task.Delay(500);
+                    Console.WriteLine("time loop");
+                    _time.UpdateTime();
+  
+                }
+                catch (Exception ex)
+                {
                 }
             }
         }

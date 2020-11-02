@@ -26,7 +26,9 @@ namespace ArchaicQuestII.GameLogic.Hubs
         private readonly ICommands _commands;
         private readonly IUpdateClientUI _updateClientUi;
         private readonly IMobScripts _mobScripts;
-        public GameHub(IDataBase db, ICache cache, ILogger<GameHub> logger, IWriteToClient writeToClient, ICommands commands, IUpdateClientUI updateClientUi, IMobScripts mobScripts)
+        private readonly ITime _time
+            ;
+        public GameHub(IDataBase db, ICache cache, ILogger<GameHub> logger, IWriteToClient writeToClient, ICommands commands, IUpdateClientUI updateClientUi, IMobScripts mobScripts, ITime time)
         {
             _logger = logger;
             _db = db;
@@ -35,6 +37,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
             _commands = commands;
             _updateClientUi = updateClientUi;
             _mobScripts = mobScripts;
+            _time = time;
         }
 
  
@@ -253,7 +256,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
             _updateClientUi.UpdateScore(character);
             _updateClientUi.GetMap(character,_cache.GetMap(room.AreaId));
 
-            new RoomActions(_writeToClient).Look("", room, character);
+            new RoomActions(_writeToClient, _time).Look("", room, character);
 
             foreach (var mob in room.Mobs)
             {

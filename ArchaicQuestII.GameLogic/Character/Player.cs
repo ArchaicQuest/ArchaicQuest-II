@@ -17,5 +17,6 @@ namespace ArchaicQuestII.GameLogic.Character
         public string HairLength { get; set; }
         public string HairTexture { get; set; }
         public string FacialHair { get; set; }
+        public string ReplyTo { get; set; }
     }
 }

@@ -122,9 +122,23 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
           
         }
 
-        public void Tells(string text, Room room, Player player)
+        public void Tells(string name, string text, Player player)
         {
-            throw new NotImplementedException();
+                 var foundPlayer =  _cache.GetPlayerCache()
+                .FirstOrDefault(x => x.Value.Name.StartsWith(name, StringComparison.CurrentCultureIgnoreCase)).Value;
+
+                 if (foundPlayer == null)
+                 {
+                     _writer.WriteLine($"<p>They are not in this realm.</p>", player.ConnectionId);
+                     return;
+                 }
+
+                 _writer.WriteLine($"<p class='say'>{player.Name} tells you, {text}</p>", foundPlayer.ConnectionId);
+                 _updateClient.UpdateCommunication(foundPlayer, $"<p class='say'>{player.Name} tells you, {text}</p>", "tells");
+
+                 _writer.WriteLine($"<p class='say'>You tell {foundPlayer.Name}, {text}</p>", player.ConnectionId);
+                 _updateClient.UpdateCommunication(player, $"<p class='say'>You say to {foundPlayer.Name}, {text}</p>", "tells");
+
         }
 
         public void Whisper(string text, string target, Room room, Player player)

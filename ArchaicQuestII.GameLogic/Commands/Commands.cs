@@ -199,6 +199,9 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "yell":
                     _communication.Yell(obj, room, player);
                     break;
+                case "tell":
+                    _communication.Tells(obj, target, player);
+                    break;
                 case "wear":
                     _equipment.Wear(obj, room, player);
                     break;
@@ -328,6 +331,15 @@ namespace ArchaicQuestII.GameLogic.Commands
                 var say = string.Join(" ", commands);
 
                 say = say.Remove(0, 7);
+                return new Tuple<string, string>(say, string.Empty);
+            }
+
+
+            if (commands[0] == "tell")
+            {
+                var say = string.Join(" ", commands);
+
+                say = say.Remove(0, 5);
                 return new Tuple<string, string>(say, string.Empty);
             }
 

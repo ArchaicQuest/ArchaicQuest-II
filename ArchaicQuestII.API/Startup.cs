@@ -140,6 +140,7 @@ namespace ArchaicQuestII.API
             services.AddSingleton<IFormulas, Formulas>();
             services.AddSingleton<IUpdateClientUI, UpdateClientUI>();
             services.AddSingleton<IMobScripts, MobScripts>();
+            services.AddSingleton<ITime, Time>();
             services.AddSingleton<IWriteToClient, WriteToClient>((factory) => new WriteToClient(_hubContext, TelnetHub.Instance));
 
         }
@@ -355,12 +356,14 @@ namespace ArchaicQuestII.API
         public static void StartLoops(this IApplicationBuilder app)
         {
             var loop = app.ApplicationServices.GetRequiredService<IGameLoop>();
+           
             Task.Run(TelnetHub.Instance.ProcessConnections);
             Task.Run(loop.UpdateTime);
             Task.Run(loop.UpdateCombat);
             Task.Run(loop.UpdatePlayers);
             Task.Run(loop.UpdateRoomEmote).ConfigureAwait(false);
             Task.Run(loop.UpdateMobEmote).ConfigureAwait(false);
+            Task.Run(loop.UpdateWorldTime).ConfigureAwait(false);
         }
     }
 
