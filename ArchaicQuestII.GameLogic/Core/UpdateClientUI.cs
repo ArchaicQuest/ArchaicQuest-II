@@ -186,7 +186,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public async void UpdateInventory(Player player)
         {
-            if (string.IsNullOrEmpty(player.ConnectionId) || !player.IsTelnet)
+            if (string.IsNullOrEmpty(player.ConnectionId) && !player.IsTelnet)
             {
                 return;
             }
