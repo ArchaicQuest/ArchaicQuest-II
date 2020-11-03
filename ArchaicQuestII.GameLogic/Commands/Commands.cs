@@ -202,6 +202,9 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "tell":
                     _communication.Tells(obj, target, player);
                     break;
+                case "reply":
+                    _communication.Reply(obj, player);
+                    break;
                 case "wear":
                     _equipment.Wear(obj, room, player);
                     break;
@@ -334,13 +337,20 @@ namespace ArchaicQuestII.GameLogic.Commands
                 return new Tuple<string, string>(say, string.Empty);
             }
 
+            if (commands[0] == "reply")
+            {
+                var say = string.Join(" ", commands);
+
+                say = say.Remove(0, 6);
+                return new Tuple<string, string>(say, string.Empty);
+            }
 
             if (commands[0] == "tell")
             {
                 var say = string.Join(" ", commands);
 
                 say = say.Remove(0, 5);
-                return new Tuple<string, string>(say, string.Empty);
+                return new Tuple<string, string>(commands[1], say.Remove(0, commands[1].Length+1));
             }
 
             if (cmdCount == 1)

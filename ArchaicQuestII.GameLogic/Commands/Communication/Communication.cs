@@ -133,12 +133,32 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
                      return;
                  }
 
-                 _writer.WriteLine($"<p class='say'>{player.Name} tells you, {text}</p>", foundPlayer.ConnectionId);
-                 _updateClient.UpdateCommunication(foundPlayer, $"<p class='say'>{player.Name} tells you, {text}</p>", "tells");
+                 if (foundPlayer == player)
+                 {
+                     _writer.WriteLine($"<p>You tell yourself \"{text}\"</p>", player.ConnectionId);
+                     return;
+                 }
 
-                 _writer.WriteLine($"<p class='say'>You tell {foundPlayer.Name}, {text}</p>", player.ConnectionId);
-                 _updateClient.UpdateCommunication(player, $"<p class='say'>You say to {foundPlayer.Name}, {text}</p>", "tells");
+                 player.ReplyTo = foundPlayer.Name;
+                 foundPlayer.ReplyTo = player.Name;
 
+                 _writer.WriteLine($"<p class='say'>You tell {foundPlayer.Name} \"{text}\"</p>", player.ConnectionId);
+                 _updateClient.UpdateCommunication(player, $"<p class='say'>You tell {foundPlayer.Name} \"{text}\"</p>", "all");
+
+                  _writer.WriteLine($"<p class='say'>{player.Name} tells you \"{text}\"</p>", foundPlayer.ConnectionId);
+                 _updateClient.UpdateCommunication(foundPlayer, $"<p class='say'>{player.Name} tells you \"{text}\"</p>", "all");
+
+        }
+
+        public void Reply(string text, Player player)
+        {
+            if (string.IsNullOrEmpty(player.ReplyTo))
+            {
+                _writer.WriteLine("<p>You have no one to reply too.</p>", player.ConnectionId);
+                return;
+            }
+
+          Tells(player.ReplyTo, text, player);
         }
 
         public void Whisper(string text, string target, Room room, Player player)

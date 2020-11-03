@@ -90,6 +90,7 @@ namespace ArchaicQuestII.GameLogic.Core
                         {
                             room.Items.Add(item);
                         }
+                          itemExist = room.Items.FirstOrDefault(x => x.Id.Equals(item.Id));
 
                         if (itemExist.Container.Items.Count < item.Container.Items.Count)
                         {
