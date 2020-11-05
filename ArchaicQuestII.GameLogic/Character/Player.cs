@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace ArchaicQuestII.GameLogic.Character
 {
@@ -18,5 +19,9 @@ namespace ArchaicQuestII.GameLogic.Character
         public string HairTexture { get; set; }
         public string FacialHair { get; set; }
         public string ReplyTo { get; set; }
+        public List<Player> Followers { get; set; } = new List<Player>();
+        public string Following { get; set; }
+        public bool grouped { get; set; }
+
     }
 }

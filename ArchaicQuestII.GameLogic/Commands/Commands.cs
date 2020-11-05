@@ -243,6 +243,12 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "soc":
                     _socials.DisplaySocials(player);
                     break;
+                case "follow":
+                    _movement.Follow(player, room, obj);
+                    break;
+                case "group":
+                    _movement.Group(player, room, obj);
+                    break;
                 default:
                         _commandHandler.HandleCommand(key,obj,target, player, room);
                     break;

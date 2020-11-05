@@ -150,8 +150,7 @@ end
         public bool Roam { get; set; }
         public MobEvents Events { get; set; } = new MobEvents();
         public Dictionary<string, int> EventState { get; set; } = new Dictionary<string, int>();
-
-
+     
 
     }
 }

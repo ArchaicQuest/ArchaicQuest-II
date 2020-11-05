@@ -18,6 +18,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
         public void Sleep(Player player, Room room, string target);
         public void Wake(Player player, Room room,  string target);
         public void Rest(Player player, Room room, string target);
+        public void Follow(Player player, Room room, string target);
+        public void Group(Player player, Room room, string target);
         public void SetCharacterStatus(Player player, string longName, CharacterStatus.Status status);
     }
 }
