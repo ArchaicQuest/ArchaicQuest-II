@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Item;
@@ -203,6 +204,21 @@ namespace ArchaicQuestII.GameLogic.Core
         {
             return player.Inventory.FirstOrDefault(x => x.Name.StartsWith(name, StringComparison.CurrentCultureIgnoreCase)) !=
                    null;
+        }
+
+        public void AddQuest(Player player, string id, string title, string description, QuestTypes type, string area, List<string> rewards)
+        {
+           player.QuestLog.Add(new Quest()
+           {
+               Id = id,
+               Area = area,
+               Title = title,
+               Description = description,
+               Rewards = rewards,
+               Type = type
+           });
+
+           _writeToClient.WriteLine($"<p class='gain'>New Quest: {title}!</p>", player.ConnectionId);
         }
     }
 }

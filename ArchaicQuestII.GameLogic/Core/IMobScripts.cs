@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Core
@@ -31,5 +32,6 @@ namespace ArchaicQuestII.GameLogic.Core
        public bool IsObjectHere(string name, Room room);
        public bool IsImm(Player player);
        public bool HasObject(Player player, string name);
-    }
+       public void AddQuest(Player player, string id, string title, string description, QuestTypes type, string area, List<string> rewards);
+   }
 }

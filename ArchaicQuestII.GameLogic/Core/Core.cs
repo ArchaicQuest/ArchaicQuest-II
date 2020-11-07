@@ -56,8 +56,7 @@ namespace ArchaicQuestII.GameLogic.Core
                     sb.Append(
                         $"<li>{pc.Name} - {rm.Title}");
                 }
-              
-               
+                
             }
 
             sb.Append("</ul>");
