@@ -69,6 +69,12 @@ namespace ArchaicQuestII.GameLogic.Hubs
         {
            
             var player = _cache.GetPlayer(connectionId);
+
+            if (player == null)
+            {
+                _writeToClient.WriteLine("<p>Refresh the page to reconnect!</p>");
+                return;
+            }
             player.Buffer.Push(message);
           
         }

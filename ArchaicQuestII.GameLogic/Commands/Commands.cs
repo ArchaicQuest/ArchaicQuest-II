@@ -37,6 +37,7 @@ namespace ArchaicQuestII.GameLogic.Commands
         private readonly ICache _cache;
         private readonly ISocials _socials;
         private readonly ICommandHandler _commandHandler;
+        private readonly ICore _core;
 
         public Commands(
             IMovement movement,
@@ -52,7 +53,8 @@ namespace ArchaicQuestII.GameLogic.Commands
             ICombat combat,
             ICache cache,
             ISocials socials,
-            ICommandHandler commandHandler
+            ICommandHandler commandHandler,
+            ICore core
             )
         {
             _movement = movement;
@@ -69,6 +71,7 @@ namespace ArchaicQuestII.GameLogic.Commands
             _cache = cache;
             _socials = socials;
             _commandHandler = commandHandler;
+            _core = core;
         }
  
         public void CommandList(string key, string obj, string target, Player player, Room room)
@@ -248,6 +251,14 @@ namespace ArchaicQuestII.GameLogic.Commands
                     break;
                 case "group":
                     _movement.Group(player, room, obj);
+                    break;
+                case "who":
+                case "wh":
+                    _core.Who(player);
+                    break;
+                case "where":
+                case "whe":
+                    _core.Where(player, room);
                     break;
                 default:
                         _commandHandler.HandleCommand(key,obj,target, player, room);
