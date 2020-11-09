@@ -32,6 +32,6 @@ namespace ArchaicQuestII.GameLogic.Core
        public bool IsObjectHere(string name, Room room);
        public bool IsImm(Player player);
        public bool HasObject(Player player, string name);
-       public void AddQuest(Player player, string id, string title, string description, QuestTypes type, string area, List<string> rewards);
+       public void AddQuest(Player player, int id);
    }
 }

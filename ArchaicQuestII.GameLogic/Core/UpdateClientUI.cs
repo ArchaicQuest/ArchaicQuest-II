@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Equipment;
+using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Hubs;
 using ArchaicQuestII.GameLogic.World.Room;
@@ -177,6 +178,22 @@ namespace ArchaicQuestII.GameLogic.Core
             {
      
                 await _hubContext.Clients.Client(player.ConnectionId).SendAsync("MapUpdate", map, player.RoomId);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        public async void UpdateQuest(Player player, Quest quest)
+        {
+
+            try
+            {
+
+                var quests = JsonConvert.SerializeObject(player.QuestLog);
+
+                await _hubContext.Clients.Client(player.ConnectionId).SendAsync("QuestUpdate", quests);
             }
             catch (Exception ex)
             {

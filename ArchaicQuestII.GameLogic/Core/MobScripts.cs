@@ -53,13 +53,15 @@ namespace ArchaicQuestII.GameLogic.Core
         private readonly ICache _cache;
         private readonly IDice _dice;
         private readonly IWriteToClient _writeToClient;
+        private readonly IUpdateClientUI _updateClientUi;
         public MobScripts(ICache cache, ICombat
-            combat, IWriteToClient writeToClient, IDice dice)
+            combat, IWriteToClient writeToClient, IDice dice, IUpdateClientUI updateClientUi)
         {
             _cache = cache;
             _combat = combat;
             _writeToClient = writeToClient;
             _dice = dice;
+            _updateClientUi = updateClientUi;
 
         }
         public bool IsInRoom(Room room, Player player)
@@ -206,19 +208,28 @@ namespace ArchaicQuestII.GameLogic.Core
                    null;
         }
 
-        public void AddQuest(Player player, string id, string title, string description, QuestTypes type, string area, List<string> rewards)
+        public void AddQuest(Player player, int questId)
         {
-           player.QuestLog.Add(new Quest()
-           {
-               Id = id,
-               Area = area,
-               Title = title,
-               Description = description,
-               Rewards = rewards,
-               Type = type
-           });
 
-           _writeToClient.WriteLine($"<p class='gain'>New Quest: {title}!</p>", player.ConnectionId);
+          var quest =  _cache.GetQuest(questId);
+
+          if (player.QuestLog.FirstOrDefault(x => x.Id == quest.Id) == null)
+          {
+
+              player.QuestLog.Add(new Quest()
+              {
+                  Id = quest.Id,
+                  Area = quest.Area,
+                  Title = quest.Title,
+                  Description = quest.Description,
+                  Type = quest.Type,
+                  ExpGain = quest.ExpGain,
+                  GoldGain = quest.GoldGain
+              });
+          }
+
+          _writeToClient.WriteLine($"<p class='gain'>New Quest: {quest.Title}!</p>", player.ConnectionId);
+            _updateClientUi.UpdateQuest(player, quest);
         }
     }
 }

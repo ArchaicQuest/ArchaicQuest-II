@@ -110,6 +110,15 @@ namespace ArchaicQuestII.Controllers
             return area;
         }
 
+        [HttpGet]
+        [Route("api/World/Area/List")]
+        public List<string> GetListOfAreas()
+        {
+            var areaCollection = _db.GetCollection<Area>(DataBase.Collections.Area).FindAll();
+
+            return areaCollection.Select(area => area.Title).ToList();
+        }
+
 
 
         private bool CheckIfValidFile(IFormFile file)

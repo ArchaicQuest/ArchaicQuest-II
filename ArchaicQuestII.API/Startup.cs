@@ -30,6 +30,7 @@ using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Emote;
 using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.Character.Gain;
+using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Commands.Communication;
 using ArchaicQuestII.GameLogic.Commands.Inventory;
@@ -46,6 +47,7 @@ using ArchaicQuestII.GameLogic.Spell.Interface;
 using ArchaicQuestII.GameLogic.World.Area;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Config = ArchaicQuestII.GameLogic.Core.Config;
 using Damage = ArchaicQuestII.GameLogic.Core.Damage;
 using Object = ArchaicQuestII.GameLogic.Commands.Objects.Object;
 
@@ -319,6 +321,13 @@ namespace ArchaicQuestII.API
             foreach (var skill in skills)
             {
                 _cache.AddSkill(skill.Id, skill);
+            }
+
+            var quests = _db.GetList<Quest>(DataBase.Collections.Quests);
+
+            foreach (var quest in quests)
+            {
+                _cache.AddQuest(quest.Id, quest);
             }
 
             var areas = _db.GetList<Area>(DataBase.Collections.Area);
