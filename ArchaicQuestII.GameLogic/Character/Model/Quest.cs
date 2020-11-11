@@ -15,12 +15,14 @@ namespace ArchaicQuestII.GameLogic.Character.Model
     public class KillQuest
     {
         public string Name { get; set; }
+        public int? Current { get; set; }
         public int Count { get; set; }
     }
 
     public class FetchQuest
     {
         public string Name { get; set; }
+        public int? Current { get; set; }
         public int Count { get; set; }
     }
 
@@ -37,6 +39,7 @@ namespace ArchaicQuestII.GameLogic.Character.Model
         public int GoldGain { get; set; }
         public List<Item.Item> ItemGain { get; set; }
         public bool Completed { get; set; }
+        public bool RewardClaimed { get; set; }
         public DateTime DateUpdated { get; set; } = DateTime.Now;
         public DateTime DateCreated { get; set; } = DateTime.Now;
         public int TimesCompleted { get; set; }

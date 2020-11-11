@@ -1,0 +1,45 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Model;
+
+namespace ArchaicQuestII.GameLogic.Core
+{
+    public class QuestLog: IQuestLog
+    {
+        private readonly IWriteToClient _writeToClient;
+
+        public QuestLog(IWriteToClient writeToClient)
+        {
+            writeToClient = _writeToClient;
+        }
+        public void IsQuestMob(Player player, string mobName)
+        {
+            foreach (var quest in player.QuestLog)
+            {
+                if (quest.Type != QuestTypes.Kill)
+                {
+                    continue;
+                }
+
+                var questCompleted = false;
+
+                foreach (var mob in quest.MobsToKill)
+                {
+                    if (!mob.Name.Equals(mobName)) { continue; }
+
+                    mob.Current = mob.Current++;
+                    questCompleted = mob.Count == mob.Current;
+                }
+
+                if (questCompleted)
+                {
+                    quest.Completed = true;
+
+                    _writeToClient.WriteLine($"<h3 class='gain'>{quest.Title} Completed!</h3><p>Return to the quest giver for your reward.</p>", player.ConnectionId);
+                }
+            }
+        }
+    }
+}

@@ -144,6 +144,7 @@ namespace ArchaicQuestII.API
             services.AddSingleton<IMobScripts, MobScripts>();
             services.AddSingleton<ITime, Time>();
             services.AddSingleton<ICore, GameLogic.Core.Core>();
+            services.AddSingleton<IQuestLog, QuestLog>();
             services.AddSingleton<IWriteToClient, WriteToClient>((factory) => new WriteToClient(_hubContext, TelnetHub.Instance));
 
         }

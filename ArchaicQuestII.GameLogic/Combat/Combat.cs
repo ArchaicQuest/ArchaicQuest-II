@@ -24,7 +24,8 @@ namespace ArchaicQuestII.GameLogic.Combat
         private readonly IDamage _damage;
         private readonly IFormulas _formulas;
         private readonly ICache _cache;
-        public Combat(IWriteToClient writer, IUpdateClientUI clientUi, IDamage damage, IFormulas formulas, IGain gain, ICache cache)
+        private readonly IQuestLog _quest;
+        public Combat(IWriteToClient writer, IUpdateClientUI clientUi, IDamage damage, IFormulas formulas, IGain gain, ICache cache, IQuestLog quest)
         {
             _writer = writer;
             _clientUi = clientUi;
@@ -32,6 +33,7 @@ namespace ArchaicQuestII.GameLogic.Combat
             _formulas = formulas;
             _gain = gain;
             _cache = cache;
+            _quest = quest;
         }
 
         public Player FindTarget(Player attacker, string target, Room room, bool isMurder)
@@ -219,6 +221,8 @@ namespace ArchaicQuestII.GameLogic.Combat
                     _writer.WriteLine($"<p>Your blood freezes as you hear someone's death cry.</p>", pc.ConnectionId);
                 }
             }
+
+        
         }
 
         public void Fight(Player player, string victim, Room room, bool isMurder)
@@ -363,8 +367,9 @@ namespace ArchaicQuestII.GameLogic.Combat
                     target.Target = string.Empty;
 
                      DeathCry(room, target);
+                     _quest.IsQuestMob(player, target.Name);
 
-                    _gain.GainExperiencePoints(player, target);
+                        _gain.GainExperiencePoints(player, target);
 
                     _writer.WriteLine("<p class='dead'>You are dead. R.I.P.</p>", target.ConnectionId);
 

@@ -62,9 +62,9 @@ namespace ArchaicQuestII.API.Controllers.Core
 
         [HttpGet]
         [Route("api/Quest")]
-        public Quest Get()
+        public Quest Get(int id)
         {
-            return _db.GetById<Quest>(1, DataBase.Collections.Quests);
+            return _db.GetById<Quest>(id, DataBase.Collections.Quests);
         }
 
         [HttpGet]
