@@ -38,7 +38,8 @@ namespace ArchaicQuestII.API.Controllers.Core
                 Description = Quest.Description,
                 ExpGain = Quest.ExpGain,
                 GoldGain = Quest.GoldGain,
-                ItemGain = Quest.ItemGain
+                ItemGain = Quest.ItemGain,
+                MobsToKill = Quest.MobsToKill
             };
 
             if (Quest.Id != -1)
