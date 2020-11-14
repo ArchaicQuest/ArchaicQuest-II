@@ -24,6 +24,8 @@ namespace ArchaicQuestII.GameLogic.Combat
 
         public void Fight(Player player, string victim, Room room, bool isMurder);
 
-       // public void AutoAttack(Player player, Player target, Room room, bool isMurder);
+        public void Consider(Player player, string target, Room room);
+
+        // public void AutoAttack(Player player, Player target, Room room, bool isMurder);
     }
 }

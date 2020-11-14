@@ -9,10 +9,12 @@ namespace ArchaicQuestII.GameLogic.Core
     public class QuestLog: IQuestLog
     {
         private readonly IWriteToClient _writeToClient;
+        private readonly IUpdateClientUI _updateClientUi;
 
-        public QuestLog(IWriteToClient writeToClient)
+        public QuestLog(IWriteToClient writeToClient, IUpdateClientUI updateClientUi)
         {
-            writeToClient = _writeToClient;
+            _writeToClient = writeToClient;
+            _updateClientUi = updateClientUi;
         }
         public void IsQuestMob(Player player, string mobName)
         {
@@ -29,9 +31,10 @@ namespace ArchaicQuestII.GameLogic.Core
                 {
                     if (!mob.Name.Equals(mobName)) { continue; }
 
-                    mob.Current = mob.Current++;
+                    mob.Current = mob.Current + 1;
                     questCompleted = mob.Count == mob.Current;
                 }
+               
 
                 if (questCompleted)
                 {
@@ -40,6 +43,7 @@ namespace ArchaicQuestII.GameLogic.Core
                     _writeToClient.WriteLine($"<h3 class='gain'>{quest.Title} Completed!</h3><p>Return to the quest giver for your reward.</p>", player.ConnectionId);
                 }
             }
+            _updateClientUi.UpdateQuest(player);
         }
     }
 }

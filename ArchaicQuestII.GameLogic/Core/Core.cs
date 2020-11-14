@@ -63,5 +63,32 @@ namespace ArchaicQuestII.GameLogic.Core
 
             _writeToClient.WriteLine(sb.ToString(), player.ConnectionId);
         }
+
+        public void QuestLog(Player player)
+        {
+           var sb = new StringBuilder();
+
+           foreach (var q in player.QuestLog)
+           {
+               sb.Append($"<div class='quest-block'><h3>{q.Title}</h3><p>{q.Area}</p><p>Kill:</p><ol>");
+
+               foreach (var mob in q.MobsToKill)
+               {
+                   sb.Append($"<li>{mob.Name} {mob.Current}/{mob.Count}</li>");
+               }
+
+               sb.Append($"</ol><p>{q.Description}</p><p>Reward:</p><ul><li>{q.ExpGain} Experience points</li><li>{q.GoldGain} Gold</li>");
+
+               foreach (var i in q.ItemGain)
+               {
+                   sb.Append($"<li>{i.Name}</li>");
+               }
+
+               sb.Append("</ul></div>");
+           }
+
+           _writeToClient.WriteLine(sb.ToString(), player.ConnectionId);
+                         
+        }
     }
 }

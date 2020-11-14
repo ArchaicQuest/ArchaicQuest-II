@@ -224,12 +224,15 @@ namespace ArchaicQuestII.GameLogic.Core
                   Description = quest.Description,
                   Type = quest.Type,
                   ExpGain = quest.ExpGain,
-                  GoldGain = quest.GoldGain
+                  GoldGain = quest.GoldGain,
+                  MobsToKill = quest.MobsToKill,
+                  ItemGain = quest.ItemGain,
+                  
               });
           }
 
           _writeToClient.WriteLine($"<p class='gain'>New Quest: {quest.Title}!</p>", player.ConnectionId);
-            _updateClientUi.UpdateQuest(player, quest);
+            _updateClientUi.UpdateQuest(player);
         }
     }
 }

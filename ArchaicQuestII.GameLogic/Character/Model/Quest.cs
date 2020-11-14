@@ -15,14 +15,14 @@ namespace ArchaicQuestII.GameLogic.Character.Model
     public class KillQuest
     {
         public string Name { get; set; }
-        public int? Current { get; set; }
+        public int? Current { get; set; } = 0;
         public int Count { get; set; }
     }
 
     public class FetchQuest
     {
         public string Name { get; set; }
-        public int? Current { get; set; }
+        public int? Current { get; set; } = 0;
         public int Count { get; set; }
     }
 

@@ -38,6 +38,6 @@ namespace ArchaicQuestII.GameLogic.Core
        void UpdateCommunication(Player player, string message, string type);
 
        void GetMap(Player player, string rooms);
-       void UpdateQuest(Player player, Quest quest);
+       void UpdateQuest(Player player);
    }
 }

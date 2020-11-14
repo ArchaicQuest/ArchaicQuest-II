@@ -260,6 +260,14 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "whe":
                     _core.Where(player, room);
                     break;
+                case "con":
+                case "consider":
+                    _combat.Consider(player,obj, room);
+                    break;
+                case "ql":
+                case "questlog":
+                    _core.QuestLog(player);
+                    break;
                 default:
                         _commandHandler.HandleCommand(key,obj,target, player, room);
                     break;

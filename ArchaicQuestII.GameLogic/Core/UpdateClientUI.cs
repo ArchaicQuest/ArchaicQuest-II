@@ -185,7 +185,7 @@ namespace ArchaicQuestII.GameLogic.Core
             }
         }
 
-        public async void UpdateQuest(Player player, Quest quest)
+        public async void UpdateQuest(Player player)
         {
 
             try

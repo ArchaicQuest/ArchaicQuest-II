@@ -367,11 +367,14 @@ namespace ArchaicQuestII.GameLogic.Combat
                     target.Target = string.Empty;
 
                      DeathCry(room, target);
-                     _quest.IsQuestMob(player, target.Name);
 
-                        _gain.GainExperiencePoints(player, target);
+                     _gain.GainExperiencePoints(player, target);
 
-                    _writer.WriteLine("<p class='dead'>You are dead. R.I.P.</p>", target.ConnectionId);
+                        _quest.IsQuestMob(player, target.Name);
+
+
+
+                        _writer.WriteLine("<p class='dead'>You are dead. R.I.P.</p>", target.ConnectionId);
 
                     var targetName =  target.Name.ToLower(CultureInfo.CurrentCulture);
                     var corpse = new Item.Item()
@@ -472,6 +475,56 @@ namespace ArchaicQuestII.GameLogic.Combat
                 throw;
             }
 
+        }
+
+        public void Consider(Player player, string target, Room room)
+        {
+            var victim =
+                room.Mobs.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ??
+                room.Players.FirstOrDefault(x => x.Name.StartsWith(target, StringComparison.CurrentCultureIgnoreCase));
+
+            if (victim == null)
+            {
+                _writer.WriteLine("Consider killing who?", player.ConnectionId);
+                return;
+            }
+
+            if (victim == player)
+            {
+                _writer.WriteLine("Easy! Very easy indeed!", player.ConnectionId);
+                return;
+            }
+
+            if (!victim.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
+            {
+                _writer.WriteLine("You would need a lot of luck!", player.ConnectionId);
+                return;
+            }
+
+            var diff = victim.Level - player.Level;
+
+            if (diff <= -10)
+                 _writer.WriteLine("Now where did that chicken go?", player.ConnectionId);
+            else if (diff <= -5)
+                 _writer.WriteLine( "You could do it with a needle!", player.ConnectionId);
+            else if (diff <= -2)
+                 _writer.WriteLine("Easy.", player.ConnectionId);
+            else if (diff <= -1)
+                 _writer.WriteLine( "Fairly easy.", player.ConnectionId);
+            else if (diff == 0)
+                 _writer.WriteLine( "The perfect match!", player.ConnectionId);
+            else if (diff <= 1)
+                 _writer.WriteLine( "You would need some luck!", player.ConnectionId);
+            else if (diff <= 2)
+                 _writer.WriteLine( "You would need a lot of luck!", player.ConnectionId);
+            else if (diff <= 3)
+                 _writer.WriteLine( "You would need a lot of luck and great equipment!", player.ConnectionId);
+            else if (diff <= 5)
+                 _writer.WriteLine( "Do you feel lucky, punk?", player.ConnectionId);
+            else if (diff <= 10)
+                 _writer.WriteLine( "Are you mad!?", player.ConnectionId);
+            else if (diff <= 100)
+                 _writer.WriteLine( "You ARE mad!", player.ConnectionId);
         }
     }
 }

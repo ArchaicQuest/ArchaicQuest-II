@@ -69,15 +69,38 @@ namespace ArchaicQuestII.GameLogic.Core
                         // need to check if mob exists before adding
                         var mobExist = room.Mobs.FirstOrDefault(x => x.Id.Equals(mob.Id));
 
-                        if (mobExist == null)
+                        if (originalRoom.Mobs.Count != room.Mobs.Count && room.Players.Count == 0)
                         {
-                            room.Mobs.Add(mob);
+
+                            room.Mobs = originalRoom.Mobs;
                         }
                         else
                         {
                             mobExist.Attributes.Attribute[EffectLocation.Hitpoints] += _dice.Roll(1, 2, 5) * mobExist.Level;
                             mobExist.Attributes.Attribute[EffectLocation.Mana] += _dice.Roll(1, 2, 5) * mobExist.Level;
                             mobExist.Attributes.Attribute[EffectLocation.Moves] += _dice.Roll(1, 2, 5) * mobExist.Level;
+
+                            if (mobExist.Attributes.Attribute[EffectLocation.Hitpoints] >
+                                mobExist.MaxAttributes.Attribute[EffectLocation.Hitpoints])
+                            {
+                                mobExist.Attributes.Attribute[EffectLocation.Hitpoints] =
+                                    mobExist.MaxAttributes.Attribute[EffectLocation.Hitpoints];
+                            }
+
+                            if (mobExist.Attributes.Attribute[EffectLocation.Mana] >
+                                mobExist.MaxAttributes.Attribute[EffectLocation.Mana])
+                            {
+                                mobExist.Attributes.Attribute[EffectLocation.Mana] =
+                                    mobExist.MaxAttributes.Attribute[EffectLocation.Mana];
+                            }
+
+                            if (mobExist.Attributes.Attribute[EffectLocation.Moves] >
+                                mobExist.MaxAttributes.Attribute[EffectLocation.Moves])
+                            {
+                                mobExist.Attributes.Attribute[EffectLocation.Moves] =
+                                    mobExist.MaxAttributes.Attribute[EffectLocation.Moves];
+                            }
+
                         }
                     }
 
