@@ -104,6 +104,8 @@ namespace ArchaicQuestII.GameLogic.Core
                         }
                     }
 
+                    
+
                     foreach (var item in originalRoom.Items)
                     {
                         // need to check if item exists before adding

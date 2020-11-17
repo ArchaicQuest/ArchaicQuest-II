@@ -89,6 +89,13 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
             //flee bug 
             character.Status = CharacterStatus.Status.Standing;
 
+            if (getExitToNextRoom.Closed)
+            {
+                _writeToClient.WriteLine("<p>The door is close.</p>", character.ConnectionId);
+                //TODO: log bug that the new room could not be found
+                return;
+            }
+
             OnPlayerLeaveEvent(room, character);
             NotifyRoomLeft(room, character, direction);
 

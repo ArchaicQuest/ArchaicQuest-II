@@ -268,6 +268,12 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "questlog":
                     _core.QuestLog(player);
                     break;
+                case "unlock":
+                    _object.Unlock(obj, room, player);
+                    break;
+                case "lock":
+                    _object.Lock(obj, room, player);
+                    break;
                 default:
                         _commandHandler.HandleCommand(key,obj,target, player, room);
                     break;

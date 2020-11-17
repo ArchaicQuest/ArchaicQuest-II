@@ -86,7 +86,7 @@ namespace ArchaicQuestII.Controllers
 
             if (item.ItemType == Item.ItemTypes.Key)
             {
-                newItem.KeyId = new Guid();
+                newItem.KeyId = Guid.NewGuid();
             }
 
 

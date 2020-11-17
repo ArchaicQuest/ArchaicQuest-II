@@ -78,6 +78,72 @@ namespace ArchaicQuestII.GameLogic.Core
             return room.Items.FirstOrDefault(x => x.Name.StartsWith(target, StringComparison.CurrentCultureIgnoreCase));
         }
 
+        public static string DisplayDoor(Exit exit)
+        {
+            var exitName = "";
+            if (exit.Door && exit.Closed)
+            {
+                exitName = $"[{exit.Name}]";
+            }
+            else
+            {
+                exitName = exit.Name;
+            }
+            return exitName;
+        }
+
+        public static Exit IsExit(string exit, Room room)
+        {
+            if (room.Exits.North != null && room.Exits.North.Name.StartsWith(exit, StringComparison.CurrentCultureIgnoreCase))
+            {
+                return room.Exits.North;
+            }
+
+            if (room.Exits.East != null && room.Exits.East.Name.StartsWith(exit, StringComparison.CurrentCultureIgnoreCase))
+            {
+                return room.Exits.East;
+            }
+
+            if (room.Exits.South != null && room.Exits.South.Name.StartsWith(exit, StringComparison.CurrentCultureIgnoreCase))
+            {
+                return room.Exits.South;
+            }
+
+            if (room.Exits.West != null && room.Exits.West.Name.StartsWith(exit, StringComparison.CurrentCultureIgnoreCase))
+            {
+                return room.Exits.West;
+            }
+
+            if (room.Exits.NorthWest != null && room.Exits.NorthWest.Name.StartsWith(exit, StringComparison.CurrentCultureIgnoreCase))
+            {
+                return room.Exits.NorthWest;
+            }
+
+            if (room.Exits.NorthEast != null && room.Exits.NorthEast.Name.StartsWith(exit, StringComparison.CurrentCultureIgnoreCase))
+            {
+                return room.Exits.NorthEast;
+            }
+
+            if (room.Exits.SouthEast != null && room.Exits.SouthEast.Name.StartsWith(exit, StringComparison.CurrentCultureIgnoreCase))
+            {
+                return room.Exits.SouthEast;
+            }
+            if (room.Exits.SouthWest != null && room.Exits.SouthWest.Name.StartsWith(exit, StringComparison.CurrentCultureIgnoreCase))
+            {
+                return room.Exits.SouthWest;
+            }
+            if (room.Exits.Down != null && room.Exits.Down.Name.StartsWith(exit, StringComparison.CurrentCultureIgnoreCase))
+            {
+                return room.Exits.Down;
+            }
+            if (room.Exits.Up != null && room.Exits.Up.Name.StartsWith(exit, StringComparison.CurrentCultureIgnoreCase))
+            {
+                return room.Exits.Up;
+            }
+
+            return null;
+        }
+
         public static List<string> GetListOfExits(ExitDirections exits)
         {
             var exitList = new List<string>();
