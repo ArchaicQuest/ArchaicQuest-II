@@ -10,6 +10,7 @@ using ArchaicQuestII.GameLogic.World.Area;
 using ArchaicQuestII.GameLogic.World.Room;
 using ArchaicQuestII.GameLogic.Account;
 using System.Globalization;
+using ArchaicQuestII.API.Helpers;
 using ArchaicQuestII.GameLogic.Core;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -41,8 +42,8 @@ namespace ArchaicQuestII.Controllers.Dashboard
         public string Name { get; set; }
         public int Value { get; set; }
     }
- 
 
+    [Authorize]
     public class DashboardController : Controller
     {
         private IDataBase _db { get; }

@@ -3,10 +3,12 @@ using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character.Class;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using ArchaicQuestII.API.Helpers;
 using ArchaicQuestII.GameLogic.Item;
 
 namespace ArchaicQuestII.API.Character
 {
+    [Authorize]
     public class ClassController : Controller
     {
 

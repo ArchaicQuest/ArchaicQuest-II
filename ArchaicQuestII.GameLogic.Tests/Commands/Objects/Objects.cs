@@ -7,6 +7,7 @@ using ArchaicQuestII.GameLogic.Commands.Objects;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.World.Room;
+using Microsoft.VisualStudio.TestPlatform.Common.DataCollection;
 using Moq;
 using Xunit;
 
@@ -240,5 +241,111 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
 
             _IWriteToClient.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("They aren't here.")), "1"), Times.Once());
         }
+
+
+        [Fact]
+        public void Should_open_closed_door()
+        {
+            var exit = new Exit();
+            exit.Name = "North";
+           exit.Closed = true;
+            var room = new Room();
+            room.Exits.North = exit;
+
+            var player = new Player();
+            player.ConnectionId = "1";
+            player.Name = "Gary";
+            player.Inventory = new ItemList();
+             
+
+            var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object, _IMobScripts.Object);
+
+            objects.Open("north", room, player);
+
+            _IWriteToClient.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("You open the door")), "1"), Times.Once());
+        }
+
+        //[Fact]
+        //public void Should_close_open_door()
+        //{
+        //    var exit = new Exit();
+        //    exit.Name = "North";
+        //    exit.Closed = false;
+        //    var room = new Room();
+        //    room.Exits.North = exit;
+
+        //    var player = new Player();
+        //    player.ConnectionId = "1";
+        //    player.Name = "Gary";
+        //    player.Inventory = new ItemList();
+
+
+        //    var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object, _IMobScripts.Object);
+
+        //    objects.Close("north", room, player);
+
+        //    _IWriteToClient.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("You close the door")), "1"), Times.Once());
+        //}
+
+        [Fact]
+        public void Should_open_closed_Container()
+        {
+            var item = new GameLogic.Item.Item
+            {
+                Name = "Chest",
+                Description = new Description(),
+                
+                ItemType = GameLogic.Item.Item.ItemTypes.Container,
+                Container = new Container(){CanOpen = true, IsOpen = false, Items = new ItemList()},
+                
+            };
+
+            var room = new Room();
+            room.Items.Add(item);
+
+            var player = new Player();
+            player.ConnectionId = "1";
+            player.Name = "Gary";
+            player.Inventory = new ItemList();
+
+
+            var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object, _IMobScripts.Object);
+
+            objects.Open("chest", room, player);
+
+            _IWriteToClient.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("You open")), "1"), Times.Once());
+            Assert.True(item.Container.IsOpen);
+        }
+
+        [Fact]
+        public void Should_close_opened_Container()
+        {
+            var item = new GameLogic.Item.Item
+            {
+                Name = "Chest",
+                Description = new Description(),
+
+                ItemType = GameLogic.Item.Item.ItemTypes.Container,
+                Container = new Container() { CanOpen = true, IsOpen = true, Items = new ItemList() },
+
+            };
+
+            var room = new Room();
+            room.Items.Add(item);
+
+            var player = new Player();
+            player.ConnectionId = "1";
+            player.Name = "Gary";
+            player.Inventory = new ItemList();
+
+
+            var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object, _IMobScripts.Object);
+
+            objects.Close("chest", room, player);
+
+            _IWriteToClient.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("You close")), "1"), Times.Once());
+            Assert.True(!item.Container.IsOpen);
+        }
     }
+
 }

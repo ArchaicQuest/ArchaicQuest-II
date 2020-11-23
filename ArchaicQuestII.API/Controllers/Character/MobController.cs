@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ArchaicQuestII.API.Helpers;
 using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +15,7 @@ using Newtonsoft.Json;
 
 namespace ArchaicQuestII.Controllers
 {
+    [Authorize]
     public class MobController : Controller
     {
 

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ArchaicQuestII.API.Helpers;
 using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.Skill.Model;
@@ -13,6 +14,7 @@ using Newtonsoft.Json;
 
 namespace ArchaicQuestII.Controllers.Skills
 {
+    [Authorize]
     public class SkillsController : Controller
     {
         private IDataBase _db { get; }

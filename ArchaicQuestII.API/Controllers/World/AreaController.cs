@@ -8,6 +8,8 @@ using ArchaicQuestII.GameLogic.World.Room;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ArchaicQuestII.API.Helpers;
+using Microsoft.AspNetCore.Authentication.JwtBearer; 
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -17,7 +19,9 @@ using Newtonsoft.Json.Linq;
 
 namespace ArchaicQuestII.Controllers
 {
-    public class AreaController : Controller
+
+    [Authorize]
+    public class AreaController : ControllerBase
     {
         private IDataBase _db { get; }
         public AreaController(IDataBase db)
@@ -82,7 +86,7 @@ namespace ArchaicQuestII.Controllers
         //    return Ok(JsonConvert.SerializeObject(new { toast = $"Room deleted successfully." }));
 
         //}
-
+       
         [HttpGet]
         [Route("api/World/Area")]
         public List<Area> Get()

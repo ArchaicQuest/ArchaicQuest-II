@@ -39,6 +39,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
         private readonly Mock<ICommandHandler> _commandHandler;
         private readonly Mock<ICache> _cache;
         private readonly Mock<ISocials> _socials;
+        private readonly Mock<ICore> _core;
 
         public CommandsTests()
         {
@@ -56,7 +57,9 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
             _commandHandler = new Mock<ICommandHandler>();
             _cache = new Mock<ICache>();
             _socials = new Mock<ISocials>();
+            _core = new Mock<ICore>();
             _player = new Player();
+
             _player.ConnectionId = "1";
             _player.Name = "Bob";
 
@@ -79,7 +82,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
                 }
             };
 
-            _commands = new GameLogic.Commands.Commands(_movement.Object, _roomActions.Object, _debug.Object, _skill.Object, _spell.Object, _object.Object, _inventory.Object, _communication.Object, _equipment.Object, _score.Object, _combat.Object, _cache.Object, _socials.Object, _commandHandler.Object);
+            _commands = new GameLogic.Commands.Commands(_movement.Object, _roomActions.Object, _debug.Object, _skill.Object, _spell.Object, _object.Object, _inventory.Object, _communication.Object, _equipment.Object, _score.Object, _combat.Object, _cache.Object, _socials.Object, _commandHandler.Object, _core.Object);
 
         }
 

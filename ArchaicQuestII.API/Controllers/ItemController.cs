@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ArchaicQuestII.API.Helpers;
 using ArchaicQuestII.GameLogic.Character.Equipment;
 using Newtonsoft.Json;
 
@@ -11,6 +12,7 @@ using Newtonsoft.Json;
 
 namespace ArchaicQuestII.Controllers
 {
+    [Authorize]
     public class ItemController : Controller
     {
         private IDataBase _db { get; }

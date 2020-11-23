@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using ArchaicQuestII.API.Helpers;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Item;
 using Newtonsoft.Json;
@@ -13,7 +14,7 @@ using ArchaicQuestII.GameLogic.World.Area;
 
 namespace ArchaicQuestII.API.World
 {
-
+    [Authorize]
     public class RoomController : Controller
     {
 

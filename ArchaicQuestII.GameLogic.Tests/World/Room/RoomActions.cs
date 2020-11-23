@@ -14,11 +14,12 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
         private GameLogic.World.Room.Room _room;
         private Player _player;
         private readonly Mock<IWriteToClient> _writer;
- 
+        private readonly Mock<ITime> _time;
+
         public RoomActionsTests()
         {
             _writer = new Mock<IWriteToClient>();
-            
+            _time = new Mock<ITime>();
         }
 
         // too brittle
@@ -43,7 +44,7 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
             _player = new Player();
             _player.ConnectionId = "1";
 
-            new RoomActions(_writer.Object).Look("", _room, _player);
+            new RoomActions(_writer.Object, _time.Object).Look("", _room, _player);
 
             _writer.Verify(w => w.WriteLine(It.IsAny<string>(), "1"), Times.Once);
         }
@@ -62,7 +63,7 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
                 }
             };
 
-            var exits =  new RoomActions(_writer.Object).FindValidExits(_room);
+            var exits =  new RoomActions(_writer.Object, _time.Object).FindValidExits(_room);
         
             Assert.Equal("North", exits);
         }
@@ -81,7 +82,7 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
                 }
             };
 
-            var exits = new RoomActions(_writer.Object).FindValidExits(_room);
+            var exits = new RoomActions(_writer.Object, _time.Object).FindValidExits(_room);
 
             Assert.Equal("North East", exits);
         }
@@ -100,7 +101,7 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
                 }
             };
 
-            var exits = new RoomActions(_writer.Object).FindValidExits(_room);
+            var exits = new RoomActions(_writer.Object, _time.Object).FindValidExits(_room);
 
             Assert.Equal("East", exits);
         }
@@ -119,7 +120,7 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
                 }
             };
 
-            var exits = new RoomActions(_writer.Object).FindValidExits(_room);
+            var exits = new RoomActions(_writer.Object, _time.Object).FindValidExits(_room);
 
             Assert.Equal("South East", exits);
         }
@@ -138,7 +139,7 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
                 }
             };
 
-            var exits = new RoomActions(_writer.Object).FindValidExits(_room);
+            var exits = new RoomActions(_writer.Object, _time.Object).FindValidExits(_room);
 
             Assert.Equal("South", exits);
         }
@@ -157,7 +158,7 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
                 }
             };
 
-            var exits = new RoomActions(_writer.Object).FindValidExits(_room);
+            var exits = new RoomActions(_writer.Object, _time.Object).FindValidExits(_room);
 
             Assert.Equal("South West", exits);
         }
@@ -176,7 +177,7 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
                 }
             };
 
-            var exits = new RoomActions(_writer.Object).FindValidExits(_room);
+            var exits = new RoomActions(_writer.Object,_time.Object).FindValidExits(_room);
 
             Assert.Equal("West", exits);
         }
@@ -195,7 +196,7 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
                 }
             };
 
-            var exits = new RoomActions(_writer.Object).FindValidExits(_room);
+            var exits = new RoomActions(_writer.Object, _time.Object).FindValidExits(_room);
 
             Assert.Equal("North West", exits);
         }
@@ -210,7 +211,7 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
                 }
             };
 
-            var exits = new RoomActions(_writer.Object).FindValidExits(_room);
+            var exits = new RoomActions(_writer.Object, _time.Object).FindValidExits(_room);
 
             Assert.Equal("None", exits);
         }
@@ -259,7 +260,7 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
                 }
             };
 
-            var exits = new RoomActions(_writer.Object).FindValidExits(_room);
+            var exits = new RoomActions(_writer.Object, _time.Object).FindValidExits(_room);
 
             Assert.Equal(" North West,  North,  North East,  East,  South East,  South,  South West,  West", exits);
         }
@@ -278,7 +279,7 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
                 }
             };
 
-            var exits = new RoomActions(_writer.Object).FindValidExits(_room);
+            var exits = new RoomActions(_writer.Object, _time.Object).FindValidExits(_room);
 
             Assert.Equal("A hole in the wall", exits);
         }

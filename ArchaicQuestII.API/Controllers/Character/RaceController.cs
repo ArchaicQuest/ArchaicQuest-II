@@ -3,9 +3,11 @@ using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character.Race;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using ArchaicQuestII.API.Helpers;
 
 namespace ArchaicQuestII.API.Controllers.Character
 {
+    [Authorize]
     [ApiController]
     public class RaceController : Controller
     {
