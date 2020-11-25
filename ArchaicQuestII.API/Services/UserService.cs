@@ -10,6 +10,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using ArchaicQuestII.API.Models;
+using ArchaicQuestII.DataAccess;
 
 namespace ArchaicQuestII.API.Services
 {
@@ -18,26 +19,32 @@ namespace ArchaicQuestII.API.Services
         AuthenticateResponse Authenticate(AuthenticateRequest model);
         IEnumerable<AdminUser> GetAll();
         AdminUser GetById(int id);
+       
     }
 
     public class UserService : IUserService
     {
         // users hardcoded for simplicity, store in a db with hashed passwords in production applications
-        private List<AdminUser> _users = new List<AdminUser>
-        {
-            new AdminUser { Id = 1, FirstName = "Test", LastName = "User", Username = "test", Password = "test" }
-        };
+        private List<AdminUser> _users;
+        private IDataBase _db { get; }
+        //{
+        //    new AdminUser { Id = 1, FirstName = "Test", LastName = "User", Username = "test", Password = "test" }
+        //};
+
 
         private readonly AppSettings _appSettings;
 
-        public UserService(IOptions<AppSettings> appSettings)
+        public UserService(IOptions<AppSettings> appSettings, IDataBase db)
         {
             _appSettings = appSettings.Value;
+            _db = db;
+            _users = _db.GetList<AdminUser>(DataBase.Collections.Users);
         }
 
         public AuthenticateResponse Authenticate(AuthenticateRequest model)
         {
-            var user = _users.SingleOrDefault(x => x.Username == model.Username && x.Password == model.Password);
+
+            var user = _users.SingleOrDefault(x => x.Username.Equals(model.Username, StringComparison.CurrentCultureIgnoreCase) && x.Password == model.Password);
 
             // return null if user not found
             if (user == null) return null;

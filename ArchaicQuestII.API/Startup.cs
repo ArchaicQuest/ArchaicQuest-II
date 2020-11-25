@@ -25,6 +25,7 @@ using ArchaicQuestII.GameLogic.Hubs;
 using ArchaicQuestII.GameLogic.World.Room;
 using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
+using ArchaicQuestII.API.Entities;
 using ArchaicQuestII.API.Services;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Emote;
@@ -73,15 +74,11 @@ namespace ArchaicQuestII.API
         public void ConfigureServices(IServiceCollection services)
         {
 
-            //     
-       
-            
             services.AddCors(options =>
             {
                 options.AddPolicy("client",
                     builder => builder.WithOrigins("http://localhost:4200", "http://localhost:1337", "https://admin.archaicquest.com", "https://play.archaicquest.com")
                         .AllowAnyMethod().AllowAnyHeader().AllowCredentials());
-           
             });
 
             services.AddControllers().AddNewtonsoftJson();
@@ -90,14 +87,9 @@ namespace ArchaicQuestII.API
                 o.EnableDetailedErrors = true;
             });
 
-            //// configure strongly typed settings objects
-            //var appSettingsSection = Configuration.GetSection("AppSettings");
-            //services.Configure<AppSettings>(appSettingsSection);
 
             // configure jwt authentication
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
-
-
 
             // configure DI for application services
             services.AddScoped<IUserService, UserService>();
@@ -342,7 +334,14 @@ namespace ArchaicQuestII.API
                 }
             }
 
-        
+            if (!_db.DoesCollectionExist(DataBase.Collections.Users))
+            {
+
+                var admin = new AdminUser() {Username = "Admin", Password = "admin"};
+               
+                    _db.Save(admin, DataBase.Collections.Users);
+                
+            }
 
 
         }

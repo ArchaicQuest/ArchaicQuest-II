@@ -13,7 +13,7 @@ using ArchaicQuestII.API.Services;
 using ArchaicQuestII.DataAccess.DataModels;
 using Newtonsoft.Json;
 using Account = ArchaicQuestII.GameLogic.Account.Account;
-using AccountStats = ArchaicQuestII.GameLogic.Account.AccountStats; 
+using AccountStats = ArchaicQuestII.GameLogic.Account.AccountStats;
 
 
 namespace ArchaicQuestII.API.Controllers
@@ -85,10 +85,10 @@ namespace ArchaicQuestII.API.Controllers
             if (!BCrypt.Net.BCrypt.Verify(login.Password, user.Password))
             {
                 return BadRequest("Password is not correct.");
-            }      
+            }
 
             return (IActionResult)Ok(JsonConvert.SerializeObject(new { toast = "logged in successfully", id = user.Id }));
-            
+
         }
 
         [HttpPost]
@@ -119,11 +119,11 @@ namespace ArchaicQuestII.API.Controllers
                 DateJoined = user.DateJoined,
                 Stats = new AccountStats()
                 {
-                    
+
                 }
             };
 
-           
+
             return Ok(JsonConvert.SerializeObject(new { toast = "logged in successfully", profile }));
 
         }
@@ -141,7 +141,54 @@ namespace ArchaicQuestII.API.Controllers
             return Ok(response);
         }
 
-      
+        [Authorize]
+        [HttpPost("api/Account/adduser")]
+        public IActionResult Add([FromBody] AddAdminUser user)
+        {
+            var userExists = _db.GetList<AdminUser>(DataBase.Collections.Users).FirstOrDefault(x => x.Username.Equals(user.Username, StringComparison.CurrentCultureIgnoreCase));
+
+            if (userExists != null)
+            {
+                return BadRequest(new { message = "Username already exists." });
+            }
+
+            var adminUser = new AdminUser()
+            {
+                Username = user.Username,
+                Password = user.Password,
+                Role = ""
+            };
+            _db.Save(adminUser, DataBase.Collections.Users);
+
+
+            return Ok(new { message = "User successfully added" });
+        }
+
+        [Authorize]
+        [HttpPost("api/Account/deleteUser")]
+        public IActionResult Delete([FromBody] int id)
+        {
+            var userExists = _db.GetById<AdminUser>(id, DataBase.Collections.Users);
+
+            if (userExists == null)
+            {
+                return BadRequest(new { message = "User does not exists." });
+            }
+
+           
+            var deleted = _db.Delete<AdminUser>(userExists.Id, DataBase.Collections.Users);
+
+            if (deleted)
+            {
+                return Ok(new { message = "User deleted successfully" });
+            }
+
+            return BadRequest(new { message = "User deletion failed" });
+
+        }
+
+
+
 
         [Authorize]
         [HttpGet("api/Account/getusers")]

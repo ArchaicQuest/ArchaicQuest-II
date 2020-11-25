@@ -36,7 +36,8 @@ namespace ArchaicQuestII.DataAccess
             Status,
             Config,
             Socials,
-            Quests
+            Quests,
+            Users
         }
 
         public bool Save<T>(T data, Collections collectionName)
@@ -97,6 +98,7 @@ namespace ArchaicQuestII.DataAccess
                 Collections.Config => "Config",
                 Collections.Socials => "Socials",
                 Collections.Quests => "Quests",
+                Collections.Users => "Users",
                 _ => "error",
             };
         }
