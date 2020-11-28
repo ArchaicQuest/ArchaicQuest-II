@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ArchaicQuestII.API.Entities;
 using ArchaicQuestII.API.Helpers;
 using ArchaicQuestII.GameLogic.Character.Equipment;
 using Newtonsoft.Json;
@@ -108,6 +109,10 @@ namespace ArchaicQuestII.Controllers
 
 
             _db.Save(newItem, DataBase.Collections.Items);
+
+            var user = (HttpContext.Items["User"] as AdminUser);
+            user.Contributions += 1;
+            _db.Save(user, DataBase.Collections.Users);
             return Ok(JsonConvert.SerializeObject(new { toast = $"Item saved successfully." }));
         }
 

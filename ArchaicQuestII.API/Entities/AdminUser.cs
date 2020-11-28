@@ -18,7 +18,7 @@ namespace ArchaicQuestII.API.Entities
         public bool CanDelete { get; set; }
         public DateTime Joined { get; set; } = DateTime.Now;
         public DateTime LastActive { get; set; } = DateTime.Now;
-        public int Contributions { get; set; }
+        public int Contributions { get; set; } = 0;
 
     }
 

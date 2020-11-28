@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using ArchaicQuestII.API.Entities;
 using ArchaicQuestII.API.Helpers;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Item;
@@ -36,6 +37,12 @@ namespace ArchaicQuestII.API.World
 
 
             _db.Save(newRoom, DataBase.Collections.Room);
+
+            var user = (HttpContext.Items["User"] as AdminUser);
+            user.Contributions += 1;
+            _db.Save(user, DataBase.Collections.Users);
+
+            
 
             return Ok(JsonConvert.SerializeObject(new { toast = $"Room saved successfully." }));
         }
@@ -90,6 +97,10 @@ namespace ArchaicQuestII.API.World
         {
             var updateRoom = _addRoom.MapRoom(data);
             _db.Save(updateRoom, DataBase.Collections.Room);
+
+         var user = (HttpContext.Items["User"] as AdminUser);
+         user.Contributions += 1;
+         _db.Save(user, DataBase.Collections.Users);
 
         }
 

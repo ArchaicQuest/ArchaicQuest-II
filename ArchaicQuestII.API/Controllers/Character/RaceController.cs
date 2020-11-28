@@ -3,6 +3,7 @@ using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character.Race;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using ArchaicQuestII.API.Entities;
 using ArchaicQuestII.API.Helpers;
 
 namespace ArchaicQuestII.API.Controllers.Character
@@ -23,6 +24,10 @@ namespace ArchaicQuestII.API.Controllers.Character
         public void Post(Race race)
         {
             _db.Save(race, DataBase.Collections.Race);
+
+            var user = (HttpContext.Items["User"] as AdminUser);
+            user.Contributions += 1;
+            _db.Save(user, DataBase.Collections.Users);
         }
 
         [HttpGet]

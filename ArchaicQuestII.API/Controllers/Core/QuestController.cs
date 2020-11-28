@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using ArchaicQuestII.API.Entities;
 using ArchaicQuestII.API.Helpers;
 using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character.Alignment;
@@ -58,6 +59,10 @@ namespace ArchaicQuestII.API.Controllers.Core
             }
 
             _db.Save(newQuest, DataBase.Collections.Quests);
+
+            var user = (HttpContext.Items["User"] as AdminUser);
+            user.Contributions += 1;
+            _db.Save(user, DataBase.Collections.Users);
             return HttpStatusCode.OK;
 
         }

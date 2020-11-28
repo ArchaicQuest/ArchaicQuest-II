@@ -3,6 +3,7 @@ using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character.Class;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using ArchaicQuestII.API.Entities;
 using ArchaicQuestII.API.Helpers;
 using ArchaicQuestII.GameLogic.Item;
 
@@ -61,6 +62,10 @@ namespace ArchaicQuestII.API.Character
             }
 
             _db.Save(newClass, DataBase.Collections.Class);
+
+            var user = (HttpContext.Items["User"] as AdminUser);
+            user.Contributions += 1;
+            _db.Save(user, DataBase.Collections.Users);
         }
 
         [HttpGet]

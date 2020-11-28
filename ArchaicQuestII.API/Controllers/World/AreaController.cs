@@ -8,6 +8,7 @@ using ArchaicQuestII.GameLogic.World.Room;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ArchaicQuestII.API.Entities;
 using ArchaicQuestII.API.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer; 
 using Microsoft.AspNetCore.Http;
@@ -66,6 +67,10 @@ namespace ArchaicQuestII.Controllers
 
 
             _db.Save(newArea, DataBase.Collections.Area);
+
+            var user = (HttpContext.Items["User"] as AdminUser);
+            user.Contributions += 1;
+            _db.Save(user, DataBase.Collections.Users);
             return Ok(JsonConvert.SerializeObject(new { toast = $"Area saved successfully." }));
 
         }
@@ -316,6 +321,10 @@ namespace ArchaicQuestII.Controllers
             area.Title = area.Title;
 
             _db.Save(data, DataBase.Collections.Area);
+
+            var user = (HttpContext.Items["User"] as AdminUser);
+            user.Contributions += 1;
+            _db.Save(user, DataBase.Collections.Users);
 
         }
 

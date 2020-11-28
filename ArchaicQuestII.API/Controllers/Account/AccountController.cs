@@ -179,7 +179,7 @@ namespace ArchaicQuestII.API.Controllers
             {
                 Id = user.Id,
                 Username = user.Username,
-                Password = string.IsNullOrEmpty(user.Password) ? user.Password : userExists.Password,
+                Password = string.IsNullOrEmpty(user.Password) ? userExists.Password : user.Password,
                 Role = user.Role,
                 LastActive = DateTime.Now
             };
