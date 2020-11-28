@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using ArchaicQuestII.API.Entities;
@@ -54,6 +55,7 @@ namespace ArchaicQuestII.API.Helpers
 
                 // attach user to context on successful jwt validation
                 context.Items["User"] = userService.GetById(userId);
+                 
             }
             catch
             {

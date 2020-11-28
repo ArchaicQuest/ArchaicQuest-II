@@ -165,6 +165,31 @@ namespace ArchaicQuestII.API.Controllers
         }
 
         [Authorize]
+        [HttpPost("api/Account/edituser")]
+        public IActionResult Edit([FromBody] EditAdminUser user)
+        {
+            var userExists = _db.GetById<AdminUser>(user.Id, DataBase.Collections.Users);
+
+            if (userExists == null)
+            {
+                return BadRequest(new { message = "User does not exists." });
+            }
+
+            var adminUser = new AdminUser()
+            {
+                Id = user.Id,
+                Username = user.Username,
+                Password = string.IsNullOrEmpty(user.Password) ? user.Password : userExists.Password,
+                Role = user.Role,
+                LastActive = DateTime.Now
+            };
+            _db.Save(adminUser, DataBase.Collections.Users);
+
+
+            return Ok(new { message = "User successfully updated" });
+        }
+
+        [Authorize]
         [HttpPost("api/Account/deleteUser")]
         public IActionResult Delete([FromBody] int id)
         {
@@ -173,6 +198,12 @@ namespace ArchaicQuestII.API.Controllers
             if (userExists == null)
             {
                 return BadRequest(new { message = "User does not exists." });
+            }
+
+           
+            if ((HttpContext.Items["User"] as AdminUser).Role != Role.Admin)
+            {
+                return BadRequest(new { message = "You need to be admin to do this" });
             }
 
            
@@ -194,7 +225,25 @@ namespace ArchaicQuestII.API.Controllers
         [HttpGet("api/Account/getusers")]
         public IActionResult GetAll()
         {
+          
+            
             var users = _userService.GetAll();
+            var context = (HttpContext.Items["User"] as AdminUser);
+            foreach (var user in users)
+            {
+                if ((context.Role == Role.Admin))
+                {
+                    user.CanDelete = true;
+                    user.CanEdit = true;
+                }
+
+                if (context.Id.Equals(user.Id))
+                {
+                    user.CanDelete = false;
+                    user.CanEdit = true;
+                }
+            }
+
             return Ok(users);
         }
     }
