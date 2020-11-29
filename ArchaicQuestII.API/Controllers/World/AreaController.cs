@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ArchaicQuestII.API.Entities;
 using ArchaicQuestII.API.Helpers;
+using ArchaicQuestII.API.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer; 
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
@@ -52,7 +53,7 @@ namespace ArchaicQuestII.Controllers
 
                 _db.Save(data, DataBase.Collections.Area);
             }
-
+            var user = (HttpContext.Items["User"] as AdminUser);
 
             var newArea = new Area()
             {
@@ -60,7 +61,7 @@ namespace ArchaicQuestII.Controllers
                 Title = area.Title,
                 Description = area.Description,
                 DateCreated = DateTime.Now,
-                CreatedBy = "Malleus",
+                CreatedBy = user?.Username ?? "Malleus",
                 DateUpdated = DateTime.Now
 
             };
@@ -68,9 +69,17 @@ namespace ArchaicQuestII.Controllers
 
             _db.Save(newArea, DataBase.Collections.Area);
 
-            var user = (HttpContext.Items["User"] as AdminUser);
+         
             user.Contributions += 1;
             _db.Save(user, DataBase.Collections.Users);
+
+            var log = new AdminLog()
+            {
+                Detail = $"({newArea.Id}) {newArea.Title}",
+                Type = DataBase.Collections.Room,
+                UserName = user.Username
+            };
+            _db.Save(log, DataBase.Collections.Log);
             return Ok(JsonConvert.SerializeObject(new { toast = $"Area saved successfully." }));
 
         }
@@ -326,6 +335,14 @@ namespace ArchaicQuestII.Controllers
             user.Contributions += 1;
             _db.Save(user, DataBase.Collections.Users);
 
+            var log = new AdminLog()
+            {
+                Detail = $"({area.Id}) {area.Title}",
+                Type = DataBase.Collections.Area,
+                UserName = user.Username
+            };
+            _db.Save(log, DataBase.Collections.Log);
+
         }
 
         [HttpDelete]
@@ -338,6 +355,14 @@ namespace ArchaicQuestII.Controllers
 
             if (saved)
             {
+                var user = (HttpContext.Items["User"] as AdminUser);
+                var log = new AdminLog()
+                {
+                    Detail = $"Deleted ({area.Id}) {area.Title}",
+                    Type = DataBase.Collections.Area,
+                    UserName = user.Username
+                };
+                _db.Save(log, DataBase.Collections.Log);
                 return Ok(JsonConvert.SerializeObject(new { toast = $"{area.Title} deleted successfully." }));
             }
             return Ok(JsonConvert.SerializeObject(new { toast = $"{area.Title} deletion failed." }));

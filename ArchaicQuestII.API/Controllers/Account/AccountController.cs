@@ -246,6 +246,15 @@ namespace ArchaicQuestII.API.Controllers
 
             return Ok(users);
         }
+
+        [Authorize]
+        [HttpGet("api/Account/logs")]
+        public IActionResult GetLogs()
+        {
+
+            var logs = _db.GetList<AdminLog>(DataBase.Collections.Log);
+            return Ok(logs);
+        }
     }
 
 

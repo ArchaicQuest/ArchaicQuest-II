@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ArchaicQuestII.API.Entities;
 using ArchaicQuestII.API.Helpers;
+using ArchaicQuestII.API.Models;
 using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
 using Microsoft.AspNetCore.Mvc;
@@ -109,6 +110,14 @@ namespace ArchaicQuestII.Controllers
             var user = (HttpContext.Items["User"] as AdminUser);
             user.Contributions += 1;
             _db.Save(user, DataBase.Collections.Users);
+
+            var log = new AdminLog()
+            {
+                Detail = $"({newMob.Id}) {newMob.Name}",
+                Type = DataBase.Collections.Mobs,
+                UserName = user.Username
+            };
+            _db.Save(log, DataBase.Collections.Log);
 
             return Ok(JsonConvert.SerializeObject(new { toast = $"Mob saved successfully." }));
         }
