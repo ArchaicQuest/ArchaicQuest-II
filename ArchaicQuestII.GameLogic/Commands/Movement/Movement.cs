@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
@@ -64,6 +65,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
                 return;
             }
 
+          
             var getExitToNextRoom = FindExit(room, direction);
 
             if (getExitToNextRoom == null)
@@ -86,6 +88,13 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
 
             //flee bug 
             character.Status = CharacterStatus.Status.Standing;
+
+            if (getExitToNextRoom.Closed)
+            {
+                _writeToClient.WriteLine("<p>The door is close.</p>", character.ConnectionId);
+                //TODO: log bug that the new room could not be found
+                return;
+            }
 
             OnPlayerLeaveEvent(room, character);
             NotifyRoomLeft(room, character, direction);
@@ -114,6 +123,18 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
          
             _updateUi.GetMap(character, _cache.GetMap(getExitToNextRoom.AreaId));
             _updateUi.UpdateMoves(character);
+
+            if (character.Followers.Count >= 1)
+            {
+                foreach (var follower in character.Followers)
+                {
+                    if (room.Players.Contains(follower))
+                    {
+                        Move(room, follower, direction);
+                    }
+                }
+            }
+
         }
 
         public Exit FindExit(Room room, string direction)
@@ -525,6 +546,128 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
                     _writeToClient.WriteLine($"<p>{player.Name} sprawls out haphazardly.</p>", pc.ConnectionId);
                 }
             }
+        }
+
+        public void Group(Player player, Room room, string target)
+        {
+            if((string.IsNullOrEmpty(target) || target.Equals("group", StringComparison.CurrentCultureIgnoreCase)) && !player.grouped)
+            {
+                _writeToClient.WriteLine($"<p>But you are not the member of a group!</p>", player.ConnectionId);
+                return;
+            }
+
+            if (target.Equals(player.Name, StringComparison.CurrentCultureIgnoreCase))
+            {
+                _writeToClient.WriteLine($"<p>You can't group yourself.</p>", player.ConnectionId);
+                return;
+            }
+
+            if (target.Equals("group", StringComparison.CurrentCultureIgnoreCase) && player.grouped)
+            {
+                _writeToClient.WriteLine($"<p>Grouped with:</p>", player.ConnectionId);
+
+                var sb = new StringBuilder();
+                sb.Append("<ul>");
+
+                var foundLeader = _cache.GetPlayerCache()
+          .FirstOrDefault(x => x.Value.Name.StartsWith(player.Following ?? player.Name, StringComparison.CurrentCultureIgnoreCase));
+                sb.Append($"<li>Lvl: {foundLeader.Value.Level} {foundLeader.Value.Name} (Leader)  <span class='group-hp' title='Hit points'>{foundLeader.Value.Attributes.Attribute[EffectLocation.Hitpoints]}</span>/<span class='group-mana' title='Mana points'>{foundLeader.Value.Attributes.Attribute[EffectLocation.Mana]}</span>/<span class='group-moves' title='Move points'>{foundLeader.Value.Attributes.Attribute[EffectLocation.Moves]}</span></li>");
+
+                foreach (var follower in foundLeader.Value.Followers.Where(x => x.grouped))
+                {
+                    sb.Append($"<li>Lvl: {follower.Level} {follower.Name} <span class='group-hp' title='Hit points'>{follower.Attributes.Attribute[EffectLocation.Hitpoints]}</span>/<span class='group-mana' title='Mana points'>{follower.Attributes.Attribute[EffectLocation.Mana]}</span>/<span class='group-moves' title='Move points'>{follower.Attributes.Attribute[EffectLocation.Moves]}</span></li>");
+                }
+
+                sb.Append("</ul>");
+                _writeToClient.WriteLine(sb.ToString(), player.ConnectionId);
+
+                return;
+            }
+
+            var foundPlayer = player.Followers
+            .FirstOrDefault(x => x.Name.StartsWith(target, StringComparison.CurrentCultureIgnoreCase));
+
+            if(foundPlayer == null)
+            {
+                _writeToClient.WriteLine("<p>They are not following you!</p>", player.ConnectionId);
+                return;
+            }
+
+            if (foundPlayer == player)
+            {
+                _writeToClient.WriteLine("<p>You can't group with yourself!</p>", player.ConnectionId);
+                return;
+            }
+
+            if (foundPlayer.grouped)
+            {
+                foundPlayer.grouped = false;
+ 
+                _writeToClient.WriteLine($"<p>{foundPlayer.Name} is no longer a member of your group.</p>", player.ConnectionId);
+                _writeToClient.WriteLine($"<p>You are no longer a member of {player.Name}'s group.</p>", foundPlayer.ConnectionId);
+                return;
+
+            }
+
+
+            foundPlayer.grouped = true;
+            player.grouped = true;
+            _writeToClient.WriteLine($"<p>{foundPlayer.Name} is now a member of your group.</p>", player.ConnectionId);
+            _writeToClient.WriteLine($"<p>You are now a member of {player.Name}'s group.</p>", foundPlayer.ConnectionId);
+
+            foreach (var pc in room.Players)
+            {
+                if(pc.Id == player.Id || pc.Id == foundPlayer.Id)
+                {
+                    continue;
+                }
+                _writeToClient.WriteLine($"<p>{foundPlayer.Name} is now a member of {player.Name}'s group.</p>", pc.ConnectionId);
+
+            }
+ 
+        }
+            public void Follow(Player player, Room room, string target)
+        {
+            if(target.Equals("self", StringComparison.CurrentCultureIgnoreCase))
+            { 
+
+                var leader = _cache.GetPlayerCache()
+              .FirstOrDefault(x => x.Value.Name.StartsWith(player.Following ?? player.Name, StringComparison.CurrentCultureIgnoreCase));
+
+                _writeToClient.WriteLine($"<p>You stop following {leader.Value.Name}.</p>", player.ConnectionId);
+                _writeToClient.WriteLine($"<p>{player.Name} stops following you.</p>", leader.Value.ConnectionId);
+                leader.Value.Followers.Remove(player);
+                if (leader.Value.Followers.Count == 0)
+                {
+                    leader.Value.grouped = false;
+                }
+                player.Following = null;
+                player.grouped = false;
+
+              
+                return;
+            }
+
+            var foundPlayer = room.Players
+                .FirstOrDefault(x => x.Name.StartsWith(target, StringComparison.CurrentCultureIgnoreCase));
+
+            if (foundPlayer == null)
+            {
+                _writeToClient.WriteLine("<p>You don't see them here.</p>", player.ConnectionId);
+                return;
+            }
+
+            if(foundPlayer.Followers.Contains(player))
+            {
+                _writeToClient.WriteLine($"<p>You are already following {foundPlayer.Name}.</p>", player.ConnectionId);
+                return;
+            }
+
+            _writeToClient.WriteLine($"<p>{player.Name} now follows you.</p>", foundPlayer.ConnectionId);
+            _writeToClient.WriteLine($"<p>You are now following {foundPlayer.Name}.</p>", player.ConnectionId);
+           
+            player.Following = foundPlayer.Name;
+            foundPlayer.Followers.Add(player);
         }
 
         public void SetCharacterStatus(Player player, string longName, CharacterStatus.Status status)

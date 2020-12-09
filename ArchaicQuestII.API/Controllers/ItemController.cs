@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ArchaicQuestII.API.Entities;
+using ArchaicQuestII.API.Helpers;
+using ArchaicQuestII.API.Models;
 using ArchaicQuestII.GameLogic.Character.Equipment;
 using Newtonsoft.Json;
 
@@ -11,6 +14,7 @@ using Newtonsoft.Json;
 
 namespace ArchaicQuestII.Controllers
 {
+    [Authorize]
     public class ItemController : Controller
     {
         private IDataBase _db { get; }
@@ -86,7 +90,7 @@ namespace ArchaicQuestII.Controllers
 
             if (item.ItemType == Item.ItemTypes.Key)
             {
-                newItem.KeyId = new Guid();
+                newItem.KeyId = Guid.NewGuid();
             }
 
 
@@ -106,6 +110,18 @@ namespace ArchaicQuestII.Controllers
 
 
             _db.Save(newItem, DataBase.Collections.Items);
+
+            var user = (HttpContext.Items["User"] as AdminUser);
+            user.Contributions += 1;
+            _db.Save(user, DataBase.Collections.Users); 
+
+            var log = new AdminLog()
+            {
+                Detail = $"({newItem.Id}) {newItem.Name}",
+                Type = DataBase.Collections.Items,
+                UserName = user.Username
+            };
+            _db.Save(log, DataBase.Collections.Log);
             return Ok(JsonConvert.SerializeObject(new { toast = $"Item saved successfully." }));
         }
 

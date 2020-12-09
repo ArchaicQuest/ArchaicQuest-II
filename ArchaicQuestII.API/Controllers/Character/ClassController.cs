@@ -3,10 +3,14 @@ using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character.Class;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using ArchaicQuestII.API.Entities;
+using ArchaicQuestII.API.Helpers;
+using ArchaicQuestII.API.Models;
 using ArchaicQuestII.GameLogic.Item;
 
 namespace ArchaicQuestII.API.Character
 {
+    [Authorize]
     public class ClassController : Controller
     {
 
@@ -59,6 +63,18 @@ namespace ArchaicQuestII.API.Character
             }
 
             _db.Save(newClass, DataBase.Collections.Class);
+
+            var user = (HttpContext.Items["User"] as AdminUser);
+            user.Contributions += 1;
+            _db.Save(user, DataBase.Collections.Users);
+
+             var log = new AdminLog()
+         {
+             Detail = $"({newClass.Id}) {newClass.Name}",
+             Type = DataBase.Collections.Class,
+             UserName = user.Username
+         };
+         _db.Save(log, DataBase.Collections.Log);
         }
 
         [HttpGet]

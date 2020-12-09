@@ -40,6 +40,8 @@ namespace ArchaicQuestII.GameLogic.World.Room
             Field = 1 << 8,
             Forest = 1 << 9,
             Desert = 1 << 10,
+            Inside = 1 << 11,
+            Underground = 1 << 12
         }
 
         public int Id { get; set; }
@@ -81,6 +83,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
         /// Does this repop every tick
         /// </summary>
         public bool InstantRePop { get; set; }
+        public bool RoomLit { get; set; }
         public DateTime DateCreated { get; set; } = new DateTime();
         public DateTime DateUpdated { get; set; }
 

@@ -5,25 +5,27 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using ArchaicQuestII.API.Entities;
+using ArchaicQuestII.API.Helpers;
+using ArchaicQuestII.API.Models;
 using ArchaicQuestII.API.Services;
 using ArchaicQuestII.DataAccess.DataModels;
 using Newtonsoft.Json;
 using Account = ArchaicQuestII.GameLogic.Account.Account;
 using AccountStats = ArchaicQuestII.GameLogic.Account.AccountStats;
-using static ArchaicQuestII.API.Services.services;
-using Microsoft.AspNetCore.Authorization;
+
 
 namespace ArchaicQuestII.API.Controllers
 {
     public class AccountController : Controller
     {
         private IDataBase _db { get; }
-        private IAdminUserService _adminUserService;
-        public AccountController(IDataBase db, IAdminUserService adminUser)
+        private readonly IUserService _userService;
+        public AccountController(IDataBase db, IUserService adminService)
         {
             _db = db;
-            _adminUserService = adminUser;
+            _userService = adminService;
         }
 
         [HttpPost]
@@ -83,10 +85,10 @@ namespace ArchaicQuestII.API.Controllers
             if (!BCrypt.Net.BCrypt.Verify(login.Password, user.Password))
             {
                 return BadRequest("Password is not correct.");
-            }      
+            }
 
             return (IActionResult)Ok(JsonConvert.SerializeObject(new { toast = "logged in successfully", id = user.Id }));
-            
+
         }
 
         [HttpPost]
@@ -117,34 +119,141 @@ namespace ArchaicQuestII.API.Controllers
                 DateJoined = user.DateJoined,
                 Stats = new AccountStats()
                 {
-                    
+
                 }
             };
 
-           
+
             return Ok(JsonConvert.SerializeObject(new { toast = "logged in successfully", profile }));
 
         }
 
 
-        //https://jasonwatmore.com/post/2018/08/14/aspnet-core-21-jwt-authentication-tutorial-with-example-api
+        //https://jasonwatmore.com/post/2019/10/11/aspnet-core-3-jwt-authentication-tutorial-with-example-api
         [HttpPost("api/Account/authenticate")]
-        public IActionResult Authenticate([FromBody]AdminUser userParam)
+        public IActionResult Authenticate([FromBody] AuthenticateRequest userParam)
         {
-            var user = _adminUserService.Authenticate(userParam.Username, userParam.Password);
+            var response = _userService.Authenticate(userParam);
 
-            if (user == null)
+            if (response == null)
                 return BadRequest(new { message = "Username or password is incorrect" });
 
-            return Ok(user);
+            return Ok(response);
         }
+
+        [Authorize]
+        [HttpPost("api/Account/adduser")]
+        public IActionResult Add([FromBody] AddAdminUser user)
+        {
+            var userExists = _db.GetList<AdminUser>(DataBase.Collections.Users).FirstOrDefault(x => x.Username.Equals(user.Username, StringComparison.CurrentCultureIgnoreCase));
+
+            if (userExists != null)
+            {
+                return BadRequest(new { message = "Username already exists." });
+            }
+
+            var adminUser = new AdminUser()
+            {
+                Username = user.Username,
+                Password = user.Password,
+                Role = ""
+            };
+            _db.Save(adminUser, DataBase.Collections.Users);
+
+
+            return Ok(new { message = "User successfully added" });
+        }
+
+        [Authorize]
+        [HttpPost("api/Account/edituser")]
+        public IActionResult Edit([FromBody] EditAdminUser user)
+        {
+            var userExists = _db.GetById<AdminUser>(user.Id, DataBase.Collections.Users);
+
+            if (userExists == null)
+            {
+                return BadRequest(new { message = "User does not exists." });
+            }
+
+            var adminUser = new AdminUser()
+            {
+                Id = user.Id,
+                Username = user.Username,
+                Password = string.IsNullOrEmpty(user.Password) ? userExists.Password : user.Password,
+                Role = user.Role,
+                LastActive = DateTime.Now
+            };
+            _db.Save(adminUser, DataBase.Collections.Users);
+
+
+            return Ok(new { message = "User successfully updated" });
+        }
+
+        [Authorize]
+        [HttpPost("api/Account/deleteUser")]
+        public IActionResult Delete([FromBody] int id)
+        {
+            var userExists = _db.GetById<AdminUser>(id, DataBase.Collections.Users);
+
+            if (userExists == null)
+            {
+                return BadRequest(new { message = "User does not exists." });
+            }
+
+           
+            if ((HttpContext.Items["User"] as AdminUser).Role != Role.Admin)
+            {
+                return BadRequest(new { message = "You need to be admin to do this" });
+            }
+
+           
+            var deleted = _db.Delete<AdminUser>(userExists.Id, DataBase.Collections.Users);
+
+            if (deleted)
+            {
+                return Ok(new { message = "User deleted successfully" });
+            }
+
+            return BadRequest(new { message = "User deletion failed" });
+
+        }
+
+
+
 
         [Authorize]
         [HttpGet("api/Account/getusers")]
         public IActionResult GetAll()
         {
-            var users = _adminUserService.GetAll();
+          
+            
+            var users = _userService.GetAll();
+            var context = (HttpContext.Items["User"] as AdminUser);
+            foreach (var user in users)
+            {
+                if ((context.Role == Role.Admin))
+                {
+                    user.CanDelete = true;
+                    user.CanEdit = true;
+                }
+
+                if (context.Id.Equals(user.Id))
+                {
+                    user.CanDelete = false;
+                    user.CanEdit = true;
+                }
+            }
+
             return Ok(users);
+        }
+
+        [Authorize]
+        [HttpGet("api/Account/logs")]
+        public IActionResult GetLogs()
+        {
+
+            var logs = _db.GetList<AdminLog>(DataBase.Collections.Log);
+            return Ok(logs);
         }
     }
 

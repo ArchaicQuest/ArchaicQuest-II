@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Equipment;
+using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Hubs;
 using ArchaicQuestII.GameLogic.World.Room;
@@ -184,9 +185,25 @@ namespace ArchaicQuestII.GameLogic.Core
             }
         }
 
+        public async void UpdateQuest(Player player)
+        {
+
+            try
+            {
+
+                var quests = JsonConvert.SerializeObject(player.QuestLog);
+
+                await _hubContext.Clients.Client(player.ConnectionId).SendAsync("QuestUpdate", quests);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
         public async void UpdateInventory(Player player)
         {
-            if (string.IsNullOrEmpty(player.ConnectionId) || !player.IsTelnet)
+            if (string.IsNullOrEmpty(player.ConnectionId) && !player.IsTelnet)
             {
                 return;
             }

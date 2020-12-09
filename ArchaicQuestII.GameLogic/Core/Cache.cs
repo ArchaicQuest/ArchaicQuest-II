@@ -6,6 +6,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Emote;
+using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.World.Room;
 
 
@@ -23,6 +24,7 @@ namespace ArchaicQuestII.GameLogic.Core
         private readonly ConcurrentDictionary<int, Skill.Model.Skill> _skillCache = new ConcurrentDictionary<int, Skill.Model.Skill>();
         private readonly ConcurrentDictionary<int, string> _mapCache = new ConcurrentDictionary<int, string>();
         private readonly ConcurrentDictionary<string, Player> _combatCache = new ConcurrentDictionary<string, Player>();
+        private readonly ConcurrentDictionary<int, Quest> _questCache = new ConcurrentDictionary<int, Quest>();
         private readonly Dictionary<string, Action> _commands = new Dictionary<string, Action>();
         private readonly Dictionary<string, Emote> _socials = new Dictionary<string, Emote>();
         private Config _configCache = new Config();
@@ -224,6 +226,23 @@ namespace ArchaicQuestII.GameLogic.Core
         public Dictionary<string, Emote> GetSocials()
         {
             return _socials;
+        }
+
+        public bool AddQuest(int id, Quest quest)
+        {
+           return _questCache.TryAdd(id, quest);
+        }
+
+        public Quest GetQuest(int id)
+        {
+            _questCache.TryGetValue(id, out var quest);
+
+            return quest;
+        }
+
+        public ConcurrentDictionary<int, Quest> GetQuestCache()
+        {
+            return _questCache;
         }
 
         #endregion

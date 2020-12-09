@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using ArchaicQuestII.API.Helpers;
 using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Core;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ArchaicQuestII.API.Controllers.Character
 {
+    [Authorize]
     public class StatusController
     {
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using ArchaicQuestII.API.Helpers;
 using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character.Alignment;
 using ArchaicQuestII.GameLogic.Core;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ArchaicQuestII.API.Controllers.Core
 {
+    [Authorize]
     public class ConfigController: Controller
     {
         private IDataBase _db { get; }

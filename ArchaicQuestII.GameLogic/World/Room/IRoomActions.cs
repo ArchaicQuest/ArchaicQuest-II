@@ -14,7 +14,8 @@ namespace ArchaicQuestII.GameLogic.World.Room
         void TasteObject(string target, Room room, Player player);
         void TouchObject(string target, Room room, Player player);
         string FindValidExits(Room room);
-        string DisplayItems(Room room);
-        string DisplayMobs(Room room);
+        string DisplayItems(Room room, Player player);
+        string DisplayMobs(Room room, Player player);
+        bool RoomIsDark(Room room, Player player);
     }
 }

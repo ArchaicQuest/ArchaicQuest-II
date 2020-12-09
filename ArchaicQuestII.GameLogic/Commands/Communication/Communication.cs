@@ -122,9 +122,43 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
           
         }
 
-        public void Tells(string text, Room room, Player player)
+        public void Tells(string name, string text, Player player)
         {
-            throw new NotImplementedException();
+                 var foundPlayer =  _cache.GetPlayerCache()
+                .FirstOrDefault(x => x.Value.Name.StartsWith(name, StringComparison.CurrentCultureIgnoreCase)).Value;
+
+                 if (foundPlayer == null)
+                 {
+                     _writer.WriteLine($"<p>They are not in this realm.</p>", player.ConnectionId);
+                     return;
+                 }
+
+                 if (foundPlayer == player)
+                 {
+                     _writer.WriteLine($"<p>You tell yourself \"{text}\"</p>", player.ConnectionId);
+                     return;
+                 }
+
+                 player.ReplyTo = foundPlayer.Name;
+                 foundPlayer.ReplyTo = player.Name;
+
+                 _writer.WriteLine($"<p class='say'>You tell {foundPlayer.Name} \"{text}\"</p>", player.ConnectionId);
+                 _updateClient.UpdateCommunication(player, $"<p class='say'>You tell {foundPlayer.Name} \"{text}\"</p>", "all");
+
+                  _writer.WriteLine($"<p class='say'>{player.Name} tells you \"{text}\"</p>", foundPlayer.ConnectionId);
+                 _updateClient.UpdateCommunication(foundPlayer, $"<p class='say'>{player.Name} tells you \"{text}\"</p>", "all");
+
+        }
+
+        public void Reply(string text, Player player)
+        {
+            if (string.IsNullOrEmpty(player.ReplyTo))
+            {
+                _writer.WriteLine("<p>You have no one to reply too.</p>", player.ConnectionId);
+                return;
+            }
+
+          Tells(player.ReplyTo, text, player);
         }
 
         public void Whisper(string text, string target, Room room, Player player)

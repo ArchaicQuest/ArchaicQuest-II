@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ArchaicQuestII.API.Helpers;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Core;
@@ -19,6 +20,7 @@ using ArchaicQuestII.GameLogic.Skill.Model;
 
 namespace ArchaicQuestII.Controllers.character
 {
+    [Authorize]
     [ApiController]
     public class PlayerController : ControllerBase
     {

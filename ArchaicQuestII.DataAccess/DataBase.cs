@@ -35,7 +35,10 @@ namespace ArchaicQuestII.DataAccess
             Skill,
             Status,
             Config,
-            Socials
+            Socials,
+            Quests,
+            Users,
+            Log
         }
 
         public bool Save<T>(T data, Collections collectionName)
@@ -43,6 +46,7 @@ namespace ArchaicQuestII.DataAccess
             var collection = _db.GetCollection<T>(GetCollectionName(collectionName));
             collection.Upsert(data);
             SetIndex((LiteCollection<T>)collection, collectionName);
+
  
             return true;
         }
@@ -95,6 +99,9 @@ namespace ArchaicQuestII.DataAccess
                 Collections.Status => "Status",
                 Collections.Config => "Config",
                 Collections.Socials => "Socials",
+                Collections.Quests => "Quests",
+                Collections.Users => "Users",
+                Collections.Log => "Log",
                 _ => "error",
             };
         }

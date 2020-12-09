@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ArchaicQuestII.API.Entities;
+using ArchaicQuestII.API.Helpers;
+using ArchaicQuestII.API.Models;
 using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.Skill.Model;
@@ -13,6 +16,7 @@ using Newtonsoft.Json;
 
 namespace ArchaicQuestII.Controllers.Skills
 {
+    [Authorize]
     public class SkillsController : Controller
     {
         private IDataBase _db { get; }
@@ -70,7 +74,18 @@ namespace ArchaicQuestII.Controllers.Skills
 
 
             var saved = _db.Save(newSkill, DataBase.Collections.Skill);
+            var user = (HttpContext.Items["User"] as AdminUser);
+            user.Contributions += 1;
+            _db.Save(user, DataBase.Collections.Users);
 
+
+            var log = new AdminLog()
+            {
+                Detail = $"({newSkill.Id}) {newSkill.Name}",
+                Type = DataBase.Collections.Skill,
+                UserName = user.Username
+            };
+            _db.Save(log, DataBase.Collections.Log);
 
             string json = JsonConvert.SerializeObject(new { toast = "skill created successfully", id = newSkill.Id });
             return saved ? (IActionResult)Ok(json) : BadRequest("Error saving skill");

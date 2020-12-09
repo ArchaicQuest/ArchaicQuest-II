@@ -386,6 +386,36 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
         {
             var item = room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ?? player.Inventory.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
 
+            if (item == null)
+            {
+                var isExit = Helpers.IsExit(target, room);
+
+                if (isExit != null)
+                {
+
+                    if (!isExit.Locked)
+                    {
+                        isExit.Closed = false;
+                        _writer.WriteLine($"<p>You open the door {isExit.Name}.", player.ConnectionId);
+
+                        return;
+                    }
+
+                    if (isExit.Locked)
+                    {
+                        
+                        _writer.WriteLine($"<p>You try to open it but it's locked.", player.ConnectionId);
+
+                        return;
+                    }
+
+
+                }
+
+
+               
+            }
+
             if (item != null && item.Container.CanOpen != true)
             {
                 _writer.WriteLine($"<p>{item.Name} cannot be opened", player.ConnectionId);
@@ -547,6 +577,190 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
             throw new NotImplementedException();
         }
 
-    
+        public void Unlock(string target, Room room, Player player)
+        {
+            var objToUnlock =
+                room.Items.FirstOrDefault(x =>
+                    x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+
+            if (objToUnlock == null)
+            {
+
+                var doorToUnlock = Helpers.IsExit(target, room);
+
+                if (doorToUnlock != null)
+                {
+                    var playerHasKey = player.Inventory.FirstOrDefault(x =>
+                        x.ItemType == Item.Item.ItemTypes.Key && x.KeyId.Equals(doorToUnlock.LockId));
+                    if (playerHasKey== null)
+                    {
+                        _writer.WriteLine("<p>You don't have the key to unlock this.</p>", player.ConnectionId);
+                        return;
+                    }
+                    else
+                    {
+
+                        if (!doorToUnlock.Locked)
+                        {
+                            _writer.WriteLine("<p>It's already unlocked.</p>", player.ConnectionId);
+                            return;
+                        }
+
+                        doorToUnlock.Locked = false;
+                        _writer.WriteLine("<p>You enter the key and turn it. *CLICK* </p>", player.ConnectionId);
+
+                        foreach (var pc in room.Players)
+                        {
+                            if (pc.Name.Equals(player.Name, StringComparison.CurrentCultureIgnoreCase))
+                            {
+                                continue;
+                            }
+                            _writer.WriteLine($"<p>{pc.Name} enters the key and turns it. *CLICK* </p>", pc.ConnectionId);
+                        }
+                       
+                        return;
+                    }
+
+                    
+                }
+               
+
+                _writer.WriteLine("<p>You don't see that here.</p>", player.ConnectionId);
+                return;
+            }
+
+            if (!objToUnlock.Container.CanLock)
+            {
+                _writer.WriteLine("<p>You can't unlock that.</p>", player.ConnectionId);
+                return;
+            }
+
+              var hasKey = player.Inventory.FirstOrDefault(x =>
+                x.ItemType == Item.Item.ItemTypes.Key && x.KeyId.Equals(objToUnlock.Container.AssociatedKeyId));
+
+              if (hasKey == null)
+              {
+                
+                      _writer.WriteLine("<p>You don't have the key to unlock this.</p>", player.ConnectionId);
+                      return;
+ 
+            }
+              else
+              {
+                  if (!objToUnlock.Container.IsLocked)
+                  {
+                      _writer.WriteLine("<p>It's already unlocked.</p>", player.ConnectionId);
+                      return;
+                  }
+
+                  objToUnlock.Container.IsLocked = false;
+                  _writer.WriteLine("<p>You enter the key and turn it. *CLICK* </p>", player.ConnectionId);
+
+                  foreach (var pc in room.Players)
+                  {
+                      if (pc.Name.Equals(player.Name, StringComparison.CurrentCultureIgnoreCase))
+                      {
+                          continue;
+                      }
+                      _writer.WriteLine($"<p>{pc.Name} enters the key into {objToUnlock.Name} and turns it. *CLICK* </p>", pc.ConnectionId);
+                  }
+
+                  return;
+            }
+
+        }
+
+        public void Lock(string target, Room room, Player player)
+        {
+            var objToUnlock =
+                room.Items.FirstOrDefault(x =>
+                    x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+
+            if (objToUnlock == null)
+            {
+
+                var doorToUnlock = Helpers.IsExit(target, room);
+
+                if (doorToUnlock != null)
+                {
+                    var playerHasKey = player.Inventory.FirstOrDefault(x =>
+                        x.ItemType == Item.Item.ItemTypes.Key && x.KeyId.Equals(doorToUnlock.LockId));
+                    if (playerHasKey == null)
+                    {
+                        _writer.WriteLine("<p>You don't have the key to lock this.</p>", player.ConnectionId);
+                        return;
+                    }
+                    else
+                    {
+
+                        if (doorToUnlock.Locked)
+                        {
+                            _writer.WriteLine("<p>It's already locked.</p>", player.ConnectionId);
+                            return;
+                        }
+
+                        doorToUnlock.Locked = true;
+                        _writer.WriteLine("<p>You enter the key and turn it. *CLICK* </p>", player.ConnectionId);
+
+                        foreach (var pc in room.Players)
+                        {
+                            if (pc.Name.Equals(player.Name, StringComparison.CurrentCultureIgnoreCase))
+                            {
+                                continue;
+                            }
+                            _writer.WriteLine($"<p>{pc.Name} enters the key and turns it. *CLICK* </p>", pc.ConnectionId);
+                        }
+
+                        return;
+                    }
+
+
+                }
+
+
+                _writer.WriteLine("<p>You don't see that here.</p>", player.ConnectionId);
+                return;
+            }
+
+            if (!objToUnlock.Container.CanLock)
+            {
+                _writer.WriteLine("<p>You can't lock that.</p>", player.ConnectionId);
+                return;
+            }
+
+            var hasKey = player.Inventory.FirstOrDefault(x =>
+              x.ItemType == Item.Item.ItemTypes.Key && x.KeyId.Equals(objToUnlock.Container.AssociatedKeyId));
+
+            if (hasKey == null)
+            {
+
+                _writer.WriteLine("<p>You don't have the key to lock this.</p>", player.ConnectionId);
+                return;
+
+            }
+            else
+            {
+                if (objToUnlock.Container.IsLocked)
+                {
+                    _writer.WriteLine("<p>It's already locked.</p>", player.ConnectionId);
+                    return;
+                }
+
+                objToUnlock.Container.IsLocked = true;
+                _writer.WriteLine("<p>You enter the key and turn it. *CLICK* </p>", player.ConnectionId);
+
+                foreach (var pc in room.Players)
+                {
+                    if (pc.Name.Equals(player.Name, StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        continue;
+                    }
+                    _writer.WriteLine($"<p>{pc.Name} enters the key into {objToUnlock.Name} and turns it. *CLICK* </p>", pc.ConnectionId);
+                }
+
+                return;
+            }
+
+        }
     }
 }

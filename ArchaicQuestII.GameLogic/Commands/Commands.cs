@@ -37,6 +37,7 @@ namespace ArchaicQuestII.GameLogic.Commands
         private readonly ICache _cache;
         private readonly ISocials _socials;
         private readonly ICommandHandler _commandHandler;
+        private readonly ICore _core;
 
         public Commands(
             IMovement movement,
@@ -52,7 +53,8 @@ namespace ArchaicQuestII.GameLogic.Commands
             ICombat combat,
             ICache cache,
             ISocials socials,
-            ICommandHandler commandHandler
+            ICommandHandler commandHandler,
+            ICore core
             )
         {
             _movement = movement;
@@ -69,6 +71,7 @@ namespace ArchaicQuestII.GameLogic.Commands
             _cache = cache;
             _socials = socials;
             _commandHandler = commandHandler;
+            _core = core;
         }
  
         public void CommandList(string key, string obj, string target, Player player, Room room)
@@ -199,6 +202,12 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "yell":
                     _communication.Yell(obj, room, player);
                     break;
+                case "tell":
+                    _communication.Tells(obj, target, player);
+                    break;
+                case "reply":
+                    _communication.Reply(obj, player);
+                    break;
                 case "wear":
                     _equipment.Wear(obj, room, player);
                     break;
@@ -236,6 +245,34 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "socials":
                 case "soc":
                     _socials.DisplaySocials(player);
+                    break;
+                case "follow":
+                    _movement.Follow(player, room, obj);
+                    break;
+                case "group":
+                    _movement.Group(player, room, obj);
+                    break;
+                case "who":
+                case "wh":
+                    _core.Who(player);
+                    break;
+                case "where":
+                case "whe":
+                    _core.Where(player, room);
+                    break;
+                case "con":
+                case "consider":
+                    _combat.Consider(player,obj, room);
+                    break;
+                case "ql":
+                case "questlog":
+                    _core.QuestLog(player);
+                    break;
+                case "unlock":
+                    _object.Unlock(obj, room, player);
+                    break;
+                case "lock":
+                    _object.Lock(obj, room, player);
                     break;
                 default:
                         _commandHandler.HandleCommand(key,obj,target, player, room);
@@ -329,6 +366,22 @@ namespace ArchaicQuestII.GameLogic.Commands
 
                 say = say.Remove(0, 7);
                 return new Tuple<string, string>(say, string.Empty);
+            }
+
+            if (commands[0] == "reply")
+            {
+                var say = string.Join(" ", commands);
+
+                say = say.Remove(0, 6);
+                return new Tuple<string, string>(say, string.Empty);
+            }
+
+            if (commands[0] == "tell")
+            {
+                var say = string.Join(" ", commands);
+
+                say = say.Remove(0, 5);
+                return new Tuple<string, string>(commands[1], say.Remove(0, commands[1].Length+1));
             }
 
             if (cmdCount == 1)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Item;
@@ -52,13 +53,15 @@ namespace ArchaicQuestII.GameLogic.Core
         private readonly ICache _cache;
         private readonly IDice _dice;
         private readonly IWriteToClient _writeToClient;
+        private readonly IUpdateClientUI _updateClientUi;
         public MobScripts(ICache cache, ICombat
-            combat, IWriteToClient writeToClient, IDice dice)
+            combat, IWriteToClient writeToClient, IDice dice, IUpdateClientUI updateClientUi)
         {
             _cache = cache;
             _combat = combat;
             _writeToClient = writeToClient;
             _dice = dice;
+            _updateClientUi = updateClientUi;
 
         }
         public bool IsInRoom(Room room, Player player)
@@ -203,6 +206,33 @@ namespace ArchaicQuestII.GameLogic.Core
         {
             return player.Inventory.FirstOrDefault(x => x.Name.StartsWith(name, StringComparison.CurrentCultureIgnoreCase)) !=
                    null;
+        }
+
+        public void AddQuest(Player player, int questId)
+        {
+
+          var quest =  _cache.GetQuest(questId);
+
+          if (player.QuestLog.FirstOrDefault(x => x.Id == quest.Id) == null)
+          {
+
+              player.QuestLog.Add(new Quest()
+              {
+                  Id = quest.Id,
+                  Area = quest.Area,
+                  Title = quest.Title,
+                  Description = quest.Description,
+                  Type = quest.Type,
+                  ExpGain = quest.ExpGain,
+                  GoldGain = quest.GoldGain,
+                  MobsToKill = quest.MobsToKill,
+                  ItemGain = quest.ItemGain,
+                  
+              });
+          }
+
+          _writeToClient.WriteLine($"<p class='gain'>New Quest: {quest.Title}!</p>", player.ConnectionId);
+            _updateClientUi.UpdateQuest(player);
         }
     }
 }

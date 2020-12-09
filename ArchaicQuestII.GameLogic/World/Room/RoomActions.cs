@@ -14,9 +14,11 @@ namespace ArchaicQuestII.GameLogic.World.Room
     {
 
         private readonly IWriteToClient _writeToClient;
-        public RoomActions(IWriteToClient writeToClient)
+        private readonly ITime _time;
+        public RoomActions(IWriteToClient writeToClient, ITime time)
         {
             _writeToClient = writeToClient;
+            _time = time;
         }
         /// <summary>
         /// Displays current room 
@@ -36,20 +38,21 @@ namespace ArchaicQuestII.GameLogic.World.Room
             }
 
             var exits = FindValidExits(room);
-            var items = DisplayItems(room);
-            var mobs = DisplayMobs(room);
+            var items = DisplayItems(room, player);
+            var mobs = DisplayMobs(room, player);
             var players = DisplayPlayers(room, player);
 
             var roomDesc = new StringBuilder();
+            var isDark = RoomIsDark(room, player);
 
             roomDesc
-                .Append($"<p class=\"room-title\">{room.Title}<br /></p>")
-                .Append($"<p class=\"room-description\">{room.Description}</p>")
+                .Append($"<p class=\"room-title {(isDark ? "room-dark" : "")}\">{room.Title}<br /></p>")
+                .Append($"<p class=\"room-description  {(isDark ? "room-dark" : "")}\">{room.Description}</p>")
                 .Append(
-                    $"<p class=\"room-exit\"> <span class=\"room-exits\">[</span>Exits: <span class=\"room-exits\">{exits}</span><span class=\"room-exits\">]</span></p>")
-                .Append($"<p>{items}</p>")
-                .Append($"<p>{mobs}</p>")
-                .Append($"<p>{players}</p>");
+                    $"<p class=\"room-exit  {(isDark ? "room-dark" : "")}\"> <span class=\"room-exits\">[</span>Exits: <span class=\"room-exits\">{exits}</span><span class=\"room-exits\">]</span></p>")
+                .Append($"<p  class=\" {(isDark ? "room-dark" : "")}\">{items}</p>")
+                .Append($"<p  class=\"{(isDark ? "room-dark" : "")}\">{mobs}</p>")
+                .Append($"<p  class=\"  {(isDark ? "room-dark" : "")}\">{players}</p>");
 
 
             _writeToClient.WriteLine(roomDesc.ToString(), player.ConnectionId);
@@ -92,10 +95,14 @@ namespace ArchaicQuestII.GameLogic.World.Room
             {
                 _writeToClient.WriteLine($"<p>Nothing.</p>", player.ConnectionId);
             }
+
+            var isDark = RoomIsDark(room, player);
             foreach (var obj in container.Container.Items.List(false))
             {
-                _writeToClient.WriteLine($"<p>{obj}</p>", player.ConnectionId);
+                _writeToClient.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{obj}</p>", player.ConnectionId);
             }
+
+           
 
             foreach (var pc in room.Players)
             {
@@ -115,7 +122,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 _writeToClient.WriteLine("You can't do that while asleep.", player.ConnectionId);
                 return;
             }
-
+            var isDark = RoomIsDark(room, player);
 
             var item =
                 room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ??
@@ -149,7 +156,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
             if (item != null && character == null && roomObjects == null)
             {
-                _writeToClient.WriteLine($"<p>{item.Description.Look}", player.ConnectionId);
+                _writeToClient.WriteLine($"<p  class='{(isDark ? "room-dark" : "")}'>{item.Description.Look}", player.ConnectionId);
 
                 foreach (var pc in room.Players)
                 {
@@ -166,7 +173,8 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
             if (roomObjects != null && character == null && item == null)
             {
-                _writeToClient.WriteLine($"<p>{roomObjects.Look}", player.ConnectionId);
+              
+                _writeToClient.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{roomObjects.Look}", player.ConnectionId);
 
                 foreach (var pc in room.Players)
                 {
@@ -202,7 +210,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
                     $"<tr><td><span class='cell-title'>Face:</span> {character.Face}</td><td><span class='cell-title'>Hair Facial:</span> {character.FacialHair}</td></tr><table>");
             }
 
-            _writeToClient.WriteLine($"{sb}<p>{character.Description}", player.ConnectionId);
+            _writeToClient.WriteLine($"{sb}<p class='{(isDark ? "room-dark" : "")}'>{character.Description}", player.ConnectionId);
 
             foreach (var pc in room.Players)
             {
@@ -240,7 +248,9 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 return;
             }
 
-            _writeToClient.WriteLine($"<p>{item.Description.Exam}", player.ConnectionId);
+            var isDark = RoomIsDark(room, player);
+
+            _writeToClient.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{item.Description.Exam}", player.ConnectionId);
 
             foreach (var pc in room.Players)
             {
@@ -278,8 +288,9 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 _writeToClient.WriteLine("<p>You don't see that here.", player.ConnectionId);
                 return;
             }
+            var isDark = RoomIsDark(room, player);
 
-            _writeToClient.WriteLine($"<p>{item.Description.Smell}", player.ConnectionId);
+            _writeToClient.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{item.Description.Smell}", player.ConnectionId);
 
             foreach (var pc in room.Players)
             {
@@ -308,7 +319,9 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 return;
             }
 
-            _writeToClient.WriteLine($"<p>{item.Description.Taste}", player.ConnectionId);
+            var isDark = RoomIsDark(room, player);
+
+            _writeToClient.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{item.Description.Taste}", player.ConnectionId);
 
 
             foreach (var pc in room.Players)
@@ -340,7 +353,9 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 return;
             }
 
-            _writeToClient.WriteLine($"<p>{item.Description.Touch}", player.ConnectionId);
+            var isDark = RoomIsDark(room, player);
+
+            _writeToClient.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{item.Description.Touch}", player.ConnectionId);
 
             foreach (var pc in room.Players)
             {
@@ -354,16 +369,16 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
         }
 
-        public string DisplayItems(Room room)
+        public string DisplayItems(Room room, Player player)
         {
+            var isDark = RoomIsDark(room, player);
             var items = room.Items.List();
             var x = string.Empty;
             foreach (var item in items)
             {
                 if (!string.IsNullOrEmpty(item))
                 {
-
-                    x += "<p class='item'>" + item + "</p>";
+                    x += $"<p class='item {(isDark ? "dark-room" : "")}'>{item}</p>";
                 }
 
             }
@@ -372,19 +387,20 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
         }
 
-        public string DisplayMobs(Room room)
+        public string DisplayMobs(Room room, Player player)
         {
             var mobs = string.Empty;
+            var isDark = RoomIsDark(room, player);
 
             foreach (var mob in room.Mobs)
             {
                 if (!string.IsNullOrEmpty(mob.LongName))
                 {
-                    mobs += "<p class='mob'>" + mob.LongName + "</p>";
+                    mobs += $"<p class='mob {(isDark ? "dark-room" : "")}'>" + mob.LongName + "</p>";
                 }
                 else
                 {
-                    mobs += "<p class='mob'>" + mob.Name + " is here.</p>";
+                    mobs += $"<p class='mob {(isDark ? "dark-room" : "")}'>" + mob.Name + " is here.</p>";
                 }
 
             }
@@ -393,9 +409,35 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
         }
 
+        public bool RoomIsDark(Room room, Player player)
+        {
+            if (room.RoomLit)
+            {
+                return false;
+            }
+
+            if (room.Type == Room.RoomType.Inside || room.Type == Room.RoomType.Town || room.Type == Room.RoomType.Shop || room.Type == Room.RoomType.Guild)
+            {
+                return false;
+            }
+
+            if (player.Equipped.Light != null)
+            {
+                return false;
+            }
+
+            if (!_time.IsNightTime())
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         public string DisplayPlayers(Room room, Player player)
         {
             var players = string.Empty;
+            var isNightTime = !_time.IsNightTime();
 
             foreach (var pc in room.Players)
             {
@@ -403,7 +445,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 {
                     continue;
                 }
-                players += string.IsNullOrEmpty(pc.LongName) ? $"<p class='player'>{pc.Name} is here.</p>" : $"<p class='player'>{pc.Name} {pc.LongName}.</p>";
+                players += string.IsNullOrEmpty(pc.LongName) ? $"<p class='player {(isNightTime ? "dark-room" : "")}'>{pc.Name} is here.</p>" : $"<p class='player'>{pc.Name} {pc.LongName}.</p>";
             }
 
             return players;
@@ -421,42 +463,42 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
             if (room.Exits.NorthWest != null)
             {
-                exits.Add(room.Exits.NorthWest.Name);
+                exits.Add(Helpers.DisplayDoor(room.Exits.NorthWest));
             }
 
             if (room.Exits.North != null)
             {
-                exits.Add(room.Exits.North.Name);
+                exits.Add(Helpers.DisplayDoor(room.Exits.North));
             }
 
             if (room.Exits.NorthEast != null)
             {
-                exits.Add(room.Exits.NorthEast.Name);
+                exits.Add(Helpers.DisplayDoor(room.Exits.NorthEast));
             }
 
             if (room.Exits.East != null)
             {
-                exits.Add(room.Exits.East.Name);
+                exits.Add(Helpers.DisplayDoor(room.Exits.East));
             }
 
             if (room.Exits.SouthEast != null)
             {
-                exits.Add(room.Exits.SouthEast.Name);
+                exits.Add(Helpers.DisplayDoor(room.Exits.SouthEast));
             }
 
             if (room.Exits.South != null)
             {
-                exits.Add(room.Exits.South.Name);
+                exits.Add(Helpers.DisplayDoor(room.Exits.South));
             }
 
             if (room.Exits.SouthWest != null)
             {
-                exits.Add(room.Exits.SouthWest.Name);
+                exits.Add(Helpers.DisplayDoor(room.Exits.SouthWest));
             }
 
             if (room.Exits.West != null)
             {
-                exits.Add(room.Exits.West.Name);
+                exits.Add(Helpers.DisplayDoor(room.Exits.West));
             }
 
             if (exits.Count <= 0)

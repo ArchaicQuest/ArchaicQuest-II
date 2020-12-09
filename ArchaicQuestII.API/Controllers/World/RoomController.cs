@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using ArchaicQuestII.API.Entities;
+using ArchaicQuestII.API.Helpers;
+using ArchaicQuestII.API.Models;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Item;
 using Newtonsoft.Json;
@@ -13,7 +16,7 @@ using ArchaicQuestII.GameLogic.World.Area;
 
 namespace ArchaicQuestII.API.World
 {
-
+    [Authorize]
     public class RoomController : Controller
     {
 
@@ -35,6 +38,12 @@ namespace ArchaicQuestII.API.World
 
 
             _db.Save(newRoom, DataBase.Collections.Room);
+
+            var user = (HttpContext.Items["User"] as AdminUser);
+            user.Contributions += 1;
+            _db.Save(user, DataBase.Collections.Users);
+
+            
 
             return Ok(JsonConvert.SerializeObject(new { toast = $"Room saved successfully." }));
         }
@@ -89,6 +98,18 @@ namespace ArchaicQuestII.API.World
         {
             var updateRoom = _addRoom.MapRoom(data);
             _db.Save(updateRoom, DataBase.Collections.Room);
+
+         var user = (HttpContext.Items["User"] as AdminUser);
+         user.Contributions += 1;
+         _db.Save(user, DataBase.Collections.Users);
+
+         var log = new AdminLog()
+         {
+             Detail = $"({data.AreaId}, {data.Id}, x: {data.Coords.X} y: {data.Coords.Y}, z: {data.Coords.Z}) {data.Title}",
+             Type = DataBase.Collections.Room,
+             UserName = user.Username
+         };
+         _db.Save(log, DataBase.Collections.Log);
 
         }
 

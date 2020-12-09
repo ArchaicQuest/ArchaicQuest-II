@@ -6,6 +6,7 @@ using LiteDB;
 using System.Collections.Generic;
 using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Effect;
+using ArchaicQuestII.GameLogic.World.Room;
 using Newtonsoft.Json;
 using Money = ArchaicQuestII.GameLogic.Item.Money;
 
@@ -123,6 +124,10 @@ end
         [JsonProperty("roomId")]
         /// arearID + X + Y + z e,g "1000"
         public string RoomId { get; set; }
+
+        [JsonProperty("roomType")]
+        /// arearID + X + Y + z e,g "1000"
+        public Room.RoomType? RoomType { get; set; } = Room.RoomType.Standard;
         [JsonProperty("recallId")]
         public int RecallId { get; set; }
         [JsonProperty("defaultAttack")]
@@ -145,8 +150,7 @@ end
         public bool Roam { get; set; }
         public MobEvents Events { get; set; } = new MobEvents();
         public Dictionary<string, int> EventState { get; set; } = new Dictionary<string, int>();
-
-
+        public List<Quest> QuestLog { get; set; } = new List<Quest>();
 
     }
 }
