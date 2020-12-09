@@ -147,6 +147,12 @@ namespace ArchaicQuestII.API.Controllers
         {
             var userExists = _db.GetList<AdminUser>(DataBase.Collections.Users).FirstOrDefault(x => x.Username.Equals(user.Username, StringComparison.CurrentCultureIgnoreCase));
 
+            var context = (HttpContext.Items["User"] as AdminUser);
+            if (context.Role != Role.Admin)
+            {
+                return BadRequest(new { message = "Only admin can add accounts." });
+            }
+
             if (userExists != null)
             {
                 return BadRequest(new { message = "Username already exists." });
@@ -156,7 +162,7 @@ namespace ArchaicQuestII.API.Controllers
             {
                 Username = user.Username,
                 Password = user.Password,
-                Role = ""
+                Role = user.Role
             };
             _db.Save(adminUser, DataBase.Collections.Users);
 
