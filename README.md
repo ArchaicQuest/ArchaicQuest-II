@@ -1,32 +1,44 @@
 # ArchaicQuest II - MUD codebase written in C#
 ![alt ArchaicQuest II](https://i.imgur.com/LUv3vGm.png)
 
-## A multiplayer text based RPG, also known a Multi User Dungeon (MUD)
+## A MUD codebase to create a multiplayer text based RPG, also known a Multi User Dungeon (MUD)
 
-This project contains:
-* The Web API that powers the Admin tool
-* The Signalr game server
-* The Web client
+ArchaicQuest II comprises of [3 projects](https://github.com/ArchaicQuest) that are required together.
 
-The first phase of this project is to complete the web API so the game content can be created using [the Admin system](https://github.com/ArchaicQuest/ArchaicQuest-II-Web-Admin).
 
-For the web api we need endpoints that allow the creation of these things:
-* Items - In progress
-* Mobs
-* Mob Scripts (Responding to events, moving from a to b, other basic AI)
-* NPC Dialogue
-* Quests
+| Project                                                                                     | Description                                                                                                            |
+| ------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| [ArchaicQuest II](https://github.com/ArchaicQuest/ArchaicQuest-II)                          | C# game engine, contains the web API for the admin tool and the SignalR hub for the web socket connects to the client. |
+| [ArchaicQuest II - Admin tool](https://github.com/ArchaicQuest/ArchaicQuest-II-Web-Admin)   | Angular 8+ web admin, allows creation and management of your MUD world.                                                |
+| [ArchaicQuest II - Game Client](https://github.com/ArchaicQuest/ArchaicQuest-II-Web-Client) | Angular 8+ web client for connecting to the game and playing with others.                                              |
+
+## ArchaicQuest II
+
+The C# project is .NET Core 3.1 and uses [LiteDb](https://www.litedb.org/) which is an embedded NoSQL database. Within Startup.cs it will seed the database on first run with the necessary defaults that are required. 
+
+* Alignments
+* AttackTypes
 * Skills
-* Spells
 * Races
+* Status
 * Classes
-* World Building (Rooms / Areas)
+* Config
 
-Some of the code for this project will be lifted from the [original ArchaicQuest](https://github.com/LiamKenneth/ArchaicQuest/tree/master/MIMWebClient) with the bad bits left behind and the good parts improved.
+Some of the above can be edited in the admin tool, the rest if required to be changed needs to be done in code.
 
-Next will be building the game server with a basic functioning web client so players can create an account, make a Character and starting moving around and interacting with the game world that was created with the admin tool.
+The last important step that isn't seeded yet is the very first room! For now before connecting to the game you will need to fire up the web admin tool and create an area and then create a room in said area. Then the web client will be able to connect correctly. 
 
-Finally, make the web client look great, here is what the old client looked like to give you an idea:
-![alt ArchaicQuest web based MUD client](https://i.imgur.com/j3Tr2EH.png)
+### Running the project
+Use `dotnet run -p ArchaicQuestII.API/ArchaicQuestII.API.csproj`, if on unix you can use the make file in the project to run using `make run`. For Windows using visual studio just hit the run button.
 
-More info coming, if you want more info join the discord server: https://discordapp.com/invite/nuf7FVq
+There's no output to say it's running but once you make a request it wakes up and responds.
+
+### Basic Structure overview
+
+- ArchaicQuestII.API
+  - Handles all the API endpoints and initialises everything in Startup.cs
+- ArchaicQuestII.DataAccess
+  - Wrapper around LiteDB. To add new collections you need to modify Collections enum and the GetCollectionName switch
+- ArchaicQuestII.GameLogic
+  - All game logic here plus the Signalr and Telnet logic. Best place to start is Commands.cs to see what commands exists and how to add more.
+ 
