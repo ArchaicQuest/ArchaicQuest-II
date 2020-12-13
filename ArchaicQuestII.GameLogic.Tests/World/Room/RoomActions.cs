@@ -58,7 +58,8 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
                 {
                     North = new Exit()
                     {
-                        Name = "North"
+                        Name = "North",
+                        Door = false,
                     }
                 }
             };
@@ -77,7 +78,8 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
                 {
                     NorthEast = new Exit()
                     {
-                        Name = "North East"
+                        Name = "North East",
+                        Door = false,
                     }
                 }
             };
@@ -96,7 +98,8 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
                 {
                     East = new Exit()
                     {
-                        Name = "East"
+                        Name = "East",
+                        Door = false,
                     }
                 }
             };
@@ -115,7 +118,8 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
                 {
                     SouthEast = new Exit()
                     {
-                        Name = "South East"
+                        Name = "South East",
+                        Door = false,
                     }
                 }
             };
@@ -134,7 +138,8 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
                 {
                     South = new Exit()
                     {
-                        Name = "South"
+                        Name = "South",
+                        Door = false,
                     }
                 }
             };
@@ -153,7 +158,8 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
                 {
                     SouthWest = new Exit()
                     {
-                        Name = "South West"
+                        Name = "South West",
+                        Door = false,
                     }
                 }
             };
@@ -172,7 +178,8 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
                 {
                     West = new Exit()
                     {
-                        Name = "West"
+                        Name = "West",
+                        Door = false,
                     }
                 }
             };
@@ -191,7 +198,8 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
                 {
                     NorthWest = new Exit()
                     {
-                        Name = "North West"
+                        Name = "North West",
+                        Door = false,
                     }
                 }
             };
@@ -225,36 +233,44 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
                 {
                     NorthWest = new Exit()
                     {
-                        Name = " North West"
+                        Name = " North West",
+                        Door = false,
                     },
 
                     North = new Exit()
                     {
-                        Name = " North"
+                        Name = " North",
+                        Door = false,
                     },
                     NorthEast = new Exit()
                     {
-                        Name = " North East"
+                        Name = " North East",
+                        Door = false,
                     },
                     East = new Exit()
                     {
-                        Name = " East"
+                        Name = " East",
+                        Door = false,
                     },
                     SouthEast = new Exit()
                     {
-                        Name = " South East"
+                        Name = " South East",
+                        Door = false,
                     },
                     South = new Exit()
                     {
-                        Name = " South"
+                        Name = " South",
+                        Door = false,
                     },
                     SouthWest = new Exit()
                     {
-                        Name = " South West"
+                        Name = " South West",
+                        Door = false,
                     },
                     West = new Exit()
                     {
-                        Name = " West"
+                        Name = " West",
+                        Door = false,
                     },
                    
                 }
@@ -274,7 +290,8 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
                 {
                     NorthWest = new Exit()
                     {
-                        Name = "A hole in the wall"
+                        Name = "A hole in the wall",
+                        Door = false,
                     }
                 }
             };

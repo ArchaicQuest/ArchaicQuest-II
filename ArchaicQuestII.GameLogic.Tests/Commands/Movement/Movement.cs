@@ -77,7 +77,9 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Movement
                             X = 0,
                             Y = 1,
                             Z = 0
-                        }
+                        },
+                        Door = false,
+                        Closed = false
                     }
                 },
                 Players = new List<Player>()
@@ -105,6 +107,8 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Movement
                     {
                         AreaId = 1,
                         Name = "South",
+                        Door = false,
+                        Closed = false,
                         Coords =
                         new Coordinates {
                             X = 0,
