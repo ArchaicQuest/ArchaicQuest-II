@@ -3,6 +3,25 @@
 
 ## A MUD codebase to create a multiplayer text based RPG, also known a Multi User Dungeon (MUD)
 
+Goal of ArchaicQuest II is to provide a MUD codebase that makes building and managing your game simple and fun especially for non coders with the help of the admin tool.
+
+[play.archaicquest.com](play.archaicquest.com) is the flagship MUD built with ArchaicQuest II.
+
+## Current Features
+- Currently 54 commands, commands can also be abbreviated  🔠
+- Cardinal and Ordinal Movement directions including up and down 🦶
+- Auto Attack combat ⚔
+- Skills & spells 💫
+- 350+ socials 😃 
+- Look, examine, smell, taste, and touch 👁🔎👃👅🤏
+- Day and Night cycles 🌞🌛
+- Communication among players publicly and privately 💬
+- NPCs can follow waypoints and execute commands 🎭
+- Ability to add simple or complex quests with Lua Scripting ⁉
+- Event scripts for NPCs/Rooms for your scripting needs 📜
+
+## About the Projects
+
 ArchaicQuest II comprises of [3 projects](https://github.com/ArchaicQuest) that are required together.
 
 
@@ -54,16 +73,5 @@ To add new skills and spells use the web admin tool, skills and spells can be sc
 
 Majority of features added have been built with the admin tool in mind so most content can be added or modified without coding or making a deployment
 
-### Current Features
-- Currently 54 commands, commands can also be abbreviated  🔠
-- Cardinal and Ordinal Movement directions including up and down 🦶
-- Auto Attack combat ⚔
-- Skills & spells 💫
-- 350+ socials 😃 
-- Look, examine, smell, taste, and touch 👁🔎👃👅🤏
-- Day and Night cycles 🌞🌛
-- Communication among players publicly and privately 💬
-- NPCs can follow waypoints and execute commands 🎭
-- Ability to add simple or complex quests with Lua Scripting ⁉
-- Event scripts for NPCs/Rooms for your scripting needs 📜
+
   
