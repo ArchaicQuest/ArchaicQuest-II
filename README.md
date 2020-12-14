@@ -3,22 +3,23 @@
 
 ## A MUD codebase to create a multiplayer text based RPG, also known a Multi User Dungeon (MUD)
 
-Goal of ArchaicQuest II is to provide a MUD codebase that makes building and managing your game simple and fun especially for non coders with the help of the admin tool.
+Goal of ArchaicQuest II is to make a MUD that feels nostalgic and compelling to play as well as providing a MUD codebase that makes building and managing your own game simple and fun especially for non coders with the help of the admin tool.
 
-[play.archaicquest.com](play.archaicquest.com) is the flagship MUD built with ArchaicQuest II.
+[play.archaicquest.com](https://play.archaicquest.com) is the flagship MUD built with ArchaicQuest II.
 
 ## Current Features
 - Currently 54 commands, commands can also be abbreviated  🔠
 - Cardinal and Ordinal Movement directions including up and down 🦶
-- Auto Attack combat ⚔
+- Auto Attack combat rounds ⚔
 - Skills & spells 💫
 - 350+ socials 😃 
-- Look, examine, smell, taste, and touch 👁🔎👃👅🤏
+- Look, examine, smell, taste, and touch objects 👁🔎👃👅🤏
 - Day and Night cycles 🌞🌛
 - Communication among players publicly and privately 💬
 - NPCs can follow waypoints and execute commands 🎭
 - Ability to add simple or complex quests with Lua Scripting ⁉
 - Event scripts for NPCs/Rooms for your scripting needs 📜
+- Room and NPC emotes 💃
 
 ## About the Projects
 
@@ -73,5 +74,20 @@ To add new skills and spells use the web admin tool, skills and spells can be sc
 
 Majority of features added have been built with the admin tool in mind so most content can be added or modified without coding or making a deployment
 
+### Telnet Support
+Traditionally MUDs use telnet as the way to communicate but with ArchaicQuest II it's web only, the browser can offer a richer, consistent, and streamlined interface for all players without having them to download a client. 
 
-  
+### Want to get involved?
+If you're a coder, writer, MUD player, or someone who wants to help up then get in touch and say 'Hello' on the discord server: [https://discordapp.com/invite/nuf7FVq](https://discordapp.com/invite/nuf7FVq)
+
+---
+
+## Admin  Tool
+View the [ArchaicQuest II - Admin tool](https://github.com/ArchaicQuest/ArchaicQuest-II-Web-Admin) to find out more.
+
+![alt ArchaicQuestII Web Admin](https://cdn.discordapp.com/attachments/660365544377155604/764419912088420352/editRoom.PNG)
+
+## Game Client
+View the [ArchaicQuest II - Game Client](https://github.com/ArchaicQuest/ArchaicQuest-II-Web-Client) to find out more.
+
+![alt ArchaicQuestII Web Admin](https://cdn.discordapp.com/attachments/660365544377155604/764419914970300456/web_client.PNG)
