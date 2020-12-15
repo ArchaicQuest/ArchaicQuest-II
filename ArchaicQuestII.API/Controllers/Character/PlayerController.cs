@@ -9,18 +9,18 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ArchaicQuestII.API.Helpers;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Skill.Model;
+using Microsoft.AspNetCore.Authorization;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace ArchaicQuestII.Controllers.character
 {
-    [Authorize]
+    [API.Helpers.Authorize]
     [ApiController]
     public class PlayerController : ControllerBase
     {
@@ -32,6 +32,7 @@ namespace ArchaicQuestII.Controllers.character
             _cache = cache;
         }
         [HttpPost]
+        [AllowAnonymous]
         [Route("api/character/Player")]
         public ObjectResult Post([FromBody] Player player)
         {
@@ -128,6 +129,7 @@ namespace ArchaicQuestII.Controllers.character
 
 
         [HttpGet]
+        [AllowAnonymous]
         [Route("api/player/NameAllowed")]
         public bool NameAllowed([FromQuery] string name)
         {
