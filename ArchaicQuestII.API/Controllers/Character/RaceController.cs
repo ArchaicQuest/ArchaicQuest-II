@@ -4,12 +4,12 @@ using ArchaicQuestII.GameLogic.Character.Race;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using ArchaicQuestII.API.Entities;
-using ArchaicQuestII.API.Helpers;
 using ArchaicQuestII.API.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ArchaicQuestII.API.Controllers.Character
 {
-    [Authorize]
+    [Helpers.Authorize]
     [ApiController]
     public class RaceController : Controller
     {
@@ -47,6 +47,7 @@ namespace ArchaicQuestII.API.Controllers.Character
         }
 
         [HttpGet]
+        [AllowAnonymous]
         [Route("api/Character/Race")]
         public List<Race> Get()
         { 

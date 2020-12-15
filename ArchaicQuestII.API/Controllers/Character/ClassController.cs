@@ -4,13 +4,13 @@ using ArchaicQuestII.GameLogic.Character.Class;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using ArchaicQuestII.API.Entities;
-using ArchaicQuestII.API.Helpers;
 using ArchaicQuestII.API.Models;
 using ArchaicQuestII.GameLogic.Item;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ArchaicQuestII.API.Character
 {
-    [Authorize]
+    [Helpers.Authorize]
     public class ClassController : Controller
     {
 
@@ -85,6 +85,7 @@ namespace ArchaicQuestII.API.Character
         }
 
         [HttpGet]
+        [AllowAnonymous]
         [Route("api/Character/Class")]
         public List<Class> Get()
         {
