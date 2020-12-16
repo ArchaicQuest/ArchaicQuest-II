@@ -20,7 +20,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ArchaicQuestII.Controllers.character
 {
-    [API.Helpers.Authorize]
+    
     [ApiController]
     public class PlayerController : ControllerBase
     {
@@ -147,6 +147,7 @@ namespace ArchaicQuestII.Controllers.character
 
 
         [HttpGet]
+        [API.Helpers.Authorize]
         [Route("api/character/Player")]
         public List<Player> Get([FromQuery] string query)
         {

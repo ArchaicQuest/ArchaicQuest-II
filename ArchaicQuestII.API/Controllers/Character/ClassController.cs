@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ArchaicQuestII.API.Character
 {
-    [Helpers.Authorize]
+    
     public class ClassController : Controller
     {
 
@@ -21,6 +21,7 @@ namespace ArchaicQuestII.API.Character
         }
 
         [HttpPost]
+        [Helpers.Authorize]
         [Route("api/Character/Class")]
         public void Post([FromBody] Class charClass)
         {
@@ -78,6 +79,7 @@ namespace ArchaicQuestII.API.Character
         }
 
         [HttpGet]
+        [Helpers.Authorize]
         [Route("api/Character/Class/{id:int}")]
         public Class Get(int id)
         {
