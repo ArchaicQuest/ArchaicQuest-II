@@ -12,7 +12,8 @@ namespace ArchaicQuestII.API.Entities
         public string Username { get; set; }
         [JsonIgnore]
         public string Password { get; set; }
-        public string Role { get; set; }
+
+        public string Role { get; set; } = Entities.Role.Builder;
         public string Token { get; set; }
         public bool CanEdit { get; set; }
         public bool CanDelete { get; set; }
@@ -26,7 +27,7 @@ namespace ArchaicQuestII.API.Entities
     {
         public string Username { get; set; }
         public string Password { get; set; }
-        public string Role { get; set; }
+        public string Role { get; set; } = Entities.Role.Builder;
 
     }
 

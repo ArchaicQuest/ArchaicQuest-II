@@ -237,7 +237,7 @@ namespace ArchaicQuestII.API.Controllers
             var context = (HttpContext.Items["User"] as AdminUser);
             foreach (var user in users)
             {
-                if ((context.Role == Role.Admin))
+                if (user.Username == "Admin" || (context.Role == Role.Admin))
                 {
                     user.CanDelete = true;
                     user.CanEdit = true;
