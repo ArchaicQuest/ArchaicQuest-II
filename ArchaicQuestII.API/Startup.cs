@@ -337,7 +337,7 @@ namespace ArchaicQuestII.API
             if (!_db.DoesCollectionExist(DataBase.Collections.Users))
             {
 
-                var admin = new AdminUser() {Username = "Admin", Password = "admin", Role = Role.Admin, CanEdit = true, CanDelete = true};
+                var admin = new AdminUser() {Username = "Admin", Password = "admin", Role = "Admin", CanEdit = true, CanDelete = true};
                
                     _db.Save(admin, DataBase.Collections.Users);
                 
