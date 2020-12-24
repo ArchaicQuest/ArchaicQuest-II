@@ -7,6 +7,7 @@ using ArchaicQuestII.GameLogic.Commands.Movement;
 using ArchaicQuestII.GameLogic.World.Room;
 using System.Linq;
 using ArchaicQuestII.GameLogic.Character.Equipment;
+using ArchaicQuestII.GameLogic.Character.MobFunctions;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Commands.Communication;
 using ArchaicQuestII.GameLogic.Commands.Debug;
@@ -38,6 +39,7 @@ namespace ArchaicQuestII.GameLogic.Commands
         private readonly ISocials _socials;
         private readonly ICommandHandler _commandHandler;
         private readonly ICore _core;
+        private readonly IMobFunctions _mobFunctions;
 
         public Commands(
             IMovement movement,
@@ -54,7 +56,8 @@ namespace ArchaicQuestII.GameLogic.Commands
             ICache cache,
             ISocials socials,
             ICommandHandler commandHandler,
-            ICore core
+            ICore core,
+            IMobFunctions mobFunctions
             )
         {
             _movement = movement;
@@ -72,6 +75,7 @@ namespace ArchaicQuestII.GameLogic.Commands
             _socials = socials;
             _commandHandler = commandHandler;
             _core = core;
+            _mobFunctions = mobFunctions;
         }
  
         public void CommandList(string key, string obj, string target, Player player, Room room)
@@ -273,6 +277,10 @@ namespace ArchaicQuestII.GameLogic.Commands
                     break;
                 case "lock":
                     _object.Lock(obj, room, player);
+                    break;
+                case "list":
+                case "li":
+                    _mobFunctions.List(room, player);
                     break;
                 default:
                         _commandHandler.HandleCommand(key,obj,target, player, room);
