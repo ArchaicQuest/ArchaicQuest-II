@@ -11,6 +11,10 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
         public Player FindShopKeeper(Room room);
         public void List(Room room, Player player);
 
-        public int AddMarkUp(int price);
+        public double AddMarkUp(int price);
+
+        public string DisplayUnit(int price);
+
+
     }
 }
