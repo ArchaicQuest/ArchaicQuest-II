@@ -22,13 +22,13 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
         {
             _writer.WriteLine(mob.Name + " says 'Here's what I have for sale.'", player.ConnectionId);
             var sb = new StringBuilder();
-            sb.Append("<table><tr><td>#</td><td>Name</td><td>Price</td></tr>");
+            sb.Append("<table class='data'><tr><td style='width: 30px; text-align: center;'>#</td><td>Name</td><td>Price</td></tr>");
 
             int i = 0;
             foreach (var item in mob.Inventory.Distinct().OrderBy(x => x.Name))
             {
                 i++;
-                sb.Append($"<tr><td>{i}</td><td>{item.Name}</td><td>xx</td></tr>");
+                sb.Append($"<tr><td style='width: 30px; text-align: center;'>{i}</td><td>{item.Name}</td><td>{AddMarkUp(item.Value)} GP</td></tr>");
             }
 
             sb.Append("</table>");
@@ -40,7 +40,7 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
         {
             foreach (var mob in room.Mobs)
             {
-                if (mob.ShopKeeper)
+                if (mob.Shopkeeper)
                 {
                     return mob;
                 }
@@ -59,6 +59,11 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
             }
 
             DisplayInventory(shopKeeper, player);
+        }
+
+        public int AddMarkUp(int price)
+        {
+            return (int)Math.Floor(price * 1.5);
         }
     }
 }

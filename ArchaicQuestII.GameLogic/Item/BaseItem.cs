@@ -15,6 +15,7 @@ namespace ArchaicQuestII.GameLogic.Item
         /// Min level needed to use item
         /// </summary>
         public int Level { get; set; }
+        public int Value { get; set; }
         public bool KnownByName { get; set; }
         public Description Description { get; set; }
         /// <summary>

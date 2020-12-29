@@ -148,7 +148,7 @@ end
         /// moves around randomly
         /// </summary>
         public bool Roam { get; set; }
-        public bool ShopKeeper { get; set; }
+        public bool Shopkeeper { get; set; }
         public MobEvents Events { get; set; } = new MobEvents();
         public Dictionary<string, int> EventState { get; set; } = new Dictionary<string, int>();
         public List<Quest> QuestLog { get; set; } = new List<Quest>();

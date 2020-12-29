@@ -85,6 +85,7 @@ namespace ArchaicQuestII.Controllers
                 WeaponSpeed = item.WeaponSpeed,
                 WeaponType = item.WeaponType,
                 Weight = item.Weight,
+                Value = item.Value
 
             };
 

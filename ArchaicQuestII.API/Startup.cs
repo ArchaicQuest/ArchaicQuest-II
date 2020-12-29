@@ -31,6 +31,8 @@ using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Emote;
 using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.Character.Gain;
+using ArchaicQuestII.GameLogic.Character.MobFunctions;
+using ArchaicQuestII.GameLogic.Character.MobFunctions.Shop;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Commands.Communication;
@@ -123,6 +125,7 @@ namespace ArchaicQuestII.API
             services.AddSingleton<ITime, Time>();
             services.AddSingleton<ICore, GameLogic.Core.Core>();
             services.AddSingleton<IQuestLog, QuestLog>();
+            services.AddSingleton<IMobFunctions, Shop>();
             services.AddSingleton<IWriteToClient, WriteToClient>((factory) => new WriteToClient(_hubContext, TelnetHub.Instance));
            
         }
