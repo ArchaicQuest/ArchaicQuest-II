@@ -24,7 +24,8 @@ namespace ArchaicQuestII.GameLogic.Item
             Repair,
             Weapon,
             Seating,
-            Inanimate
+            Inanimate,
+            Money
         }
 
         [Flags]
@@ -159,6 +160,9 @@ namespace ArchaicQuestII.GameLogic.Item
         public Modifier Modifier { get; set; }
         public ArmourRating ArmourRating { get; set; }
         public int Weight { get; set; } = 2;
+
+        public int Gold { get; set; } = 0;
+        public int Silver { get; set; } = 0;
 
         /// <summary>
         /// used for foraging, is rank is equal or less than player level

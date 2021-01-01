@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Core;
+using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.World.Room;
 using MoonSharp.Interpreter;
 
 namespace ArchaicQuestII.GameLogic.Commands.Objects
 {
 
-   public class Object: IObject
+    public class Object : IObject
     {
         private readonly IWriteToClient _writer;
         private readonly IUpdateClientUI _updateUi;
@@ -41,8 +42,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
             if (item == null)
             {
-               _writer.WriteLine("<p>You don't see that here.</p>", player.ConnectionId);
-               return;
+                _writer.WriteLine("<p>You don't see that here.</p>", player.ConnectionId);
+                return;
             }
 
             if (item.Stuck)
@@ -72,11 +73,11 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
         }
 
- 
+
 
         public void GetAll(Room room, Player player)
         {
-           
+
             //Check room first
 
             if (room.Items.Count == 0)
@@ -89,9 +90,19 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
             {
                 if (room.Items[i].Stuck == false)
                 {
-                    room.Items[i].IsHiddenInRoom = false;
-                    player.Inventory.Add(room.Items[i]);
-                    _writer.WriteLine($"<p>You pick up {room.Items[i].Name.ToLower()}.</p>", player.ConnectionId);
+                    if (room.Items[i].ItemType == Item.Item.ItemTypes.Money)
+                    {
+
+                        _writer.WriteLine($"<p>You pick up {ItemList.DisplayMoneyAmount(room.Items[i].Value).ToLower()}.</p>", player.ConnectionId);
+
+                        player.Money.Gold += room.Items[i].Value;
+                    }
+                    else
+                    {
+                        room.Items[i].IsHiddenInRoom = false;
+                        player.Inventory.Add(room.Items[i]);
+                        _writer.WriteLine($"<p>You pick up {room.Items[i].Name.ToLower()}</p>", player.ConnectionId);
+                    }
 
                     foreach (var pc in room.Players)
                     {
@@ -100,8 +111,19 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                             continue;
                         }
 
-                        _writer.WriteLine($"<p>{player.Name} picks up {room.Items[i].Name.ToLower()}.</p>",
-                            pc.ConnectionId);
+                        if (room.Items[i].ItemType == Item.Item.ItemTypes.Money)
+                        {
+
+
+                            _writer.WriteLine($"<p>{player.Name} picks up  {ItemList.DisplayMoneyAmount(room.Items[i].Value).ToLower()}</p>",
+                                    pc.ConnectionId);
+                        }
+                        else
+                        {
+
+                            _writer.WriteLine($"<p>{player.Name} picks up {room.Items[i].Name.ToLower()}.</p>",
+                                pc.ConnectionId);
+                        }
                     }
 
                     room.Items.RemoveAt(i);
@@ -134,19 +156,19 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                 container.Container.Items[i].IsHiddenInRoom = false;
                 player.Inventory.Add(container.Container.Items[i]);
 
-                    _writer.WriteLine($"<p>You pick up {container.Container.Items[i].Name.ToLower()} from {container.Name.ToLower()}.</p>", player.ConnectionId);
+                _writer.WriteLine($"<p>You pick up {container.Container.Items[i].Name.ToLower()} from {container.Name.ToLower()}.</p>", player.ConnectionId);
 
-                    foreach (var pc in room.Players)
+                foreach (var pc in room.Players)
+                {
+                    if (pc.Name == player.Name)
                     {
-                        if (pc.Name == player.Name)
-                        {
-                            continue;
-                        }
-
-                        _writer.WriteLine($"<p>{player.Name} picks up {container.Container.Items.Name.ToLower()} from {container.Name.ToLower()}.</p>",
-                            pc.ConnectionId);
+                        continue;
                     }
-                    container.Container.Items.RemoveAt(i);
+
+                    _writer.WriteLine($"<p>{player.Name} picks up {container.Container.Items.Name.ToLower()} from {container.Name.ToLower()}.</p>",
+                        pc.ConnectionId);
+                }
+                container.Container.Items.RemoveAt(i);
 
             }
             _updateUi.UpdateInventory(player);
@@ -200,7 +222,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
         public void DropInContainer(string target, string container, Room room, Player player)
         {
 
-            var containerObj = room.Items.FirstOrDefault(x => x.Name.Contains(container, StringComparison.CurrentCultureIgnoreCase))  ?? player.Inventory.Where(x => x.Stuck == false).FirstOrDefault(x => x.Name.Contains(container, StringComparison.CurrentCultureIgnoreCase));
+            var containerObj = room.Items.FirstOrDefault(x => x.Name.Contains(container, StringComparison.CurrentCultureIgnoreCase)) ?? player.Inventory.Where(x => x.Stuck == false).FirstOrDefault(x => x.Name.Contains(container, StringComparison.CurrentCultureIgnoreCase));
 
             if (containerObj == null)
             {
@@ -287,7 +309,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
         public void GetFromContainer(string target, string container, Room room, Player player)
         {
 
-          
+
 
             var containerObj = room.Items.FirstOrDefault(x => x.Name.Contains(container, StringComparison.CurrentCultureIgnoreCase)) ?? player.Inventory.Where(x => x.Stuck == false).FirstOrDefault(x => x.Name.Contains(container, StringComparison.CurrentCultureIgnoreCase));
 
@@ -295,7 +317,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
             {
                 _writer.WriteLine($"<p>You don't see that here.</p>", player.ConnectionId);
                 return;
-            } 
+            }
 
 
             if (containerObj.Container.CanOpen && !containerObj.Container.IsOpen)
@@ -319,7 +341,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
             }
 
             containerObj.Container.Items.Remove(item);
-           
+
 
             foreach (var pc in room.Players)
             {
@@ -351,7 +373,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                 return;
             }
 
-         
+
 
             for (var i = player.Inventory.Count - 1; i >= 0; i--)
             {
@@ -360,7 +382,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
                     room.Items.Add(player.Inventory[i]);
 
-                   
+
                     _writer.WriteLine($"<p>You drop {player.Inventory[i].Name.ToLower()}.</p>", player.ConnectionId);
 
                     foreach (var pc in room.Players)
@@ -403,7 +425,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
                     if (isExit.Locked)
                     {
-                        
+
                         _writer.WriteLine($"<p>You try to open it but it's locked.", player.ConnectionId);
 
                         return;
@@ -413,7 +435,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                 }
 
 
-               
+
             }
 
             if (item != null && item.Container.CanOpen != true)
@@ -453,40 +475,40 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
             var item = room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ?? player.Inventory.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
 
-                if (item != null && item.Container.CanOpen != true)
-                {
-                    _writer.WriteLine($"<p>{item.Name} cannot be closed", player.ConnectionId);
-                    return;
-                }
+            if (item != null && item.Container.CanOpen != true)
+            {
+                _writer.WriteLine($"<p>{item.Name} cannot be closed", player.ConnectionId);
+                return;
+            }
 
-                if (item == null)
-                {
-                    _writer.WriteLine("<p>You don't see that here.", player.ConnectionId);
-                    return;
-                }
+            if (item == null)
+            {
+                _writer.WriteLine("<p>You don't see that here.", player.ConnectionId);
+                return;
+            }
 
 
-                if (!item.Container.IsOpen)
-                {
-                    _writer.WriteLine("<p>It's already closed.", player.ConnectionId);
-                    return;
-                }
+            if (!item.Container.IsOpen)
+            {
+                _writer.WriteLine("<p>It's already closed.", player.ConnectionId);
+                return;
+            }
 
             _writer.WriteLine($"<p>You close {item.Name.ToLower()}.</p>", player.ConnectionId);
 
-                item.Container.IsOpen = false;
+            item.Container.IsOpen = false;
 
-                
-                foreach (var obj in room.Players)
+
+            foreach (var obj in room.Players)
+            {
+                if (obj.Name == player.Name)
                 {
-                    if (obj.Name == player.Name)
-                    {
-                        continue;
-                    }
-                    _writer.WriteLine($"<p>{player.Name} closes {item.Name.ToLower()}</p>", obj.ConnectionId);
+                    continue;
                 }
+                _writer.WriteLine($"<p>{player.Name} closes {item.Name.ToLower()}</p>", obj.ConnectionId);
+            }
 
-                room.Clean = false;
+            room.Clean = false;
         }
 
         public void Give(string itemName, string targetName, Room room, Player player)
@@ -514,8 +536,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                 _writer.WriteLine("<p>They aren't here.</p>", player.ConnectionId);
                 return;
             }
-           
-    
+
+
             //Check room first
             var item = player.Inventory.FirstOrDefault(x => x.Name.Contains(itemName, StringComparison.CurrentCultureIgnoreCase));
 
@@ -544,7 +566,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
             }
 
             target.Inventory.Add(item);
-            _writer.WriteLine($"<p>{player.Name} gives you {item.Name.ToLower()}.</p>", target .ConnectionId);
+            _writer.WriteLine($"<p>{player.Name} gives you {item.Name.ToLower()}.</p>", target.ConnectionId);
             _updateUi.UpdateInventory(player);
 
             if (!string.IsNullOrEmpty(target.Events.Give))
@@ -592,7 +614,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                 {
                     var playerHasKey = player.Inventory.FirstOrDefault(x =>
                         x.ItemType == Item.Item.ItemTypes.Key && x.KeyId.Equals(doorToUnlock.LockId));
-                    if (playerHasKey== null)
+                    if (playerHasKey == null)
                     {
                         _writer.WriteLine("<p>You don't have the key to unlock this.</p>", player.ConnectionId);
                         return;
@@ -617,13 +639,13 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                             }
                             _writer.WriteLine($"<p>{pc.Name} enters the key and turns it. *CLICK* </p>", pc.ConnectionId);
                         }
-                       
+
                         return;
                     }
 
-                    
+
                 }
-               
+
 
                 _writer.WriteLine("<p>You don't see that here.</p>", player.ConnectionId);
                 return;
@@ -635,37 +657,37 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                 return;
             }
 
-              var hasKey = player.Inventory.FirstOrDefault(x =>
-                x.ItemType == Item.Item.ItemTypes.Key && x.KeyId.Equals(objToUnlock.Container.AssociatedKeyId));
+            var hasKey = player.Inventory.FirstOrDefault(x =>
+              x.ItemType == Item.Item.ItemTypes.Key && x.KeyId.Equals(objToUnlock.Container.AssociatedKeyId));
 
-              if (hasKey == null)
-              {
-                
-                      _writer.WriteLine("<p>You don't have the key to unlock this.</p>", player.ConnectionId);
-                      return;
- 
+            if (hasKey == null)
+            {
+
+                _writer.WriteLine("<p>You don't have the key to unlock this.</p>", player.ConnectionId);
+                return;
+
             }
-              else
-              {
-                  if (!objToUnlock.Container.IsLocked)
-                  {
-                      _writer.WriteLine("<p>It's already unlocked.</p>", player.ConnectionId);
-                      return;
-                  }
+            else
+            {
+                if (!objToUnlock.Container.IsLocked)
+                {
+                    _writer.WriteLine("<p>It's already unlocked.</p>", player.ConnectionId);
+                    return;
+                }
 
-                  objToUnlock.Container.IsLocked = false;
-                  _writer.WriteLine("<p>You enter the key and turn it. *CLICK* </p>", player.ConnectionId);
+                objToUnlock.Container.IsLocked = false;
+                _writer.WriteLine("<p>You enter the key and turn it. *CLICK* </p>", player.ConnectionId);
 
-                  foreach (var pc in room.Players)
-                  {
-                      if (pc.Name.Equals(player.Name, StringComparison.CurrentCultureIgnoreCase))
-                      {
-                          continue;
-                      }
-                      _writer.WriteLine($"<p>{pc.Name} enters the key into {objToUnlock.Name} and turns it. *CLICK* </p>", pc.ConnectionId);
-                  }
+                foreach (var pc in room.Players)
+                {
+                    if (pc.Name.Equals(player.Name, StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        continue;
+                    }
+                    _writer.WriteLine($"<p>{pc.Name} enters the key into {objToUnlock.Name} and turns it. *CLICK* </p>", pc.ConnectionId);
+                }
 
-                  return;
+                return;
             }
 
         }

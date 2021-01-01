@@ -337,6 +337,28 @@ namespace ArchaicQuestII.API
                 }
             }
 
+
+            if (!_db.DoesCollectionExist(DataBase.Collections.Items)) {
+                foreach (var itemSeed in new ItemSeed().SeedData())
+                {
+                    _db.Save(itemSeed, DataBase.Collections.Items);
+                }
+            }
+            else
+            {
+                var hasMoney = _db.GetList<Item>(DataBase.Collections.Items)
+                    .FirstOrDefault(x => x.ItemType == Item.ItemTypes.Money);
+
+
+                if (hasMoney == null)
+                {
+                    foreach (var itemSeed in new ItemSeed().SeedData())
+                    {
+                        _db.Save(itemSeed, DataBase.Collections.Items);
+                    }
+                }
+            }
+
             if (!_db.DoesCollectionExist(DataBase.Collections.Users))
             {
 
