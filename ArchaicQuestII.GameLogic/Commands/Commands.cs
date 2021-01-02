@@ -78,7 +78,7 @@ namespace ArchaicQuestII.GameLogic.Commands
             _mobFunctions = mobFunctions;
         }
  
-        public void CommandList(string key, string obj, string target, Player player, Room room)
+        public void CommandList(string key, string obj, string target, string fullCommand, Player player, Room room)
         {
             switch (key)
             {
@@ -171,7 +171,7 @@ namespace ArchaicQuestII.GameLogic.Commands
                     break;
                 case "drop":
                 case "put":
-                    _object.Drop(obj, target, room, player);
+                    _object.Drop(obj, target, room, player, fullCommand);
                     break;
                 case "cast":
                 case "c":
@@ -311,7 +311,7 @@ namespace ArchaicQuestII.GameLogic.Commands
 
  
 
-            CommandList(key, parameters.Item1, parameters.Item2, player, room);
+            CommandList(key, parameters.Item1, parameters.Item2, cleanCommand, player, room);
         }
 
         public Tuple<string, string> MakeCommandPartsSafe(string[] commands)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.World.Room;
@@ -61,13 +62,30 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                     continue;
                 }
 
+                if (item.ItemType == Item.Item.ItemTypes.Money)
+                {
+                    _writer.WriteLine($"<p>{player.Name} picks up {ItemList.DisplayMoneyAmount(item.Value).ToLower()}.</p>", pc.ConnectionId);
+                    continue;
+                }
+
+
                 _writer.WriteLine($"<p>{player.Name} picks up {item.Name.ToLower()}.</p>", pc.ConnectionId);
             }
 
-            item.IsHiddenInRoom = false;
-            player.Inventory.Add(item);
-            _writer.WriteLine($"<p>You pick up {item.Name.ToLower()}.</p>", player.ConnectionId);
+            if (item.ItemType == Item.Item.ItemTypes.Money)
+            {
+                _writer.WriteLine($"<p>You pick up {ItemList.DisplayMoneyAmount(item.Value).ToLower()}.</p>", player.ConnectionId);
+                player.Money.Gold += item.Value;
+            }
+            else
+            {
+                item.IsHiddenInRoom = false;
+                player.Inventory.Add(item);
+                _writer.WriteLine($"<p>You pick up {item.Name.ToLower()}.</p>", player.ConnectionId);
+            }
+
             _updateUi.UpdateInventory(player);
+            _updateUi.UpdateScore(player);
             room.Clean = false;
             // TODO: You are over encumbered 
 
@@ -153,10 +171,25 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
             for (var i = container.Container.Items.Count - 1; i >= 0; i--)
             {
-                container.Container.Items[i].IsHiddenInRoom = false;
-                player.Inventory.Add(container.Container.Items[i]);
+                if (container.Container.Items[i].ItemType == Item.Item.ItemTypes.Money)
+                {
 
-                _writer.WriteLine($"<p>You pick up {container.Container.Items[i].Name.ToLower()} from {container.Name.ToLower()}.</p>", player.ConnectionId);
+                    _writer.WriteLine(
+                        $"<p>You pick up {ItemList.DisplayMoneyAmount(container.Container.Items[i].Value).ToLower()} from {container.Name.ToLower()}.</p>",
+                        player.ConnectionId);
+
+                    player.Money.Gold += container.Container.Items[i].Value;
+                }
+                else
+                {
+                    container.Container.Items[i].IsHiddenInRoom = false;
+                    player.Inventory.Add(container.Container.Items[i]);
+
+                    _writer.WriteLine(
+                        $"<p>You pick up {container.Container.Items[i].Name.ToLower()} from {container.Name.ToLower()}.</p>",
+                        player.ConnectionId);
+                }
+
 
                 foreach (var pc in room.Players)
                 {
@@ -165,19 +198,31 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                         continue;
                     }
 
-                    _writer.WriteLine($"<p>{player.Name} picks up {container.Container.Items.Name.ToLower()} from {container.Name.ToLower()}.</p>",
-                        pc.ConnectionId);
+                    if (container.Container.Items[i].ItemType == Item.Item.ItemTypes.Money)
+                    {
+                        _writer.WriteLine(
+                            $"<p>{player.Name} picks up {ItemList.DisplayMoneyAmount(container.Container.Items.Value).ToLower()} from {container.Name.ToLower()}.</p>",
+                            pc.ConnectionId);
+                    }
+                    else
+                    {
+
+                        _writer.WriteLine(
+                            $"<p>{player.Name} picks up {container.Container.Items.Name.ToLower()} from {container.Name.ToLower()}.</p>",
+                            pc.ConnectionId);
+                    }
                 }
                 container.Container.Items.RemoveAt(i);
 
             }
             _updateUi.UpdateInventory(player);
+            _updateUi.UpdateScore(player);
             room.Clean = false;
             // TODO: You are over encumbered 
 
         }
 
-        public void Drop(string target, string container, Room room, Player player)
+        public void Drop(string target, string container, Room room, Player player, string fullCommand)
         {
 
             if (target == "all" && string.IsNullOrEmpty(container))
@@ -186,7 +231,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                 return;
             }
 
-            if (!string.IsNullOrEmpty(container))
+            if (!string.IsNullOrEmpty(container) && !int.TryParse(target, out var number))
             {
                 DropInContainer(target, container, room, player);
                 return;
@@ -196,6 +241,20 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
             if (item == null)
             {
+                //incase someone tries drop gold as in drop golden sword,
+                // need to be sure that dropping an item doesn't interfere with dropping gold coins
+
+                if (!string.IsNullOrEmpty(container))
+                {
+
+                    var droppedGold = DropGold(fullCommand, room, player);
+
+                    if (droppedGold)
+                    {
+                        return;
+                    }
+                }
+
                 _writer.WriteLine("<p>You don't have that item.</p>", player.ConnectionId);
                 return;
             }
@@ -217,6 +276,77 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
             _writer.WriteLine($"<p>You drop {item.Name.ToLower()}.</p>", player.ConnectionId);
             _updateUi.UpdateInventory(player);
+        }
+
+        public bool DropGold(string command, Room room, Player player)
+        {
+            var splitCommand = command.Split(' ');
+
+            if (int.TryParse(splitCommand[1], out var number))
+            {
+                if (player.Money.Gold < number)
+                {
+                    _writer.WriteLine("<p>You don't have that much gold to drop.</p>", player.ConnectionId);
+                    return false;
+                }
+
+                var goldCoin = new Item.Item()
+                {
+                    Name = "Gold Coin",
+                    Value = number,
+                    ItemType = Item.Item.ItemTypes.Money,
+                    ArmourType = Item.Item.ArmourTypes.Cloth,
+                    AttackType = Item.Item.AttackTypes.Charge,
+                    WeaponType = Item.Item.WeaponTypes.Arrows,
+                    Gold = 1,
+                    Slot = Equipment.EqSlot.Hands,
+                    Level = 1,
+                    Modifier = new Modifier(),
+                    Description = new Description()
+                    {
+                        Look =
+                            "A small gold coin with an embossed crown on one side and the number one on the opposite side, along the edge inscribed is 'de omnibus dubitandum'",
+                        Exam =
+                            "A small gold coin with an embossed crown on one side and the number one on the opposite side, along the edge inscribed is 'de omnibus dubitandum'",
+                        Room = "A single gold coin.",
+                    },
+                    Book = new Book()
+                    {
+                        Pages = new List<string>()
+                    },
+                    ArmourRating = new ArmourRating(),
+                    Container = new Container()
+                    {
+                        Items = new ItemList()
+                    }
+                };
+
+                _writer.WriteLine($"<p>You drop {(number == 1 ? "1 gold coin." : $"{number} gold coins.")}</p>",
+                    player.ConnectionId);
+
+                foreach (var pc in room.Players)
+                {
+                    if (pc.Name == player.Name)
+                    {
+                        continue;
+                    }
+
+                    _writer.WriteLine($"<p>{player.Name} drops {ItemList.DisplayMoneyAmount(number).ToLower()}.</p>",
+                        pc.ConnectionId);
+
+
+                }
+
+                player.Money.Gold -= number;
+                room.Items.Add(goldCoin);
+
+                _updateUi.UpdateScore(player);
+
+                return true;
+
+            }
+
+            return false;
         }
 
         public void DropInContainer(string target, string container, Room room, Player player)
@@ -315,14 +445,14 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
             if (containerObj == null)
             {
-                _writer.WriteLine($"<p>You don't see that here.</p>", player.ConnectionId);
+                _writer.WriteLine("<p>You don't see that here.</p>", player.ConnectionId);
                 return;
             }
 
 
             if (containerObj.Container.CanOpen && !containerObj.Container.IsOpen)
             {
-                _writer.WriteLine($"<p>You need to open it first.</p>", player.ConnectionId);
+                _writer.WriteLine("<p>You need to open it first.</p>", player.ConnectionId);
                 return;
             }
 
@@ -350,15 +480,37 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                     continue;
                 }
 
-                _writer.WriteLine($"<p>{player.Name} gets {item.Name.ToLower()} from {containerObj.Name.ToLower()}.</p>",
-                    pc.ConnectionId);
+                if (item.ItemType == Item.Item.ItemTypes.Money)
+                {
+
+
+                    _writer.WriteLine($"<p>{player.Name} gets {ItemList.DisplayMoneyAmount(item.Value).ToLower()} from {containerObj.Name.ToLower()}</p>",
+                        pc.ConnectionId);
+                }
+                else
+                {
+                    _writer.WriteLine($"<p>{player.Name} gets {item.Name.ToLower()} from {containerObj.Name.ToLower()}.</p>",
+                        pc.ConnectionId);
+                }
+
+
             }
 
-            item.IsHiddenInRoom = false;
-            player.Inventory.Add(item);
+            if (item.ItemType == Item.Item.ItemTypes.Money)
+            {
+                _writer.WriteLine($"<p>You get {ItemList.DisplayMoneyAmount(item.Value).ToLower()} from {containerObj.Name.ToLower()}.</p>", player.ConnectionId);
+                player.Money.Gold += item.Value;
+            }
+            else
+            {
+                item.IsHiddenInRoom = false;
+                player.Inventory.Add(item);
 
-            _writer.WriteLine($"<p>You get {item.Name.ToLower()} from {containerObj.Name.ToLower()}.</p>", player.ConnectionId);
+                _writer.WriteLine($"<p>You get {item.Name.ToLower()} from {containerObj.Name.ToLower()}.</p>", player.ConnectionId);
+            }
+
             _updateUi.UpdateInventory(player);
+            _updateUi.UpdateScore(player);
             room.Clean = false;
         }
 
