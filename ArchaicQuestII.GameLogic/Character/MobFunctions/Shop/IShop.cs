@@ -15,6 +15,9 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
 
         public string DisplayUnit(int price);
 
+        public void InspectItem(int itemNumber, Room room, Player player);
+        public void InspectItem(string itemName, Room room, Player player);
+
 
     }
 }

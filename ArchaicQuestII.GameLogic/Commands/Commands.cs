@@ -162,7 +162,7 @@ namespace ArchaicQuestII.GameLogic.Commands
                     break;
                 case "give":
                 case "hand":
-                    _object.Give(obj, target, room, player);
+                    _object.Give(obj, target, room, player, fullCommand);
                     break;
                 case "loot":
                 case "get":
@@ -281,6 +281,9 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "list":
                 case "li":
                     _mobFunctions.List(room, player);
+                    break;
+                case "inspect":
+                    _mobFunctions.InspectItem(obj, room, player);
                     break;
                 default:
                         _commandHandler.HandleCommand(key,obj,target, player, room);

@@ -36,7 +36,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Character.MobFunctions
                 ConnectionId = "1",
                 Name = "Gary",
                 Inventory = new ItemList(),
-                ShopKeeper = true
+                Shopkeeper = true
             };
 
             var room = new Room();
@@ -62,7 +62,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Character.MobFunctions
                 ConnectionId = "1",
                 Name = "Gary",
                 Inventory = new ItemList(),
-                ShopKeeper = false
+                Shopkeeper = false
             };
 
             shopkeeper.Inventory.Add(item);
@@ -72,7 +72,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Character.MobFunctions
                 ConnectionId = "1",
                 Name = "Player",
                 Inventory = new ItemList(),
-                ShopKeeper = false
+                Shopkeeper = false
             };
 
             var room = new Room();
@@ -101,7 +101,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Character.MobFunctions
                 ConnectionId = "1",
                 Name = "Gary",
                 Inventory = new ItemList(),
-                ShopKeeper = true
+                Shopkeeper = true
             };
 
             shopkeeper.Inventory.Add(item);
@@ -111,7 +111,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Character.MobFunctions
                 ConnectionId = "1",
                 Name = "Player",
                 Inventory = new ItemList(),
-                ShopKeeper = false
+                Shopkeeper = false
             };
 
             var room = new Room();
@@ -124,7 +124,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Character.MobFunctions
 
             _IWriteToClient.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("Gary says 'Here's what I have for sale.'")), "1"), Times.Once());
 
-            _IWriteToClient.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("<table><tr><td>#</td><td>Name</td><td>Price</td></tr><tr><td>1</td><td>Sword</td><td>xx</td></tr></table>")), "1"), Times.Once());
+            _IWriteToClient.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("<table class='data'><tr><td style='width: 30px; text-align: center;'>#</td><td style='width: 30px; text-align: center;'>Level</td><td  style='width: 100px;'>Price</td><td>Item</td></tr><tr><td style='width: 30px; text-align: center;'>1</td><td style='width: 30px; text-align: center;'>0</td><td  style='width: 100px;'>0 SP</td><td>Sword</td></tr></table>")), "1"), Times.Once());
         }
 
     }

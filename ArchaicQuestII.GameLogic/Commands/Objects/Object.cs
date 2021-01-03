@@ -246,7 +246,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
                 if (!string.IsNullOrEmpty(container))
                 {
-
+                    // TODO: Add drop gold in Container
                     var droppedGold = DropGold(fullCommand, room, player);
 
                     if (droppedGold)
@@ -344,6 +344,60 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
                 return true;
 
+            }
+
+            return false;
+        }
+
+        public bool GiveGold(string command, Room room, Player player)
+        {
+            var splitCommand = command.Split(' ');
+
+            if (int.TryParse(splitCommand[1], out var number))
+            {
+                if (player.Money.Gold < number)
+                {
+                    _writer.WriteLine("<p>You don't have that much gold to give.</p>", player.ConnectionId);
+                    return false;
+                }
+
+                var targetName = splitCommand[3];
+                var target =
+                    room.Players.FirstOrDefault(x =>
+                        x.Name.Contains(targetName, StringComparison.CurrentCultureIgnoreCase)) ??
+                    room.Mobs.FirstOrDefault(x => x.Name.Contains(targetName, StringComparison.CurrentCultureIgnoreCase));
+
+                if (target == null)
+                {
+                    _writer.WriteLine("<p>They aren't here.</p>", player.ConnectionId);
+                    return false;
+                }
+
+                _writer.WriteLine($"<p>You give {target.Name} {(number == 1 ? "1 gold coin." : $"{number} gold coins.")}</p>",
+                    player.ConnectionId);
+
+                player.Money.Gold -= number;
+                target.Money.Gold += number;
+
+                foreach (var pc in room.Players)
+                {
+                    if (pc.Name == player.Name)
+                    {
+                        continue;
+                    }
+
+                    if (pc.Name == target.Name)
+                    {
+                        _writer.WriteLine($"<p>{player.Name} gives you {(number == 1 ? "1 gold coin." : $"{number} gold coins.")}</p>",
+                            pc.ConnectionId);
+                        continue;
+                    }
+
+                    _writer.WriteLine($"<p>{player.Name} gives {target.Name} some gold.</p>",
+                        pc.ConnectionId);
+                }
+
+                return true;
             }
 
             return false;
@@ -663,7 +717,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
             room.Clean = false;
         }
 
-        public void Give(string itemName, string targetName, Room room, Player player)
+        public void Give(string itemName, string targetName, Room room, Player player, string command)
         {
 
             if (string.IsNullOrEmpty(itemName))
@@ -685,6 +739,17 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
             if (target == null)
             {
+
+                if (int.TryParse(itemName, out var number) && targetName.Equals("gold"))
+                {
+                    if (GiveGold(command, room, player))
+                    {
+                        return;
+                    }
+
+                    return;
+                }
+
                 _writer.WriteLine("<p>They aren't here.</p>", player.ConnectionId);
                 return;
             }

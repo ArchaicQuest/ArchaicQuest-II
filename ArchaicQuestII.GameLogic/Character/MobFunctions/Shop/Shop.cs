@@ -22,13 +22,13 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
         {
             _writer.WriteLine(mob.Name + " says 'Here's what I have for sale.'", player.ConnectionId);
             var sb = new StringBuilder();
-            sb.Append("<table class='data'><tr><td style='width: 30px; text-align: center;'>#</td><td style='width: 30px; text-align: center;'>Level</td><td  style='width: 100px;'>Price</td><td>Item</td></tr>");
+            sb.Append("<table class='data'><tr><td style='width: 30px; text-align: center;'>#</td><td style='width: 30px; text-align: center;'>Level</td><td  style='width: 65px;'>Price</td><td>Item</td></tr>");
 
             int i = 0;
             foreach (var item in mob.Inventory.Distinct().OrderBy(x => x.Level).ThenBy(x => x.Value))
             {
                 i++;
-                sb.Append($"<tr><td style='width: 30px; text-align: center;'>{i}</td><td style='width: 30px; text-align: center;'>{item.Level}</td><td  style='width: 100px;'>{DisplayUnit(item.Value)}</td><td>{item.Name}</td></tr>");
+                sb.Append($"<tr><td style='width: 30px; text-align: center;'>{i}</td><td style='width: 30px; text-align: center;'>{item.Level}</td><td  style='width: 65px;'>{DisplayUnit(item.Value)}</td><td>{item.Name}</td></tr>");
             }
 
             sb.Append("</table>");
@@ -76,8 +76,123 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
         /// <returns></returns>
         public string DisplayUnit(int price)
         {
-            var goldPrice = AddMarkUp(price) / 100;
-            return goldPrice < 1 ? $"{Math.Floor(goldPrice * 100)} SP" : $"{Math.Floor(goldPrice)} GP";
+            var goldPrice = AddMarkUp(price); // /100
+            return $"{Math.Floor(goldPrice)}";
+            // return goldPrice < 1 ? $"{Math.Floor(goldPrice * 100)} SP" : $"{Math.Floor(goldPrice)} GP";
+        }
+
+        public void InspectItem(int itemNumber, Room room, Player player)
+        {
+
+            itemNumber -= 1;
+            if (itemNumber < 0)
+            {
+                itemNumber = 0;
+            }
+
+            var vendor = room.Mobs.FirstOrDefault(x => x.Shopkeeper.Equals(true));
+
+            if (vendor == null)
+            {
+                _writer.WriteLine("<p>You can't do that here.</p>", player.ConnectionId);
+                return;
+            }
+
+            var hasItem = vendor.Inventory.Distinct().OrderBy(x => x.Level).ThenBy(x => x.Value).ToArray()[itemNumber];
+            if (hasItem == null)
+            {
+                _writer.WriteLine($"<p>{vendor.Name} says 'I don't have anything like that to show you.'</p>", player.ConnectionId);
+                return;
+            }
+
+            var sb = new StringBuilder();
+            sb.Append($"<p>{vendor.Name} explains to you the properties of {hasItem.Name.ToLower()}:</p>");
+            sb.Append(
+                $"<p>'{hasItem.Name}' is type {hasItem.ItemType}<br />weight is {hasItem.Weight}, value is {hasItem.Value}, level is {hasItem.Level}.<br/>");
+
+            string flags = "Extra flags: ";
+            foreach (Enum value in Enum.GetValues(hasItem.ItemFlag.GetType()))
+            {
+                if (hasItem.ItemFlag.HasFlag(value))
+                {
+
+                    flags += value + ", ";
+
+                }
+            }
+
+            if (hasItem.ItemType == Item.Item.ItemTypes.Armour)
+            {
+                sb.Append($"Armour Type: {hasItem.ArmourType}, Defense {hasItem.ArmourRating.Armour} and {hasItem.ArmourRating.Magic} vs magic.<br />");
+            }
+
+            if (hasItem.ItemType == Item.Item.ItemTypes.Weapon)
+            {
+                sb.Append($"Weapon Type: {hasItem.WeaponType}, Damage is {hasItem.Damage.Minimum}-{hasItem.Damage.Maximum} (average {hasItem.Damage.Minimum + hasItem.Damage.Maximum / 2}).<br />");
+                sb.Append($"Damage type: {hasItem.DamageType}</br>");
+            }
+
+            sb.Append($"{flags}<br />");
+            sb.Append("</p>");
+            _writer.WriteLine(sb.ToString(), player.ConnectionId);
+        }
+    
+
+        public void InspectItem(string itemName, Room room, Player player)
+        {
+            if (int.TryParse(itemName, out var n))
+            {
+                InspectItem(n, room, player);
+                return;
+            }
+
+            var vendor = room.Mobs.FirstOrDefault(x => x.Shopkeeper.Equals(true));
+
+            if (vendor == null)
+            {
+                _writer.WriteLine("<p>You can't do that here.</p>", player.ConnectionId);
+                return;
+            }
+
+            var hasItem = vendor.Inventory.FirstOrDefault(x =>
+                x.Name.Contains(itemName, StringComparison.InvariantCultureIgnoreCase));
+
+            if (hasItem == null)
+            {
+                _writer.WriteLine($"<p>{vendor.Name} says 'I don't have anything like that to show you.'</p>", player.ConnectionId);
+                return;
+            }
+
+            var sb = new StringBuilder();
+            sb.Append($"<p>{vendor.Name} explains to you the properties of {hasItem.Name.ToLower()}:</p>");
+            sb.Append(
+                $"<p>'{hasItem.Name}' is type {hasItem.ItemType}<br />weight is {hasItem.Weight}, value is {hasItem.Value}, level is {hasItem.Level}.<br/>");
+
+            string flags = "Extra flags: ";
+            foreach (Enum value in Enum.GetValues(hasItem.ItemFlag.GetType()))
+            {
+                if (hasItem.ItemFlag.HasFlag(value))
+                {
+
+                    flags += value + ", ";
+
+                }
+            }
+
+            if (hasItem.ItemType == Item.Item.ItemTypes.Armour)
+            {
+                sb.Append($"Armour Type: {hasItem.ArmourType}, Defense {hasItem.ArmourRating.Armour} and {hasItem.ArmourRating.Magic} vs magic.<br />");
+            }
+
+            if (hasItem.ItemType == Item.Item.ItemTypes.Weapon)
+            {
+                sb.Append($"Weapon Type: {hasItem.WeaponType}, Damage is {hasItem.Damage.Minimum}-{hasItem.Damage.Maximum} (average {hasItem.Damage.Minimum + hasItem.Damage.Maximum / 2}).<br />");
+                sb.Append($"Damage type: {hasItem.DamageType}</br>");
+            }
+
+            sb.Append($"{flags}<br />");
+            sb.Append("</p>");
+            _writer.WriteLine(sb.ToString(), player.ConnectionId);
         }
     }
 }
