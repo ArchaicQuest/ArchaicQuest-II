@@ -136,7 +136,6 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
             sb.Append("</p>");
             _writer.WriteLine(sb.ToString(), player.ConnectionId);
         }
-    
 
         public void InspectItem(string itemName, Room room, Player player)
         {
@@ -193,6 +192,139 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
             sb.Append($"{flags}<br />");
             sb.Append("</p>");
             _writer.WriteLine(sb.ToString(), player.ConnectionId);
+        }
+
+        public void BuyItem(int itemNumber, Room room, Player player)
+        {
+
+            itemNumber -= 1;
+            if (itemNumber < 0)
+            {
+                itemNumber = 0;
+            }
+
+            var vendor = room.Mobs.FirstOrDefault(x => x.Shopkeeper.Equals(true));
+
+            if (vendor == null)
+            {
+                _writer.WriteLine("<p>You can't do that here.</p>", player.ConnectionId);
+                return;
+            }
+
+            var hasItem = vendor.Inventory.Distinct().OrderBy(x => x.Level).ThenBy(x => x.Value).ToArray()[itemNumber];
+
+            if (hasItem == null)
+            {
+                _writer.WriteLine($"<p>{vendor.Name} says 'I don't sell that, please view my \'list\' of items for sale.'</p>", player.ConnectionId);
+                return;
+            }
+
+            if (player.Money.Gold < AddMarkUp(hasItem.Value))
+            {
+                _writer.WriteLine($"<p>{vendor.Name} says 'Sorry you can't afford that.'</p>", player.ConnectionId);
+                return;
+            }
+
+            player.Money.Gold -= (int)AddMarkUp(hasItem.Value);
+
+            player.Inventory.Add(hasItem);
+
+            // TODO: weight
+
+            _clientUi.UpdateScore(player);
+            _clientUi.UpdateInventory(player);
+
+            _writer.WriteLine($"<p>You buy {hasItem.Name.ToLower()} for {Math.Floor(AddMarkUp(hasItem.Value))} gold.</p>", player.ConnectionId);
+        }
+
+        public void BuyItem(string itemName, Room room, Player player)
+        {
+            if (int.TryParse(itemName, out var n))
+            {
+                BuyItem(n, room, player);
+                return;
+            }
+
+            var vendor = room.Mobs.FirstOrDefault(x => x.Shopkeeper.Equals(true));
+
+            if (vendor == null)
+            {
+                _writer.WriteLine("<p>You can't do that here.</p>", player.ConnectionId);
+                return;
+            }
+
+            var hasItem = vendor.Inventory.FirstOrDefault(x =>
+                x.Name.Contains(itemName, StringComparison.InvariantCultureIgnoreCase));
+
+            if (hasItem == null)
+            {
+                _writer.WriteLine($"<p>{vendor.Name} says 'I don't sell that, please view my \'list\' of items for sale.'</p>", player.ConnectionId);
+                return;
+            }
+
+            if (player.Money.Gold < AddMarkUp(hasItem.Value))
+            {
+                _writer.WriteLine($"<p>{vendor.Name} says 'Sorry you can't afford that.'</p>", player.ConnectionId);
+                return;
+            }
+
+            player.Money.Gold -= (int)Math.Floor(AddMarkUp(hasItem.Value));
+
+            player.Inventory.Add(hasItem);
+
+            // TODO: weight
+
+            _clientUi.UpdateScore(player);
+            _clientUi.UpdateInventory(player);
+  
+            _writer.WriteLine($"<p>You buy {hasItem.Name.ToLower()} for {Math.Floor(AddMarkUp(hasItem.Value))} gold.</p>", player.ConnectionId);
+        }
+
+        public void SellItem(string itemName, Room room, Player player)
+        {
+            var vendor = room.Mobs.FirstOrDefault(x => x.Shopkeeper.Equals(true));
+
+            if (vendor == null)
+            {
+                _writer.WriteLine("<p>You can't do that here.</p>", player.ConnectionId);
+                return;
+            }
+
+            var hasItem = player.Inventory.FirstOrDefault(x =>
+                x.Name.Contains(itemName, StringComparison.InvariantCultureIgnoreCase));
+
+            if (hasItem == null)
+            {
+                _writer.WriteLine($"<p>{vendor.Name} says 'You don't have that item.'</p>", player.ConnectionId);
+                return;
+            }
+
+            var vendorInterested = vendor.Inventory.FirstOrDefault(x => x.ItemType.Equals(hasItem.ItemType));
+
+            if (vendorInterested == null)
+            {
+                _writer.WriteLine($"<p>{vendor.Name} says 'I'm not interested in {hasItem.Name.ToLower()}.'</p>", player.ConnectionId);
+                return;
+            }
+
+            var vendorMarkup = hasItem.Value * 1.5;
+            var vendorBuyPrice = hasItem.Value - (vendorMarkup - hasItem.Value);
+
+            player.Money.Gold += (int)Math.Floor(vendorBuyPrice);
+            player.Inventory.Remove(hasItem);
+
+            // if we wanted to show sold items in the vendors list we would add it here
+            // currently we can't set limits so this would make all items sold infinite 
+
+            //if (vendor.Inventory.FirstOrDefault(x => x.Name.Equals(hasItem.Name)) == null)
+            //{
+            //    vendor.Inventory.Add(hasItem);
+            //}
+
+            _clientUi.UpdateScore(player);
+            _clientUi.UpdateInventory(player);
+
+            _writer.WriteLine($"<p>You sell {hasItem.Name.ToLower()} for {(int)Math.Floor(vendorBuyPrice)} gold.</p>", player.ConnectionId);
         }
     }
 }

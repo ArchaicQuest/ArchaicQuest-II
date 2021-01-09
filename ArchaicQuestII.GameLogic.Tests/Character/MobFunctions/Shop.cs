@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.MobFunctions.Shop;
+using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.World.Room;
 using Xunit;
@@ -125,6 +126,111 @@ namespace ArchaicQuestII.GameLogic.Tests.Character.MobFunctions
             _IWriteToClient.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("Gary says 'Here's what I have for sale.'")), "1"), Times.Once());
 
             _IWriteToClient.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("<table class='data'><tr><td style='width: 30px; text-align: center;'>#</td><td style='width: 30px; text-align: center;'>Level</td><td  style='width: 100px;'>Price</td><td>Item</td></tr><tr><td style='width: 30px; text-align: center;'>1</td><td style='width: 30px; text-align: center;'>0</td><td  style='width: 100px;'>0 SP</td><td>Sword</td></tr></table>")), "1"), Times.Once());
+        }
+
+        [Fact]
+        public void Buy_from_shop()
+        {
+
+            var item = new GameLogic.Item.Item()
+            {
+                Name = "Sword",
+                Value = 10
+
+            };
+            var shopkeeper = new Player
+            {
+                ConnectionId = "1",
+                Name = "Gary",
+                Inventory = new ItemList(),
+                Shopkeeper = true
+            };
+
+            shopkeeper.Inventory.Add(item);
+
+            var player = new Player
+            {
+                ConnectionId = "1",
+                Name = "Player",
+                Inventory = new ItemList(),
+                Shopkeeper = false,
+                Money = new GameLogic.Character.Model.Money()
+                {
+                    Gold = 10
+                }
+            };
+
+            var room = new Room();
+            room.Mobs.Add(shopkeeper);
+            room.Players.Add(player);
+
+
+            var shop = new Shop(_IWriteToClient.Object, _IUpdateUI.Object);
+            shop.BuyItem("sword", room, player);
+
+            Assert.True(player.Inventory.FirstOrDefault(x => x.Name.Equals("Sword")) != null);
+            Assert.True(player.Money.Gold == 0);
+
+            _IWriteToClient.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("You buy sword for 10 gold.")), "1"), Times.Once());
+ 
+        }
+
+        [Fact]
+        public void Sell_to_shop()
+        {
+
+            var item = new GameLogic.Item.Item()
+            {
+                Name = "Sword",
+                Value = 10,
+                ItemType = GameLogic.Item.Item.ItemTypes.Weapon
+
+            };
+
+            var itemB = new GameLogic.Item.Item()
+            {
+                Name = "Axe",
+                Value = 10,
+                ItemType = GameLogic.Item.Item.ItemTypes.Weapon
+
+            };
+        var shopkeeper = new Player
+            {
+                ConnectionId = "1",
+                Name = "Gary",
+                Inventory = new ItemList(),
+                Shopkeeper = true
+            };
+        shopkeeper.Inventory.Add(itemB);
+          
+
+            var player = new Player
+            {
+                ConnectionId = "1",
+                Name = "Player",
+                Inventory = new ItemList(),
+                Shopkeeper = false,
+                Money = new GameLogic.Character.Model.Money()
+                {
+                    Gold = 10
+                }
+            };
+
+            player.Inventory.Add(item);
+
+            var room = new Room();
+            room.Mobs.Add(shopkeeper);
+            room.Players.Add(player);
+
+
+            var shop = new Shop(_IWriteToClient.Object, _IUpdateUI.Object);
+            shop.SellItem("sword", room, player);
+
+            Assert.True(player.Inventory.FirstOrDefault(x => x.Name.Equals("Sword")) == null);
+            Assert.True(player.Money.Gold == 15);
+
+            _IWriteToClient.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("You sell sword for 5 gold.")), "1"), Times.Once());
+
         }
 
     }

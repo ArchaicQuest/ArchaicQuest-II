@@ -282,7 +282,16 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "li":
                     _mobFunctions.List(room, player);
                     break;
+                case "buy":
+                case "by":
+                case "b":
+                    _mobFunctions.BuyItem(obj, room, player);
+                    break;
+                case "sell":
+                    _mobFunctions.SellItem(obj, room, player);
+                    break; 
                 case "inspect":
+                case "ins":
                     _mobFunctions.InspectItem(obj, room, player);
                     break;
                 default:

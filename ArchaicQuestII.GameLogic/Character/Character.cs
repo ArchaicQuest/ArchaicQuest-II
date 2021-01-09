@@ -133,7 +133,7 @@ end
         [JsonProperty("defaultAttack")]
         public string DefaultAttack { get; set; }
         [JsonIgnore]
-        public Stack<string> Buffer { get; set; } = new Stack<string>();
+        public Queue<string> Buffer { get; set; } = new Queue<string>();
         public List<Spell.Model.Spell> Spells { get; set; }
         public List<SkillList> Skills { get; set; }
         public bool Deleted { get; set; }

@@ -18,6 +18,10 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
         public void InspectItem(int itemNumber, Room room, Player player);
         public void InspectItem(string itemName, Room room, Player player);
 
+        public void BuyItem(int itemNumber, Room room, Player player);
+        public void BuyItem(string itemName, Room room, Player player);
+        public void SellItem(string itemName, Room room, Player player);
+
 
     }
 }
