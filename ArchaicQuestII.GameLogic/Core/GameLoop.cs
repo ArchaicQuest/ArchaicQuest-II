@@ -306,11 +306,6 @@ namespace ArchaicQuestII.GameLogic.Core
                             }
 
 
-                            else
-                            {
-
-                            }
-
                             if (mob.Roam && _dice.Roll(1, 1, 100) >= 50)
                             {
                                 var exits = Helpers.GetListOfExits(room.Exits);
