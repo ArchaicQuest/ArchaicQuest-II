@@ -66,6 +66,6 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public bool AddHelp(int id, Help help);
         public Help GetHelp(int id);
-        public Help FindHelp(string id);
+        public List<Help> FindHelp(string id);
     }
 }

@@ -167,9 +167,9 @@ namespace ArchaicQuestII.GameLogic.Core
         }
 
 
-        public Help FindHelp(string id)
+        public List<Help> FindHelp(string id)
         {
-            return _helpCache.Values.FirstOrDefault(x => x.Keywords.Contains(id, StringComparison.CurrentCultureIgnoreCase));
+            return _helpCache.Values.Where(x => x.Keywords.Contains(id, StringComparison.CurrentCultureIgnoreCase)).ToList();
         }
 
 
