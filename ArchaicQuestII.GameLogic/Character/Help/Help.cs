@@ -14,5 +14,6 @@ namespace ArchaicQuestII.GameLogic.Character.Help
         public string RelatedHelpFiles { get; set; }
         public DateTime? DateCreated { get; set; }
         public DateTime? DateUpdated { get; set; }
+        public Boolean Deleted { get; set; }
     }
 }

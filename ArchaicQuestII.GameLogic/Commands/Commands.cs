@@ -7,6 +7,7 @@ using ArchaicQuestII.GameLogic.Commands.Movement;
 using ArchaicQuestII.GameLogic.World.Room;
 using System.Linq;
 using ArchaicQuestII.GameLogic.Character.Equipment;
+using ArchaicQuestII.GameLogic.Character.Help;
 using ArchaicQuestII.GameLogic.Character.MobFunctions;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Commands.Communication;
@@ -40,6 +41,7 @@ namespace ArchaicQuestII.GameLogic.Commands
         private readonly ICommandHandler _commandHandler;
         private readonly ICore _core;
         private readonly IMobFunctions _mobFunctions;
+        private readonly IHelp _help;
 
         public Commands(
             IMovement movement,
@@ -57,7 +59,8 @@ namespace ArchaicQuestII.GameLogic.Commands
             ISocials socials,
             ICommandHandler commandHandler,
             ICore core,
-            IMobFunctions mobFunctions
+            IMobFunctions mobFunctions,
+            IHelp help
             )
         {
             _movement = movement;
@@ -76,6 +79,7 @@ namespace ArchaicQuestII.GameLogic.Commands
             _commandHandler = commandHandler;
             _core = core;
             _mobFunctions = mobFunctions;
+            _help = help;
         }
  
         public void CommandList(string key, string obj, string target, string fullCommand, Player player, Room room)
@@ -293,6 +297,9 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "inspect":
                 case "ins":
                     _mobFunctions.InspectItem(obj, room, player);
+                    break;
+                case "help":
+                    _help.DisplayHelpFile(obj, player);
                     break;
                 default:
                         _commandHandler.HandleCommand(key,obj,target, player, room);

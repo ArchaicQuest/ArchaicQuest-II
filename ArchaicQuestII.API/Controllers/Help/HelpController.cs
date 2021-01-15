@@ -73,11 +73,35 @@ namespace ArchaicQuestII.API.Controllers
         }
 
         [HttpGet]
+        [Route("api/help/GetHelpById/{id:int}")]
+        public Help GetHelpById(int id)
+        {
+            return _db.GetById<Help>(id, DataBase.Collections.Help);
+        }
+
+
+        [HttpGet]
         [Route("api/help")]
         public List<Help> GetHelp()
         {
 
-            return _db.GetList<Help>(DataBase.Collections.Help).ToList();
+            return _db.GetList<Help>(DataBase.Collections.Help).Where(x => x.Deleted.Equals(false)).ToList();
+
+        }
+
+        [HttpDelete]
+        [Route("api/help/delete/{id:int}")]
+        public IActionResult Delete(int id)
+        {
+            var help = _db.GetById<Help>(id, DataBase.Collections.Help);
+            help.Deleted = true;
+            var saved = _db.Save(help, DataBase.Collections.Help);
+
+            if (saved)
+            {
+                return Ok(JsonConvert.SerializeObject(new { toast = $"{help.Title} deleted successfully." }));
+            }
+            return Ok(JsonConvert.SerializeObject(new { toast = $"{help.Title} deletion failed." }));
 
         }
 

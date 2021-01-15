@@ -6,6 +6,7 @@ namespace ArchaicQuestII.GameLogic.Character.Help
 {
     public interface IHelp
     {
-        string FindHelpFile(string keyword);
+        Help FindHelpFile(string keyword);
+        void DisplayHelpFile(string keyword, Player player);
     }
 }

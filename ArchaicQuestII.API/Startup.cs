@@ -31,6 +31,7 @@ using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Emote;
 using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.Character.Gain;
+using ArchaicQuestII.GameLogic.Character.Help;
 using ArchaicQuestII.GameLogic.Character.MobFunctions;
 using ArchaicQuestII.GameLogic.Character.MobFunctions.Shop;
 using ArchaicQuestII.GameLogic.Character.Model;
@@ -126,6 +127,7 @@ namespace ArchaicQuestII.API
             services.AddSingleton<ICore, GameLogic.Core.Core>();
             services.AddSingleton<IQuestLog, QuestLog>();
             services.AddSingleton<IMobFunctions, Shop>();
+            services.AddSingleton<IHelp, HelpFile>();
             services.AddSingleton<IWriteToClient, WriteToClient>((factory) => new WriteToClient(_hubContext, TelnetHub.Instance));
            
         }
@@ -357,6 +359,34 @@ namespace ArchaicQuestII.API
                         _db.Save(itemSeed, DataBase.Collections.Items);
                     }
                 }
+            }
+
+            if (!_db.DoesCollectionExist(DataBase.Collections.Help))
+            {
+                foreach (var seed in new HelpSeed().SeedData())
+                {
+                    _db.Save(seed, DataBase.Collections.Help);
+                }
+            }
+            else
+            {
+                var helpList = _db.GetList<Help>(DataBase.Collections.Help);
+
+
+                foreach (var seed in new HelpSeed().SeedData())
+                {
+                    if (helpList.FirstOrDefault(x => x.Title.Equals(seed.Title)) != null)
+                    {
+                        continue;
+                    }
+
+                    _db.Save(seed, DataBase.Collections.Help);
+                }
+            }
+            var helpFiles = _db.GetList<Help>(DataBase.Collections.Help);
+            foreach (var helpFile in helpFiles)
+            {
+                _cache.AddHelp(helpFile.Id, helpFile);
             }
 
             if (!_db.DoesCollectionExist(DataBase.Collections.Users))
