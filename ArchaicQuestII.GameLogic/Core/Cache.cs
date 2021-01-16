@@ -169,7 +169,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public List<Help> FindHelp(string id)
         {
-            return _helpCache.Values.Where(x => x.Keywords.Contains(id, StringComparison.CurrentCultureIgnoreCase)).ToList();
+            return _helpCache.Values.Where(x => x.Keywords.Contains(id, StringComparison.CurrentCultureIgnoreCase) && x.Deleted.Equals(false)).ToList();
         }
 
 

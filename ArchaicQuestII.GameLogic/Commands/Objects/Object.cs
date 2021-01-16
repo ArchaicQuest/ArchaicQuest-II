@@ -612,7 +612,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
         public void Open(string target, Room room, Player player)
         {
-            var item = room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ?? player.Inventory.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+            var item = room.Items.FirstOrDefault(x => x.Name.StartsWith(target, StringComparison.CurrentCultureIgnoreCase)) ?? player.Inventory.FirstOrDefault(x => x.Name.StartsWith(target, StringComparison.CurrentCultureIgnoreCase));
 
             if (item == null)
             {
@@ -679,7 +679,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
         public void Close(string target, Room room, Player player)
         {
 
-            var item = room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ?? player.Inventory.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+            var item = room.Items.FirstOrDefault(x => x.Name.StartsWith(target, StringComparison.CurrentCultureIgnoreCase)) ?? player.Inventory.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
 
             if (item != null && item.Container.CanOpen != true)
             {
@@ -820,7 +820,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
         {
             var objToUnlock =
                 room.Items.FirstOrDefault(x =>
-                    x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+                    x.Name.StartsWith(target, StringComparison.CurrentCultureIgnoreCase));
 
             if (objToUnlock == null)
             {
@@ -913,7 +913,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
         {
             var objToUnlock =
                 room.Items.FirstOrDefault(x =>
-                    x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+                    x.Name.StartsWith(target, StringComparison.CurrentCultureIgnoreCase));
 
             if (objToUnlock == null)
             {

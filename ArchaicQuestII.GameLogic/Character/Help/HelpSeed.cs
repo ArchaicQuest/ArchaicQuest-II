@@ -44,14 +44,35 @@ namespace ArchaicQuestII.GameLogic.Character.Help
                 },
                 new Help()
                 {
-                    Title = "Get",
-                    Keywords = "get, pick, grab",
-                    BriefDescription = "How to get items",
-                    Description = "Typing <span class='hint'>get &lt;thing&gt;</span> will pick up the item in the room.\r\n\r\n Usage: <span class='hint'>get sword</span>. \r\n\r\n To see the item you have just picked up type <span class='hint'>inventory</span> or <span class='hint'>i</span> for short to display the items you are currently carry. \r\n\r\n To drop an item type <span class='hint'>drop &lt;thing&gt;</span> e.g. drop sword. This item will now be available in the room for others to pick up.",
+                    Title = "Item Interaction",
+                    Keywords = "Drop, Get, Give, Put, Take",
+                    BriefDescription = "Information about object manipulation.",
+                    Description = "\r\n<table class='simple'>\r\n<tr><td><span style='color:#fff'>Syntax</span></td><td>&nbsp;</td></tr>\r\n<tr><td>drop <span style='color:#fff'>&lt;object&gt;</span> </td><td>Drops the item from your inventory.</td></tr>\r\n<tr><td>drop <span style='color:#fff'>&lt;amount&gt;</span> coins</td><td>Drops this amount of gold if you have it.</td></tr>\r\n<tr><td>get <span style='color:#fff'>&lt;object&gt;</span>  </td><td>Picks up an item from the room.</td></tr>\r\n<tr><td>get <span style='color:#fff'>&lt;object&gt;</span> <span style='color:#fff'>&lt;container&gt;</span> </td><td>Gets an item from a container.</td></tr>\r\n<tr><td>give <span style='color:#fff'>&lt;object&gt;</span> <span style='color:#fff'>&lt;character&gt;</span></td><td>Gives an item to another.</td></tr>\r\n<tr><td>give <span style='color:#fff'>&lt;amount&gt;</span> gold <span style='color:#fff'>&lt;character&gt;</span></td><td>Gives a character gold.</td></tr>\r\n<tr><td>put <span style='color:#fff'>&lt;object&gt;</span> <span style='color:#fff'>&lt;container&gt;</span></td><td>Puts an item into a container.</td></tr>\r\n</table>\r\n'<span class='hint'>drop</span>' is used to drop a specified item or gold to the ground if you possess it. Only items in your inventory can be dropped, to drop a worn item you must remove it first.\r\n\r\nUsage: drop sword\r\n           drop all \r\n\r\n'<span class='hint'>get</span>' is used to get the specified item or gold from the ground,container, or a corpse.  \r\n\r\nUsage: get sword \r\n           get all \r\n           get all corpse \r\n\r\n'<span class='hint'>give</span>' is used to give the specified item or gold to another player or NPC.\r\n\r\nUsage: give sword Luca \r\n           give 100 gold Hugo\r\n\r\n'<span class='hint'>put</span>' is used to put the specified item into a container\r\n\r\nUsage: put sword Chest \r\n           put all chest \r\n\r\nOther commands that deal with objects are:\r\n\r\n<table class=\"simple\">\r\n<tr><td style='width:72px'>wear<td><td>wear a piece of armour.<td></tr>\r\n<tr><td style='width:72px'>wield<td><td>wield a weapon.<td></tr>\r\n<tr><td style='width:72px'>hold<td><td>hold an item<td></tr>\r\n<tr><td style='width:72px'>remove<td><td>stop using a worn, held, or wielded item.<td></tr>\r\n</table>",
 
+
+                DateCreated = DateTime.Now,
+                    DateUpdated = DateTime.Now,
+                    RelatedHelpFiles = "Equipment"
+                },
+                new Help()
+                {
+                    Title = "Wear",
+                    Keywords = "wear, wearable",
+                    BriefDescription = "Allows a player to wear items in their inventory.  ",
+                    Description = "<table class='simple'>\r\n<tr><td><span style='color:#fff'>Syntax</span></td><td>&nbsp;</td></tr>\r\n<tr><td>wear <span style='color:#fff'>&lt;object&gt;</span> </td><td>Wears a particular object.</td></tr>\r\n<tr><td>wear <span style='color:#fff'>all</span> coins</td><td>Attempts to wear all items in inventory.</td></tr>\r\n<tr><td>eq</td><td>Shows worn items</td></tr>\r\n</table>\r\n'<span class='hint'>wear</span>' is used to wear a particular item. This is the only way to gain the benefits of an item. Some wear locations are duplicated such as neck or wrist. To find out the item properties of an item use the identify spell or seek a mage from the guild. If you are already wearing an item in an occupied slot it will be replaced with the new item you want to wear.\r\n\r\nWear all will try to wear all items in your inventory until your equipment slots are full.\r\n\r\nUsage: wear helm\r\n           wear all \r\n\r\nOther commands that deal with items are:\r\n\r\n<table class=\"simple\">\r\n<tr><td style='width:72px'>wield<td><td>wield a weapon.<td></tr>\r\n<tr><td style='width:72px'>hold<td><td>hold an item<td></tr>\r\n<tr><td style='width:72px'>remove<td><td>stop using a worn, held, or wielded item.<td></tr>\r\n</table>",
                     DateCreated = DateTime.Now,
                     DateUpdated = DateTime.Now,
-                    RelatedHelpFiles = "Drop, Inventory"
+                    RelatedHelpFiles = "Wield, hold"
+                },
+                new Help()
+                {
+                    Title = "Wield",
+                    Keywords = "wield, weapons",
+                    BriefDescription = "Allows a player to wield a weapon",
+                    Description = "<table class='simple'>\r\n<tr><td><span style='color:#fff'>Syntax</span></td><td>&nbsp;</td></tr>\r\n<tr><td>Wield<span style='color:#fff'>&lt;object&gt;</span> </td><td>Wields a weapon.</td></tr>\r\n</table>\r\n'<span class='hint'>wield</span>' is used to wield a weapon. You may not wield a weapon if it's a higher level than you or does not match your alignment or is to heavy for you to wield.\r\n\r\nUsage: wield dagger\r\n\r\nOther commands that deal with items are:\r\n\r\n<table class=\"simple\">\r\n<tr><td style='width:72px'>wear<td><td>wear equipment.<td></tr>\r\n<tr><td style='width:72px'>hold<td><td>hold an item<td></tr>\r\n<tr><td style='width:72px'>remove<td><td>stop using a worn, held, or wielded item.<td></tr>\r\n</table>",
+                    DateCreated = DateTime.Now,
+                    DateUpdated = DateTime.Now,
+                    RelatedHelpFiles = "Wear"
                 }
             };
 

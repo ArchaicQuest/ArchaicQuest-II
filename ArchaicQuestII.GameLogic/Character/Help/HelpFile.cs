@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Core;
 
@@ -35,6 +36,28 @@ namespace ArchaicQuestII.GameLogic.Character.Help
             return sb.ToString();
         }
 
+        public void SendHelpFileToUser(Help help, Player player)
+        {
+            var sb = new StringBuilder();
+
+
+            sb.Append("<div class='help-section'><table><tr>");
+            sb.Append($"<td>Help Title</td><td>{help.Title}</td></tr>");
+
+            sb.Append($"<td>Help Keywords</td><td>{help.Keywords}</td></tr>");
+
+            if (!string.IsNullOrEmpty(help.RelatedHelpFiles))
+            {
+                sb.Append($"<tr><td>Related Helps</td><td>{help.RelatedHelpFiles}</td></tr>");
+            }
+
+            sb.Append($"<tr><td>Last Updated</td><td>{help.DateUpdated.Value:MMMM dd, yyyy}</td></tr></table>");
+
+            sb.Append($"<pre>{help.Description}</pre>");
+
+            _writer.WriteLine(sb.ToString(), player.ConnectionId);
+        }
+
         public void DisplayHelpFile(string keyword, Player player)
         {
             var helpFile = FindHelpFile(keyword);
@@ -44,29 +67,31 @@ namespace ArchaicQuestII.GameLogic.Character.Help
 
                 if (helpFile.Count > 1)
                 {
-                    _writer.WriteLine(DisplayHelpOptions(helpFile, keyword), player.ConnectionId);
-                    return;
+                    var searchByTitle = helpFile.FirstOrDefault(x =>
+                        x.Title.Equals(keyword, StringComparison.CurrentCultureIgnoreCase));
+
+                    if (searchByTitle == null)
+                    {
+
+                        _writer.WriteLine(DisplayHelpOptions(helpFile, keyword), player.ConnectionId);
+                        return;
+                    }
+                  
+                        SendHelpFileToUser(searchByTitle, player);
+                        return;
+                    
                 }
 
-                var sb = new StringBuilder();
-
-
-                    sb.Append("<div class='help-section'><table><tr>");
-                    sb.Append($"<td>Help Title</td><td>{helpFile[0].Title}</td></tr>");
-
-                sb.Append($"<td>Help Keywords</td><td>{helpFile[0].Keywords}</td></tr>");
-
-                if (!string.IsNullOrEmpty(helpFile[0].RelatedHelpFiles))
-                {    
-                    sb.Append($"<tr><td>Related Helps</td><td>{helpFile[0].RelatedHelpFiles}</td></tr>");
+                if (helpFile.Count == 1)
+                {
+                    SendHelpFileToUser(helpFile[0], player);
                 }
-
-                sb.Append($"<tr><td>Last Updated</td><td>{helpFile[0].DateUpdated.Value:MMMM dd, yyyy}</td></tr></table>");
-
-                sb.Append($"<pre>{helpFile[0].Description}</pre>");
-
-                _writer.WriteLine(sb.ToString(), player.ConnectionId);
+                else
+                {
+                    _writer.WriteLine("No help found for that keyword", player.ConnectionId);
+                }
             }
+        
  
         }
     }
