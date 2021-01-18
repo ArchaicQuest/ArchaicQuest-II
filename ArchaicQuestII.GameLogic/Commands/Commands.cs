@@ -19,6 +19,7 @@ using ArchaicQuestII.GameLogic.Commands.Skills;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Socials;
 using ArchaicQuestII.GameLogic.Spell.Interface;
+using MoonSharp.Interpreter;
 
 namespace ArchaicQuestII.GameLogic.Commands
 {
@@ -42,6 +43,7 @@ namespace ArchaicQuestII.GameLogic.Commands
         private readonly ICore _core;
         private readonly IMobFunctions _mobFunctions;
         private readonly IHelp _help;
+        private readonly IMobScripts _mobScripts;
 
         public Commands(
             IMovement movement,
@@ -60,7 +62,8 @@ namespace ArchaicQuestII.GameLogic.Commands
             ICommandHandler commandHandler,
             ICore core,
             IMobFunctions mobFunctions,
-            IHelp help
+            IHelp help,
+            IMobScripts mobScripts
             )
         {
             _movement = movement;
@@ -80,6 +83,7 @@ namespace ArchaicQuestII.GameLogic.Commands
             _core = core;
             _mobFunctions = mobFunctions;
             _help = help;
+            _mobScripts = mobScripts;
         }
  
         public void CommandList(string key, string obj, string target, string fullCommand, Player player, Room room)
@@ -328,7 +332,38 @@ namespace ArchaicQuestII.GameLogic.Commands
             }
             var parameters = MakeCommandPartsSafe(commandParts);
 
- 
+            try
+            {
+                foreach (var mob in room.Mobs)
+                {
+
+                    if (!string.IsNullOrEmpty(mob.Events.Act))
+                    {
+                        UserData.RegisterType<MobScripts>();
+
+                        Script script = new Script();
+
+                        DynValue obj = UserData.Create(_mobScripts);
+                        script.Globals.Set("obj", obj);
+                        UserData.RegisterProxyType<MyProxy, Room>(r => new MyProxy(room));
+                        UserData.RegisterProxyType<ProxyPlayer, Player>(r => new ProxyPlayer(player));
+                        UserData.RegisterProxyType<ProxyCommand, string>(r => new ProxyCommand(command));
+
+
+                        script.Globals["room"] = room;
+                        script.Globals["command"] = command;
+                        script.Globals["player"] = player;
+                        script.Globals["mob"] = mob;
+
+
+                        DynValue res = script.DoString(mob.Events.Act);
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+
+            }
 
             CommandList(key, parameters.Item1, parameters.Item2, cleanCommand, player, room);
         }

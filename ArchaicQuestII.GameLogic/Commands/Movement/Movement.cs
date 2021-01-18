@@ -224,22 +224,6 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
             foreach (var mob in room.Mobs)
             {
 
-                //             string scriptCode = @"    
-                //                   -- defines a function
-                //                   function greet (room, player, mob)
-
-                //                            obj.updateInv(player)
-                //                             obj.Say('hello', 0, room, player)
-                //                             if obj.isInRoom(room, player) then obj.Say('I have a quest for you', 1000, room, player) end
-                //                             obj.Say('you have to kill some goblins', 1000, room, player)
-                //                             obj.Say('you have to kill some goblins', 10000, room, player)
-                //obj.Say('What you say', 5000, room, player)
-                //                  return ('Hello there ' .. obj.getName(player) .. ' check your inventory')
-                //                   end
-
-                //             return greet(room, player, mob)
-
-                //                    ";
 
                 if (!string.IsNullOrEmpty(mob.Events.Enter))
                 {

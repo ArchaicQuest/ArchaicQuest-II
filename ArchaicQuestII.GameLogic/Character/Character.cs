@@ -15,34 +15,35 @@ namespace ArchaicQuestII.GameLogic.Character
 
     public class MobEvents
     {
-        public string Act { get; set; } = @"    
-		                    -- defines a function
-function act(room, player, mob, text)
-    if string.match(text, ' pokes you in the') then
-        
+        //        public string Act { get; set; } = @"    
+        //		                    -- defines a function
+        //function act(room, player, mob, text)
+        //    if string.match(text, ' pokes you in the') then
 
-        if obj.HasEventState(player, 'larisaPoke')
-            then
-          state =  obj.ReadEventState(player, 'larisaPoke')
-          state = state + 1
- obj.UpdateEventState(player, 'larisaPoke', state)
-  
-           else
-            obj.AddEventState(player, 'larisaPoke', 1)
-            end
 
-            if state > 3
-            then
- obj.Say(obj.getName(mob) .. ' says GRRRRR!! I WARNED YOU!!', 0, room, player)
-            obj.AttackPlayer(room, player, mob)
-        end
+        //        if obj.HasEventState(player, 'larisaPoke')
+        //            then
+        //          state =  obj.ReadEventState(player, 'larisaPoke')
+        //          state = state + 1
+        // obj.UpdateEventState(player, 'larisaPoke', state)
 
-  
-    end
-     
-end
+        //           else
+        //            obj.AddEventState(player, 'larisaPoke', 1)
+        //            end
 
-  act(room, player, mob, text)";
+        //            if state > 3
+        //            then
+        // obj.Say(obj.getName(mob) .. ' says GRRRRR!! I WARNED YOU!!', 0, room, player)
+        //            obj.AttackPlayer(room, player, mob)
+        //        end
+
+
+        //    end
+
+        //end
+
+        //  act(room, player, mob, text)";
+        public string Act { get; set; }
         public string Look { get; set; }
         public string Enter { get; set; }
         public string Leave { get; set; }

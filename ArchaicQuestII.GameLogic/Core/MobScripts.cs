@@ -18,6 +18,7 @@ namespace ArchaicQuestII.GameLogic.Core
         private Room room;
         private Player player;
         private Player mob;
+        private string command;
         [MoonSharpHidden]
         public MyProxy(Room room)
         {
@@ -29,6 +30,7 @@ namespace ArchaicQuestII.GameLogic.Core
         public Room GetRoom() { return room; }
         public Player GetPlayer() { return player; }
         public Player GetMob() { return mob; }
+        public string GetCommand() { return command; }
     }
 
 
@@ -44,6 +46,21 @@ namespace ArchaicQuestII.GameLogic.Core
         public Player GetPlayer() { return player; }
 
     }
+
+    public class ProxyCommand
+    {
+        private string command;
+        [MoonSharpHidden]
+        public ProxyCommand(string command)
+        {
+            this.command = command;
+        }
+
+        public string getCommand() { return command; }
+
+    }
+
+
     public class MobScripts: IMobScripts
     {
         public Player _player;
@@ -232,6 +249,20 @@ namespace ArchaicQuestII.GameLogic.Core
           }
 
           _writeToClient.WriteLine($"<p class='gain'>New Quest: {quest.Title}!</p>", player.ConnectionId);
+            _updateClientUi.UpdateQuest(player);
+        }
+
+        public void CompleteQuest(Player player, int questId)
+        {
+            var quest = player.QuestLog.FirstOrDefault(x => x.Id == questId);
+
+            if (quest != null)
+            {
+                quest.Completed = true;
+                _writeToClient.WriteLine($"<p class='gain'>Quest Complete: {quest.Title}!</p>", player.ConnectionId);
+                _writeToClient.WriteLine($"<p class='gain'>You gain {quest.ExpGain} experience points and {quest.GoldGain} gold.</p>", player.ConnectionId);
+            }
+ 
             _updateClientUi.UpdateQuest(player);
         }
     }

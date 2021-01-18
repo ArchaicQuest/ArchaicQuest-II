@@ -33,5 +33,6 @@ namespace ArchaicQuestII.GameLogic.Core
        public bool IsImm(Player player);
        public bool HasObject(Player player, string name);
        public void AddQuest(Player player, int id);
+       void CompleteQuest(Player player, int questId);
    }
 }
