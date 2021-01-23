@@ -317,16 +317,16 @@ namespace ArchaicQuestII.GameLogic.Commands
         public void ProcessCommand(string command, Player player, Room room)
         {
 
-            var cleanCommand = command.Trim().ToLower();
+            var cleanCommand = command;
             var commandParts = cleanCommand.Split(' ');
-            var key = commandParts[0];
+            var key = commandParts[0].ToLower();
             
             
             if (commandParts.Length >= 2)
             {
-                if (commandParts[1] == "in")
+                if (commandParts[1].ToLower() == "in")
                 {
-                    key = commandParts[0] + " " + commandParts[1];
+                    key = commandParts[0] + " " + commandParts[1].ToLower();
                     commandParts = commandParts.Where(x => x != "in").ToArray();
                 }
             }
@@ -373,11 +373,11 @@ namespace ArchaicQuestII.GameLogic.Commands
 
             var cmdCount = commands.Length;
 
-            if (commands[0] == "say" || commands[0] == "'")
+            if (commands[0].ToLower() == "say" || commands[0] == "'")
             {
                 var say = string.Join(" ", commands);
 
-                if (commands[0] == "say")
+                if (commands[0].ToLower() == "say")
                 {
                     say = say.Remove(0, 4);
                 }
@@ -388,7 +388,7 @@ namespace ArchaicQuestII.GameLogic.Commands
                 return new Tuple<string, string>(say, string.Empty);
             }
 
-            if (commands[0] == "sayto" || commands[0] == ">")
+            if (commands[0].ToLower() == "sayto" || commands[0] == ">")
             {
                 var say = string.Join(" ", commands);
 
@@ -398,7 +398,7 @@ namespace ArchaicQuestII.GameLogic.Commands
 
             }
 
-            if (commands[0] == "yell")
+            if (commands[0].ToLower() == "yell")
             {
                 var say = string.Join(" ", commands);
 
@@ -406,7 +406,7 @@ namespace ArchaicQuestII.GameLogic.Commands
                 return new Tuple<string, string>(say, string.Empty);
             }
 
-            if (commands[0] == "newbie")
+            if (commands[0].ToLower() == "newbie")
             {
                 var say = string.Join(" ", commands);
 
@@ -414,7 +414,7 @@ namespace ArchaicQuestII.GameLogic.Commands
                 return new Tuple<string, string>(say, string.Empty);
             }
 
-            if (commands[0] == "ooc")
+            if (commands[0].ToLower() == "ooc")
             {
                 var say = string.Join(" ", commands);
 
@@ -422,7 +422,7 @@ namespace ArchaicQuestII.GameLogic.Commands
                 return new Tuple<string, string>(say, string.Empty);
             }
 
-            if (commands[0] == "gossip")
+            if (commands[0].ToLower() == "gossip")
             {
                 var say = string.Join(" ", commands);
 
@@ -430,7 +430,7 @@ namespace ArchaicQuestII.GameLogic.Commands
                 return new Tuple<string, string>(say, string.Empty);
             }
 
-            if (commands[0] == "reply")
+            if (commands[0].ToLower() == "reply")
             {
                 var say = string.Join(" ", commands);
 
@@ -438,7 +438,7 @@ namespace ArchaicQuestII.GameLogic.Commands
                 return new Tuple<string, string>(say, string.Empty);
             }
 
-            if (commands[0] == "tell")
+            if (commands[0].ToLower() == "tell")
             {
                 var say = string.Join(" ", commands);
 

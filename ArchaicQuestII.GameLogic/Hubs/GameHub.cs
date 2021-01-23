@@ -263,7 +263,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
             _updateClientUi.UpdateQuest(character);
             _updateClientUi.GetMap(character,_cache.GetMap(room.AreaId));
 
-            new RoomActions(_writeToClient, _time).Look("", room, character);
+            new RoomActions(_writeToClient, _time, _cache).Look("", room, character);
 
             foreach (var mob in room.Mobs)
             {

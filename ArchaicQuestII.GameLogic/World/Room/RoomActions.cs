@@ -15,10 +15,12 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
         private readonly IWriteToClient _writeToClient;
         private readonly ITime _time;
-        public RoomActions(IWriteToClient writeToClient, ITime time)
+        private readonly ICache _cache;
+        public RoomActions(IWriteToClient writeToClient, ITime time, ICache cache)
         {
             _writeToClient = writeToClient;
             _time = time;
+            _cache = cache;
         }
         /// <summary>
         /// Displays current room 
@@ -37,7 +39,9 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 return;
             }
 
-            var exits = FindValidExits(room);
+            var showVerboseExits = player.Config.VerboseExits;
+            string exits = FindValidExits(room, showVerboseExits);
+            
             var items = DisplayItems(room, player);
             var mobs = DisplayMobs(room, player);
             var players = DisplayPlayers(room, player);
@@ -47,10 +51,20 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
             roomDesc
                 .Append($"<p class=\"room-title {(isDark ? "room-dark" : "")}\">{room.Title}<br /></p>")
-                .Append($"<p class=\"room-description  {(isDark ? "room-dark" : "")}\">{room.Description}</p>")
-                .Append(
-                    $"<p class=\"room-exit  {(isDark ? "room-dark" : "")}\"> <span class=\"room-exits\">[</span>Exits: <span class=\"room-exits\">{exits}</span><span class=\"room-exits\">]</span></p>")
-                .Append($"<p  class=\" {(isDark ? "room-dark" : "")}\">{items}</p>")
+                .Append($"<p class=\"room-description  {(isDark ? "room-dark" : "")}\">{room.Description}</p>");
+
+            if (!showVerboseExits)
+            {
+                roomDesc.Append(
+                    $"<p class=\"room-exit  {(isDark ? "room-dark" : "")}\"> <span class=\"room-exits\">[</span>Exits: <span class=\"room-exits\">{exits}</span><span class=\"room-exits\">]</span></p>");
+            }
+            else
+            {
+                roomDesc.Append(
+                    $"<p class=\" {(isDark ? "room-dark" : "")}\">Obvious exits: <table class=\"room-exits\"><tbody>{exits}</tbody></table></p>");
+            }
+ 
+            roomDesc.Append($"<p  class=\" {(isDark ? "room-dark" : "")}\">{items}</p>")
                 .Append($"<p  class=\"{(isDark ? "room-dark" : "")}\">{mobs}</p>")
                 .Append($"<p  class=\"  {(isDark ? "room-dark" : "")}\">{players}</p>");
 
@@ -453,68 +467,111 @@ namespace ArchaicQuestII.GameLogic.World.Room
         }
 
 
+        public string GetRoom(Exit exit)
+        {
+            var RoomId = $"{exit.AreaId}{exit.Coords.X}{exit.Coords.Y}{exit.Coords.Z}";
+            var room = _cache.GetRoom(RoomId);
+
+            return room.Title;
+        }
+
+
         /// <summary>
         /// Displays valid exits
         /// </summary>
-        public string FindValidExits(Room room)
+        public string FindValidExits(Room room, bool verbose)
         {
             var exits = new List<string>();
             var exitList = string.Empty;
 
-            if (room.Exits.NorthWest != null)
-            {
-                exits.Add(Helpers.DisplayDoor(room.Exits.NorthWest));
-            }
+       
 
             if (room.Exits.North != null)
             {
-                exits.Add(Helpers.DisplayDoor(room.Exits.North));
+                exits.Add(verbose
+                    ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.North)} </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'>{GetRoom(room.Exits.North)}</td></tr>"
+                    : Helpers.DisplayDoor(room.Exits.North));
             }
 
-            if (room.Exits.NorthEast != null)
-            {
-                exits.Add(Helpers.DisplayDoor(room.Exits.NorthEast));
-            }
+           
 
             if (room.Exits.East != null)
             {
-                exits.Add(Helpers.DisplayDoor(room.Exits.East));
+                exits.Add(verbose
+                    ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.East)} </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'>{GetRoom(room.Exits.East)}</td></tr>"
+                    : Helpers.DisplayDoor(room.Exits.East));
             }
 
-            if (room.Exits.SouthEast != null)
-            {
-                exits.Add(Helpers.DisplayDoor(room.Exits.SouthEast));
-            }
+           
 
             if (room.Exits.South != null)
             {
-                exits.Add(Helpers.DisplayDoor(room.Exits.South));
-            }
-
-            if (room.Exits.SouthWest != null)
-            {
-                exits.Add(Helpers.DisplayDoor(room.Exits.SouthWest));
+                exits.Add(verbose
+                    ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.South)} </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'>{GetRoom(room.Exits.South)}</td></tr>"
+                    : Helpers.DisplayDoor(room.Exits.South));
             }
 
             if (room.Exits.West != null)
             {
-                exits.Add(Helpers.DisplayDoor(room.Exits.West));
+                exits.Add(verbose
+                    ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.West)} </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'>{GetRoom(room.Exits.West)}</td></tr>"
+                    : Helpers.DisplayDoor(room.Exits.West));
             }
 
+            if (room.Exits.NorthEast != null)
+            {
+                exits.Add(verbose
+                    ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.NorthEast)}  </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'>{GetRoom(room.Exits.NorthEast)}</td></tr>"
+                    : Helpers.DisplayDoor(room.Exits.NorthEast));
+            }
+
+            if (room.Exits.SouthEast != null)
+            {
+                exits.Add(verbose
+                    ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.SouthEast)}  </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'>{GetRoom(room.Exits.SouthEast)}</td></tr>"
+                    : Helpers.DisplayDoor(room.Exits.SouthEast));
+            }
+
+            if (room.Exits.SouthWest != null)
+            {
+                exits.Add(verbose
+                    ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.SouthWest)}  </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'>{GetRoom(room.Exits.SouthWest)}</td></tr>"
+                    : Helpers.DisplayDoor(room.Exits.SouthWest));
+            }
+
+            if (room.Exits.NorthWest != null)
+            {
+                exits.Add(verbose
+                    ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.NorthWest)}  </td> <td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'>{GetRoom(room.Exits.NorthWest)}</td></tr>"
+                    : Helpers.DisplayDoor(room.Exits.NorthWest));
+            }
+
+     
+
+  
             if (exits.Count <= 0)
             {
                 exits.Add("None");
             }
 
+
             foreach (var exit in exits)
             {
-                exitList += exit + ", ";
+                if (!verbose)
+                {
+                    exitList += exit + ", ";
+                }
+                else
+                {
+                    exitList += exit;
+                }
+
             }
 
             exitList = exitList.Remove(exitList.Length - 2);
+            
 
-
-            return exitList;
+            return  exitList;
 
         }
 

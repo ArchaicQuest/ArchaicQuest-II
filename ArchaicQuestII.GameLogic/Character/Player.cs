@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using ArchaicQuestII.GameLogic.Character.Config;
 using ArchaicQuestII.GameLogic.Character.Model;
 
 namespace ArchaicQuestII.GameLogic.Character
@@ -25,6 +26,7 @@ namespace ArchaicQuestII.GameLogic.Character
         public bool grouped { get; set; }
         public Money Money { get; set; } = new Money();
         public Money Bank { get; set; } = new Money();
+        public PlayerConfig Config { get; set; } = new PlayerConfig();
 
     }
 }

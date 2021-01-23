@@ -13,7 +13,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
         void SmellObject(string target, Room room, Player player);
         void TasteObject(string target, Room room, Player player);
         void TouchObject(string target, Room room, Player player);
-        string FindValidExits(Room room);
+        string FindValidExits(Room room, bool showVerboseExits);
         string DisplayItems(Room room, Player player);
         string DisplayMobs(Room room, Player player);
         bool RoomIsDark(Room room, Player player);
