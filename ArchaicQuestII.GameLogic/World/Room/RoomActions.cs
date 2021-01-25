@@ -7,6 +7,7 @@ using ArchaicQuestII.Core.World;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
+using Newtonsoft.Json;
 
 namespace ArchaicQuestII.GameLogic.World.Room
 {
@@ -61,7 +62,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
             else
             {
                 roomDesc.Append(
-                    $"<p class=\" {(isDark ? "room-dark" : "")}\">Obvious exits: <table class=\"room-exits\"><tbody>{exits}</tbody></table></p>");
+                    $"<div class=\" {(isDark ? "room-dark" : "")}\">Obvious exits: <table class=\"room-exits\"><tbody>{exits}</tbody></table></div>");
             }
  
             roomDesc.Append($"<p  class=\" {(isDark ? "room-dark" : "")}\">{items}</p>")
@@ -469,6 +470,12 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
         public string GetRoom(Exit exit)
         {
+            if (exit == null)
+            {
+                return "";
+            }
+
+            
             var RoomId = $"{exit.AreaId}{exit.Coords.X}{exit.Coords.Y}{exit.Coords.Z}";
             var room = _cache.GetRoom(RoomId);
 
@@ -484,21 +491,24 @@ namespace ArchaicQuestII.GameLogic.World.Room
             var exits = new List<string>();
             var exitList = string.Empty;
 
-       
+        /* TODO: Click event for simple exit view */
 
             if (room.Exits.North != null)
             {
+                
+                var clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"n\"}))";
                 exits.Add(verbose
-                    ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.North)} </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'>{GetRoom(room.Exits.North)}</td></tr>"
+                    ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.North)} </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.North)}</a></td></tr>"
                     : Helpers.DisplayDoor(room.Exits.North));
             }
 
-           
+          
 
             if (room.Exits.East != null)
             {
+                var clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"e\"}))";
                 exits.Add(verbose
-                    ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.East)} </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'>{GetRoom(room.Exits.East)}</td></tr>"
+                    ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.East)} </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.East)}</a></td></tr>"
                     : Helpers.DisplayDoor(room.Exits.East));
             }
 
@@ -506,43 +516,49 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
             if (room.Exits.South != null)
             {
+                var clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"s\"}))";
                 exits.Add(verbose
-                    ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.South)} </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'>{GetRoom(room.Exits.South)}</td></tr>"
+                    ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.South)} </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.South)}</a></td></tr>"
                     : Helpers.DisplayDoor(room.Exits.South));
             }
 
             if (room.Exits.West != null)
             {
+                var clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"w\"}))";
                 exits.Add(verbose
-                    ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.West)} </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'>{GetRoom(room.Exits.West)}</td></tr>"
+                    ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.West)} </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.West)}</a></td></tr>"
                     : Helpers.DisplayDoor(room.Exits.West));
             }
 
             if (room.Exits.NorthEast != null)
             {
+                var clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"ne\"}))";
                 exits.Add(verbose
-                    ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.NorthEast)}  </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'>{GetRoom(room.Exits.NorthEast)}</td></tr>"
+                    ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.NorthEast)}  </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.NorthEast)}</a></td></tr>"
                     : Helpers.DisplayDoor(room.Exits.NorthEast));
             }
 
             if (room.Exits.SouthEast != null)
             {
+                var clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"se\"}))";
                 exits.Add(verbose
-                    ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.SouthEast)}  </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'>{GetRoom(room.Exits.SouthEast)}</td></tr>"
+                    ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.SouthEast)}  </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.SouthEast)}</a></td></tr>"
                     : Helpers.DisplayDoor(room.Exits.SouthEast));
             }
 
             if (room.Exits.SouthWest != null)
             {
+                var clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"sw\"}))";
                 exits.Add(verbose
-                    ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.SouthWest)}  </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'>{GetRoom(room.Exits.SouthWest)}</td></tr>"
+                    ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.SouthWest)}  </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.SouthWest)}</a></td></tr>"
                     : Helpers.DisplayDoor(room.Exits.SouthWest));
             }
 
             if (room.Exits.NorthWest != null)
             {
+                var clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"nw\"}))";
                 exits.Add(verbose
-                    ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.NorthWest)}  </td> <td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'>{GetRoom(room.Exits.NorthWest)}</td></tr>"
+                    ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.NorthWest)}  </td> <td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.NorthWest)}</a></td></tr>"
                     : Helpers.DisplayDoor(room.Exits.NorthWest));
             }
 

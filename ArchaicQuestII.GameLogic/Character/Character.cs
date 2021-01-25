@@ -130,7 +130,7 @@ namespace ArchaicQuestII.GameLogic.Character
         /// arearID + X + Y + z e,g "1000"
         public Room.RoomType? RoomType { get; set; } = Room.RoomType.Standard;
         [JsonProperty("recallId")]
-        public int RecallId { get; set; }
+        public string RecallId { get; set; }
         [JsonProperty("defaultAttack")]
         public string DefaultAttack { get; set; }
         [JsonIgnore]
@@ -150,6 +150,7 @@ namespace ArchaicQuestII.GameLogic.Character
         /// </summary>
         public bool Roam { get; set; }
         public bool Shopkeeper { get; set; }
+        public bool Trainer { get; set; }
         public MobEvents Events { get; set; } = new MobEvents();
         public Dictionary<string, int> EventState { get; set; } = new Dictionary<string, int>();
         public List<Quest> QuestLog { get; set; } = new List<Quest>();

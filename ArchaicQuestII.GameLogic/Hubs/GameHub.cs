@@ -245,11 +245,18 @@ namespace ArchaicQuestII.GameLogic.Hubs
             var room = _cache.GetRoom(roomid);
            character.RoomId = $"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}";
 
+           if (string.IsNullOrEmpty(character.RecallId))
+           {
+               var defaultRoom = _cache.GetConfig().StartingRoom;
+               character.RecallId = defaultRoom;
+            }
+
            var playerAlreadyInRoom = room.Players.FirstOrDefault(x => x.Id.Equals(character.Id)) != null;
            if (!playerAlreadyInRoom)
            {
                room.Players.Add(character);
            }
+
 
            var rooms = _cache.GetAllRoomsInArea(1);
 

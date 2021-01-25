@@ -305,6 +305,11 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "help":
                     _help.DisplayHelpFile(obj, player);
                     break;
+                case "recall":
+                case "reca":
+                case "rc":
+                    _core.Recall(player, room);
+                    break;
                 default:
                         _commandHandler.HandleCommand(key,obj,target, player, room);
                     break;

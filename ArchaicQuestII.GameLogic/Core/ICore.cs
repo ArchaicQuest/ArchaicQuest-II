@@ -12,5 +12,7 @@ namespace ArchaicQuestII.GameLogic.Core
         void Who(Player player);
         void Where(Player player, Room room);
         void QuestLog(Player player);
+        void Recall(Player player, Room room);
+        void Train(Player player, Room room, string stat);
     }
 }

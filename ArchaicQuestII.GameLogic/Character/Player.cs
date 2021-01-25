@@ -27,6 +27,7 @@ namespace ArchaicQuestII.GameLogic.Character
         public Money Money { get; set; } = new Money();
         public Money Bank { get; set; } = new Money();
         public PlayerConfig Config { get; set; } = new PlayerConfig();
+        public int Trains { get; set; } = 5;
 
     }
 }
