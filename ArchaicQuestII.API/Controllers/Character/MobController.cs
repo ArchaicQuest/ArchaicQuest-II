@@ -72,7 +72,8 @@ namespace ArchaicQuestII.Controllers
                 Commands = mob.Commands,
                 Events = mob.Events,
                 Roam = mob.Roam,
-                Shopkeeper = mob.Shopkeeper
+                Shopkeeper = mob.Shopkeeper,
+                Trainer = mob.Trainer
             };
 
 

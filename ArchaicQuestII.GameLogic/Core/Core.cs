@@ -17,12 +17,14 @@ namespace ArchaicQuestII.GameLogic.Core
         private readonly IWriteToClient _writeToClient;
         private readonly IDataBase _db;
         private readonly IUpdateClientUI _clientUi;
-        public Core(ICache cache, IWriteToClient writeToClient, IDataBase db, IUpdateClientUI clientUi)
+        private readonly IDice _dice;
+        public Core(ICache cache, IWriteToClient writeToClient, IDataBase db, IUpdateClientUI clientUi, IDice dice)
         {
             _cache = cache;
             _writeToClient = writeToClient;
             _db = db;
             _clientUi = clientUi;
+            _dice = dice;
         }
         public void Who(Player player)
         {
@@ -162,28 +164,99 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public void Train(Player player, Room room, string stat)
         {
+            if ((player.Status & CharacterStatus.Status.Sleeping) != 0)
+            {
+                _writeToClient.WriteLine("In your dreams, or what?", player.ConnectionId);
+                return;
+            }
+
+            if (room.Mobs.Find(x => x.Trainer) == null)
+            {
+                _writeToClient.WriteLine("You can't do that here.", player.ConnectionId);
+                return;
+            }
+
             if (player.Trains <= 0)
             {
                 _writeToClient.WriteLine("You have no training sessions left.", player.ConnectionId);
+                return;
             }
 
-            if (string.IsNullOrEmpty(stat))
+            if (string.IsNullOrEmpty(stat) || stat == "train")
             {
 
                 _writeToClient.WriteLine(
-                    ($"<p>You have {player.Trains} training sessions.</p><p> You can train: str dex con int wis cha hp mana move.</p>"
+                    ($"<p>You have {player.Trains} training session{(player.Trains > 1 ? "s" : "")} remaining.<br />You can train: str dex con int wis cha hp mana move.</p>"
                     ));
             }
             else
             {
-                if ("str dex con int wis cha hp mana move".Contains(stat, StringComparison.CurrentCultureIgnoreCase))
+                var statName = GetStatName(stat);
+                if (string.IsNullOrEmpty(statName.Item1))
                 {
-                    player.Trains -= 1;
                     _writeToClient.WriteLine(
-                        ($"<p>Your x increases.</p>"
+                        ($"<p>{stat} not found. Please choose from the following. <br /> You can train: str dex con int wis cha hp mana move.</p>"
+                        ), player.ConnectionId);
+                    return;
+                }
+
+                player.Trains -= 1;
+                if (player.Trains < 0)
+                {
+                    player.Trains = 0;
+                }
+
+                if (statName.Item1 == "hit points" || statName.Item1 == "moves" || statName.Item1 == "mana")
+                {
+                    var hitDie = _cache.GetClass(player.ClassName);
+                    var roll = _dice.Roll(1, hitDie.HitDice.DiceMinSize, hitDie.HitDice.DiceMaxSize);
+
+                    player.MaxAttributes.Attribute[statName.Item2] += roll;
+                    player.Attributes.Attribute[statName.Item2] += roll;
+
+                    _writeToClient.WriteLine(
+                        ($"<p class='gain'>Your {statName.Item1} increases by {roll}.</p>"
+                        ), player.ConnectionId);
+
+                    _clientUi.UpdateHP(player);
+                    _clientUi.UpdateMana(player);
+                    _clientUi.UpdateMoves(player);
+                }
+                else
+                {
+                    player.MaxAttributes.Attribute[statName.Item2] += 1;
+                    player.Attributes.Attribute[statName.Item2] += 1;
+
+                    _writeToClient.WriteLine(
+                        ($"<p class='gain'>Your {statName.Item1} increases by 1.</p>"
                         ), player.ConnectionId);
                 }
+
+                
+            
+
+                _clientUi.UpdateScore(player);
+               
+
             }
         }
+
+
+       public Tuple<string, EffectLocation> GetStatName(string name)
+       {
+           return name switch
+           {
+               "str" => new Tuple<string, EffectLocation>("strength", EffectLocation.Strength),
+               "dex" => new Tuple<string, EffectLocation>("dexterity", EffectLocation.Dexterity),
+               "con" => new Tuple<string, EffectLocation>("constitution", EffectLocation.Constitution),
+               "int" => new Tuple<string, EffectLocation>("intelligence", EffectLocation.Intelligence),
+               "wis" => new Tuple<string, EffectLocation>("wisdom", EffectLocation.Wisdom),
+               "cha" => new Tuple<string, EffectLocation>("charisma", EffectLocation.Charisma),
+               "hp" => new Tuple<string, EffectLocation>("hit points", EffectLocation.Hitpoints),
+               "move" => new Tuple<string, EffectLocation>("moves", EffectLocation.Moves),
+               "mana" => new Tuple<string, EffectLocation>("mana", EffectLocation.Mana),
+               _ => new Tuple<string, EffectLocation>("", EffectLocation.None)
+           };
+       }
     }
 }

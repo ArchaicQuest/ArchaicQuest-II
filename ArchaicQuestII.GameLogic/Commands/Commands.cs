@@ -310,6 +310,9 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "rc":
                     _core.Recall(player, room);
                     break;
+                case "train":
+                    _core.Train(player, room, obj);
+                    break;
                 default:
                         _commandHandler.HandleCommand(key,obj,target, player, room);
                     break;

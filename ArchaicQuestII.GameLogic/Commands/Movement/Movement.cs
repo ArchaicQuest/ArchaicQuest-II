@@ -227,23 +227,30 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
 
                 if (!string.IsNullOrEmpty(mob.Events.Enter))
                 {
-                    UserData.RegisterType<MobScripts>();
+                    try
+                    {
+                        UserData.RegisterType<MobScripts>();
 
-                    Script script = new Script();
+                        Script script = new Script();
 
-                    DynValue obj = UserData.Create(_mobScripts);
-                    script.Globals.Set("obj", obj);
-                    UserData.RegisterProxyType<MyProxy, Room>(r => new MyProxy(room));
-                    UserData.RegisterProxyType<ProxyPlayer, Player>(r => new ProxyPlayer(character));
-
-
-                    script.Globals["room"] = room;
-
-                    script.Globals["player"] = character;
-                    script.Globals["mob"] = mob;
+                        DynValue obj = UserData.Create(_mobScripts);
+                        script.Globals.Set("obj", obj);
+                        UserData.RegisterProxyType<MyProxy, Room>(r => new MyProxy(room));
+                        UserData.RegisterProxyType<ProxyPlayer, Player>(r => new ProxyPlayer(character));
 
 
-                    DynValue res = script.DoString(mob.Events.Enter);
+                        script.Globals["room"] = room;
+
+                        script.Globals["player"] = character;
+                        script.Globals["mob"] = mob;
+
+
+                        DynValue res = script.DoString(mob.Events.Enter);
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
                 }
 
 

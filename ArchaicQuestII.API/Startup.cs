@@ -288,8 +288,18 @@ namespace ArchaicQuestII.API
                 foreach (var data in new Class().SeedData())
                 {
                     _db.Save(data, DataBase.Collections.Class);
+
                 }
             }
+
+            var classes = _db.GetList<Class>(DataBase.Collections.Class);
+
+            foreach (var pcClass in classes)
+            {
+                _cache.AddClass(pcClass.Name, pcClass);
+            }
+
+
 
             if (!_db.DoesCollectionExist(DataBase.Collections.Config))
             {

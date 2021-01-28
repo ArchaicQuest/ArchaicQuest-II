@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Emote;
 using ArchaicQuestII.GameLogic.Character.Help;
 using ArchaicQuestII.GameLogic.Character.Model;
@@ -67,5 +68,9 @@ namespace ArchaicQuestII.GameLogic.Core
         public bool AddHelp(int id, Help help);
         public Help GetHelp(int id);
         public List<Help> FindHelp(string id);
+
+        public bool AddClass(string id, Class pcClass);
+
+        public Class GetClass(string id);
     }
 }

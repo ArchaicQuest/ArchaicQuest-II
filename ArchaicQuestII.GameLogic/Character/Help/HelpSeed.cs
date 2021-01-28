@@ -73,6 +73,66 @@ namespace ArchaicQuestII.GameLogic.Character.Help
                     DateCreated = DateTime.Now,
                     DateUpdated = DateTime.Now,
                     RelatedHelpFiles = "Wear"
+                },
+                new Help()
+                {
+                    Title = "Help",
+                    Keywords = "help, commands",
+                    BriefDescription = "Overview of commands",
+                    Description = "<table class='simple heading'>\n<tbody>\n<tr>\n<td>Movement</td>\n <td>Objects</td>\n</tr>  <tr>\n     <td>north south east west up down        \nnortheast northwest southeast\nsouthwest exits recall\nsleep wake rest stand</td>\n <td>get put drop give sacrifice          \nwear wield hold                     \nrecite quaff zap brandish            \nlock unlock open close pick          \ninventory equipment look compare    \neat drink fill                      \nlist buy sell value</td>\n</tr>\n  <tr>\n     <td>Combat</td>\n <td>Group</td>\n</tr>\n <tr>\n     <td>kill cast skills spells\ndodge parry wimpy flee  \nwands scrolls staves\ndamage death healers\nnosummon PK</td>\n <td> group follow nofollow gtell</td>\n</tr>  <tr>\n     <td>Character</td>\n <td>Communication</td>\n</tr>\n  <tr>\n     <td>description title \nscore report practice train stats\ncommands socials pose emote RP </td>\n <td>ic ooc newbie gossip yell shout   \nnote idea history change  \nsay tell reply who    \n   </td>\n</tr>\n</tbody>\n</table>\n\nFor more help, type 'help <topic>' for any command, skill, or spell.",
+                    DateCreated = DateTime.Now,
+                    DateUpdated = DateTime.Now,
+                    RelatedHelpFiles = ""
+                },
+                new Help()
+                {
+                    Title = "Score",
+                    Keywords = "score, status",
+                    BriefDescription = "See detailed Character stats",
+                    Description = "<table class='simple'>\r\n<tr><td><span style='color:#fff'>Syntax</span></td><td>&nbsp;</td></tr>\r\n<tr><td>score</td><td>Displays Character stats</td></tr>\r\n</table>\r\n'<span class='hint'>score</span>'  shows you detailed statistics about your character.\r\nAs you equip / remove items it affects your Armour Class and can be seen when viewing score.\r\nAlso, your attributes show your current value and the max value in brackets",
+                    DateCreated = DateTime.Now,
+                    DateUpdated = DateTime.Now,
+                    RelatedHelpFiles = "Affects"
+                },
+                new Help()
+                {
+                    Title = "Affects",
+                    Keywords = "affects effects",
+                    BriefDescription = "shows all spells and skills that affect your character",
+                    Description = "<table class='simple'>\r\n<tr><td><span style='color:#fff'>Syntax</span></td><td>&nbsp;</td></tr>\r\n<tr><td>affects</td><td>shows all spells and skills affecting you.</td></tr>\r\n</table>\r\n'<span class='hint'>affects</span>'  shows all spells and skills that affect your character\r\nThese affects may have been placed on you by yourself or other sources.  Affects will also\r\nshow the duration of affects.",
+                    DateCreated = DateTime.Now,
+                    DateUpdated = DateTime.Now,
+                    RelatedHelpFiles = "Score"
+                },
+                new Help()
+                {
+                    Title = "Recall",
+                    Keywords = "recall",
+                    BriefDescription = "Return back to temple or clan hall",
+                    Description = "<table class='simple'>\r\n<tr><td><span style='color:#fff'>Syntax</span></td><td>&nbsp;</td></tr>\r\n<tr><td>recall</td><td>Returns you to your recall point</td></tr>\r\n</table>\r\n'<span class='hint'>recall</span>'  using this command will teleport your character\r\nto your starting point or clan hall. It costs half of your moves each time you recall\r\nyou can use '/' as an alias.",
+                    DateCreated = DateTime.Now,
+                    DateUpdated = DateTime.Now,
+                    RelatedHelpFiles = ""
+                },
+                new Help()
+                {
+                    Title = "Questlog",
+                    Keywords = "questlog, quest",
+                    BriefDescription = "displays current quests",
+                    Description = "<table class='simple'>\r\n<tr><td><span style='color:#fff'>Syntax</span></td><td>&nbsp;</td></tr>\r\n<tr><td>questlog</td><td>displays current quests</td></tr>\r\n</table>\r\n'<span class='hint'>questlog</span>'  Displays your current active quests, the title, a description of the quest and the requirements required to complete the test and what you will be rewarded.",
+                    DateCreated = DateTime.Now,
+                    DateUpdated = DateTime.Now,
+                    RelatedHelpFiles = ""
+                },
+                new Help()
+                {
+                    Title = "Train",
+                    Keywords = "train, trainer",
+                    BriefDescription = "training stats",
+                    Description = "<table class='simple'>\r\n<tr><td><span style='color:#fff'>Syntax</span></td><td>&nbsp;</td></tr>\r\n<tr><td>train</td><td>displays remaing trains to use</td></tr>  \r\n<tr><td>train &lt;stat&gt;</td><td>will train this stat once</td></tr>\r\n</table>\r\n'<span class='hint'>train</span>'  Displays your remaining trains which you can use to increase your stats. The Maximium a core attribute can be trained to is 100. No limits are set on HP, Mana, or moves. You can use the train command in the presence of a trainer or guild master",
+                    DateCreated = DateTime.Now,
+                    DateUpdated = DateTime.Now,
+                    RelatedHelpFiles = ""
                 }
             };
 
