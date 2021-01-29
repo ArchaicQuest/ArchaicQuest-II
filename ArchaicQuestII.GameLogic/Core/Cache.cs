@@ -24,7 +24,7 @@ namespace ArchaicQuestII.GameLogic.Core
         private readonly ConcurrentDictionary<string, Player> _playerCache = new ConcurrentDictionary<string, Player>();
         private readonly ConcurrentDictionary<string, Room> _roomCache = new ConcurrentDictionary<string, Room>();
         private readonly ConcurrentDictionary<int, Skill.Model.Skill> _skillCache = new ConcurrentDictionary<int, Skill.Model.Skill>();
-        private readonly ConcurrentDictionary<int, string> _mapCache = new ConcurrentDictionary<int, string>();
+        private readonly ConcurrentDictionary<string, string> _mapCache = new ConcurrentDictionary<string, string>();
         private readonly ConcurrentDictionary<string, Player> _combatCache = new ConcurrentDictionary<string, Player>();
         private readonly ConcurrentDictionary<int, Quest> _questCache = new ConcurrentDictionary<int, Quest>();
         private readonly ConcurrentDictionary<int, Help> _helpCache = new ConcurrentDictionary<int, Help>();
@@ -214,12 +214,12 @@ namespace ArchaicQuestII.GameLogic.Core
 
         }
 
-        public void AddMap(int areaId, string map)
+        public void AddMap(string areaId, string map)
         {
              _mapCache.TryAdd(areaId, map);
         }
 
-        public string GetMap(int areaId)
+        public string GetMap(string areaId)
         {
             _mapCache.TryGetValue(areaId, out var map);
 

@@ -43,7 +43,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
             MapRoomId(newRoom);
 
-            if(room.Id != -1)
+                if(room.Id != -1)
             {
                 newRoom.Id = room.Id;
             }
@@ -99,6 +99,18 @@ namespace ArchaicQuestII.GameLogic.World.Room
             if (SWRoom != null)
             {
                 room.Exits.SouthWest.RoomId = GetRoomFromCoords(SWRoom, room.AreaId) != null ? GetRoomFromCoords(SWRoom, room.AreaId).Id : -1;
+            }
+
+            var DRoom = room.Exits.Down?.Coords;
+            if (DRoom != null)
+            {
+                room.Exits.Down.RoomId = GetRoomFromCoords(DRoom, room.AreaId) != null ? GetRoomFromCoords(DRoom, room.AreaId).Id : -1;
+            }
+
+            var URoom = room.Exits.Up?.Coords;
+            if (URoom != null)
+            {
+                room.Exits.Up.RoomId = GetRoomFromCoords(URoom, room.AreaId) != null ? GetRoomFromCoords(URoom, room.AreaId).Id : -1;
             }
         }
 

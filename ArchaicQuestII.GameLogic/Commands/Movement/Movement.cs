@@ -121,7 +121,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
             OnPlayerEnterEvent(getNextRoom, character); 
 
          
-            _updateUi.GetMap(character, _cache.GetMap(getExitToNextRoom.AreaId));
+            _updateUi.GetMap(character, _cache.GetMap($"{getExitToNextRoom.AreaId}{getExitToNextRoom.Coords.Z}"));
             _updateUi.UpdateMoves(character);
 
             if (character.Followers.Count >= 1)

@@ -158,7 +158,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
             _clientUi.UpdateScore(player);
             _clientUi.UpdateMoves(player);
-            _clientUi.GetMap(player, _cache.GetMap(recallRoom.AreaId));
+            _clientUi.GetMap(player, _cache.GetMap($"{recallRoom.AreaId}{recallRoom.Coords.Z}"));
              
         }
 

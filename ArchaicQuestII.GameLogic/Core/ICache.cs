@@ -39,8 +39,13 @@ namespace ArchaicQuestII.GameLogic.Core
         void SetConfig(Config config);
         Config GetConfig();
 
-        void AddMap(int areaId, string room);
-        string GetMap(int areaId);
+        /// <summary>
+        /// areaId + Zindex
+        /// </summary>
+        /// <param name="areaId"></param>
+        /// <param name="room"></param>
+        void AddMap(string areaId, string room);
+        string GetMap(string areaId);
 
         bool IsCharInCombat(string id);
         bool AddCharToCombat(string id, Player character);

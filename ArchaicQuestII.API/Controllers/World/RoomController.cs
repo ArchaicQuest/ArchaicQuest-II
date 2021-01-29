@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using ArchaicQuestII.API.Entities;
 using ArchaicQuestII.API.Helpers;
 using ArchaicQuestII.API.Models;
@@ -142,7 +143,20 @@ namespace ArchaicQuestII.API.World
             foreach (var area in areas)
             {
                 var roomList = rooms.FindAll(x => x.AreaId == area.Id);
-                _cache.AddMap(area.Id, Map.DrawMap(roomList));
+                var areaByZIndex = roomList.FindAll(x => x.Coords.Z != 0).Distinct();
+                foreach (var zarea in areaByZIndex)
+                {
+                    var roomsByZ = new List<Room>();
+                    foreach (var room in roomList.FindAll(x => x.Coords.Z == zarea.Coords.Z))
+                    {
+                        roomsByZ.Add(room);
+                    }
+
+                    _cache.AddMap($"{area.Id}{zarea.Coords.Z}", Map.DrawMap(roomsByZ));
+                }
+
+                var rooms0index = roomList.FindAll(x => x.Coords.Z == 0);
+                _cache.AddMap($"{area.Id}0", Map.DrawMap(rooms0index));
             }
 
             s.Stop();

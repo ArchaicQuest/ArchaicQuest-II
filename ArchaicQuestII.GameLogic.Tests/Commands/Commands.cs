@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Equipment;
+using ArchaicQuestII.GameLogic.Character.Help;
 using ArchaicQuestII.GameLogic.Character.MobFunctions;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Commands;
@@ -42,7 +43,8 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
         private readonly Mock<ISocials> _socials;
         private readonly Mock<ICore> _core;
         private readonly Mock<IMobFunctions> _mobFunctions;
-
+        private readonly Mock<IHelp> _help;
+        private readonly Mock<IMobScripts> _mobScripts;
         public CommandsTests()
         {
             _movement = new Mock<IMovement>();
@@ -61,7 +63,9 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
             _socials = new Mock<ISocials>();
             _core = new Mock<ICore>();
             _mobFunctions = new Mock<IMobFunctions>();
+            _mobScripts = new Mock<IMobScripts>();
             _player = new Player();
+            _help = new Mock<IHelp>();
 
             _player.ConnectionId = "1";
             _player.Name = "Bob";
@@ -85,7 +89,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
                 }
             };
 
-            _commands = new GameLogic.Commands.Commands(_movement.Object, _roomActions.Object, _debug.Object, _skill.Object, _spell.Object, _object.Object, _inventory.Object, _communication.Object, _equipment.Object, _score.Object, _combat.Object, _cache.Object, _socials.Object, _commandHandler.Object, _core.Object, _mobFunctions.Object);
+            _commands = new GameLogic.Commands.Commands(_movement.Object, _roomActions.Object, _debug.Object, _skill.Object, _spell.Object, _object.Object, _inventory.Object, _communication.Object, _equipment.Object, _score.Object, _combat.Object, _cache.Object, _socials.Object, _commandHandler.Object, _core.Object, _mobFunctions.Object, _help.Object, _mobScripts.Object);
 
         }
 

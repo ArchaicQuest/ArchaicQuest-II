@@ -562,9 +562,24 @@ namespace ArchaicQuestII.GameLogic.World.Room
                     : Helpers.DisplayDoor(room.Exits.NorthWest));
             }
 
-     
+            if (room.Exits.Down != null)
+            {
+                var clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"d\"}))";
+                exits.Add(verbose
+                    ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.Down)}  </td> <td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.Down)}</a></td></tr>"
+                    : Helpers.DisplayDoor(room.Exits.Down));
+            }
 
-  
+            if (room.Exits.Up != null)
+            {
+                var clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"u\"}))";
+                exits.Add(verbose
+                    ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.Up)}  </td> <td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.Up)}</a></td></tr>"
+                    : Helpers.DisplayDoor(room.Exits.Up));
+            }
+
+
+
             if (exits.Count <= 0)
             {
                 exits.Add("None");
@@ -583,10 +598,11 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 }
 
             }
+            if (!verbose)
+            {
+                exitList = exitList.Remove(exitList.Length - 2);
 
-            exitList = exitList.Remove(exitList.Length - 2);
-            
-
+            }
             return  exitList;
 
         }
