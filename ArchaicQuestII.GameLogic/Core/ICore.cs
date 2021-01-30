@@ -9,10 +9,31 @@ namespace ArchaicQuestII.GameLogic.Core
 {
  public interface ICore
     {
+        /// <summary>
+        /// Displays lists of players 
+        /// </summary>
+        /// <param name="player"></param>
         void Who(Player player);
+
+        void Save(Player player);
+        /// <summary>
+        /// Where are players within the area
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="room"></param>
         void Where(Player player, Room room);
+        /// <summary>
+        /// Display questlog
+        /// </summary>
+        /// <param name="player"></param>
         void QuestLog(Player player);
         void Recall(Player player, Room room);
+        /// <summary>
+        /// Train attributes
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="room"></param>
+        /// <param name="stat"></param>
         void Train(Player player, Room room, string stat);
     }
 }

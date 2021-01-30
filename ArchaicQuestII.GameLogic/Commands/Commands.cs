@@ -313,6 +313,9 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "train":
                     _core.Train(player, room, obj);
                     break;
+                case "save":
+                    _core.Save(player);
+                    break;
                 default:
                         _commandHandler.HandleCommand(key,obj,target, player, room);
                     break;

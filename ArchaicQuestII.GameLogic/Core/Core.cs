@@ -47,6 +47,12 @@ namespace ArchaicQuestII.GameLogic.Core
 
         }
 
+        public void Save(Player player)
+        {
+            _db.Save(player, DataBase.Collections.Players);
+            _writeToClient.WriteLine("Character saved.");
+        }
+
         public void Where(Player player, Room room)
         {
             var area = _cache.GetAllRoomsInArea(room.AreaId);

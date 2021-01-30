@@ -105,7 +105,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 return;
             }
 
-            _writeToClient.WriteLine($"<p>You look inside {container.Name.ToLower()}:</p>", player.ConnectionId);
+            _writeToClient.WriteLine($"<p>{container.Name} contains:</p>", player.ConnectionId);
             if (container.Container.Items.Count == 0)
             {
                 _writeToClient.WriteLine($"<p>Nothing.</p>", player.ConnectionId);
@@ -173,6 +173,20 @@ namespace ArchaicQuestII.GameLogic.World.Room
             {
                 _writeToClient.WriteLine($"<p  class='{(isDark ? "room-dark" : "")}'>{item.Description.Look}", player.ConnectionId);
 
+                if (item.Container != null && !item.Container.CanOpen && item.Container.Items.Any())
+                {
+                    _writeToClient.WriteLine($"<p  class='{(isDark ? "room-dark" : "")}'>{item.Name} contains:", player.ConnectionId);
+
+                    var listOfContainerItems = new StringBuilder();
+                    foreach (var containerItem in item.Container.Items)
+                    {
+                        listOfContainerItems.Append(containerItem.Name);
+                    }
+
+                    _writeToClient.WriteLine($"<p  class='{(isDark ? "room-dark" : "")}'>{listOfContainerItems}", player.ConnectionId);
+
+                }
+
                 foreach (var pc in room.Players)
                 {
                     if (pc.Name == player.Name)
@@ -185,7 +199,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
                 return;
             }
-
+            //for player?
             if (roomObjects != null && character == null && item == null)
             {
               

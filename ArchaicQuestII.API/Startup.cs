@@ -232,6 +232,8 @@ namespace ArchaicQuestII.API
             _hubContext = app.ApplicationServices.GetService<IHubContext<GameHub>>();
             app.StartLoops();
 
+            var watch = System.Diagnostics.Stopwatch.StartNew();
+
             var rooms = _db.GetList<Room>(DataBase.Collections.Room);
 
             foreach (var room in rooms)
@@ -426,7 +428,10 @@ namespace ArchaicQuestII.API
                 
             }
 
+            watch.Stop();
+            var elapsedMs = watch.ElapsedMilliseconds;
 
+            Console.WriteLine($"Start up completed in {elapsedMs}");
         }
     }
 

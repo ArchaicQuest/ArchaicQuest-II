@@ -612,14 +612,14 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
         public void Open(string target, Room room, Player player)
         {
-            var item = room.Items.FirstOrDefault(x => x.Name.StartsWith(target, StringComparison.CurrentCultureIgnoreCase)) ?? player.Inventory.FirstOrDefault(x => x.Name.StartsWith(target, StringComparison.CurrentCultureIgnoreCase));
+            
+            var item = room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ?? player.Inventory.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
 
-            if (item == null)
+            var isExit = Helpers.IsExit(target, room);
+
+
+            if (isExit != null)
             {
-                var isExit = Helpers.IsExit(target, room);
-
-                if (isExit != null)
-                {
 
                     if (!isExit.Locked)
                     {
@@ -636,11 +636,6 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
                         return;
                     }
-
-
-                }
-
-
 
             }
 
