@@ -23,7 +23,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
             _updateUi = updateUi;
             _mobScripts = mobScripts;
         }
-        public void Get(string target, string container, Room room, Player player)
+        public void Get(string target, string container, Room room, Player player, string fullCommand)
         {
             //TODO: Get all, get nth (get 2.apple)
             if (target == "all" && string.IsNullOrEmpty(container))
@@ -32,14 +32,17 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                 return;
             }
 
+            var nthItem = Helpers.findNth(target);
+
             if (!string.IsNullOrEmpty(container))
             {
                 GetFromContainer(target, container, room, player);
                 return;
             }
-
+            
             //Check room first
-            var item = room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+            var item = nthItem == null ? room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) : 
+                room.Items.FindAll(x => x.Name.Contains(nthItem.Item2, StringComparison.CurrentCultureIgnoreCase)).Skip(nthItem.Item1 - 1).FirstOrDefault();
 
             if (item == null)
             {
@@ -231,13 +234,17 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                 return;
             }
 
+            var nthItem = Helpers.findNth(target);
+
             if (!string.IsNullOrEmpty(container) && !int.TryParse(target, out var number))
             {
                 DropInContainer(target, container, room, player);
                 return;
             }
 
-            var item = player.Inventory.Where(x => x.Stuck == false).FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+ 
+            var item = nthItem == null ? player.Inventory.Where(x => x.Stuck == false).FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) :
+                player.Inventory.FindAll(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase) && x.Stuck == false).Skip(nthItem.Item1 - 1).FirstOrDefault();
 
             if (item == null)
             {
@@ -405,8 +412,23 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
         public void DropInContainer(string target, string container, Room room, Player player)
         {
+            var nthItem = Helpers.findNth(target);
 
-            var containerObj = room.Items.FirstOrDefault(x => x.Name.Contains(container, StringComparison.CurrentCultureIgnoreCase)) ?? player.Inventory.Where(x => x.Stuck == false).FirstOrDefault(x => x.Name.Contains(container, StringComparison.CurrentCultureIgnoreCase));
+            var containerObj = nthItem == null
+                ? room.Items.FirstOrDefault(x => x.Name.Contains(container, StringComparison.CurrentCultureIgnoreCase))
+                : room.Items.FindAll(x => x.Name.Contains(container, StringComparison.CurrentCultureIgnoreCase))
+                    .Skip(nthItem.Item1 - 1).FirstOrDefault();
+
+            if (containerObj == null)
+            {
+                containerObj = nthItem == null
+                    ? player.Inventory.Where(x => x.Stuck == false).FirstOrDefault(x =>
+                        x.Name.Contains(container, StringComparison.CurrentCultureIgnoreCase))
+                    : player.Inventory
+                        .FindAll(x =>
+                            x.Stuck == false && x.Name.Contains(container, StringComparison.CurrentCultureIgnoreCase))
+                        .Skip(nthItem.Item1 - 1).FirstOrDefault();
+            }
 
             if (containerObj == null)
             {
@@ -494,8 +516,23 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
         {
 
 
+            var nthItem = Helpers.findNth(target);
 
-            var containerObj = room.Items.FirstOrDefault(x => x.Name.Contains(container, StringComparison.CurrentCultureIgnoreCase)) ?? player.Inventory.Where(x => x.Stuck == false).FirstOrDefault(x => x.Name.Contains(container, StringComparison.CurrentCultureIgnoreCase));
+            var containerObj = nthItem == null
+                ? room.Items.FirstOrDefault(x => x.Name.Contains(container, StringComparison.CurrentCultureIgnoreCase))
+                : room.Items.FindAll(x => x.Name.Contains(container, StringComparison.CurrentCultureIgnoreCase))
+                    .Skip(nthItem.Item1 - 1).FirstOrDefault();
+
+            if (containerObj == null)
+            {
+                containerObj = nthItem == null
+                    ? player.Inventory.Where(x => x.Stuck == false).FirstOrDefault(x =>
+                        x.Name.Contains(container, StringComparison.CurrentCultureIgnoreCase))
+                    : player.Inventory
+                        .FindAll(x =>
+                            x.Stuck == false && x.Name.Contains(container, StringComparison.CurrentCultureIgnoreCase))
+                        .Skip(nthItem.Item1 - 1).FirstOrDefault();
+            }
 
             if (containerObj == null)
             {
@@ -612,8 +649,16 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
         public void Open(string target, Room room, Player player)
         {
-            
-            var item = room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ?? player.Inventory.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+            var nthItem = Helpers.findNth(target);
+            var item = nthItem == null
+                ? room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase))
+                : room.Items.FindAll(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase))
+                      .Skip(nthItem.Item1 - 1).FirstOrDefault()
+                  ?? ( player.Inventory.FirstOrDefault(x =>
+                          x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase))
+                      ?? player.Inventory
+                          .FindAll(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase))
+                          .Skip(nthItem.Item1 - 1).FirstOrDefault());
 
             var isExit = Helpers.IsExit(target, room);
 
@@ -674,7 +719,17 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
         public void Close(string target, Room room, Player player)
         {
 
-            var item = room.Items.FirstOrDefault(x => x.Name.StartsWith(target, StringComparison.CurrentCultureIgnoreCase)) ?? player.Inventory.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+            var nthItem = Helpers.findNth(target);
+            var item = nthItem == null
+                ? room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase))
+                : room.Items.FindAll(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase))
+                      .Skip(nthItem.Item1 - 1).FirstOrDefault()
+                  ?? (player.Inventory.FirstOrDefault(x =>
+                          x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase))
+                      ?? player.Inventory
+                          .FindAll(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase))
+                          .Skip(nthItem.Item1 - 1).FirstOrDefault());
+
 
             if (item != null && item.Container.CanOpen != true)
             {
@@ -813,9 +868,17 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
         public void Unlock(string target, Room room, Player player)
         {
-            var objToUnlock =
-                room.Items.FirstOrDefault(x =>
-                    x.Name.StartsWith(target, StringComparison.CurrentCultureIgnoreCase));
+            var nthItem = Helpers.findNth(target);
+            var objToUnlock = nthItem == null
+                ? room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase))
+                : room.Items.FindAll(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase))
+                      .Skip(nthItem.Item1 - 1).FirstOrDefault()
+                  ?? (player.Inventory.FirstOrDefault(x =>
+                          x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase))
+                      ?? player.Inventory
+                          .FindAll(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase))
+                          .Skip(nthItem.Item1 - 1).FirstOrDefault());
+
 
             if (objToUnlock == null)
             {

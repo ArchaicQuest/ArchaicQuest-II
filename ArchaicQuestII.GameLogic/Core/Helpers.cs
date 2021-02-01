@@ -15,6 +15,21 @@ namespace ArchaicQuestII.GameLogic.Core
     /// </summary>
    public static class Helpers
     {
+        public static Tuple<int, string> findNth(string command)
+        {
+            var splitCommand = command.Split('.');
+           var isnumber = int.TryParse(splitCommand[0], out int nth);
+            if (splitCommand[0].Equals(command) || !isnumber)
+            {
+                return null;
+            }
+
+           
+            var target = splitCommand[1];
+
+            return new Tuple<int, string>(nth, target);
+        }
+
         /// <summary>
         /// Her / His
         /// </summary>

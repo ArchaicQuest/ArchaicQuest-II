@@ -175,7 +175,7 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "loot":
                 case "get":
                 case "take":
-                    _object.Get(obj, target, room, player);
+                    _object.Get(obj, target, room, player, fullCommand);
                     break;
                 case "drop":
                 case "put":

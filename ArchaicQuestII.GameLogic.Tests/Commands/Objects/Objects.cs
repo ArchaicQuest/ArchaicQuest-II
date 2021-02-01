@@ -49,7 +49,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
 
             var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object, _IMobScripts.Object);
 
-            objects.Get("apple", "", room, player);
+            objects.Get("apple", "", room, player, "get apple");
 
 
             Assert.True(room.Items.FirstOrDefault(x => x.Name == "apple") == null);
@@ -76,7 +76,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
 
             var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object, _IMobScripts.Object);
 
-            objects.Get("all", "", room, player);
+            objects.Get("all", "", room, player, "get all");
 
 
             Assert.True(room.Items.FirstOrDefault(x => x.Name == "apple") == null);
@@ -108,7 +108,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
 
             var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object, _IMobScripts.Object);
 
-            objects.Get("apple", "chest", room, player);
+            objects.Get("apple", "chest", room, player, "get apple chest");
 
 
             Assert.True(chest.Container.Items.FirstOrDefault(x => x.Name == "apple") == null);
@@ -136,7 +136,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
 
             var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object, _IMobScripts.Object);
 
-            objects.Get("apple", "", room, player);
+            objects.Get("apple", "", room, player, "get apple");
 
 
             Assert.True(player.Inventory.FirstOrDefault(x => x.Name == "apple") != null);
@@ -161,7 +161,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
 
             var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object, _IMobScripts.Object);
 
-            objects.Get("gold", "", room, player);
+            objects.Get("gold", "", room, player, "get gold");
 
 
             Assert.True(player.Money.Gold.Equals(5));
