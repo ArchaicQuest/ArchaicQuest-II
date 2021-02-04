@@ -83,9 +83,8 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 return;
             }
 
-
-
-            var container = room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ?? player.Inventory.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+            var nthTarget = Helpers.findNth(target);
+            var container = Helpers.findRoomObject(nthTarget, room) ?? Helpers.findObjectInInventory(nthTarget, player);
 
             if (container != null && container.ItemType != Item.Item.ItemTypes.Container)
             {
@@ -138,15 +137,10 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 return;
             }
             var isDark = RoomIsDark(room, player);
+            var nthTarget = Helpers.findNth(target);
 
-            var item =
-                room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ??
-                player.Inventory.FirstOrDefault(x =>
-                    x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
-
-            var character =
-                room.Mobs.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ??
-                room.Players.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+            var item = Helpers.findRoomObject(nthTarget, room) ?? Helpers.findObjectInInventory(nthTarget, player);
+            var character = Helpers.FindMob(nthTarget, room) ?? Helpers.FindPlayer(nthTarget, room);
 
 
             RoomObject roomObjects = null;
@@ -169,7 +163,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 return;
             }
 
-            if (item != null && character == null && roomObjects == null)
+            if (item != null && character == null)
             {
                 _writeToClient.WriteLine($"<p  class='{(isDark ? "room-dark" : "")}'>{item.Description.Look}", player.ConnectionId);
 
@@ -196,11 +190,11 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
                     _writeToClient.WriteLine($"<p>{player.Name} looks at {item.Name.ToLower()}.</p>", pc.ConnectionId);
                 }
-
                 return;
+                
             }
             //for player?
-            if (roomObjects != null && character == null && item == null)
+            if (roomObjects != null && character == null)
             {
               
                 _writeToClient.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{roomObjects.Look}", player.ConnectionId);
@@ -224,7 +218,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 return;
             }
 
-        
+
 
             var sb = new StringBuilder();
             if (character.ConnectionId != "mob")
@@ -268,9 +262,13 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 return;
             }
 
+            var nthTarget = Helpers.findNth(target);
 
-            var item = room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ?? player.Inventory.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+            var item = Helpers.findRoomObject(nthTarget, room) ?? Helpers.findObjectInInventory(nthTarget, player);
 
+
+            RoomObject roomObjects = null;
+       
             if (item == null)
             {
                 _writeToClient.WriteLine("<p>You don't see that here.", player.ConnectionId);
@@ -291,6 +289,16 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 _writeToClient.WriteLine($"<p>{player.Name} examines {item.Name.ToLower()}.</p>", pc.ConnectionId);
             }
 
+            if (room.RoomObjects.Count >= 1 && room.RoomObjects[0].Name != null)
+            {
+                roomObjects =
+                    room.RoomObjects.FirstOrDefault(x =>
+                        x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+
+                _writeToClient.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{roomObjects.Examine}", player.ConnectionId);
+            }
+
+
             //if (item.ItemType == Item.Item.ItemTypes.Container)
             //{
             //    _writeToClient.WriteLine($"<p>You look inside {item.Name}", player.ConnectionId);
@@ -309,8 +317,9 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 return;
             }
 
+            var nthTarget = Helpers.findNth(target);
+            var item = Helpers.findRoomObject(nthTarget, room) ?? Helpers.findObjectInInventory(nthTarget, player);
 
-            var item = room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ?? player.Inventory.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
 
             if (item == null)
             {
@@ -340,7 +349,9 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 return;
             }
 
-            var item = room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ?? player.Inventory.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+            var nthTarget = Helpers.findNth(target);
+            var item = Helpers.findRoomObject(nthTarget, room) ?? Helpers.findObjectInInventory(nthTarget, player);
+
 
             if (item == null)
             {
@@ -374,7 +385,8 @@ namespace ArchaicQuestII.GameLogic.World.Room
             }
 
 
-            var item = room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ?? player.Inventory.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+            var nthTarget = Helpers.findNth(target);
+            var item = Helpers.findRoomObject(nthTarget, room) ?? Helpers.findObjectInInventory(nthTarget, player);
 
             if (item == null)
             {

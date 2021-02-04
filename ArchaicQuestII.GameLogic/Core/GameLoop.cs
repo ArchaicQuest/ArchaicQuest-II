@@ -56,7 +56,7 @@ namespace ArchaicQuestII.GameLogic.Core
             while (true)
             {
                 //2 mins
-                await Task.Delay(30000);
+                await Task.Delay(120000);
                 var rooms = _cache.GetAllRoomsToRepop();
                 var players = _cache.GetPlayerCache().Values.ToList();
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Effect;
@@ -71,14 +72,16 @@ namespace ArchaicQuestII.GameLogic.Core
         private readonly IDice _dice;
         private readonly IWriteToClient _writeToClient;
         private readonly IUpdateClientUI _updateClientUi;
+        private readonly IGain _gain;
         public MobScripts(ICache cache, ICombat
-            combat, IWriteToClient writeToClient, IDice dice, IUpdateClientUI updateClientUi)
+            combat, IWriteToClient writeToClient, IDice dice, IUpdateClientUI updateClientUi, IGain gain)
         {
             _cache = cache;
             _combat = combat;
             _writeToClient = writeToClient;
             _dice = dice;
             _updateClientUi = updateClientUi;
+            _gain = gain;
 
         }
         public bool IsInRoom(Room room, Player player)
@@ -121,7 +124,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public void AddEventState(Player player, string key, int value)
         {
-            player.EventState.Add(key, value);
+            player.EventState.TryAdd(key, value);
         }
 
         public void UpdateEventState(Player player, string key, int value)
@@ -219,10 +222,39 @@ namespace ArchaicQuestII.GameLogic.Core
             throw new NotImplementedException();
         }
 
+        public void GiveItem(Player player, Player mob, string name)
+        {
+            var item = mob.Inventory.FirstOrDefault(x =>
+                x.Name.Contains(name, StringComparison.CurrentCultureIgnoreCase));
+
+            if (item != null)
+            {
+
+                player.Inventory.Add(item);
+
+                _updateClientUi.UpdateInventory(player);
+            }
+        }
+
         public bool HasObject(Player player, string name)
         {
             return player.Inventory.FirstOrDefault(x => x.Name.StartsWith(name, StringComparison.CurrentCultureIgnoreCase)) !=
                    null;
+        }
+
+
+        public void UpdateQuest(Player player, int questId, string message)
+        {
+
+            var quest = player.QuestLog.FirstOrDefault(x => x.Id == questId);
+
+            if (quest != null)
+            {
+                quest.Description += $"\r\n{message}";
+
+            }
+
+            _writeToClient.WriteLine($"<p class='gain'>Updated Quest: {quest.Title}!</p>", player.ConnectionId);
         }
 
         public void AddQuest(Player player, int questId)
@@ -260,7 +292,10 @@ namespace ArchaicQuestII.GameLogic.Core
             {
                 quest.Completed = true;
                 _writeToClient.WriteLine($"<p class='gain'>Quest Complete: {quest.Title}!</p>", player.ConnectionId);
-                _writeToClient.WriteLine($"<p class='gain'>You gain {quest.ExpGain} experience points and {quest.GoldGain} gold.</p>", player.ConnectionId);
+                _writeToClient.WriteLine($"<p class='gain'>You gain {quest.ExpGain} experience points{(quest.GoldGain == 0 ? "." : $" and {quest.GoldGain} gold. ")}</p>", player.ConnectionId);
+
+                _gain.GainExperiencePoints(player, quest.ExpGain);
+                player.Money.Gold = quest.GoldGain;
             }
  
             _updateClientUi.UpdateQuest(player);

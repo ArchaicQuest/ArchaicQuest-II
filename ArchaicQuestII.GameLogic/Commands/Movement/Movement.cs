@@ -617,7 +617,13 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
             }
  
         }
-            public void Follow(Player player, Room room, string target)
+
+        public void Enter(Player player, Room room, string target)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Follow(Player player, Room room, string target)
         {
             if(target.Equals("self", StringComparison.CurrentCultureIgnoreCase))
             { 

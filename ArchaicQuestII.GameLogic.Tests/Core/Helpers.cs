@@ -30,7 +30,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Core
         {
             var nthObject = GameLogic.Core.Helpers.findNth("get apple corpse");
 
-            Assert.Null(nthObject);
+            Assert.Equal(-1, nthObject.Item1);
 
         }
 
@@ -40,7 +40,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Core
         {
             var nthObject = GameLogic.Core.Helpers.findNth("get ab.apple corpse");
 
-            Assert.Null(nthObject);
+            Assert.Equal(-1, nthObject.Item1);
 
         }
     }
