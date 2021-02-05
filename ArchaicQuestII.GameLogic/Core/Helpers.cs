@@ -82,6 +82,10 @@ namespace ArchaicQuestII.GameLogic.Core
                     .Skip(keyword.Item1 - 1).FirstOrDefault();
         }
 
+        public static string ReturnRoomId(Room room)
+        {
+            return $"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}";
+        }
 
         /// <summary>
         /// Her / His
@@ -126,9 +130,6 @@ namespace ArchaicQuestII.GameLogic.Core
             };
         }
 
- 
-
-     
         public static string DisplayDoor(Exit exit)
         {
             var exitName = "";

@@ -539,6 +539,22 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
             }
         }
 
+
+        public void ChangePlayerLocation(Player player, Room room)
+        {
+            player.RoomId = Helpers.ReturnRoomId(room);
+
+            room.Players.Add(player);
+        }
+
+        public void RemovePlayerLocation(Player player, Room room)
+        {
+
+            room.Players.Remove(player);
+        }
+
+
+
         public void Group(Player player, Room room, string target)
         {
             if((string.IsNullOrEmpty(target) || target.Equals("group", StringComparison.CurrentCultureIgnoreCase)) && !player.grouped)
@@ -620,7 +636,55 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
 
         public void Enter(Player player, Room room, string target)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(target))
+            {
+                _writeToClient.WriteLine("<p>You can't do that here.</p>", player.ConnectionId);
+                return;
+            }
+
+            var nthItem = Helpers.findNth(target);
+            var item = Helpers.findRoomObject(nthItem, room);
+
+            if (item == null)
+            {
+                _writeToClient.WriteLine("<p>You don't see that here.</p>", player.ConnectionId);
+                return;
+            }
+
+            if (item.ItemType != Item.Item.ItemTypes.Portal)
+            {
+                _writeToClient.WriteLine("<p>You can't enter that.</p>", player.ConnectionId);
+                return;
+            }
+
+            foreach (var pc in room.Players)
+            {
+                if (player.Name == pc.Name)
+                {
+                    _writeToClient.WriteLine($"<p>You {item.Portal.EnterDescription}</p>", player.ConnectionId);
+                    continue;
+                }
+                _writeToClient.WriteLine($"<p>{player.Name} {item.Portal.EnterDescription}</p>", pc.ConnectionId);
+            }
+
+            var newRoom = _cache.GetRoom(item.Portal.Destination);
+            //Change player location
+            ChangePlayerLocation(player, newRoom);
+            RemovePlayerLocation(player, room);
+            _roomActions.Look("", newRoom, player);
+
+            foreach (var pc in newRoom.Players)
+            {
+                if (player.Name == pc.Name)
+                {
+                    continue;
+                }
+                _writeToClient.WriteLine($"<p>{player.Name} {item.Portal.EnterDescriptionRoom}</p>", pc.ConnectionId);
+            }
+
+            var rooms = _cache.GetMap($"{newRoom.AreaId}{newRoom.Coords.Z}");
+            _updateUi.GetMap(player, rooms);
+            
         }
 
         public void Follow(Player player, Room room, string target)

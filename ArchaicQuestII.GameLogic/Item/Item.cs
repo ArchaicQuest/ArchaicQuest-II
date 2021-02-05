@@ -25,7 +25,8 @@ namespace ArchaicQuestII.GameLogic.Item
             Weapon,
             Seating,
             Inanimate,
-            Money
+            Money,
+            Portal
         }
 
         [Flags]
@@ -179,5 +180,7 @@ namespace ArchaicQuestII.GameLogic.Item
         public bool Infinite { get; set; }
 
         public bool Deleted { get; set; }
+
+        public Portal Portal { get; set; }
     }
 }

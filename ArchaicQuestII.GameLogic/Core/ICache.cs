@@ -45,6 +45,11 @@ namespace ArchaicQuestII.GameLogic.Core
         /// <param name="areaId"></param>
         /// <param name="room"></param>
         void AddMap(string areaId, string room);
+        /// <summary>
+        /// Area Id + Z coord
+        /// </summary>
+        /// <param name="areaId"></param>
+        /// <returns></returns>
         string GetMap(string areaId);
 
         bool IsCharInCombat(string id);
