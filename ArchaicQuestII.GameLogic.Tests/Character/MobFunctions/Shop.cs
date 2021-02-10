@@ -125,7 +125,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Character.MobFunctions
 
             _IWriteToClient.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("Gary says 'Here's what I have for sale.'")), "1"), Times.Once());
 
-            _IWriteToClient.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("<table class='data'><tr><td style='width: 30px; text-align: center;'>#</td><td style='width: 30px; text-align: center;'>Level</td><td  style='width: 100px;'>Price</td><td>Item</td></tr><tr><td style='width: 30px; text-align: center;'>1</td><td style='width: 30px; text-align: center;'>0</td><td  style='width: 100px;'>0 SP</td><td>Sword</td></tr></table>")), "1"), Times.Once());
+            _IWriteToClient.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("<table class='data'><tr><td style='width: 30px; text-align: center;'>#</td><td style='width: 30px; text-align: center;'>Level</td><td  style='width: 65px;'>Price</td><td>Item</td></tr><tr><td style='width: 30px; text-align: center;'>1</td><td style='width: 30px; text-align: center;'>0</td><td  style='width: 65px;'>0</td><td>Sword</td></tr></table>")), "1"), Times.Once());
         }
 
         [Fact]
@@ -156,7 +156,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Character.MobFunctions
                 Shopkeeper = false,
                 Money = new GameLogic.Character.Model.Money()
                 {
-                    Gold = 10
+                    Gold = 20
                 }
             };
 
@@ -169,9 +169,9 @@ namespace ArchaicQuestII.GameLogic.Tests.Character.MobFunctions
             shop.BuyItem("sword", room, player);
 
             Assert.True(player.Inventory.FirstOrDefault(x => x.Name.Equals("Sword")) != null);
-            Assert.True(player.Money.Gold == 0);
+            Assert.True(player.Money.Gold < 20);
 
-            _IWriteToClient.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("You buy sword for 10 gold.")), "1"), Times.Once());
+            _IWriteToClient.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("You buy sword for 15 gold.")), "1"), Times.Once());
  
         }
 

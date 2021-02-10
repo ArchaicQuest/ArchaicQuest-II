@@ -6,8 +6,9 @@ namespace ArchaicQuestII.GameLogic.Core
 {
     public interface ITime
     {
-        public void UpdateTime();
+        public string UpdateTime();
         public string ReturnTime();
         public bool IsNightTime();
+        public void DisplayTimeOfDayMessage(string TickMessage);
     }
 }

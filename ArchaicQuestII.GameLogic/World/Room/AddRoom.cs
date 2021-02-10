@@ -36,6 +36,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 Mobs = room.Mobs,
                 RoomObjects = room.RoomObjects,
                 Type = room.Type,
+                Terrain = room.Terrain,
                 DateUpdated = DateTime.Now,
                 DateCreated = DateTime.Now,
                 

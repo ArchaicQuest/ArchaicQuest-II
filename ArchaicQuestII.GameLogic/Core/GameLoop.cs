@@ -211,8 +211,7 @@ namespace ArchaicQuestII.GameLogic.Core
                 try
                 {
                     await Task.Delay(500);
-                    Console.WriteLine("time loop");
-                    _time.UpdateTime();
+                   _time.DisplayTimeOfDayMessage(_time.UpdateTime());
   
                 }
                 catch (Exception ex)

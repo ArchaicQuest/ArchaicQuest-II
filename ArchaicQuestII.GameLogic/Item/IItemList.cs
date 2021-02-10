@@ -8,7 +8,7 @@ namespace ArchaicQuestII.GameLogic.Item
 {
    public interface IItemList
    {
-       public IEnumerable<String> List(bool isRoom);
-       public IEnumerable<String> List(IEnumerable<Item> items, params object[] isRoom);
+       public IEnumerable<ItemObj> List(bool isRoom);
+       public IEnumerable<ItemObj> List(IEnumerable<Item> items, params object[] isRoom);
    }
 }

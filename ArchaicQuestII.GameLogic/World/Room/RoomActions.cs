@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Text.Encodings.Web;
 using ArchaicQuestII.Core.World;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
+using ArchaicQuestII.GameLogic.Item;
 using Newtonsoft.Json;
 
 namespace ArchaicQuestII.GameLogic.World.Room
@@ -49,7 +51,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
             var roomDesc = new StringBuilder();
             var isDark = RoomIsDark(room, player);
-
+          
             roomDesc
                 .Append($"<p class=\"room-title {(isDark ? "room-dark" : "")}\">{room.Title}<br /></p>")
                 .Append($"<p class=\"room-description  {(isDark ? "room-dark" : "")}\">{room.Description}</p>");
@@ -88,6 +90,12 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
             if (container != null && container.ItemType != Item.Item.ItemTypes.Container)
             {
+                if (container.ItemType == Item.Item.ItemTypes.Portal)
+                {
+                    LookInPortal(container, room, player);
+                    return;
+                }
+
                 _writeToClient.WriteLine($"<p>{container.Name} is not a container", player.ConnectionId);
                 return;
             }
@@ -113,7 +121,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
             var isDark = RoomIsDark(room, player);
             foreach (var obj in container.Container.Items.List(false))
             {
-                _writeToClient.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{obj}</p>", player.ConnectionId);
+                _writeToClient.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{obj.Name}</p>", player.ConnectionId);
             }
 
            
@@ -127,6 +135,20 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
                 _writeToClient.WriteLine($"<p>{player.Name} looks inside {container.Name.ToLower()}.</p>", pc.ConnectionId);
             }
+        }
+
+        public void LookInPortal(Item.Item portal, Room room, Player player)
+        {
+            var getPortalLocation = _cache.GetRoom(portal.Portal.Destination);
+
+            if (getPortalLocation == null)
+            {
+                //Log error
+                _writeToClient.WriteLine("<p>The dark abyss, I wouldn't enter if I were you.</p>", player.ConnectionId);
+                return;
+            }
+
+            Look("", getPortalLocation, player);
         }
 
         public void LookObject(string target, Room room, Player player)
@@ -410,17 +432,32 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
         }
 
+        public Item.Item GetItemAttributes(int index, Room room)
+        {
+
+            return room.Items.FirstOrDefault(x => x.Id.Equals(index));
+        }
+
         public string DisplayItems(Room room, Player player)
         {
             var isDark = RoomIsDark(room, player);
             var items = room.Items.List();
             var x = string.Empty;
+            int index = 0;
             foreach (var item in items)
             {
-                if (!string.IsNullOrEmpty(item))
+                if (!string.IsNullOrEmpty(item.Name))
                 {
-                    x += $"<p class='item {(isDark ? "dark-room" : "")}'>{item}</p>";
+
+                    var i = GetItemAttributes(item.Id, room);
+                    var keyword = i.Name.Split(" ");
+
+                    var data = $"{{detail: {{name: \" {HtmlEncoder.Default.Encode(i.Name)}\", desc: \"{HtmlEncoder.Default.Encode(i.Description.Look)}\", type: \"{i.ItemType}\", canOpen: \"{i.Container.CanOpen}\", isOpen: \"{i.Container.IsOpen}\", keyword: \"{HtmlEncoder.Default.Encode(keyword[keyword.Length - 1])}\"}}}}";
+
+                    var clickEvent = $"window.dispatchEvent(new CustomEvent(\"open-detail\", {data}))";
+                    x += $"<p onClick='{clickEvent}' class='item {(isDark ? "dark-room" : "")}' >{item.Name}</p>";
                 }
+                index++;
 
             }
 

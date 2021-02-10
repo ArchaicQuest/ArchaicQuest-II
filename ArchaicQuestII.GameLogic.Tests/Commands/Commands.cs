@@ -99,7 +99,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
 
             _movement.Setup(x => x.Move(_room, _player, "North"));
 
-            _commands.ProcessCommand(" NoRtH ", _player, _room);
+            _commands.ProcessCommand("NoRtH ", _player, _room);
 
             _movement.Verify(x => x.Move(_room, _player, "North"), Times.Once);
 

@@ -92,8 +92,8 @@ namespace ArchaicQuestII.Controllers
                     EnterDescription = item.Portal.EnterDescription,
                     EnterDescriptionRoom = item.Portal.EnterDescriptionRoom,
                     ExitDescription = item.Portal.ExitDescription,
-                    ExitDescriptionRoom = item.Portal.ExitDescriptionRoom
-                    Name = item.Portal.Name
+                    ExitDescriptionRoom = item.Portal.ExitDescriptionRoom,
+                    Name = item.Portal.Name,
                 }
 
             };
