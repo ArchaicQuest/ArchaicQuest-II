@@ -56,7 +56,7 @@ namespace ArchaicQuestII.GameLogic.Core
             while (true)
             {
                 //2 mins
-                await Task.Delay(30000);
+                await Task.Delay(120000);
                 var rooms = _cache.GetAllRoomsToRepop();
                 var players = _cache.GetPlayerCache().Values.ToList();
 
@@ -211,8 +211,7 @@ namespace ArchaicQuestII.GameLogic.Core
                 try
                 {
                     await Task.Delay(500);
-                    Console.WriteLine("time loop");
-                    _time.UpdateTime();
+                   _time.DisplayTimeOfDayMessage(_time.UpdateTime());
   
                 }
                 catch (Exception ex)
@@ -306,11 +305,6 @@ namespace ArchaicQuestII.GameLogic.Core
                             }
 
 
-                            else
-                            {
-
-                            }
-
                             if (mob.Roam && _dice.Roll(1, 1, 100) >= 50)
                             {
                                 var exits = Helpers.GetListOfExits(room.Exits);
@@ -318,7 +312,7 @@ namespace ArchaicQuestII.GameLogic.Core
                                 {
                                     var direction = exits[_dice.Roll(1, 0, exits.Count - 1)];
 
-                                    mob.Buffer.Push(direction);
+                                    mob.Buffer.Enqueue(direction);
                                 }
                             }
 
@@ -329,14 +323,14 @@ namespace ArchaicQuestII.GameLogic.Core
 
                                 foreach (var command in commands)
                                 {
-                                    mob.Buffer.Push(command);
+                                    mob.Buffer.Enqueue(command);
                                 }
 
                             }
 
                             if (mob.Buffer.Count > 0)
                             {
-                                var mobCommand = mob.Buffer.Pop();
+                                var mobCommand = mob.Buffer.Dequeue();
 
                                 _commands.ProcessCommand(mobCommand, mob, room);
                             }
@@ -368,7 +362,7 @@ namespace ArchaicQuestII.GameLogic.Core
                     foreach (var player in validPlayers)
                     {
 
-                        var command = player.Value.Buffer.Pop();
+                        var command = player.Value.Buffer.Dequeue();
                         var room = _cache.GetRoom(player.Value.RoomId);
 
                         _commands.ProcessCommand(command, player.Value, room);

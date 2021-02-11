@@ -15,6 +15,78 @@ namespace ArchaicQuestII.GameLogic.Core
     /// </summary>
    public static class Helpers
     {
+        public static Tuple<int, string> findNth(string command)
+        {
+            var splitCommand = command.Split('.');
+           var isnumber = int.TryParse(splitCommand[0], out int nth);
+            if (splitCommand[0].Equals(command) || !isnumber)
+            {
+                return new Tuple<int, string>(-1, command);
+            }
+
+           
+            var target = splitCommand[1];
+
+            return new Tuple<int, string>(nth, target);
+        }
+
+
+        public static Item.Item findRoomObject(Tuple<int, string> keyword, Room room)
+        {
+           return keyword.Item1 == -1 ? room.Items.FirstOrDefault(x => x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase)) :
+                room.Items.FindAll(x => x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase)).Skip(keyword.Item1 - 1).FirstOrDefault();
+        }
+
+        public static Item.Item findObjectInInventory(Tuple<int, string> keyword, Player player)
+        {
+            return keyword.Item1 == -1 ? player.Inventory.FirstOrDefault(x => x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase)) :
+                player.Inventory.FindAll(x => x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase)).Skip(keyword.Item1 - 1).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Find matching player or mob
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <param name="room"></param>
+        /// <returns></returns>
+        public static Player findPlayerObject(Tuple<int, string> keyword, Room room)
+        {
+            return keyword.Item1 == -1
+                ? room.Players.FirstOrDefault(x =>
+                    x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase))
+                : room.Players.FindAll(x => x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase))
+                    .Skip(keyword.Item1 - 1).FirstOrDefault() ?? (keyword.Item1 == null
+                    ? room.Mobs.FirstOrDefault(x =>
+                        x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase))
+                    : room.Mobs
+                        .FindAll(x => x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase))
+                        .Skip(keyword.Item1 - 1).FirstOrDefault());
+        }
+
+        public static Player FindPlayer(Tuple<int, string> keyword, Room room)
+        {
+            return keyword.Item1 == -1
+                ? room.Players.FirstOrDefault(x =>
+                    x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase))
+                : room.Players.FindAll(x => x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase))
+                    .Skip(keyword.Item1 - 1).FirstOrDefault();
+        }
+
+        public static Player FindMob(Tuple<int, string> keyword, Room room)
+        {
+
+            return keyword.Item1 == -1
+                ? room.Mobs.FirstOrDefault(x =>
+                    x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase))
+                : room.Mobs.FindAll(x => x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase))
+                    .Skip(keyword.Item1 - 1).FirstOrDefault();
+        }
+
+        public static string ReturnRoomId(Room room)
+        {
+            return $"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}";
+        }
+
         /// <summary>
         /// Her / His
         /// </summary>
@@ -56,26 +128,6 @@ namespace ArchaicQuestII.GameLogic.Core
                 "Male" => "him",
                 _ => "it",
             };
-        }
-
-        public static Player FindPlayer(string target, Room room)
-        {
-            return room.Players.FirstOrDefault(x => x.Name.StartsWith(target, StringComparison.CurrentCultureIgnoreCase));
-        }
-
-        public static Player FindMob(string target, Room room)
-        {
-            return (Player)room.Mobs.FirstOrDefault(x => x.Name.StartsWith(target, StringComparison.CurrentCultureIgnoreCase));
-        }
-
-        public static Item.Item FindItemInInventory(string target, Player player)
-        {
-            return player.Inventory.FirstOrDefault(x => x.Name.StartsWith(target, StringComparison.CurrentCultureIgnoreCase));
-        }
-
-        public static Item.Item FindItemInRoom(string target, Room room)
-        {
-            return room.Items.FirstOrDefault(x => x.Name.StartsWith(target, StringComparison.CurrentCultureIgnoreCase));
         }
 
         public static string DisplayDoor(Exit exit)

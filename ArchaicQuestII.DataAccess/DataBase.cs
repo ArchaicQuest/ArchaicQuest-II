@@ -27,6 +27,7 @@ namespace ArchaicQuestII.DataAccess
             Area,
             AttackType,
             Class,
+            Help,
             Items,
             Mobs,
             Players,
@@ -46,7 +47,7 @@ namespace ArchaicQuestII.DataAccess
             var collection = _db.GetCollection<T>(GetCollectionName(collectionName));
             collection.Upsert(data);
             SetIndex((LiteCollection<T>)collection, collectionName);
-
+            _db.Checkpoint();
  
             return true;
         }
@@ -90,6 +91,7 @@ namespace ArchaicQuestII.DataAccess
                 Collections.Area => "Area",
                 Collections.AttackType => "AttackType",
                 Collections.Class => "Class",
+                Collections.Help => "Help",
                 Collections.Items => "Items",
                 Collections.Mobs => "Mobs",
                 Collections.Players => "Players",

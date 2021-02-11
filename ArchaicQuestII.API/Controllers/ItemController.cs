@@ -85,6 +85,16 @@ namespace ArchaicQuestII.Controllers
                 WeaponSpeed = item.WeaponSpeed,
                 WeaponType = item.WeaponType,
                 Weight = item.Weight,
+                Value = item.Value,
+                Portal = new Portal()
+                {
+                    Destination = item.Portal.Destination,
+                    EnterDescription = item.Portal.EnterDescription,
+                    EnterDescriptionRoom = item.Portal.EnterDescriptionRoom,
+                    ExitDescription = item.Portal.ExitDescription,
+                    ExitDescriptionRoom = item.Portal.ExitDescriptionRoom,
+                    Name = item.Portal.Name,
+                }
 
             };
 

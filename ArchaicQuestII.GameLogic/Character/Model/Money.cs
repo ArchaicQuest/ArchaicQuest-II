@@ -6,6 +6,5 @@ namespace ArchaicQuestII.GameLogic.Character.Model
     {
         public int Gold { get; set; }
         public int Silver { get; set; }
-        public int Copper { get; set; }
     }
 }

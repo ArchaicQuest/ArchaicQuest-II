@@ -5,7 +5,9 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Emote;
+using ArchaicQuestII.GameLogic.Character.Help;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.World.Room;
 
@@ -22,11 +24,13 @@ namespace ArchaicQuestII.GameLogic.Core
         private readonly ConcurrentDictionary<string, Player> _playerCache = new ConcurrentDictionary<string, Player>();
         private readonly ConcurrentDictionary<string, Room> _roomCache = new ConcurrentDictionary<string, Room>();
         private readonly ConcurrentDictionary<int, Skill.Model.Skill> _skillCache = new ConcurrentDictionary<int, Skill.Model.Skill>();
-        private readonly ConcurrentDictionary<int, string> _mapCache = new ConcurrentDictionary<int, string>();
+        private readonly ConcurrentDictionary<string, string> _mapCache = new ConcurrentDictionary<string, string>();
         private readonly ConcurrentDictionary<string, Player> _combatCache = new ConcurrentDictionary<string, Player>();
         private readonly ConcurrentDictionary<int, Quest> _questCache = new ConcurrentDictionary<int, Quest>();
+        private readonly ConcurrentDictionary<int, Help> _helpCache = new ConcurrentDictionary<int, Help>();
         private readonly Dictionary<string, Action> _commands = new Dictionary<string, Action>();
         private readonly Dictionary<string, Emote> _socials = new Dictionary<string, Emote>();
+        private readonly Dictionary<string, Class> _pcClass = new Dictionary<string, Class>();
         private Config _configCache = new Config();
 
         #region PlayerCache
@@ -144,6 +148,51 @@ namespace ArchaicQuestII.GameLogic.Core
         }
 
 
+
+
+        #endregion
+
+
+        #region ClassCache
+
+
+        public bool AddClass(string id, Class pcClass)
+        {
+            return _pcClass.TryAdd(id, pcClass);
+        }
+
+
+        public Class GetClass(string id)
+        {
+            return _pcClass[id];
+        }
+
+
+        #endregion
+
+
+        #region HelpCache
+
+
+        public bool AddHelp(int id, Help help)
+        {
+            return _helpCache.TryAdd(id, help);
+        }
+
+        public Help GetHelp(int id)
+        {
+            _helpCache.TryGetValue(id, out var help);
+
+            return help;
+        }
+
+
+        public List<Help> FindHelp(string id)
+        {
+            return _helpCache.Values.Where(x => x.Keywords.Contains(id, StringComparison.CurrentCultureIgnoreCase) && x.Deleted.Equals(false)).ToList();
+        }
+
+
         #endregion
 
 
@@ -165,12 +214,12 @@ namespace ArchaicQuestII.GameLogic.Core
 
         }
 
-        public void AddMap(int areaId, string map)
+        public void AddMap(string areaId, string map)
         {
              _mapCache.TryAdd(areaId, map);
         }
 
-        public string GetMap(int areaId)
+        public string GetMap(string areaId)
         {
             _mapCache.TryGetValue(areaId, out var map);
 

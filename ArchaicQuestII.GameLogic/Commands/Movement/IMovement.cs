@@ -19,7 +19,16 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
         public void Wake(Player player, Room room,  string target);
         public void Rest(Player player, Room room, string target);
         public void Follow(Player player, Room room, string target);
+        public void ChangePlayerLocation(Player player, Room room);
         public void Group(Player player, Room room, string target);
+        /// <summary>
+        /// Entering portals
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="room"></param>
+        /// <param name="target"></param>
+        public void Enter(Player player, Room room, string target);
         public void SetCharacterStatus(Player player, string longName, CharacterStatus.Status status);
+
     }
 }

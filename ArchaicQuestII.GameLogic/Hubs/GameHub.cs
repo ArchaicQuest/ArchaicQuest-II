@@ -75,7 +75,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
                 _writeToClient.WriteLine("<p>Refresh the page to reconnect!</p>");
                 return;
             }
-            player.Buffer.Push(message);
+            player.Buffer.Enqueue(message);
           
         }
 
@@ -245,11 +245,18 @@ namespace ArchaicQuestII.GameLogic.Hubs
             var room = _cache.GetRoom(roomid);
            character.RoomId = $"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}";
 
+           if (string.IsNullOrEmpty(character.RecallId))
+           {
+               var defaultRoom = _cache.GetConfig().StartingRoom;
+               character.RecallId = defaultRoom;
+            }
+
            var playerAlreadyInRoom = room.Players.FirstOrDefault(x => x.Id.Equals(character.Id)) != null;
            if (!playerAlreadyInRoom)
            {
                room.Players.Add(character);
            }
+
 
            var rooms = _cache.GetAllRoomsInArea(1);
 
@@ -261,9 +268,10 @@ namespace ArchaicQuestII.GameLogic.Hubs
             _updateClientUi.UpdateInventory(character);
             _updateClientUi.UpdateScore(character);
             _updateClientUi.UpdateQuest(character);
-            _updateClientUi.GetMap(character,_cache.GetMap(room.AreaId));
 
-            new RoomActions(_writeToClient, _time).Look("", room, character);
+            _updateClientUi.GetMap(character,_cache.GetMap($"{room.AreaId}{room.Coords.Z}"));
+
+            new RoomActions(_writeToClient, _time, _cache).Look("", room, character);
 
             foreach (var mob in room.Mobs)
             {

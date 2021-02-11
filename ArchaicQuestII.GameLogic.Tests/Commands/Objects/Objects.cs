@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Commands.Objects;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Item;
@@ -48,7 +49,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
 
             var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object, _IMobScripts.Object);
 
-            objects.Get("apple", "", room, player);
+            objects.Get("apple", "", room, player, "get apple");
 
 
             Assert.True(room.Items.FirstOrDefault(x => x.Name == "apple") == null);
@@ -75,7 +76,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
 
             var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object, _IMobScripts.Object);
 
-            objects.Get("all", "", room, player);
+            objects.Get("all", "", room, player, "get all");
 
 
             Assert.True(room.Items.FirstOrDefault(x => x.Name == "apple") == null);
@@ -107,7 +108,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
 
             var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object, _IMobScripts.Object);
 
-            objects.Get("apple", "chest", room, player);
+            objects.Get("apple", "chest", room, player, "get apple chest");
 
 
             Assert.True(chest.Container.Items.FirstOrDefault(x => x.Name == "apple") == null);
@@ -135,10 +136,96 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
 
             var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object, _IMobScripts.Object);
 
-            objects.Get("apple", "", room, player);
+            objects.Get("apple", "", room, player, "get apple");
 
 
             Assert.True(player.Inventory.FirstOrDefault(x => x.Name == "apple") != null);
+        }
+
+        [Fact]
+        public void Add_Gold_to_player()
+        {
+            var item = new GameLogic.Item.Item
+            {
+                Name = "gold", Description = new Description() {Room = "gold"}, Value = 5, ItemType = GameLogic.Item.Item.ItemTypes.Money
+            };
+
+            var room = new Room();
+            room.Items.Add(item);
+
+            var player = new Player();
+            player.ConnectionId = "1";
+            player.Name = "Gary";
+            player.Inventory = new ItemList();
+            player.Money = new GameLogic.Character.Model.Money();
+
+            var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object, _IMobScripts.Object);
+
+            objects.Get("gold", "", room, player, "get gold");
+
+
+            Assert.True(player.Money.Gold.Equals(5));
+        }
+
+        [Fact]
+        public void Drop_Gold()
+        {
+            
+            var room = new Room();
+           
+            var player = new Player();
+            player.ConnectionId = "1";
+            player.Name = "Gary";
+            player.Inventory = new ItemList();
+            player.Money = new GameLogic.Character.Model.Money()
+            {
+                Gold = 500,
+                Silver = 0
+            };
+
+            var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object, _IMobScripts.Object);
+
+            objects.Drop("250", "gold", room, player, "drop 250 gold");
+
+            Assert.True(room.Items.FirstOrDefault(x => x.Name.Contains("Gold", StringComparison.CurrentCultureIgnoreCase)) != null);
+            Assert.True(player.Money.Gold.Equals(250));
+        }
+
+        [Fact]
+        public void Give_gold_to_player()
+        {
+
+            var room = new Room();
+
+            var player = new Player();
+            player.ConnectionId = "1";
+            player.Name = "Gary";
+            player.Inventory = new ItemList();
+            player.Money = new GameLogic.Character.Model.Money()
+            {
+                Gold = 500,
+                Silver = 0
+            };
+
+            var playerB = new Player();
+            playerB.ConnectionId = "2";
+            playerB.Name = "Barry";
+            playerB.Inventory = new ItemList();
+            playerB.Money = new GameLogic.Character.Model.Money()
+            {
+                Gold = 0,
+                Silver = 0
+            };
+
+            room.Players.Add(playerB);
+            room.Players.Add(player);
+
+            var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object, _IMobScripts.Object);
+
+            objects.Give("500", "gold", room, player, "give 500 gold barry");
+
+            Assert.True(player.Money.Gold.Equals(0));
+            Assert.True(playerB.Money.Gold.Equals(500));
         }
 
         [Fact]
@@ -169,7 +256,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
 
             var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object, _IMobScripts.Object);
 
-            objects.Give("apple", "mob", room, player);
+            objects.Give("apple", "mob", room, player, "");
 
 
             Assert.True(player.Inventory.FirstOrDefault(x => x.Name == "apple") == null);
@@ -204,7 +291,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
 
             var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object, _IMobScripts.Object);
 
-            objects.Give("bread", "mob", room, player);
+            objects.Give("bread", "mob", room, player, "");
 
             _IWriteToClient.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("You do not have that item.")), "1"), Times.Once());
         }
@@ -237,7 +324,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
 
             var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object, _IMobScripts.Object);
 
-            objects.Give("apple", "max", room, player);
+            objects.Give("apple", "max", room, player, "");
 
             _IWriteToClient.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("They aren't here.")), "1"), Times.Once());
         }

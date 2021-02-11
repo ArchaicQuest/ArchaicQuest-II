@@ -75,9 +75,15 @@ namespace ArchaicQuestII.Controllers.character
                     ManaPoints = player.Attributes.Attribute[GameLogic.Effect.EffectLocation.Intelligence] * 2,
                 },
                 MaxStats = player.Stats,
-                Money = new Gold()
+                Money = new GameLogic.Character.Model.Money()
                 {
-                    Amount = 100
+                    Gold = 10,
+                    Silver = 0,
+                },
+                Bank = new GameLogic.Character.Model.Money()
+                {
+                    Gold = 10,
+                    Silver = 0,
                 },
                 Race = player.Race,
                 JoinedDate = DateTime.Now,

@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Text.Encodings.Web;
 using ArchaicQuestII.Core.World;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
+using ArchaicQuestII.GameLogic.Item;
+using Newtonsoft.Json;
 
 namespace ArchaicQuestII.GameLogic.World.Room
 {
@@ -15,10 +18,12 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
         private readonly IWriteToClient _writeToClient;
         private readonly ITime _time;
-        public RoomActions(IWriteToClient writeToClient, ITime time)
+        private readonly ICache _cache;
+        public RoomActions(IWriteToClient writeToClient, ITime time, ICache cache)
         {
             _writeToClient = writeToClient;
             _time = time;
+            _cache = cache;
         }
         /// <summary>
         /// Displays current room 
@@ -37,20 +42,32 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 return;
             }
 
-            var exits = FindValidExits(room);
+            var showVerboseExits = player.Config.VerboseExits;
+            string exits = FindValidExits(room, showVerboseExits);
+            
             var items = DisplayItems(room, player);
             var mobs = DisplayMobs(room, player);
             var players = DisplayPlayers(room, player);
 
             var roomDesc = new StringBuilder();
             var isDark = RoomIsDark(room, player);
-
+          
             roomDesc
                 .Append($"<p class=\"room-title {(isDark ? "room-dark" : "")}\">{room.Title}<br /></p>")
-                .Append($"<p class=\"room-description  {(isDark ? "room-dark" : "")}\">{room.Description}</p>")
-                .Append(
-                    $"<p class=\"room-exit  {(isDark ? "room-dark" : "")}\"> <span class=\"room-exits\">[</span>Exits: <span class=\"room-exits\">{exits}</span><span class=\"room-exits\">]</span></p>")
-                .Append($"<p  class=\" {(isDark ? "room-dark" : "")}\">{items}</p>")
+                .Append($"<p class=\"room-description  {(isDark ? "room-dark" : "")}\">{room.Description}</p>");
+
+            if (!showVerboseExits)
+            {
+                roomDesc.Append(
+                    $"<p class=\"room-exit  {(isDark ? "room-dark" : "")}\"> <span class=\"room-exits\">[</span>Exits: <span class=\"room-exits\">{exits}</span><span class=\"room-exits\">]</span></p>");
+            }
+            else
+            {
+                roomDesc.Append(
+                    $"<div class=\" {(isDark ? "room-dark" : "")}\">Obvious exits: <table class=\"room-exits\"><tbody>{exits}</tbody></table></div>");
+            }
+ 
+            roomDesc.Append($"<p  class=\" {(isDark ? "room-dark" : "")}\">{items}</p>")
                 .Append($"<p  class=\"{(isDark ? "room-dark" : "")}\">{mobs}</p>")
                 .Append($"<p  class=\"  {(isDark ? "room-dark" : "")}\">{players}</p>");
 
@@ -68,12 +85,17 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 return;
             }
 
-
-
-            var container = room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ?? player.Inventory.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+            var nthTarget = Helpers.findNth(target);
+            var container = Helpers.findRoomObject(nthTarget, room) ?? Helpers.findObjectInInventory(nthTarget, player);
 
             if (container != null && container.ItemType != Item.Item.ItemTypes.Container)
             {
+                if (container.ItemType == Item.Item.ItemTypes.Portal)
+                {
+                    LookInPortal(container, room, player);
+                    return;
+                }
+
                 _writeToClient.WriteLine($"<p>{container.Name} is not a container", player.ConnectionId);
                 return;
             }
@@ -90,7 +112,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 return;
             }
 
-            _writeToClient.WriteLine($"<p>You look inside {container.Name.ToLower()}:</p>", player.ConnectionId);
+            _writeToClient.WriteLine($"<p>{container.Name} contains:</p>", player.ConnectionId);
             if (container.Container.Items.Count == 0)
             {
                 _writeToClient.WriteLine($"<p>Nothing.</p>", player.ConnectionId);
@@ -99,7 +121,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
             var isDark = RoomIsDark(room, player);
             foreach (var obj in container.Container.Items.List(false))
             {
-                _writeToClient.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{obj}</p>", player.ConnectionId);
+                _writeToClient.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{obj.Name}</p>", player.ConnectionId);
             }
 
            
@@ -115,6 +137,20 @@ namespace ArchaicQuestII.GameLogic.World.Room
             }
         }
 
+        public void LookInPortal(Item.Item portal, Room room, Player player)
+        {
+            var getPortalLocation = _cache.GetRoom(portal.Portal.Destination);
+
+            if (getPortalLocation == null)
+            {
+                //Log error
+                _writeToClient.WriteLine("<p>The dark abyss, I wouldn't enter if I were you.</p>", player.ConnectionId);
+                return;
+            }
+
+            Look("", getPortalLocation, player);
+        }
+
         public void LookObject(string target, Room room, Player player)
         {
             if (player.Status == CharacterStatus.Status.Sleeping)
@@ -123,15 +159,10 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 return;
             }
             var isDark = RoomIsDark(room, player);
+            var nthTarget = Helpers.findNth(target);
 
-            var item =
-                room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ??
-                player.Inventory.FirstOrDefault(x =>
-                    x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
-
-            var character =
-                room.Mobs.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ??
-                room.Players.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+            var item = Helpers.findRoomObject(nthTarget, room) ?? Helpers.findObjectInInventory(nthTarget, player);
+            var character = Helpers.FindMob(nthTarget, room) ?? Helpers.FindPlayer(nthTarget, room);
 
 
             RoomObject roomObjects = null;
@@ -154,9 +185,23 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 return;
             }
 
-            if (item != null && character == null && roomObjects == null)
+            if (item != null && character == null)
             {
                 _writeToClient.WriteLine($"<p  class='{(isDark ? "room-dark" : "")}'>{item.Description.Look}", player.ConnectionId);
+
+                if (item.Container != null && !item.Container.CanOpen && item.Container.Items.Any())
+                {
+                    _writeToClient.WriteLine($"<p  class='{(isDark ? "room-dark" : "")}'>{item.Name} contains:", player.ConnectionId);
+
+                    var listOfContainerItems = new StringBuilder();
+                    foreach (var containerItem in item.Container.Items)
+                    {
+                        listOfContainerItems.Append(containerItem.Name);
+                    }
+
+                    _writeToClient.WriteLine($"<p  class='{(isDark ? "room-dark" : "")}'>{listOfContainerItems}", player.ConnectionId);
+
+                }
 
                 foreach (var pc in room.Players)
                 {
@@ -167,11 +212,11 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
                     _writeToClient.WriteLine($"<p>{player.Name} looks at {item.Name.ToLower()}.</p>", pc.ConnectionId);
                 }
-
                 return;
+                
             }
-
-            if (roomObjects != null && character == null && item == null)
+            //for player?
+            if (roomObjects != null && character == null)
             {
               
                 _writeToClient.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{roomObjects.Look}", player.ConnectionId);
@@ -195,7 +240,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 return;
             }
 
-        
+
 
             var sb = new StringBuilder();
             if (character.ConnectionId != "mob")
@@ -239,9 +284,13 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 return;
             }
 
+            var nthTarget = Helpers.findNth(target);
 
-            var item = room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ?? player.Inventory.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+            var item = Helpers.findRoomObject(nthTarget, room) ?? Helpers.findObjectInInventory(nthTarget, player);
 
+
+            RoomObject roomObjects = null;
+       
             if (item == null)
             {
                 _writeToClient.WriteLine("<p>You don't see that here.", player.ConnectionId);
@@ -262,6 +311,16 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 _writeToClient.WriteLine($"<p>{player.Name} examines {item.Name.ToLower()}.</p>", pc.ConnectionId);
             }
 
+            if (room.RoomObjects.Count >= 1 && room.RoomObjects[0].Name != null)
+            {
+                roomObjects =
+                    room.RoomObjects.FirstOrDefault(x =>
+                        x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+
+                _writeToClient.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{roomObjects.Examine}", player.ConnectionId);
+            }
+
+
             //if (item.ItemType == Item.Item.ItemTypes.Container)
             //{
             //    _writeToClient.WriteLine($"<p>You look inside {item.Name}", player.ConnectionId);
@@ -280,8 +339,9 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 return;
             }
 
+            var nthTarget = Helpers.findNth(target);
+            var item = Helpers.findRoomObject(nthTarget, room) ?? Helpers.findObjectInInventory(nthTarget, player);
 
-            var item = room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ?? player.Inventory.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
 
             if (item == null)
             {
@@ -311,7 +371,9 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 return;
             }
 
-            var item = room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ?? player.Inventory.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+            var nthTarget = Helpers.findNth(target);
+            var item = Helpers.findRoomObject(nthTarget, room) ?? Helpers.findObjectInInventory(nthTarget, player);
+
 
             if (item == null)
             {
@@ -345,7 +407,8 @@ namespace ArchaicQuestII.GameLogic.World.Room
             }
 
 
-            var item = room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ?? player.Inventory.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+            var nthTarget = Helpers.findNth(target);
+            var item = Helpers.findRoomObject(nthTarget, room) ?? Helpers.findObjectInInventory(nthTarget, player);
 
             if (item == null)
             {
@@ -369,17 +432,32 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
         }
 
+        public Item.Item GetItemAttributes(int index, Room room)
+        {
+
+            return room.Items.FirstOrDefault(x => x.Id.Equals(index));
+        }
+
         public string DisplayItems(Room room, Player player)
         {
             var isDark = RoomIsDark(room, player);
             var items = room.Items.List();
             var x = string.Empty;
+            int index = 0;
             foreach (var item in items)
             {
-                if (!string.IsNullOrEmpty(item))
+                if (!string.IsNullOrEmpty(item.Name))
                 {
-                    x += $"<p class='item {(isDark ? "dark-room" : "")}'>{item}</p>";
+
+                    var i = GetItemAttributes(item.Id, room);
+                    var keyword = i.Name.Split(" ");
+
+                    var data = $"{{detail: {{name: \" {HtmlEncoder.Default.Encode(i.Name)}\", desc: \"{HtmlEncoder.Default.Encode(i.Description.Look)}\", type: \"{i.ItemType}\", canOpen: \"{i.Container.CanOpen}\", isOpen: \"{i.Container.IsOpen}\", keyword: \"{HtmlEncoder.Default.Encode(keyword[keyword.Length - 1])}\"}}}}";
+
+                    var clickEvent = $"window.dispatchEvent(new CustomEvent(\"open-detail\", {data}))";
+                    x += $"<p onClick='{clickEvent}' class='item {(isDark ? "dark-room" : "")}' >{item.Name}</p>";
                 }
+                index++;
 
             }
 
@@ -453,68 +531,142 @@ namespace ArchaicQuestII.GameLogic.World.Room
         }
 
 
+        public string GetRoom(Exit exit)
+        {
+            if (exit == null)
+            {
+                return "";
+            }
+
+            
+            var RoomId = $"{exit.AreaId}{exit.Coords.X}{exit.Coords.Y}{exit.Coords.Z}";
+            var room = _cache.GetRoom(RoomId);
+
+            return room.Title;
+        }
+
+
         /// <summary>
         /// Displays valid exits
         /// </summary>
-        public string FindValidExits(Room room)
+        public string FindValidExits(Room room, bool verbose)
         {
             var exits = new List<string>();
             var exitList = string.Empty;
 
-            if (room.Exits.NorthWest != null)
-            {
-                exits.Add(Helpers.DisplayDoor(room.Exits.NorthWest));
-            }
+        /* TODO: Click event for simple exit view */
 
             if (room.Exits.North != null)
             {
-                exits.Add(Helpers.DisplayDoor(room.Exits.North));
+                
+                var clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"n\"}))";
+                exits.Add(verbose
+                    ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.North)} </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.North)}</a></td></tr>"
+                    : Helpers.DisplayDoor(room.Exits.North));
             }
 
-            if (room.Exits.NorthEast != null)
-            {
-                exits.Add(Helpers.DisplayDoor(room.Exits.NorthEast));
-            }
+          
 
             if (room.Exits.East != null)
             {
-                exits.Add(Helpers.DisplayDoor(room.Exits.East));
+                var clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"e\"}))";
+                exits.Add(verbose
+                    ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.East)} </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.East)}</a></td></tr>"
+                    : Helpers.DisplayDoor(room.Exits.East));
             }
 
-            if (room.Exits.SouthEast != null)
-            {
-                exits.Add(Helpers.DisplayDoor(room.Exits.SouthEast));
-            }
+           
 
             if (room.Exits.South != null)
             {
-                exits.Add(Helpers.DisplayDoor(room.Exits.South));
-            }
-
-            if (room.Exits.SouthWest != null)
-            {
-                exits.Add(Helpers.DisplayDoor(room.Exits.SouthWest));
+                var clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"s\"}))";
+                exits.Add(verbose
+                    ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.South)} </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.South)}</a></td></tr>"
+                    : Helpers.DisplayDoor(room.Exits.South));
             }
 
             if (room.Exits.West != null)
             {
-                exits.Add(Helpers.DisplayDoor(room.Exits.West));
+                var clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"w\"}))";
+                exits.Add(verbose
+                    ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.West)} </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.West)}</a></td></tr>"
+                    : Helpers.DisplayDoor(room.Exits.West));
             }
+
+            if (room.Exits.NorthEast != null)
+            {
+                var clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"ne\"}))";
+                exits.Add(verbose
+                    ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.NorthEast)}  </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.NorthEast)}</a></td></tr>"
+                    : Helpers.DisplayDoor(room.Exits.NorthEast));
+            }
+
+            if (room.Exits.SouthEast != null)
+            {
+                var clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"se\"}))";
+                exits.Add(verbose
+                    ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.SouthEast)}  </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.SouthEast)}</a></td></tr>"
+                    : Helpers.DisplayDoor(room.Exits.SouthEast));
+            }
+
+            if (room.Exits.SouthWest != null)
+            {
+                var clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"sw\"}))";
+                exits.Add(verbose
+                    ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.SouthWest)}  </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.SouthWest)}</a></td></tr>"
+                    : Helpers.DisplayDoor(room.Exits.SouthWest));
+            }
+
+            if (room.Exits.NorthWest != null)
+            {
+                var clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"nw\"}))";
+                exits.Add(verbose
+                    ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.NorthWest)}  </td> <td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.NorthWest)}</a></td></tr>"
+                    : Helpers.DisplayDoor(room.Exits.NorthWest));
+            }
+
+            if (room.Exits.Down != null)
+            {
+                var clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"d\"}))";
+                exits.Add(verbose
+                    ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.Down)}  </td> <td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.Down)}</a></td></tr>"
+                    : Helpers.DisplayDoor(room.Exits.Down));
+            }
+
+            if (room.Exits.Up != null)
+            {
+                var clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"u\"}))";
+                exits.Add(verbose
+                    ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.Up)}  </td> <td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.Up)}</a></td></tr>"
+                    : Helpers.DisplayDoor(room.Exits.Up));
+            }
+
+
 
             if (exits.Count <= 0)
             {
                 exits.Add("None");
             }
 
+
             foreach (var exit in exits)
             {
-                exitList += exit + ", ";
+                if (!verbose)
+                {
+                    exitList += exit + ", ";
+                }
+                else
+                {
+                    exitList += exit;
+                }
+
             }
+            if (!verbose)
+            {
+                exitList = exitList.Remove(exitList.Length - 2);
 
-            exitList = exitList.Remove(exitList.Length - 2);
-
-
-            return exitList;
+            }
+            return  exitList;
 
         }
 

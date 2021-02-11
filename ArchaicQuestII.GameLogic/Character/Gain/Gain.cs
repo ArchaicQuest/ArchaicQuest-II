@@ -46,7 +46,7 @@ namespace ArchaicQuestII.GameLogic.Character.Gain
 
         public void GainExperiencePoints(Player player, int value)
         {
-
+            // TODO: gain level
             player.Experience += value;
             player.ExperienceToNextLevel -= value;
 

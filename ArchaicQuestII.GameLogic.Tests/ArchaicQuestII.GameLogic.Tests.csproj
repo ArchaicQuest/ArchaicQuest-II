@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>netcoreapp31</TargetFramework>
@@ -17,11 +17,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\ArchaicQuestII.GameLogic\ArchaicQuestII.GameLogic.csproj" />
-    </ItemGroup>
-
-
-    <ItemGroup>
-      <Folder Include="Core\" />
     </ItemGroup>
 
 </Project>

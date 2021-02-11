@@ -121,7 +121,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
             OnPlayerEnterEvent(getNextRoom, character); 
 
          
-            _updateUi.GetMap(character, _cache.GetMap(getExitToNextRoom.AreaId));
+            _updateUi.GetMap(character, _cache.GetMap($"{getExitToNextRoom.AreaId}{getExitToNextRoom.Coords.Z}"));
             _updateUi.UpdateMoves(character);
 
             if (character.Followers.Count >= 1)
@@ -224,42 +224,33 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
             foreach (var mob in room.Mobs)
             {
 
-                //             string scriptCode = @"    
-                //                   -- defines a function
-                //                   function greet (room, player, mob)
-
-                //                            obj.updateInv(player)
-                //                             obj.Say('hello', 0, room, player)
-                //                             if obj.isInRoom(room, player) then obj.Say('I have a quest for you', 1000, room, player) end
-                //                             obj.Say('you have to kill some goblins', 1000, room, player)
-                //                             obj.Say('you have to kill some goblins', 10000, room, player)
-                //obj.Say('What you say', 5000, room, player)
-                //                  return ('Hello there ' .. obj.getName(player) .. ' check your inventory')
-                //                   end
-
-                //             return greet(room, player, mob)
-
-                //                    ";
 
                 if (!string.IsNullOrEmpty(mob.Events.Enter))
                 {
-                    UserData.RegisterType<MobScripts>();
+                    try
+                    {
+                        UserData.RegisterType<MobScripts>();
 
-                    Script script = new Script();
+                        Script script = new Script();
 
-                    DynValue obj = UserData.Create(_mobScripts);
-                    script.Globals.Set("obj", obj);
-                    UserData.RegisterProxyType<MyProxy, Room>(r => new MyProxy(room));
-                    UserData.RegisterProxyType<ProxyPlayer, Player>(r => new ProxyPlayer(character));
-
-
-                    script.Globals["room"] = room;
-
-                    script.Globals["player"] = character;
-                    script.Globals["mob"] = mob;
+                        DynValue obj = UserData.Create(_mobScripts);
+                        script.Globals.Set("obj", obj);
+                        UserData.RegisterProxyType<MyProxy, Room>(r => new MyProxy(room));
+                        UserData.RegisterProxyType<ProxyPlayer, Player>(r => new ProxyPlayer(character));
 
 
-                    DynValue res = script.DoString(mob.Events.Enter);
+                        script.Globals["room"] = room;
+
+                        script.Globals["player"] = character;
+                        script.Globals["mob"] = mob;
+
+
+                        DynValue res = script.DoString(mob.Events.Enter);
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
                 }
 
 
@@ -548,6 +539,22 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
             }
         }
 
+
+        public void ChangePlayerLocation(Player player, Room room)
+        {
+            player.RoomId = Helpers.ReturnRoomId(room);
+
+            room.Players.Add(player);
+        }
+
+        public void RemovePlayerLocation(Player player, Room room)
+        {
+
+            room.Players.Remove(player);
+        }
+
+
+
         public void Group(Player player, Room room, string target)
         {
             if((string.IsNullOrEmpty(target) || target.Equals("group", StringComparison.CurrentCultureIgnoreCase)) && !player.grouped)
@@ -626,7 +633,61 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
             }
  
         }
-            public void Follow(Player player, Room room, string target)
+
+        public void Enter(Player player, Room room, string target)
+        {
+            if (string.IsNullOrEmpty(target))
+            {
+                _writeToClient.WriteLine("<p>You can't do that here.</p>", player.ConnectionId);
+                return;
+            }
+
+            var nthItem = Helpers.findNth(target);
+            var item = Helpers.findRoomObject(nthItem, room);
+
+            if (item == null)
+            {
+                _writeToClient.WriteLine("<p>You don't see that here.</p>", player.ConnectionId);
+                return;
+            }
+
+            if (item.ItemType != Item.Item.ItemTypes.Portal)
+            {
+                _writeToClient.WriteLine("<p>You can't enter that.</p>", player.ConnectionId);
+                return;
+            }
+
+            foreach (var pc in room.Players)
+            {
+                if (player.Name == pc.Name)
+                {
+                    _writeToClient.WriteLine($"<p>You {item.Portal.EnterDescription}</p>", player.ConnectionId);
+                    continue;
+                }
+                _writeToClient.WriteLine($"<p>{player.Name} {item.Portal.EnterDescription}</p>", pc.ConnectionId);
+            }
+
+            var newRoom = _cache.GetRoom(item.Portal.Destination);
+            //Change player location
+            ChangePlayerLocation(player, newRoom);
+            RemovePlayerLocation(player, room);
+            _roomActions.Look("", newRoom, player);
+
+            foreach (var pc in newRoom.Players)
+            {
+                if (player.Name == pc.Name)
+                {
+                    continue;
+                }
+                _writeToClient.WriteLine($"<p>{player.Name} {item.Portal.EnterDescriptionRoom}</p>", pc.ConnectionId);
+            }
+
+            var rooms = _cache.GetMap($"{newRoom.AreaId}{newRoom.Coords.Z}");
+            _updateUi.GetMap(player, rooms);
+            
+        }
+
+        public void Follow(Player player, Room room, string target)
         {
             if(target.Equals("self", StringComparison.CurrentCultureIgnoreCase))
             { 

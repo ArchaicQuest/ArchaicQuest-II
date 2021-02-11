@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Status;
+using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.World.Area;
 using ArchaicQuestII.GameLogic.World.Room;
 
@@ -13,11 +16,15 @@ namespace ArchaicQuestII.GameLogic.Core
         private readonly ICache _cache;
         private readonly IWriteToClient _writeToClient;
         private readonly IDataBase _db;
-        public Core(ICache cache, IWriteToClient writeToClient, IDataBase db)
+        private readonly IUpdateClientUI _clientUi;
+        private readonly IDice _dice;
+        public Core(ICache cache, IWriteToClient writeToClient, IDataBase db, IUpdateClientUI clientUi, IDice dice)
         {
             _cache = cache;
             _writeToClient = writeToClient;
             _db = db;
+            _clientUi = clientUi;
+            _dice = dice;
         }
         public void Who(Player player)
         {
@@ -38,6 +45,12 @@ namespace ArchaicQuestII.GameLogic.Core
             _writeToClient.WriteLine(sb.ToString(), player.ConnectionId);
 
 
+        }
+
+        public void Save(Player player)
+        {
+            _db.Save(player, DataBase.Collections.Players);
+            _writeToClient.WriteLine("Character saved.");
         }
 
         public void Where(Player player, Room room)
@@ -90,5 +103,166 @@ namespace ArchaicQuestII.GameLogic.Core
            _writeToClient.WriteLine(sb.ToString(), player.ConnectionId);
                          
         }
+
+        public void Recall(Player player, Room room)
+        {
+            if ((player.Status & CharacterStatus.Status.Sleeping) != 0)
+            {
+                _writeToClient.WriteLine("In your dreams, or what?", player.ConnectionId);
+                return;
+            }
+            if ((player.Status & CharacterStatus.Status.Sitting) != 0)
+            {
+                _writeToClient.WriteLine("Better stand up first.", player.ConnectionId);
+                return;
+            }
+            if ((player.Status & CharacterStatus.Status.Resting) != 0)
+            {
+                _writeToClient.WriteLine("Nah... You feel too relaxed...", player.ConnectionId);
+                return;
+            }
+
+            foreach (var pc in room.Players)
+            {
+                if (pc.Id == player.Id)
+                {
+                    _writeToClient.WriteLine("You glow a bright light before vanishing.", pc.ConnectionId);
+                    continue;
+                }
+                _writeToClient.WriteLine($"{player.Name} glows a bright light before vanishing.", pc.ConnectionId);
+            }
+
+            room.Players.Remove(player);
+
+            var recallRoom = _cache.GetRoom(player.RecallId);
+
+            if (!recallRoom.Players.Any(a => a.Id == player.Id))
+            {
+                recallRoom.Players.Add(player);
+                player.RoomId = player.RecallId;
+            }
+               
+            player.Buffer.Clear();
+
+            foreach (var pc in recallRoom.Players)
+            {
+                if (pc.Id == player.Id)
+                {
+                    continue;
+                }
+                _writeToClient.WriteLine($"{player.Name} suddenly appears in a flash of bright light.", pc.ConnectionId);
+            }
+
+            player.Buffer.Enqueue("l");
+
+            player.Attributes.Attribute[EffectLocation.Moves] = player.Attributes.Attribute[EffectLocation.Moves] / 2;
+
+            if (player.Attributes.Attribute[EffectLocation.Moves] < 1)
+            {
+                player.Attributes.Attribute[EffectLocation.Moves] = 0;
+            }
+
+            _clientUi.UpdateScore(player);
+            _clientUi.UpdateMoves(player);
+            _clientUi.GetMap(player, _cache.GetMap($"{recallRoom.AreaId}{recallRoom.Coords.Z}"));
+             
+        }
+
+        public void Train(Player player, Room room, string stat)
+        {
+            if ((player.Status & CharacterStatus.Status.Sleeping) != 0)
+            {
+                _writeToClient.WriteLine("In your dreams, or what?", player.ConnectionId);
+                return;
+            }
+
+            if (room.Mobs.Find(x => x.Trainer) == null)
+            {
+                _writeToClient.WriteLine("You can't do that here.", player.ConnectionId);
+                return;
+            }
+
+            if (player.Trains <= 0)
+            {
+                _writeToClient.WriteLine("You have no training sessions left.", player.ConnectionId);
+                return;
+            }
+
+            if (string.IsNullOrEmpty(stat) || stat == "train")
+            {
+
+                _writeToClient.WriteLine(
+                    ($"<p>You have {player.Trains} training session{(player.Trains > 1 ? "s" : "")} remaining.<br />You can train: str dex con int wis cha hp mana move.</p>"
+                    ));
+            }
+            else
+            {
+                var statName = GetStatName(stat);
+                if (string.IsNullOrEmpty(statName.Item1))
+                {
+                    _writeToClient.WriteLine(
+                        ($"<p>{stat} not found. Please choose from the following. <br /> You can train: str dex con int wis cha hp mana move.</p>"
+                        ), player.ConnectionId);
+                    return;
+                }
+
+                player.Trains -= 1;
+                if (player.Trains < 0)
+                {
+                    player.Trains = 0;
+                }
+
+                if (statName.Item1 == "hit points" || statName.Item1 == "moves" || statName.Item1 == "mana")
+                {
+                    var hitDie = _cache.GetClass(player.ClassName);
+                    var roll = _dice.Roll(1, hitDie.HitDice.DiceMinSize, hitDie.HitDice.DiceMaxSize);
+
+                    player.MaxAttributes.Attribute[statName.Item2] += roll;
+                    player.Attributes.Attribute[statName.Item2] += roll;
+
+                    _writeToClient.WriteLine(
+                        ($"<p class='gain'>Your {statName.Item1} increases by {roll}.</p>"
+                        ), player.ConnectionId);
+
+                    _clientUi.UpdateHP(player);
+                    _clientUi.UpdateMana(player);
+                    _clientUi.UpdateMoves(player);
+                }
+                else
+                {
+                    player.MaxAttributes.Attribute[statName.Item2] += 1;
+                    player.Attributes.Attribute[statName.Item2] += 1;
+
+                    _writeToClient.WriteLine(
+                        ($"<p class='gain'>Your {statName.Item1} increases by 1.</p>"
+                        ), player.ConnectionId);
+                }
+
+                
+            
+
+                _clientUi.UpdateScore(player);
+               
+
+            }
+        }
+
+
+       public Tuple<string, EffectLocation> GetStatName(string name)
+       {
+           return name switch
+           {
+               "str" => new Tuple<string, EffectLocation>("strength", EffectLocation.Strength),
+               "dex" => new Tuple<string, EffectLocation>("dexterity", EffectLocation.Dexterity),
+               "con" => new Tuple<string, EffectLocation>("constitution", EffectLocation.Constitution),
+               "int" => new Tuple<string, EffectLocation>("intelligence", EffectLocation.Intelligence),
+               "wis" => new Tuple<string, EffectLocation>("wisdom", EffectLocation.Wisdom),
+               "cha" => new Tuple<string, EffectLocation>("charisma", EffectLocation.Charisma),
+               "hp" => new Tuple<string, EffectLocation>("hit points", EffectLocation.Hitpoints),
+               "move" => new Tuple<string, EffectLocation>("moves", EffectLocation.Moves),
+               "mana" => new Tuple<string, EffectLocation>("mana", EffectLocation.Mana),
+               _ => new Tuple<string, EffectLocation>("", EffectLocation.None)
+           };
+       }
     }
 }

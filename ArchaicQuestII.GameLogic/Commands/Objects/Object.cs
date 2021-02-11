@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Equipment;
+using ArchaicQuestII.GameLogic.Character.Help;
 using ArchaicQuestII.GameLogic.Core;
+using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.World.Room;
 using MoonSharp.Interpreter;
 
 namespace ArchaicQuestII.GameLogic.Commands.Objects
 {
 
-   public class Object: IObject
+    public class Object : IObject
     {
         private readonly IWriteToClient _writer;
         private readonly IUpdateClientUI _updateUi;
@@ -21,7 +24,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
             _updateUi = updateUi;
             _mobScripts = mobScripts;
         }
-        public void Get(string target, string container, Room room, Player player)
+        public void Get(string target, string container, Room room, Player player, string fullCommand)
         {
             //TODO: Get all, get nth (get 2.apple)
             if (target == "all" && string.IsNullOrEmpty(container))
@@ -30,6 +33,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                 return;
             }
 
+
             if (!string.IsNullOrEmpty(container))
             {
                 GetFromContainer(target, container, room, player);
@@ -37,12 +41,15 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
             }
 
             //Check room first
-            var item = room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+            var nthTarget = Helpers.findNth(target);
+
+            var item = Helpers.findRoomObject(nthTarget, room);
+
 
             if (item == null)
             {
-               _writer.WriteLine("<p>You don't see that here.</p>", player.ConnectionId);
-               return;
+                _writer.WriteLine("<p>You don't see that here.</p>", player.ConnectionId);
+                return;
             }
 
             if (item.Stuck)
@@ -60,23 +67,40 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                     continue;
                 }
 
+                if (item.ItemType == Item.Item.ItemTypes.Money)
+                {
+                    _writer.WriteLine($"<p>{player.Name} picks up {ItemList.DisplayMoneyAmount(item.Value).ToLower()}.</p>", pc.ConnectionId);
+                    continue;
+                }
+
+
                 _writer.WriteLine($"<p>{player.Name} picks up {item.Name.ToLower()}.</p>", pc.ConnectionId);
             }
 
-            item.IsHiddenInRoom = false;
-            player.Inventory.Add(item);
-            _writer.WriteLine($"<p>You pick up {item.Name.ToLower()}.</p>", player.ConnectionId);
+            if (item.ItemType == Item.Item.ItemTypes.Money)
+            {
+                _writer.WriteLine($"<p>You pick up {ItemList.DisplayMoneyAmount(item.Value).ToLower()}.</p>", player.ConnectionId);
+                player.Money.Gold += item.Value;
+            }
+            else
+            {
+                item.IsHiddenInRoom = false;
+                player.Inventory.Add(item);
+                _writer.WriteLine($"<p>You pick up {item.Name.ToLower()}.</p>", player.ConnectionId);
+            }
+
             _updateUi.UpdateInventory(player);
+            _updateUi.UpdateScore(player);
             room.Clean = false;
             // TODO: You are over encumbered 
 
         }
 
- 
+
 
         public void GetAll(Room room, Player player)
         {
-           
+
             //Check room first
 
             if (room.Items.Count == 0)
@@ -89,9 +113,19 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
             {
                 if (room.Items[i].Stuck == false)
                 {
-                    room.Items[i].IsHiddenInRoom = false;
-                    player.Inventory.Add(room.Items[i]);
-                    _writer.WriteLine($"<p>You pick up {room.Items[i].Name.ToLower()}.</p>", player.ConnectionId);
+                    if (room.Items[i].ItemType == Item.Item.ItemTypes.Money)
+                    {
+
+                        _writer.WriteLine($"<p>You pick up {ItemList.DisplayMoneyAmount(room.Items[i].Value).ToLower()}.</p>", player.ConnectionId);
+
+                        player.Money.Gold += room.Items[i].Value;
+                    }
+                    else
+                    {
+                        room.Items[i].IsHiddenInRoom = false;
+                        player.Inventory.Add(room.Items[i]);
+                        _writer.WriteLine($"<p>You pick up {room.Items[i].Name.ToLower()}</p>", player.ConnectionId);
+                    }
 
                     foreach (var pc in room.Players)
                     {
@@ -100,8 +134,19 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                             continue;
                         }
 
-                        _writer.WriteLine($"<p>{player.Name} picks up {room.Items[i].Name.ToLower()}.</p>",
-                            pc.ConnectionId);
+                        if (room.Items[i].ItemType == Item.Item.ItemTypes.Money)
+                        {
+
+
+                            _writer.WriteLine($"<p>{player.Name} picks up  {ItemList.DisplayMoneyAmount(room.Items[i].Value).ToLower()}</p>",
+                                    pc.ConnectionId);
+                        }
+                        else
+                        {
+
+                            _writer.WriteLine($"<p>{player.Name} picks up {room.Items[i].Name.ToLower()}.</p>",
+                                pc.ConnectionId);
+                        }
                     }
 
                     room.Items.RemoveAt(i);
@@ -131,31 +176,58 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
             for (var i = container.Container.Items.Count - 1; i >= 0; i--)
             {
-                container.Container.Items[i].IsHiddenInRoom = false;
-                player.Inventory.Add(container.Container.Items[i]);
+                if (container.Container.Items[i].ItemType == Item.Item.ItemTypes.Money)
+                {
 
-                    _writer.WriteLine($"<p>You pick up {container.Container.Items[i].Name.ToLower()} from {container.Name.ToLower()}.</p>", player.ConnectionId);
+                    _writer.WriteLine(
+                        $"<p>You pick up {ItemList.DisplayMoneyAmount(container.Container.Items[i].Value).ToLower()} from {container.Name.ToLower()}.</p>",
+                        player.ConnectionId);
 
-                    foreach (var pc in room.Players)
+                    player.Money.Gold += container.Container.Items[i].Value;
+                }
+                else
+                {
+                    container.Container.Items[i].IsHiddenInRoom = false;
+                    player.Inventory.Add(container.Container.Items[i]);
+
+                    _writer.WriteLine(
+                        $"<p>You pick up {container.Container.Items[i].Name.ToLower()} from {container.Name.ToLower()}.</p>",
+                        player.ConnectionId);
+                }
+
+
+                foreach (var pc in room.Players)
+                {
+                    if (pc.Name == player.Name)
                     {
-                        if (pc.Name == player.Name)
-                        {
-                            continue;
-                        }
+                        continue;
+                    }
 
-                        _writer.WriteLine($"<p>{player.Name} picks up {container.Container.Items.Name.ToLower()} from {container.Name.ToLower()}.</p>",
+                    if (container.Container.Items[i].ItemType == Item.Item.ItemTypes.Money)
+                    {
+                        _writer.WriteLine(
+                            $"<p>{player.Name} picks up {ItemList.DisplayMoneyAmount(container.Container.Items.Value).ToLower()} from {container.Name.ToLower()}.</p>",
                             pc.ConnectionId);
                     }
-                    container.Container.Items.RemoveAt(i);
+                    else
+                    {
+
+                        _writer.WriteLine(
+                            $"<p>{player.Name} picks up {container.Container.Items.Name.ToLower()} from {container.Name.ToLower()}.</p>",
+                            pc.ConnectionId);
+                    }
+                }
+                container.Container.Items.RemoveAt(i);
 
             }
             _updateUi.UpdateInventory(player);
+            _updateUi.UpdateScore(player);
             room.Clean = false;
             // TODO: You are over encumbered 
 
         }
 
-        public void Drop(string target, string container, Room room, Player player)
+        public void Drop(string target, string container, Room room, Player player, string fullCommand)
         {
 
             if (target == "all" && string.IsNullOrEmpty(container))
@@ -164,16 +236,35 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                 return;
             }
 
-            if (!string.IsNullOrEmpty(container))
+          
+
+            if (!string.IsNullOrEmpty(container) && !int.TryParse(target, out var number))
             {
                 DropInContainer(target, container, room, player);
                 return;
             }
 
-            var item = player.Inventory.Where(x => x.Stuck == false).FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+
+            var nthTarget = Helpers.findNth(target);
+            var item = Helpers.findRoomObject(nthTarget, room);
+
 
             if (item == null)
             {
+                //incase someone tries drop gold as in drop golden sword,
+                // need to be sure that dropping an item doesn't interfere with dropping gold coins
+
+                if (!string.IsNullOrEmpty(container))
+                {
+                    // TODO: Add drop gold in Container
+                    var droppedGold = DropGold(fullCommand, room, player);
+
+                    if (droppedGold)
+                    {
+                        return;
+                    }
+                }
+
                 _writer.WriteLine("<p>You don't have that item.</p>", player.ConnectionId);
                 return;
             }
@@ -197,10 +288,143 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
             _updateUi.UpdateInventory(player);
         }
 
+        public bool DropGold(string command, Room room, Player player)
+        {
+            var splitCommand = command.Split(' ');
+
+            if (int.TryParse(splitCommand[1], out var number))
+            {
+                if (player.Money.Gold < number)
+                {
+                    _writer.WriteLine("<p>You don't have that much gold to drop.</p>", player.ConnectionId);
+                    return false;
+                }
+
+                var goldCoin = new Item.Item()
+                {
+                    Name = "Gold Coin",
+                    Value = number,
+                    ItemType = Item.Item.ItemTypes.Money,
+                    ArmourType = Item.Item.ArmourTypes.Cloth,
+                    AttackType = Item.Item.AttackTypes.Charge,
+                    WeaponType = Item.Item.WeaponTypes.Arrows,
+                    Gold = 1,
+                    Slot = Equipment.EqSlot.Hands,
+                    Level = 1,
+                    Modifier = new Modifier(),
+                    Description = new Description()
+                    {
+                        Look =
+                            "A small gold coin with an embossed crown on one side and the number one on the opposite side, along the edge inscribed is 'de omnibus dubitandum'",
+                        Exam =
+                            "A small gold coin with an embossed crown on one side and the number one on the opposite side, along the edge inscribed is 'de omnibus dubitandum'",
+                        Room = "A single gold coin.",
+                    },
+                    Book = new Book()
+                    {
+                        Pages = new List<string>()
+                    },
+                    ArmourRating = new ArmourRating(),
+                    Container = new Container()
+                    {
+                        Items = new ItemList()
+                    }
+                };
+
+                _writer.WriteLine($"<p>You drop {(number == 1 ? "1 gold coin." : $"{number} gold coins.")}</p>",
+                    player.ConnectionId);
+
+                foreach (var pc in room.Players)
+                {
+                    if (pc.Name == player.Name)
+                    {
+                        continue;
+                    }
+
+                    _writer.WriteLine($"<p>{player.Name} drops {ItemList.DisplayMoneyAmount(number).ToLower()}.</p>",
+                        pc.ConnectionId);
+
+
+                }
+
+                player.Money.Gold -= number;
+                room.Items.Add(goldCoin);
+
+                _updateUi.UpdateScore(player);
+
+                return true;
+
+            }
+
+            return false;
+        }
+
+        public bool GiveGold(string command, Room room, Player player)
+        {
+            var splitCommand = command.Split(' ');
+
+            if (int.TryParse(splitCommand[1], out var number))
+            {
+                if (player.Money.Gold < number)
+                {
+                    _writer.WriteLine("<p>You don't have that much gold to give.</p>", player.ConnectionId);
+                    return false;
+                }
+
+                var targetName = splitCommand[3];
+                var target =
+                    room.Players.FirstOrDefault(x =>
+                        x.Name.Contains(targetName, StringComparison.CurrentCultureIgnoreCase)) ??
+                    room.Mobs.FirstOrDefault(x => x.Name.Contains(targetName, StringComparison.CurrentCultureIgnoreCase));
+
+                if (target == null)
+                {
+                    _writer.WriteLine("<p>They aren't here.</p>", player.ConnectionId);
+                    return false;
+                }
+
+                _writer.WriteLine($"<p>You give {target.Name} {(number == 1 ? "1 gold coin." : $"{number} gold coins.")}</p>",
+                    player.ConnectionId);
+
+                player.Money.Gold -= number;
+                target.Money.Gold += number;
+
+                foreach (var pc in room.Players)
+                {
+                    if (pc.Name == player.Name)
+                    {
+                        continue;
+                    }
+
+                    if (pc.Name == target.Name)
+                    {
+                        _writer.WriteLine($"<p>{player.Name} gives you {(number == 1 ? "1 gold coin." : $"{number} gold coins.")}</p>",
+                            pc.ConnectionId);
+                        continue;
+                    }
+
+                    _writer.WriteLine($"<p>{player.Name} gives {target.Name} some gold.</p>",
+                        pc.ConnectionId);
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
         public void DropInContainer(string target, string container, Room room, Player player)
         {
+            var nthItem = Helpers.findNth(target);
 
-            var containerObj = room.Items.FirstOrDefault(x => x.Name.Contains(container, StringComparison.CurrentCultureIgnoreCase))  ?? player.Inventory.Where(x => x.Stuck == false).FirstOrDefault(x => x.Name.Contains(container, StringComparison.CurrentCultureIgnoreCase));
+
+            var containerObj = Helpers.findRoomObject(nthItem, room);
+
+            if (containerObj == null)
+            {
+                var nthContainer = Helpers.findNth(container);
+                containerObj = Helpers.findRoomObject(nthContainer, room) ?? Helpers.findObjectInInventory(nthContainer, player);
+            }
 
             if (containerObj == null)
             {
@@ -287,20 +511,27 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
         public void GetFromContainer(string target, string container, Room room, Player player)
         {
 
-          
 
-            var containerObj = room.Items.FirstOrDefault(x => x.Name.Contains(container, StringComparison.CurrentCultureIgnoreCase)) ?? player.Inventory.Where(x => x.Stuck == false).FirstOrDefault(x => x.Name.Contains(container, StringComparison.CurrentCultureIgnoreCase));
+            var nthItem = Helpers.findNth(target);
+
+            var containerObj = Helpers.findRoomObject(nthItem, room);
 
             if (containerObj == null)
             {
-                _writer.WriteLine($"<p>You don't see that here.</p>", player.ConnectionId);
+                var nthContainer = Helpers.findNth(container);
+                containerObj = Helpers.findRoomObject(nthContainer, room) ?? Helpers.findObjectInInventory(nthContainer, player);
+            }
+
+            if (containerObj == null)
+            {
+                _writer.WriteLine("<p>You don't see that here.</p>", player.ConnectionId);
                 return;
-            } 
+            }
 
 
             if (containerObj.Container.CanOpen && !containerObj.Container.IsOpen)
             {
-                _writer.WriteLine($"<p>You need to open it first.</p>", player.ConnectionId);
+                _writer.WriteLine("<p>You need to open it first.</p>", player.ConnectionId);
                 return;
             }
 
@@ -319,7 +550,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
             }
 
             containerObj.Container.Items.Remove(item);
-           
+
 
             foreach (var pc in room.Players)
             {
@@ -328,15 +559,37 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                     continue;
                 }
 
-                _writer.WriteLine($"<p>{player.Name} gets {item.Name.ToLower()} from {containerObj.Name.ToLower()}.</p>",
-                    pc.ConnectionId);
+                if (item.ItemType == Item.Item.ItemTypes.Money)
+                {
+
+
+                    _writer.WriteLine($"<p>{player.Name} gets {ItemList.DisplayMoneyAmount(item.Value).ToLower()} from {containerObj.Name.ToLower()}</p>",
+                        pc.ConnectionId);
+                }
+                else
+                {
+                    _writer.WriteLine($"<p>{player.Name} gets {item.Name.ToLower()} from {containerObj.Name.ToLower()}.</p>",
+                        pc.ConnectionId);
+                }
+
+
             }
 
-            item.IsHiddenInRoom = false;
-            player.Inventory.Add(item);
+            if (item.ItemType == Item.Item.ItemTypes.Money)
+            {
+                _writer.WriteLine($"<p>You get {ItemList.DisplayMoneyAmount(item.Value).ToLower()} from {containerObj.Name.ToLower()}.</p>", player.ConnectionId);
+                player.Money.Gold += item.Value;
+            }
+            else
+            {
+                item.IsHiddenInRoom = false;
+                player.Inventory.Add(item);
 
-            _writer.WriteLine($"<p>You get {item.Name.ToLower()} from {containerObj.Name.ToLower()}.</p>", player.ConnectionId);
+                _writer.WriteLine($"<p>You get {item.Name.ToLower()} from {containerObj.Name.ToLower()}.</p>", player.ConnectionId);
+            }
+
             _updateUi.UpdateInventory(player);
+            _updateUi.UpdateScore(player);
             room.Clean = false;
         }
 
@@ -351,7 +604,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                 return;
             }
 
-         
+
 
             for (var i = player.Inventory.Count - 1; i >= 0; i--)
             {
@@ -360,7 +613,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
                     room.Items.Add(player.Inventory[i]);
 
-                   
+
                     _writer.WriteLine($"<p>You drop {player.Inventory[i].Name.ToLower()}.</p>", player.ConnectionId);
 
                     foreach (var pc in room.Players)
@@ -384,14 +637,14 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
         public void Open(string target, Room room, Player player)
         {
-            var item = room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ?? player.Inventory.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+            var nthItem = Helpers.findNth(target);
+            var item = Helpers.findRoomObject(nthItem, room) ?? Helpers.findObjectInInventory(nthItem, player);
 
-            if (item == null)
+            var isExit = Helpers.IsExit(target, room);
+
+
+            if (isExit != null)
             {
-                var isExit = Helpers.IsExit(target, room);
-
-                if (isExit != null)
-                {
 
                     if (!isExit.Locked)
                     {
@@ -403,17 +656,12 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
                     if (isExit.Locked)
                     {
-                        
+
                         _writer.WriteLine($"<p>You try to open it but it's locked.", player.ConnectionId);
 
                         return;
                     }
 
-
-                }
-
-
-               
             }
 
             if (item != null && item.Container.CanOpen != true)
@@ -451,45 +699,48 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
         public void Close(string target, Room room, Player player)
         {
 
-            var item = room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ?? player.Inventory.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
-
-                if (item != null && item.Container.CanOpen != true)
-                {
-                    _writer.WriteLine($"<p>{item.Name} cannot be closed", player.ConnectionId);
-                    return;
-                }
-
-                if (item == null)
-                {
-                    _writer.WriteLine("<p>You don't see that here.", player.ConnectionId);
-                    return;
-                }
+            var nthItem = Helpers.findNth(target);
+            var item = Helpers.findRoomObject(nthItem, room) ?? Helpers.findObjectInInventory(nthItem, player);
 
 
-                if (!item.Container.IsOpen)
-                {
-                    _writer.WriteLine("<p>It's already closed.", player.ConnectionId);
-                    return;
-                }
+
+            if (item != null && item.Container.CanOpen != true)
+            {
+                _writer.WriteLine($"<p>{item.Name} cannot be closed", player.ConnectionId);
+                return;
+            }
+
+            if (item == null)
+            {
+                _writer.WriteLine("<p>You don't see that here.", player.ConnectionId);
+                return;
+            }
+
+
+            if (!item.Container.IsOpen)
+            {
+                _writer.WriteLine("<p>It's already closed.", player.ConnectionId);
+                return;
+            }
 
             _writer.WriteLine($"<p>You close {item.Name.ToLower()}.</p>", player.ConnectionId);
 
-                item.Container.IsOpen = false;
+            item.Container.IsOpen = false;
 
-                
-                foreach (var obj in room.Players)
+
+            foreach (var obj in room.Players)
+            {
+                if (obj.Name == player.Name)
                 {
-                    if (obj.Name == player.Name)
-                    {
-                        continue;
-                    }
-                    _writer.WriteLine($"<p>{player.Name} closes {item.Name.ToLower()}</p>", obj.ConnectionId);
+                    continue;
                 }
+                _writer.WriteLine($"<p>{player.Name} closes {item.Name.ToLower()}</p>", obj.ConnectionId);
+            }
 
-                room.Clean = false;
+            room.Clean = false;
         }
 
-        public void Give(string itemName, string targetName, Room room, Player player)
+        public void Give(string itemName, string targetName, Room room, Player player, string command)
         {
 
             if (string.IsNullOrEmpty(itemName))
@@ -503,21 +754,29 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                 _writer.WriteLine("<p>Give to whom?</p>", player.ConnectionId);
                 return;
             }
-
-            var target =
-                room.Players.FirstOrDefault(x =>
-                    x.Name.Contains(targetName, StringComparison.CurrentCultureIgnoreCase)) ??
-                room.Mobs.FirstOrDefault(x => x.Name.Contains(targetName, StringComparison.CurrentCultureIgnoreCase));
+            var nthItem = Helpers.findNth(itemName);
+            var nthTarget = Helpers.findNth(targetName);
+            var target = Helpers.FindMob(nthTarget, room) ?? Helpers.findPlayerObject(nthTarget, room);
 
             if (target == null)
             {
+
+                if (int.TryParse(itemName, out var number) && targetName.Equals("gold"))
+                {
+                    if (GiveGold(command, room, player))
+                    {
+                        return;
+                    }
+
+                    return;
+                }
+
                 _writer.WriteLine("<p>They aren't here.</p>", player.ConnectionId);
                 return;
             }
-           
-    
-            //Check room first
-            var item = player.Inventory.FirstOrDefault(x => x.Name.Contains(itemName, StringComparison.CurrentCultureIgnoreCase));
+
+
+            var item = Helpers.findObjectInInventory(nthItem, player);
 
             if (item == null)
             {
@@ -544,7 +803,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
             }
 
             target.Inventory.Add(item);
-            _writer.WriteLine($"<p>{player.Name} gives you {item.Name.ToLower()}.</p>", target .ConnectionId);
+            _writer.WriteLine($"<p>{player.Name} gives you {item.Name.ToLower()}.</p>", target.ConnectionId);
             _updateUi.UpdateInventory(player);
 
             if (!string.IsNullOrEmpty(target.Events.Give))
@@ -579,9 +838,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
         public void Unlock(string target, Room room, Player player)
         {
-            var objToUnlock =
-                room.Items.FirstOrDefault(x =>
-                    x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+            var nthItem = Helpers.findNth(target);
+            var objToUnlock = Helpers.findRoomObject(nthItem, room) ?? Helpers.findObjectInInventory(nthItem, player);
 
             if (objToUnlock == null)
             {
@@ -592,7 +850,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                 {
                     var playerHasKey = player.Inventory.FirstOrDefault(x =>
                         x.ItemType == Item.Item.ItemTypes.Key && x.KeyId.Equals(doorToUnlock.LockId));
-                    if (playerHasKey== null)
+                    if (playerHasKey == null)
                     {
                         _writer.WriteLine("<p>You don't have the key to unlock this.</p>", player.ConnectionId);
                         return;
@@ -617,13 +875,13 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                             }
                             _writer.WriteLine($"<p>{pc.Name} enters the key and turns it. *CLICK* </p>", pc.ConnectionId);
                         }
-                       
+
                         return;
                     }
 
-                    
+
                 }
-               
+
 
                 _writer.WriteLine("<p>You don't see that here.</p>", player.ConnectionId);
                 return;
@@ -635,46 +893,46 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                 return;
             }
 
-              var hasKey = player.Inventory.FirstOrDefault(x =>
-                x.ItemType == Item.Item.ItemTypes.Key && x.KeyId.Equals(objToUnlock.Container.AssociatedKeyId));
+            var hasKey = player.Inventory.FirstOrDefault(x =>
+              x.ItemType == Item.Item.ItemTypes.Key && x.KeyId.Equals(objToUnlock.Container.AssociatedKeyId));
 
-              if (hasKey == null)
-              {
-                
-                      _writer.WriteLine("<p>You don't have the key to unlock this.</p>", player.ConnectionId);
-                      return;
- 
+            if (hasKey == null)
+            {
+
+                _writer.WriteLine("<p>You don't have the key to unlock this.</p>", player.ConnectionId);
+                return;
+
             }
-              else
-              {
-                  if (!objToUnlock.Container.IsLocked)
-                  {
-                      _writer.WriteLine("<p>It's already unlocked.</p>", player.ConnectionId);
-                      return;
-                  }
+            else
+            {
+                if (!objToUnlock.Container.IsLocked)
+                {
+                    _writer.WriteLine("<p>It's already unlocked.</p>", player.ConnectionId);
+                    return;
+                }
 
-                  objToUnlock.Container.IsLocked = false;
-                  _writer.WriteLine("<p>You enter the key and turn it. *CLICK* </p>", player.ConnectionId);
+                objToUnlock.Container.IsLocked = false;
+                _writer.WriteLine("<p>You enter the key and turn it. *CLICK* </p>", player.ConnectionId);
 
-                  foreach (var pc in room.Players)
-                  {
-                      if (pc.Name.Equals(player.Name, StringComparison.CurrentCultureIgnoreCase))
-                      {
-                          continue;
-                      }
-                      _writer.WriteLine($"<p>{pc.Name} enters the key into {objToUnlock.Name} and turns it. *CLICK* </p>", pc.ConnectionId);
-                  }
+                foreach (var pc in room.Players)
+                {
+                    if (pc.Name.Equals(player.Name, StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        continue;
+                    }
+                    _writer.WriteLine($"<p>{pc.Name} enters the key into {objToUnlock.Name} and turns it. *CLICK* </p>", pc.ConnectionId);
+                }
 
-                  return;
+                return;
             }
 
         }
 
         public void Lock(string target, Room room, Player player)
         {
+            var nthItem = Helpers.findNth(target);
             var objToUnlock =
-                room.Items.FirstOrDefault(x =>
-                    x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+                Helpers.findRoomObject(nthItem, room) ?? Helpers.findObjectInInventory(nthItem, player);
 
             if (objToUnlock == null)
             {

@@ -15,34 +15,35 @@ namespace ArchaicQuestII.GameLogic.Character
 
     public class MobEvents
     {
-        public string Act { get; set; } = @"    
-		                    -- defines a function
-function act(room, player, mob, text)
-    if string.match(text, ' pokes you in the') then
-        
+        //        public string Act { get; set; } = @"    
+        //		                    -- defines a function
+        //function act(room, player, mob, text)
+        //    if string.match(text, ' pokes you in the') then
 
-        if obj.HasEventState(player, 'larisaPoke')
-            then
-          state =  obj.ReadEventState(player, 'larisaPoke')
-          state = state + 1
- obj.UpdateEventState(player, 'larisaPoke', state)
-  
-           else
-            obj.AddEventState(player, 'larisaPoke', 1)
-            end
 
-            if state > 3
-            then
- obj.Say(obj.getName(mob) .. ' says GRRRRR!! I WARNED YOU!!', 0, room, player)
-            obj.AttackPlayer(room, player, mob)
-        end
+        //        if obj.HasEventState(player, 'larisaPoke')
+        //            then
+        //          state =  obj.ReadEventState(player, 'larisaPoke')
+        //          state = state + 1
+        // obj.UpdateEventState(player, 'larisaPoke', state)
 
-  
-    end
-     
-end
+        //           else
+        //            obj.AddEventState(player, 'larisaPoke', 1)
+        //            end
 
-  act(room, player, mob, text)";
+        //            if state > 3
+        //            then
+        // obj.Say(obj.getName(mob) .. ' says GRRRRR!! I WARNED YOU!!', 0, room, player)
+        //            obj.AttackPlayer(room, player, mob)
+        //        end
+
+
+        //    end
+
+        //end
+
+        //  act(room, player, mob, text)";
+        public string Act { get; set; }
         public string Look { get; set; }
         public string Enter { get; set; }
         public string Leave { get; set; }
@@ -120,7 +121,7 @@ end
         [JsonProperty("affects")]
         public Affects Affects { get; set; }
         [JsonProperty("config")]
-        public Config Config { get; set; }
+        public Model.Config Config { get; set; }
         [JsonProperty("roomId")]
         /// arearID + X + Y + z e,g "1000"
         public string RoomId { get; set; }
@@ -129,11 +130,11 @@ end
         /// arearID + X + Y + z e,g "1000"
         public Room.RoomType? RoomType { get; set; } = Room.RoomType.Standard;
         [JsonProperty("recallId")]
-        public int RecallId { get; set; }
+        public string RecallId { get; set; }
         [JsonProperty("defaultAttack")]
         public string DefaultAttack { get; set; }
         [JsonIgnore]
-        public Stack<string> Buffer { get; set; } = new Stack<string>();
+        public Queue<string> Buffer { get; set; } = new Queue<string>();
         public List<Spell.Model.Spell> Spells { get; set; }
         public List<SkillList> Skills { get; set; }
         public bool Deleted { get; set; }
@@ -148,6 +149,8 @@ end
         /// moves around randomly
         /// </summary>
         public bool Roam { get; set; }
+        public bool Shopkeeper { get; set; }
+        public bool Trainer { get; set; }
         public MobEvents Events { get; set; } = new MobEvents();
         public Dictionary<string, int> EventState { get; set; } = new Dictionary<string, int>();
         public List<Quest> QuestLog { get; set; } = new List<Quest>();

@@ -59,6 +59,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
         public List<Player> Mobs { get; set; } = new List<Player>();
         public ItemList Items { get; set; } = new ItemList();
         public RoomType? Type { get; set; } = RoomType.Standard;
+        public TerrainType? Terrain { get; set; } = TerrainType.City;
         /// <summary>
         /// List of emotes that will be randomly played on tick
         /// </summary>

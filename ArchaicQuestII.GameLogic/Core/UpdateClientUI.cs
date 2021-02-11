@@ -222,7 +222,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
                     foreach (var item in player.Inventory.List(false))
                     {
-                        inventory.Append($"<li>{item}</li>");
+                        inventory.Append($"<li>{item.Name}</li>");
                     }
 
                     inventory.Append("</ul>");

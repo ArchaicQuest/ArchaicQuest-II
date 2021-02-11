@@ -31,6 +31,9 @@ using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Emote;
 using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.Character.Gain;
+using ArchaicQuestII.GameLogic.Character.Help;
+using ArchaicQuestII.GameLogic.Character.MobFunctions;
+using ArchaicQuestII.GameLogic.Character.MobFunctions.Shop;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Commands.Communication;
@@ -123,6 +126,8 @@ namespace ArchaicQuestII.API
             services.AddSingleton<ITime, Time>();
             services.AddSingleton<ICore, GameLogic.Core.Core>();
             services.AddSingleton<IQuestLog, QuestLog>();
+            services.AddSingleton<IMobFunctions, Shop>();
+            services.AddSingleton<IHelp, HelpFile>();
             services.AddSingleton<IWriteToClient, WriteToClient>((factory) => new WriteToClient(_hubContext, TelnetHub.Instance));
            
         }
@@ -227,6 +232,8 @@ namespace ArchaicQuestII.API
             _hubContext = app.ApplicationServices.GetService<IHubContext<GameHub>>();
             app.StartLoops();
 
+            var watch = System.Diagnostics.Stopwatch.StartNew();
+
             var rooms = _db.GetList<Room>(DataBase.Collections.Room);
 
             foreach (var room in rooms)
@@ -283,8 +290,18 @@ namespace ArchaicQuestII.API
                 foreach (var data in new Class().SeedData())
                 {
                     _db.Save(data, DataBase.Collections.Class);
+
                 }
             }
+
+            var classes = _db.GetList<Class>(DataBase.Collections.Class);
+
+            foreach (var pcClass in classes)
+            {
+                _cache.AddClass(pcClass.Name, pcClass);
+            }
+
+
 
             if (!_db.DoesCollectionExist(DataBase.Collections.Config))
             {
@@ -311,12 +328,30 @@ namespace ArchaicQuestII.API
 
             var areas = _db.GetList<Area>(DataBase.Collections.Area);
            
+            //foreach (var area in areas)
+            //{
+            //    var roomList = rooms.FindAll(x => x.AreaId == area.Id);
+            //    _cache.AddMap(area.Id, Map.DrawMap(roomList));
+            //}
+
             foreach (var area in areas)
             {
                 var roomList = rooms.FindAll(x => x.AreaId == area.Id);
-                _cache.AddMap(area.Id, Map.DrawMap(roomList));
-            }
+                var areaByZIndex = roomList.FindAll(x => x.Coords.Z != 0).Distinct();
+                foreach (var zarea in areaByZIndex)
+                {
+                    var roomsByZ = new List<Room>();
+                    foreach (var room in roomList.FindAll(x => x.Coords.Z == zarea.Coords.Z))
+                    {
+                        roomsByZ.Add(room);
+                    }
 
+                    _cache.AddMap($"{area.Id}{zarea.Coords.Z}", Map.DrawMap(roomsByZ));
+                }
+
+                var rooms0index = roomList.FindAll(x => x.Coords.Z == 0);
+                _cache.AddMap($"{area.Id}0", Map.DrawMap(rooms0index));
+            }
 
             var socials = new SocialSeedData().SeedData();
 
@@ -334,6 +369,56 @@ namespace ArchaicQuestII.API
                 }
             }
 
+
+            if (!_db.DoesCollectionExist(DataBase.Collections.Items)) {
+                foreach (var itemSeed in new ItemSeed().SeedData())
+                {
+                    _db.Save(itemSeed, DataBase.Collections.Items);
+                }
+            }
+            else
+            {
+                var hasMoney = _db.GetList<Item>(DataBase.Collections.Items)
+                    .FirstOrDefault(x => x.ItemType == Item.ItemTypes.Money);
+
+
+                if (hasMoney == null)
+                {
+                    foreach (var itemSeed in new ItemSeed().SeedData())
+                    {
+                        _db.Save(itemSeed, DataBase.Collections.Items);
+                    }
+                }
+            }
+
+            if (!_db.DoesCollectionExist(DataBase.Collections.Help))
+            {
+                foreach (var seed in new HelpSeed().SeedData())
+                {
+                    _db.Save(seed, DataBase.Collections.Help);
+                }
+            }
+            else
+            {
+                var helpList = _db.GetList<Help>(DataBase.Collections.Help);
+
+
+                foreach (var seed in new HelpSeed().SeedData())
+                {
+                    if (helpList.FirstOrDefault(x => x.Title.Equals(seed.Title)) != null)
+                    {
+                        continue;
+                    }
+
+                    _db.Save(seed, DataBase.Collections.Help);
+                }
+            }
+            var helpFiles = _db.GetList<Help>(DataBase.Collections.Help);
+            foreach (var helpFile in helpFiles)
+            {
+                _cache.AddHelp(helpFile.Id, helpFile);
+            }
+
             if (!_db.DoesCollectionExist(DataBase.Collections.Users))
             {
 
@@ -343,7 +428,10 @@ namespace ArchaicQuestII.API
                 
             }
 
+            watch.Stop();
+            var elapsedMs = watch.ElapsedMilliseconds;
 
+            Console.WriteLine($"Start up completed in {elapsedMs}");
         }
     }
 
