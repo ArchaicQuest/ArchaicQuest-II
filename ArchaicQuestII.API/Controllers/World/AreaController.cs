@@ -140,7 +140,7 @@ namespace ArchaicQuestII.Controllers
 
 
         private bool CheckIfValidFile(IFormFile file)
-        {
+        { 
             var extension = "." + file.FileName.Split('.')[file.FileName.Split('.').Length - 1];
             return (extension == ".json");
         }
@@ -163,17 +163,19 @@ namespace ArchaicQuestII.Controllers
                     // so we will remove them and have 
                     // the DB issue new ones
 
-                    editExistingArea.Id = _db.GetList<Area>(DataBase.Collections.Area).Count + 1;
+                    editExistingArea.Id = _db.GetList<Area>(DataBase.Collections.Area).Count + 2;
                     editExistingArea.DateCreated = DateTime.Now;
                     editExistingArea.Rooms = new List<Room>();
 
                     // Add the new area first
                     _db.Save(editExistingArea, DataBase.Collections.Area);
 
+
+                    
                     //create rooms
                     foreach (var room in exitingArea.Rooms)
                     {
-                        room.Id = _db.GetList<Room>(DataBase.Collections.Room).Count + 1;
+                        room.Id = exitingArea.Rooms.Max(x => x.Id) + 1;
                         room.AreaId = editExistingArea.Id;
                         if (room.Exits.Down != null)
                         {
@@ -227,61 +229,62 @@ namespace ArchaicQuestII.Controllers
                         {
                             room.Exits.Down.RoomId = newRooms.FirstOrDefault(x =>
                                 x.Coords.X == room.Exits.Down.Coords.X && x.Coords.Y == room.Exits.Down.Coords.Y &&
-                                x.Coords.Z == room.Exits.Down.Coords.Z).Id;
+                                x.Coords.Z == room.Exits.Down.Coords.Z)?.Id ?? -1;
                         }
                         if (room.Exits.Up != null)
                         {
                             room.Exits.Up.RoomId = newRooms.FirstOrDefault(x =>
                                 x.Coords.X == room.Exits.Up.Coords.X && x.Coords.Y == room.Exits.Up.Coords.Y &&
-                                x.Coords.Z == room.Exits.Up.Coords.Z).Id;
+                                x.Coords.Z == room.Exits.Up.Coords.Z)?.Id ?? -1;
                         }
                         if (room.Exits.North != null)
                         {
                             room.Exits.North.RoomId = newRooms.FirstOrDefault(x =>
                                 x.Coords.X == room.Exits.North.Coords.X && x.Coords.Y == room.Exits.North.Coords.Y &&
-                                x.Coords.Z == room.Exits.North.Coords.Z).Id;
+                                x.Coords.Z == room.Exits.North.Coords.Z)?.Id ?? -1;
                         }
                         if (room.Exits.NorthEast != null)
                         {
                             room.Exits.NorthEast.RoomId = newRooms.FirstOrDefault(x =>
                                 x.Coords.X == room.Exits.NorthEast.Coords.X && x.Coords.Y == room.Exits.NorthEast.Coords.Y &&
-                                x.Coords.Z == room.Exits.NorthEast.Coords.Z).Id;
+                                x.Coords.Z == room.Exits.NorthEast.Coords.Z)?.Id ?? -1;
                         }
                         if (room.Exits.NorthWest != null)
                         {
                             room.Exits.NorthWest.RoomId = newRooms.FirstOrDefault(x =>
                                 x.Coords.X == room.Exits.NorthWest.Coords.X && x.Coords.Y == room.Exits.NorthWest.Coords.Y &&
-                                x.Coords.Z == room.Exits.NorthWest.Coords.Z).Id;
+                                x.Coords.Z == room.Exits.NorthWest.Coords.Z)?.Id ?? -1;
                         }
                         if (room.Exits.East != null)
                         {
                             room.Exits.East.RoomId = newRooms.FirstOrDefault(x =>
                                 x.Coords.X == room.Exits.East.Coords.X && x.Coords.Y == room.Exits.East.Coords.Y &&
-                                x.Coords.Z == room.Exits.East.Coords.Z).Id;
+                                x.Coords.Z == room.Exits.East.Coords.Z)?.Id ?? -1;
                         }
                         if (room.Exits.SouthEast != null)
                         {
                             room.Exits.SouthEast.RoomId = newRooms.FirstOrDefault(x =>
                                 x.Coords.X == room.Exits.SouthEast.Coords.X && x.Coords.Y == room.Exits.SouthEast.Coords.Y &&
-                                x.Coords.Z == room.Exits.SouthEast.Coords.Z).Id;
+                                x.Coords.Z == room.Exits.SouthEast.Coords.Z)?.Id ?? -1;
                         }
                         if (room.Exits.South != null)
                         {
                             room.Exits.South.RoomId = newRooms.FirstOrDefault(x =>
                                 x.Coords.X == room.Exits.South.Coords.X && x.Coords.Y == room.Exits.South.Coords.Y &&
-                                x.Coords.Z == room.Exits.South.Coords.Z).Id;
+                                x.Coords.Z == room.Exits.South.Coords.Z)?.Id ?? -1;
                         }
                         if (room.Exits.SouthWest != null)
                         {
                             room.Exits.SouthWest.RoomId = newRooms.FirstOrDefault(x =>
-                                x.Coords.X == room.Exits.SouthWest.Coords.X && x.Coords.Y == room.Exits.SouthWest.Coords.Y &&
-                                x.Coords.Z == room.Exits.SouthWest.Coords.Z).Id;
+                                x.Coords.X == room.Exits.SouthWest.Coords.X &&
+                                x.Coords.Y == room.Exits.SouthWest.Coords.Y &&
+                                x.Coords.Z == room.Exits.SouthWest.Coords.Z)?.Id ?? -1;
                         }
                         if (room.Exits.West != null)
                         {
                             room.Exits.West.RoomId = newRooms.FirstOrDefault(x =>
                                 x.Coords.X == room.Exits.West.Coords.X && x.Coords.Y == room.Exits.West.Coords.Y &&
-                                x.Coords.Z == room.Exits.West.Coords.Z).Id;
+                                x.Coords.Z == room.Exits.West.Coords.Z)?.Id ?? -1;
                         }
                         room.RoomObjects.RemoveAll(x => x.Name == null);
                         _db.Save(room, DataBase.Collections.Room);

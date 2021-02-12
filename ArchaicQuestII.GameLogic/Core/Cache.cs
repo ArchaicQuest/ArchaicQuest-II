@@ -211,6 +211,9 @@ namespace ArchaicQuestII.GameLogic.Core
         {
             _roomCache.Clear();
             _mapCache.Clear();
+            _helpCache.Clear();
+            _questCache.Clear();
+            _skillCache.Clear();
 
         }
 

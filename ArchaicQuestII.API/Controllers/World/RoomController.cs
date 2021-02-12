@@ -8,8 +8,11 @@ using System.Linq;
 using ArchaicQuestII.API.Entities;
 using ArchaicQuestII.API.Helpers;
 using ArchaicQuestII.API.Models;
+using ArchaicQuestII.GameLogic.Character.Help;
+using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Item;
+using ArchaicQuestII.GameLogic.Skill.Model;
 using Newtonsoft.Json;
 using ArchaicQuestII.GameLogic.World.Area;
 
@@ -129,34 +132,61 @@ namespace ArchaicQuestII.API.World
             Stopwatch s = Stopwatch.StartNew();
 
             _cache.ClearRoomCache();
-            
 
-            var rooms = _db.GetList<Room>(DataBase.Collections.Room);
-
-            foreach (var room in rooms)
+            try
             {
-                _cache.AddRoom($"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}", room);
-            }
+                var rooms = _db.GetList<Room>(DataBase.Collections.Room);
 
-            var areas = _db.GetList<Area>(DataBase.Collections.Area);
-
-            foreach (var area in areas)
-            {
-                var roomList = rooms.FindAll(x => x.AreaId == area.Id);
-                var areaByZIndex = roomList.FindAll(x => x.Coords.Z != 0).Distinct();
-                foreach (var zarea in areaByZIndex)
+                foreach (var room in rooms)
                 {
-                    var roomsByZ = new List<Room>();
-                    foreach (var room in roomList.FindAll(x => x.Coords.Z == zarea.Coords.Z))
-                    {
-                        roomsByZ.Add(room);
-                    }
-
-                    _cache.AddMap($"{area.Id}{zarea.Coords.Z}", Map.DrawMap(roomsByZ));
+                    _cache.AddRoom($"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}", room);
                 }
 
-                var rooms0index = roomList.FindAll(x => x.Coords.Z == 0);
-                _cache.AddMap($"{area.Id}0", Map.DrawMap(rooms0index));
+                var areas = _db.GetList<Area>(DataBase.Collections.Area);
+
+                foreach (var area in areas)
+                {
+                    var roomList = rooms.FindAll(x => x.AreaId == area.Id);
+                    var areaByZIndex = roomList.FindAll(x => x.Coords.Z != 0).Distinct();
+                    foreach (var zarea in areaByZIndex)
+                    {
+                        var roomsByZ = new List<Room>();
+                        foreach (var room in roomList.FindAll(x => x.Coords.Z == zarea.Coords.Z))
+                        {
+                            roomsByZ.Add(room);
+                        }
+
+                        _cache.AddMap($"{area.Id}{zarea.Coords.Z}", Map.DrawMap(roomsByZ));
+                    }
+
+                    var rooms0index = roomList.FindAll(x => x.Coords.Z == 0);
+                    _cache.AddMap($"{area.Id}0", Map.DrawMap(rooms0index));
+                }
+
+                var helps = _db.GetList<Help>(DataBase.Collections.Help);
+
+                foreach (var help in helps)
+                {
+                    _cache.AddHelp(help.Id, help);
+                }
+
+                var quests = _db.GetList<Quest>(DataBase.Collections.Quests);
+
+                foreach (var quest in quests)
+                {
+                    _cache.AddQuest(quest.Id, quest);
+                }
+
+                var skills = _db.GetList<Skill>(DataBase.Collections.Skill);
+
+                foreach (var skill in skills)
+                {
+                    _cache.AddSkill(skill.Id, skill);
+                }
+            }
+            catch (Exception ex)
+            {
+
             }
 
             s.Stop();
