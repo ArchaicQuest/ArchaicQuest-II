@@ -76,31 +76,36 @@ namespace ArchaicQuestII.GameLogic.Core
                         }
                         else
                         {
-                            mobExist.Attributes.Attribute[EffectLocation.Hitpoints] += _dice.Roll(1, 2, 5) * mobExist.Level;
-                            mobExist.Attributes.Attribute[EffectLocation.Mana] += _dice.Roll(1, 2, 5) * mobExist.Level;
-                            mobExist.Attributes.Attribute[EffectLocation.Moves] += _dice.Roll(1, 2, 5) * mobExist.Level;
-
-                            if (mobExist.Attributes.Attribute[EffectLocation.Hitpoints] >
-                                mobExist.MaxAttributes.Attribute[EffectLocation.Hitpoints])
+                            if (mobExist != null)
                             {
-                                mobExist.Attributes.Attribute[EffectLocation.Hitpoints] =
-                                    mobExist.MaxAttributes.Attribute[EffectLocation.Hitpoints];
-                            }
+                                mobExist.Attributes.Attribute[EffectLocation.Hitpoints] +=
+                                    _dice.Roll(1, 2, 5) * mobExist.Level;
+                                mobExist.Attributes.Attribute[EffectLocation.Mana] +=
+                                    _dice.Roll(1, 2, 5) * mobExist.Level;
+                                mobExist.Attributes.Attribute[EffectLocation.Moves] +=
+                                    _dice.Roll(1, 2, 5) * mobExist.Level;
 
-                            if (mobExist.Attributes.Attribute[EffectLocation.Mana] >
-                                mobExist.MaxAttributes.Attribute[EffectLocation.Mana])
-                            {
-                                mobExist.Attributes.Attribute[EffectLocation.Mana] =
-                                    mobExist.MaxAttributes.Attribute[EffectLocation.Mana];
-                            }
+                                if (mobExist.Attributes.Attribute[EffectLocation.Hitpoints] >
+                                    mobExist.MaxAttributes.Attribute[EffectLocation.Hitpoints])
+                                {
+                                    mobExist.Attributes.Attribute[EffectLocation.Hitpoints] =
+                                        mobExist.MaxAttributes.Attribute[EffectLocation.Hitpoints];
+                                }
 
-                            if (mobExist.Attributes.Attribute[EffectLocation.Moves] >
-                                mobExist.MaxAttributes.Attribute[EffectLocation.Moves])
-                            {
-                                mobExist.Attributes.Attribute[EffectLocation.Moves] =
-                                    mobExist.MaxAttributes.Attribute[EffectLocation.Moves];
-                            }
+                                if (mobExist.Attributes.Attribute[EffectLocation.Mana] >
+                                    mobExist.MaxAttributes.Attribute[EffectLocation.Mana])
+                                {
+                                    mobExist.Attributes.Attribute[EffectLocation.Mana] =
+                                        mobExist.MaxAttributes.Attribute[EffectLocation.Mana];
+                                }
 
+                                if (mobExist.Attributes.Attribute[EffectLocation.Moves] >
+                                    mobExist.MaxAttributes.Attribute[EffectLocation.Moves])
+                                {
+                                    mobExist.Attributes.Attribute[EffectLocation.Moves] =
+                                        mobExist.MaxAttributes.Attribute[EffectLocation.Moves];
+                                }
+                            }
                         }
                     }
 
