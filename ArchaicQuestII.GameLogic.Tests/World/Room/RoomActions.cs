@@ -106,6 +106,7 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
                     {
                         Name = "East",
                         Door = false,
+                        Coords = new Coordinates()
                     }
                 }
             };
@@ -241,42 +242,50 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
                     {
                         Name = " North West",
                         Door = false,
+                        Coords = new Coordinates()
                     },
 
                     North = new Exit()
                     {
                         Name = " North",
                         Door = false,
+                        Coords = new Coordinates()
                     },
                     NorthEast = new Exit()
                     {
                         Name = " North East",
                         Door = false,
+                        Coords = new Coordinates()
                     },
                     East = new Exit()
                     {
                         Name = " East",
                         Door = false,
+                        Coords = new Coordinates()
                     },
                     SouthEast = new Exit()
                     {
                         Name = " South East",
                         Door = false,
+                        Coords = new Coordinates()
                     },
                     South = new Exit()
                     {
                         Name = " South",
                         Door = false,
+                        Coords = new Coordinates()
                     },
                     SouthWest = new Exit()
                     {
                         Name = " South West",
                         Door = false,
+                        Coords = new Coordinates()
                     },
                     West = new Exit()
                     {
                         Name = " West",
                         Door = false,
+                        Coords = new Coordinates()
                     },
                    
                 }
