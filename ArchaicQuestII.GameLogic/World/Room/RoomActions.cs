@@ -567,7 +567,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
           
 
-            if (room.Exits.East != null)
+            if (room.Exits.East != null && room.Exits.East.Coords != null)
             {
                 var clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"e\"}))";
                 exits.Add(verbose

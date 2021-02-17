@@ -155,7 +155,7 @@ namespace ArchaicQuestII.GameLogic.Core
                     }
                 }
 
-                if (node.Exits.East != null)
+                if (node.Exits.East != null && node.Exits.East.Coords != null)
                 {
                     var mapEdge = new SigmaMapEdge()
                     {
