@@ -287,8 +287,13 @@ namespace ArchaicQuestII.GameLogic.World.Room
             var nthTarget = Helpers.findNth(target);
 
             var item = Helpers.findRoomObject(nthTarget, room) ?? Helpers.findObjectInInventory(nthTarget, player);
+            var character = Helpers.FindMob(nthTarget, room) ?? Helpers.FindPlayer(nthTarget, room);
 
-
+            if (character != null)
+            {
+                LookObject(target, room, player);
+                return;
+            }
             RoomObject roomObjects = null;
        
             if (item == null)
@@ -298,8 +303,10 @@ namespace ArchaicQuestII.GameLogic.World.Room
             }
 
             var isDark = RoomIsDark(room, player);
-
-            _writeToClient.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{item.Description.Exam}", player.ConnectionId);
+            var examMessage = item.Description.Exam == "You don't see anything special."
+                ? $"On closer inspection you don't see anything special to note to what you already see. {item.Description.Look}"
+                : item.Description.Exam;
+            _writeToClient.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{examMessage}", player.ConnectionId);
 
             foreach (var pc in room.Players)
             {
@@ -311,7 +318,9 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 _writeToClient.WriteLine($"<p>{player.Name} examines {item.Name.ToLower()}.</p>", pc.ConnectionId);
             }
 
-            if (room.RoomObjects.Count >= 1 && room.RoomObjects[0].Name != null)
+         
+
+            if (item == null && room.RoomObjects.Count >= 1 && room.RoomObjects[0].Name != null)
             {
                 roomObjects =
                     room.RoomObjects.FirstOrDefault(x =>
