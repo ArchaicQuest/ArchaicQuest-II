@@ -21,8 +21,16 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore --verbosity normal
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
     - name: Test
       run: dotnet test --configuration Release --no-restore
+  deploy:
+     runs-on: ubuntu-latest
+
+    steps:
     - name: dotnet publish
       run: dotnet publish ArchaicQuestII.API/ArchaicQuestII.API.csproj -c Release -o deploy -r ubuntu.19.04-x64
     - name: Copy via ssh
