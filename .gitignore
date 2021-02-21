@@ -38,3 +38,4 @@ msbuild.wrn
 node_modules/
 ArchaicQuestII.API/log.txt
 deploy/
+ArchaicQuestII.GameLogic/Core/Keys.cs

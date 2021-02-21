@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Security.Cryptography;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Skill.Enum;
 using ArchaicQuestII.GameLogic.World.Room;
+using Newtonsoft.Json;
 
 namespace ArchaicQuestII.GameLogic.Core
 {
@@ -231,6 +236,35 @@ namespace ArchaicQuestII.GameLogic.Core
             }
 
             return exitList;
+        }
+
+        public static async void PostToDiscord(string botToSay, string eventName)
+        {
+            var client = new HttpClient();
+            var content = new FormUrlEncodedContent(new[]
+            {
+                new KeyValuePair<string, string>("content", botToSay)
+            });
+
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
+
+            var location = System.Reflection.Assembly.GetEntryAssembly().Location;
+            var directory = System.IO.Path.GetDirectoryName(location);
+            var keys =  JsonConvert.DeserializeObject<Keys>(File.ReadAllText(directory + "/keys.json"));
+
+            switch (eventName)
+            {
+                case "event":
+                    await client.PostAsync(keys.EventsDiscordWebHookURL, content);
+                    break;
+                case "channels":
+                    await client.PostAsync(keys.ChannelDiscordWebHookURL, content);
+                    break;
+                default:
+                    break;
+            }
+
+            client.Dispose();
         }
 
 

@@ -16,6 +16,7 @@ namespace ArchaicQuestII.GameLogic.Core
         void Who(Player player);
 
         void Save(Player player);
+        void Quit(Player player, Room room);
         /// <summary>
         /// Where are players within the area
         /// </summary>

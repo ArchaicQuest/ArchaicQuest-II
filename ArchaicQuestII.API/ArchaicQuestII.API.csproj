@@ -7,6 +7,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Content Remove="keys.json" />
+    </ItemGroup>
+
+    <ItemGroup>
         <None Remove="motd" />
         <None Remove="motd-telnet" />
     </ItemGroup>
@@ -20,6 +24,12 @@
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
           <Generator>MSBuild:Compile</Generator>
         </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="keys.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
     <ItemGroup>

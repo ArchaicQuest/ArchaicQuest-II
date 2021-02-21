@@ -320,6 +320,9 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "save":
                     _core.Save(player);
                     break;
+                case "quit":
+                    _core.Quit(player, room);
+                    break;
                 default:
                         _commandHandler.HandleCommand(key,obj,target, player, room);
                     break;

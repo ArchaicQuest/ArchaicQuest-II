@@ -25,8 +25,9 @@ namespace ArchaicQuestII.GameLogic.Core
         private IDice _dice;
         private IUpdateClientUI _client;
         private ITime _time;
+        private ICore _core;
 
-        public GameLoop(IWriteToClient writeToClient, ICache cache, ICommands commands, ICombat combat, IDataBase database, IDice dice, IUpdateClientUI client, ITime time)
+        public GameLoop(IWriteToClient writeToClient, ICache cache, ICommands commands, ICombat combat, IDataBase database, IDice dice, IUpdateClientUI client, ITime time, ICore core)
         {
             _writeToClient = writeToClient;
             _cache = cache;
@@ -36,6 +37,7 @@ namespace ArchaicQuestII.GameLogic.Core
             _dice = dice;
             _client = client;
             _time = time;
+            _core = core;
         }
 
         public int GainAmount(int value, Player player)
@@ -145,7 +147,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
                 foreach (var player in players)
                 {
-
+                    IdleCheck(player);
                     var hP = (_dice.Roll(1, 2, 5) * player.Level);
                     var mana = (_dice.Roll(1, 2, 5) * player.Level);
                     var moves = (_dice.Roll(1, 2, 5) * player.Level);
@@ -222,6 +224,30 @@ namespace ArchaicQuestII.GameLogic.Core
                 catch (Exception ex)
                 {
                 }
+            }
+        }
+
+        public void IdleCheck(Player player)
+        {
+            var idleTime5Mins = player.LastCommandTime.AddMinutes(6) <= DateTime.Now;
+
+            if (!player.Idle && idleTime5Mins)
+            {
+                _writeToClient.WriteLine("You enter the void.", player.ConnectionId);
+                player.Idle = true;
+                return;
+            }
+
+            var idleTime10Mins = player.LastCommandTime.AddMinutes(11) <= DateTime.Now;
+            var idleTime15Mins = player.LastCommandTime.AddMinutes(16) <= DateTime.Now;
+            if (idleTime10Mins && !idleTime15Mins)
+            {
+                _writeToClient.WriteLine("You go deeper into the void.", player.ConnectionId);
+            }
+
+            if (idleTime15Mins)
+            {
+                _core.Quit(player, _cache.GetRoom(player.RecallId));
             }
         }
 
@@ -369,7 +395,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
                         var command = player.Value.Buffer.Dequeue();
                         var room = _cache.GetRoom(player.Value.RoomId);
-
+                        player.Value.LastCommandTime = DateTime.Now;
                         _commands.ProcessCommand(command, player.Value, room);
 
                     }

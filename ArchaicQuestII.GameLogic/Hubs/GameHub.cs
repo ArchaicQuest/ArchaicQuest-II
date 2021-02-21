@@ -136,11 +136,14 @@ namespace ArchaicQuestII.GameLogic.Hubs
                 AddCharacterToCache(hubId, player);
 
             var playerExist = _cache.PlayerAlreadyExists(player.Id);
+            player.LastLoginTime = DateTime.Now;
+            player.LastCommandTime = DateTime.Now;
 
             await SendToClient($"<p>Welcome {player.Name}. Your adventure awaits you.</p>", hubId);
 
             if (playerExist != null)
             {
+                Helpers.PostToDiscord($"{player.Name} has entered the realms.", "event");
                 GetRoom(hubId, playerExist, playerExist.RoomId);
             }
             else

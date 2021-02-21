@@ -372,7 +372,10 @@ namespace ArchaicQuestII.GameLogic.Combat
 
                         _quest.IsQuestMob(player, target.Name);
 
-
+                        if (target.ConnectionId != "mob")
+                        {
+                            Helpers.PostToDiscord($"{target.Name} got killed by {player.Name}!", "event");
+                        }
 
                         _writer.WriteLine("<p class='dead'>You are dead. R.I.P.</p>", target.ConnectionId);
 

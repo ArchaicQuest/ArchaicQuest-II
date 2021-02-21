@@ -6,8 +6,10 @@ using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Effect;
+using ArchaicQuestII.GameLogic.Hubs;
 using ArchaicQuestII.GameLogic.World.Area;
 using ArchaicQuestII.GameLogic.World.Room;
+using Microsoft.AspNetCore.SignalR;
 
 namespace ArchaicQuestII.GameLogic.Core
 {
@@ -50,7 +52,31 @@ namespace ArchaicQuestII.GameLogic.Core
         public void Save(Player player)
         {
             _db.Save(player, DataBase.Collections.Players);
-            _writeToClient.WriteLine("Character saved.");
+            _writeToClient.WriteLine("Character saved.", player.ConnectionId);
+        }
+
+        public void Quit(Player player, Room room)
+        {
+
+            player.Buffer = new Queue<string>();
+           Save(player);
+
+           foreach (var pc in room.Players)
+           {
+               if (pc.Name.Equals(player.Name))
+               {
+                   _writeToClient.WriteLine("You wave goodbye and vanish.", pc.ConnectionId);
+                  continue;
+                }
+               _writeToClient.WriteLine($"{player.Name} waves goodbye and vanishes.", pc.ConnectionId);
+            }
+
+           room.Players.Remove(player);
+           _writeToClient.WriteLine($"We await your return {player.Name}. If you enjoyed your time here, help spread the word by tweeting, writing a blog posts or posting reviews online.", player.ConnectionId);
+           Helpers.PostToDiscord($"{player.Name} quit after playing for {Math.Floor(DateTime.Now.Subtract(player.LastLoginTime).TotalMinutes)} minutes.", "event");
+            _cache.RemovePlayer(player.ConnectionId);
+
+            
         }
 
         public void Where(Player player, Room room)
