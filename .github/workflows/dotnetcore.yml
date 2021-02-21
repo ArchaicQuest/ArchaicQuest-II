@@ -20,17 +20,17 @@ jobs:
     - name: Install dependencies
       run: dotnet restore
     - name: update event key
-        uses: deef0000dragon1/json-edit-action/@v1
-        env:
-          KEY: EventsDiscordWebHookURL
-          VALUE: ${{ secrets.DISCORDEVENT}}
-          FILE: keys.json
+      uses: deef0000dragon1/json-edit-action/@v1
+      env:
+        KEY: EventsDiscordWebHookURL
+        VALUE: ${{ secrets.DISCORDEVENT}}
+        FILE: keys.json
     - name: update channel key
-        uses: deef0000dragon1/json-edit-action/@v1
-        env:
-          KEY: ChannelDiscordWebHookURL
-          VALUE: ${{ secrets.DISCORDEVENT}}
-          FILE: keys.json
+      uses: deef0000dragon1/json-edit-action/@v1
+      env:
+        KEY: ChannelDiscordWebHookURL
+        VALUE: ${{ secrets.DISCORDEVENT}}
+        FILE: keys.json
     - name: Build
       run: dotnet build --no-restore --verbosity normal
     - name: Test
