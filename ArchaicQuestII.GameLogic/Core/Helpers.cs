@@ -238,8 +238,12 @@ namespace ArchaicQuestII.GameLogic.Core
             return exitList;
         }
 
-        public static async void PostToDiscord(string botToSay, string eventName)
+        public static async void PostToDiscord(string botToSay, string eventName, Config config)
         {
+            if (!config.PostToDiscord)
+            {
+                return;
+            }
             var client = new HttpClient();
             var content = new FormUrlEncodedContent(new[]
             {
@@ -248,17 +252,16 @@ namespace ArchaicQuestII.GameLogic.Core
 
             content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
 
-            var location = System.Reflection.Assembly.GetEntryAssembly().Location;
-            var directory = System.IO.Path.GetDirectoryName(location);
-            var keys =  JsonConvert.DeserializeObject<Keys>(File.ReadAllText(directory + "/keys.json"));
-
             switch (eventName)
             {
                 case "event":
-                    await client.PostAsync(keys.EventsDiscordWebHookURL, content);
+                    await client.PostAsync(config.EventsDiscordWebHookURL, content);
                     break;
                 case "channels":
-                    await client.PostAsync(keys.ChannelDiscordWebHookURL, content);
+                    await client.PostAsync(config.ChannelDiscordWebHookURL, content);
+                    break;
+                case "error":
+                    await client.PostAsync(config.ErrorDiscordWebHookURL, content);
                     break;
                 default:
                     break;

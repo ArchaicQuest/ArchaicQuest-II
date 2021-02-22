@@ -143,7 +143,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
 
             if (playerExist != null)
             {
-                Helpers.PostToDiscord($"{player.Name} has entered the realms.", "event");
+                Helpers.PostToDiscord($"{player.Name} has entered the realms.", "event", _cache.GetConfig());
                 GetRoom(hubId, playerExist, playerExist.RoomId);
             }
             else

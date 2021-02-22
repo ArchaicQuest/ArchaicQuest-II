@@ -35,7 +35,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
                 _updateClient.UpdateCommunication(pc, $"<p class='gossip'>[<span>Gossip</span>] {player.Name}: {text}</p>", "gossip");
             }
 
-            Helpers.PostToDiscord($"[Gossip] {player.Name} {text}", "channels");
+            Helpers.PostToDiscord($"[Gossip] {player.Name} {text}", "channels", _cache.GetConfig());
         }
 
         public void Newbie(string text, Room room, Player player)
@@ -53,7 +53,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
                 _updateClient.UpdateCommunication(pc, $"<p class='newbie'>[<span>Newbie</span>] {player.Name}: {text}</p>", "newbie");
             }
 
-            Helpers.PostToDiscord($"[Newbie] {player.Name} {text}", "channels");
+            Helpers.PostToDiscord($"[Newbie] {player.Name} {text}", "channels", _cache.GetConfig());
              
         }
 
@@ -71,7 +71,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
                 _updateClient.UpdateCommunication(pc, $"<p class='ooc'>[<span>OOC</span>] {player.Name}: {text}</p>", "ooc");
             }
 
-            Helpers.PostToDiscord($"[OOC] {player.Name} {text}", "channels");
+            Helpers.PostToDiscord($"[OOC] {player.Name} {text}", "channels", _cache.GetConfig());
 
         }
 

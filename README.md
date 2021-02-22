@@ -49,8 +49,6 @@ Some of the above can be edited in the admin tool, the rest if required to be ch
 The last important step that isn't seeded yet is the very first room! For now before connecting to the game you will need to fire up the web admin tool and create an area and then create a room in said area. Then the web client will be able to connect correctly. 
 
 ### Running the project
-Before running the project navigate to `ArchaicQuestII.API/Helpers/Keys.example.cs` rename this file to `keys.cs` and uncomment the code. Now the application will compile.
-
 Use `dotnet run -p ArchaicQuestII.API/ArchaicQuestII.API.csproj`.
 
 If on unix you can use the make file in the project to run using `make run`. 
@@ -66,7 +64,7 @@ There's no output to say it's running but once you make a request it wakes up an
 - ArchaicQuestII.DataAccess
   - Wrapper around LiteDB. To add new collections you need to modify Collections enum and the GetCollectionName switch
 - ArchaicQuestII.GameLogic
-  - All game logic here plus the Signalr and Telnet logic. Best place to start is Commands.cs to see what commands exists and how to add more.
+  - All game logic here plus the SignalR and Telnet logic. Best place to start is Commands.cs to see what commands exists and how to add more.
  
 ### Adding Commands / Features
 

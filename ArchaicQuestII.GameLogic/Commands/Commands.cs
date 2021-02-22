@@ -335,6 +335,11 @@ namespace ArchaicQuestII.GameLogic.Commands
         public void ProcessCommand(string command, Player player, Room room)
         {
 
+            if (string.IsNullOrEmpty(command))
+            {
+                return;
+            }
+
             var cleanCommand = command;
             var commandParts = cleanCommand.Split(' ');
             var key = commandParts[0].ToLower();
@@ -355,7 +360,7 @@ namespace ArchaicQuestII.GameLogic.Commands
                 foreach (var mob in room.Mobs)
                 {
 
-                    if (!string.IsNullOrEmpty(mob.Events.Act))
+                    if (!string.IsNullOrEmpty(mob.Events.Act) && room.Players.Any())
                     {
                         UserData.RegisterType<MobScripts>();
 
@@ -380,7 +385,7 @@ namespace ArchaicQuestII.GameLogic.Commands
             }
             catch(Exception ex)
             {
-
+                Helpers.PostToDiscord($"{player.Name} {ex.Message}", "error", _cache.GetConfig());
             }
 
             CommandList(key, parameters.Item1, parameters.Item2, cleanCommand, player, room);

@@ -119,7 +119,7 @@ namespace ArchaicQuestII.Controllers.character
 
             var account = _db.GetById<Account>(player.AccountId, DataBase.Collections.Account);
             account.Characters.Add(newPlayer.Id);
-            Helpers.PostToDiscord($"{player.Name} has joined the realms for the first time.", "event");
+            Helpers.PostToDiscord($"{player.Name} has joined the realms for the first time.", "event", _cache.GetConfig());
             _db.Save(account, DataBase.Collections.Account);
             _db.Save(newPlayer, DataBase.Collections.Players);
 

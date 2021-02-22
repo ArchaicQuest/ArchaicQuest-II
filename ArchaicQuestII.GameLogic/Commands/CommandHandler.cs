@@ -36,6 +36,13 @@ namespace ArchaicQuestII.GameLogic.Commands
             //check player skills
             if(false){}
 
+            var logMsg = player.Name + " key: " + key + " obj: " + obj + " target: " + target + "\r\n" + "Buffer: ";
+            foreach (var cmd in player.Buffer)
+            {
+                logMsg += cmd + " ";
+            }
+            Helpers.PostToDiscord(logMsg, "error", _cache.GetConfig());
+
             //check socials
             var social = _cache.GetSocials().Keys.FirstOrDefault(x => x.StartsWith(key));
             if (social != null)
@@ -45,6 +52,7 @@ namespace ArchaicQuestII.GameLogic.Commands
                 _socials.EmoteSocial(player, room, _cache.GetSocials()[social], emoteTarget);
                 return;
             }
+            
 
             _writeToClient.WriteLine("That is not a command.", player.ConnectionId);
         }

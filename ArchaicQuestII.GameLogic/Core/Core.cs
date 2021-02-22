@@ -73,7 +73,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
            room.Players.Remove(player);
            _writeToClient.WriteLine($"We await your return {player.Name}. If you enjoyed your time here, help spread the word by tweeting, writing a blog posts or posting reviews online.", player.ConnectionId);
-           Helpers.PostToDiscord($"{player.Name} quit after playing for {Math.Floor(DateTime.Now.Subtract(player.LastLoginTime).TotalMinutes)} minutes.", "event");
+           Helpers.PostToDiscord($"{player.Name} quit after playing for {Math.Floor(DateTime.Now.Subtract(player.LastLoginTime).TotalMinutes)} minutes.", "event", _cache.GetConfig());
             _cache.RemovePlayer(player.ConnectionId);
 
             

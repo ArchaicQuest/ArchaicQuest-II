@@ -42,5 +42,11 @@ namespace ArchaicQuestII.GameLogic.Core
         /// </summary>
         public int UpdateTick { get; set; } = 1000;
 
+        public bool PostToDiscord { get; set; } = false;
+
+        public string ChannelDiscordWebHookURL { get; set; } = "";
+        public string EventsDiscordWebHookURL { get; set; } = "";
+        public string ErrorDiscordWebHookURL { get; set; } = "";
+
     }
 }
