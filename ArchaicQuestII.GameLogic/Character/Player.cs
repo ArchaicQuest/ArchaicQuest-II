@@ -24,8 +24,8 @@ namespace ArchaicQuestII.GameLogic.Character
         public List<Player> Followers { get; set; } = new List<Player>();
         public string Following { get; set; }
         public bool grouped { get; set; }
-        public Money Money { get; set; } = new Money();
-        public Money Bank { get; set; } = new Money();
+        public Money Money { get; set; } = new Money() {Gold = 0};
+        public Money Bank { get; set; } = new Money() { Gold = 0};
         public PlayerConfig Config { get; set; } = new PlayerConfig();
         public int Trains { get; set; } = 5;
         public bool Idle { get; set; } = false;

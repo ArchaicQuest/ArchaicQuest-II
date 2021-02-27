@@ -308,9 +308,9 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
             }
 
             var vendorMarkup = hasItem.Value * 1.5;
-            var vendorBuyPrice = hasItem.Value - (vendorMarkup - hasItem.Value);
+            var vendorBuyPrice = (int)Math.Floor((decimal)hasItem.Value / 2);
 
-            player.Money.Gold += (int)Math.Floor(vendorBuyPrice);
+            player.Money.Gold += vendorBuyPrice <= 0 ? 1 : vendorBuyPrice;
             player.Inventory.Remove(hasItem);
 
             // if we wanted to show sold items in the vendors list we would add it here
@@ -324,7 +324,7 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
             _clientUi.UpdateScore(player);
             _clientUi.UpdateInventory(player);
 
-            _writer.WriteLine($"<p>You sell {hasItem.Name.ToLower()} for {(int)Math.Floor(vendorBuyPrice)} gold.</p>", player.ConnectionId);
+            _writer.WriteLine($"<p>You sell {hasItem.Name.ToLower()} for {(vendorBuyPrice <= 0 ? 1 : vendorBuyPrice)} gold.</p>", player.ConnectionId);
         }
     }
 }
