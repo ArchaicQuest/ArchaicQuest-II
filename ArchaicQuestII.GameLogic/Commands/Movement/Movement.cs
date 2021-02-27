@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -42,6 +43,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
 
         public void Move(Room room, Player character, string direction)
         {
+            var timer = new Stopwatch();
+            timer.Start();
             switch (character.Status)
             {
                 case CharacterStatus.Status.Fighting:
@@ -147,7 +150,14 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
                     }
                 }
             }
+            timer.Stop();
 
+            TimeSpan timeTaken = timer.Elapsed;
+
+            var elapsed = timeTaken.ToString(@"s\.fff");
+
+            _writeToClient.WriteLine("<p>Debugging lag - Time taken to move: " + elapsed + " seconds</p>", character.ConnectionId);
+            
         }
 
         public Exit FindExit(Room room, string direction)
