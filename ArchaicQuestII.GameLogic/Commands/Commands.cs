@@ -225,6 +225,7 @@ namespace ArchaicQuestII.GameLogic.Commands
                     _communication.Reply(obj, player);
                     break;
                 case "wear":
+                case "wield":
                     _equipment.Wear(obj, room, player);
                     break;
                 case "eq":
