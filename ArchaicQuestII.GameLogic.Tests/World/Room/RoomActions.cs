@@ -28,32 +28,32 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
         }
 
         // too brittle
-        [Fact]
-        public void Should_return_room_description()
-        {
-            _room = new GameLogic.World.Room.Room()
-            {
-                Title = "Room 1",
-                Description =
-                           "room descriptions",
+        //[Fact]
+        //public void Should_return_room_description()
+        //{
+        //    _room = new GameLogic.World.Room.Room()
+        //    {
+        //        Title = "Room 1",
+        //        Description =
+        //                   "room descriptions",
 
-                Exits = new ExitDirections()
-                {
-                    North = new Exit()
-                    {
-                        Name = "North"
-                    }
-                }
-            };
+        //        Exits = new ExitDirections()
+        //        {
+        //            North = new Exit()
+        //            {
+        //                Name = "North"
+        //            }
+        //        }
+        //    };
 
-            _player = new Player();
-            _player.Config.VerboseExits = false;
-            _player.ConnectionId = "1";
+        //    _player = new Player();
+        //    _player.Config.VerboseExits = false;
+        //    _player.ConnectionId = "1";
 
-            new RoomActions(_writer.Object, _time.Object, _cache.Object).Look("", _room, _player);
+        //    new RoomActions(_writer.Object, _time.Object, _cache.Object).Look("", _room, _player);
 
-            _writer.Verify(w => w.WriteLine(It.IsAny<string>(), "1"), Times.Once);
-        }
+        //    _writer.Verify(w => w.WriteLine(It.IsAny<string>(), "1"), Times.Once);
+        //}
 
         [Fact]
         public void Should_return_north_exits()
