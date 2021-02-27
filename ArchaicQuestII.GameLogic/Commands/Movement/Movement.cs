@@ -96,10 +96,20 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
                 return;
             }
 
-            OnPlayerLeaveEvent(room, character);
-            NotifyRoomLeft(room, character, direction);
+            if (room.Mobs.Any())
+            {
+                OnPlayerLeaveEvent(room, character);
+            }
 
-            NotifyRoomEnter(getNextRoom, character, direction);
+            if (room.Players.Any())
+            {
+                NotifyRoomLeft(room, character, direction);
+            }
+
+            if (getNextRoom.Players.Any())
+            {
+                NotifyRoomEnter(getNextRoom, character, direction);
+            }
 
             UpdateCharactersLocation(getExitToNextRoom, character, room);
 
@@ -118,9 +128,12 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
 
             _roomActions.Look("", getNextRoom, character);
 
-            OnPlayerEnterEvent(getNextRoom, character); 
+            if (room.Mobs.Any())
+            {
+                OnPlayerEnterEvent(getNextRoom, character);
+            }
 
-         
+
             _updateUi.GetMap(character, _cache.GetMap($"{getExitToNextRoom.AreaId}{getExitToNextRoom.Coords.Z}"));
             _updateUi.UpdateMoves(character);
 

@@ -121,7 +121,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
             var isDark = RoomIsDark(room, player);
             foreach (var obj in container.Container.Items.List(false))
             {
-                _writeToClient.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{obj.Name}</p>", player.ConnectionId);
+                _writeToClient.WriteLine($"<p class='item {(isDark ? "room-dark" : "")}'>{obj.Name}</p>", player.ConnectionId);
             }
 
            

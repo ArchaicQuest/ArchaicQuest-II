@@ -307,7 +307,6 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
                 return;
             }
 
-            var vendorMarkup = hasItem.Value * 1.5;
             var vendorBuyPrice = (int)Math.Floor((decimal)hasItem.Value / 2);
 
             player.Money.Gold += vendorBuyPrice <= 0 ? 1 : vendorBuyPrice;

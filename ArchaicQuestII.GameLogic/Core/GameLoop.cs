@@ -193,11 +193,11 @@ namespace ArchaicQuestII.GameLogic.Core
                 try
                 {
                     await Task.Delay(4000);
-                    Console.WriteLine("combat loop");
+                  
 
                     var players = _cache.GetCombatList();
                     var validPlayers = players.Where(x => x.Status == CharacterStatus.Status.Fighting);
-                    Console.WriteLine("Number of fighters " + players.Count + " valid " + validPlayers.Count());
+                   
                     foreach (var player in validPlayers)
                     {
                         _combat.Fight(player, player.Target, _cache.GetRoom(player.RoomId), false);
@@ -302,14 +302,14 @@ namespace ArchaicQuestII.GameLogic.Core
                 {
                     await Task.Delay(30000).ConfigureAwait(false);
 
-                    var rooms = _cache.GetAllRooms().Where(x => x.Mobs.Any());
+                    var rooms = _cache.GetAllRooms().Where(x => x.Players.Any());
 
                     if (!rooms.Any())
                     {
                         continue;
                     }
                     var mobIds = new List<Guid>();
-                    foreach (var room in rooms)
+                    foreach (var room in rooms.Where(x => x.Mobs.Any()))
                     {
 
                         foreach (var mob in room.Mobs.Where(x => x.Status != CharacterStatus.Status.Fighting).ToList())
