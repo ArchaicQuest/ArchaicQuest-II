@@ -202,12 +202,12 @@ namespace ArchaicQuestII.GameLogic.World.Room
                     _writeToClient.WriteLine($"<p  class='{(isDark ? "room-dark" : "")}'>{item.Name} contains:", player.ConnectionId);
 
                     var listOfContainerItems = new StringBuilder();
-                    foreach (var containerItem in item.Container.Items)
+                    foreach (var containerItem in item.Container.Items.List())
                     {
-                        listOfContainerItems.Append(containerItem.Name);
+                        listOfContainerItems.Append($"<p class='{(isDark ? "room-dark" : "")}'>{containerItem.Name.Replace(" lies here.", "")}</p>");
                     }
 
-                    _writeToClient.WriteLine($"<p  class='{(isDark ? "room-dark" : "")}'>{listOfContainerItems}", player.ConnectionId);
+                    _writeToClient.WriteLine(listOfContainerItems.ToString(), player.ConnectionId);
 
                 }
 
