@@ -18,6 +18,7 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
             _clientUi = clientUi;
         }
 
+
         public string ShowEquipmentUI(Player player)
         {
             var displayEquipment = new StringBuilder();
@@ -48,7 +49,141 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
             return displayEquipment.ToString();
         }
 
+        private void EmitRemoveActionToRoom(Item.Item item, Room room, Player player)
+        {
+            foreach (var pc in room.Players)
+            {
+                if (pc.ConnectionId == player.ConnectionId)
+                {
+                    continue;
+                }
 
+                _writer.WriteLine($"<p>{pc.Name} stops using {item.Name.ToLower()}.</p>", pc.ConnectionId);
+            }
+        }
+
+        private void EmitWearActionToRoom(string action, Room room, Player player)
+        {
+            foreach (var pc in room.Players)
+            {
+                if (pc.ConnectionId == player.ConnectionId)
+                {
+                    continue;
+                }
+
+                _writer.WriteLine($"<p>{pc.Name} equips {action}</p>", pc.ConnectionId);
+            }
+        }
+
+
+        public void Remove(string item, Room room, Player player)
+        {
+            var itemToRemove = player.Inventory.FirstOrDefault(x => x.Name.Contains(item, StringComparison.CurrentCultureIgnoreCase) && x.Equipped);
+
+            if (itemToRemove == null)
+            {
+                _writer.WriteLine("<p>You are not wearing that item.</p>", player.ConnectionId);
+                return;
+            }
+
+            itemToRemove.Equipped = false;
+
+            switch (itemToRemove.Slot)
+            {
+                case Equipment.EqSlot.Arms:
+                    player.Equipped.Arms = null;
+                    _writer.WriteLine($"<p>You stop using {itemToRemove.Name.ToLower()}.</p>", player.ConnectionId);
+                    EmitRemoveActionToRoom(itemToRemove, room, player);
+                    break;
+                case Equipment.EqSlot.Body:
+                    player.Equipped.AboutBody = null;
+                    _writer.WriteLine($"<p>You stop using {itemToRemove.Name.ToLower()}.</p>", player.ConnectionId);
+                    EmitRemoveActionToRoom(itemToRemove, room, player);
+                    break;
+                case Equipment.EqSlot.Face:
+                    player.Equipped.Face = null;
+                    _writer.WriteLine($"<p>You stop using {itemToRemove.Name.ToLower()}.</p>", player.ConnectionId);
+                    EmitRemoveActionToRoom(itemToRemove, room, player);
+                    break;
+                case Equipment.EqSlot.Feet:
+                    player.Equipped.Feet = null;
+                    _writer.WriteLine($"<p>You stop using {itemToRemove.Name.ToLower()}.</p>", player.ConnectionId);
+                    EmitRemoveActionToRoom(itemToRemove, room, player);
+                    break;
+                case Equipment.EqSlot.Finger:
+                    player.Equipped.Finger = null; // TODO: slot 2
+                    _writer.WriteLine($"<p>You stop using {itemToRemove.Name.ToLower()}.</p>", player.ConnectionId);
+                    EmitRemoveActionToRoom(itemToRemove, room, player);
+                    break;
+                case Equipment.EqSlot.Floating:
+                    player.Equipped.Floating = null;
+                    _writer.WriteLine($"<p>You stop using {itemToRemove.Name.ToLower()}.</p>", player.ConnectionId);
+                    EmitRemoveActionToRoom(itemToRemove, room, player);
+                    break;
+                case Equipment.EqSlot.Hands:
+                    player.Equipped.Hands = null;
+                    _writer.WriteLine($"<p>You stop using {itemToRemove.Name.ToLower()}.</p>", player.ConnectionId);
+                    EmitRemoveActionToRoom(itemToRemove, room, player);
+                    break;
+                case Equipment.EqSlot.Head:
+                    player.Equipped.Head = null;
+                    _writer.WriteLine($"<p>You stop using {itemToRemove.Name.ToLower()}.</p>", player.ConnectionId);
+                    EmitRemoveActionToRoom(itemToRemove, room, player);
+                    break;
+                case Equipment.EqSlot.Held:
+                    player.Equipped.Held = null; // TODO: handle when wield and shield or 2hand item are equipped
+                    _writer.WriteLine($"<p>You stop using {itemToRemove.Name.ToLower()}.</p>", player.ConnectionId);
+                    EmitRemoveActionToRoom(itemToRemove, room, player);
+                    break;
+                case Equipment.EqSlot.Legs:
+                    player.Equipped.Legs = null;
+                    _writer.WriteLine($"<p>You stop using {itemToRemove.Name.ToLower()}.</p>", player.ConnectionId);
+                    EmitRemoveActionToRoom(itemToRemove, room, player);
+                    break;
+                case Equipment.EqSlot.Light:
+                    player.Equipped.Light = null;
+                    _writer.WriteLine($"<p>You stop using {itemToRemove.Name.ToLower()}.</p>", player.ConnectionId);
+                    EmitRemoveActionToRoom(itemToRemove, room, player);
+                    break;
+                case Equipment.EqSlot.Neck:
+                    player.Equipped.Neck = null; // TODO: slot 2
+                    _writer.WriteLine($"<p>You stop using {itemToRemove.Name.ToLower()}.</p>", player.ConnectionId);
+                    EmitRemoveActionToRoom(itemToRemove, room, player);
+                    break;
+                case Equipment.EqSlot.Shield:
+                    player.Equipped.Shield = null;
+                    _writer.WriteLine($"<p>You stop using {itemToRemove.Name.ToLower()}.</p>", player.ConnectionId);
+                    EmitRemoveActionToRoom(itemToRemove, room, player);
+                    break;
+                case Equipment.EqSlot.Torso:
+                    player.Equipped.Torso = null;
+                    _writer.WriteLine($"<p>You stop using {itemToRemove.Name.ToLower()}.</p>", player.ConnectionId);
+                    EmitRemoveActionToRoom(itemToRemove, room, player);
+                    break;
+                case Equipment.EqSlot.Waist:
+                    player.Equipped.Waist = null;
+                    _writer.WriteLine($"<p>You stop using {itemToRemove.Name.ToLower()}.</p>", player.ConnectionId);
+                    EmitRemoveActionToRoom(itemToRemove, room, player);
+                    break;
+                case Equipment.EqSlot.Wielded:
+                    player.Equipped.Wielded = null;
+                    _writer.WriteLine($"<p>You stop using {itemToRemove.Name.ToLower()}.</p>", player.ConnectionId);
+                    EmitRemoveActionToRoom(itemToRemove, room, player);
+                    break;
+                case Equipment.EqSlot.Wrist:
+                    player.Equipped.Wrist = null; // TODO: slot 2
+                    _writer.WriteLine($"<p>You stop using {itemToRemove.Name.ToLower()}.</p>", player.ConnectionId);
+                    EmitRemoveActionToRoom(itemToRemove, room, player);
+                    break;
+                default:
+                    itemToRemove.Equipped = false;
+                    _writer.WriteLine("<p>You don't know how to remove this.</p>", player.ConnectionId);
+                    break;
+            }
+
+            _clientUi.UpdateEquipment(player);
+            _clientUi.UpdateInventory(player);
+        }
 
         public void ShowEquipment(Player player)
         {
@@ -75,70 +210,87 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
                 case Equipment.EqSlot.Arms:
                     player.Equipped.Arms = itemToWear;
                     _writer.WriteLine($"<p>You wear {itemToWear.Name.ToLower()} on your arms.</p>", player.ConnectionId);
+                    EmitWearActionToRoom($"{itemToWear.Name.ToLower()} on {Helpers.GetPronoun(player.Gender)} arms.", room, player);
                     break;
                 case Equipment.EqSlot.Body:
                     player.Equipped.AboutBody = itemToWear;
                     _writer.WriteLine($"<p>You wear {itemToWear.Name.ToLower()} about your body.</p>", player.ConnectionId);
+                    EmitWearActionToRoom($"{itemToWear.Name.ToLower()} about {Helpers.GetPronoun(player.Gender)} body.", room, player);
                     break;
                 case Equipment.EqSlot.Face:
                     player.Equipped.Face = itemToWear;
                     _writer.WriteLine($"<p>You wear {itemToWear.Name.ToLower()} on your face.</p>", player.ConnectionId);
+                    EmitWearActionToRoom($"{itemToWear.Name.ToLower()} on {Helpers.GetPronoun(player.Gender)} face.", room, player);
                     break;
                 case Equipment.EqSlot.Feet:
                     player.Equipped.Feet = itemToWear;
                     _writer.WriteLine($"<p>You wear {itemToWear.Name.ToLower()} on your feet.</p>", player.ConnectionId);
+                    EmitWearActionToRoom($"{itemToWear.Name.ToLower()} on {Helpers.GetPronoun(player.Gender)} feet.", room, player);
                     break;
                 case Equipment.EqSlot.Finger:
                     player.Equipped.Finger = itemToWear; // TODO: slot 2
                     _writer.WriteLine($"<p>You wear {itemToWear.Name.ToLower()} on your finger.</p>", player.ConnectionId);
+                    EmitWearActionToRoom($"{itemToWear.Name.ToLower()} on {Helpers.GetPronoun(player.Gender)} finger.", room, player);
                     break;
                 case Equipment.EqSlot.Floating:
                     player.Equipped.Floating = itemToWear;
                     _writer.WriteLine($"<p>You release {itemToWear.Name.ToLower()} to float around you.</p>", player.ConnectionId);
+                    EmitWearActionToRoom($"{itemToWear.Name.ToLower()} to float around {Helpers.GetPronoun(player.Gender)}.", room, player);
                     break;
                 case Equipment.EqSlot.Hands:
                     player.Equipped.Hands = itemToWear;
                     _writer.WriteLine($"<p>You wear {itemToWear.Name.ToLower()} on your hands.</p>", player.ConnectionId);
+                    EmitWearActionToRoom($"{itemToWear.Name.ToLower()} on {Helpers.GetPronoun(player.Gender)} hands.", room, player);
                     break;
                 case Equipment.EqSlot.Head:
                     player.Equipped.Head = itemToWear;
                     _writer.WriteLine($"<p>You wear {itemToWear.Name.ToLower()} on your head.</p>", player.ConnectionId);
+                    EmitWearActionToRoom($"{itemToWear.Name.ToLower()} on {Helpers.GetPronoun(player.Gender)} head.", room, player);
                     break;
                 case Equipment.EqSlot.Held:
                     player.Equipped.Held = itemToWear; // TODO: handle when wield and shield or 2hand item are equipped
                     _writer.WriteLine($"<p>You hold {itemToWear.Name.ToLower()} in your hands.</p>", player.ConnectionId);
+                    EmitWearActionToRoom($"{itemToWear.Name.ToLower()} in {Helpers.GetPronoun(player.Gender)} hands.", room, player);
                     break;
                 case Equipment.EqSlot.Legs:
                     player.Equipped.Legs = itemToWear;
                     _writer.WriteLine($"<p>You wear {itemToWear.Name.ToLower()} on your legs.</p>", player.ConnectionId);
+                    EmitWearActionToRoom($"{itemToWear.Name.ToLower()} on {Helpers.GetPronoun(player.Gender)} legs.", room, player);
                     break;
                 case Equipment.EqSlot.Light:
                     player.Equipped.Light = itemToWear;
                     _writer.WriteLine($"<p>You equip {itemToWear.Name.ToLower()} as your light.</p>", player.ConnectionId);
+                    EmitWearActionToRoom($"{itemToWear.Name.ToLower()} as {Helpers.GetPronoun(player.Gender)} light.", room, player);
                     break;
                 case Equipment.EqSlot.Neck:
                     player.Equipped.Neck = itemToWear; // TODO: slot 2
                     _writer.WriteLine($"<p>You wear {itemToWear.Name.ToLower()} around your neck.</p>", player.ConnectionId);
+                    EmitWearActionToRoom($"{itemToWear.Name.ToLower()} around {Helpers.GetPronoun(player.Gender)} neck.", room, player);
                     break;
                 case Equipment.EqSlot.Shield:
                     player.Equipped.Shield = itemToWear;
                     _writer.WriteLine($"<p>You equip {itemToWear.Name.ToLower()} as your shield.</p>", player.ConnectionId);
+                    EmitWearActionToRoom($"{itemToWear.Name.ToLower()} as {Helpers.GetPronoun(player.Gender)} shield.", room, player);
                     break;
                 case Equipment.EqSlot.Torso:
                     player.Equipped.Torso = itemToWear;
                     _writer.WriteLine($"<p>You wear {itemToWear.Name.ToLower()} around your torso.</p>", player.ConnectionId);
+                    EmitWearActionToRoom($"{itemToWear.Name.ToLower()} around {Helpers.GetPronoun(player.Gender)} torso.", room, player);
                     break;
                 case Equipment.EqSlot.Waist:
                     player.Equipped.Waist = itemToWear;
                     _writer.WriteLine($"<p>You wear {itemToWear.Name.ToLower()} around your waist.</p>", player.ConnectionId);
+                    EmitWearActionToRoom($"{itemToWear.Name.ToLower()} around {Helpers.GetPronoun(player.Gender)} waist.", room, player);
                     break;
                 case Equipment.EqSlot.Wielded:
                     player.Equipped.Wielded = itemToWear;
                     _writer.WriteLine($"<p>You wield {itemToWear.Name.ToLower()}.</p>", player.ConnectionId);
+                    EmitWearActionToRoom($"{itemToWear.Name.ToLower()}.", room, player);
                     break;
                 case Equipment.EqSlot.Wrist:
                     player.Equipped.Wrist = itemToWear; // TODO: slot 2
                     _writer.WriteLine($"<p>You wear {itemToWear.Name.ToLower()} on your wrist.</p>", player.ConnectionId);
+                    EmitWearActionToRoom($"{itemToWear.Name.ToLower()} on {Helpers.GetPronoun(player.Gender)} wrist.", room, player);
                     break;
                 default:
                     itemToWear.Equipped = false;
@@ -147,6 +299,7 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
             }
 
             _clientUi.UpdateEquipment(player);
+            _clientUi.UpdateInventory(player);
         }
 
     }

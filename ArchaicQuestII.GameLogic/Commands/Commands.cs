@@ -228,6 +228,9 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "wield":
                     _equipment.Wear(obj, room, player);
                     break;
+                case "remove":
+                    _equipment.Remove(obj, room, player);
+                    break;
                 case "eq":
                 case "equipment":
                     _equipment.ShowEquipment(player);
