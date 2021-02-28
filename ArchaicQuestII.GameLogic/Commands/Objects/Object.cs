@@ -246,7 +246,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
 
             var nthTarget = Helpers.findNth(target);
-            var item = Helpers.findRoomObject(nthTarget, room);
+            var item = Helpers.findObjectInInventory(nthTarget, player);
 
 
             if (item == null)
