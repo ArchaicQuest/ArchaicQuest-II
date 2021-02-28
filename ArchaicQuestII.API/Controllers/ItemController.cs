@@ -151,7 +151,7 @@ namespace ArchaicQuestII.Controllers
         public List<Item> FindItems([FromQuery] string query)
         {
 
-            var items = _db.GetCollection<Item>(DataBase.Collections.Items).FindAll().Where(x => x.Name != null);
+            var items = _db.GetCollection<Item>(DataBase.Collections.Items).FindAll().Where(x => x.Name != null && x.Deleted == false);
 
             if (string.IsNullOrEmpty(query))
             {
