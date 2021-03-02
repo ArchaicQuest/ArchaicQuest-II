@@ -63,6 +63,12 @@ namespace ArchaicQuestII.GameLogic.Character
       [JsonProperty("connectionId")]
       public string ConnectionId { get; set; } = "mob";
 
+      /// <summary>
+      /// To be assigned to mobs on start up,
+      /// used to repop correct mobs
+      /// </summary>
+      [BsonIgnore]
+        public Guid UniqueId { get; set; } = Guid.Empty;
         /// <summary>
         /// Associated Account Id
         /// </summary>

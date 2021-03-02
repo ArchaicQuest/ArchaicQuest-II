@@ -24,11 +24,13 @@ namespace ArchaicQuestII.GameLogic.Core
         Player PlayerAlreadyExists(Guid id);
 
         bool AddRoom(string id, Room room);
-
+        bool AddOriginalRoom(string id, Room room);
         List<Room> GetAllRoomsToRepop();
+        List<Room> GetOriginalRooms();
         List<Room> GetAllRoomsInArea(int id);
         List<Room> GetAllRooms();
         Room GetRoom(string id);
+        Room GetOriginalRoom(string id);
         bool UpdateRoom(string id, Room room, Player player);
 
 

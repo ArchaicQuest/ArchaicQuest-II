@@ -759,5 +759,28 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
             player.Status = status;
             player.LongName = longName;
         }
+
+        public void UpdateLightCondition(Player player, Room room)
+        {
+            var lightSource = player.Equipped.Light;
+
+            if (lightSource == null)
+            {
+                return;
+            }
+
+            lightSource.Condition -= _dice.Roll(1, 1, 5);
+
+            if (lightSource.Condition <= 0)
+            {
+                lightSource.Condition = 0;
+
+                _writeToClient.WriteLine($"<p>Your {lightSource.Name} flickers and fades out.</p>");
+            }
+            else
+            {
+                _writeToClient.WriteLine($"<p>Your {lightSource.Name} flickers.</p>");
+            }
+        }
     }
 }

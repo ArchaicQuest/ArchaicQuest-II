@@ -52,6 +52,7 @@ using ArchaicQuestII.GameLogic.World.Area;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Newtonsoft.Json;
 using Config = ArchaicQuestII.GameLogic.Core.Config;
 using Damage = ArchaicQuestII.GameLogic.Core.Damage;
 using Object = ArchaicQuestII.GameLogic.Commands.Objects.Object;
@@ -176,6 +177,9 @@ namespace ArchaicQuestII.API
                         );
                     }
                 }
+
+                //give mob unique IDs
+                mob.UniqueId = Guid.NewGuid();
             }
         }
 
@@ -241,6 +245,7 @@ namespace ArchaicQuestII.API
                 AddSkillsToMobs(room);
                 MapMobRoomId(room);
                 _cache.AddRoom($"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}", room);
+                _cache.AddOriginalRoom($"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}", JsonConvert.DeserializeObject<Room>(JsonConvert.SerializeObject(room)));
             }
 
 

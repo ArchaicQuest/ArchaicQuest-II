@@ -22,6 +22,7 @@ namespace ArchaicQuestII.GameLogic.Core
     public class Cache : ICache
     {
         private readonly ConcurrentDictionary<string, Player> _playerCache = new ConcurrentDictionary<string, Player>();
+        private readonly ConcurrentDictionary<string, Room> _originalRoomCache = new ConcurrentDictionary<string, Room>();
         private readonly ConcurrentDictionary<string, Room> _roomCache = new ConcurrentDictionary<string, Room>();
         private readonly ConcurrentDictionary<int, Skill.Model.Skill> _skillCache = new ConcurrentDictionary<int, Skill.Model.Skill>();
         private readonly ConcurrentDictionary<string, string> _mapCache = new ConcurrentDictionary<string, string>();
@@ -77,6 +78,11 @@ namespace ArchaicQuestII.GameLogic.Core
             return _roomCache.TryAdd(id, room);
         }
 
+        public bool AddOriginalRoom(string id, Room room)
+        {
+            return _originalRoomCache.TryAdd(id, room);
+        }
+
         //public Room GetRoom(int id)
         //{
         //    _roomCache.TryGetValue(id == 0 ? 1 : id, out Room room);
@@ -99,6 +105,13 @@ namespace ArchaicQuestII.GameLogic.Core
             return room;
         }
 
+        public Room GetOriginalRoom(string id)
+        {
+            _originalRoomCache.TryGetValue(id, out var room);
+
+            return room;
+        }
+
         public List<Room> GetAllRooms()
         {
             var room = _roomCache.Values.ToList();
@@ -106,6 +119,12 @@ namespace ArchaicQuestII.GameLogic.Core
             return room;
         }
 
+        public List<Room> GetOriginalRooms()
+        {
+            return _originalRoomCache.Values.ToList();
+        }
+
+  
         public List<Room> GetAllRoomsInArea(int id)
         {
             var room = _roomCache.Values.Where(x =>x.AreaId.Equals(id)).ToList();
@@ -119,6 +138,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
             return room;
         }
+ 
 
         public bool UpdateRoom(string id, Room room, Player player)
         {

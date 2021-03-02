@@ -9,6 +9,7 @@ using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.World.Room;
+using Newtonsoft.Json;
 
 namespace ArchaicQuestII.GameLogic.Core
 {
@@ -58,23 +59,27 @@ namespace ArchaicQuestII.GameLogic.Core
             while (true)
             {
                 //2 mins
-                await Task.Delay(120000);
+                await Task.Delay(5000);
                 var rooms = _cache.GetAllRoomsToRepop();
                 var players = _cache.GetPlayerCache().Values.ToList();
 
+                
                 foreach (var room in rooms)
                 {
-                    var originalRoom = _db.GetById<Room>(room.Id, DataBase.Collections.Room);
+                    var originalRoom = JsonConvert.DeserializeObject<Room>(JsonConvert.SerializeObject(_cache.GetOriginalRoom(Helpers.ReturnRoomId(room))));
 
                     foreach (var mob in originalRoom.Mobs)
                     {
                         // need to check if mob exists before adding
-                        var mobExist = room.Mobs.FirstOrDefault(x => x.Id.Equals(mob.Id));
+                        var mobExist = room.Mobs.FirstOrDefault(x => x.UniqueId.Equals(mob.UniqueId));
 
-                        if (originalRoom.Mobs.Count != room.Mobs.Count && room.Players.Count == 0)
+                        if (mobExist == null && room.Players.Count == 0)
                         {
+                            room.Mobs.Add(mob);
 
-                            room.Mobs = originalRoom.Mobs;
+                            //get corpse and remove
+                            var corpse = room.Items.FirstOrDefault(x => x.Name.Contains(mob.Name, StringComparison.CurrentCultureIgnoreCase));
+                            room.Items.Remove(corpse);
                         }
                         else
                         {
@@ -136,12 +141,16 @@ namespace ArchaicQuestII.GameLogic.Core
                     room.Exits = originalRoom.Exits;
 
                     //set room clean
-                    room.Clean = true;
-
-                    foreach (var player in room.Players)
+                    if (room.Players.Count == 0)
                     {
-                        _writeToClient.WriteLine("<p>The hairs on your neck stand up.</p>", player.ConnectionId);
+                        room.Clean = true;
+
+                        foreach (var player in room.Players)
+                        {
+                            _writeToClient.WriteLine("<p>The hairs on your neck stand up.</p>", player.ConnectionId);
+                        }
                     }
+                    
 
                 }
 
@@ -247,7 +256,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
             if (idleTime15Mins)
             {
-                _core.Quit(player, _cache.GetRoom(player.RecallId));
+                _core.Quit(player, _cache.GetRoom(player.RoomId));
             }
         }
 

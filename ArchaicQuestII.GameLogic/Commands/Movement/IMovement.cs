@@ -30,5 +30,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
         public void Enter(Player player, Room room, string target);
         public void SetCharacterStatus(Player player, string longName, CharacterStatus.Status status);
 
+        public void UpdateLightCondition(Player player, Room room);
+
     }
 }
