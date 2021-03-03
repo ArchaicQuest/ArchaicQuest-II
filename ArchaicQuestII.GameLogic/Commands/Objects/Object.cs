@@ -81,14 +81,17 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
             {
                 _writer.WriteLine($"<p>You pick up {ItemList.DisplayMoneyAmount(item.Value).ToLower()}.</p>", player.ConnectionId);
                 player.Money.Gold += item.Value;
+                player.Weight += item.Value * 0.1;
             }
             else
             {
                 item.IsHiddenInRoom = false;
                 player.Inventory.Add(item);
+                player.Weight += item.Weight;
                 _writer.WriteLine($"<p>You pick up {item.Name.ToLower()}.</p>", player.ConnectionId);
             }
 
+         
             _updateUi.UpdateInventory(player);
             _updateUi.UpdateScore(player);
             room.Clean = false;
@@ -119,12 +122,14 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                         _writer.WriteLine($"<p>You pick up {ItemList.DisplayMoneyAmount(room.Items[i].Value).ToLower()}.</p>", player.ConnectionId);
 
                         player.Money.Gold += room.Items[i].Value;
+                        player.Weight += room.Items[i].Value * 0.1;
                     }
                     else
                     {
                         room.Items[i].IsHiddenInRoom = false;
                         player.Inventory.Add(room.Items[i]);
                         _writer.WriteLine($"<p>You pick up {room.Items[i].Name.ToLower()}</p>", player.ConnectionId);
+                        player.Weight += room.Items[i].Weight;
                     }
 
                     foreach (var pc in room.Players)
@@ -159,6 +164,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
             }
             room.Clean = false;
             _updateUi.UpdateInventory(player);
+            _updateUi.UpdateScore(player);
             // TODO: You are over encumbered 
 
         }
@@ -184,12 +190,13 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                         player.ConnectionId);
 
                     player.Money.Gold += container.Container.Items[i].Value;
+                    player.Weight += 0.1;
                 }
                 else
                 {
                     container.Container.Items[i].IsHiddenInRoom = false;
                     player.Inventory.Add(container.Container.Items[i]);
-
+                    player.Weight += container.Container.Items[i].Weight;
                     _writer.WriteLine(
                         $"<p>You pick up {container.Container.Items[i].Name.ToLower()} from {container.Name.ToLower()}.</p>",
                         player.ConnectionId);
@@ -283,9 +290,11 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
             }
 
             room.Items.Add(item);
+            player.Weight -= item.Weight;
 
             _writer.WriteLine($"<p>You drop {item.Name.ToLower()}.</p>", player.ConnectionId);
             _updateUi.UpdateInventory(player);
+            _updateUi.UpdateScore(player);
         }
 
         public bool DropGold(string command, Room room, Player player)
@@ -350,6 +359,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                 player.Money.Gold -= number;
                 room.Items.Add(goldCoin);
 
+                player.Weight -= number * 0.1;
+
                 _updateUi.UpdateScore(player);
 
                 return true;
@@ -387,8 +398,10 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                     player.ConnectionId);
 
                 player.Money.Gold -= number;
+                player.Weight -= number * 0.1;
                 target.Money.Gold += number;
-
+                target.Weight += number * 0.1;
+                _updateUi.UpdateScore(player);
                 foreach (var pc in room.Players)
                 {
                     if (pc.Name == player.Name)
@@ -453,6 +466,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
             }
 
             player.Inventory.Remove(item);
+            player.Weight -= item.Weight;
 
             foreach (var pc in room.Players)
             {
@@ -469,6 +483,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
             _writer.WriteLine($"<p>You put {item.Name.ToLower()} into {containerObj.Name.ToLower()}.</p>", player.ConnectionId);
             _updateUi.UpdateInventory(player);
+            _updateUi.UpdateScore(player);
         }
 
         public void DropAllContainer(Item.Item container, Room room, Player player)
@@ -485,7 +500,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
             {
 
                 container.Container.Items.Add(player.Inventory[i]);
-
+                player.Weight -= player.Inventory[i].Weight;
                 _writer.WriteLine($"<p>You place {player.Inventory[i].Name.ToLower()} into {container.Name.ToLower()}.</p>", player.ConnectionId);
 
                 foreach (var pc in room.Players)
@@ -502,7 +517,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
             }
             _updateUi.UpdateInventory(player);
-
+            _updateUi.UpdateScore(player);
             // TODO: You are over encumbered 
 
         }
@@ -565,11 +580,15 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
                     _writer.WriteLine($"<p>{player.Name} gets {ItemList.DisplayMoneyAmount(item.Value).ToLower()} from {containerObj.Name.ToLower()}</p>",
                         pc.ConnectionId);
+
+                    
                 }
                 else
                 {
                     _writer.WriteLine($"<p>{player.Name} gets {item.Name.ToLower()} from {containerObj.Name.ToLower()}.</p>",
                         pc.ConnectionId);
+
+                  
                 }
 
 
@@ -579,12 +598,13 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
             {
                 _writer.WriteLine($"<p>You get {ItemList.DisplayMoneyAmount(item.Value).ToLower()} from {containerObj.Name.ToLower()}.</p>", player.ConnectionId);
                 player.Money.Gold += item.Value;
+                player.Weight += item.Value * 0.1;
             }
             else
             {
                 item.IsHiddenInRoom = false;
                 player.Inventory.Add(item);
-
+                player.Weight += item.Weight;
                 _writer.WriteLine($"<p>You get {item.Name.ToLower()} from {containerObj.Name.ToLower()}.</p>", player.ConnectionId);
             }
 
@@ -612,7 +632,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                 {
 
                     room.Items.Add(player.Inventory[i]);
-
+                    player.Weight -= player.Inventory[i].Weight;
 
                     _writer.WriteLine($"<p>You drop {player.Inventory[i].Name.ToLower()}.</p>", player.ConnectionId);
 
@@ -631,6 +651,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                 }
             }
             _updateUi.UpdateInventory(player);
+            _updateUi.UpdateScore(player);
             // TODO: You are over encumbered 
 
         }
@@ -785,6 +806,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
             }
 
             player.Inventory.Remove(item);
+            player.Weight -= item.Weight;
 
             foreach (var pc in room.Players)
             {

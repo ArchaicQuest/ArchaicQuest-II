@@ -160,6 +160,8 @@ namespace ArchaicQuestII.GameLogic.Character
         public MobEvents Events { get; set; } = new MobEvents();
         public Dictionary<string, int> EventState { get; set; } = new Dictionary<string, int>();
         public List<Quest> QuestLog { get; set; } = new List<Quest>();
+        [JsonProperty("weight")]
+        public double Weight { get; set; } = 0;
 
-    }
+  }
 }

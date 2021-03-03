@@ -29,6 +29,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Score
                 weight += item.Weight == 0 ? 1 : item.Weight;
             }
 
+            player.Weight = weight;
+
             return weight;
         }
 
@@ -45,7 +47,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Score
            sb.Append($"<tr><td class=\"cell-title\">WIS:</td><td>{player.Attributes.Attribute[EffectLocation.Wisdom]}({player.MaxAttributes.Attribute[EffectLocation.Wisdom]})<td class=\"cell-title\">Pos'n:</td><td>Standing</td><td></td><td></td></tr>");
            sb.Append($"<tr><td class=\"cell-title\">CHA:</td><td>{player.Attributes.Attribute[EffectLocation.Charisma]}({player.MaxAttributes.Attribute[EffectLocation.Charisma]})<td class=\"cell-title\">Style:</td><td>Standard</td><td></td><td></td></tr>");
            sb.Append("<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td class=\"cell-title\"></td><td></td><td></td><td></td></tr>");
-           sb.Append($"<tr><td class=\"cell-title\">Qpoints:</td><td>0</td><td class=\"cell-title\">HP</td><td> {player.Attributes.Attribute[EffectLocation.Hitpoints]}/{player.MaxAttributes.Attribute[EffectLocation.Hitpoints]}</td><td class=\"cell-title\">weight:</td><td>{CalculateWeight(player)} (max:{player.Attributes.Attribute[EffectLocation.Strength] * 3})</td></tr>");
+           sb.Append($"<tr><td class=\"cell-title\">Qpoints:</td><td>0</td><td class=\"cell-title\">HP</td><td> {player.Attributes.Attribute[EffectLocation.Hitpoints]}/{player.MaxAttributes.Attribute[EffectLocation.Hitpoints]}</td><td class=\"cell-title\">weight:</td><td>{CalculateWeight(player)} lb. (max:{player.Attributes.Attribute[EffectLocation.Strength] * 3} lb.)</td></tr>");
            sb.Append($"<tr><td class=\"cell-title\">Pract:</td><td>0</td><td class=\"cell-title\">Mana</td><td> {player.Attributes.Attribute[EffectLocation.Mana]}/{player.MaxAttributes.Attribute[EffectLocation.Mana]}</td><td class=\"cell-title\">Mkills:</td><td>0</td></tr>");
            sb.Append($"<tr><td class=\"cell-title\">Train:</td><td>0</td><td class=\"cell-title\">Moves</td><td> {player.Attributes.Attribute[EffectLocation.Moves]}/{player.MaxAttributes.Attribute[EffectLocation.Moves]}</td><td class=\"cell-title\">MDeaths:</td><td>0</td></tr>");
            sb.Append($"<tr><td class=\"cell-title\">Gold:</td><td>{player.Money.Gold}</td><td class=\"cell-title\">XP</td><td>{player.Experience}</td><td class=\"cell-title\"></td><td></td></tr>");
