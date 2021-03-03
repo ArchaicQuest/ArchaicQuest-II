@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Hubs;
+using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.World.Room;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
@@ -215,12 +217,17 @@ namespace ArchaicQuestII.GameLogic.Core
                 var inventory = new StringBuilder();
                 inventory.Append("<p>You are carrying:</p>");
 
-                if (player.Inventory.Count > 0)
+                if (player.Inventory.Where(x => x.Equipped == false).ToList().Count > 0)
                 {
                     inventory.Append("<ul>");
+                    var inv = new ItemList();
 
+                    foreach (var item in player.Inventory.Where(x => x.Equipped == false).ToList())
+                    {
+                        inv.Add(item);
+                    }
 
-                    foreach (var item in player.Inventory.List(false))
+                    foreach (var item in inv.List(false))
                     {
                         inventory.Append($"<li>{item.Name}</li>");
                     }

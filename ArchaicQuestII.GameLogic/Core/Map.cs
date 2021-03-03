@@ -117,7 +117,8 @@ namespace ArchaicQuestII.GameLogic.Core
 
                     };
 
-                    if (edges.FirstOrDefault(x => x.Source == mapEdge.Source && x.Target == mapEdge.Target) == null)
+                    if (edges.FirstOrDefault(x => x.Source == mapEdge.Source && x.Target == mapEdge.Target) == null && node.AreaId ==
+                        node.Exits.NorthWest.AreaId)
                     {
                         edges.Add(mapEdge);
                     }
@@ -133,7 +134,8 @@ namespace ArchaicQuestII.GameLogic.Core
 
                     };
 
-                    if (edges.FirstOrDefault(x => x.Source == mapEdge.Source && x.Target == mapEdge.Target) == null)
+                    if (edges.FirstOrDefault(x => x.Source == mapEdge.Source && x.Target == mapEdge.Target) == null && node.AreaId ==
+                        node.Exits.North.AreaId)
                     {
                         edges.Add(mapEdge);
                     }
@@ -149,7 +151,8 @@ namespace ArchaicQuestII.GameLogic.Core
 
                     };
 
-                    if (edges.FirstOrDefault(x => x.Source == mapEdge.Source && x.Target == mapEdge.Target) == null)
+                    if (edges.FirstOrDefault(x => x.Source == mapEdge.Source && x.Target == mapEdge.Target) == null && node.AreaId ==
+                        node.Exits.NorthEast.AreaId)
                     {
                         edges.Add(mapEdge);
                     }
@@ -165,7 +168,8 @@ namespace ArchaicQuestII.GameLogic.Core
 
                     };
 
-                     if (edges.FirstOrDefault(x => x.Source == mapEdge.Source && x.Target == mapEdge.Target) == null)
+                     if (edges.FirstOrDefault(x => x.Source == mapEdge.Source && x.Target == mapEdge.Target) == null && node.AreaId ==
+                         node.Exits.East.AreaId)
                     {
                         edges.Add(mapEdge);
                     }
@@ -181,7 +185,8 @@ namespace ArchaicQuestII.GameLogic.Core
 
                     };
 
-                     if (edges.FirstOrDefault(x => x.Source == mapEdge.Source && x.Target == mapEdge.Target) == null)
+                     if (edges.FirstOrDefault(x => x.Source == mapEdge.Source && x.Target == mapEdge.Target) == null && node.AreaId ==
+                         node.Exits.South.AreaId)
                     {
                         edges.Add(mapEdge);
                     }
@@ -213,7 +218,8 @@ namespace ArchaicQuestII.GameLogic.Core
 
                     };
 
-                    if (edges.FirstOrDefault(x => x.Source == mapEdge.Source && x.Target == mapEdge.Target) == null)
+                    if (edges.FirstOrDefault(x => x.Source == mapEdge.Source && x.Target == mapEdge.Target) == null && node.AreaId ==
+                        node.Exits.SouthWest.AreaId)
                     {
                         edges.Add(mapEdge);
                     }
@@ -229,7 +235,8 @@ namespace ArchaicQuestII.GameLogic.Core
 
                     };
 
-                     if (edges.FirstOrDefault(x => x.Source == mapEdge.Source && x.Target == mapEdge.Target) == null)
+                     if (edges.FirstOrDefault(x => x.Source == mapEdge.Source && x.Target == mapEdge.Target) == null && node.AreaId == 
+                         node.Exits.West.AreaId )
                     {
                         edges.Add(mapEdge);
                     }

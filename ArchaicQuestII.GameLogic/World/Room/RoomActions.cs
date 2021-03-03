@@ -31,8 +31,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
         /// </summary>
         public void Look(string target, Room room, Player player)
         {
-            var timer = new Stopwatch();
-            timer.Start();
+            
             if (player.Status == CharacterStatus.Status.Sleeping)
             {
                 _writeToClient.WriteLine("You can't do that while asleep.", player.ConnectionId);
@@ -76,11 +75,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
 
             _writeToClient.WriteLine(roomDesc.ToString(), player.ConnectionId);
-            TimeSpan timeTaken = timer.Elapsed;
-
-            var elapsed = timeTaken.ToString(@"s\.fff");
-
-            _writeToClient.WriteLine("<p>Debugging lag - look command took " + elapsed + " seconds</p>", player.ConnectionId);
+           
         }
 
         public void LookInContainer(string target, Room room, Player player)

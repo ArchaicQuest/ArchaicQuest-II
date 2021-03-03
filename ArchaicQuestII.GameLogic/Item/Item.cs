@@ -160,7 +160,7 @@ namespace ArchaicQuestII.GameLogic.Item
         public Book Book { get; set; }
         public Modifier Modifier { get; set; }
         public ArmourRating ArmourRating { get; set; }
-        public int Weight { get; set; } = 2;
+        public float Weight { get; set; } = 2;
 
         public int Gold { get; set; } = 0;
         public int Silver { get; set; } = 0;

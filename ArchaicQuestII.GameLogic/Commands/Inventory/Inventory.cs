@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Core;
+using ArchaicQuestII.GameLogic.Item;
 
 namespace ArchaicQuestII.GameLogic.Commands.Inventory
 {
@@ -19,12 +21,17 @@ namespace ArchaicQuestII.GameLogic.Commands.Inventory
             var inventory = new StringBuilder();
             inventory.Append("<p>You are carrying:</p>");
 
-            if (player.Inventory.Count > 0)
+            if (player.Inventory.Where(x => x.Equipped == false).ToList().Count > 0)
             {
                 inventory.Append("<ul>");
+                var inv = new ItemList();
 
+                foreach (var item in player.Inventory.Where(x => x.Equipped == false).ToList())
+                {
+                    inv.Add(item);
+                }
 
-                foreach (var item in player.Inventory.List(false))
+                foreach (var item in inv.List(false))
                 {
                     inventory.Append($"<li>{item.Name}</li>");
                 }
