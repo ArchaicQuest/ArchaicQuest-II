@@ -26,7 +26,9 @@ namespace ArchaicQuestII.GameLogic.Item
             Seating,
             Inanimate,
             Money,
-            Portal
+            Portal,
+            Crafting,
+            Material,
         }
 
         [Flags]

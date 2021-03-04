@@ -39,7 +39,8 @@ namespace ArchaicQuestII.DataAccess
             Socials,
             Quests,
             Users,
-            Log
+            Log,
+            CraftingRecipes
         }
 
         public bool Save<T>(T data, Collections collectionName)
@@ -104,6 +105,7 @@ namespace ArchaicQuestII.DataAccess
                 Collections.Quests => "Quests",
                 Collections.Users => "Users",
                 Collections.Log => "Log",
+                Collections.CraftingRecipes => "CraftingRecipes",
                 _ => "error",
             };
         }
