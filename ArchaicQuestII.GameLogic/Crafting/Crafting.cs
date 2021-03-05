@@ -15,15 +15,14 @@ namespace ArchaicQuestII.GameLogic.Crafting
         private IWriteToClient _writeToClient;
         private ICache _cache;
         private IDice _dice;
-        private IUpdateClientUI _clientUi;
-        private IObject _object;
-        public Crafting(IWriteToClient writeToClient, ICache cache, IDice dice, IUpdateClientUI clientUi, IObject Object)
+        private IUpdateClientUI _clientUi; 
+        public Crafting(IWriteToClient writeToClient, ICache cache, IDice dice, IUpdateClientUI clientUi)
         {
             _writeToClient = writeToClient;
             _cache = cache;
             _dice = dice;
             _clientUi = clientUi;
-            _object = Object;
+            
         }
         public void ListCrafts(Player player)
         {

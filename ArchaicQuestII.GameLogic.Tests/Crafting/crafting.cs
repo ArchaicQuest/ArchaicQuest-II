@@ -17,13 +17,15 @@ namespace ArchaicQuestII.GameLogic.Tests.Crafting
     {
         private readonly Mock<IWriteToClient> _writer;
         private readonly Mock<ICache> _cache;
-        private readonly Mock<ICrafting> _crafting;
+        private readonly Mock<IUpdateClientUI> _updateClientUi;
+        private readonly Mock<IDice> _dice;
 
         public CraftingTest()
         {
             _writer = new Mock<IWriteToClient>();
             _cache = new Mock<ICache>();
-            _crafting = new Mock<ICrafting>();
+            _updateClientUi = new Mock<IUpdateClientUI>();
+            _dice = new Mock<IDice>();
         }
 
         [Fact]
@@ -38,7 +40,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Crafting
                 Inventory = new ItemList()
             };
 
-            new GameLogic.Crafting.Crafting(_writer.Object, _cache.Object).ListCrafts(player);
+            new GameLogic.Crafting.Crafting(_writer.Object, _cache.Object, _dice.Object, _updateClientUi.Object).ListCrafts(player);
 
             _writer.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("<p>You can't do that while sleeping.</p>")), "1"), Times.Once());
         }
@@ -55,7 +57,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Crafting
                 Inventory = new ItemList()
             };
  
-           new GameLogic.Crafting.Crafting(_writer.Object, _cache.Object).ListCrafts(player);
+           new GameLogic.Crafting.Crafting(_writer.Object, _cache.Object, _dice.Object, _updateClientUi.Object).ListCrafts(player);
 
             _writer.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("<p>You don't have any materials to craft a thing.</p>")), "1"), Times.Once());
         }
@@ -78,7 +80,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Crafting
                 Inventory = new ItemList(){item}
             };
 
-            new GameLogic.Crafting.Crafting(_writer.Object, _cache.Object).ListCrafts(player);
+            new GameLogic.Crafting.Crafting(_writer.Object, _cache.Object, _dice.Object, _updateClientUi.Object).ListCrafts(player);
 
             _writer.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("<p>No crafting recipes have been set up.</p>")), "1"), Times.Once());
         }
@@ -119,7 +121,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Crafting
             listOfRecipes.Add(recipe);
             _cache.Setup(x => x.GetCraftingRecipes()).Returns(listOfRecipes);
 
-            new GameLogic.Crafting.Crafting(_writer.Object, _cache.Object).ListCrafts(player);
+            new GameLogic.Crafting.Crafting(_writer.Object, _cache.Object, _dice.Object, _updateClientUi.Object).ListCrafts(player);
 
             var sb = new StringBuilder();
             sb.Append("<p>You can craft the following items:</p");
@@ -165,7 +167,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Crafting
             listOfRecipes.Add(recipe);
             _cache.Setup(x => x.GetCraftingRecipes()).Returns(listOfRecipes);
 
-            new GameLogic.Crafting.Crafting(_writer.Object, _cache.Object).ListCrafts(player);
+            new GameLogic.Crafting.Crafting(_writer.Object, _cache.Object, _dice.Object, _updateClientUi.Object).ListCrafts(player);
  
             _writer.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("<p>No crafting recipes found with the current materials you have.</p>")), "1"), Times.Once());
         }
