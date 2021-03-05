@@ -41,6 +41,7 @@ using ArchaicQuestII.GameLogic.Commands.Inventory;
 using ArchaicQuestII.GameLogic.Commands.Objects;
 using ArchaicQuestII.GameLogic.Commands.Score;
 using ArchaicQuestII.GameLogic.Commands.Skills;
+using ArchaicQuestII.GameLogic.Crafting;
 using ArchaicQuestII.GameLogic.Hubs.Telnet;
 using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.Skill.Core;
@@ -129,6 +130,7 @@ namespace ArchaicQuestII.API
             services.AddSingleton<IQuestLog, QuestLog>();
             services.AddSingleton<IMobFunctions, Shop>();
             services.AddSingleton<IHelp, HelpFile>();
+            services.AddSingleton<ICrafting, Crafting>();
             services.AddSingleton<IWriteToClient, WriteToClient>((factory) => new WriteToClient(_hubContext, TelnetHub.Instance));
            
         }
@@ -422,6 +424,12 @@ namespace ArchaicQuestII.API
             foreach (var helpFile in helpFiles)
             {
                 _cache.AddHelp(helpFile.Id, helpFile);
+            }
+
+            var craftingRecipes = _db.GetList<CraftingRecipes>(DataBase.Collections.CraftingRecipes);
+            foreach (var craftingRecipe in craftingRecipes)
+            {
+                _cache.AddCraftingRecipes(craftingRecipe.Id, craftingRecipe);
             }
 
             if (!_db.DoesCollectionExist(DataBase.Collections.Users))

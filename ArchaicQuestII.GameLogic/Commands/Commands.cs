@@ -17,6 +17,7 @@ using ArchaicQuestII.GameLogic.Commands.Objects;
 using ArchaicQuestII.GameLogic.Commands.Score;
 using ArchaicQuestII.GameLogic.Commands.Skills;
 using ArchaicQuestII.GameLogic.Core;
+using ArchaicQuestII.GameLogic.Crafting;
 using ArchaicQuestII.GameLogic.Socials;
 using ArchaicQuestII.GameLogic.Spell.Interface;
 using MoonSharp.Interpreter;
@@ -44,6 +45,7 @@ namespace ArchaicQuestII.GameLogic.Commands
         private readonly IMobFunctions _mobFunctions;
         private readonly IHelp _help;
         private readonly IMobScripts _mobScripts;
+        private readonly ICrafting _crafting;
 
         public Commands(
             IMovement movement,
@@ -63,7 +65,8 @@ namespace ArchaicQuestII.GameLogic.Commands
             ICore core,
             IMobFunctions mobFunctions,
             IHelp help,
-            IMobScripts mobScripts
+            IMobScripts mobScripts,
+            ICrafting crafting
             )
         {
             _movement = movement;
@@ -84,6 +87,7 @@ namespace ArchaicQuestII.GameLogic.Commands
             _mobFunctions = mobFunctions;
             _help = help;
             _mobScripts = mobScripts;
+            _crafting = crafting;
         }
  
         public void CommandList(string key, string obj, string target, string fullCommand, Player player, Room room)
@@ -326,6 +330,9 @@ namespace ArchaicQuestII.GameLogic.Commands
                     break;
                 case "quit":
                     _core.Quit(player, room);
+                    break;
+                case "craft":
+                    _crafting.CraftingManager(player, room, fullCommand);
                     break;
                 default:
                         _commandHandler.HandleCommand(key,obj,target, player, room);

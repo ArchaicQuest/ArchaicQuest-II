@@ -6,6 +6,7 @@ using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Emote;
 using ArchaicQuestII.GameLogic.Character.Help;
 using ArchaicQuestII.GameLogic.Character.Model;
+using ArchaicQuestII.GameLogic.Crafting;
 using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Core
@@ -80,6 +81,10 @@ namespace ArchaicQuestII.GameLogic.Core
         public bool AddHelp(int id, Help help);
         public Help GetHelp(int id);
         public List<Help> FindHelp(string id);
+
+        public bool AddCraftingRecipes(int id, CraftingRecipes CraftingRecipes);
+        public CraftingRecipes GetCraftingRecipes(int id, CraftingRecipes recipe);
+        public List<CraftingRecipes> GetCraftingRecipes();
 
         public bool AddClass(string id, Class pcClass);
 

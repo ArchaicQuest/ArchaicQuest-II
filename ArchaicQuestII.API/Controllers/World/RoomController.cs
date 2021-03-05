@@ -11,6 +11,7 @@ using ArchaicQuestII.API.Models;
 using ArchaicQuestII.GameLogic.Character.Help;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Core;
+using ArchaicQuestII.GameLogic.Crafting;
 using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.Skill.Model;
 using Newtonsoft.Json;
@@ -182,6 +183,12 @@ namespace ArchaicQuestII.API.World
                 foreach (var skill in skills)
                 {
                     _cache.AddSkill(skill.Id, skill);
+                }
+
+                var craftingRecipes = _db.GetList<CraftingRecipes>(DataBase.Collections.CraftingRecipes);
+                foreach (var craftingRecipe in craftingRecipes)
+                {
+                    _cache.AddCraftingRecipes(craftingRecipe.Id, craftingRecipe);
                 }
             }
             catch (Exception ex)

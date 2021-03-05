@@ -517,7 +517,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
             }
             _updateUi.UpdateInventory(player);
-            _updateUi.UpdateScore(player);
+             _updateUi.UpdateScore(player);
             // TODO: You are over encumbered 
 
         }
@@ -651,7 +651,6 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                 }
             }
             _updateUi.UpdateInventory(player);
-            _updateUi.UpdateScore(player);
             // TODO: You are over encumbered 
 
         }
