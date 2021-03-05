@@ -124,7 +124,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Crafting
             new GameLogic.Crafting.Crafting(_writer.Object, _cache.Object, _dice.Object, _updateClientUi.Object).ListCrafts(player);
 
             var sb = new StringBuilder();
-            sb.Append("<p>You can craft the following items:</p");
+            sb.Append("<p>You can craft the following items:</p>");
             sb.Append("<table class='simple'>");
             sb.Append($"<tr><td>Name</td><td>Materials</td></tr>");
             sb.Append($"<tr><td>Wooden sword</td><td>Wood x2, </td></tr>");
