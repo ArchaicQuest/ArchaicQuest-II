@@ -628,7 +628,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
             for (var i = player.Inventory.Count - 1; i >= 0; i--)
             {
-                if (player.Inventory[i].Stuck == false)
+                if (player.Inventory[i].Stuck == false && player.Inventory[i].Equipped == false)
                 {
 
                     room.Items.Add(player.Inventory[i]);

@@ -123,7 +123,7 @@ namespace ArchaicQuestII.GameLogic.Crafting
             {
                var craftItem = player.Inventory.FirstOrDefault(x => x.Name.Equals(material.Material, StringComparison.CurrentCultureIgnoreCase));
 
-               var limit = 0;
+               var limit = 1;
                for (var i = player.Inventory.Count - 1; i >= 0; i--)
                {
                    if (player.Inventory[i].Name == craftItem.Name && limit <= material.Quantity)
@@ -137,9 +137,7 @@ namespace ArchaicQuestII.GameLogic.Crafting
 
             }
 
-            _clientUi.UpdateScore(player);
-            _clientUi.UpdateInventory(player);
-
+          
             var roll = _dice.Roll(1, 1, 100);
 
             if (roll > 50)
@@ -148,10 +146,16 @@ namespace ArchaicQuestII.GameLogic.Crafting
                 player.Weight += recipe.CreatedItem.Weight;
                 _writeToClient.WriteLine($"<p>You slave over the crafting bench working away.</p>", player.ConnectionId, 2000);
                 _writeToClient.WriteLine($"<p class='improve'>You have crafted successfully {recipe.Title}.</p>", player.ConnectionId, 4000);
+
+                _clientUi.UpdateScore(player);
+                _clientUi.UpdateInventory(player);
+
             }
             else
             {
-               
+                _clientUi.UpdateScore(player);
+                _clientUi.UpdateInventory(player);
+
                 _writeToClient.WriteLine($"<p>You slave over the crafting bench working away.</p>", player.ConnectionId, 2000);
                 _writeToClient.WriteLine($"<p>You have failed to craft {recipe.Title}. It looks nothing like!</p>", player.ConnectionId, 4000);
             }
