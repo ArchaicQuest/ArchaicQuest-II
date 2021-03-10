@@ -29,6 +29,13 @@ namespace ArchaicQuestII.GameLogic.Item
             Portal,
             Crafting,
             Material,
+            Cooking,
+            Furnace,
+            SpinningWheel,
+            Anvil,
+            MortarAndPestle,
+            Cooked
+          
         }
 
         [Flags]

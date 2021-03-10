@@ -131,6 +131,7 @@ namespace ArchaicQuestII.API
             services.AddSingleton<IMobFunctions, Shop>();
             services.AddSingleton<IHelp, HelpFile>();
             services.AddSingleton<ICrafting, Crafting>();
+            services.AddSingleton<ICooking, Cooking>();
             services.AddSingleton<IWriteToClient, WriteToClient>((factory) => new WriteToClient(_hubContext, TelnetHub.Instance));
            
         }
@@ -266,6 +267,17 @@ namespace ArchaicQuestII.API
                     _db.Save(data, DataBase.Collections.Skill);
                 }
 
+            }
+            else
+            {
+                var currentSkills = _db.GetList<Skill>(DataBase.Collections.Skill);
+                foreach (var data in new SeedCoreSkills().SeedData())
+                {
+                    if (currentSkills.FirstOrDefault(x => x.Name == data.Name) == null)
+                    {
+                        _db.Save(data, DataBase.Collections.Skill);
+                    }
+                }
             }
 
             if (!_db.DoesCollectionExist(DataBase.Collections.AttackType))

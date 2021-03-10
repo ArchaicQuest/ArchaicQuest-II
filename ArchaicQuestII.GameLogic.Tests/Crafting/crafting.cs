@@ -5,31 +5,33 @@ using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
+using ArchaicQuestII.GameLogic.Commands.Skills;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Crafting;
 using ArchaicQuestII.GameLogic.Item;
+using ArchaicQuestII.GameLogic.World.Room;
 using Xunit;
 
 namespace ArchaicQuestII.GameLogic.Tests.Crafting
 {
    
-    public class CraftingTest
+    public class CookingTest
     {
         private readonly Mock<IWriteToClient> _writer;
-        private readonly Mock<ICache> _cache;
         private readonly Mock<IUpdateClientUI> _updateClientUi;
         private readonly Mock<IDice> _dice;
+        private readonly Mock<ISkills> _skills;
 
-        public CraftingTest()
+        public CookingTest()
         {
             _writer = new Mock<IWriteToClient>();
-            _cache = new Mock<ICache>();
             _updateClientUi = new Mock<IUpdateClientUI>();
             _dice = new Mock<IDice>();
+            _skills = new Mock<ISkills>();
         }
 
         [Fact]
-        public void Returns_error_if_player_is_not_standing()
+        public void Returns_food_item()
         {
 
             var player = new Player()
@@ -40,137 +42,77 @@ namespace ArchaicQuestII.GameLogic.Tests.Crafting
                 Inventory = new ItemList()
             };
 
-            new GameLogic.Crafting.Crafting(_writer.Object, _cache.Object, _dice.Object, _updateClientUi.Object).ListCrafts(player);
+            var room = new Room();
 
-            _writer.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("<p>You can't do that while sleeping.</p>")), "1"), Times.Once());
-        }
 
-        [Fact]
-        public void Returns_error_if_no_materials()
-        {
-
-            var player = new Player()
+            var pot = new GameLogic.Item.Item()
             {
-                ConnectionId = "1",
-                Name = "Malleus",
-                Status = CharacterStatus.Status.Standing,
-                Inventory = new ItemList()
-            };
- 
-           new GameLogic.Crafting.Crafting(_writer.Object, _cache.Object, _dice.Object, _updateClientUi.Object).ListCrafts(player);
-
-            _writer.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("<p>You don't have any materials to craft a thing.</p>")), "1"), Times.Once());
-        }
-
-        [Fact]
-        public void Returns_error_if_no_recipes_configured()
-        {
-
-            var item = new GameLogic.Item.Item()
-            {
-                Name = "Wood",
-                ItemType = GameLogic.Item.Item.ItemTypes.Material,
-            };
-
-            var player = new Player()
-            {
-                ConnectionId = "1",
-                Name = "Malleus",
-                Status = CharacterStatus.Status.Standing,
-                Inventory = new ItemList(){item}
-            };
-
-            new GameLogic.Crafting.Crafting(_writer.Object, _cache.Object, _dice.Object, _updateClientUi.Object).ListCrafts(player);
-
-            _writer.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("<p>No crafting recipes have been set up.</p>")), "1"), Times.Once());
-        }
-
-        [Fact]
-        public void Returns_list_of_recipes()
-        {
-
-            var item = new GameLogic.Item.Item()
-            {
-                Name = "Wood",
-                ItemType = GameLogic.Item.Item.ItemTypes.Material,
-            };
-
-            var player = new Player()
-            {
-                ConnectionId = "1",
-                Name = "Malleus",
-                Status = CharacterStatus.Status.Standing,
-                Inventory = new ItemList() { item, item }
-            };
-
-            var recipe = new CraftingRecipes()
-            {
-                Description = "",
-                Title = "Wooden sword",
-                CraftingMaterials = new List<CraftingMaterials>()
+                Name = "cook pot",
+                Container = new Container()
                 {
-                    new CraftingMaterials()
+                    IsOpen = true,
+                    Items = new ItemList()
                     {
-                        Quantity = 2,
-                        Material = "Wood"
+                        new GameLogic.Item.Item()
+                        {
+                            Name = "Carrot",
+                            ItemType = GameLogic.Item.Item.ItemTypes.Material,
+                            Modifier = new Modifier()
+                            {
+                                HP = 5
+                            }
+                        },
+                        new GameLogic.Item.Item()
+                        {
+                            Name = "Mango",
+                            ItemType = GameLogic.Item.Item.ItemTypes.Material,
+                            Modifier = new Modifier()
+                            {
+                                Mana = 10
+                            }
+                        },
+                        new GameLogic.Item.Item()
+                        {
+                            Name = "Melon",
+                            ItemType = GameLogic.Item.Item.ItemTypes.Material,
+                            Modifier = new Modifier()
+                            {
+                                HP = 5
+                            }
+                        }
                     }
-                }
+                },
+                ItemType = GameLogic.Item.Item.ItemTypes.Cooking
             };
 
-            var listOfRecipes = new List<CraftingRecipes>();
-            listOfRecipes.Add(recipe);
-            _cache.Setup(x => x.GetCraftingRecipes()).Returns(listOfRecipes);
+            _dice.Setup(x => x.Roll(1, It.IsAny<int>(), It.IsAny<int>()))
+                .Returns(1);
 
-            new GameLogic.Crafting.Crafting(_writer.Object, _cache.Object, _dice.Object, _updateClientUi.Object).ListCrafts(player);
-
-            var sb = new StringBuilder();
-            sb.Append("<p>You can craft the following items:</p>");
-            sb.Append("<table class='simple'>");
-            sb.Append($"<tr><td>Name</td><td>Materials</td></tr>");
-            sb.Append($"<tr><td>Wooden sword</td><td>Wood x2, </td></tr>");
-            sb.Append($"</table>");
-            _writer.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains(sb.ToString())), "1"), Times.Once());
-        }
-
-        [Fact]
-        public void Returns_error_if_not_enough_quantity_of_materials() {
-
-            var item = new GameLogic.Item.Item()
+            var ingredient = new Tuple<GameLogic.Item.Item, int>(new GameLogic.Item.Item()
             {
-                Name = "Wood",
+                Name = "Mango",
                 ItemType = GameLogic.Item.Item.ItemTypes.Material,
-            };
-
-            var player = new Player()
-            {
-                ConnectionId = "1",
-                Name = "Malleus",
-                Status = CharacterStatus.Status.Standing,
-                Inventory = new ItemList() { item }
-            };
-
-            var recipe = new CraftingRecipes()
-            {
-                Description = "",
-                Title = "Wooden sword",
-                CraftingMaterials = new List<CraftingMaterials>()
+                Modifier = new Modifier()
                 {
-                    new CraftingMaterials()
-                    {
-                        Quantity = 2,
-                        Material = "Wood"
-                    }
+                    Mana = 10
                 }
+            }, 3);
+
+
+
+            var ingredients = new List<Tuple<GameLogic.Item.Item, int>>()
+            {
+                ingredient
             };
 
-            var listOfRecipes = new List<CraftingRecipes>();
-            listOfRecipes.Add(recipe);
-            _cache.Setup(x => x.GetCraftingRecipes()).Returns(listOfRecipes);
 
-            new GameLogic.Crafting.Crafting(_writer.Object, _cache.Object, _dice.Object, _updateClientUi.Object).ListCrafts(player);
- 
-            _writer.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("<p>No crafting recipes found with the current materials you have.</p>")), "1"), Times.Once());
+            var food =   new GameLogic.Crafting.Cooking(_writer.Object,  _dice.Object, _updateClientUi.Object, _skills.Object).GenerateCookedItem(player, room, ingredients);
+
+          Assert.NotNull(food);
         }
+
+       
+    
 
     }
 }

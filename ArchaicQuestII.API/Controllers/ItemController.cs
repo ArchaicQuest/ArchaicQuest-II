@@ -68,6 +68,12 @@ namespace ArchaicQuestII.Controllers
                     Moves = item.Modifier.Moves,
                     SpellDam = item.Modifier.SpellDam,
                     Saves = item.Modifier.Saves,
+                    Strength = item.Modifier.Strength,
+                    Dexterity = item.Modifier.Dexterity,
+                    Constitution = item.Modifier.Constitution,
+                    Wisdom = item.Modifier.Wisdom,
+                    Intelligence = item.Modifier.Intelligence,
+                    Charisma = item.Modifier.Charisma
                 },
                 DecayTimer = item.DecayTimer,
                 Description = item.Description,

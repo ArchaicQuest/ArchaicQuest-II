@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Commands.Objects;
+using ArchaicQuestII.GameLogic.Commands.Skills;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.World.Room;
 
@@ -14,15 +16,16 @@ namespace ArchaicQuestII.GameLogic.Crafting
     {
         private IWriteToClient _writeToClient;
         private ICache _cache;
-        private IDice _dice;
-        private IUpdateClientUI _clientUi; 
-        public Crafting(IWriteToClient writeToClient, ICache cache, IDice dice, IUpdateClientUI clientUi)
+        private IGain _gain;
+        private IUpdateClientUI _clientUi;
+        private ISkills _skills;
+        public Crafting(IWriteToClient writeToClient, ICache cache, IGain gain, IUpdateClientUI clientUi, ISkills skills)
         {
             _writeToClient = writeToClient;
             _cache = cache;
-            _dice = dice;
+            _gain = gain;
             _clientUi = clientUi;
-            
+            _skills = skills;
         }
         public void ListCrafts(Player player)
         {
@@ -103,7 +106,7 @@ namespace ArchaicQuestII.GameLogic.Crafting
         {
             var craftingRecipes = ReturnValidRecipes(player);
 
-            if (room.Items.FirstOrDefault(x => x.ItemType == Item.Item.ItemTypes.Crafting) == null)
+            if (room.Items.FirstOrDefault(x => x.ItemType == Item.Item.ItemTypes.Crafting) == null && player.Inventory.FirstOrDefault(x => x.ItemType == Item.Item.ItemTypes.Crafting) == null)
             {
                 _writeToClient.WriteLine("<p>To begin crafting you require the correct tools such as a crafting bench.</p>", player.ConnectionId);
                 return;
@@ -117,35 +120,56 @@ namespace ArchaicQuestII.GameLogic.Crafting
                 _writeToClient.WriteLine("<p>You can't craft that.</p>", player.ConnectionId);
                 return;
             }
-            _writeToClient.WriteLine($"<p>You begin crafting {recipe.Title}.</p>", player.ConnectionId);
-            // use up materials
-            foreach (var material in recipe.CraftingMaterials)
+            _writeToClient.WriteLine($"<p>You begin crafting {Helpers.AddArticle(recipe.Title).ToLower()}.</p>", player.ConnectionId);
+            
+            var success = _skills.SuccessCheck(player, "crafting");
+
+            if (success)
             {
-               var craftItem = player.Inventory.FirstOrDefault(x => x.Name.Equals(material.Material, StringComparison.CurrentCultureIgnoreCase));
 
-               var limit = 1;
-               for (var i = player.Inventory.Count - 1; i >= 0; i--)
-               {
-                   if (player.Inventory[i].Name == craftItem.Name && limit <= material.Quantity)
-                   {
-                       limit++;
-                       player.Weight -= craftItem.Weight;
-                        player.Inventory.RemoveAt(i);
-                   }
-               }
+                // use up materials
+                foreach (var material in recipe.CraftingMaterials)
+                {
+                    var craftItem = player.Inventory.FirstOrDefault(x => x.Name.Equals(material.Material, StringComparison.CurrentCultureIgnoreCase));
+
+                    if (craftItem == null)
+                    {
+                        _writeToClient.WriteLine("You appear to be missing required items", player.ConnectionId);
+                        return;
+                    }
+
+                    var limit = 1;
+                    for (var i = player.Inventory.Count - 1; i >= 0; i--)
+                    {
+                        if (player.Inventory[i].Name == craftItem.Name && limit <= material.Quantity)
+                        {
+                            limit++;
+                            player.Weight -= craftItem.Weight;
+                            player.Inventory.RemoveAt(i);
+                        }
+                    }
 
 
-            }
+                }
 
-          
-            var roll = _dice.Roll(1, 1, 100);
+                if (recipe.CreatedItemDropsInRoom)
+                {
+                    room.Items.Add(recipe.CreatedItem);
+                    _writeToClient.WriteLine($"<p>You continue working on {Helpers.AddArticle(recipe.Title).ToLower()}.</p>",
+                        player.ConnectionId, 2000);
 
-            if (roll > 50)
-            {
-                player.Inventory.Add(recipe.CreatedItem);
-                player.Weight += recipe.CreatedItem.Weight;
-                _writeToClient.WriteLine($"<p>You slave over the crafting bench working away.</p>", player.ConnectionId, 2000);
-                _writeToClient.WriteLine($"<p class='improve'>You have crafted successfully {recipe.Title}.</p>", player.ConnectionId, 4000);
+                    _writeToClient.WriteLine($"<p class='improve'>You have successfully created {Helpers.AddArticle(recipe.Title).ToLower()}.</p>",
+                        player.ConnectionId, 4000);
+                }
+                else
+                {
+                    player.Inventory.Add(recipe.CreatedItem);
+                    player.Weight += recipe.CreatedItem.Weight;
+                    _writeToClient.WriteLine($"<p>You slave over the crafting bench working away.</p>",
+                        player.ConnectionId, 2000);
+                    _writeToClient.WriteLine($"<p class='improve'>You have crafted successfully {Helpers.AddArticle(recipe.Title).ToLower()}.</p>",
+                        player.ConnectionId, 4000);
+                }
 
                 _clientUi.UpdateScore(player);
                 _clientUi.UpdateInventory(player);
@@ -156,8 +180,22 @@ namespace ArchaicQuestII.GameLogic.Crafting
                 _clientUi.UpdateScore(player);
                 _clientUi.UpdateInventory(player);
 
-                _writeToClient.WriteLine($"<p>You slave over the crafting bench working away.</p>", player.ConnectionId, 2000);
-                _writeToClient.WriteLine($"<p>You have failed to craft {recipe.Title}. It looks nothing like!</p>", player.ConnectionId, 4000);
+                if (recipe.CreatedItemDropsInRoom)
+                {
+                   
+
+                    _writeToClient.WriteLine($"<p>You have failed in making {recipe.Title}.</p>",
+                        player.ConnectionId, 2000);
+                }
+                else
+                {
+
+                   
+                    _writeToClient.WriteLine($"<p>You have failed to craft {recipe.Title}. It looks nothing like!</p>",
+                        player.ConnectionId, 2000);
+                }
+
+                _skills.LearnMistakes(player, "Crafting", 2000);
             }
             
 

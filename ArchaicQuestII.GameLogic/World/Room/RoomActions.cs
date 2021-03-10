@@ -91,7 +91,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
             var nthTarget = Helpers.findNth(target);
             var container = Helpers.findRoomObject(nthTarget, room) ?? Helpers.findObjectInInventory(nthTarget, player);
 
-            if (container != null && container.ItemType != Item.Item.ItemTypes.Container)
+            if (container != null && (container.ItemType != Item.Item.ItemTypes.Container && container.ItemType != Item.Item.ItemTypes.Cooking))
             {
                 if (container.ItemType == Item.Item.ItemTypes.Portal)
                 {

@@ -42,6 +42,7 @@ namespace ArchaicQuestII.API.Controllers.Core
                 Title = recipes.Title,
                 Description = recipes.Description,
                 CreatedItem = recipes.CreatedItem,
+                CreatedItemDropsInRoom = recipes.CreatedItemDropsInRoom,
                 DateUpdated = DateTime.Now
             };
 

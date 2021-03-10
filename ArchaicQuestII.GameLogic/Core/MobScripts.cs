@@ -294,7 +294,7 @@ namespace ArchaicQuestII.GameLogic.Core
                 _writeToClient.WriteLine($"<p class='gain'>Quest Complete: {quest.Title}!</p>", player.ConnectionId);
                 _writeToClient.WriteLine($"<p class='gain'>You gain {quest.ExpGain} experience points{(quest.GoldGain == 0 ? "." : $" and {quest.GoldGain} gold. ")}</p>", player.ConnectionId);
 
-                _gain.GainExperiencePoints(player, quest.ExpGain);
+                _gain.GainExperiencePoints(player, quest.ExpGain, true);
                 player.Money.Gold = quest.GoldGain;
             }
  

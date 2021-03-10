@@ -466,7 +466,7 @@ namespace ArchaicQuestII.GameLogic.Combat
                     getWeaponSkill.Proficiency += 1;
                     _writer.WriteLine($"<p class='improve'>Your proficiency in {getWeaponSkill.SkillName} has increased.</p>");
                
-                    _gain.GainExperiencePoints(player, getWeaponSkill.Level * 50);
+                    _gain.GainExperiencePoints(player, getWeaponSkill.Level * 50, true);
                 }
 
               

@@ -15,6 +15,8 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
         {
             var seedData = new List<Model.Skill>()
             {
+                new CraftingSkills().Cooking(),
+                new CraftingSkills().Crafting(),
                 new WeaponTypeSkills().Crossbow(),
                 new WeaponTypeSkills().Flail(),
                 new WeaponTypeSkills().HandToHand(),

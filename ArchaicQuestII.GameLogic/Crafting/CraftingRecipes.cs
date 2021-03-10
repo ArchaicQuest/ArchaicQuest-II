@@ -9,6 +9,7 @@ namespace ArchaicQuestII.GameLogic.Crafting
     {
         public string Material { get; set; }
         public int Quantity { get; set; }
+        public bool PresentInRoom { get; set; }
     }
 
     public class CraftingRecipes
@@ -18,6 +19,7 @@ namespace ArchaicQuestII.GameLogic.Crafting
         public string Description { get; set; }
         public List<CraftingMaterials> CraftingMaterials { get; set; } = new List<CraftingMaterials>();
         public Item.Item CreatedItem { get; set; }
+        public bool CreatedItemDropsInRoom { get; set; } = false;
         public DateTime DateUpdated { get; set; } = DateTime.Now;
     }
 }

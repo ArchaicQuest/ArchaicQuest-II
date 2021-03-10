@@ -8,5 +8,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
     public interface ISkills
     {
         void ShowSkills(Player player);
+        void LearnMistakes(Player player, string skillName, int delay);
+        bool SuccessCheck(Player player, string skillName);
     }
 }

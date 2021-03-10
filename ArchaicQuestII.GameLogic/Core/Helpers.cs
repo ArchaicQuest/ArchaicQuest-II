@@ -93,6 +93,49 @@ namespace ArchaicQuestII.GameLogic.Core
         }
 
         /// <summary>
+        /// Use to remove A / An from word
+        /// </summary>
+        /// <param name="word"></param>
+        /// <returns> string</returns>
+        public static string RemoveArticle(string word)
+        {
+            var wordWithOutArticle = word;
+            var splitWord = word.Split(" ");
+
+            if(splitWord[0].Equals("a", StringComparison.CurrentCultureIgnoreCase) || splitWord[0].Equals("an", StringComparison.CurrentCultureIgnoreCase))
+            {
+                wordWithOutArticle = word.Substring(word.IndexOf(" ") + 1);
+            }
+
+            return wordWithOutArticle;
+        }
+
+        /// <summary>
+        /// Adds A / An to word, should work in most cases as
+        /// we are dealing with nouns but this doesn't work for
+        /// words like hour where it should be An Hour and not a
+        /// hour.
+        /// </summary>
+        /// <param name="word"></param>
+        /// <returns> string</returns>
+        public static string AddArticle(string word)
+        {
+
+            var startsWithVowel = "aeiou".Contains(word[0], StringComparison.CurrentCultureIgnoreCase);
+            var newWord = string.Empty;
+
+            if(startsWithVowel)
+            {
+                newWord = "An " + word;
+            }
+            else
+            {
+                newWord = "A " + word;
+            }
+            return newWord;
+        }
+
+        /// <summary>
         /// Her / His
         /// </summary>
         /// <param name="gender"></param>
@@ -120,6 +163,7 @@ namespace ArchaicQuestII.GameLogic.Core
                 _ => "it",
             };
         }
+
         /// <summary>
         /// Her / Him
         /// </summary>
@@ -269,6 +313,9 @@ namespace ArchaicQuestII.GameLogic.Core
 
             client.Dispose();
         }
+
+       
+ 
 
 
     }

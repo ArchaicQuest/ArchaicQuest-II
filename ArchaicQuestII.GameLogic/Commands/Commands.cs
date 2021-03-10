@@ -46,6 +46,7 @@ namespace ArchaicQuestII.GameLogic.Commands
         private readonly IHelp _help;
         private readonly IMobScripts _mobScripts;
         private readonly ICrafting _crafting;
+        private readonly ICooking _cooking;
 
         public Commands(
             IMovement movement,
@@ -66,7 +67,8 @@ namespace ArchaicQuestII.GameLogic.Commands
             IMobFunctions mobFunctions,
             IHelp help,
             IMobScripts mobScripts,
-            ICrafting crafting
+            ICrafting crafting,
+            ICooking cooking
             )
         {
             _movement = movement;
@@ -88,6 +90,7 @@ namespace ArchaicQuestII.GameLogic.Commands
             _help = help;
             _mobScripts = mobScripts;
             _crafting = crafting;
+            _cooking = cooking;
         }
  
         public void CommandList(string key, string obj, string target, string fullCommand, Player player, Room room)
@@ -333,6 +336,9 @@ namespace ArchaicQuestII.GameLogic.Commands
                     break;
                 case "craft":
                     _crafting.CraftingManager(player, room, fullCommand);
+                    break;
+                case "cook":
+                    _cooking.Cook(player, room);
                     break;
                 default:
                         _commandHandler.HandleCommand(key,obj,target, player, room);

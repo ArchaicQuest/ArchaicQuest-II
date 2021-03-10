@@ -12,11 +12,13 @@ namespace ArchaicQuestII.GameLogic.Character.Gain
 
         private readonly IWriteToClient _writer;
         private readonly IUpdateClientUI _clientUi;
+        private readonly IDice _dice;
 
-        public Gain(IWriteToClient writer, IUpdateClientUI clientUI)
+        public Gain(IWriteToClient writer, IUpdateClientUI clientUI, IDice dice)
         {
             _writer = writer;
             _clientUi = clientUI;
+            _dice = dice;
         }
         public void GainExperiencePoints(Player player, Player target)
         {
@@ -41,20 +43,60 @@ namespace ArchaicQuestII.GameLogic.Character.Gain
             _writer.WriteLine(
                 $"<p class='improve'>You receive {expWorth} experience points.</p>",
                 player.ConnectionId);
-         
+
+            GainLevel(player);
+            _clientUi.UpdateExp(player);
+
         }
 
-        public void GainExperiencePoints(Player player, int value)
+        public void GainExperiencePoints(Player player, int value, bool showMessage = true)
         {
             // TODO: gain level
             player.Experience += value;
             player.ExperienceToNextLevel -= value;
 
+            if (showMessage)
+            {
+                _writer.WriteLine(
+                    $"<p class='improve'>You receive {value} experience points.</p>",
+                    player.ConnectionId);
+            }
+
+            GainLevel(player);
+
             _clientUi.UpdateExp(player);
 
-            _writer.WriteLine(
-                $"<p class='improve'>You receive {value} experience points.</p>",
-                player.ConnectionId);
+        }
+
+        public void GainLevel(Player player)
+        {
+            if(player.ExperienceToNextLevel <= 0)
+            {
+                player.Level++;
+                player.ExperienceToNextLevel = player.Level * 2000; //TODO: have class and race mod
+
+                var hpGain = player.MaxAttributes.Attribute[EffectLocation.Constitution] / 100 * 20;
+                var minHPGain = hpGain / 100 * 20;
+                var totalHP = _dice.Roll(1, minHPGain, hpGain);
+
+                var manaGain = player.MaxAttributes.Attribute[EffectLocation.Intelligence] / 100 * 20;
+                var minManaGain = manaGain / 100 * 20;
+                var totalMana = _dice.Roll(1, minManaGain, manaGain);
+
+                var moveGain = player.MaxAttributes.Attribute[EffectLocation.Dexterity] / 100 * 20;
+                var minMoveGain = manaGain / 100 * 20;
+                var totalMove = _dice.Roll(1, minMoveGain, moveGain);
+
+                //player.Attributes.Attribute[EffectLocation.Hitpoints] += totalHP;
+                //player.Attributes.Attribute[EffectLocation.Mana] += totalMana;
+                //player.Attributes.Attribute[EffectLocation.Moves] += totalMove;
+                player.MaxAttributes.Attribute[EffectLocation.Hitpoints] += totalHP;
+                player.MaxAttributes.Attribute[EffectLocation.Mana] += totalMana;
+                player.MaxAttributes.Attribute[EffectLocation.Moves] += totalMove;
+
+                _writer.WriteLine($"<p class='improve'>You have advanced to level {player.Level}, you gain: {totalHP} HP, {totalMana} Mana, {totalMove} Moves.</p>", player.ConnectionId);
+
+            }
 
         }
 
