@@ -125,7 +125,7 @@ namespace ArchaicQuestII.GameLogic.Character
         [JsonProperty("money")]
         public Money Money { get; set; }
         [JsonProperty("affects")]
-        public Affects Affects { get; set; }
+        public Affects Affects { get; set; } = new Affects();
         [JsonProperty("config")]
         public Model.Config Config { get; set; }
         [JsonProperty("roomId")]
@@ -162,6 +162,7 @@ namespace ArchaicQuestII.GameLogic.Character
         public List<Quest> QuestLog { get; set; } = new List<Quest>();
         [JsonProperty("weight")]
         public double Weight { get; set; } = 0;
-
+        // Full at 4
+        public int Hunger { get; set; } = 0;
   }
 }

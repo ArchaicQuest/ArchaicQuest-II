@@ -129,6 +129,24 @@ namespace ArchaicQuestII.GameLogic.Core
             }
         }
 
+        public async void UpdateAffects(Player player)
+        {
+            if (string.IsNullOrEmpty(player.ConnectionId) && !player.IsTelnet)
+            {
+                return;
+            }
+
+            try
+            {
+                await _hubContext.Clients.Client(player.ConnectionId).SendAsync("UpdatePlayerAffects", player.Affects);
+                
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
         public async void UpdateEquipment(Player player)
         {
             if (string.IsNullOrEmpty(player.ConnectionId) && !player.IsTelnet)

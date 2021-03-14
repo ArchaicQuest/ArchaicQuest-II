@@ -340,6 +340,11 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "cook":
                     _cooking.Cook(player, room);
                     break;
+                case "eat":
+                case "chew":
+                case "munch":
+                    _core.Eat(player, room, obj);
+                    break;
                 default:
                         _commandHandler.HandleCommand(key,obj,target, player, room);
                     break;

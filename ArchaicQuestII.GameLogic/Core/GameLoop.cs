@@ -160,24 +160,42 @@ namespace ArchaicQuestII.GameLogic.Core
                     var hP = (_dice.Roll(1, 2, 5) * player.Level);
                     var mana = (_dice.Roll(1, 2, 5) * player.Level);
                     var moves = (_dice.Roll(1, 2, 5) * player.Level);
-                    player.Attributes.Attribute[EffectLocation.Hitpoints] += GainAmount(hP, player);
-                    player.Attributes.Attribute[EffectLocation.Mana] += GainAmount(mana, player);
-                    player.Attributes.Attribute[EffectLocation.Moves] += GainAmount(moves, player);
 
-                    if (player.Attributes.Attribute[EffectLocation.Hitpoints] > player.MaxAttributes.Attribute[EffectLocation.Hitpoints])
+                    if (player.Attributes.Attribute[EffectLocation.Hitpoints] <
+                        player.MaxAttributes.Attribute[EffectLocation.Hitpoints])
                     {
-                        player.Attributes.Attribute[EffectLocation.Hitpoints] = player.MaxAttributes.Attribute[EffectLocation.Hitpoints];
+                        player.Attributes.Attribute[EffectLocation.Hitpoints] += GainAmount(hP, player);
+                        if (player.Attributes.Attribute[EffectLocation.Hitpoints] > player.MaxAttributes.Attribute[EffectLocation.Hitpoints])
+                        {
+                            player.Attributes.Attribute[EffectLocation.Hitpoints] = player.MaxAttributes.Attribute[EffectLocation.Hitpoints];
+                        }
                     }
 
-                    if (player.Attributes.Attribute[EffectLocation.Mana] > player.MaxAttributes.Attribute[EffectLocation.Mana])
+                    if (player.Attributes.Attribute[EffectLocation.Mana] <
+                        player.MaxAttributes.Attribute[EffectLocation.Mana])
                     {
-                        player.Attributes.Attribute[EffectLocation.Mana] = player.MaxAttributes.Attribute[EffectLocation.Mana];
+                        player.Attributes.Attribute[EffectLocation.Mana] += GainAmount(mana, player);
+
+                        if (player.Attributes.Attribute[EffectLocation.Mana] > player.MaxAttributes.Attribute[EffectLocation.Mana])
+                        {
+                            player.Attributes.Attribute[EffectLocation.Mana] = player.MaxAttributes.Attribute[EffectLocation.Mana];
+                        }
                     }
 
-                    if (player.Attributes.Attribute[EffectLocation.Moves] > player.MaxAttributes.Attribute[EffectLocation.Moves])
+                    if (player.Attributes.Attribute[EffectLocation.Moves] <
+                        player.MaxAttributes.Attribute[EffectLocation.Moves])
                     {
-                        player.Attributes.Attribute[EffectLocation.Moves] = player.MaxAttributes.Attribute[EffectLocation.Moves];
+                        player.Attributes.Attribute[EffectLocation.Moves] += GainAmount(moves, player);
+                        if (player.Attributes.Attribute[EffectLocation.Moves] > player.MaxAttributes.Attribute[EffectLocation.Moves])
+                        {
+                            player.Attributes.Attribute[EffectLocation.Moves] = player.MaxAttributes.Attribute[EffectLocation.Moves];
+                        }
                     }
+
+                 
+
+
+                 
 
                     _client.UpdateHP(player);
                     _client.UpdateMana(player);
@@ -232,6 +250,81 @@ namespace ArchaicQuestII.GameLogic.Core
                 }
                 catch (Exception ex)
                 {
+                }
+            }
+        }
+
+        public async Task Tick()
+        {
+
+
+            while (true)
+            {
+                try
+                {
+                    await Task.Delay(60000);
+                    var players = _cache.GetPlayerCache().Values;
+
+                    foreach (var pc in players)
+                    {
+                        pc.Hunger--;
+                        foreach (var aff in pc.Affects.Custom.ToList())
+                        {
+                            aff.Duration--;
+
+                            if (aff.Duration <= 0)
+                            {
+                                if (aff.Modifier.Strength != 0)
+                                {
+                                    pc.Attributes.Attribute[EffectLocation.Strength] -= aff.Modifier.Strength;
+                                }
+
+                                if (aff.Modifier.Dexterity != 0)
+                                {
+                                    pc.Attributes.Attribute[EffectLocation.Dexterity] -= aff.Modifier.Dexterity;
+                                }
+
+                                if (aff.Modifier.Constitution != 0)
+                                {
+                                    pc.Attributes.Attribute[EffectLocation.Constitution] -= aff.Modifier.Constitution;
+                                }
+
+                                if (aff.Modifier.Intelligence != 0)
+                                {
+                                    pc.Attributes.Attribute[EffectLocation.Intelligence] -= aff.Modifier.Intelligence;
+                                }
+
+                                if (aff.Modifier.Wisdom != 0)
+                                {
+                                    pc.Attributes.Attribute[EffectLocation.Wisdom] -= aff.Modifier.Wisdom;
+                                }
+
+                                if (aff.Modifier.Charisma != 0)
+                                {
+                                    pc.Attributes.Attribute[EffectLocation.Charisma] -= aff.Modifier.Charisma;
+                                }
+
+                                if (aff.Modifier.HitRoll != 0)
+                                {
+                                    pc.Attributes.Attribute[EffectLocation.HitRoll] -= aff.Modifier.HitRoll;
+                                }
+
+                                if (aff.Modifier.DamRoll != 0)
+                                {
+                                    pc.Attributes.Attribute[EffectLocation.DamageRoll] -= aff.Modifier.DamRoll;
+                                }
+
+                                _writeToClient.WriteLine($"affects from {aff.Name} have worn off.");
+
+                                pc.Affects.Custom.Remove(aff);
+                            }
+                            _client.UpdateAffects(pc);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+
                 }
             }
         }

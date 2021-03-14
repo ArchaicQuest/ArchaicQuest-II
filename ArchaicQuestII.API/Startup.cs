@@ -474,6 +474,7 @@ namespace ArchaicQuestII.API
             Task.Run(loop.UpdateRoomEmote).ConfigureAwait(false);
             Task.Run(loop.UpdateMobEmote).ConfigureAwait(false);
             Task.Run(loop.UpdateWorldTime).ConfigureAwait(false);
+            Task.Run(loop.Tick);
         }
     }
 

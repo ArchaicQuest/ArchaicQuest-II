@@ -16,6 +16,7 @@ namespace ArchaicQuestII.GameLogic.Core
         Task UpdatePlayers();
         Task UpdateCombat();
         Task UpdateWorldTime();
+        Task Tick();
         void IdleCheck(Player player);
    }
 }
