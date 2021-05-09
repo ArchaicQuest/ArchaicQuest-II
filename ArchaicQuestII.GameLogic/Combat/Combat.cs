@@ -225,6 +225,14 @@ namespace ArchaicQuestII.GameLogic.Combat
         
         }
 
+        public void AddCharToCombat(Player character)
+        {
+            if (!_cache.IsCharInCombat(character.Id.ToString()))
+            {
+                _cache.AddCharToCombat(character.Id.ToString(), character);
+            }
+        }
+
         public void Fight(Player player, string victim, Room room, bool isMurder)
         {
 

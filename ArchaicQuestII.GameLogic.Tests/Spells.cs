@@ -14,6 +14,7 @@ using Moq;
 using System.Collections.Generic;
 using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Spell.Interface;
+using ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells;
 using Xunit;
 
 
@@ -25,13 +26,15 @@ namespace ArchaicQuestII.GameLogic.Tests
         private readonly Player _player;
         private readonly Player _target;
         private readonly Room _room;
-        private readonly Spells _spell;
+        private readonly CastSpell _spell;
         private readonly Mock<IWriteToClient> _writer;
         private readonly Mock<IDamage> _damage;
         private readonly Mock<ICache> _cache;
         private readonly Mock<ISpellTargetCharacter> _spellTargetCharacter;
         private readonly Mock<IUpdateClientUI> _updateClientUI;
         private readonly Mock<IMobScripts> _mobScript;
+        private readonly Mock<IDice> _dice;
+        private readonly Mock<IDamageSpells> _damageSpells;
 
         public SpellTests()
         {
@@ -120,7 +123,9 @@ namespace ArchaicQuestII.GameLogic.Tests
             _cache = new Mock<ICache>();
             _updateClientUI = new Mock<IUpdateClientUI>();
             _mobScript = new Mock<IMobScripts>();
-            _spell = new Spells(_writer.Object, _spellTargetCharacter.Object, _cache.Object, _damage.Object, _updateClientUI.Object, _mobScript.Object);
+            _dice = new Mock<IDice>();
+            _damageSpells = new Mock<IDamageSpells>();
+            _spell = new CastSpell(_writer.Object, _spellTargetCharacter.Object, _cache.Object, _damage.Object, _updateClientUI.Object, _mobScript.Object,_dice.Object, _damageSpells.Object);
 
             var newSkill = new Skill.Model.Skill
             {
@@ -347,20 +352,25 @@ namespace ArchaicQuestII.GameLogic.Tests
                 ValidTargets = ValidTargets.TargetPlayerRoom | ValidTargets.TargetFightVictim
             };
 
+            var room = new Room();
+
             _player.Status = CharacterStatus.Status.Standing;
             _player.Gender = "Male";
             _target.Id = Guid.NewGuid();
             _player.Id = _target.Id;
+            _player.ConnectionId = _target.Id.ToString();
+            _player.ClassName = "Mage";
+            _player.Attributes.Attribute[EffectLocation.Mana] = 500;
 
-            _spell.ReciteSpellCharacter(_player, _target, spell);
-            _writer.Verify(w => w.WriteLine(It.Is<string>(s => s == "Malleus closes his eyes and utters the words, 'Magic missile'.")), Times.Once);
+            _spell.ReciteSpellCharacter(_player, _target, spell, room);
+            _writer.Verify(w => w.WriteLine(It.Is<string>(s => s == "Malleus closes his eyes and utters the words, 'Magic missile'."), _player.ConnectionId), Times.Once);
 
         }
 
         [Fact]
         public void message_for_cast_on_not_self()
         {
-
+            var room = new Room();
             var spell = new Spell.Model.Spell()
             {
                 Name = "Magic missile",
@@ -370,11 +380,28 @@ namespace ArchaicQuestII.GameLogic.Tests
             _player.Status = CharacterStatus.Status.Standing;
             _player.Gender = "Male";
             _target.Name = "Bob";
+            _target.ClassName = "Mage";
             _target.Id = Guid.NewGuid();
             _player.Id = Guid.NewGuid();
+            _player.ConnectionId = "abc";
+            _target.ConnectionId = "bcd";
 
-            _spell.ReciteSpellCharacter(_player, _target, spell);
-            _writer.Verify(w => w.WriteLine(It.Is<string>(s => s == "Malleus stares at Bob and utters the words, 'Magic missile'.")), Times.Once);
+            _spell.ReciteSpellCharacter(_player, _target, spell, room);
+            _writer.Verify(w => w.WriteLine(It.Is<string>(s => s == "You look at Bob and utters the words, 'Magic missile'."), _player.ConnectionId), Times.Once);
+
+            _writer.Verify(w => w.WriteLine(It.Is<string>(s => s == "Malleus looks at you and utters the words, 'Magic missile'."), _target.ConnectionId), Times.Once);
+
+        }
+
+
+        [Fact]
+        public void Spell_Name()
+        {
+            
+
+           var spellName =  _spell.ObsfucateSpellName("ice storm");
+            
+           Assert.Equal("uqz ghafw", spellName);
 
         }
 

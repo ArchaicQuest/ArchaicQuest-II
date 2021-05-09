@@ -38,6 +38,12 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 return;
             }
 
+            if (player.Affects.Blind)
+            {
+                _writeToClient.WriteLine("<p>You are blind and can't see a thing!</p>", player.ConnectionId);
+                return;
+            }
+
             if (!string.IsNullOrEmpty(target) && !target.Equals("look", StringComparison.CurrentCultureIgnoreCase) && !string.IsNullOrEmpty(target) && !target.Equals("l", StringComparison.CurrentCultureIgnoreCase))
             {
                 LookObject(target, room, player);

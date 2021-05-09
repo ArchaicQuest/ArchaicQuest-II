@@ -418,8 +418,8 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public void Eat(Player player, Room room, string obj)
         {
-            var food = player.Inventory.FirstOrDefault(x =>
-                x.ItemType.Equals(Item.Item.ItemTypes.Cooked) || x.ItemType.Equals(Item.Item.ItemTypes.Food) && x.Name.Contains(obj, StringComparison.CurrentCultureIgnoreCase));
+            var findNth = Helpers.findNth(obj);
+            var food = Helpers.findObjectInInventory(findNth, player);
 
             if (food == null)
             {
@@ -506,6 +506,46 @@ namespace ArchaicQuestII.GameLogic.Core
             _clientUi.UpdateInventory(player);
 
 
+        }
+
+        public void Drink(Player player, Room room, string obj)
+        {
+            var findNth = Helpers.findNth(obj);
+            var drink = Helpers.findObjectInInventory(findNth, player) ??
+                        Helpers.findRoomObject(findNth, room);
+
+            if (drink == null)
+            {
+                _writeToClient.WriteLine("You can't find that.", player.ConnectionId);
+                return;
+            }
+
+            if (drink.ItemType != Item.Item.ItemTypes.Drink)
+            {
+                _writeToClient.WriteLine($"You can't drink from {drink.Name.ToLower()}.", player.ConnectionId);
+                return;
+            }
+
+            _writeToClient.WriteLine($"You drink from {drink.Name.ToLower()}.", player.ConnectionId);
+
+            foreach (var pc in room.Players)
+            {
+                if (pc.Name == player.Name)
+                {
+                    continue;
+                }
+                _writeToClient.WriteLine($"{player.Name} drink from {drink.Name.ToLower()}.", player.ConnectionId);
+
+            }
+
+        }
+
+        public void TrainSkill(Player player)
+        {
+            foreach (var skill in player.Skills)
+            {
+                skill.Proficiency = 85;
+            }
         }
 
 

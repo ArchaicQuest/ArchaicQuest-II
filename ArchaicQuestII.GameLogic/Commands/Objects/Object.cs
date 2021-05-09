@@ -26,6 +26,12 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
         }
         public void Get(string target, string container, Room room, Player player, string fullCommand)
         {
+
+            if (player.Affects.Blind)
+            {
+                _writer.WriteLine("<p>You are blind and can't see a thing!</p>", player.ConnectionId);
+                return;
+            }
             //TODO: Get all, get nth (get 2.apple)
             if (target == "all" && string.IsNullOrEmpty(container))
             {
@@ -236,6 +242,12 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
         public void Drop(string target, string container, Room room, Player player, string fullCommand)
         {
+
+            if (player.Affects.Blind)
+            {
+                _writer.WriteLine("<p>You are blind and can't see a thing!</p>", player.ConnectionId);
+                return;
+            }
 
             if (target == "all" && string.IsNullOrEmpty(container))
             {
@@ -657,6 +669,11 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
         public void Open(string target, Room room, Player player)
         {
+            if (player.Affects.Blind)
+            {
+                _writer.WriteLine("<p>You are blind and can't see a thing!</p>", player.ConnectionId);
+                return;
+            }
             var nthItem = Helpers.findNth(target);
             var item = Helpers.findRoomObject(nthItem, room) ?? Helpers.findObjectInInventory(nthItem, player);
 
@@ -718,6 +735,11 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
         public void Close(string target, Room room, Player player)
         {
+            if (player.Affects.Blind)
+            {
+                _writer.WriteLine("<p>You are blind and can't see a thing!</p>", player.ConnectionId);
+                return;
+            }
 
             var nthItem = Helpers.findNth(target);
             var item = Helpers.findRoomObject(nthItem, room) ?? Helpers.findObjectInInventory(nthItem, player);
@@ -762,6 +784,11 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
         public void Give(string itemName, string targetName, Room room, Player player, string command)
         {
+            if (player.Affects.Blind)
+            {
+                _writer.WriteLine("<p>You are blind and can't see a thing!</p>", player.ConnectionId);
+                return;
+            }
 
             if (string.IsNullOrEmpty(itemName))
             {
@@ -859,6 +886,11 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
         public void Unlock(string target, Room room, Player player)
         {
+            if (player.Affects.Blind)
+            {
+                _writer.WriteLine("<p>You are blind and can't see a thing!</p>", player.ConnectionId);
+                return;
+            }
             var nthItem = Helpers.findNth(target);
             var objToUnlock = Helpers.findRoomObject(nthItem, room) ?? Helpers.findObjectInInventory(nthItem, player);
 
@@ -951,6 +983,11 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
         public void Lock(string target, Room room, Player player)
         {
+            if (player.Affects.Blind)
+            {
+                _writer.WriteLine("<p>You are blind and can't see a thing!</p>", player.ConnectionId);
+                return;
+            }
             var nthItem = Helpers.findNth(target);
             var objToUnlock =
                 Helpers.findRoomObject(nthItem, room) ?? Helpers.findObjectInInventory(nthItem, player);

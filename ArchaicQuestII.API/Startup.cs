@@ -49,6 +49,7 @@ using ArchaicQuestII.GameLogic.Skill.Model;
 using ArchaicQuestII.GameLogic.Socials;
 using ArchaicQuestII.GameLogic.Spell;
 using ArchaicQuestII.GameLogic.Spell.Interface;
+using ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells;
 using ArchaicQuestII.GameLogic.World.Area;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -56,6 +57,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Newtonsoft.Json;
 using Config = ArchaicQuestII.GameLogic.Core.Config;
 using Damage = ArchaicQuestII.GameLogic.Core.Damage;
+using DamageSpells = ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells.DamageSpells;
 using Object = ArchaicQuestII.GameLogic.Commands.Objects.Object;
 
 namespace ArchaicQuestII.API
@@ -106,7 +108,7 @@ namespace ArchaicQuestII.API
             services.AddSingleton<IDice, Dice>();
             services.AddTransient<IMovement, Movement>();
             services.AddTransient<ISkills, Skills>();
-            services.AddTransient<ISpells, Spells>();
+            services.AddTransient<ISpells, CastSpell>();
             services.AddTransient<IDebug, Debug>();
             services.AddTransient<IInventory, Inventory>();
             services.AddSingleton<Icommunication, Communication>();
@@ -132,6 +134,7 @@ namespace ArchaicQuestII.API
             services.AddSingleton<IHelp, HelpFile>();
             services.AddSingleton<ICrafting, Crafting>();
             services.AddSingleton<ICooking, Cooking>();
+            services.AddSingleton<IDamageSpells, DamageSpells>();
             services.AddSingleton<IWriteToClient, WriteToClient>((factory) => new WriteToClient(_hubContext, TelnetHub.Instance));
            
         }

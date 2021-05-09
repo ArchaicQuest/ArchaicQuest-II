@@ -179,6 +179,17 @@ namespace ArchaicQuestII.GameLogic.Core
             };
         }
 
+        public static bool isCaster(string classname)
+        {
+            return classname switch
+            {
+                "Mage" => true,
+                "Cleric" => true,
+                "Druid" => true,
+                _ => false,
+            };
+        }
+
         public static string DisplayDoor(Exit exit)
         {
             var exitName = "";

@@ -11,6 +11,7 @@ using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Commands;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
+using ArchaicQuestII.GameLogic.Spell;
 using ArchaicQuestII.GameLogic.World.Room;
 using Microsoft.Extensions.Logging;
 using MoonSharp.Interpreter;

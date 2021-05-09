@@ -2,7 +2,9 @@
 using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.Skill.Enum;
 using System.Collections.Generic;
+using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Character.Status;
+using ArchaicQuestII.GameLogic.Spell;
 
 namespace ArchaicQuestII.GameLogic.Skill.Model
 {
@@ -13,7 +15,9 @@ namespace ArchaicQuestII.GameLogic.Skill.Model
         public string Description { get; set; }
         public string Formula { get; set; }
         public Dice Damage { get; set; }
+        [Obsolete]
         public Effect.Effect Effect { get; set; }
+        public List<Affect> SpellAffects { get; set; } = new List<Affect>();
         public CharacterStatus.Status UsableFromStatus { get; set; } = CharacterStatus.Status.Standing;
         public int Rounds { get; set; }
         public SkillCost Cost { get; set; } = new SkillCost();
@@ -23,6 +27,16 @@ namespace ArchaicQuestII.GameLogic.Skill.Model
         public DateTime DateCreated { get; set; } = DateTime.Now;
         public DateTime DateUpdated { get; set; } = DateTime.Now;
         public bool Deleted { get; set; } = false;
+
+        public Spell.SkillMessage SkillMessage { get; set; } = new Spell.SkillMessage()
+        {
+            Miss = new Messages(),
+            Death = new Messages(),
+            Hit = new Messages()
+        };
+        public SavingThrow SavingThrow { get; set; }
+        public bool ApplyLevelCheck { get; set; }
+
 
     }
 }

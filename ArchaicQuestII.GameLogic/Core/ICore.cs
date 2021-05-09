@@ -43,5 +43,8 @@ namespace ArchaicQuestII.GameLogic.Core
         /// <param name="room"></param>
         /// <param name="obj">name of food to eat</param>
         void Eat(Player player, Room room, string obj);
+        void Drink(Player player, Room room, string obj);
+
+        void TrainSkill(Player player);
     }
 }

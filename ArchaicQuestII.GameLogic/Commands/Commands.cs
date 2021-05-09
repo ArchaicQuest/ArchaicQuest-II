@@ -345,6 +345,12 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "munch":
                     _core.Eat(player, room, obj);
                     break;
+                case "drink":
+                    _core.Drink(player, room, obj);
+                    break;
+                case "/train":
+                    _core.TrainSkill(player);
+                    break;
                 default:
                         _commandHandler.HandleCommand(key,obj,target, player, room);
                     break;

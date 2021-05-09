@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using ArchaicQuestII.GameLogic.Spell;
+using ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells;
+using AllSpells = ArchaicQuestII.GameLogic.Spell.AllSpells;
 
 namespace ArchaicQuestII.GameLogic.Skill.Core
 {
@@ -32,7 +35,11 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
                 new WeaponTypeSkills().Exotic(),
                 new EvasiveTypeSkills().Dodge(),
                 new EvasiveTypeSkills().Parry(),
-                new EvasiveTypeSkills().ShieldBLock()
+                new EvasiveTypeSkills().ShieldBLock(),
+                new AllSpells().MagicMissile(),
+                new AllSpells().CauseWounds(),
+                new AllSpells().CureWounds(),
+                new AllSpells().Armour()
             };
 
             return seedData;

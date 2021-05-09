@@ -8,6 +8,8 @@ using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Effect;
+using ArchaicQuestII.GameLogic.Spell;
+using ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells;
 using ArchaicQuestII.GameLogic.World.Room;
 using Newtonsoft.Json;
 
@@ -27,8 +29,9 @@ namespace ArchaicQuestII.GameLogic.Core
         private IUpdateClientUI _client;
         private ITime _time;
         private ICore _core;
+        private IDamageSpells _damageSpells;
 
-        public GameLoop(IWriteToClient writeToClient, ICache cache, ICommands commands, ICombat combat, IDataBase database, IDice dice, IUpdateClientUI client, ITime time, ICore core)
+        public GameLoop(IWriteToClient writeToClient, ICache cache, ICommands commands, ICombat combat, IDataBase database, IDice dice, IUpdateClientUI client, ITime time, ICore core, IDamageSpells spells)
         {
             _writeToClient = writeToClient;
             _cache = cache;
@@ -39,6 +42,7 @@ namespace ArchaicQuestII.GameLogic.Core
             _client = client;
             _time = time;
             _core = core;
+            _damageSpells = spells;
         }
 
         public int GainAmount(int value, Player player)
@@ -314,9 +318,15 @@ namespace ArchaicQuestII.GameLogic.Core
                                     pc.Attributes.Attribute[EffectLocation.DamageRoll] -= aff.Modifier.DamRoll;
                                 }
 
-                                _writeToClient.WriteLine($"affects from {aff.Name} have worn off.");
-
+                               
                                 pc.Affects.Custom.Remove(aff);
+
+                                _damageSpells.CastSpell(aff.Name, "", pc, "", pc, _cache.GetRoom(pc.RoomId), true);
+
+                                if (aff.Affects == DefineSpell.SpellAffect.Blind)
+                                {
+                                    pc.Affects.Blind = false;
+                                }
                             }
                             _client.UpdateAffects(pc);
                         }

@@ -26,6 +26,10 @@ namespace ArchaicQuestII.GameLogic.Combat
 
         public void Consider(Player player, string target, Room room);
 
+        public void DeathCry(Room room, Player target);
+
+        public void AddCharToCombat(Player character);
+
         // public void AutoAttack(Player player, Player target, Room room, bool isMurder);
     }
 }

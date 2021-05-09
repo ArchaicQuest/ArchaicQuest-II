@@ -30,7 +30,7 @@ namespace ArchaicQuestII.GameLogic.Spell
 
         public Player CheckTarget(Skill.Model.Skill spell, string target, Room room, Player player)
         {
-            var victim = GetTarget(target, room);
+            var victim = string.IsNullOrEmpty(target) ? player : GetTarget(target, room);
 
             if (victim == null)
             {
@@ -42,11 +42,11 @@ namespace ArchaicQuestII.GameLogic.Spell
                 return null;
             }
 
-            if (spell.StartsCombat && victim.Id == player.Id)
-            {
-                _writer.WriteLine("Casting this on yourself is a bad idea.", player.ConnectionId);
-                return null;
-            }
+            //if (spell.StartsCombat && victim.Id == player.Id)
+            //{
+            //    _writer.WriteLine("Casting this on yourself is a bad idea.", player.ConnectionId);
+            //    return null;
+            //}
 
             return victim;
         }

@@ -42,11 +42,15 @@ namespace ArchaicQuestII.Controllers.Skills
                 Cost = skill.Cost,
                 Damage = skill.Damage,
                 Description = skill.Description,
-                Effect = skill.Effect,
+                SpellAffects = skill.SpellAffects,
                 Rounds = skill.Rounds,
                 Type = skill.Type,
                 ValidTargets = skill.ValidTargets,
-                Formula = skill.Formula
+                Formula = skill.Formula,
+                SkillMessage = skill.SkillMessage,
+                StartsCombat = skill.StartsCombat,
+                SavingThrow = skill.SavingThrow
+
             };
 
             if (!string.IsNullOrEmpty(skill.Id.ToString()) && skill.Id != -1)
