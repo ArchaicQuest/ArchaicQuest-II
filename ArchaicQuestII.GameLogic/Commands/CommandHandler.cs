@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Core;
+using ArchaicQuestII.GameLogic.Skill;
 using ArchaicQuestII.GameLogic.Socials;
 using ArchaicQuestII.GameLogic.World.Room;
 
@@ -24,30 +25,32 @@ namespace ArchaicQuestII.GameLogic.Commands
         private readonly ISocials _socials;
         private readonly ICache _cache;
         private readonly IWriteToClient _writeToClient;
-        public CommandHandler(ISocials social, ICache cache, IWriteToClient writeToClient)
+        private readonly ISKill _Skill;
+        public CommandHandler(ISocials social, ICache cache, IWriteToClient writeToClient, ISKill skill)
         {
             _socials = social;
             _cache = cache;
             _writeToClient = writeToClient;
+            _Skill = skill;
         }
         public void HandleCommand(string key, string obj, string target, Player player, Room room)
         {
             var foundCommand = false;
-            //check player skills
-            if(false){}
-
-            var logMsg = player.Name + " key: " + key + " obj: " + obj + " target: " + target + "\r\n" + "Buffer: ";
-            foreach (var cmd in player.Buffer)
+            //check player skill
+            var foundSkill = _cache.GetAllSkills()
+                .FirstOrDefault(x => x.Name.StartsWith(key, StringComparison.CurrentCultureIgnoreCase));
+            if (foundSkill != null) 
             {
-                logMsg += cmd + " ";
+                _Skill.PerfromSkill(foundSkill.Name, player, obj, room);
+                return;
             }
-            Helpers.PostToDiscord(logMsg, "error", _cache.GetConfig());
+
+ 
 
             //check socials
             var social = _cache.GetSocials().Keys.FirstOrDefault(x => x.StartsWith(key));
             if (social != null)
             {
-                foundCommand = true;
                 var emoteTarget = key == obj ? "" : obj;
                 _socials.EmoteSocial(player, room, _cache.GetSocials()[social], emoteTarget);
                 return;

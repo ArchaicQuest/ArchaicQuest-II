@@ -30,6 +30,7 @@ namespace ArchaicQuestII.GameLogic.Core
         List<Room> GetOriginalRooms();
         List<Room> GetAllRoomsInArea(int id);
         List<Room> GetAllRooms();
+        List<Skill.Model.Skill> GetAllSkills();
         Room GetRoom(string id);
         Room GetOriginalRoom(string id);
         bool UpdateRoom(string id, Room room, Player player);

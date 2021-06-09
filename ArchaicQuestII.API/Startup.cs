@@ -44,8 +44,10 @@ using ArchaicQuestII.GameLogic.Commands.Skills;
 using ArchaicQuestII.GameLogic.Crafting;
 using ArchaicQuestII.GameLogic.Hubs.Telnet;
 using ArchaicQuestII.GameLogic.Item;
+using ArchaicQuestII.GameLogic.Skill;
 using ArchaicQuestII.GameLogic.Skill.Core;
 using ArchaicQuestII.GameLogic.Skill.Model;
+using ArchaicQuestII.GameLogic.Skill.Skills;
 using ArchaicQuestII.GameLogic.Socials;
 using ArchaicQuestII.GameLogic.Spell;
 using ArchaicQuestII.GameLogic.Spell.Interface;
@@ -57,8 +59,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Newtonsoft.Json;
 using Config = ArchaicQuestII.GameLogic.Core.Config;
 using Damage = ArchaicQuestII.GameLogic.Core.Damage;
-using DamageSpells = ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells.DamageSpells;
+ 
 using Object = ArchaicQuestII.GameLogic.Commands.Objects.Object;
+using SkillList = ArchaicQuestII.GameLogic.Character.Class.SkillList;
 
 namespace ArchaicQuestII.API
 {
@@ -134,7 +137,12 @@ namespace ArchaicQuestII.API
             services.AddSingleton<IHelp, HelpFile>();
             services.AddSingleton<ICrafting, Crafting>();
             services.AddSingleton<ICooking, Cooking>();
+            services.AddSingleton<ISkillManager, SkillManager>();
             services.AddSingleton<IDamageSpells, DamageSpells>();
+            services.AddSingleton<IDamageSkills, DamageSkills>();
+            services.AddSingleton<ISpellList, SpellList>();
+            services.AddSingleton<ISkillList, GameLogic.Skill.SkillList>();
+            services.AddSingleton<ISKill, DoSkill>();
             services.AddSingleton<IWriteToClient, WriteToClient>((factory) => new WriteToClient(_hubContext, TelnetHub.Instance));
            
         }
@@ -183,6 +191,13 @@ namespace ArchaicQuestII.API
                         );
                     }
                 }
+
+                //set mob armor
+                mob.ArmorRating = new ArmourRating()
+                {
+                    Armour = mob.Level * 3,
+                    Magic = mob.Level * 3 / 4,
+                };
 
                 //give mob unique IDs
                 mob.UniqueId = Guid.NewGuid();
@@ -474,6 +489,7 @@ namespace ArchaicQuestII.API
             Task.Run(loop.UpdateTime);
             Task.Run(loop.UpdateCombat);
             Task.Run(loop.UpdatePlayers);
+            Task.Run(loop.UpdatePlayerLag);
             Task.Run(loop.UpdateRoomEmote).ConfigureAwait(false);
             Task.Run(loop.UpdateMobEmote).ConfigureAwait(false);
             Task.Run(loop.UpdateWorldTime).ConfigureAwait(false);

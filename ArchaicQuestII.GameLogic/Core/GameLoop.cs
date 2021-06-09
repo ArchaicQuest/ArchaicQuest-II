@@ -8,6 +8,7 @@ using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Effect;
+using ArchaicQuestII.GameLogic.Skill.Core;
 using ArchaicQuestII.GameLogic.Spell;
 using ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells;
 using ArchaicQuestII.GameLogic.World.Room;
@@ -29,9 +30,9 @@ namespace ArchaicQuestII.GameLogic.Core
         private IUpdateClientUI _client;
         private ITime _time;
         private ICore _core;
-        private IDamageSpells _damageSpells;
+        private ISpellList _spellList;
 
-        public GameLoop(IWriteToClient writeToClient, ICache cache, ICommands commands, ICombat combat, IDataBase database, IDice dice, IUpdateClientUI client, ITime time, ICore core, IDamageSpells spells)
+        public GameLoop(IWriteToClient writeToClient, ICache cache, ICommands commands, ICombat combat, IDataBase database, IDice dice, IUpdateClientUI client, ITime time, ICore core, ISpellList spelllist)
         {
             _writeToClient = writeToClient;
             _cache = cache;
@@ -42,7 +43,8 @@ namespace ArchaicQuestII.GameLogic.Core
             _client = client;
             _time = time;
             _core = core;
-            _damageSpells = spells;
+            _spellList = spelllist;
+
         }
 
         public int GainAmount(int value, Player player)
@@ -321,7 +323,7 @@ namespace ArchaicQuestII.GameLogic.Core
                                
                                 pc.Affects.Custom.Remove(aff);
 
-                                _damageSpells.CastSpell(aff.Name, "", pc, "", pc, _cache.GetRoom(pc.RoomId), true);
+                                _spellList.CastSpell(aff.Name, "", pc, "", pc, _cache.GetRoom(pc.RoomId), true);
 
                                 if (aff.Affects == DefineSpell.SpellAffect.Blind)
                                 {
@@ -504,6 +506,11 @@ namespace ArchaicQuestII.GameLogic.Core
 
                     foreach (var player in validPlayers)
                     {
+                        // don't action commands if player is lagged
+                        if (player.Value.Lag > 0)
+                        {
+                            continue;
+                        }
 
                         var command = player.Value.Buffer.Dequeue();
                         var room = _cache.GetRoom(player.Value.RoomId);
@@ -519,6 +526,32 @@ namespace ArchaicQuestII.GameLogic.Core
                 }
             }
         }
+
+        public async Task UpdatePlayerLag()
+        {
+            while (true)
+            {
+
+                try
+                {
+                    await Task.Delay(4000);
+                    var players = _cache.GetPlayerCache();
+                    var validPlayers = players.Where(x => x.Value.Lag > 0);
+
+                    foreach (var player in validPlayers)
+                    {
+                         
+                        player.Value.Lag -= 1;
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+        }
+
 
     }
 

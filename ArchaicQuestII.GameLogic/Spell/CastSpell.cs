@@ -9,10 +9,10 @@ using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Item;
+using ArchaicQuestII.GameLogic.Skill.Core;
 using ArchaicQuestII.GameLogic.Skill.Enum;
 using ArchaicQuestII.GameLogic.Skill.Model;
-using ArchaicQuestII.GameLogic.Spell.Interface;
-using ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells;
+using ArchaicQuestII.GameLogic.Spell.Interface; 
 using ArchaicQuestII.GameLogic.World.Room;
 using LiteDB;
 using MoonSharp.Interpreter;
@@ -28,8 +28,8 @@ namespace ArchaicQuestII.GameLogic.Spell
         private readonly IUpdateClientUI _updateClientUi;
         private readonly IMobScripts _mobScripts;
         private readonly IDice _dice;
-        private readonly IDamageSpells _damageSpells;
-        public CastSpell(IWriteToClient writer, ISpellTargetCharacter spellTargetCharacter, ICache cache, IDamage damage, IUpdateClientUI updateClientUi, IMobScripts mobScripts, IDice dice, IDamageSpells damageSpells)
+        private readonly ISpellList _spellList;
+        public CastSpell(IWriteToClient writer, ISpellTargetCharacter spellTargetCharacter, ICache cache, IDamage damage, IUpdateClientUI updateClientUi, IMobScripts mobScripts, IDice dice, ISpellList spellList)
         {
             _writer = writer;
             _spellTargetCharacter = spellTargetCharacter;
@@ -38,7 +38,7 @@ namespace ArchaicQuestII.GameLogic.Spell
             _updateClientUi = updateClientUi;
             _mobScripts = mobScripts;
             _dice = dice;
-            _damageSpells = damageSpells;
+            _spellList = spellList;
         }
 
         public bool ValidStatus(Player player)
@@ -395,7 +395,7 @@ namespace ArchaicQuestII.GameLogic.Spell
                     if (string.IsNullOrEmpty(spell.Formula) && spell.Type == SkillType.Damage)
                     {
                         //do this for cast cure
-                         _damageSpells.CastSpell(spell.Name, "", target, "", origin, room, false);
+                         _spellList.CastSpell(spell.Name, "", target, "", origin, room, false);
 
                     }
 
@@ -405,7 +405,7 @@ namespace ArchaicQuestII.GameLogic.Spell
                     if (spell.Type != SkillType.Damage)
                     {
 
-                     _damageSpells.CastSpell(spell.Name, "", target, "", origin, room, false);
+                     _spellList.CastSpell(spell.Name, "", target, "", origin, room, false);
                     }
                 }
                 else

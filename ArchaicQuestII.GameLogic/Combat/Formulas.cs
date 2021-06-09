@@ -96,12 +96,26 @@ namespace ArchaicQuestII.GameLogic.Combat
 
         public int CalculateDamage(Player player, Player target, Item.Item weapon)
         {
-            
+
             var damage = 0;
 
             if (weapon != null)
             {
+
+                var skill = player.Skills.FirstOrDefault(x =>
+                    x.SkillName.Equals(Enum.GetName(typeof(Item.Item.WeaponTypes), weapon.WeaponType)));
+
                 damage = _dice.Roll(1, weapon.Damage.Minimum, weapon.Damage.Maximum);
+
+                if (skill != null)
+                {
+                    var percentageMastered = 100 - skill.Proficiency;
+                    damage = damage - (int)(damage * percentageMastered / 100);
+                }
+                else
+                {
+                    damage /= 4;
+                }
 
             }
             else

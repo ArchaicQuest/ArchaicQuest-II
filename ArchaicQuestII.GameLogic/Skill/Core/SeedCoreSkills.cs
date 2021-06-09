@@ -16,6 +16,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
         /// <returns></returns>
         public List<Model.Skill> SeedData()
         {
+            var skill = new DefineSkill();
             var seedData = new List<Model.Skill>()
             {
                 new CraftingSkills().Cooking(),
@@ -39,7 +40,11 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
                 new AllSpells().MagicMissile(),
                 new AllSpells().CauseWounds(),
                 new AllSpells().CureWounds(),
-                new AllSpells().Armour()
+                new AllSpells().Armour(),
+                new AllSpells().Bless(),
+                skill.Kick(),
+                skill.Elbow(),
+                skill.Lore()
             };
 
             return seedData;

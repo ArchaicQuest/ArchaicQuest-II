@@ -9,6 +9,7 @@ using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Item;
+using ArchaicQuestII.GameLogic.Skill.Core;
 using ArchaicQuestII.GameLogic.Skill.Enum;
 using ArchaicQuestII.GameLogic.Skill.Model;
 using ArchaicQuestII.GameLogic.Spell.Interface;
@@ -16,330 +17,44 @@ using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
 {
-   public class DamageSpells: IDamageSpells
+    public interface IDamageSpells
+    {
+        int MagicMissile(Player player, Player target, Room room);
+        int CauseLightWounds(Player player, Player target, Room room);
+        void Armor(Player player, Player target, Room room, bool wearOff);
+        void Bless(Player player, Player target, Room room, bool wearOff);
+        void CureLightWounds(Player player, Player target, Room room);
+    }
+
+    public class DamageSpells : IDamageSpells
     {
         private readonly IWriteToClient _writer;
         private readonly IUpdateClientUI _updateClientUi;
         private readonly IDice _dice;
         private readonly IDamage _damage;
         private readonly ICombat _fight;
+        private readonly ISkillManager _skillManager;
 
 
 
-        public DamageSpells(IWriteToClient writer, IUpdateClientUI updateClientUi, IDice dice, IDamage damage, ICombat fight)
+        public DamageSpells(IWriteToClient writer, IUpdateClientUI updateClientUi, IDice dice, IDamage damage, ICombat fight, ISkillManager skillManager)
         {
             _writer = writer;
             _updateClientUi = updateClientUi;
             _dice = dice;
             _damage = damage;
             _fight = fight;
+            _skillManager = skillManager;
 
         }
 
-        public Player GetValidTarget(Player player, Player target, ValidTargets validTargets)
-        {
-
-            var setTarget = target;
-            if (validTargets.HasFlag(ValidTargets.TargetFightSelf) && player.Status == CharacterStatus.Status.Fighting)
-            {
-                setTarget = player;
-            }
-
-            if (validTargets.HasFlag(ValidTargets.TargetFightVictim) && player.Status == CharacterStatus.Status.Fighting)
-            {
-                setTarget = target;
-            }
-
-            if (validTargets == ValidTargets.TargetIgnore)
-            {
-                setTarget = player;
-            }
-
-            return setTarget;
-        }
-
-        public void updateCombat(Player player, Player target)
-        {
-            if (string.IsNullOrEmpty(target.Target))
-            {
-                target.Target = player.Name;
-                target.Status = CharacterStatus.Status.Fighting;
-            }
-
-            if (string.IsNullOrEmpty(player.Target))
-            {
-                player.Target = target.Name;
-                player.Status = CharacterStatus.Status.Fighting;
-            }
-
-        }
-
-        public string ReplacePlaceholders(string str, Player player, bool isTarget)
-        {
-            var newString = String.Empty;
-            if (isTarget)
-            {
-                newString = str.Replace("#target#", "You");
-
-                return newString;
-            }
-
-            newString = str.Replace("#target#", player.Name);
-
-            return newString;
-
-        }
-
-        public void DamagePlayer(string spellName, int damage, Player player, Player target, Room room)
-        {
-            _writer.WriteLine(
-                $"<p>Your {spellName} {_damage.DamageText(damage).Value} {target.Name} ({damage})</p>",
-                player.ConnectionId);
-            _writer.WriteLine(
-                $"<p>{player.Name}'s {spellName} {_damage.DamageText(damage).Value} you! ({damage})</p>",
-                target.ConnectionId);
-
-            foreach (var pc in room.Players)
-            {
-                if (pc.ConnectionId.Equals(player.ConnectionId) ||
-                    pc.ConnectionId.Equals(target.ConnectionId))
-                {
-                    continue;
-                }
-
-                _writer.WriteLine($"<p>{ player.Name}'s {spellName} {_damage.DamageText(damage).Value} {target.Name} ({damage}))</p>",
-                    pc.ConnectionId);
-
-            }
-
-            target.Attributes.Attribute[EffectLocation.Hitpoints] -= damage;
-
-            if (!_fight.IsTargetAlive(target))
-            {
-                _fight.DeathCry(room, target);
-                //TODO: create corpse, refactor fight method from combat.cs
-            }
-
-            //update UI
-            _updateClientUi.UpdateHP(target);
-
-            _fight.AddCharToCombat(target);
-            _fight.AddCharToCombat(player);
-        }
-
-        /*
-         * Message for when attribute is full
-         * message for player
-         * message for target
-         * message for room
-         *
-         */
-
-        public bool AffectPlayerAttributes(string spellName, EffectLocation attribute, int value, Player player, Player target, Room room, string noAffect)
-        {
-
-            if ((attribute == EffectLocation.Hitpoints || attribute == EffectLocation.Mana || attribute == EffectLocation.Moves) && target.Attributes.Attribute[attribute] == target.MaxAttributes.Attribute[attribute])
-            {
-               _writer.WriteLine(ReplacePlaceholders(noAffect, target, false), player.ConnectionId);
-               return false;
-            }
-
-            target.Attributes.Attribute[attribute] += value;
-
-            if ((attribute == EffectLocation.Hitpoints || attribute ==  EffectLocation.Mana || attribute == EffectLocation.Moves) && target.Attributes.Attribute[attribute] > target.MaxAttributes.Attribute[attribute])
-            {
-                target.Attributes.Attribute[attribute] = target.MaxAttributes.Attribute[attribute];
-            }
-
-            return true;
-
-        }
-
-        /// <summary>
-        /// Adds affects to player
-        /// Bless
-        /// HitRoll +10
-        /// DamRoll + 5
-        /// </summary>
-        /// <param name="spellAffects"></param>
-        /// <param name="player"></param>
-        /// <param name="target"></param>
-        /// <param name="room"></param>
-        public void AddAffectToPlayer(List<Affect> spellAffects, Player player, Player target, Room room)
-        {
-            foreach (var affects in spellAffects)
-            {
-                var hasEffect = target.Affects.Custom.FirstOrDefault(x => x.Name.Equals(affects.Name));
-                if (hasEffect != null)
-                {
-                    hasEffect.Duration = affects.Duration;
-                }
-                else
-                {
-                    target.Affects.Custom.Add(new Affect()
-                    {
-                        Modifier = affects.Modifier,
-                        Benefits = affects.Benefits,
-                        Affects = affects.Affects,
-                        Duration = player.Level + player.Attributes.Attribute[EffectLocation.Intelligence] / 2,
-                        Name = affects.Name
-                    });
-
-                    if (affects.Affects == DefineSpell.SpellAffect.Blind)
-                    {
-                        target.Affects.Blind = true;
-                    }
-
-                    //apply affects to target
-                    if (affects.Modifier.Strength != 0)
-                    {
-                        target.Attributes.Attribute[EffectLocation.Strength] += affects.Modifier.Strength;
-                    }
-
-
-                    if (affects.Modifier.Dexterity != 0)
-                    {
-                        target.Attributes.Attribute[EffectLocation.Dexterity] += affects.Modifier.Dexterity;
-                    }
-
-                    if (affects.Modifier.Charisma != 0)
-                    {
-                        target.Attributes.Attribute[EffectLocation.Charisma] += affects.Modifier.Charisma;
-                    }
-
-                    if (affects.Modifier.Constitution != 0)
-                    {
-                        target.Attributes.Attribute[EffectLocation.Constitution] += affects.Modifier.Constitution;
-                    }
-
-                    if (affects.Modifier.Intelligence != 0)
-                    {
-                        target.Attributes.Attribute[EffectLocation.Intelligence] += affects.Modifier.Intelligence;
-                    }
-
-                    if (affects.Modifier.Wisdom != 0)
-                    {
-                        target.Attributes.Attribute[EffectLocation.Wisdom] += affects.Modifier.Wisdom;
-                    }
-
-                    if (affects.Modifier.DamRoll != 0)
-                    {
-                        target.Attributes.Attribute[EffectLocation.DamageRoll] += affects.Modifier.DamRoll;
-                    }
-
-                    if (affects.Modifier.HitRoll != 0)
-                    {
-                        target.Attributes.Attribute[EffectLocation.HitRoll] += affects.Modifier.HitRoll;
-                    }
-
-                    if (affects.Modifier.HP != 0)
-                    {
-                        target.Attributes.Attribute[EffectLocation.Hitpoints] += affects.Modifier.HP;
-
-                        if (target.Attributes.Attribute[EffectLocation.Hitpoints] >
-                            target.MaxAttributes.Attribute[EffectLocation.Hitpoints])
-                        {
-                            target.Attributes.Attribute[EffectLocation.Hitpoints] =
-                                target.MaxAttributes.Attribute[EffectLocation.Hitpoints];
-                        }
-                    }
-
-                    if (affects.Modifier.Mana != 0)
-                    {
-                        target.Attributes.Attribute[EffectLocation.Mana] += affects.Modifier.Mana;
-
-                        if (target.Attributes.Attribute[EffectLocation.Mana] >
-                            target.MaxAttributes.Attribute[EffectLocation.Mana])
-                        {
-                            target.Attributes.Attribute[EffectLocation.Mana] =
-                                target.MaxAttributes.Attribute[EffectLocation.Mana];
-                        }
-                    }
-
-                    if (affects.Modifier.Moves != 0)
-                    {
-                        target.Attributes.Attribute[EffectLocation.Moves] += affects.Modifier.Moves;
-
-                        if (target.Attributes.Attribute[EffectLocation.Moves] >
-                            target.MaxAttributes.Attribute[EffectLocation.Moves])
-                        {
-                            target.Attributes.Attribute[EffectLocation.Moves] =
-                                target.MaxAttributes.Attribute[EffectLocation.Moves];
-                        }
-                    }
-
-                }
-            }
-
-            _updateClientUi.UpdateAffects(target);
-            _updateClientUi.UpdateScore(target);
-        }
-
-        public void UpdateClientUI(Player player)
-        {
-            //update UI
-            _updateClientUi.UpdateHP(player);
-            _updateClientUi.UpdateMana(player);
-            _updateClientUi.UpdateMoves(player);
-            _updateClientUi.UpdateScore(player);
-        }
-
-        public void EmoteAction(Player player, Player target, Room room, SkillMessage emote)
-        {
-            if (target.ConnectionId == player.ConnectionId)
-            {
-                _writer.WriteLine(
-                    $"<p>{ReplacePlaceholders(emote.Hit.ToTarget, target, true)}</p>",
-                    target.ConnectionId);
-
-                return;
-            }
-
-            _writer.WriteLine(
-                $"<p>{ReplacePlaceholders(emote.Hit.ToPlayer, target, false)}</p>",
-                player.ConnectionId);
-            _writer.WriteLine(
-                $"<p>{emote.Hit.ToTarget}</p>",
-                target.ConnectionId);
-
-            foreach (var pc in room.Players)
-            {
-                if (pc.ConnectionId.Equals(player.ConnectionId) ||
-                    pc.ConnectionId.Equals(target.ConnectionId))
-                {
-                    continue;
-                }
-
-                _writer.WriteLine($"<p>{ReplacePlaceholders(emote.Hit.ToRoom, target, false)}</p>",
-                    pc.ConnectionId);
-
-            }
-        }
-
-        public void EmoteEffectWearOffAction(Player player, Room room, SkillMessage emote)
-        {
-            
-            foreach (var pc in room.Players)
-            {
-                if (pc.ConnectionId.Equals(player.ConnectionId))
-                {
-                    _writer.WriteLine($"<p>{emote.EffectWearOff.ToPlayer}</p>",
-                        pc.ConnectionId);
-                    continue;
-                }
-
-                _writer.WriteLine($"<p>{ReplacePlaceholders(emote.EffectWearOff.ToRoom, player, false)}</p>",
-                    pc.ConnectionId);
-
-            }
-        }
-
-
+        
+      
         public int MagicMissile(Player player, Player target, Room room)
         {
             var damage = _dice.Roll(1, 1, 4) + 1;
 
-            DamagePlayer("magic missile", damage, player, target, room );
+            _skillManager.DamagePlayer("magic missile", damage, player, target, room );
 
             return damage;
         }
@@ -349,7 +64,7 @@ namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
             var casterLevel = player.Level > 10 ? 5 : player.Level;
             var damage = _dice.Roll(1, 1, 8) + casterLevel;
 
-            DamagePlayer("Cause light wounds", damage, player, target, room);
+            _skillManager.DamagePlayer("Cause light wounds", damage, player, target, room);
 
             return damage;
         }
@@ -388,7 +103,7 @@ namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
 
               target.Affects.Custom.Remove(affect);
 
-              EmoteEffectWearOffAction(player, room, skillMessage);
+              _skillManager.EmoteEffectWearOffAction(player, room, skillMessage);
 
                 _updateClientUi.UpdateAffects(player);
                 _updateClientUi.UpdateScore(player);
@@ -396,10 +111,10 @@ namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
             }
 
             var skill = new AllSpells().Armour();
-            target = GetValidTarget(player, target, skill.ValidTargets);
+            target = _skillManager.GetValidTarget(player, target, skill.ValidTargets);
           
             //create emote effectWear off message
-            EmoteAction(player,target,room, skillMessage);
+            _skillManager.EmoteAction(player,target,room, skillMessage);
 
             if (affect == null)
             {
@@ -412,18 +127,93 @@ namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
                     Duration = 2, /* player.Level + player.Attributes.Attribute[EffectLocation.Intelligence] / 2,*/
                     Name = "Armour"
                 });
+                target.ArmorRating.Armour += 20;
             }
             else
             {
                 affect.Duration = player.Level + player.Attributes.Attribute[EffectLocation.Intelligence] / 2;
             }
 
-            target.ArmorRating.Armour += 20;
+          
 
             _updateClientUi.UpdateAffects(target);
             _updateClientUi.UpdateScore(target);
             _updateClientUi.UpdateScore(player);
      
+
+        }
+
+        public void Bless(Player player, Player target, Room room, bool wearOff)
+        {
+
+            var skillMessage = new SkillMessage()
+            {
+                NoEffect = new Messages(),
+                Hit = new Messages()
+                {
+                    ToPlayer = "You lay the blessing of your god upon #target#",
+                    ToTarget = "A powerful blessing is laid upon you.",
+                    ToRoom = "#caster# beams as a powerful blessing is laid upon #target#."
+                },
+                Death = new Messages(),
+                Miss = new Messages(),
+                EffectWearOff = new Messages()
+                {
+                    ToPlayer = "The blessing fades away.",
+                    ToRoom = "#target#'s blessing fades away."
+                }
+            };
+
+            var affect = target.Affects.Custom.FirstOrDefault(x =>
+                x.Name.Equals("Bless", StringComparison.CurrentCultureIgnoreCase));
+
+            if (wearOff)
+            {
+                target.ArmorRating.Armour -= 20;
+                target.Attributes.Attribute[EffectLocation.DamageRoll] -= 20;
+
+
+                target.Affects.Custom.Remove(affect);
+
+                _skillManager.EmoteEffectWearOffAction(player, room, skillMessage);
+
+                _updateClientUi.UpdateAffects(player);
+                _updateClientUi.UpdateScore(player);
+                return;
+            }
+
+            var skill = new AllSpells().Armour();
+            target = _skillManager.GetValidTarget(player, target, skill.ValidTargets);
+
+            //create emote effectWear off message
+            _skillManager.EmoteAction(player, target, room, skillMessage);
+
+            if (affect == null)
+            {
+
+                target.Affects.Custom.Add(new Affect()
+                {
+                    Modifier = new Modifier(),
+                    Benefits = "Affects armour by 20\r\n Affects Dam by 10",
+                    Affects = DefineSpell.SpellAffect.ArmorClass,
+                    Duration = 2, /* player.Level + player.Attributes.Attribute[EffectLocation.Intelligence] / 2,*/
+                    Name = "Bless"
+                });
+
+                target.ArmorRating.Armour += 20;
+                target.Attributes.Attribute[EffectLocation.DamageRoll] += 20;
+            }
+            else
+            {
+                affect.Duration = player.Level + player.Attributes.Attribute[EffectLocation.Intelligence] / 2;
+            }
+
+            
+
+            _updateClientUi.UpdateAffects(target);
+            _updateClientUi.UpdateScore(target);
+            _updateClientUi.UpdateScore(player);
+
 
         }
 
@@ -448,38 +238,18 @@ namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
                 Miss = new Messages()
             };
 
-         var hasAffcted = AffectPlayerAttributes("Cure light wounds", EffectLocation.Hitpoints, value, player, target, room, skillMessage.NoEffect.ToPlayer);
+         var hasAffcted = _skillManager.AffectPlayerAttributes("Cure light wounds", EffectLocation.Hitpoints, value, player, target, room, skillMessage.NoEffect.ToPlayer);
 
          if (hasAffcted)
          {
-             EmoteAction(player, target, room, skillMessage);
-             UpdateClientUI(target);
+             _skillManager.EmoteAction(player, target, room, skillMessage);
+             _skillManager.UpdateClientUI(target);
             }
-         
-            UpdateClientUI(player);
+
+         _skillManager.UpdateClientUI(player);
            
         }
 
 
-
-        public void CastSpell(string key, string obj, Player target, string fullCommand, Player player, Room room, bool wearOff)
-        {
-            switch (key.ToLower())
-            {
-                case "magic missle":
-                    MagicMissile(player, target,room);
-                    break;
-                case "cause light wounds":
-                    CauseLightWounds(player, target, room);
-                    break;
-                case "cure light wounds":
-                    CureLightWounds(player, target, room);
-                    break;
-                case "armour":
-                case "armor":
-                    Armor(player, target, room, wearOff);
-                    break;
-            }
-        }
     }
 }

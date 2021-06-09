@@ -36,6 +36,7 @@ namespace ArchaicQuestII.GameLogic.Combat
             _quest = quest;
         }
 
+        // TODO: explain that player needs to be murdered
         public Player FindTarget(Player attacker, string target, Room room, bool isMurder)
         {
             // If mob
@@ -214,12 +215,9 @@ namespace ArchaicQuestII.GameLogic.Combat
                 rooms.Add(_cache.GetRoom($"{room.Exits.Down.AreaId}{room.Exits.Down.Coords.X}{room.Exits.Down.Coords.Y}{room.Exits.Down.Coords.Z}"));
             }
 
-            foreach (var adjacentRoom in rooms)
+            foreach (var pc in rooms.SelectMany(adjacentRoom => adjacentRoom.Players))
             {
-                foreach (var pc in adjacentRoom.Players)
-                {
-                    _writer.WriteLine($"<p>Your blood freezes as you hear someone's death cry.</p>", pc.ConnectionId);
-                }
+                _writer.WriteLine($"<p>Your blood freezes as you hear someone's death cry.</p>", pc.ConnectionId);
             }
 
         
@@ -230,6 +228,24 @@ namespace ArchaicQuestII.GameLogic.Combat
             if (!_cache.IsCharInCombat(character.Id.ToString()))
             {
                 _cache.AddCharToCombat(character.Id.ToString(), character);
+            }
+        }
+
+        public void InitFightStatus(Player player, Player target)
+        {
+            player.Target = string.IsNullOrEmpty(player.Target) ? target.Name : player.Target;
+            player.Status = CharacterStatus.Status.Fighting;
+            target.Status = CharacterStatus.Status.Fighting;
+            target.Target = string.IsNullOrEmpty(target.Target) ? player.Name : target.Target; //for group combat, if target is ganged, there target should not be changed when combat is initiated.
+
+            if (!_cache.IsCharInCombat(player.Id.ToString()))
+            {
+                _cache.AddCharToCombat(player.Id.ToString(), player);
+            }
+
+            if (!_cache.IsCharInCombat(target.Id.ToString()))
+            {
+                _cache.AddCharToCombat(target.Id.ToString(), target);
             }
         }
 
@@ -368,81 +384,7 @@ namespace ArchaicQuestII.GameLogic.Combat
 
                 if (!IsTargetAlive(target))
                 {
-                  
-                    player.Target = String.Empty;
-                    player.Status = CharacterStatus.Status.Standing;
-                    target.Status = CharacterStatus.Status.Ghost;
-                    target.Target = string.Empty;
-
-                     DeathCry(room, target);
-
-                     _gain.GainExperiencePoints(player, target);
-
-                        _quest.IsQuestMob(player, target.Name);
-
-                        if (target.ConnectionId != "mob")
-                        {
-                            Helpers.PostToDiscord($"{target.Name} got killed by {player.Name}!", "event", _cache.GetConfig());
-                        }
-
-                        _writer.WriteLine("<p class='dead'>You are dead. R.I.P.</p>", target.ConnectionId);
-
-                    var targetName =  target.Name.ToLower(CultureInfo.CurrentCulture);
-                    var corpse = new Item.Item()
-                    {
-                        Name = $"The corpse of {targetName}.",
-                        Description = new Description()
-                        {
-                            Room = $"The corpse of {targetName} is laying here.",
-                            Exam = $"The corpse of {targetName} is laying here. {target.Description}",
-                            Look = $"The corpse of {targetName} is laying here. {target.Description}",
-
-                        },
-                        Slot = Equipment.EqSlot.Held,
-                        Level = 1,
-                        Stuck = true,
-                        Container = new Container()
-                        {
-                            Items = new ItemList(),
-                            CanLock = false,
-                            IsOpen = true,
-                            CanOpen = false,
-                            
-                        },
-                        ItemType = Item.Item.ItemTypes.Container,
-                        DecayTimer = 300 // 5 minutes
-                    };
-
-                    foreach (var item in target.Inventory)
-                    {
-                        corpse.Container.Items.Add(item);
-                    }
-
-                    // clear list
-                    target.Inventory = new ItemList();
-                    // clear equipped
-                    target.Equipped = new Equipment();
-
-                    // add corpse to room
-                    room.Items.Add(corpse);
-                    _clientUi.UpdateInventory(target);
-                    _clientUi.UpdateEquipment(target);
-                    _clientUi.UpdateScore(target);
-
-                    room.Clean = false;
-
-                    _cache.RemoveCharFromCombat(target.Id.ToString());
-                    _cache.RemoveCharFromCombat(player.Id.ToString());
-
-                    if (target.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
-                    {
-                        room.Mobs.Remove(target);
-                    }
-                    else
-                    {
-                        room.Players.Remove(target);
-                    }
-                    // take player to Temple / recall area
+                    TargetKilled(player, target, room);
                 }
  
             }
@@ -486,6 +428,147 @@ namespace ArchaicQuestII.GameLogic.Combat
                 throw;
             }
 
+        }
+
+        public int DamageReduction(Player defender, int damage)
+        {
+            var ArRating = defender.ArmorRating.Armour + 1;
+
+        
+            var armourReduction = ArRating / (double)damage;
+
+            if (armourReduction > 4)
+            {
+                armourReduction = 4;
+            }
+
+            if (armourReduction <= 0)
+            {
+                armourReduction = 1;
+            }
+
+            return (int)armourReduction;
+        }
+
+        public int CalculateSkillDamage(Player player, Player target, int damage)
+        {
+            // calculate damage reduction based on target armour
+            var armourReduction = DamageReduction(target, damage);
+
+            //refactor this shit
+            var strengthMod = 0.5 + player.Attributes.Attribute[EffectLocation.Strength] / (double)100;
+            var levelDif = player.Level - target.Level == 0 ? 1 : player.Level - target.Level;
+         //   var levelMod = levelDif / 2 <= 0 ? 1 : levelDif / 2;
+            
+            var criticalHit = 1;
+
+            if (target.Status == CharacterStatus.Status.Sleeping || target.Status == CharacterStatus.Status.Stunned || target.Status == CharacterStatus.Status.Resting)
+            {
+                criticalHit = 2;
+            }
+
+
+            int totalDamage = (int)(damage * strengthMod * criticalHit);
+
+            if (levelDif < 0)
+            {
+                totalDamage /= Math.Abs(levelDif);
+            }
+            else
+            {
+                totalDamage *= levelDif;
+            }
+
+            if (armourReduction > 0)
+            {
+                totalDamage /= armourReduction;
+            }
+
+            if (totalDamage <= 0)
+            {
+                totalDamage = 1;
+            }
+
+
+            return totalDamage;
+        }
+
+        public void TargetKilled(Player player, Player target, Room room)
+        {
+            player.Target = String.Empty;
+            player.Status = CharacterStatus.Status.Standing;
+            target.Status = CharacterStatus.Status.Ghost;
+            target.Target = string.Empty;
+
+            DeathCry(room, target);
+
+            _gain.GainExperiencePoints(player, target);
+
+            _quest.IsQuestMob(player, target.Name);
+
+            if (target.ConnectionId != "mob")
+            {
+                Helpers.PostToDiscord($"{target.Name} got killed by {player.Name}!", "event", _cache.GetConfig());
+            }
+
+            _writer.WriteLine("<p class='dead'>You are dead. R.I.P.</p>", target.ConnectionId);
+
+            var targetName = target.Name.ToLower(CultureInfo.CurrentCulture);
+            var corpse = new Item.Item()
+            {
+                Name = $"The corpse of {targetName}.",
+                Description = new Description()
+                {
+                    Room = $"The corpse of {targetName} is laying here.",
+                    Exam = $"The corpse of {targetName} is laying here. {target.Description}",
+                    Look = $"The corpse of {targetName} is laying here. {target.Description}",
+
+                },
+                Slot = Equipment.EqSlot.Held,
+                Level = 1,
+                Stuck = true,
+                Container = new Container()
+                {
+                    Items = new ItemList(),
+                    CanLock = false,
+                    IsOpen = true,
+                    CanOpen = false,
+
+                },
+                ItemType = Item.Item.ItemTypes.Container,
+                DecayTimer = 300 // 5 minutes
+            };
+
+            foreach (var item in target.Inventory)
+            {
+                corpse.Container.Items.Add(item);
+            }
+
+            // clear list
+            target.Inventory = new ItemList();
+            // clear equipped
+            target.Equipped = new Equipment();
+
+            // add corpse to room
+            room.Items.Add(corpse);
+            _clientUi.UpdateInventory(target);
+            _clientUi.UpdateEquipment(target);
+            _clientUi.UpdateScore(target);
+
+            room.Clean = false;
+
+            _cache.RemoveCharFromCombat(target.Id.ToString());
+            _cache.RemoveCharFromCombat(player.Id.ToString());
+
+            if (target.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
+            {
+                room.Mobs.Remove(target);
+            }
+            else
+            {
+                room.Players.Remove(target);
+            }
+            // take player to Temple / recall area
         }
 
         public void Consider(Player player, string target, Room room)

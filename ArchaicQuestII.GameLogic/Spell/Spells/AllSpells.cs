@@ -143,5 +143,36 @@ namespace ArchaicQuestII.GameLogic.Spell
 
 
         }
+
+        public Skill.Model.Skill Bless()
+        {
+            var skill = new Skill.Model.Skill()
+            {
+                Name = "Bless",
+                Description =
+                    "Blesses the target increases dam and hit chance",
+                ApplyLevelCheck = true,
+                SavingThrow = new SavingThrow(),
+                Rounds = 1,
+                Cost = new SkillCost()
+                {
+                    Table = new Dictionary<Cost, int>()
+                    {
+                        {Cost.Mana, 25}
+                    }
+                },
+                Type = SkillType.Affect,
+                StartsCombat = false,
+                ValidTargets = ValidTargets.TargetPlayerRoom,
+                Damage = new Dice()
+                {
+                },
+                UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
+            };
+
+            return skill;
+
+
+        }
     }
 }

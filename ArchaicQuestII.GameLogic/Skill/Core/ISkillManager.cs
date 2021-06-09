@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Effect;
+using ArchaicQuestII.GameLogic.Skill.Enum;
+using ArchaicQuestII.GameLogic.Spell;
 using ArchaicQuestII.GameLogic.World.Room;
 
-namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
+namespace ArchaicQuestII.GameLogic.Skill.Core
 {
-    public interface IDamageSpells
+    public interface ISkillManager
     {
         public void updateCombat(Player player, Player target);
         public string ReplacePlaceholders(string str, Player player, bool isTarget);
@@ -23,6 +25,6 @@ namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
 
         public void EmoteEffectWearOffAction(Player player, Room room, SkillMessage emote);
 
-        public void CastSpell(string key, string obj, Player target, string fullCommand, Player player, Room room, bool wearOff);
+        public Player GetValidTarget(Player player, Player target, ValidTargets validTargets);
     }
 }

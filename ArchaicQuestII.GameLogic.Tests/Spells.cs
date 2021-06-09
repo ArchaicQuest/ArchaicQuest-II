@@ -13,6 +13,7 @@ using ArchaicQuestII.GameLogic.World.Room;
 using Moq;
 using System.Collections.Generic;
 using ArchaicQuestII.GameLogic.Character.Class;
+using ArchaicQuestII.GameLogic.Skill.Core;
 using ArchaicQuestII.GameLogic.Spell.Interface;
 using ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells;
 using Xunit;
@@ -34,7 +35,7 @@ namespace ArchaicQuestII.GameLogic.Tests
         private readonly Mock<IUpdateClientUI> _updateClientUI;
         private readonly Mock<IMobScripts> _mobScript;
         private readonly Mock<IDice> _dice;
-        private readonly Mock<IDamageSpells> _damageSpells;
+        private readonly Mock<ISpellList> _spellList;
 
         public SpellTests()
         {
@@ -124,8 +125,8 @@ namespace ArchaicQuestII.GameLogic.Tests
             _updateClientUI = new Mock<IUpdateClientUI>();
             _mobScript = new Mock<IMobScripts>();
             _dice = new Mock<IDice>();
-            _damageSpells = new Mock<IDamageSpells>();
-            _spell = new CastSpell(_writer.Object, _spellTargetCharacter.Object, _cache.Object, _damage.Object, _updateClientUI.Object, _mobScript.Object,_dice.Object, _damageSpells.Object);
+            _spellList = new Mock<ISpellList>();
+            _spell = new CastSpell(_writer.Object, _spellTargetCharacter.Object, _cache.Object, _damage.Object, _updateClientUI.Object, _mobScript.Object,_dice.Object, _spellList.Object);
 
             var newSkill = new Skill.Model.Skill
             {

@@ -12,6 +12,10 @@ namespace ArchaicQuestII.GameLogic.Combat
 {
     public interface ICombat
     {
+        public void InitFightStatus(Player player, Player target);
+        public void TargetKilled(Player player, Player target, Room room);
+
+        public int CalculateSkillDamage(Player player, Player target, int damage);
         public Player FindTarget(Player attacker, string target, Room room, bool isMurder);
 
         public Item.Item GetWeapon(Player player);

@@ -70,7 +70,7 @@ namespace ArchaicQuestII.GameLogic.Spell
             //If no argument, target is the PC/NPC the player is fighting
             if (player.Status == CharacterStatus.Status.Fighting && (spell.ValidTargets & ValidTargets.TargetFightVictim) != 0)
             {
-                if (string.IsNullOrEmpty(target))
+                if (string.IsNullOrEmpty(target) || target.Equals(spell.Name, StringComparison.CurrentCultureIgnoreCase))
                 {
                     return CheckTarget(spell, player.Target, room, player);
                 }

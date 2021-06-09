@@ -121,8 +121,8 @@ namespace ArchaicQuestII.GameLogic.Character
         [JsonProperty("target")]
         public string Target { get; set; }
         [JsonProperty("armorRating")]
-        public ArmourRating ArmorRating { get; set; }
-        [JsonProperty("money")]
+        public ArmourRating ArmorRating { get; set; } = new ArmourRating();
+            [JsonProperty("money")]
         public Money Money { get; set; }
         [JsonProperty("affects")]
         public Affects Affects { get; set; } = new Affects();
@@ -164,5 +164,6 @@ namespace ArchaicQuestII.GameLogic.Character
         public double Weight { get; set; } = 0;
         // Full at 4
         public int Hunger { get; set; } = 0;
-  }
+        public int Lag { get; set; } = 0;
+    }
 }
