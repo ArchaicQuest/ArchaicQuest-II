@@ -63,7 +63,7 @@ namespace ArchaicQuestII.GameLogic.Spell
                     return player;
                 }
 
-                _writer.WriteLine("You can only this spell on yourself", player.ConnectionId);
+                _writer.WriteLine("You can only cast this spell on yourself", player.ConnectionId);
                 return null;
             }
 

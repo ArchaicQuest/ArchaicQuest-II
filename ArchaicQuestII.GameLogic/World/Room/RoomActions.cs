@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using ArchaicQuestII.Core.World;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Item;
@@ -20,11 +21,15 @@ namespace ArchaicQuestII.GameLogic.World.Room
         private readonly IWriteToClient _writeToClient;
         private readonly ITime _time;
         private readonly ICache _cache;
-        public RoomActions(IWriteToClient writeToClient, ITime time, ICache cache)
+        private readonly IDice _dice;
+        private readonly IGain _gain;
+        public RoomActions(IWriteToClient writeToClient, ITime time, ICache cache, IDice dice, IGain gain)
         {
             _writeToClient = writeToClient;
             _time = time;
             _cache = cache;
+            _dice = dice;
+            _gain = gain;
         }
         /// <summary>
         /// Displays current room 
@@ -198,7 +203,25 @@ namespace ArchaicQuestII.GameLogic.World.Room
             {
                 _writeToClient.WriteLine($"<p  class='{(isDark ? "room-dark" : "")}'>{item.Description.Look}", player.ConnectionId);
 
-                if (item.Container != null && !item.Container.CanOpen && item.Container.Items.Any())
+                // display item stats via lore
+               var hasLore = Helpers.FindSkill("lore", player);
+
+               if (hasLore != null)
+               {
+                   var success = LoreSuccess(hasLore.Proficiency ?? 0);
+
+                   if (success)
+                   {
+                       DoLore(item, player);
+                   }
+                   else
+                   {
+                
+                       _gain.GainSkillExperience(player, hasLore.Level * 100, hasLore, _dice.Roll(1, 1, 5));
+                   }
+               }
+
+               if (item.Container != null && !item.Container.CanOpen && item.Container.Items.Any())
                 {
                     _writeToClient.WriteLine($"<p  class='{(isDark ? "room-dark" : "")}'>{item.Name} contains:", player.ConnectionId);
 
@@ -528,6 +551,103 @@ namespace ArchaicQuestII.GameLogic.World.Room
             }
 
             return false;
+        }
+
+        public bool LoreSuccess(int? skillLevel)
+        {
+            var chance = _dice.Roll(1, 1, 100);
+
+            return skillLevel >= chance;
+        }
+
+        public void DoLore(Item.Item item, Player player)
+        {
+           var sb = new StringBuilder();
+
+           //It is a level 45 armor, weight 4.
+           //    Locations it can be worn: finger
+           //    Special properties: evil
+           //    Alignments allowed: evil neutral
+           //This armor has a gold value of 45000.
+           //    Armor class is 6 of 6. 
+           //    Affects strength by 1. 
+           //    Affects wisdom by 1. 
+           //    Affects mana by 60. 
+           //    Affects hit roll by 4. 
+        
+           sb.Append($"It is a level {item.Level} {item.ItemType}, weight {item.Weight}.<br/>Locations it can be worn: {item.Slot}.<br /> This {item.ItemType} has a gold value of {item.Value}.<br />");
+
+           sb.Append($"Affects armour by {item.ArmourRating.Armour} / {item.ArmourRating.Magic}");
+
+           if (item.Modifier.Strength != 0)
+           {
+               sb.Append($"<br />Affects strength by {item.Modifier.Strength}");
+           }
+
+           if (item.Modifier.Dexterity != 0)
+           {
+               sb.Append($"<br />Affects dexterity by {item.Modifier.Dexterity}");
+           }
+
+           if (item.Modifier.Constitution != 0)
+           {
+               sb.Append($"<br />Affects constitution by {item.Modifier.Constitution}");
+           }
+
+           if (item.Modifier.Wisdom != 0)
+           {
+               sb.Append($"<br />Affects wisdom by {item.Modifier.Wisdom}");
+           }
+
+           if (item.Modifier.Intelligence != 0)
+           {
+               sb.Append($"<br />Affects intelligence by {item.Modifier.Intelligence}");
+           }
+
+           if (item.Modifier.Charisma != 0)
+           {
+               sb.Append($"<br />Affects charisma by {item.Modifier.Charisma}");
+           }
+
+           if (item.Modifier.HP != 0)
+           {
+               sb.Append($"<br />Affects HP by {item.Modifier.HP}");
+           }
+
+
+           if (item.Modifier.Mana != 0)
+           {
+               sb.Append($"<br />Affects mana by {item.Modifier.Mana}");
+           }
+
+           if (item.Modifier.Moves != 0)
+           {
+               sb.Append($"<br />Affects moves by {item.Modifier.Moves}");
+           }
+
+           if (item.Modifier.DamRoll != 0)
+           {
+               sb.Append($"<br />Affects damroll by {item.Modifier.DamRoll}");
+           }
+
+           if (item.Modifier.HitRoll != 0)
+           {
+               sb.Append($"<br />Affects hitroll by {item.Modifier.HitRoll}");
+           }
+
+           if (item.Modifier.Saves != 0)
+           {
+               sb.Append($"<br />Affects saves by {item.Modifier.Saves}");
+           }
+
+           if (item.Modifier.SpellDam != 0)
+           {
+               sb.Append($"<br />Affects spell dam by {item.Modifier.SpellDam}");
+           }
+
+     
+            _writeToClient.WriteLine(sb.ToString(), player.ConnectionId);
+ 
         }
 
         public string DisplayPlayers(Room room, Player player)

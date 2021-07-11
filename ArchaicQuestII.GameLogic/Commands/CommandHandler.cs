@@ -41,7 +41,7 @@ namespace ArchaicQuestII.GameLogic.Commands
                 .FirstOrDefault(x => x.Name.StartsWith(key, StringComparison.CurrentCultureIgnoreCase));
             if (foundSkill != null) 
             {
-                _Skill.PerfromSkill(foundSkill.Name, player, obj, room);
+                _Skill.PerfromSkill(foundSkill, key, player, obj, room);
                 return;
             }
 

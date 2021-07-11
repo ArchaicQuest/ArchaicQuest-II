@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Help;
 using ArchaicQuestII.GameLogic.World.Room;
 
@@ -15,6 +16,9 @@ namespace ArchaicQuestII.GameLogic.Core
         /// <param name="player"></param>
         void Who(Player player);
 
+        bool SkillCheckSuccesful(SkillList skill);
+
+        void GainSkillProficiency(SkillList foundSkill, Player player);
         void Save(Player player);
         void Quit(Player player, Room room);
         /// <summary>

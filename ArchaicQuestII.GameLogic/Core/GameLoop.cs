@@ -122,7 +122,6 @@ namespace ArchaicQuestII.GameLogic.Core
                         }
                     }
 
-                    
 
                     foreach (var item in originalRoom.Items)
                     {
@@ -162,14 +161,48 @@ namespace ArchaicQuestII.GameLogic.Core
 
                 foreach (var player in players)
                 {
-                    IdleCheck(player);
-                    var hP = (_dice.Roll(1, 2, 5) * player.Level);
-                    var mana = (_dice.Roll(1, 2, 5) * player.Level);
-                    var moves = (_dice.Roll(1, 2, 5) * player.Level);
+                    IdleCheck(player); 
+
+                    var hP = (_dice.Roll(1, 2, 5));
+                    var mana = (_dice.Roll(1, 2, 5));
+                    var moves = (_dice.Roll(1, 2, 5));
+
+                    // if player has fast healing add the bonus here
+                  var hasFastHealing =  player.Skills.FirstOrDefault(x =>
+                        x.SkillName.Equals("Fast Healing", StringComparison.CurrentCultureIgnoreCase));
+
+         
+
+                  if ((player.Status & CharacterStatus.Status.Sleeping) != 0)
+                  {
+                      hP *= 2;
+                      mana *= 2;
+                      moves *= 2;
+                    }
+
+                  if ((player.Status & CharacterStatus.Status.Resting) != 0)
+                  {
+                      hP *= (int)1.5;
+                      mana *= (int)1.5;
+                      moves *= (int)1.5;
+                    }
 
                     if (player.Attributes.Attribute[EffectLocation.Hitpoints] <
                         player.MaxAttributes.Attribute[EffectLocation.Hitpoints])
                     {
+
+                        if (hasFastHealing != null)
+                        {
+                            if (_core.SkillCheckSuccesful(hasFastHealing))
+                            {
+                                hP *= 2;
+                            }
+                            else
+                            {
+                                _core.GainSkillProficiency(hasFastHealing, player);
+                            }
+                        }
+
                         player.Attributes.Attribute[EffectLocation.Hitpoints] += GainAmount(hP, player);
                         if (player.Attributes.Attribute[EffectLocation.Hitpoints] > player.MaxAttributes.Attribute[EffectLocation.Hitpoints])
                         {
@@ -233,6 +266,12 @@ namespace ArchaicQuestII.GameLogic.Core
                    
                     foreach (var player in validPlayers)
                     {
+                        if (player.Lag > 0 &&
+                            player.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            player.Lag -= 1;
+                            continue;
+                        }
                         _combat.Fight(player, player.Target, _cache.GetRoom(player.RoomId), false);
                     }
                 }

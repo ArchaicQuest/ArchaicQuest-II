@@ -7,6 +7,7 @@ using System.Net.Http.Headers;
 using System.Security.Cryptography;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Skill.Enum;
 using ArchaicQuestII.GameLogic.World.Room;
@@ -91,6 +92,14 @@ namespace ArchaicQuestII.GameLogic.Core
         {
             return $"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}";
         }
+
+        public static SkillList FindSkill(string skillName, Player player)
+        {
+
+            return player.Skills.FirstOrDefault(x =>
+                x.SkillName.Equals(skillName, StringComparison.CurrentCultureIgnoreCase));
+        }
+
 
         /// <summary>
         /// Use to remove A / An from word
@@ -325,8 +334,19 @@ namespace ArchaicQuestII.GameLogic.Core
             client.Dispose();
         }
 
-       
+
+        public static int GetPercentage(int percentage, int value)
+        {
+            if (percentage == 0)
+            {
+                return percentage;
+            }
+
+            return (int)percentage * value / 100;
+        }
+
  
+
 
 
     }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
 
@@ -111,6 +112,24 @@ namespace ArchaicQuestII.GameLogic.Character.Gain
             // boost xp if mob is shielded
 
             return exp > maxEXP ? maxEXP : exp;
+        }
+
+        public void GainSkillExperience(Player character, int expGain, SkillList skill, int increase)
+        {
+
+            character.Experience += expGain;
+            character.ExperienceToNextLevel -= expGain;
+            skill.Proficiency += increase;
+
+          GainLevel(character);
+            _clientUi.UpdateExp(character);
+
+            _writer.WriteLine(
+                $"<p class='improve'>You learn from your mistakes and gain {expGain} experience points.</p>",
+                character.ConnectionId);
+            _writer.WriteLine(
+                $"<p class='improve'>Your {skill.SkillName} skill increases by {increase}%.</p>",
+                character.ConnectionId);
         }
     }
 }

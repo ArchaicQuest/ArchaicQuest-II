@@ -17,7 +17,7 @@ namespace ArchaicQuestII.GameLogic.Skill
 
     public interface ISKill
     {
-        void PerfromSkill(string skillName, Player origin, string targetName, Room room = null);
+        void PerfromSkill(Model.Skill skill, string command, Player origin, string targetName, Room room = null);
     }
     public class DoSkill: ISKill
     {
@@ -51,21 +51,21 @@ namespace ArchaicQuestII.GameLogic.Skill
                 case CharacterStatus.Status.Sleeping:
                     _writer.WriteLine("You can't do this while asleep.");
                     return false;
-                case CharacterStatus.Status.Stunned:
-                    _writer.WriteLine("You are stunned.");
-                    return false;
-                case CharacterStatus.Status.Dead:
-                case CharacterStatus.Status.Ghost:
-                case CharacterStatus.Status.Incapacitated:
-                    _writer.WriteLine("You can't do this while dead.");
-                    return false;
-                case CharacterStatus.Status.Resting:
-                case CharacterStatus.Status.Sitting:
-                    _writer.WriteLine("You need to stand up before you do that.");
-                    return false;
-                case CharacterStatus.Status.Busy:
-                    _writer.WriteLine("You can't do that right now.");
-                    return false;
+                //case CharacterStatus.Status.Stunned:
+                //    _writer.WriteLine("You are stunned.");
+                //    return false;
+                //case CharacterStatus.Status.Dead:
+                //case CharacterStatus.Status.Ghost:
+                //case CharacterStatus.Status.Incapacitated:
+                //    _writer.WriteLine("You can't do this while dead.");
+                //    return false;
+                //case CharacterStatus.Status.Resting:
+                //case CharacterStatus.Status.Sitting:
+                //    _writer.WriteLine("You need to stand up before you do that.");
+                //    return false;
+                //case CharacterStatus.Status.Busy:
+                //    _writer.WriteLine("You can't do that right now.");
+                //    return false;
                 default:
                     return true;
             }
@@ -102,7 +102,7 @@ namespace ArchaicQuestII.GameLogic.Skill
 
         }
 
-        public Skill.Model.Skill FindSkill(string skillName, Player player)
+        public Skill.Model.Skill FindSkill(Model.Skill skill, string skillName, Player player)
         {
             var foundSkill = player.Skills.FirstOrDefault(x => x.SkillName.StartsWith(skillName, StringComparison.CurrentCultureIgnoreCase));
 
@@ -112,9 +112,17 @@ namespace ArchaicQuestII.GameLogic.Skill
                 return null;
             }
 
-            var skill = _cache.GetSkill(foundSkill.SkillId);
+            var getSkill = _cache.GetSkill(foundSkill.SkillId);
 
-            return skill;
+            if (getSkill == null)
+            {
+                //player skill id mismatch as not using a db no more and these are generated, chance of player not having the correct id
+                foundSkill.SkillId = skill.Id;
+                getSkill = skill;
+            }
+
+
+            return getSkill;
         }
 
         public bool AffectsCharacter(Skill.Model.Skill spell)
@@ -135,7 +143,7 @@ namespace ArchaicQuestII.GameLogic.Skill
         /// <param name="origin"></param>
         /// <param name="target"></param>
         /// <param name="room"></param>
-        public void PerfromSkill(string skillName, Player origin, string targetName = "", Room room = null)
+        public void PerfromSkill(Model.Skill performSkill, string command, Player origin, string targetName = "", Room room = null)
         {
 
 
@@ -144,7 +152,7 @@ namespace ArchaicQuestII.GameLogic.Skill
                 return;
             }
 
-            var FoundSkill = FindSkill(skillName, origin);
+            var FoundSkill = FindSkill(performSkill, command, origin);
 
             if (FoundSkill == null)
             {
@@ -160,7 +168,7 @@ namespace ArchaicQuestII.GameLogic.Skill
 
 
 
-
+                
             if (AffectsCharacter(FoundSkill))
             {
                 Player target = null;

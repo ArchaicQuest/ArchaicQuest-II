@@ -9,6 +9,7 @@ using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Status;
+using ArchaicQuestII.GameLogic.Commands.Movement;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Item;
@@ -25,6 +26,7 @@ namespace ArchaicQuestII.GameLogic.Combat
         private readonly IFormulas _formulas;
         private readonly ICache _cache;
         private readonly IQuestLog _quest;
+    
         public Combat(IWriteToClient writer, IUpdateClientUI clientUi, IDamage damage, IFormulas formulas, IGain gain, ICache cache, IQuestLog quest)
         {
             _writer = writer;
@@ -34,6 +36,7 @@ namespace ArchaicQuestII.GameLogic.Combat
             _gain = gain;
             _cache = cache;
             _quest = quest;
+           
         }
 
         // TODO: explain that player needs to be murdered
@@ -95,9 +98,8 @@ namespace ArchaicQuestII.GameLogic.Combat
             _writer.WriteLine($"<p class='combat'>Your {attackType} {damText.Value} {target.Name.ToLower(cc)}. <span class='damage'>[{damage}]</span></p>", player.ConnectionId);
             _writer.WriteLine($"<p class='combat'>{target.Name} {_formulas.TargetHealth(player, target)}</p>", player.ConnectionId);
 
-            _writer.WriteLine($"<p>{player.Name}'s {attackType} {damText.Value} you. <span class='damage'>[{damage}]</span></p></p>", target.ConnectionId);
-           
-          
+            _writer.WriteLine($"<p>{player.Name}'s {attackType} {damText.Value} you. ({Enum.GetName(typeof(CharacterStatus.Status), player.Status)}) <span class='damage'>[{damage}]</span></p></p>", target.ConnectionId);
+     
 
             foreach (var pc in room.Players)
             {
@@ -235,7 +237,7 @@ namespace ArchaicQuestII.GameLogic.Combat
         {
             player.Target = string.IsNullOrEmpty(player.Target) ? target.Name : player.Target;
             player.Status = CharacterStatus.Status.Fighting;
-            target.Status = CharacterStatus.Status.Fighting;
+            target.Status = (target.Status & CharacterStatus.Status.Stunned) != 0 ? CharacterStatus.Status.Stunned : CharacterStatus.Status.Fighting;
             target.Target = string.IsNullOrEmpty(target.Target) ? player.Name : target.Target; //for group combat, if target is ganged, there target should not be changed when combat is initiated.
 
             if (!_cache.IsCharInCombat(player.Id.ToString()))
@@ -255,6 +257,11 @@ namespace ArchaicQuestII.GameLogic.Combat
             try
             {
 
+                if ((player.Status & CharacterStatus.Status.Stunned) != 0)
+                {
+                    _writer.WriteLine($"<p>You are too stunned to attack this round.<p>", player.ConnectionId);
+                    return;
+                }
          
             var target = FindTarget(player, victim, room, isMurder);
 
@@ -569,6 +576,19 @@ namespace ArchaicQuestII.GameLogic.Combat
                 room.Players.Remove(target);
             }
             // take player to Temple / recall area
+
+            if (target.ConnectionId != "mob")
+            {
+                target.Status = CharacterStatus.Status.Resting;
+                var newRoom = _cache.GetRoom(target.RecallId);
+
+                target.Buffer = new Queue<string>();
+
+                target.RoomId = Helpers.ReturnRoomId(newRoom);
+
+                newRoom.Players.Add(target);
+                target.Buffer.Enqueue("look");
+            }
         }
 
         public void Consider(Player player, string target, Room room)

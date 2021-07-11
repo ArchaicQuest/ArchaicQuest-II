@@ -44,7 +44,12 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
                 new AllSpells().Bless(),
                 skill.Kick(),
                 skill.Elbow(),
-                skill.Lore()
+                skill.Lore(),
+                skill.Trip(),
+                skill.Haggle(),
+                skill.HeadButt(),
+                skill.Charge(),
+                skill.FastHealing()
             };
 
             return seedData;

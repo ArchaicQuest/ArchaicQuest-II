@@ -140,6 +140,7 @@ namespace ArchaicQuestII.API
             services.AddSingleton<ISkillManager, SkillManager>();
             services.AddSingleton<IDamageSpells, DamageSpells>();
             services.AddSingleton<IDamageSkills, DamageSkills>();
+            services.AddSingleton<IPassiveSkills, PassiveSkills>();
             services.AddSingleton<ISpellList, SpellList>();
             services.AddSingleton<ISkillList, GameLogic.Skill.SkillList>();
             services.AddSingleton<ISKill, DoSkill>();
@@ -349,12 +350,15 @@ namespace ArchaicQuestII.API
             _cache.SetConfig(config);
 
             //add skills
-            var skills = _db.GetList<Skill>(DataBase.Collections.Skill);
+            var skills = new SeedCoreSkills().SeedData();
 
-            foreach (var skill in skills)
+                foreach (var skill in skills)
             {
+                 skill.Id = skills.Count > 0 ? skills.Max(x => x.Id) + 1 : 1;
                 _cache.AddSkill(skill.Id, skill);
             }
+
+                // update player skills id
 
             var quests = _db.GetList<Quest>(DataBase.Collections.Quests);
 

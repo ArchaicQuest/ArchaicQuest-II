@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Class;
+using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Effect;
@@ -22,13 +24,15 @@ namespace ArchaicQuestII.GameLogic.Core
         private readonly IDataBase _db;
         private readonly IUpdateClientUI _clientUi;
         private readonly IDice _dice;
-        public Core(ICache cache, IWriteToClient writeToClient, IDataBase db, IUpdateClientUI clientUi, IDice dice)
+        private readonly IGain _gain;
+        public Core(ICache cache, IWriteToClient writeToClient, IDataBase db, IUpdateClientUI clientUi, IDice dice, IGain gain)
         {
             _cache = cache;
             _writeToClient = writeToClient;
             _db = db;
             _clientUi = clientUi;
             _dice = dice;
+            _gain = gain;
         }
         public void Who(Player player)
         {
@@ -540,6 +544,10 @@ namespace ArchaicQuestII.GameLogic.Core
 
         }
 
+        /// <summary>
+        /// for testing
+        /// </summary>
+        /// <param name="player"></param>
         public void TrainSkill(Player player)
         {
             foreach (var skill in player.Skills)
@@ -564,6 +572,55 @@ namespace ArchaicQuestII.GameLogic.Core
                 "mana" => new Tuple<string, EffectLocation>("mana", EffectLocation.Mana),
                 _ => new Tuple<string, EffectLocation>("", EffectLocation.None)
             };
+        }
+
+        /// <summary>
+        /// is basic skill successful?
+        /// </summary>
+        /// <param name="skill"></param>
+        /// <returns></returns>
+        public bool SkillCheckSuccesful(SkillList skill)
+        {
+            var proficiency = skill.Proficiency;
+            var success = _dice.Roll(1, 1, 100);
+
+            if (success == 1 || success == 101)
+            {
+                return false;
+            }
+
+            return proficiency >= success;
+        }
+
+        public void GainSkillProficiency(SkillList foundSkill, Player player)
+        {
+
+            var getSkill = _cache.GetSkill(foundSkill.SkillId);
+
+            if (getSkill == null)
+            {
+                var skill = _cache.GetAllSkills().FirstOrDefault(x => x.Name.Equals(foundSkill.SkillName, StringComparison.CurrentCultureIgnoreCase));
+                foundSkill.SkillId = skill.Id;
+            }
+
+           
+            if (foundSkill.Proficiency == 100)
+            {
+                return;
+            }
+
+            var increase = _dice.Roll(1, 1, 5);
+
+            foundSkill.Proficiency += increase;
+
+            _gain.GainExperiencePoints(player, 100 * foundSkill.Level / 4, false);
+
+            _clientUi.UpdateExp(player);
+
+            _writeToClient.WriteLine(
+                $"<p class='improve'>You learn from your mistakes and gain {100 * foundSkill.Level / 4} experience points.</p>" +
+                $"<p class='improve'>Your knowledge of {foundSkill.SkillName} increases by {increase}%.</p>",
+                player.ConnectionId, 0);
         }
     }
 }

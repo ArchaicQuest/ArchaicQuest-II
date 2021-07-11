@@ -37,6 +37,15 @@ namespace ArchaicQuestII.GameLogic.Skill
                 case "elbow":
                     _damage.Elbow(player, target, room);
                     break;
+                case "trip":
+                    _damage.Trip(player, target, room);
+                    break;
+                case "headbutt":
+                    _damage.HeadButt(player, target, room);
+                    break;
+                case "charge":
+                    _damage.Charge(player, target, room, obj);
+                    break;
                     //case "cause light wounds":
                     //    _damageSpells.CauseLightWounds(player, target, room);
                     //    break;

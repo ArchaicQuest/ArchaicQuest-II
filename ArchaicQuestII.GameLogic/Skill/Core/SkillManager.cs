@@ -60,6 +60,12 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
             return setTarget;
         }
 
+        public Player findTarget(Player player, string target, Room room, bool murder)
+        {
+            return _fight.FindTarget(player, target, room, murder);
+
+        }
+
         public void updateCombat(Player player, Player target)
         {
            _fight.InitFightStatus(player, target);

@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ArchaicQuestII.GameLogic.Commands;
 using ArchaicQuestII.GameLogic.Core;
+using ArchaicQuestII.GameLogic.Skill.Skills;
 using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
@@ -11,15 +13,20 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
     {
         private readonly IWriteToClient _writer;
         private readonly IUpdateClientUI _clientUi;
+        private readonly IPassiveSkills _passiveSkills;
 
-        public Shop(IWriteToClient writer, IUpdateClientUI clientUi)
+        public Shop(IWriteToClient writer, IUpdateClientUI clientUi, IPassiveSkills passiveSkills)
         {
             _writer = writer;
             _clientUi = clientUi;
+            _passiveSkills = passiveSkills;
         }
 
         public void DisplayInventory(Player mob, Player player)
         {
+
+           var hagglePriceReduction = Haggle(player, mob);
+
             _writer.WriteLine(mob.Name + " says 'Here's what I have for sale.'", player.ConnectionId);
             var sb = new StringBuilder();
             sb.Append("<table class='data'><tr><td style='width: 30px; text-align: center;'>#</td><td style='width: 30px; text-align: center;'>Level</td><td  style='width: 65px;'>Price</td><td>Item</td></tr>");
@@ -28,7 +35,7 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
             foreach (var item in mob.Inventory.Distinct().OrderBy(x => x.Level).ThenBy(x => x.Value))
             {
                 i++;
-                sb.Append($"<tr><td style='width: 30px; text-align: center;'>{i}</td><td style='width: 30px; text-align: center;'>{item.Level}</td><td  style='width: 65px;'>{DisplayUnit(item.Value)}</td><td>{item.Name}</td></tr>");
+                sb.Append($"<tr><td style='width: 30px; text-align: center;'>{i}</td><td style='width: 30px; text-align: center;'>{item.Level}</td><td  style='width: 65px;'>{DisplayUnit(item.Value, hagglePriceReduction)}</td><td>{item.Name}</td></tr>");
             }
 
             sb.Append("</table>");
@@ -61,10 +68,20 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
             DisplayInventory(shopKeeper, player);
         }
 
+        public int Haggle(Player player, Player target)
+        {
+          var priceReduction =  _passiveSkills.Haggle(player, target);
+
+          return priceReduction;
+
+        }
+
         public double AddMarkUp(int price)
         {
             return price * 1.5;
         }
+
+   
 
         /// <summary>
         /// Each gold piece is worth 100 silver pieces.
@@ -74,10 +91,12 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
         /// </summary>
         /// <param name="price"></param>
         /// <returns></returns>
-        public string DisplayUnit(int price)
+        public string DisplayUnit(int price, int hagglePriceReduction)
         {
             var goldPrice = AddMarkUp(price); // /100
-            return $"{Math.Floor(goldPrice)}";
+             
+            // show haggle price
+            return $"{Math.Floor((decimal)goldPrice - Helpers.GetPercentage(hagglePriceReduction, (int)goldPrice))}";
             // return goldPrice < 1 ? $"{Math.Floor(goldPrice * 100)} SP" : $"{Math.Floor(goldPrice)} GP";
         }
 
@@ -219,22 +238,26 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
                 return;
             }
 
-            if (player.Money.Gold < AddMarkUp(hasItem.Value))
+            var haggleReduction = _passiveSkills.Haggle(player, vendor);
+            var goldValue = AddMarkUp(hasItem.Value);
+            var trueGoldValue = goldValue - Helpers.GetPercentage(haggleReduction, (int)goldValue);
+            if (player.Money.Gold < trueGoldValue)
             {
                 _writer.WriteLine($"<p>{vendor.Name} says 'Sorry you can't afford that.'</p>", player.ConnectionId);
                 return;
             }
 
-            player.Money.Gold -= (int)AddMarkUp(hasItem.Value);
+            player.Money.Gold -= (int)Math.Floor(trueGoldValue);
 
             player.Inventory.Add(hasItem);
 
             // TODO: weight
+            player.Weight += hasItem.Weight;
 
             _clientUi.UpdateScore(player);
             _clientUi.UpdateInventory(player);
 
-            _writer.WriteLine($"<p>You buy {hasItem.Name.ToLower()} for {Math.Floor(AddMarkUp(hasItem.Value))} gold.</p>", player.ConnectionId);
+            _writer.WriteLine($"<p>You buy {hasItem.Name.ToLower()} for {Math.Floor(trueGoldValue)} gold.</p>", player.ConnectionId);
         }
 
         public void BuyItem(string itemName, Room room, Player player)
@@ -262,22 +285,26 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
                 return;
             }
 
-            if (player.Money.Gold < AddMarkUp(hasItem.Value))
+            var haggleReduction = _passiveSkills.Haggle(player, vendor);
+            var goldValue = AddMarkUp(hasItem.Value);
+            var trueGoldValue = goldValue - Helpers.GetPercentage(haggleReduction, (int) goldValue);
+            if (player.Money.Gold < trueGoldValue)
             {
                 _writer.WriteLine($"<p>{vendor.Name} says 'Sorry you can't afford that.'</p>", player.ConnectionId);
                 return;
             }
 
-            player.Money.Gold -= (int)Math.Floor(AddMarkUp(hasItem.Value));
+            player.Money.Gold -= (int)Math.Floor(trueGoldValue);
 
             player.Inventory.Add(hasItem);
 
             // TODO: weight
+            player.Weight += hasItem.Weight;
 
             _clientUi.UpdateScore(player);
             _clientUi.UpdateInventory(player);
   
-            _writer.WriteLine($"<p>You buy {hasItem.Name.ToLower()} for {Math.Floor(AddMarkUp(hasItem.Value))} gold.</p>", player.ConnectionId);
+            _writer.WriteLine($"<p>You buy {hasItem.Name.ToLower()} for {Math.Floor(trueGoldValue)} gold.</p>", player.ConnectionId);
         }
 
         public void SellItem(string itemName, Room room, Player player)
@@ -320,6 +347,7 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
             //    vendor.Inventory.Add(hasItem);
             //}
 
+            player.Weight -= hasItem.Weight;
             _clientUi.UpdateScore(player);
             _clientUi.UpdateInventory(player);
 

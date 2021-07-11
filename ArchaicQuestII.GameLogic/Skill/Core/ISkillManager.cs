@@ -26,5 +26,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
         public void EmoteEffectWearOffAction(Player player, Room room, SkillMessage emote);
 
         public Player GetValidTarget(Player player, Player target, ValidTargets validTargets);
+
+        public Player findTarget(Player player, string target, Room room, bool murder);
     }
 }
