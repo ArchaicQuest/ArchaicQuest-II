@@ -19,6 +19,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
     public interface IPassiveSkills
     {
         int Haggle(Player player, Player target);
+       
 
     }
 
@@ -48,6 +49,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
         }
 
+   
         public int Haggle(Player player, Player target)
         {
             var foundSkill = player.Skills.FirstOrDefault(x =>
@@ -103,6 +105,60 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                 $"<p class='improve'>You learn from your mistakes and gain {100 * foundSkill.Level / 4} experience points.</p>" +
                 $"<p class='improve'>Your knowledge of {foundSkill.SkillName} increases by {increase}%.</p>",
                 player.ConnectionId, 0);
+
+            return 0;
+        }
+
+
+        public int DualWield(Player player, Player target, string obj)
+        {
+
+            if (string.IsNullOrEmpty(obj))
+            {
+                _writer.WriteLine("Use what for a secondary weapon?", player.ConnectionId);
+                return 0;
+            }
+
+            var foundSkill = player.Skills.FirstOrDefault(x =>
+                x.SkillName.StartsWith("dual wield", StringComparison.CurrentCultureIgnoreCase));
+
+            if (foundSkill == null)
+            {
+                _writer.WriteLine("One weapon is more than enough for you to worry about.", player.ConnectionId);
+                return 0;
+            }
+
+            var findWeapon = player.Inventory.FirstOrDefault(x => x.Name.StartsWith(obj) && x.Equipped == false);
+
+            if (findWeapon == null)
+            {
+                _writer.WriteLine("You can't find that weapon.", player.ConnectionId);
+                return 0;
+            }
+           
+
+                // exception for rangers
+                if (findWeapon.Weight >= player.Equipped.Wielded.Weight)
+                {
+                    _writer.WriteLine("Your offhand secondary weapon must be lighter than your primary weapon", player.ConnectionId);
+                    return 0;
+                }
+
+                // equip off hand
+            
+
+
+            if (player.Equipped.Shield != null)
+            {
+                var shield = player.Equipped.Shield;
+                shield.Equipped = false;
+
+                _writer.WriteLine($"You remove your {shield.Name.ToLower()}.", player.ConnectionId);
+                player.Equipped.Shield = null;
+              
+            }
+
+
 
             return 0;
         }

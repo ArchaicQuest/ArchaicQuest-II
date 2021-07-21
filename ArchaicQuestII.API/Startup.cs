@@ -141,6 +141,7 @@ namespace ArchaicQuestII.API
             services.AddSingleton<IDamageSpells, DamageSpells>();
             services.AddSingleton<IDamageSkills, DamageSkills>();
             services.AddSingleton<IPassiveSkills, PassiveSkills>();
+            services.AddSingleton<IUtilSkills, UtilSkills>();
             services.AddSingleton<ISpellList, SpellList>();
             services.AddSingleton<ISkillList, GameLogic.Skill.SkillList>();
             services.AddSingleton<ISKill, DoSkill>();

@@ -40,5 +40,6 @@ namespace ArchaicQuestII.GameLogic.Item
         public int Intelligence { get; set; }
         public int Wisdom { get; set; }
         public int Charisma { get; set; }
+        public int Armour { get; set; }
     }
 }

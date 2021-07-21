@@ -13,6 +13,7 @@ using ArchaicQuestII.GameLogic.Commands.Movement;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Item;
+using ArchaicQuestII.GameLogic.Skill.Skills;
 using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Combat
@@ -26,8 +27,9 @@ namespace ArchaicQuestII.GameLogic.Combat
         private readonly IFormulas _formulas;
         private readonly ICache _cache;
         private readonly IQuestLog _quest;
-    
-        public Combat(IWriteToClient writer, IUpdateClientUI clientUi, IDamage damage, IFormulas formulas, IGain gain, ICache cache, IQuestLog quest)
+        private readonly IDice _dice;
+
+        public Combat(IWriteToClient writer, IUpdateClientUI clientUi, IDamage damage, IFormulas formulas, IGain gain, ICache cache, IQuestLog quest, IDice dice)
         {
             _writer = writer;
             _clientUi = clientUi;
@@ -36,7 +38,8 @@ namespace ArchaicQuestII.GameLogic.Combat
             _gain = gain;
             _cache = cache;
             _quest = quest;
-           
+            _dice = dice;
+
         }
 
         // TODO: explain that player needs to be murdered
@@ -259,7 +262,7 @@ namespace ArchaicQuestII.GameLogic.Combat
 
                 if ((player.Status & CharacterStatus.Status.Stunned) != 0)
                 {
-                    _writer.WriteLine($"<p>You are too stunned to attack this round.<p>", player.ConnectionId);
+                    _writer.WriteLine("<p>You are too stunned to attack this round.<p>", player.ConnectionId);
                     return;
                 }
          
@@ -309,6 +312,14 @@ namespace ArchaicQuestII.GameLogic.Combat
                 _cache.AddCharToCombat(target.Id.ToString(), target);
             }
             var chanceToHit = _formulas.ToHitChance(player, target);
+
+            //if player bind and don't have blind fighting 
+            // reduce chance to hit by 40%
+            if (player.Affects.Blind && !BlindFighting(player))
+            {
+                chanceToHit = (int)(chanceToHit - (chanceToHit * .40));
+            }
+
             var doesHit = _formulas.DoesHit(chanceToHit);
             var weapon = GetWeapon(player);
             if (doesHit)
@@ -556,6 +567,13 @@ namespace ArchaicQuestII.GameLogic.Combat
             // clear equipped
             target.Equipped = new Equipment();
 
+            var mount = target.Pets.FirstOrDefault(x => x.Name.Equals(target.Mounted.Name));
+            if (mount != null)
+            {
+                target.Pets.Remove(mount);
+                target.Mounted.Name = string.Empty;
+            }
+
             // add corpse to room
             room.Items.Add(corpse);
             _clientUi.UpdateInventory(target);
@@ -640,6 +658,67 @@ namespace ArchaicQuestII.GameLogic.Combat
             else if (diff <= 100)
                  _writer.WriteLine( "You ARE mad!", player.ConnectionId);
         }
+
+        /// <summary>
+        /// 40% chance to hit reduce if no blind fighting
+        /// </summary>
+        /// <param name="player"></param>
+        /// <returns></returns>
+        public bool BlindFighting(Player player)
+        {
+            var foundSkill = player.Skills.FirstOrDefault(x =>
+                x.SkillName.StartsWith("blind fighting", StringComparison.CurrentCultureIgnoreCase));
+
+            if (foundSkill == null)
+            {
+                return false;
+            }
+
+            var getSkill = _cache.GetSkill(foundSkill.SkillId);
+
+            if (getSkill == null)
+            {
+                var skill = _cache.GetAllSkills().FirstOrDefault(x => x.Name.Equals("blind fighting", StringComparison.CurrentCultureIgnoreCase));
+                foundSkill.SkillId = skill.Id;
+                getSkill = skill;
+            }
+
+            var proficiency = foundSkill.Proficiency;
+            var success = _dice.Roll(1, 1, 100);
+
+            if (success == 1 || success == 101)
+            {
+                return false;
+            }
+
+            //TODO Charisma Check
+            if (proficiency >= success)
+            {
+                return true;
+            }
+
+            if (foundSkill.Proficiency == 100)
+            {
+                return false;
+            }
+
+            var increase = _dice.Roll(1, 1, 5);
+
+            foundSkill.Proficiency += increase;
+
+            _gain.GainExperiencePoints(player, 100 * foundSkill.Level / 4, false);
+
+            _clientUi.UpdateExp(player);
+
+            _writer.WriteLine(
+                $"<p class='improve'>You learn from your mistakes and gain {100 * foundSkill.Level / 4} experience points.</p>" +
+                $"<p class='improve'>Your knowledge of {foundSkill.SkillName} increases by {increase}%.</p>",
+                player.ConnectionId, 0);
+
+            return false;
+
+        }
+
     }
 }
  

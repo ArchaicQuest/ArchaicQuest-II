@@ -50,5 +50,7 @@ namespace ArchaicQuestII.GameLogic.Core
         void Drink(Player player, Room room, string obj);
 
         void TrainSkill(Player player);
+
+        void Dismount(Player player, Room room);
     }
 }

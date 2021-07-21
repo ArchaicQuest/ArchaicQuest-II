@@ -345,11 +345,50 @@ namespace ArchaicQuestII.GameLogic.Core
             return (int)percentage * value / 100;
         }
 
- 
 
 
+        public static int GetWeaponSkill(Item.Item weapon, Player player)
+        {
+
+            var weaponTypeString = Enum.GetName(typeof(Item.Item.WeaponTypes), weapon.WeaponType);
+
+            var weaponSkill = player.Skills.FirstOrDefault(x =>
+                x.SkillName.Equals(weaponTypeString, StringComparison.CurrentCultureIgnoreCase));
+
+           return (int)(weaponSkill == null ? 0 : weaponSkill.Proficiency);
+        }
+
+        public static string ReturnOpositeExitName(string direction)
+        {
+            switch (direction)
+            {
+                case "North":
+                    return "South";
+                case "North East":
+                    return "South West";
+                case "East":
+                    return "West";
+                case "South East":
+                    return "North West";
+                case "South":
+                    return "North";
+                case "South West":
+                    return "North East";
+                case "West":
+                    return "East";
+                case "North West":
+                    return "South East";
+                case "Down":
+                    return "Up";
+                case "Up":
+                    return "Down";
+                default: { return direction; }
+            }
+        }
 
     }
+
+
 
 
 }

@@ -99,43 +99,43 @@ namespace ArchaicQuestII.GameLogic.Commands
             {
                 case "north west":
                 case "nw":
-                    _movement.Move(room, player, "North West");
+                    _movement.Move(room, player, "North West", false);
                     break;
                 case "north east":
                 case "ne":
-                    _movement.Move(room, player, "North East");
+                    _movement.Move(room, player, "North East", false);
                     break;
                 case "south east":
                 case "se":
-                    _movement.Move(room, player, "South East");
+                    _movement.Move(room, player, "South East", false);
                     break;
                 case "south west":
                 case "sw":
-                    _movement.Move(room, player, "South West");
+                    _movement.Move(room, player, "South West", false);
                     break;
                 case "north":
                 case "n":
-                    _movement.Move(room, player, "North");
+                    _movement.Move(room, player, "North", false);
                     break;
                 case "east":
                 case "e":
-                    _movement.Move(room, player, "East");
+                    _movement.Move(room, player, "East", false);
                     break;
                 case "south":
                 case "s":
-                    _movement.Move(room, player, "South");
+                    _movement.Move(room, player, "South", false);
                     break;
                 case "west":
                 case "w":
-                    _movement.Move(room, player, "West");
+                    _movement.Move(room, player, "West", false);
                     break;
                 case "up":
                 case "u":
-                    _movement.Move(room, player, "Up");
+                    _movement.Move(room, player, "Up", false);
                     break;
                 case "down":
                 case "d":
-                    _movement.Move(room, player, "Down");
+                    _movement.Move(room, player, "Down", false);
                     break;
                 case "flee":
                 case "fle":
@@ -347,6 +347,9 @@ namespace ArchaicQuestII.GameLogic.Commands
                     break;
                 case "drink":
                     _core.Drink(player, room, obj);
+                    break;
+                case "dismount": // see UtilSkills for Mount
+                    _core.Dismount(player, room);
                     break;
                 case "/train":
                     _core.TrainSkill(player);

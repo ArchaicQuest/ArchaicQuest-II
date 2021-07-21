@@ -53,6 +53,13 @@ namespace ArchaicQuestII.GameLogic.Character
         public string CombatMessages { get; set; }
     }
 
+    public class Mount
+    {
+        public string Name { get; set; } = String.Empty;
+        public string MountedBy { get; set; } = String.Empty;
+        public bool IsMount { get; set; }
+    }
+
   public class Character
   {
       /// <summary>
@@ -165,5 +172,7 @@ namespace ArchaicQuestII.GameLogic.Character
         // Full at 4
         public int Hunger { get; set; } = 0;
         public int Lag { get; set; } = 0;
+        public Mount Mounted { get; set; } = new Mount();
+        public List<Player> Pets { get; set; } = new List<Player>(); //maybe just ID will suffice?
     }
 }

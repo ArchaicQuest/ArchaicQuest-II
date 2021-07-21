@@ -47,6 +47,7 @@ namespace ArchaicQuestII.GameLogic.Skill
 
 
         }
+
         public Skill.Model.Skill Elbow()
         {
             return new Skill.Model.Skill()
@@ -83,6 +84,7 @@ namespace ArchaicQuestII.GameLogic.Skill
 
 
         }
+
         public Skill.Model.Skill Lore()
         {
             return new Skill.Model.Skill()
@@ -133,7 +135,8 @@ namespace ArchaicQuestII.GameLogic.Skill
                 },
                 Type = SkillType.Damage,
                 StartsCombat = false,
-                ValidTargets = ValidTargets.TargetPlayerRoom | ValidTargets.TargetFightVictim | ValidTargets.TargetNotSelf,
+                ValidTargets = ValidTargets.TargetPlayerRoom | ValidTargets.TargetFightVictim |
+                               ValidTargets.TargetNotSelf,
                 Damage = new Dice()
                 {
                     DiceMaxSize = 4,
@@ -218,6 +221,7 @@ namespace ArchaicQuestII.GameLogic.Skill
 
 
         }
+
         public Skill.Model.Skill Charge()
         {
             return new Skill.Model.Skill()
@@ -288,5 +292,558 @@ namespace ArchaicQuestII.GameLogic.Skill
 
 
         }
+
+
+        public Skill.Model.Skill Stab()
+        {
+            return new Skill.Model.Skill()
+            {
+                Name = "Stab",
+                Description =
+                    "Stabs the target with a will aimed stab towards vital organs. Does 1d6 damage + weapon damage ",
+                ApplyLevelCheck = true,
+                SavingThrow = new SavingThrow()
+                {
+                    Reflex = true
+                },
+                Rounds = 1,
+                Cost = new SkillCost()
+                {
+                    Table = new Dictionary<Cost, int>()
+                    {
+                        {Cost.Moves, 25}
+                    }
+                },
+                Type = SkillType.Damage,
+                StartsCombat = true,
+                ValidTargets = ValidTargets.TargetPlayerRoom | ValidTargets.TargetFightVictim,
+                Damage = new Dice()
+                {
+                    DiceMaxSize = 6,
+                    DiceMinSize = 1,
+                    DiceRoll = 1
+                },
+                UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
+            };
+
+
+
+
+        }
+
+        public Skill.Model.Skill Uppercut()
+        {
+            return new Skill.Model.Skill()
+            {
+                Name = "Uppercut",
+                Description =
+                    "Uppercut smashes the target with a strong fist to the chin, has a chance to knock off the helmet of an opponents head, if they are not protecting their head the next blow will stun them for 1 round",
+                ApplyLevelCheck = true,
+                SavingThrow = new SavingThrow()
+                {
+                    Reflex = true
+                },
+                Rounds = 1,
+                Cost = new SkillCost()
+                {
+                    Table = new Dictionary<Cost, int>()
+                    {
+                        {Cost.Moves, 25}
+                    }
+                },
+                Type = SkillType.Damage,
+                StartsCombat = true,
+                ValidTargets = ValidTargets.TargetPlayerRoom | ValidTargets.TargetFightVictim,
+                Damage = new Dice()
+                {
+                    DiceMaxSize = 6,
+                    DiceMinSize = 1,
+                    DiceRoll = 1
+                },
+                UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
+            };
+
+
+
+
+        }
+
+        public Skill.Model.Skill DirtKick()
+        {
+            return new Skill.Model.Skill()
+            {
+                Name = "DirtKick",
+                Description =
+                    "Kicks up a storm of dirt blinding the opponent briefly",
+                ApplyLevelCheck = true,
+                SavingThrow = new SavingThrow()
+                {
+                    Reflex = true
+                },
+                Rounds = 1,
+                Cost = new SkillCost()
+                {
+                    Table = new Dictionary<Cost, int>()
+                    {
+                        {Cost.Moves, 25}
+                    }
+                },
+                Type = SkillType.Damage,
+                StartsCombat = true,
+                ValidTargets = ValidTargets.TargetPlayerRoom | ValidTargets.TargetFightVictim,
+                Damage = new Dice()
+                {
+                    DiceMaxSize = 6,
+                    DiceMinSize = 1,
+                    DiceRoll = 1
+                },
+                UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
+            };
+
+
+
+
+        }
+
+        public Skill.Model.Skill Disarm()
+        {
+            return new Skill.Model.Skill()
+            {
+                Name = "Disarm",
+                Description =
+                    "Disarms the opponent knocking their weapon flying",
+                ApplyLevelCheck = true,
+                SavingThrow = new SavingThrow()
+                {
+                    Reflex = true
+                },
+                Rounds = 1,
+                Cost = new SkillCost()
+                {
+                    Table = new Dictionary<Cost, int>()
+                    {
+                        {Cost.Moves, 25}
+                    }
+                },
+                Type = SkillType.Damage,
+                StartsCombat = true,
+                ValidTargets = ValidTargets.TargetPlayerRoom | ValidTargets.TargetFightVictim,
+                Damage = new Dice()
+                {
+                    DiceMaxSize = 6,
+                    DiceMinSize = 1,
+                    DiceRoll = 1
+                },
+                UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
+            };
+
+
+
+
+        }
+
+        public Skill.Model.Skill Lunge()
+        {
+            return new Skill.Model.Skill()
+            {
+                Name = "Lunge",
+                Description =
+                    "Lunge at your opponent deliver a devastating blow, it's not without risks though",
+                ApplyLevelCheck = true,
+                SavingThrow = new SavingThrow()
+                {
+                    Reflex = true
+                },
+                Rounds = 1,
+                Cost = new SkillCost()
+                {
+                    Table = new Dictionary<Cost, int>()
+                    {
+                        {Cost.Moves, 25}
+                    }
+                },
+                Type = SkillType.Damage,
+                StartsCombat = true,
+                ValidTargets = ValidTargets.TargetPlayerRoom | ValidTargets.TargetFightVictim,
+                Damage = new Dice()
+                {
+                    DiceMaxSize = 6,
+                    DiceMinSize = 1,
+                    DiceRoll = 1
+                },
+                UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
+            };
+
+
+
+
+        }
+
+        public Skill.Model.Skill Berserk()
+        {
+            return new Skill.Model.Skill()
+            {
+                Name = "Berserk",
+                Description =
+                    "Berserk, going into a fit of rage to boost dam numbers",
+                ApplyLevelCheck = true,
+                SavingThrow = new SavingThrow()
+                {
+                    Reflex = true
+                },
+                Rounds = 1,
+                Cost = new SkillCost()
+                {
+                    Table = new Dictionary<Cost, int>()
+                    {
+                        {Cost.Moves, 25}
+                    }
+                },
+                Type = SkillType.Damage,
+                StartsCombat = true,
+                ValidTargets = ValidTargets.TargetPlayerRoom | ValidTargets.TargetFightVictim,
+                Damage = new Dice()
+                {
+                    DiceMaxSize = 6,
+                    DiceMinSize = 1,
+                    DiceRoll = 1
+                },
+                UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
+            };
+
+
+
+
+        }
+
+        public Skill.Model.Skill Rescue()
+        {
+            return new Skill.Model.Skill()
+            {
+                Name = "Rescue",
+                Description =
+                    "Rescues target and becomes the new target of the mob fighting the person being rescued",
+                ApplyLevelCheck = true,
+                SavingThrow = new SavingThrow()
+                {
+                    Reflex = true
+                },
+                Rounds = 1,
+                Cost = new SkillCost()
+                {
+                    Table = new Dictionary<Cost, int>()
+                    {
+                        {Cost.Moves, 25}
+                    }
+                },
+                Type = SkillType.None,
+                StartsCombat = true,
+                ValidTargets = ValidTargets.TargetPlayerRoom | ValidTargets.TargetFightVictim,
+                Damage = new Dice()
+                {
+                    DiceMaxSize = 6,
+                    DiceMinSize = 1,
+                    DiceRoll = 1
+                },
+                UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
+            };
+
+
+
+
+        }
+
+        public Skill.Model.Skill SecondAttack()
+        {
+            return new Skill.Model.Skill()
+            {
+                Name = "Second Attack",
+                Description =
+                    "Allows you attack twice a round if successful",
+                ApplyLevelCheck = true,
+                SavingThrow = new SavingThrow()
+                {
+                    Reflex = true
+                },
+                Rounds = 1,
+                Cost = new SkillCost()
+                {
+                    Table = new Dictionary<Cost, int>()
+                    {
+                        {Cost.Moves, 0}
+                    }
+                },
+                Type = SkillType.None,
+                StartsCombat = true,
+                ValidTargets = ValidTargets.TargetPlayerRoom | ValidTargets.TargetFightVictim,
+                Damage = new Dice()
+                {
+                    DiceMaxSize = 6,
+                    DiceMinSize = 1,
+                    DiceRoll = 1
+                },
+                UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
+            };
+
+
+
+
+        }
+
+        public Skill.Model.Skill ThirdAttack()
+        {
+            return new Skill.Model.Skill()
+            {
+                Name = "Third Attack",
+                Description =
+                    "Allows you attack Three times a round if successful",
+                ApplyLevelCheck = true,
+                SavingThrow = new SavingThrow()
+                {
+                    Reflex = true
+                },
+                Rounds = 1,
+                Cost = new SkillCost()
+                {
+                    Table = new Dictionary<Cost, int>()
+                    {
+                        {Cost.Moves, 0}
+                    }
+                },
+                Type = SkillType.None,
+                StartsCombat = true,
+                ValidTargets = ValidTargets.TargetPlayerRoom | ValidTargets.TargetFightVictim,
+                Damage = new Dice()
+                {
+                    DiceMaxSize = 6,
+                    DiceMinSize = 1,
+                    DiceRoll = 1
+                },
+                UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
+            };
+
+
+
+
+        }
+
+        public Skill.Model.Skill FouthAttack()
+        {
+            return new Skill.Model.Skill()
+            {
+                Name = "Fouth Attack",
+                Description =
+                    "Allows you attack four times a round if successful",
+                ApplyLevelCheck = true,
+                SavingThrow = new SavingThrow()
+                {
+                    Reflex = true
+                },
+                Rounds = 1,
+                Cost = new SkillCost()
+                {
+                    Table = new Dictionary<Cost, int>()
+                    {
+                        {Cost.Moves, 0}
+                    }
+                },
+                Type = SkillType.None,
+                StartsCombat = true,
+                ValidTargets = ValidTargets.TargetPlayerRoom | ValidTargets.TargetFightVictim,
+                Damage = new Dice()
+                {
+                    DiceMaxSize = 6,
+                    DiceMinSize = 1,
+                    DiceRoll = 1
+                },
+                UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
+            };
+
+
+
+
+        }
+
+        public Skill.Model.Skill FithAttack()
+        {
+            return new Skill.Model.Skill()
+            {
+                Name = "Fith Attack",
+                Description =
+                    "Allows you attack five times a round if successful",
+                ApplyLevelCheck = true,
+                SavingThrow = new SavingThrow()
+                {
+                    Reflex = true
+                },
+                Rounds = 1,
+                Cost = new SkillCost()
+                {
+                    Table = new Dictionary<Cost, int>()
+                    {
+                        {Cost.Moves, 0}
+                    }
+                },
+                Type = SkillType.None,
+                StartsCombat = true,
+                ValidTargets = ValidTargets.TargetPlayerRoom | ValidTargets.TargetFightVictim,
+                Damage = new Dice()
+                {
+                    DiceMaxSize = 6,
+                    DiceMinSize = 1,
+                    DiceRoll = 1
+                },
+                UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
+            };
+
+
+
+
+        }
+
+        public Skill.Model.Skill Mount()
+        {
+            return new Skill.Model.Skill()
+            {
+                Name = "Mount",
+                Description =
+                    "Mount a mob and ride around",
+                ApplyLevelCheck = true,
+                SavingThrow = new SavingThrow()
+                {
+                    Reflex = true
+                },
+                Rounds = 1,
+                Cost = new SkillCost()
+                {
+                    Table = new Dictionary<Cost, int>()
+                    {
+                        {Cost.Moves, 0}
+                    }
+                },
+                Type = SkillType.None,
+                StartsCombat = true,
+                ValidTargets = ValidTargets.TargetPlayerRoom | ValidTargets.TargetFightVictim,
+                Damage = new Dice()
+                {
+                    DiceMaxSize = 6,
+                    DiceMinSize = 1,
+                    DiceRoll = 1
+                },
+                UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
+            };
+
+
+
+
+        }
+
+
+        public Skill.Model.Skill BlindFighting()
+        {
+            return new Skill.Model.Skill()
+            {
+                Name = "Blind Fighting",
+                Description =
+                    "Allows you to fight while blinded",
+                ApplyLevelCheck = true,
+                SavingThrow = new SavingThrow()
+                {
+                    Reflex = true
+                },
+                Rounds = 1,
+                Cost = new SkillCost()
+                {
+                    Table = new Dictionary<Cost, int>()
+                    {
+                        {Cost.Moves, 0}
+                    }
+                },
+                Type = SkillType.Passive,
+                StartsCombat = true,
+                ValidTargets = ValidTargets.TargetSelfOnly,
+                Damage = new Dice()
+                {
+                    DiceMaxSize = 6,
+                    DiceMinSize = 1,
+                    DiceRoll = 1
+                },
+                UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
+            };
+
+            // blind fighting
+        }
+
+        public Skill.Model.Skill ShieldBash()
+        {
+            return new Skill.Model.Skill()
+            {
+                Name = "Shield Bash",
+                Description =
+                    "Bashes opponent with shield",
+                ApplyLevelCheck = true,
+                SavingThrow = new SavingThrow()
+                {
+                    Reflex = true
+                },
+                Rounds = 1,
+                Cost = new SkillCost()
+                {
+                    Table = new Dictionary<Cost, int>()
+                    {
+                        {Cost.Moves, 0}
+                    }
+                },
+                Type = SkillType.Damage,
+                StartsCombat = true,
+                ValidTargets = ValidTargets.TargetFightVictim | ValidTargets.TargetPlayerRoom,
+                Damage = new Dice()
+                {
+                    DiceMaxSize = 6,
+                    DiceMinSize = 1,
+                    DiceRoll = 1
+                },
+                UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
+            };
+
+            // blind fighting
+        }
+
+        public Skill.Model.Skill DualWield()
+        {
+            return new Skill.Model.Skill()
+            {
+                Name = "Dual Wield",
+                Description =
+                    "The ability to weld two weapons",
+                ApplyLevelCheck = true,
+                SavingThrow = new SavingThrow()
+                {
+                    Reflex = true
+                },
+                Rounds = 1,
+                Cost = new SkillCost()
+                {
+                    Table = new Dictionary<Cost, int>()
+                    {
+                        {Cost.Moves, 0}
+                    }
+                },
+                Type = SkillType.Passive,
+                StartsCombat = true,
+                ValidTargets = ValidTargets.TargetFightVictim | ValidTargets.TargetPlayerRoom,
+                Damage = new Dice()
+                {
+                    DiceMaxSize = 6,
+                    DiceMinSize = 1,
+                    DiceRoll = 1
+                },
+                UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
+            };
+
+            // blind fighting
+        }
     }
+
+
 }

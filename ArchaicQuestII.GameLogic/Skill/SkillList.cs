@@ -22,9 +22,11 @@ namespace ArchaicQuestII.GameLogic.Skill
     public class SkillList:ISkillList
     {
         private readonly IDamageSkills _damage;
-        public SkillList(IDamageSkills damage)
+        private readonly IUtilSkills _util;
+        public SkillList(IDamageSkills damage, IUtilSkills utilSkills)
         {
             _damage = damage;
+            _util = utilSkills;
         }
         public void DoSkill(string key, string obj, Player target, string fullCommand, Player player, Room room, bool wearOff)
         {
@@ -46,6 +48,33 @@ namespace ArchaicQuestII.GameLogic.Skill
                 case "charge":
                     _damage.Charge(player, target, room, obj);
                     break;
+                case "stab":
+                    _damage.Stab(player, target, room, obj);
+                    break;
+                case "uppercut":
+                    _damage.UpperCut(player, target, room, obj);
+                    break;
+                case "dirt kick":
+                    _damage.DirtKick(player, target, room, obj);
+                    break;
+                case "disarm":
+                    _util.Disarm(player, target, room, obj);
+                    break;
+                case "lunge":
+                    _damage.Lunge(player, target, room, obj);
+                    break;
+                case "berserk":
+                    _util.Berserk(player, target, room);
+                    break;
+                case "rescue":
+                    _util.Rescue(player, target, room, obj);
+                    break;
+                case "mount":
+                    _util.Mount(player, target, room);
+                    break;
+                case "shield bash":
+                    _damage.ShieldBash(player, target, room, obj);
+                    break;
                     //case "cause light wounds":
                     //    _damageSpells.CauseLightWounds(player, target, room);
                     //    break;
@@ -60,6 +89,8 @@ namespace ArchaicQuestII.GameLogic.Skill
                     //    _damageSpells.Bless(player, target, room, wearOff);
                     //    break;
             }
+
+
         }
 
     }

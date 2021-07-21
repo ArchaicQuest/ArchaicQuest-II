@@ -49,7 +49,22 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
                 skill.Haggle(),
                 skill.HeadButt(),
                 skill.Charge(),
-                skill.FastHealing()
+                skill.FastHealing(),
+                skill.Stab(),
+                skill.Uppercut(),
+                skill.DirtKick(),
+                skill.Disarm(),
+                skill.Lunge(),
+                skill.Berserk(),
+                skill.Rescue(),
+                skill.SecondAttack(),
+                skill.ThirdAttack(),
+                skill.FouthAttack(),
+                skill.FithAttack(),
+                skill.Mount(),
+                skill.BlindFighting(),
+                skill.ShieldBash(),
+                skill.DualWield()
             };
 
             return seedData;

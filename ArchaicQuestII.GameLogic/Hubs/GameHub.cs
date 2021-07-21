@@ -264,6 +264,19 @@ namespace ArchaicQuestII.GameLogic.Hubs
            if (!playerAlreadyInRoom)
            {
                room.Players.Add(character);
+               if(character.Pets.Any())
+                {
+                    foreach (var pet in character.Pets)
+                    {
+                        var petAlreadyInRoom = room.Mobs.FirstOrDefault(x => x.Id.Equals(pet.Id)) != null;
+
+                        if (!petAlreadyInRoom)
+                        {
+                            room.Mobs.Add(pet);
+                        }
+                    }
+                   
+                }
            }
 
 

@@ -14,6 +14,8 @@ namespace ArchaicQuestII.GameLogic.Character.Model
         public bool DetectHidden { get; set; } = false;
         public bool Poisoned { get; set; } = false;
         public bool Blind { get; set; } = false;
+        public bool Haste { get; set; } = false;
+        public bool Berserk { get; set; } = false;
         public List<Affect> Custom { get; set; } = new List<Affect>();
 
     }

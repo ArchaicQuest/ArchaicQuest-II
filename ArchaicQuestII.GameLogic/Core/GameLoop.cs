@@ -272,7 +272,48 @@ namespace ArchaicQuestII.GameLogic.Core
                             player.Lag -= 1;
                             continue;
                         }
-                        _combat.Fight(player, player.Target, _cache.GetRoom(player.RoomId), false);
+
+                        var attackCount = 1;
+
+                        var hasSecondAttack = player.Skills.FirstOrDefault(x =>
+                            x.SkillName.Equals("Second Attack", StringComparison.CurrentCultureIgnoreCase));
+                        var hasThirdAttack = player.Skills.FirstOrDefault(x =>
+                            x.SkillName.Equals("Third Attack", StringComparison.CurrentCultureIgnoreCase));
+                        var hasFouthAttack = player.Skills.FirstOrDefault(x =>
+                            x.SkillName.Equals("Fourth Attack", StringComparison.CurrentCultureIgnoreCase));
+                        var hasFithAttack = player.Skills.FirstOrDefault(x =>
+                            x.SkillName.Equals("Fith Attack", StringComparison.CurrentCultureIgnoreCase));
+
+                        if (hasSecondAttack != null)
+                        {
+                            attackCount += 1;
+                        }
+
+                        if (hasThirdAttack != null)
+                        {
+                            attackCount += 1;
+                        }
+
+                        if (hasFouthAttack != null)
+                        {
+                            attackCount += 1;
+                        }
+
+                        if (hasFithAttack != null)
+                        {
+                            attackCount += 1;
+                        }
+
+                        if (player.Affects.Haste)
+                        {
+                            attackCount += 1;
+                        }
+
+                        for (var i = 0; i < attackCount; i++)
+                        {
+                            _combat.Fight(player, player.Target, _cache.GetRoom(player.RoomId), false);
+                        }
+                       
                     }
                 }
                 catch (Exception ex)

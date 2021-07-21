@@ -556,6 +556,37 @@ namespace ArchaicQuestII.GameLogic.Core
             }
         }
 
+        public void Dismount(Player player, Room room)
+        {
+            if (string.IsNullOrEmpty(player.Mounted.Name))
+            {
+                _writeToClient.WriteLine("You are not using a mount");
+                return;
+            }
+
+            var getMount = player.Pets.FirstOrDefault(x => x.Name.Equals(player.Mounted.Name));
+
+            if (getMount != null)
+            {
+                player.Pets.Remove(getMount);
+                getMount.Mounted.MountedBy = String.Empty;
+                player.Mounted.Name = string.Empty;
+
+                _writeToClient.WriteLine($"You dismount {getMount.Name}.", player.ConnectionId);
+
+                foreach (var pc in room.Players)
+                {
+                    if (pc.Id == player.Id)
+                    {
+                        continue;
+                    }
+
+                    _writeToClient.WriteLine($"{player.Name} dismounts {getMount.Name}.", pc.ConnectionId);
+                }
+            }
+           
+        }
+
 
         public Tuple<string, EffectLocation> GetStatName(string name)
         {
@@ -622,5 +653,7 @@ namespace ArchaicQuestII.GameLogic.Core
                 $"<p class='improve'>Your knowledge of {foundSkill.SkillName} increases by {increase}%.</p>",
                 player.ConnectionId, 0);
         }
+
+      
     }
 }

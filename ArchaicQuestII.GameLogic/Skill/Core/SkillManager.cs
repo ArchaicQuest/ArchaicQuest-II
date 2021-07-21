@@ -298,9 +298,13 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
             _writer.WriteLine(
                 $"<p>{ReplacePlaceholders(emote.Hit.ToPlayer, target, false)}</p>",
                 player.ConnectionId);
-            _writer.WriteLine(
-                $"<p>{emote.Hit.ToTarget}</p>",
-                target.ConnectionId);
+
+            if (!string.IsNullOrEmpty(emote.Hit.ToTarget))
+            {
+                _writer.WriteLine(
+                    $"<p>{emote.Hit.ToTarget}</p>",
+                    target.ConnectionId);
+            }
 
             foreach (var pc in room.Players)
             {

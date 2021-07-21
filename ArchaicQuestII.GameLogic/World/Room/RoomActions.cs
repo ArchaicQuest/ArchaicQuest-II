@@ -509,17 +509,33 @@ namespace ArchaicQuestII.GameLogic.World.Room
         public string DisplayMobs(Room room, Player player)
         {
             var mobs = string.Empty;
+            var mobName = string.Empty;
             var isDark = RoomIsDark(room, player);
 
             foreach (var mob in room.Mobs)
             {
+
                 if (!string.IsNullOrEmpty(mob.LongName))
                 {
-                    mobs += $"<p class='mob {(isDark ? "dark-room" : "")}'>" + mob.LongName + "</p>";
+                    mobName = mob.LongName;
                 }
                 else
                 {
-                    mobs += $"<p class='mob {(isDark ? "dark-room" : "")}'>" + mob.Name + " is here.</p>";
+                    mobName = mob.Name;
+                }
+
+                if (!string.IsNullOrEmpty(mob.Mounted.MountedBy))
+                {
+                    mobName += " tosses it's mane and snorts.";
+                }
+
+                if (!string.IsNullOrEmpty(mob.LongName))
+                {
+                    mobs += $"<p class='mob {(isDark ? "dark-room" : "")}'>" + mobName + "</p>";
+                }
+                else
+                {
+                    mobs += $"<p class='mob {(isDark ? "dark-room" : "")}'>" + mobName + " is here.</p>";
                 }
 
             }
@@ -654,6 +670,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
         {
             var players = string.Empty;
             var isNightTime = !_time.IsNightTime();
+            var pcName = string.Empty;
 
             foreach (var pc in room.Players)
             {
@@ -661,7 +678,29 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 {
                     continue;
                 }
-                players += string.IsNullOrEmpty(pc.LongName) ? $"<p class='player {(isNightTime ? "dark-room" : "")}'>{pc.Name} is here.</p>" : $"<p class='player'>{pc.Name} {pc.LongName}.</p>";
+
+                if (string.IsNullOrEmpty(pc.LongName))
+                {
+                    pcName = $"{ pc.Name}";
+                }
+                else
+                {
+                    pcName = $"{ pc.Name} {pc.LongName}";
+                }
+
+              
+
+                if (!string.IsNullOrEmpty(pc.Mounted.Name))
+                {
+                    pcName += $", is riding {pc.Mounted.Name}";
+                }
+                else
+                {
+                    pcName += " is here";
+                }
+                
+
+                players += $"<p class='player {(isNightTime ? "dark-room" : "")}'>{pcName}.</p>";
             }
 
             return players;
