@@ -92,6 +92,7 @@ namespace ArchaicQuestII.Controllers
                 WeaponType = item.WeaponType,
                 Weight = item.Weight,
                 Value = item.Value,
+                TwoHanded = item.TwoHanded,
                 Portal = new Portal()
                 {
                     Destination = item.Portal.Destination,

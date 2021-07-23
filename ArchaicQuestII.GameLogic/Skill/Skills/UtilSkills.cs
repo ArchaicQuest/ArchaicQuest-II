@@ -374,5 +374,51 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
           
             return 0;
         }
+
+        public int Sharpen(Player player, Player target, Room room, string obj)
+        {
+
+            if (string.IsNullOrEmpty(obj))
+            {
+                _writer.WriteLine("Sharpen what?", player.ConnectionId);
+                return 0;
+            }
+
+            var item = player.Inventory.FirstOrDefault(x =>
+                x.Equipped == false && x.Name.StartsWith(obj, StringComparison.CurrentCultureIgnoreCase));
+            if (item == null)
+            {
+                _writer.WriteLine($"You can't find that item in your inventory.", player.ConnectionId);
+                return 0;
+            }
+
+          // check for max sharpen
+          // chance to 
+
+
+            var skillMessage = new SkillMessage()
+            {
+                Hit =
+                {
+                    ToPlayer = $"You jump upon {target.Name}.",
+                    ToRoom = $"{player.Name} jumps upon {target.Name}.",
+                    ToTarget = $""
+                }
+            };
+
+
+            target.Mounted.MountedBy = player.Name;
+            player.Mounted.Name = target.Name;
+            player.Pets.Add(target);
+
+            _skillManager.EmoteAction(player, target, room, skillMessage);
+
+
+            _updateClientUi.UpdateScore(player);
+
+
+
+            return 0;
+        }
     }
 }

@@ -190,6 +190,8 @@ namespace ArchaicQuestII.GameLogic.Item
 
         public bool Deleted { get; set; }
 
+        public bool TwoHanded { get; set; }
+
         public Portal Portal { get; set; }
     }
 }

@@ -11,5 +11,6 @@ namespace ArchaicQuestII.GameLogic.Core
             void WriteLine(string message, string id);
             void WriteLine(string message, string id, int delay);
         void WriteLine(string message);
+        void WriteLineRoom(string message, string id, int delay);
     }
 }

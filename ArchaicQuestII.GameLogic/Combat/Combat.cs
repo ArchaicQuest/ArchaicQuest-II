@@ -18,7 +18,7 @@ using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Combat
 {
-   public class Combat: ICombat
+    public class Combat : ICombat
     {
         private readonly IWriteToClient _writer;
         private readonly IUpdateClientUI _clientUi;
@@ -59,13 +59,12 @@ namespace ArchaicQuestII.GameLogic.Combat
             return (Player)room.Players.FirstOrDefault(x => x.Name.StartsWith(target, StringComparison.CurrentCultureIgnoreCase));
         }
 
-    
 
-        public Item.Item GetWeapon(Player player)
+
+        public Item.Item GetWeapon(Player player, bool dualWield = false)
         {
-            return player.Equipped.Wielded;
+            return dualWield ? player.Equipped.Secondary : player.Equipped.Wielded;
         }
-
 
         public void HarmTarget(Player victim, int damage)
         {
@@ -80,7 +79,7 @@ namespace ArchaicQuestII.GameLogic.Combat
 
         public bool IsTargetAlive(Player victim)
         {
-           return victim.Attributes.Attribute[EffectLocation.Hitpoints] > 0;
+            return victim.Attributes.Attribute[EffectLocation.Hitpoints] > 0;
         }
 
         public void DisplayDamage(Player player, Player target, Room room, Item.Item weapon, int damage)
@@ -91,18 +90,18 @@ namespace ArchaicQuestII.GameLogic.Combat
             var attackType = "";
             if (weapon == null)
             {
-                attackType = player.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase) ? player.DefaultAttack?.ToLower(cc): "punch";
+                attackType = player.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase) ? player.DefaultAttack?.ToLower(cc) : "punch";
             }
             else
             {
                 attackType = Enum.GetName(typeof(Item.Item.AttackTypes), weapon.AttackType)?.ToLower(cc);
             }
-    
+
             _writer.WriteLine($"<p class='combat'>Your {attackType} {damText.Value} {target.Name.ToLower(cc)}. <span class='damage'>[{damage}]</span></p>", player.ConnectionId);
             _writer.WriteLine($"<p class='combat'>{target.Name} {_formulas.TargetHealth(player, target)}</p>", player.ConnectionId);
 
             _writer.WriteLine($"<p>{player.Name}'s {attackType} {damText.Value} you. ({Enum.GetName(typeof(CharacterStatus.Status), player.Status)}) <span class='damage'>[{damage}]</span></p></p>", target.ConnectionId);
-     
+
 
             foreach (var pc in room.Players)
             {
@@ -119,8 +118,8 @@ namespace ArchaicQuestII.GameLogic.Combat
         {
             //this is breaking
 
-            var skill =  player.Skills.FirstOrDefault(x =>
-                x.SkillName.Replace(" ", "").Equals(skillName.Replace(" ", ""), StringComparison.CurrentCultureIgnoreCase));
+            var skill = player.Skills.FirstOrDefault(x =>
+               x.SkillName.Replace(" ", "").Equals(skillName.Replace(" ", ""), StringComparison.CurrentCultureIgnoreCase));
             return skill;
         }
 
@@ -136,7 +135,7 @@ namespace ArchaicQuestII.GameLogic.Combat
             {
                 attackType = Enum.GetName(typeof(Item.Item.AttackTypes), weapon.AttackType)?.ToLower(cc);
             }
-            
+
             _writer.WriteLine($"<p class='combat'>Your {attackType} misses {target.Name.ToLower(cc)}.</p>", player.ConnectionId);
             _writer.WriteLine($"<p class='combat'>{player.Name}'s {attackType} misses you.</p>", target.ConnectionId);
 
@@ -151,7 +150,7 @@ namespace ArchaicQuestII.GameLogic.Combat
             }
         }
 
- 
+
         public void DeathCry(Room room, Player target)
         {
 
@@ -172,7 +171,7 @@ namespace ArchaicQuestII.GameLogic.Combat
 
             if (room.Exits.NorthWest != null)
             {
-               rooms.Add(_cache.GetRoom($"{room.Exits.NorthWest.AreaId}{room.Exits.NorthWest.Coords.X}{room.Exits.NorthWest.Coords.Y}{room.Exits.NorthWest.Coords.Z}"));
+                rooms.Add(_cache.GetRoom($"{room.Exits.NorthWest.AreaId}{room.Exits.NorthWest.Coords.X}{room.Exits.NorthWest.Coords.Y}{room.Exits.NorthWest.Coords.Z}"));
             }
 
             if (room.Exits.North != null)
@@ -225,7 +224,7 @@ namespace ArchaicQuestII.GameLogic.Combat
                 _writer.WriteLine($"<p>Your blood freezes as you hear someone's death cry.</p>", pc.ConnectionId);
             }
 
-        
+
         }
 
         public void AddCharToCombat(Player character)
@@ -265,194 +264,374 @@ namespace ArchaicQuestII.GameLogic.Combat
                     _writer.WriteLine("<p>You are too stunned to attack this round.<p>", player.ConnectionId);
                     return;
                 }
-         
-            var target = FindTarget(player, victim, room, isMurder);
 
-            if (target == null)
-            {
-                if (player.Status == CharacterStatus.Status.Fighting)
+                var target = FindTarget(player, victim, room, isMurder);
+
+                if (target == null)
                 {
-                    player.Target = "";
-                    player.Status = CharacterStatus.Status.Standing;
-
-                    _cache.RemoveCharFromCombat(player.Id.ToString());
-                }
-
-                _writer.WriteLine("<p>They are not here.</p>", player.ConnectionId);
-                return;
-            }
-
-            if (player.Attributes.Attribute[EffectLocation.Hitpoints] <= 0)
-            {
-                _writer.WriteLine("<p>You cannot do that while dead.</p>", player.ConnectionId);
-                return;
-            }
-
-            if (target.Attributes.Attribute[EffectLocation.Hitpoints] <= 0)
-            {
-                _writer.WriteLine("<p>They are already dead.</p>", player.ConnectionId);
-                return;
-            }
-
-            // For the UI to create a nice gap between rounds of auto attacks
-            _writer.WriteLine($"<p class='combat-start'></p>", player.ConnectionId);
-
-            player.Target = target.Name;
-            player.Status = CharacterStatus.Status.Fighting;
-            target.Status = CharacterStatus.Status.Fighting;
-            target.Target = string.IsNullOrEmpty(target.Target) ? player.Name : target.Target; //for group combat, if target is ganged, there target should not be changed when combat is initiated.
-
-           if(!_cache.IsCharInCombat(player.Id.ToString()))
-            {
-                _cache.AddCharToCombat(player.Id.ToString(), player);
-            }
-
-            if(!_cache.IsCharInCombat(target.Id.ToString()))
-            {
-                _cache.AddCharToCombat(target.Id.ToString(), target);
-            }
-            var chanceToHit = _formulas.ToHitChance(player, target);
-
-            //if player bind and don't have blind fighting 
-            // reduce chance to hit by 40%
-            if (player.Affects.Blind && !BlindFighting(player))
-            {
-                chanceToHit = (int)(chanceToHit - (chanceToHit * .40));
-            }
-
-            var doesHit = _formulas.DoesHit(chanceToHit);
-            var weapon = GetWeapon(player);
-            if (doesHit)
-            {
-
-
-                // avoidance percentage can be improved by core skills 
-                // such as improved parry, acrobatic etc 
-                // instead of rolling a D10, roll a D6 for a close to 15% increase in chance
-
-                // Move to formula, needs to use _dice instead of making a new instance
-                var avoidanceRoll = new Dice().Roll(1, 1, 10);
-
-
-                //10% chance to attempt a dodge
-                if (avoidanceRoll == 1)
-                {
-                    var dodge = GetSkill("dodge", player);
-
-                    if (dodge != null)
+                    if (player.Status == CharacterStatus.Status.Fighting)
                     {
-                        _writer.WriteLine($"<p>You dodge {target.Name}'s attack.</p>", player.ConnectionId);
-                        _writer.WriteLine($"<p>{player.Name} dodges your attack.</p>", target.ConnectionId);
-                        return;
+                        player.Target = "";
+                        player.Status = CharacterStatus.Status.Standing;
+
+                        _cache.RemoveCharFromCombat(player.Id.ToString());
                     }
 
-                   
+                    _writer.WriteLine("<p>They are not here.</p>", player.ConnectionId);
+                    return;
                 }
 
-                //10% chance to parry
-                if (avoidanceRoll == 2)
+                if (player.Attributes.Attribute[EffectLocation.Hitpoints] <= 0)
                 {
-                    var skill = GetSkill("parry", player);
+                    _writer.WriteLine("<p>You cannot do that while dead.</p>", player.ConnectionId);
+                    return;
+                }
 
-                    if (skill != null)
+                if (target.Attributes.Attribute[EffectLocation.Hitpoints] <= 0)
+                {
+                    _writer.WriteLine("<p>They are already dead.</p>", player.ConnectionId);
+                    return;
+                }
+
+                // For the UI to create a nice gap between rounds of auto attacks
+                _writer.WriteLine($"<p class='combat-start'></p>", player.ConnectionId);
+
+                player.Target = target.Name;
+                player.Status = CharacterStatus.Status.Fighting;
+                target.Status = CharacterStatus.Status.Fighting;
+                target.Target =
+                    string.IsNullOrEmpty(target.Target)
+                        ? player.Name
+                        : target.Target; //for group combat, if target is ganged, there target should not be changed when combat is initiated.
+
+                if (!_cache.IsCharInCombat(player.Id.ToString()))
+                {
+                    _cache.AddCharToCombat(player.Id.ToString(), player);
+                }
+
+                if (!_cache.IsCharInCombat(target.Id.ToString()))
+                {
+                    _cache.AddCharToCombat(target.Id.ToString(), target);
+                }
+
+
+                /*
+                 *  This section crying out for a refactor
+                 */
+
+
+                var weapon = GetWeapon(player);
+                var chanceToHit = _formulas.ToHitChance(player, target, false);
+
+                //if player bind and don't have blind fighting 
+                // reduce chance to hit by 40%
+                if (player.Affects.Blind && !BlindFighting(player))
+                {
+                    chanceToHit = (int)(chanceToHit - (chanceToHit * .40));
+                }
+
+                var doesHit = _formulas.DoesHit(chanceToHit);
+
+                if (doesHit)
+                {
+
+
+                    // avoidance percentage can be improved by core skills 
+                    // such as improved parry, acrobatic etc 
+                    // instead of rolling a D10, roll a D6 for a close to 15% increase in chance
+
+                    // Move to formula, needs to use _dice instead of making a new instance
+                    var avoidanceRoll = new Dice().Roll(1, 1, 10);
+
+
+                    //10% chance to attempt a dodge
+                    if (avoidanceRoll == 1)
                     {
-                        _writer.WriteLine($"<p>You parry {target.Name}'s attack.</p>", player.ConnectionId);
-                        _writer.WriteLine($"<p>{player.Name} parries your attack.</p>", target.ConnectionId);
-                        return;
+                        var dodge = GetSkill("dodge", player);
+
+                        if (dodge != null)
+                        {
+                            _writer.WriteLine($"<p>You dodge {target.Name}'s attack.</p>", player.ConnectionId);
+                            _writer.WriteLine($"<p>{player.Name} dodges your attack.</p>", target.ConnectionId);
+                            return;
+                        }
+
+
+                    }
+
+                    //10% chance to parry
+                    if (avoidanceRoll == 2)
+                    {
+                        var skill = GetSkill("parry", player);
+
+                        if (skill != null)
+                        {
+                            _writer.WriteLine($"<p>You parry {target.Name}'s attack.</p>", player.ConnectionId);
+                            _writer.WriteLine($"<p>{player.Name} parries your attack.</p>", target.ConnectionId);
+                            return;
+                        }
+                    }
+
+                    // Block
+                    if (avoidanceRoll == 3)
+                    {
+                        var chanceToBlock = _formulas.ToBlockChance(target, player);
+                        var doesBlock = _formulas.DoesHit(chanceToBlock);
+
+                        if (doesBlock)
+                        {
+                            var skill = GetSkill("shieldblock", player);
+
+                            if (skill != null)
+                            {
+                                _writer.WriteLine($"You block {target.Name}'s attack with your shield.",
+                                    player.ConnectionId);
+                                _writer.WriteLine($"{player.Name} blocks your attack with their shield.",
+                                    player.ConnectionId);
+                            }
+                        }
+                        else
+                        {
+                            // block fail
+                        }
+                    }
+
+
+                    var damage = _formulas.CalculateDamage(player, target, weapon);
+
+                    var enhancedDamageChance = _dice.Roll(1, 1, 100);
+                    var hasEnhancedDamage =
+                        player.Skills.FirstOrDefault(x => x.SkillName.Equals("Enhanced Damage"));
+
+
+                    if (_formulas.IsCriticalHit())
+                    {
+                        // double damage
+                        damage *= 2;
+                    }
+
+                    if (hasEnhancedDamage != null)
+                    {
+                        if (hasEnhancedDamage.Proficiency >= enhancedDamageChance)
+                        {
+                            var bonusDam = Helpers.GetPercentage(15, damage);
+                            damage += bonusDam;
+                        }
+                    }
+
+                    HarmTarget(target, damage);
+
+                    DisplayDamage(player, target, room, weapon, damage);
+
+                    _clientUi.UpdateHP(target);
+
+                    if (!IsTargetAlive(target))
+                    {
+                        TargetKilled(player, target, room);
+                    }
+
+                }
+                else
+                {
+
+                    DisplayMiss(player, target, room, weapon);
+                    // miss message
+                    // gain improvements on weapon skill
+
+
+                    SkillList getWeaponSkill = null;
+                    if (weapon != null &&
+                        !player.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        // urgh this is ugly
+                        getWeaponSkill = player.Skills.FirstOrDefault(x =>
+                            x.SkillName.Replace(" ", string.Empty)
+                                .Equals(Enum.GetName(typeof(Item.Item.WeaponTypes), weapon.WeaponType)));
+                    }
+
+                    if (weapon == null &&
+                        !player.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        getWeaponSkill = player.Skills.FirstOrDefault(x =>
+                            x.SkillName.Equals("Hand To Hand", StringComparison.CurrentCultureIgnoreCase));
+                    }
+
+                    if (getWeaponSkill != null)
+                    {
+                        getWeaponSkill.Proficiency += 1;
+                        _writer.WriteLine(
+                            $"<p class='improve'>Your proficiency in {getWeaponSkill.SkillName} has increased.</p>");
+
+                        _gain.GainExperiencePoints(player, getWeaponSkill.Level * 50, true);
+                    }
+
+
+                }
+
+                if (player.Equipped.Secondary != null)
+                {
+                    weapon = GetWeapon(player, true);
+                    chanceToHit = _formulas.ToHitChance(player, target, true);
+
+                    //if player bind and don't have blind fighting 
+                    // reduce chance to hit by 40%
+                    if (player.Affects.Blind && !BlindFighting(player))
+                    {
+                        chanceToHit = (int)(chanceToHit - (chanceToHit * .40));
+                    }
+
+                    doesHit = _formulas.DoesHit(chanceToHit);
+
+                    if (doesHit)
+                    {
+
+
+                        // avoidance percentage can be improved by core skills 
+                        // such as improved parry, acrobatic etc 
+                        // instead of rolling a D10, roll a D6 for a close to 15% increase in chance
+
+                        // Move to formula, needs to use _dice instead of making a new instance
+                        var avoidanceRoll = new Dice().Roll(1, 1, 10);
+
+
+                        //10% chance to attempt a dodge
+                        if (avoidanceRoll == 1)
+                        {
+                            var dodge = GetSkill("dodge", player);
+
+                            if (dodge != null)
+                            {
+                                _writer.WriteLine($"<p>You dodge {target.Name}'s attack.</p>", player.ConnectionId);
+                                _writer.WriteLine($"<p>{player.Name} dodges your attack.</p>", target.ConnectionId);
+                                return;
+                            }
+
+
+                        }
+
+                        //10% chance to parry
+                        if (avoidanceRoll == 2)
+                        {
+                            var skill = GetSkill("parry", player);
+
+                            if (skill != null)
+                            {
+                                _writer.WriteLine($"<p>You parry {target.Name}'s attack.</p>", player.ConnectionId);
+                                _writer.WriteLine($"<p>{player.Name} parries your attack.</p>", target.ConnectionId);
+                                return;
+                            }
+                        }
+
+                        // Block
+                        if (avoidanceRoll == 3)
+                        {
+                            var chanceToBlock = _formulas.ToBlockChance(target, player);
+                            var doesBlock = _formulas.DoesHit(chanceToBlock);
+
+                            if (doesBlock)
+                            {
+                                var skill = GetSkill("shieldblock", player);
+
+                                if (skill != null)
+                                {
+                                    _writer.WriteLine($"You block {target.Name}'s attack with your shield.",
+                                        player.ConnectionId);
+                                    _writer.WriteLine($"{player.Name} blocks your attack with their shield.",
+                                        player.ConnectionId);
+                                }
+                            }
+                            else
+                            {
+                                // block fail
+                            }
+                        }
+
+
+                        var damage = _formulas.CalculateDamage(player, target, weapon);
+
+                        if (_formulas.IsCriticalHit())
+                        {
+                            // double damage
+                            damage *= 2;
+                        }
+
+                        var enhancedDamageChance = _dice.Roll(1, 1, 100);
+                        var hasEnhancedDamage =
+                            player.Skills.FirstOrDefault(x => x.SkillName.Equals("Enhanced Damage"));
+
+                        if (hasEnhancedDamage != null)
+                        {
+                            if (hasEnhancedDamage.Proficiency >= enhancedDamageChance)
+                            {
+                                var bonusDam = Helpers.GetPercentage(15, damage);
+                                damage += bonusDam;
+                            }
+                        }
+
+                        HarmTarget(target, damage);
+
+                        DisplayDamage(player, target, room, weapon, damage);
+
+                        _clientUi.UpdateHP(target);
+
+                        if (!IsTargetAlive(target))
+                        {
+                            TargetKilled(player, target, room);
+                        }
+
+                    }
+                    else
+                    {
+
+                        DisplayMiss(player, target, room, weapon);
+                        // miss message
+                        // gain improvements on weapon skill
+
+
+                        SkillList getWeaponSkill = null;
+                        if (weapon != null &&
+                            !player.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            // urgh this is ugly
+                            getWeaponSkill = player.Skills.FirstOrDefault(x =>
+                                x.SkillName.Replace(" ", string.Empty)
+                                    .Equals(Enum.GetName(typeof(Item.Item.WeaponTypes), weapon.WeaponType)));
+                        }
+
+                        if (weapon == null &&
+                            !player.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            getWeaponSkill = player.Skills.FirstOrDefault(x =>
+                                x.SkillName.Equals("Hand To Hand", StringComparison.CurrentCultureIgnoreCase));
+                        }
+
+                        if (getWeaponSkill != null)
+                        {
+                            getWeaponSkill.Proficiency += 1;
+                            _writer.WriteLine(
+                                $"<p class='improve'>Your proficiency in {getWeaponSkill.SkillName} has increased.</p>");
+
+                            _gain.GainExperiencePoints(player, getWeaponSkill.Level * 50, true);
+                        }
+
+
                     }
                 }
 
-                // Block
-                if (avoidanceRoll == 3)
-                {
-                    //var chanceToBlock = _formulas.ToBlockChance(target, player);
-                    //var doesBlock = _formulas.DoesHit(chanceToBlock);
-
-                    //if (doesBlock)
-                    //{
-                    //    var skill = GetSkill("shieldblock", player);
-
-                    //    if (skill != null)
-                    //    {
-                    //        _writer.WriteLine($"You block {target.Name}'s attack with your shield.", player.ConnectionId);
-                    //        _writer.WriteLine($"{player.Name} blocks your attack with their shield.", player.ConnectionId);
-                    //    }
-                    //}
-                    //else
-                    //{
-                    //    // block fail
-                    //}
-                }
- 
-
-                var damage = _formulas.CalculateDamage(player, target, weapon);
-
-                if (_formulas.IsCriticalHit())
-                {
-                    // double damage
-                    damage *= 2;
-                }
-
-
-                HarmTarget(target, damage); 
-                
-                DisplayDamage(player, target, room, weapon, damage);
-
-                _clientUi.UpdateHP(target);
-
-                if (!IsTargetAlive(target))
-                {
-                    TargetKilled(player, target, room);
-                }
- 
-            }
-            else
-            {
-               
-                DisplayMiss(player, target, room, weapon);
-                // miss message
-                // gain improvements on weapon skill
-
-
-                SkillList getWeaponSkill = null;
-                if (weapon != null && !player.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    // urgh this is ugly
-                    getWeaponSkill = player.Skills.FirstOrDefault(x =>
-                        x.SkillName.Replace(" ", string.Empty)
-                            .Equals(Enum.GetName(typeof(Item.Item.WeaponTypes), weapon.WeaponType)));
-                }
-
-                if (weapon == null && !player.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    getWeaponSkill = player.Skills.FirstOrDefault(x =>
-                        x.SkillName.Equals("Hand To Hand", StringComparison.CurrentCultureIgnoreCase));
-                }
-
-                if (getWeaponSkill != null)
-                {
-                    getWeaponSkill.Proficiency += 1;
-                    _writer.WriteLine($"<p class='improve'>Your proficiency in {getWeaponSkill.SkillName} has increased.</p>");
-               
-                    _gain.GainExperiencePoints(player, getWeaponSkill.Level * 50, true);
-                }
-
-              
-            }
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
                 throw;
             }
-
         }
+
 
         public int DamageReduction(Player defender, int damage)
         {
             var ArRating = defender.ArmorRating.Armour + 1;
 
-        
+
             var armourReduction = ArRating / (double)damage;
 
             if (armourReduction > 4)
@@ -476,8 +655,8 @@ namespace ArchaicQuestII.GameLogic.Combat
             //refactor this shit
             var strengthMod = 0.5 + player.Attributes.Attribute[EffectLocation.Strength] / (double)100;
             var levelDif = player.Level - target.Level == 0 ? 1 : player.Level - target.Level;
-         //   var levelMod = levelDif / 2 <= 0 ? 1 : levelDif / 2;
-            
+            //   var levelMod = levelDif / 2 <= 0 ? 1 : levelDif / 2;
+
             var criticalHit = 1;
 
             if (target.Status == CharacterStatus.Status.Sleeping || target.Status == CharacterStatus.Status.Stunned || target.Status == CharacterStatus.Status.Resting)
@@ -636,27 +815,27 @@ namespace ArchaicQuestII.GameLogic.Combat
             var diff = victim.Level - player.Level;
 
             if (diff <= -10)
-                 _writer.WriteLine("Now where did that chicken go?", player.ConnectionId);
+                _writer.WriteLine("Now where did that chicken go?", player.ConnectionId);
             else if (diff <= -5)
-                 _writer.WriteLine( "You could do it with a needle!", player.ConnectionId);
+                _writer.WriteLine("You could do it with a needle!", player.ConnectionId);
             else if (diff <= -2)
-                 _writer.WriteLine("Easy.", player.ConnectionId);
+                _writer.WriteLine("Easy.", player.ConnectionId);
             else if (diff <= -1)
-                 _writer.WriteLine( "Fairly easy.", player.ConnectionId);
+                _writer.WriteLine("Fairly easy.", player.ConnectionId);
             else if (diff == 0)
-                 _writer.WriteLine( "The perfect match!", player.ConnectionId);
+                _writer.WriteLine("The perfect match!", player.ConnectionId);
             else if (diff <= 1)
-                 _writer.WriteLine( "You would need some luck!", player.ConnectionId);
+                _writer.WriteLine("You would need some luck!", player.ConnectionId);
             else if (diff <= 2)
-                 _writer.WriteLine( "You would need a lot of luck!", player.ConnectionId);
+                _writer.WriteLine("You would need a lot of luck!", player.ConnectionId);
             else if (diff <= 3)
-                 _writer.WriteLine( "You would need a lot of luck and great equipment!", player.ConnectionId);
+                _writer.WriteLine("You would need a lot of luck and great equipment!", player.ConnectionId);
             else if (diff <= 5)
-                 _writer.WriteLine( "Do you feel lucky, punk?", player.ConnectionId);
+                _writer.WriteLine("Do you feel lucky, punk?", player.ConnectionId);
             else if (diff <= 10)
-                 _writer.WriteLine( "Are you mad!?", player.ConnectionId);
+                _writer.WriteLine("Are you mad!?", player.ConnectionId);
             else if (diff <= 100)
-                 _writer.WriteLine( "You ARE mad!", player.ConnectionId);
+                _writer.WriteLine("You ARE mad!", player.ConnectionId);
         }
 
         /// <summary>
@@ -721,4 +900,3 @@ namespace ArchaicQuestII.GameLogic.Combat
 
     }
 }
- 

@@ -18,13 +18,13 @@ namespace ArchaicQuestII.GameLogic.Combat
         {
             _dice = dice;
         }
-        public int OffensivePoints(Player player)
+        public int OffensivePoints(Player player, bool useDualWield = false)
         {
             var offensePoints = player.Attributes.Attribute[EffectLocation.Strength] / 5
                                 + player.Attributes.Attribute[EffectLocation.Dexterity] / 10
                                 + player.Attributes.Attribute[EffectLocation.HitRoll];
 
-            var weapon = player.Equipped.Wielded;
+            var weapon = useDualWield ? player.Equipped.Secondary : player.Equipped.Wielded;
 
            SkillList getWeaponSkill = null;
             if (weapon != null && !player.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
@@ -67,13 +67,13 @@ namespace ArchaicQuestII.GameLogic.Combat
             return BlockPoints(player) * 100 / (BlockPoints(player) + DefensivePoints(target));
         }
 
-        public int ToHitChance(Player player, Player target)
+        public int ToHitChance(Player player, Player target, bool useDualWield)
         {
 
             //var x = OffensivePoints(player);
             //var y = DefensivePoints(target);
             //var z = OffensivePoints(player) * 100 / (OffensivePoints(player) + DefensivePoints(target));
-            return OffensivePoints(player) * 100 / (OffensivePoints(player) + DefensivePoints(target));
+            return OffensivePoints(player, useDualWield) * 100 / (OffensivePoints(player, useDualWield) + DefensivePoints(target));
         }
 
         public int DamageReduction(Player defender, int damage)

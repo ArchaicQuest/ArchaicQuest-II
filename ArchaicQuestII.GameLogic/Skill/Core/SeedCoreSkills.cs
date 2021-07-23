@@ -64,7 +64,8 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
                 skill.Mount(),
                 skill.BlindFighting(),
                 skill.ShieldBash(),
-                skill.DualWield()
+                skill.DualWield(),
+                skill.EnhancedDamage()
             };
 
             return seedData;

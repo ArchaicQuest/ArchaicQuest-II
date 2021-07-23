@@ -417,6 +417,12 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
                     break;
                 case Equipment.EqSlot.Shield:
 
+                    if(player.Equipped.Wielded != null && player.Equipped.Wielded.TwoHanded)
+                    {
+                        _writer.WriteLine("Your hands are tied up with your two-handed weapon!", player.ConnectionId);
+                        return;
+                    }
+
                     if (player.Equipped.Shield != null)
                     {
                         Remove(player.Equipped.Shield.Name, room, player);
@@ -449,6 +455,13 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
                     EmitWearActionToRoom($"{itemToWear.Name.ToLower()} around {Helpers.GetPronoun(player.Gender)} waist.", room, player);
                     break;
                 case Equipment.EqSlot.Wielded:
+
+                    if (itemToWear.TwoHanded && player.Equipped.Shield != null)
+                    {
+                        _writer.WriteLine("You need two hands free for that weapon, remove your shield and try again.",player.ConnectionId);
+
+                        return;
+                    }
 
                     if (player.Equipped.Wielded != null)
                     {

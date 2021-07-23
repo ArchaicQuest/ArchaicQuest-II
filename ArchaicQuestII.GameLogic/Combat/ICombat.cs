@@ -18,7 +18,7 @@ namespace ArchaicQuestII.GameLogic.Combat
         public int CalculateSkillDamage(Player player, Player target, int damage);
         public Player FindTarget(Player attacker, string target, Room room, bool isMurder);
 
-        public Item.Item GetWeapon(Player player);
+        public Item.Item GetWeapon(Player player, bool dualWield);
 
         public void HarmTarget(Player victim, int damage);
 

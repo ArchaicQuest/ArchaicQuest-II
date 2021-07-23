@@ -843,6 +843,76 @@ namespace ArchaicQuestII.GameLogic.Skill
 
             // blind fighting
         }
+
+        public Skill.Model.Skill EnhancedDamage()
+        {
+            return new Skill.Model.Skill()
+            {
+                Name = "Enhanced Damage",
+                Description =
+                    "Chance to increase damage per hit",
+                ApplyLevelCheck = true,
+                SavingThrow = new SavingThrow()
+                {
+                    Reflex = true
+                },
+                Rounds = 1,
+                Cost = new SkillCost()
+                {
+                    Table = new Dictionary<Cost, int>()
+                    {
+                        {Cost.Moves, 0}
+                    }
+                },
+                Type = SkillType.Passive,
+                StartsCombat = true,
+                ValidTargets = ValidTargets.TargetFightVictim | ValidTargets.TargetPlayerRoom,
+                Damage = new Dice()
+                {
+                    DiceMaxSize = 6,
+                    DiceMinSize = 1,
+                    DiceRoll = 1
+                },
+                UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
+            };
+
+            // blind fighting
+        }
+
+        public Skill.Model.Skill Sharpen()
+        {
+            return new Skill.Model.Skill()
+            {
+                Name = "Sharpen",
+                Description =
+                    "Sharpens weapon, increases the damage by 1, there is a chance the sword breaks with each sharpen up to the max on 10",
+                ApplyLevelCheck = true,
+                SavingThrow = new SavingThrow()
+                {
+                    Reflex = true
+                },
+                Rounds = 1,
+                Cost = new SkillCost()
+                {
+                    Table = new Dictionary<Cost, int>()
+                    {
+                        {Cost.Moves, 0}
+                    }
+                },
+                Type = SkillType.None,
+                StartsCombat = true,
+                ValidTargets = ValidTargets.TargetObjectInventory,
+                Damage = new Dice()
+                {
+                    DiceMaxSize = 6,
+                    DiceMinSize = 1,
+                    DiceRoll = 1
+                },
+                UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
+            };
+
+            // blind fighting
+        }
     }
 
 

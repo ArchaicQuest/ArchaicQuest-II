@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Combat;
@@ -33,10 +34,11 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
         private readonly ICombat _fight;
         private readonly ISkillManager _skillManager;
         private readonly ICache _cache;
+        private readonly IEquip _equip;
 
 
 
-        public PassiveSkills(IWriteToClient writer, IUpdateClientUI updateClientUi, IDice dice, IDamage damage, ICombat fight, ISkillManager skillManager, ICache cache, IGain gain)
+        public PassiveSkills(IWriteToClient writer, IUpdateClientUI updateClientUi, IDice dice, IDamage damage, ICombat fight, ISkillManager skillManager, ICache cache, IGain gain, IEquip equip)
         {
             _writer = writer;
             _updateClientUi = updateClientUi;
@@ -46,6 +48,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             _skillManager = skillManager;
             _cache = cache;
             _gain = gain;
+            _equip = equip;
 
         }
 
@@ -110,7 +113,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
         }
 
 
-        public int DualWield(Player player, Player target, string obj)
+        public int DualWield(Player player, Player target, Room room, string obj)
         {
 
             if (string.IsNullOrEmpty(obj))
@@ -144,21 +147,19 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                     return 0;
                 }
 
-                // equip off hand
-            
-
 
             if (player.Equipped.Shield != null)
             {
                 var shield = player.Equipped.Shield;
-                shield.Equipped = false;
-
-                _writer.WriteLine($"You remove your {shield.Name.ToLower()}.", player.ConnectionId);
-                player.Equipped.Shield = null;
-              
+     
+                _equip.Remove(shield.Name,room, player);
             }
+          
+
+            _equip.Wear(findWeapon.Name, room, player);
 
 
+            // combat on success 2 hits, on success for strength damage if not half damage
 
             return 0;
         }

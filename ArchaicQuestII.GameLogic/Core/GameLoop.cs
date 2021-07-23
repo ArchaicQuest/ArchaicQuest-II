@@ -309,6 +309,7 @@ namespace ArchaicQuestII.GameLogic.Core
                             attackCount += 1;
                         }
 
+
                         for (var i = 0; i < attackCount; i++)
                         {
                             _combat.Fight(player, player.Target, _cache.GetRoom(player.RoomId), false);

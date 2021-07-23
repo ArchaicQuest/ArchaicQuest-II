@@ -7,7 +7,7 @@ namespace ArchaicQuestII.GameLogic.Combat
 {
    public interface IFormulas
     {
-        public int OffensivePoints(Player player);
+        public int OffensivePoints(Player player, bool useDualWield);
 
         public int DefensivePoints(Player player);
 
@@ -15,7 +15,7 @@ namespace ArchaicQuestII.GameLogic.Combat
 
         public int ToBlockChance(Player player, Player target);
 
-        public int ToHitChance(Player player, Player target);
+        public int ToHitChance(Player player, Player target, bool useDualWield);
 
         public int DamageReduction(Player defender, int damage);
 
