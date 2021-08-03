@@ -177,6 +177,12 @@ namespace ArchaicQuestII.GameLogic.Core
         }
 
 
+        public List<Skill.Model.Skill> ReturnSkills()
+        {
+            return _skillCache.Values.ToList();
+        }
+
+
 
 
         #endregion

@@ -8,6 +8,7 @@ namespace ArchaicQuestII.GameLogic.Character.Model
     public class Affects
     {
         public bool NonDectect { get; set; } = false;
+        public bool Stunned { get; set; } = false;
         public bool Invis { get; set; } = false;
         public bool DetectInvis { get; set; } = false;
         public bool Hidden { get; set; } = false;

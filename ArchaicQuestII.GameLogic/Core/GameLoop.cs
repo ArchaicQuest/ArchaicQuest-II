@@ -400,8 +400,13 @@ namespace ArchaicQuestII.GameLogic.Core
                                 {
                                     pc.Attributes.Attribute[EffectLocation.DamageRoll] -= aff.Modifier.DamRoll;
                                 }
+                                if (aff.Modifier.Armour != 0)
+                                {
+                                    pc.ArmorRating.Armour -= aff.Modifier.Armour;
+                                    pc.ArmorRating.Magic -= aff.Modifier.Armour;
+                                }
 
-                               
+
                                 pc.Affects.Custom.Remove(aff);
 
                                 _spellList.CastSpell(aff.Name, "", pc, "", pc, _cache.GetRoom(pc.RoomId), true);
@@ -409,6 +414,36 @@ namespace ArchaicQuestII.GameLogic.Core
                                 if (aff.Affects == DefineSpell.SpellAffect.Blind)
                                 {
                                     pc.Affects.Blind = false;
+                                    _writeToClient.WriteLine("You are no longer blinded.", pc.ConnectionId);
+                                }
+                                if (aff.Affects == DefineSpell.SpellAffect.Berserk)
+                                {
+                                    pc.Affects.Berserk = false;
+                                }
+                                if (aff.Affects == DefineSpell.SpellAffect.NonDetect)
+                                {
+                                    pc.Affects.NonDectect = false;
+                                }
+                                if (aff.Affects == DefineSpell.SpellAffect.Invis)
+                                {
+                                    pc.Affects.Invis = false;
+                                }
+                                if (aff.Affects == DefineSpell.SpellAffect.DetectInvis)
+                                {
+                                    pc.Affects.DetectInvis = false;
+                                }
+                                if (aff.Affects == DefineSpell.SpellAffect.DetectHidden)
+                                {
+                                    pc.Affects.DetectHidden = false;
+                                }
+                                if (aff.Affects == DefineSpell.SpellAffect.Poison)
+                                {
+                                    pc.Affects.Poisoned = false;
+                                }
+                                if (aff.Affects == DefineSpell.SpellAffect.Haste
+                                )
+                                {
+                                    pc.Affects.Haste = false;
                                 }
                             }
                             _client.UpdateAffects(pc);

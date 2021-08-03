@@ -24,6 +24,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
         int Rescue(Player player, Player target, Room room, string obj);
         int Mount(Player player, Player target, Room room);
         int Berserk(Player player, Player target, Room room);
+        int WarCry(Player player, Player target, Room room);
 
     }
 
@@ -98,6 +99,23 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             if (target.Affects.Haste)
             {
                 chance -= 25;
+            }
+
+            var hasGrip = target.Skills.FirstOrDefault(x =>
+                x.SkillName.Equals("grip", StringComparison.CurrentCultureIgnoreCase));
+
+            var gripChance = _dice.Roll(1, 1, 100);
+
+            if (hasGrip != null)
+            {
+                if (gripChance <= hasGrip.Proficiency)
+                {
+                    chance -= 20;
+                }
+                else
+                {
+                    _gain.GainSkillExperience(target, hasGrip.Level * 100, hasGrip, _dice.Roll(1, 1, 5));
+                }
             }
 
             if (_dice.Roll(1, 1, 100) < chance)
@@ -208,7 +226,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
                _skillManager.EmoteAction(player, target, room, skillMessage);
 
-                _skillManager.updateCombat(player, findTarget);
+                _skillManager.updateCombat(player, findTarget, room);
                 return 0;
             }
             var increase = _dice.Roll(1, 1, 5);
@@ -249,7 +267,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                 var chance = foundSkill
                     .Proficiency;
                 
-                chance = (player.Status & CharacterStatus.Status.Fighting) != 0 ? 10 : 1;
+                chance += (player.Status & CharacterStatus.Status.Fighting) != 0 ? 10 : 1;
                 var hpPercent = 100 * player.Attributes.Attribute[EffectLocation.Hitpoints] /
                                 player.MaxAttributes.Attribute[EffectLocation.Hitpoints];
                 chance += 25 - hpPercent / 2;
@@ -259,19 +277,23 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                 {
 
                     target.Affects.Berserk = true;
-                    target.Affects.Custom.Add(new Affect()
+                    var affect = new Affect()
                     {
-                        Duration = player.Level / 5,
+                        Duration = 4 + player.Level / 5,
                         Modifier = new Modifier()
                         {
-                            DamRoll = player.Level / 5,
-                            HitRoll = player.Level / 8,
-                            Armour = player.Level / 5
-                        
+                            DamRoll = 4 + player.Level / 5,
+                            HitRoll = 4 + player.Level / 8,
+                            Armour = 4 +player.Level / 5
+
                         },
                         Affects = DefineSpell.SpellAffect.Berserk,
                         Name = "Berserk"
-                    });
+                    };
+                    target.Affects.Custom.Add(affect);
+
+                    Helpers.ApplyAffects(affect, player);
+
 
                     player.Attributes.Attribute[EffectLocation.Hitpoints] += player.Level * 2;
 
@@ -281,7 +303,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                         {
                             ToPlayer = "Your pulse races as you are consumed by rage!",
                             ToRoom = $"{player.Name} gets a wild look in {Helpers.GetPronoun(player.Gender)} eyes.",
-                            ToTarget = $""
+                            ToTarget = ""
                         }
                     };
 
@@ -293,7 +315,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                 {
                     _writer.WriteLine("Your pulse speeds up, but nothing happens", target.ConnectionId);
 
-                    player.Attributes.Attribute[EffectLocation.Moves] /= 2;
+                    player.Attributes.Attribute[EffectLocation.Moves] = player.Attributes.Attribute[EffectLocation.Moves] /= 4;
 
                     var increase = _dice.Roll(1, 1, 5);
 
@@ -308,8 +330,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                         $"<p class='improve'>Your knowledge of {foundSkill.SkillName} increases by {increase}%.</p>",
                         player.ConnectionId, 0);
 
-                    return 0;
-
+                 
                 }
             }
 
@@ -375,49 +396,52 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             return 0;
         }
 
-        public int Sharpen(Player player, Player target, Room room, string obj)
+        public int WarCry(Player player, Player target, Room room)
         {
 
-            if (string.IsNullOrEmpty(obj))
+          if(player.Affects.Custom.FirstOrDefault(x => x.Name.Equals("War Cry")) != null)
             {
-                _writer.WriteLine("Sharpen what?", player.ConnectionId);
+                _writer.WriteLine("You are already affected by War Cry.", player.ConnectionId);
                 return 0;
             }
-
-            var item = player.Inventory.FirstOrDefault(x =>
-                x.Equipped == false && x.Name.StartsWith(obj, StringComparison.CurrentCultureIgnoreCase));
-            if (item == null)
-            {
-                _writer.WriteLine($"You can't find that item in your inventory.", player.ConnectionId);
-                return 0;
-            }
-
-          // check for max sharpen
-          // chance to 
-
-
+            
+   
             var skillMessage = new SkillMessage()
             {
                 Hit =
                 {
-                    ToPlayer = $"You jump upon {target.Name}.",
-                    ToRoom = $"{player.Name} jumps upon {target.Name}.",
+                    ToPlayer = $"You scream a loud war cry.",
+                    ToRoom = $"{player.Name} screams a loud war cry.",
                     ToTarget = $""
                 }
             };
 
 
-            target.Mounted.MountedBy = player.Name;
-            player.Mounted.Name = target.Name;
-            player.Pets.Add(target);
-
             _skillManager.EmoteAction(player, target, room, skillMessage);
 
+            var affect = new Affect()
+            {
+                Duration = player.Level / 5,
+                Modifier = new Modifier()
+                {
+                    DamRoll = 3,
+                    Armour = -2
 
+                },
+                Affects = DefineSpell.SpellAffect.Berserk,
+                Name = "War Cry"
+            };
+
+            player.Affects.Custom.Add(affect);
+
+            Helpers.ApplyAffects(affect, player);
             _updateClientUi.UpdateScore(player);
+            _updateClientUi.UpdateMoves(player);
+            _updateClientUi.UpdateHP(player);
+            _updateClientUi.UpdateAffects(player);
+            _updateClientUi.UpdateExp(player);
 
-
-
+           
             return 0;
         }
     }

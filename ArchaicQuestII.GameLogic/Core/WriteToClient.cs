@@ -67,6 +67,11 @@ namespace ArchaicQuestII.GameLogic.Core
                 Console.WriteLine(ex.Message);
             }
         }
+
+        public void WriteLineRoom(string message, string id, int delay)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
     

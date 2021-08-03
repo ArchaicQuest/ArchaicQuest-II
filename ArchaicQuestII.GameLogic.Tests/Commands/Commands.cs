@@ -102,11 +102,11 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
         public void Should_call_process_command()
         {
 
-            _movement.Setup(x => x.Move(_room, _player, "North"));
+            _movement.Setup(x => x.Move(_room, _player, "North", false));
 
             _commands.ProcessCommand("NoRtH ", _player, _room);
 
-            _movement.Verify(x => x.Move(_room, _player, "North"), Times.Once);
+            _movement.Verify(x => x.Move(_room, _player, "North", false), Times.Once);
 
         }
 
@@ -114,11 +114,11 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
         public void Should_call_move_north_east()
         {
 
-            _movement.Setup(x => x.Move(_room, _player, "North East"));
+            _movement.Setup(x => x.Move(_room, _player, "North East", false));
 
             _commands.CommandList("ne", string.Empty, String.Empty, "", _player, _room);
 
-            _movement.Verify(x => x.Move(_room, _player, "North East"), Times.Once);
+            _movement.Verify(x => x.Move(_room, _player, "North East", false), Times.Once);
 
         }
 
@@ -126,11 +126,11 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
         public void Should_call_move_north_west()
         {
 
-            _movement.Setup(x => x.Move(_room, _player, "North West"));
+            _movement.Setup(x => x.Move(_room, _player, "North West", false));
 
             _commands.CommandList("nw", string.Empty, String.Empty, "",  _player, _room);
 
-            _movement.Verify(x => x.Move(_room, _player, "North West"), Times.Once);
+            _movement.Verify(x => x.Move(_room, _player, "North West", false), Times.Once);
 
         }
 
@@ -139,11 +139,11 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
         public void Should_call_move_south_west()
         {
 
-            _movement.Setup(x => x.Move(_room, _player, "South West"));
+            _movement.Setup(x => x.Move(_room, _player, "South West", false));
 
             _commands.CommandList("sw", string.Empty, String.Empty, "", _player, _room);
 
-            _movement.Verify(x => x.Move(_room, _player, "South West"), Times.Once);
+            _movement.Verify(x => x.Move(_room, _player, "South West", false), Times.Once);
 
         }
 
@@ -151,11 +151,11 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
         public void Should_call_move_south_east()
         {
 
-            _movement.Setup(x => x.Move(_room, _player, "South East"));
+            _movement.Setup(x => x.Move(_room, _player, "South East", false));
 
             _commands.CommandList("se", string.Empty, String.Empty, "", _player, _room);
 
-            _movement.Verify(x => x.Move(_room, _player, "South East"), Times.Once);
+            _movement.Verify(x => x.Move(_room, _player, "South East", false), Times.Once);
 
         }
 
@@ -165,11 +165,11 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
         public void Should_call_move_north()
         {
        
-            _movement.Setup(x => x.Move(_room, _player, "North"));
+            _movement.Setup(x => x.Move(_room, _player, "North", false));
 
             _commands.CommandList("n", string.Empty, string.Empty, "", _player, _room);
 
-            _movement.Verify(x => x.Move(_room, _player, "North"), Times.Once);
+            _movement.Verify(x => x.Move(_room, _player, "North", false), Times.Once);
         
         }
 
@@ -177,11 +177,11 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
         public void Should_call_move_east()
         {
 
-            _movement.Setup(x => x.Move(_room, _player, "East"));
+            _movement.Setup(x => x.Move(_room, _player, "East", false));
 
             _commands.CommandList("e", string.Empty, string.Empty, "", _player, _room);
 
-            _movement.Verify(x => x.Move(_room, _player, "East"), Times.Once);
+            _movement.Verify(x => x.Move(_room, _player, "East", false), Times.Once);
 
         }
 
@@ -189,11 +189,11 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
         public void Should_call_move_South()
         {
 
-            _movement.Setup(x => x.Move(_room, _player, "South"));
+            _movement.Setup(x => x.Move(_room, _player, "South", false));
 
             _commands.CommandList("s", string.Empty, string.Empty, "", _player, _room);
 
-            _movement.Verify(x => x.Move(_room, _player, "South"), Times.Once);
+            _movement.Verify(x => x.Move(_room, _player, "South", false), Times.Once);
 
         }
 
@@ -201,11 +201,11 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
         public void Should_call_move_Up()
         {
 
-            _movement.Setup(x => x.Move(_room, _player, "Up"));
+            _movement.Setup(x => x.Move(_room, _player, "Up", false));
 
             _commands.CommandList("u", string.Empty, string.Empty, "", _player, _room);
 
-            _movement.Verify(x => x.Move(_room, _player, "Up"), Times.Once);
+            _movement.Verify(x => x.Move(_room, _player, "Up", false), Times.Once);
 
         }
 
@@ -213,11 +213,11 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
         public void Should_call_move_Down()
         {
 
-            _movement.Setup(x => x.Move(_room, _player, "Down"));
+            _movement.Setup(x => x.Move(_room, _player, "Down", false));
 
             _commands.CommandList("d", string.Empty, string.Empty, "", _player, _room);
 
-            _movement.Verify(x => x.Move(_room, _player, "Down"), Times.Once);
+            _movement.Verify(x => x.Move(_room, _player, "Down", false), Times.Once);
 
         }
 

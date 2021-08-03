@@ -8,8 +8,11 @@ using System.Security.Cryptography;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Class;
+using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Character.Status;
+using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Skill.Enum;
+using ArchaicQuestII.GameLogic.Spell;
 using ArchaicQuestII.GameLogic.World.Room;
 using Newtonsoft.Json;
 
@@ -383,6 +386,96 @@ namespace ArchaicQuestII.GameLogic.Core
                 case "Up":
                     return "Down";
                 default: { return direction; }
+            }
+        }
+        /// <summary>
+        /// Applies bonus affects to player
+        /// </summary>
+        /// <param name="direction"></param>
+        public static void ApplyAffects(Affect affect, Player player)
+        {
+            
+                {
+                    if (affect.Modifier.Strength != 0)
+                    {
+                        player.Attributes.Attribute[EffectLocation.Strength] += affect.Modifier.Strength;
+                    }
+
+                    if (affect.Modifier.Dexterity != 0)
+                    {
+                        player.Attributes.Attribute[EffectLocation.Dexterity] += affect.Modifier.Dexterity;
+                    }
+
+                    if (affect.Modifier.Constitution != 0)
+                    {
+                        player.Attributes.Attribute[EffectLocation.Constitution] += affect.Modifier.Constitution;
+                    }
+
+                    if (affect.Modifier.Intelligence != 0)
+                    {
+                        player.Attributes.Attribute[EffectLocation.Intelligence] += affect.Modifier.Intelligence;
+                    }
+
+                    if (affect.Modifier.Wisdom != 0)
+                    {
+                        player.Attributes.Attribute[EffectLocation.Wisdom] += affect.Modifier.Wisdom;
+                    }
+
+                    if (affect.Modifier.Charisma != 0)
+                    {
+                        player.Attributes.Attribute[EffectLocation.Charisma] += affect.Modifier.Charisma;
+                    }
+
+                    if (affect.Modifier.HitRoll != 0)
+                    {
+                        player.Attributes.Attribute[EffectLocation.HitRoll] += affect.Modifier.HitRoll;
+                    }
+
+                    if (affect.Modifier.DamRoll != 0)
+                    {
+                        player.Attributes.Attribute[EffectLocation.DamageRoll] += affect.Modifier.DamRoll;
+                    }
+
+                    if (affect.Modifier.Armour != 0)
+                    {
+                        player.ArmorRating.Armour += affect.Modifier.Armour;
+                        player.ArmorRating.Magic += affect.Modifier.Armour;
+                  }
+
+                    if (affect.Affects == DefineSpell.SpellAffect.Blind)
+                    {
+                        player.Affects.Blind = true;
+                    }
+                    if (affect.Affects == DefineSpell.SpellAffect.Berserk)
+                    {
+                        player.Affects.Berserk = true;
+                    }
+                    if (affect.Affects == DefineSpell.SpellAffect.NonDetect)
+                    {
+                        player.Affects.NonDectect = true;
+                    }
+                    if (affect.Affects == DefineSpell.SpellAffect.Invis)
+                    {
+                        player.Affects.Invis = true;
+                    }
+                    if (affect.Affects == DefineSpell.SpellAffect.DetectInvis)
+                    {
+                        player.Affects.DetectInvis = true;
+                    }
+                    if (affect.Affects == DefineSpell.SpellAffect.DetectHidden)
+                    {
+                        player.Affects.DetectHidden = true;
+                    }
+                    if (affect.Affects == DefineSpell.SpellAffect.Poison)
+                    {
+                        player.Affects.Poisoned = true;
+                    }
+                    if (affect.Affects == DefineSpell.SpellAffect.Haste
+                    )
+                    {
+                        player.Affects.Haste = true;
+                    }
+
             }
         }
 

@@ -45,6 +45,10 @@ namespace ArchaicQuestII.GameLogic.Combat
         // TODO: explain that player needs to be murdered
         public Player FindTarget(Player attacker, string target, Room room, bool isMurder)
         {
+            if (string.IsNullOrEmpty(target))
+            {
+                return null;
+            }
             // If mob
             if (!isMurder && attacker.ConnectionId != "mob")
             {
@@ -259,13 +263,14 @@ namespace ArchaicQuestII.GameLogic.Combat
             try
             {
 
-                if ((player.Status & CharacterStatus.Status.Stunned) != 0)
+                if (player.Affects.Stunned)
                 {
                     _writer.WriteLine("<p>You are too stunned to attack this round.<p>", player.ConnectionId);
                     return;
                 }
-
-                var target = FindTarget(player, victim, room, isMurder);
+                // refactor this, makes no sense
+                // murder command need its on'y check here should be generic find the target player or mob
+                var target = FindTarget(player, victim, room, isMurder) ?? FindTarget(player, victim, room, true);
 
                 if (target == null)
                 {
@@ -276,6 +281,13 @@ namespace ArchaicQuestII.GameLogic.Combat
 
                         _cache.RemoveCharFromCombat(player.Id.ToString());
                     }
+
+
+                    if (player.Status != CharacterStatus.Status.Fighting)
+                    {
+                        return;
+                    }
+
 
                     _writer.WriteLine("<p>They are not here.</p>", player.ConnectionId);
                     return;
@@ -290,6 +302,8 @@ namespace ArchaicQuestII.GameLogic.Combat
                 if (target.Attributes.Attribute[EffectLocation.Hitpoints] <= 0)
                 {
                     _writer.WriteLine("<p>They are already dead.</p>", player.ConnectionId);
+
+                    player.Target = String.Empty;
                     return;
                 }
 
@@ -347,12 +361,12 @@ namespace ArchaicQuestII.GameLogic.Combat
                     //10% chance to attempt a dodge
                     if (avoidanceRoll == 1)
                     {
-                        var dodge = GetSkill("dodge", player);
+                        var dodge = GetSkill("dodge", target);
 
                         if (dodge != null)
                         {
-                            _writer.WriteLine($"<p>You dodge {target.Name}'s attack.</p>", player.ConnectionId);
-                            _writer.WriteLine($"<p>{player.Name} dodges your attack.</p>", target.ConnectionId);
+                            _writer.WriteLine($"<p>You dodge {player.Name}'s attack.</p>", target.ConnectionId);
+                            _writer.WriteLine($"<p>{target.Name} dodges your attack.</p>", player.ConnectionId);
                             return;
                         }
 
@@ -362,38 +376,71 @@ namespace ArchaicQuestII.GameLogic.Combat
                     //10% chance to parry
                     if (avoidanceRoll == 2)
                     {
-                        var skill = GetSkill("parry", player);
+                        var skill = GetSkill("parry", target);
 
                         if (skill != null)
                         {
-                            _writer.WriteLine($"<p>You parry {target.Name}'s attack.</p>", player.ConnectionId);
-                            _writer.WriteLine($"<p>{player.Name} parries your attack.</p>", target.ConnectionId);
+                            _writer.WriteLine($"<p>You parry {player.Name}'s attack.</p>", target.ConnectionId);
+                            _writer.WriteLine($"<p>{target.Name} parries your attack.</p>", player.ConnectionId);
+
+
+
+                            var riposte = GetSkill("Riposte", target);
+
+                            if (riposte != null)
+                            {
+
+                                _writer.WriteLine($"<p>You riposte {player.Name}'s attack.</p>", target.ConnectionId);
+                                _writer.WriteLine($"<p>{target.Name} riposte's your attack.</p>", player.ConnectionId);
+
+                                var ripDamage = _formulas.CalculateDamage(target, player, weapon);
+
+                                ripDamage /= 3;
+
+                                HarmTarget(player, ripDamage);
+
+                                DisplayDamage(target, player, room, weapon, ripDamage);
+
+                                _clientUi.UpdateHP(player);
+
+                                if (!IsTargetAlive(player))
+                                {
+                                    TargetKilled(target, player, room);
+                                }
+
+                            }
+
                             return;
                         }
                     }
 
                     // Block
-                    if (avoidanceRoll == 3)
+                    if (avoidanceRoll == 3 && player.Equipped.Shield != null)
                     {
+
+
                         var chanceToBlock = _formulas.ToBlockChance(target, player);
                         var doesBlock = _formulas.DoesHit(chanceToBlock);
 
                         if (doesBlock)
                         {
-                            var skill = GetSkill("shieldblock", player);
+                            var skill = GetSkill("shieldblock", target);
 
                             if (skill != null)
                             {
-                                _writer.WriteLine($"You block {target.Name}'s attack with your shield.",
+                                _writer.WriteLine($"You block {player.Name}'s attack with your shield.",
+                                    target.ConnectionId);
+                                _writer.WriteLine($"{target.Name} blocks your attack with their shield.",
                                     player.ConnectionId);
-                                _writer.WriteLine($"{player.Name} blocks your attack with their shield.",
-                                    player.ConnectionId);
+                                return;
                             }
                         }
                         else
                         {
                             // block fail
                         }
+
+                      
                     }
 
 
@@ -460,7 +507,7 @@ namespace ArchaicQuestII.GameLogic.Combat
                     {
                         getWeaponSkill.Proficiency += 1;
                         _writer.WriteLine(
-                            $"<p class='improve'>Your proficiency in {getWeaponSkill.SkillName} has increased.</p>");
+                            $"<p class='improve'>Your proficiency in {getWeaponSkill.SkillName} has increased.</p>", player.ConnectionId);
 
                         _gain.GainExperiencePoints(player, getWeaponSkill.Level * 50, true);
                     }
@@ -497,12 +544,12 @@ namespace ArchaicQuestII.GameLogic.Combat
                         //10% chance to attempt a dodge
                         if (avoidanceRoll == 1)
                         {
-                            var dodge = GetSkill("dodge", player);
+                            var dodge = GetSkill("dodge", target);
 
                             if (dodge != null)
                             {
-                                _writer.WriteLine($"<p>You dodge {target.Name}'s attack.</p>", player.ConnectionId);
-                                _writer.WriteLine($"<p>{player.Name} dodges your attack.</p>", target.ConnectionId);
+                                _writer.WriteLine($"<p>You dodge {player.Name}'s attack.</p>", target.ConnectionId);
+                                _writer.WriteLine($"<p>{target.Name} dodges your attack.</p>", player.ConnectionId);
                                 return;
                             }
 
@@ -512,38 +559,71 @@ namespace ArchaicQuestII.GameLogic.Combat
                         //10% chance to parry
                         if (avoidanceRoll == 2)
                         {
-                            var skill = GetSkill("parry", player);
+                            var skill = GetSkill("parry", target);
 
                             if (skill != null)
                             {
-                                _writer.WriteLine($"<p>You parry {target.Name}'s attack.</p>", player.ConnectionId);
-                                _writer.WriteLine($"<p>{player.Name} parries your attack.</p>", target.ConnectionId);
+                                _writer.WriteLine($"<p>You parry {player.Name}'s attack.</p>", target.ConnectionId);
+                                _writer.WriteLine($"<p>{target.Name} parries your attack.</p>", player.ConnectionId);
+
+
+
+                                var riposte = GetSkill("Riposte", target);
+
+                                if (riposte != null)
+                                {
+
+                                    _writer.WriteLine($"<p>You riposte {player.Name}'s attack.</p>", target.ConnectionId);
+                                    _writer.WriteLine($"<p>{target.Name} riposte's your attack.</p>", player.ConnectionId);
+
+                                    var ripDamage = _formulas.CalculateDamage(target, player, weapon);
+
+                                    ripDamage /= 3;
+
+                                    HarmTarget(player, ripDamage);
+
+                                    DisplayDamage(target, player, room, weapon, ripDamage);
+
+                                    _clientUi.UpdateHP(player);
+
+                                    if (!IsTargetAlive(player))
+                                    {
+                                        TargetKilled(target, player, room);
+                                    }
+
+                                }
+
                                 return;
                             }
                         }
 
                         // Block
-                        if (avoidanceRoll == 3)
+                        if (avoidanceRoll == 3 && player.Equipped.Shield != null)
                         {
+
+
                             var chanceToBlock = _formulas.ToBlockChance(target, player);
                             var doesBlock = _formulas.DoesHit(chanceToBlock);
 
                             if (doesBlock)
                             {
-                                var skill = GetSkill("shieldblock", player);
+                                var skill = GetSkill("shieldblock", target);
 
                                 if (skill != null)
                                 {
-                                    _writer.WriteLine($"You block {target.Name}'s attack with your shield.",
+                                    _writer.WriteLine($"You block {player.Name}'s attack with your shield.",
+                                        target.ConnectionId);
+                                    _writer.WriteLine($"{target.Name} blocks your attack with their shield.",
                                         player.ConnectionId);
-                                    _writer.WriteLine($"{player.Name} blocks your attack with their shield.",
-                                        player.ConnectionId);
+                                    return;
                                 }
                             }
                             else
                             {
                                 // block fail
                             }
+
+
                         }
 
 
@@ -609,7 +689,7 @@ namespace ArchaicQuestII.GameLogic.Combat
                         {
                             getWeaponSkill.Proficiency += 1;
                             _writer.WriteLine(
-                                $"<p class='improve'>Your proficiency in {getWeaponSkill.SkillName} has increased.</p>");
+                                $"<p class='improve'>Your proficiency in {getWeaponSkill.SkillName} has increased.</p>", player.ConnectionId);
 
                             _gain.GainExperiencePoints(player, getWeaponSkill.Level * 50, true);
                         }
@@ -686,12 +766,19 @@ namespace ArchaicQuestII.GameLogic.Combat
                 totalDamage = 1;
             }
 
+            totalDamage += player.Attributes.Attribute[EffectLocation.DamageRoll];  
+
 
             return totalDamage;
         }
 
         public void TargetKilled(Player player, Player target, Room room)
         {
+            if (player.Status != CharacterStatus.Status.Fighting)
+            {
+                return;
+            }
+
             player.Target = String.Empty;
             player.Status = CharacterStatus.Status.Standing;
             target.Status = CharacterStatus.Status.Ghost;
@@ -786,6 +873,8 @@ namespace ArchaicQuestII.GameLogic.Combat
                 newRoom.Players.Add(target);
                 target.Buffer.Enqueue("look");
             }
+
+           
         }
 
         public void Consider(Player player, string target, Room room)

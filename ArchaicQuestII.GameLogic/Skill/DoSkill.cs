@@ -112,14 +112,20 @@ namespace ArchaicQuestII.GameLogic.Skill
                 return null;
             }
 
-            var getSkill = _cache.GetSkill(foundSkill.SkillId);
+            if (foundSkill.SkillId == 0)
+            {
+                foundSkill.SkillId = skill.Id;
+            }
 
+            var getSkill = _cache.ReturnSkills().FirstOrDefault(x => x.Name.Equals(foundSkill.SkillName));
             if (getSkill == null)
             {
                 //player skill id mismatch as not using a db no more and these are generated, chance of player not having the correct id
                 foundSkill.SkillId = skill.Id;
                 getSkill = skill;
             }
+
+            foundSkill.SkillId = getSkill.Id;
 
 
             return getSkill;
@@ -132,6 +138,14 @@ namespace ArchaicQuestII.GameLogic.Skill
                    (spell.ValidTargets & ValidTargets.TargetFightVictim) != 0 ||
                    (spell.ValidTargets & ValidTargets.TargetSelfOnly) != 0 ||
                    (spell.ValidTargets & ValidTargets.TargetPlayerRoom) != 0 ||
+                   (spell.ValidTargets & ValidTargets.TargetFightSelf) != 0;
+        }
+
+        public bool AffectsSelf(Skill.Model.Skill spell)
+        {
+
+            return 
+                   (spell.ValidTargets & ValidTargets.TargetSelfOnly) != 0 || 
                    (spell.ValidTargets & ValidTargets.TargetFightSelf) != 0;
         }
 
@@ -171,7 +185,22 @@ namespace ArchaicQuestII.GameLogic.Skill
                 
             if (AffectsCharacter(FoundSkill))
             {
+                // check if affects a target
+                // if target blank
+                // error with to  kick whome?
+
+                if (!AffectsSelf(FoundSkill) && (origin.Status & CharacterStatus.Status.Fighting) == 0 && (!string.IsNullOrEmpty(targetName) &&  targetName == command))
+                {
+                    _writer.WriteLine(FoundSkill.Name + " whom?");
+                    return;
+                }
+
                 Player target = null;
+
+                if (targetName == command)
+                {
+                    targetName = string.Empty;
+                }
                 target = _spellTargetCharacter.ReturnTarget(FoundSkill, targetName, room, origin);
 
                 if (target == null)

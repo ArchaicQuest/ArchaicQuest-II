@@ -22,7 +22,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Debug
 
             var jsonObject = JsonConvert.SerializeObject(room);
 
-            _writeToClient.WriteLine(jsonObject);
+            _writeToClient.WriteLine(jsonObject, player.ConnectionId);
         }
     }
 }

@@ -55,6 +55,7 @@ namespace ArchaicQuestII.GameLogic.Skill
                     _damage.UpperCut(player, target, room, obj);
                     break;
                 case "dirt kick":
+                case "dirtkick":
                     _damage.DirtKick(player, target, room, obj);
                     break;
                 case "disarm":
@@ -75,9 +76,24 @@ namespace ArchaicQuestII.GameLogic.Skill
                 case "shield bash":
                     _damage.ShieldBash(player, target, room, obj);
                     break;
-                    //case "cause light wounds":
-                    //    _damageSpells.CauseLightWounds(player, target, room);
-                    //    break;
+                case "war cry":
+                    _util.WarCry(player, target, room);
+                    break;
+                case "hamstring":
+                    _damage.HamString(player, target, room, obj);
+                    break;
+                case "impale":
+                    _damage.Impale(player, target, room, obj);
+                    break;
+                case "slash":
+                    _damage.Slash(player, target, room, obj);
+                    break;
+                case "overhead crush":
+                    _damage.OverheadCrush(player, target, room, obj);
+                    break;
+                case "cleave":
+                    _damage.Cleave(player, target, room, obj);
+                    break;
                     //case "cure light wounds":
                     //    _damageSpells.CureLightWounds(player, target, room);
                     //    break;

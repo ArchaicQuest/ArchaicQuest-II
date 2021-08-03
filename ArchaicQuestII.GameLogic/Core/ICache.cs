@@ -61,6 +61,7 @@ namespace ArchaicQuestII.GameLogic.Core
         Player GetCharFromCombat(string id);
         Player RemoveCharFromCombat(string id);
         List<Player> GetCombatList();
+        List<Skill.Model.Skill> ReturnSkills();
 
         /// <summary>
         /// Experiment, Need to generate the commands list on start up

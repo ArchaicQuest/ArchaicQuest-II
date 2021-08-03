@@ -184,16 +184,15 @@ namespace ArchaicQuestII.GameLogic.Hubs
                 }
             }
 
-            foreach (var skill in player.Skills)
+            for (var i = player.Skills.Count - 1; i >= 0; i--)
             {
-                // skill doesn't exist and should be removed from player
                 if (classSkill.Skills.FirstOrDefault(x =>
-                    x.SkillName.Equals(skill.SkillName, StringComparison.CurrentCultureIgnoreCase)) == null)
+                    x.SkillName.Equals(player.Skills[i].SkillName, StringComparison.CurrentCultureIgnoreCase)) == null)
                 {
-                    player.Skills.Remove(skill);
+                    player.Skills.Remove(player.Skills[i]);
                 }
             }
-
+ 
 
         }
 

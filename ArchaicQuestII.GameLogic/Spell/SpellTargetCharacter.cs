@@ -23,6 +23,11 @@ namespace ArchaicQuestII.GameLogic.Spell
 
         public Player GetTarget(string target, Room room)
         {
+            if (string.IsNullOrEmpty(target))
+            {
+                return null;
+            }
+
             return room.Mobs.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ??
                    room.Players.FirstOrDefault(
                        x => x.Name.StartsWith(target, StringComparison.CurrentCultureIgnoreCase));
@@ -30,6 +35,12 @@ namespace ArchaicQuestII.GameLogic.Spell
 
         public Player CheckTarget(Skill.Model.Skill spell, string target, Room room, Player player)
         {
+
+            if (string.IsNullOrEmpty(target) || target.Equals(spell.Name, StringComparison.CurrentCultureIgnoreCase))
+            {
+                return null;
+            }
+            
             var victim = string.IsNullOrEmpty(target) ? player : GetTarget(target, room);
 
             if (victim == null)

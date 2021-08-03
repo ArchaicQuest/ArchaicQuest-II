@@ -66,9 +66,22 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
 
         }
 
-        public void updateCombat(Player player, Player target)
+        public void updateCombat(Player player, Player target, Room room)
         {
-           _fight.InitFightStatus(player, target);
+            if (target != null)
+            {
+
+                if (_fight.IsTargetAlive(target))
+                {
+
+                    _fight.InitFightStatus(player, target);
+                }
+                else
+                {
+                    
+                    _fight.TargetKilled(player, target, room);
+                }
+            }
 
         }
 
@@ -90,41 +103,51 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
 
         public void DamagePlayer(string spellName, int damage, Player player, Player target, Room room)
         {
-           var totalDam = _fight.CalculateSkillDamage(player, target, damage);
 
-            _writer.WriteLine(
-                $"<p>Your {spellName} {_damage.DamageText(totalDam).Value} {target.Name}  <span class='damage'>[{damage}]</span></p>",
-                player.ConnectionId);
-            _writer.WriteLine(
-                $"<p>{player.Name}'s {spellName} {_damage.DamageText(totalDam).Value} you!  <span class='damage'>[{damage}]</span></p>",
-                target.ConnectionId);
-
-            foreach (var pc in room.Players)
+            if (_fight.IsTargetAlive(target))
             {
-                if (pc.ConnectionId.Equals(player.ConnectionId) ||
-                    pc.ConnectionId.Equals(target.ConnectionId))
+
+                var totalDam = _fight.CalculateSkillDamage(player, target, damage);
+
+                _writer.WriteLine(
+                    $"<p>Your {spellName} {_damage.DamageText(totalDam).Value} {target.Name}  <span class='damage'>[{damage}]</span></p>",
+                    player.ConnectionId);
+                _writer.WriteLine(
+                    $"<p>{player.Name}'s {spellName} {_damage.DamageText(totalDam).Value} you!  <span class='damage'>[{damage}]</span></p>",
+                    target.ConnectionId);
+
+                foreach (var pc in room.Players)
                 {
-                    continue;
+                    if (pc.ConnectionId.Equals(player.ConnectionId) ||
+                        pc.ConnectionId.Equals(target.ConnectionId))
+                    {
+                        continue;
+                    }
+
+                    _writer.WriteLine(
+                        $"<p>{player.Name}'s {spellName} {_damage.DamageText(totalDam).Value} {target.Name}  <span class='damage'>[{damage}]</span></p>",
+                        pc.ConnectionId);
+
                 }
 
-                _writer.WriteLine($"<p>{ player.Name}'s {spellName} {_damage.DamageText(totalDam).Value} {target.Name}  <span class='damage'>[{damage}]</span></p>",
-                    pc.ConnectionId);
+                target.Attributes.Attribute[EffectLocation.Hitpoints] -= totalDam;
 
+                //if (!_fight.IsTargetAlive(target))
+                //{
+                //    _fight.TargetKilled(player,target, room);
+                //    //TODO: create corpse, refactor fight method from combat.cs
+                //}
+
+                //update UI
+                _updateClientUi.UpdateHP(target);
+
+                _fight.AddCharToCombat(target);
+                _fight.AddCharToCombat(player);
             }
-
-            target.Attributes.Attribute[EffectLocation.Hitpoints] -= totalDam;
-
-            if (!_fight.IsTargetAlive(target))
+            else
             {
-                _fight.TargetKilled(player,target, room);
-                //TODO: create corpse, refactor fight method from combat.cs
+                _fight.TargetKilled(player, target, room);
             }
-
-            //update UI
-            _updateClientUi.UpdateHP(target);
-
-            _fight.AddCharToCombat(target);
-            _fight.AddCharToCombat(player);
         }
 
         /*
@@ -289,15 +312,16 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
             if (target.ConnectionId == player.ConnectionId)
             {
                 _writer.WriteLine(
-                    $"<p>{ReplacePlaceholders(emote.Hit.ToTarget, target, true)}</p>",
+                    $"<p>{ReplacePlaceholders(emote.Hit.ToPlayer, target, true)}</p>",
                     target.ConnectionId);
-
-                return;
+            }
+            else
+            {
+                _writer.WriteLine(
+                    $"<p>{ReplacePlaceholders(emote.Hit.ToPlayer, target, false)}</p>",
+                    player.ConnectionId);
             }
 
-            _writer.WriteLine(
-                $"<p>{ReplacePlaceholders(emote.Hit.ToPlayer, target, false)}</p>",
-                player.ConnectionId);
 
             if (!string.IsNullOrEmpty(emote.Hit.ToTarget))
             {

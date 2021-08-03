@@ -82,7 +82,8 @@ namespace ArchaicQuestII.GameLogic.Spell
             Frozen,
             Burnt,
             Undead,
-            Berserk
+            Berserk,
+            Haste
         }
 
  

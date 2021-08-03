@@ -119,15 +119,22 @@ namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
             if (affect == null)
             {
 
-                target.Affects.Custom.Add(new Affect()
+                var newAffect = new Affect()
                 {
-                    Modifier = new Modifier(),
+                    Modifier = new Modifier()
+                    {
+                        Armour = 20
+                    },
                     Benefits = "Affects armour by 20",
                     Affects = DefineSpell.SpellAffect.ArmorClass,
-                    Duration = 2, /* player.Level + player.Attributes.Attribute[EffectLocation.Intelligence] / 2,*/
-                    Name = "Armour"
-                });
-                target.ArmorRating.Armour += 20;
+                    Duration = player.Level + player.Attributes.Attribute[EffectLocation.Intelligence] / 2,
+                    Name = "Armour",
+
+                };
+
+                target.Affects.Custom.Add(newAffect);
+
+                Helpers.ApplyAffects(newAffect, target);
             }
             else
             {
@@ -190,18 +197,22 @@ namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
 
             if (affect == null)
             {
-
-                target.Affects.Custom.Add(new Affect()
+                var newAffect = new Affect()
                 {
-                    Modifier = new Modifier(),
+                    Modifier = new Modifier() {
+                        Armour = 10,
+                        DamRoll = 10,},
                     Benefits = "Affects armour by 20\r\n Affects Dam by 10",
                     Affects = DefineSpell.SpellAffect.ArmorClass,
-                    Duration = 2, /* player.Level + player.Attributes.Attribute[EffectLocation.Intelligence] / 2,*/
-                    Name = "Bless"
-                });
+                    Duration =  player.Level + player.Attributes.Attribute[EffectLocation.Intelligence] / 2,
+                    Name = "Bless",
+                    
+                };
 
-                target.ArmorRating.Armour += 20;
-                target.Attributes.Attribute[EffectLocation.DamageRoll] += 20;
+            
+                target.Affects.Custom.Add(newAffect);
+
+                Helpers.ApplyAffects(newAffect, target);
             }
             else
             {
