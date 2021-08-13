@@ -226,7 +226,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                     {
 
                         _writer.WriteLine(
-                            $"<p>{player.Name} picks up {container.Container.Items.Name.ToLower()} from {container.Name.ToLower()}.</p>",
+                            $"<p>{player.Name} picks up {container.Container.Items[i].Name.ToLower()} from {container.Name.ToLower()}</p>",
                             pc.ConnectionId);
                     }
                 }

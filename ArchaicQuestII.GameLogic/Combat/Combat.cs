@@ -15,6 +15,7 @@ using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.Skill.Skills;
 using ArchaicQuestII.GameLogic.World.Room;
+using Newtonsoft.Json;
 
 namespace ArchaicQuestII.GameLogic.Combat
 {
@@ -341,7 +342,7 @@ namespace ArchaicQuestII.GameLogic.Combat
                 // reduce chance to hit by 40%
                 if (player.Affects.Blind && !BlindFighting(player))
                 {
-                    chanceToHit = (int)(chanceToHit - (chanceToHit * .40));
+                    chanceToHit = (int)(chanceToHit - (chanceToHit * .70));
                 }
 
                 var doesHit = _formulas.DoesHit(chanceToHit);
@@ -774,11 +775,7 @@ namespace ArchaicQuestII.GameLogic.Combat
 
         public void TargetKilled(Player player, Player target, Room room)
         {
-            if (player.Status != CharacterStatus.Status.Fighting)
-            {
-                return;
-            }
-
+        
             player.Target = String.Empty;
             player.Status = CharacterStatus.Status.Standing;
             target.Status = CharacterStatus.Status.Ghost;
@@ -823,8 +820,8 @@ namespace ArchaicQuestII.GameLogic.Combat
                 DecayTimer = 300 // 5 minutes
             };
 
-            foreach (var item in target.Inventory)
-            {
+            foreach (var item in target.Inventory) {
+                item.Equipped = false;
                 corpse.Container.Items.Add(item);
             }
 

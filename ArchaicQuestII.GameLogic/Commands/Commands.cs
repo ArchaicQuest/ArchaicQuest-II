@@ -18,6 +18,7 @@ using ArchaicQuestII.GameLogic.Commands.Score;
 using ArchaicQuestII.GameLogic.Commands.Skills;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Crafting;
+using ArchaicQuestII.GameLogic.Skill.Skills;
 using ArchaicQuestII.GameLogic.Socials;
 using ArchaicQuestII.GameLogic.Spell.Interface;
 using MoonSharp.Interpreter;
@@ -47,6 +48,8 @@ namespace ArchaicQuestII.GameLogic.Commands
         private readonly IMobScripts _mobScripts;
         private readonly ICrafting _crafting;
         private readonly ICooking _cooking;
+        private readonly IUtilSkills _utilSkills;
+        private readonly IPassiveSkills _passiveSkills;
 
         public Commands(
             IMovement movement,
@@ -68,7 +71,9 @@ namespace ArchaicQuestII.GameLogic.Commands
             IHelp help,
             IMobScripts mobScripts,
             ICrafting crafting,
-            ICooking cooking
+            ICooking cooking,
+            IUtilSkills utilSkills,
+                 IPassiveSkills passiveSkills
             )
         {
             _movement = movement;
@@ -91,6 +96,8 @@ namespace ArchaicQuestII.GameLogic.Commands
             _mobScripts = mobScripts;
             _crafting = crafting;
             _cooking = cooking;
+            _utilSkills = utilSkills;
+            _passiveSkills = passiveSkills;
         }
  
         public void CommandList(string key, string obj, string target, string fullCommand, Player player, Room room)
@@ -233,7 +240,7 @@ namespace ArchaicQuestII.GameLogic.Commands
                     break;
                 case "wear":
                 case "wield":
-                    _equipment.Wear(obj, room, player);
+                    _equipment.Wear(obj, room, player, String.Empty);
                     break;
                 case "remove":
                     _equipment.Remove(obj, room, player);
@@ -350,6 +357,9 @@ namespace ArchaicQuestII.GameLogic.Commands
                     break;
                 case "dismount": // see UtilSkills for Mount
                     _core.Dismount(player, room);
+                    break;
+                case "second": // see UtilSkills for Mount
+                    _passiveSkills.DualWield(player, null, room, obj);
                     break;
                 case "/train":
                     _core.TrainSkill(player);

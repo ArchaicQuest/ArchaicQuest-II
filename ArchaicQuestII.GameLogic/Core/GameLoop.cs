@@ -331,7 +331,7 @@ namespace ArchaicQuestII.GameLogic.Core
             {
                 try
                 {
-                    await Task.Delay(500);
+                    await Task.Delay(1000);
                    _time.DisplayTimeOfDayMessage(_time.UpdateTime());
   
                 }

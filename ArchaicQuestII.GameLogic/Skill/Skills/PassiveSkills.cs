@@ -20,7 +20,8 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
     public interface IPassiveSkills
     {
         int Haggle(Player player, Player target);
-       
+        int DualWield(Player player, Player target, Room room, string obj);
+
 
     }
 
@@ -131,7 +132,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                 return 0;
             }
 
-            var findWeapon = player.Inventory.FirstOrDefault(x => x.Name.StartsWith(obj) && x.Equipped == false);
+            var findWeapon = player.Inventory.FirstOrDefault(x => x.Name.Contains(obj) && x.Equipped == false);
 
             if (findWeapon == null)
             {
@@ -140,12 +141,18 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             }
            
 
-                // exception for rangers
-                if (findWeapon.Weight >= player.Equipped.Wielded.Weight)
-                {
-                    _writer.WriteLine("Your offhand secondary weapon must be lighter than your primary weapon", player.ConnectionId);
-                    return 0;
-                }
+            if(player.Equipped.Wielded == null)
+            {
+                _writer.WriteLine("You need to wield a weapon first.", player.ConnectionId);
+                return 0;
+            }
+
+                //// exception for rangers
+                //if (findWeapon.Weight <= player.Equipped.Wielded.Weight)
+                //{
+                //    _writer.WriteLine("Your offhand secondary weapon must be lighter than your primary weapon", player.ConnectionId);
+                //    return 0;
+                //}
 
 
             if (player.Equipped.Shield != null)
@@ -156,7 +163,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             }
           
 
-            _equip.Wear(findWeapon.Name, room, player);
+            _equip.Wear(findWeapon.Name, room, player, "dual");
 
 
             // combat on success 2 hits, on success for strength damage if not half damage

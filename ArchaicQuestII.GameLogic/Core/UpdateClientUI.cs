@@ -177,7 +177,10 @@ namespace ArchaicQuestII.GameLogic.Core
                     .Append("<tr><td  class=\"cell-title\" title='Worn on waist'>").Append(" &lt;worn about waist&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Waist?.Name ?? "(nothing)").Append("</td></tr>")
                     .Append("<tr><td  class=\"cell-title\" title='Worn on wrist'>").Append(" &lt;worn around wrist&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Wrist?.Name ?? "(nothing)").Append("</td></tr>")
                     .Append("<tr><td  class=\"cell-title\" title='Worn on wrist'>").Append(" &lt;worn around wrist&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Wrist2?.Name ?? "(nothing)").Append("</td></tr>")
-                    .Append("<tr><td  class=\"cell-title\" title='worn as weapon'>").Append(" &lt;wielded&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Wielded?.Name ?? "(nothing)").Append("</td></tr>")
+                    .Append("<tr><td  class=\"cell-title\" title='worn as weapon'>").Append(" &lt;wielded&gt;").Append("</td>").Append("<td>")
+                    .Append(player.Equipped.Wielded?.Name ?? "(nothing)").Append("</td></tr>")
+                    .Append("<tr><td  class=\"cell-title\" title='worn as weapon'>").Append(" &lt;secondary&gt;").Append("</td>").Append("<td>")
+                    .Append(player.Equipped.Secondary?.Name ?? "(nothing)").Append("</td></tr>")
                     .Append("<tr><td  class=\"cell-title\" title='Worn as shield'>").Append(" &lt;worn as shield&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Shield?.Name ?? "(nothing)").Append("</td></tr>")
                     .Append("<tr><td  class=\"cell-title\" title='Held'>").Append(" &lt;Held&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Held?.Name ?? "(nothing)").Append("</td></tr>")
                     .Append("<tr><td  class=\"cell-title\" title='Floating Nearby'>").Append(" &lt;Floating nearby&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Floating?.Name ?? "(nothing)").Append("</td></tr>").Append("</table");

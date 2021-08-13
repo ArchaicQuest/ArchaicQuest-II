@@ -259,7 +259,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
                character.RecallId = defaultRoom;
             }
 
-           var playerAlreadyInRoom = room.Players.FirstOrDefault(x => x.Id.Equals(character.Id)) != null;
+           var playerAlreadyInRoom = room.Players.ToList().FirstOrDefault(x => x.Id.Equals(character.Id)) != null;
            if (!playerAlreadyInRoom)
            {
                room.Players.Add(character);
@@ -289,6 +289,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
             _updateClientUi.UpdateInventory(character);
             _updateClientUi.UpdateScore(character);
             _updateClientUi.UpdateQuest(character);
+            _updateClientUi.UpdateAffects(character);
 
             _updateClientUi.GetMap(character,_cache.GetMap($"{room.AreaId}{room.Coords.Z}"));
 

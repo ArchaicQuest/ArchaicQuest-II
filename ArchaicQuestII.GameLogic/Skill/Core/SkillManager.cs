@@ -76,11 +76,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
 
                     _fight.InitFightStatus(player, target);
                 }
-                else
-                {
-                    
-                    _fight.TargetKilled(player, target, room);
-                }
+
             }
 
         }
@@ -132,11 +128,14 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
 
                 target.Attributes.Attribute[EffectLocation.Hitpoints] -= totalDam;
 
-                //if (!_fight.IsTargetAlive(target))
-                //{
-                //    _fight.TargetKilled(player,target, room);
-                //    //TODO: create corpse, refactor fight method from combat.cs
-                //}
+                if (!_fight.IsTargetAlive(target))
+                {
+                    _fight.TargetKilled(player, target, room);
+                    
+                    _updateClientUi.UpdateHP(target);
+                    return;
+                    //TODO: create corpse, refactor fight method from combat.cs
+                }
 
                 //update UI
                 _updateClientUi.UpdateHP(target);
@@ -144,10 +143,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
                 _fight.AddCharToCombat(target);
                 _fight.AddCharToCombat(player);
             }
-            else
-            {
-                _fight.TargetKilled(player, target, room);
-            }
+         
         }
 
         /*

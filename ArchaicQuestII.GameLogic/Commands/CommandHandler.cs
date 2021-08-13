@@ -5,6 +5,7 @@ using System.Text;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Skill;
+using ArchaicQuestII.GameLogic.Skill.Enum;
 using ArchaicQuestII.GameLogic.Socials;
 using ArchaicQuestII.GameLogic.World.Room;
 
@@ -36,9 +37,29 @@ namespace ArchaicQuestII.GameLogic.Commands
         public void HandleCommand(string key, string obj, string target, Player player, Room room)
         {
             var foundCommand = false;
+
+            // oddballs is shit name
+            // but might be times where we need a command to trigger
+            // a skill that does not match the name
+            // here second matches on second attack
+            // but I want second to allow selecting a second weapon
+            var oddBalls = new List<Tuple<string, string>>()
+            {
+                new Tuple<string, string>("second", "dual wield"),
+                new Tuple<string, string>("warcry", "war cry"),
+            };
+
+            var oddBallMatch = oddBalls.FirstOrDefault(x => x.Item1.StartsWith(key));
+
+            if (oddBallMatch != null)
+            {
+                key = oddBallMatch.Item2;
+            }
+
+
             //check player skill
             var foundSkill = _cache.GetAllSkills()
-                .FirstOrDefault(x => x.Name.StartsWith(key, StringComparison.CurrentCultureIgnoreCase));
+                .FirstOrDefault(x => x.Name.StartsWith(key, StringComparison.CurrentCultureIgnoreCase) && x.Type != SkillType.Passive);
             if (foundSkill != null) 
             {
                 _Skill.PerfromSkill(foundSkill, key, player, obj, room);

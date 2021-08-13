@@ -78,6 +78,15 @@ namespace ArchaicQuestII.GameLogic.Spell
                 return null;
             }
 
+
+            if (player.Status != CharacterStatus.Status.Fighting && (spell.ValidTargets & ValidTargets.TargetFightVictim) != 0)
+            {
+                if (!string.IsNullOrEmpty(target) || target.Equals(spell.Name, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    return CheckTarget(spell, target, room, player);
+                }
+            }
+
             //If no argument, target is the PC/NPC the player is fighting
             if (player.Status == CharacterStatus.Status.Fighting && (spell.ValidTargets & ValidTargets.TargetFightVictim) != 0)
             {
@@ -92,7 +101,7 @@ namespace ArchaicQuestII.GameLogic.Spell
             {
                 return CheckTarget(spell, target, room, player);
             }
-
+ 
             // casting spell on PC/NPC in the world
             // example spells, gate, summon, portal
             if ((spell.ValidTargets & ValidTargets.TargetPlayerWorld) != 0)
@@ -107,7 +116,7 @@ namespace ArchaicQuestII.GameLogic.Spell
             {
                 //find victim from player cache instead
                 var item = player.Inventory.FirstOrDefault(x =>
-                    x.Name.StartsWith(target, StringComparison.CurrentCultureIgnoreCase));
+                    x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
 
                 if (item == null)
                 {

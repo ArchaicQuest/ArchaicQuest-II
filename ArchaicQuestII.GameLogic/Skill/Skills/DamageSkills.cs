@@ -173,11 +173,8 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                 (player.Status & CharacterStatus.Status.Resting) == 0)
             {
                 _writer.WriteLine("You can only use this on stunned or targets that are not prepared.", player.ConnectionId);
+                return 0;
             }
-
-            var nthTarget = Helpers.findNth(obj);
-
-            var character = Helpers.FindMob(nthTarget, room) ?? Helpers.FindPlayer(nthTarget, room);
 
 
             var weaponDam = player.Equipped.Wielded?.Damage.Maximum ?? 1 * 2;
@@ -199,13 +196,8 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             if (player.Equipped.Wielded == null)
             {
                 _writer.WriteLine("Cleave with what?", player.ConnectionId);
+                return 0;
             }
- 
-
-            var nthTarget = Helpers.findNth(obj);
-
-            var character = Helpers.FindMob(nthTarget, room) ?? Helpers.FindPlayer(nthTarget, room);
-
 
             var weaponDam = player.Equipped.Wielded?.Damage.Maximum ?? 1 * 2;
             var str = player.Attributes.Attribute[EffectLocation.Strength];
@@ -229,19 +221,15 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                 _writer.WriteLine("Impale with what?", player.ConnectionId);
             }
 
-            var nthTarget = Helpers.findNth(obj);
-
-            var character = Helpers.FindMob(nthTarget, room) ?? Helpers.FindPlayer(nthTarget, room);
-
 
             var weaponDam = player.Equipped.Wielded?.Damage.Maximum ?? 1 * 2;
             var str = player.Attributes.Attribute[EffectLocation.Strength];
             var damage = weaponDam + _dice.Roll(1, 2, 10) + str / 5;
 
             /*dexterity check */
-            var chance = 1;
+            var chance = 50;
             chance += player.Attributes.Attribute[EffectLocation.Dexterity];
-            chance -= 2 * target.Attributes.Attribute[EffectLocation.Dexterity];
+            chance -= target.Attributes.Attribute[EffectLocation.Dexterity];
 
             if (player.Affects.Haste)
             {
@@ -255,10 +243,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
             /* level check */
             chance += player.Level - target.Level;
-
-            /* TODO: terrain check, can't dirt kick underwater *taps head* */
-            /* Check if player is flying/floating then fail dirt kick */
-
+ 
             if (_dice.Roll(1, 1, 100) < chance)
             {
 
@@ -291,22 +276,18 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
         {
             if (player.Equipped.Wielded == null)
             {
-                _writer.WriteLine("Slash1 with what?", player.ConnectionId);
+                _writer.WriteLine("Slash with what?", player.ConnectionId);
             }
 
-            var nthTarget = Helpers.findNth(obj);
-
-            var character = Helpers.FindMob(nthTarget, room) ?? Helpers.FindPlayer(nthTarget, room);
-
-
+           
             var weaponDam = player.Equipped.Wielded?.Damage.Maximum ?? 1 * 2;
             var str = player.Attributes.Attribute[EffectLocation.Strength];
             var damage = weaponDam + _dice.Roll(1, 2, 10) + str / 5;
 
             /*dexterity check */
-            var chance = 1;
+            var chance = 50;
             chance += player.Attributes.Attribute[EffectLocation.Dexterity];
-            chance -= 2 * target.Attributes.Attribute[EffectLocation.Dexterity];
+            chance -= target.Attributes.Attribute[EffectLocation.Dexterity];
 
             if (player.Affects.Haste)
             {
@@ -484,7 +465,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             }
 
             /*dexterity check */
-            var chance = 1;
+            var chance = 50;
             chance += player.Attributes.Attribute[EffectLocation.Dexterity];
             chance -= target.Attributes.Attribute[EffectLocation.Dexterity] / 2;
 
@@ -572,7 +553,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
         {
  
             /*dexterity check */
-            var chance = 1;
+            var chance = 50;
             chance += player.Attributes.Attribute[EffectLocation.Strength];
             chance -= target.Attributes.Attribute[EffectLocation.Dexterity];
 
@@ -645,7 +626,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             }
 
             /*dexterity check */
-            var chance = 1;
+            var chance = 50;
             chance += player.Attributes.Attribute[EffectLocation.Strength];
             chance -= target.Attributes.Attribute[EffectLocation.Dexterity];
 
@@ -670,7 +651,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
             if(target.Equipped.Shield != null)
             {
-                chance -= 15;
+                chance += 15;
             }
 
             /* level check */
@@ -692,7 +673,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                 };
 
                 _skillManager.EmoteAction(player, target, room, skillMessage);
-                _skillManager.DamagePlayer("lunge", damage, player, target, room);
+                _skillManager.DamagePlayer("shield bash", damage, player, target, room);
                 target.Lag += 3;
             }
             else
@@ -701,9 +682,9 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                 {
                     Hit =
                     {
-                        ToPlayer = $"You lunge at {target.Name} but miss.",
-                        ToRoom = $"{player.Name} lunges at {target.Name} but misses.",
-                        ToTarget = $"{player.Name}lunges at you but you avoid it easily."
+                        ToPlayer = $"You lift your shield and swing it at {target.Name} but miss.",
+                        ToRoom = $"{player.Name} lifts {Helpers.GetPronoun(player.Gender)} shield and swings it at {target.Name} but misses.",
+                        ToTarget = $"{player.Name} lifts {Helpers.GetPronoun(player.Gender)} shield and swings it at you but you avoid it easily."
                     }
                 };
 
@@ -725,9 +706,9 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
         {
 
             /*dexterity check */
-            var chance = 1;
+            var chance = 50;
             chance += player.Attributes.Attribute[EffectLocation.Strength];
-            chance -= 2 * target.Attributes.Attribute[EffectLocation.Dexterity];
+            chance -= target.Attributes.Attribute[EffectLocation.Dexterity];
 
             if (player.Affects.Haste)
             {
@@ -760,14 +741,14 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                 };
 
                 _skillManager.EmoteAction(player, target, room, skillMessage);
-                _skillManager.DamagePlayer("lunge", damage, player, target, room);
+                _skillManager.DamagePlayer("hamstring slash", damage, player, target, room);
 
-                player.Attributes.Attribute[EffectLocation.Moves] -=
-                    player.Attributes.Attribute[EffectLocation.Moves] / 2;
+                target.Attributes.Attribute[EffectLocation.Moves] -=
+                    target.Attributes.Attribute[EffectLocation.Moves] / 2;
 
-                if(player.Attributes.Attribute[EffectLocation.Moves] < 0)
+                if(target.Attributes.Attribute[EffectLocation.Moves] < 0)
                 {
-                    player.Attributes.Attribute[EffectLocation.Moves] = 0;
+                    target.Attributes.Attribute[EffectLocation.Moves] = 0;
                 }
             }
             else
@@ -785,10 +766,10 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                 _skillManager.EmoteAction(player, target, room, skillMessage);
 
 
-                player.Lag += 2;
+                player.Lag += 3;
             }
 
-            player.Lag += 1;
+            player.Lag += 2;
 
             _skillManager.updateCombat(player, target, room);
 

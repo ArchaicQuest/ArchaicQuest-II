@@ -23,10 +23,12 @@ namespace ArchaicQuestII.GameLogic.Skill
     {
         private readonly IDamageSkills _damage;
         private readonly IUtilSkills _util;
-        public SkillList(IDamageSkills damage, IUtilSkills utilSkills)
+        private readonly IPassiveSkills _passive;
+        public SkillList(IDamageSkills damage, IUtilSkills utilSkills, IPassiveSkills passiveSkills)
         {
             _damage = damage;
             _util = utilSkills;
+            _passive = passiveSkills;
         }
         public void DoSkill(string key, string obj, Player target, string fullCommand, Player player, Room room, bool wearOff)
         {
@@ -77,6 +79,7 @@ namespace ArchaicQuestII.GameLogic.Skill
                     _damage.ShieldBash(player, target, room, obj);
                     break;
                 case "war cry":
+                case "warcry":
                     _util.WarCry(player, target, room);
                     break;
                 case "hamstring":
@@ -93,6 +96,9 @@ namespace ArchaicQuestII.GameLogic.Skill
                     break;
                 case "cleave":
                     _damage.Cleave(player, target, room, obj);
+                    break;
+                case "second":
+                    _passive.DualWield(player, target, room, obj);
                     break;
                     //case "cure light wounds":
                     //    _damageSpells.CureLightWounds(player, target, room);

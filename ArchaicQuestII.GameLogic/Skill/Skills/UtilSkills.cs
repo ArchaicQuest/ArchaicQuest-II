@@ -175,23 +175,27 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
         public int Rescue(Player player, Player target, Room room, string obj)
         {
-            if (string.IsNullOrEmpty(obj))
+            if (target == null)
             {
                 _writer.WriteLine("Rescue whom?", player.ConnectionId);
                 return 0;
             }
 
-            var rescuePlayer =
-                room.Players.FirstOrDefault(x => x.Name.StartsWith(obj, StringComparison.CurrentCultureIgnoreCase));
-
-            if ((rescuePlayer.Status & CharacterStatus.Status.Fighting) == 0)
+            if (player.Followers.FirstOrDefault(x => x.Name.Equals(target.Name)) == null)
             {
-                _writer.WriteLine($"{rescuePlayer.Name} is not fighting right now.", player.ConnectionId);
+                _writer.WriteLine("You can only rescue those in your group.", player.ConnectionId);
+                return 0;
+            }
+
+           
+            if ((target.Status & CharacterStatus.Status.Fighting) == 0)
+            {
+                _writer.WriteLine($"{target.Name} is not fighting right now.", player.ConnectionId);
 
                 return 0;
             }
 
-            if (rescuePlayer == player)
+            if (target == player)
             {
                 _writer.WriteLine("What about fleeing instead?", player.ConnectionId);
 
@@ -206,11 +210,11 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
             if (_dice.Roll(1, 1, 100) < chance)
             {
-                player.Target = rescuePlayer.Target;
-                rescuePlayer.Target = string.Empty;
-                rescuePlayer.Status = CharacterStatus.Status.Standing;
+                player.Target = target.Target;
+                target.Target = string.Empty;
+                target.Status = CharacterStatus.Status.Standing;
 
-               var findTarget = Helpers.FindMob(Helpers.findNth($"kill {player.Target}"), room) ?? Helpers.FindPlayer(Helpers.findNth($"kill {player.Target}"), room);
+               var findTarget = Helpers.FindMob(Helpers.findNth($"{player.Target}"), room) ?? Helpers.FindPlayer(Helpers.findNth($"{player.Target}"), room);
 
                findTarget.Target = player.Name;
 
@@ -218,8 +222,8 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                {
                    Hit =
                    {
-                       ToPlayer = $"You rescue {rescuePlayer.Name}!",
-                       ToRoom = $"{player.Name} rescues {rescuePlayer.Name}!",
+                       ToPlayer = $"You rescue {target.Name}!",
+                       ToRoom = $"{player.Name} rescues {target.Name}!",
                        ToTarget = $"{player.Name} rescues you!"
                    }
                };
@@ -294,7 +298,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
                     Helpers.ApplyAffects(affect, player);
 
-
+                    player.Attributes.Attribute[EffectLocation.Moves] = player.Attributes.Attribute[EffectLocation.Moves] /= 2;
                     player.Attributes.Attribute[EffectLocation.Hitpoints] += player.Level * 2;
 
                     var skillMessage = new SkillMessage()
@@ -340,6 +344,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             _updateClientUi.UpdateHP(player);
             _updateClientUi.UpdateAffects(player);
             _updateClientUi.UpdateExp(player);
+            
             return 0;
         }
 
@@ -421,7 +426,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
             var affect = new Affect()
             {
-                Duration = player.Level / 5,
+                Duration = player.Level + player.Level / 5,
                 Modifier = new Modifier()
                 {
                     DamRoll = 3,

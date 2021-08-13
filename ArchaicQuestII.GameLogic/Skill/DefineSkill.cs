@@ -538,7 +538,7 @@ namespace ArchaicQuestII.GameLogic.Skill
                 },
                 Type = SkillType.None,
                 StartsCombat = true,
-                ValidTargets = ValidTargets.TargetPlayerRoom | ValidTargets.TargetFightVictim,
+                ValidTargets = ValidTargets.TargetPlayerRoom,
                 Damage = new Dice()
                 {
                     DiceMaxSize = 6,
@@ -901,7 +901,7 @@ namespace ArchaicQuestII.GameLogic.Skill
                 },
                 Type = SkillType.None,
                 StartsCombat = true,
-                ValidTargets = ValidTargets.TargetObjectInventory,
+                ValidTargets = ValidTargets.TargetSelfOnly,
                 Damage = new Dice()
                 {
                     DiceMaxSize = 6,

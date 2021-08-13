@@ -10,6 +10,42 @@ namespace ArchaicQuestII.GameLogic.Core
         public int Tick { get; set; }
         public double Hour { get; set; }
         public int Minute { get; set; }
+        public int Day { get; set; }
+        public int Month { get; set; }
+
+        public int Year { get; set; }
+
+        public List<string> Days { get; set; } = new List<string>
+        {
+            "The Sun",
+            "The Moon",
+            "Mars",
+            "Mercury",
+            "Jupiter",
+            "Venus",
+            "Saturn"
+        };
+
+        public List<string> Months { get; set; } = new List<string>
+        {
+            "Winter",
+            "The Winter Wolf",
+            "The Frozen Forests",
+            "The Crystal Tundra",
+            "Rebirth",
+            "The Spring",
+            "Nature",
+            "Growth",
+            "The Dragon",
+            "The Sun",
+            "The Heat",
+            "The Battle",
+            "The Dark Shades",
+            "The Shadows",
+            "The Long Shadows",
+            "The Ancient Darkness",
+            "The Great Evil",
+        };
 
         private IWriteToClient _writeToClient;
         private ICache _cache;
@@ -18,6 +54,21 @@ namespace ArchaicQuestII.GameLogic.Core
             _writeToClient = writeToClient;
             _cache = cache;
         }
+
+        //public string UpdateCalendar()
+        //{
+        //    var startDate = new DateTime(2016, 04, 14);
+        //    var dateNow = DateTime.Today;
+ 
+
+         
+
+        //    var monthsSinceStart = dateNow.Subtract(startDate);
+        //    // game year is 2 years for 1 year in real life
+        //    var gameYearSinceStart = monthsSinceStart * 2;
+        //    var gameDaysSinceStart = 17 * 30 * gameYearSinceStart;
+        //    var yearsSinceStart = gameDaysSinceStart / (gameYearSinceStart / 17)
+        //}
 
         public void DisplayTimeOfDayMessage(string TickMessage)
         {
