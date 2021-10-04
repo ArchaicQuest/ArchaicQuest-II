@@ -31,8 +31,9 @@ namespace ArchaicQuestII.GameLogic.Core
         private ITime _time;
         private ICore _core;
         private ISpellList _spellList;
+        private IWeather _weather;
 
-        public GameLoop(IWriteToClient writeToClient, ICache cache, ICommands commands, ICombat combat, IDataBase database, IDice dice, IUpdateClientUI client, ITime time, ICore core, ISpellList spelllist)
+        public GameLoop(IWriteToClient writeToClient, ICache cache, ICommands commands, ICombat combat, IDataBase database, IDice dice, IUpdateClientUI client, ITime time, ICore core, ISpellList spelllist, IWeather weather)
         {
             _writeToClient = writeToClient;
             _cache = cache;
@@ -44,6 +45,7 @@ namespace ArchaicQuestII.GameLogic.Core
             _time = time;
             _core = core;
             _spellList = spelllist;
+            _weather = weather;
 
         }
 
@@ -69,6 +71,7 @@ namespace ArchaicQuestII.GameLogic.Core
                 var rooms = _cache.GetAllRoomsToRepop();
                 var players = _cache.GetPlayerCache().Values.ToList();
 
+              var weather = _weather.SimulateWeatherTransitions();
                 
                 foreach (var room in rooms)
                 {
@@ -161,7 +164,18 @@ namespace ArchaicQuestII.GameLogic.Core
 
                 foreach (var player in players)
                 {
-                    IdleCheck(player); 
+                    //check if player is not indoors
+                    // TODO:
+
+                    var room = _cache.GetRoom(player.RoomId);
+
+                    if (room.Terrain != Room.TerrainType.Inside && room.Terrain != Room.TerrainType.Underground)
+                    {
+                        _writeToClient.WriteLine(weather, player.ConnectionId);
+                        
+                    }
+
+                    IdleCheck(player);
 
                     var hP = (_dice.Roll(1, 2, 5));
                     var mana = (_dice.Roll(1, 2, 5));

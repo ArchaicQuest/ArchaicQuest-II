@@ -4,8 +4,8 @@ using System.Text;
 
 namespace ArchaicQuestII.GameLogic.Core
 {
-    interface IWeather
+   public interface IWeather
     {
-        void UpdateWeather();
+        string SimulateWeatherTransitions();
     }
 }

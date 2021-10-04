@@ -29,8 +29,9 @@ namespace ArchaicQuestII.GameLogic.Combat
         private readonly ICache _cache;
         private readonly IQuestLog _quest;
         private readonly IDice _dice;
+        private readonly IRandomItem _randomItem;
 
-        public Combat(IWriteToClient writer, IUpdateClientUI clientUi, IDamage damage, IFormulas formulas, IGain gain, ICache cache, IQuestLog quest, IDice dice)
+        public Combat(IWriteToClient writer, IUpdateClientUI clientUi, IDamage damage, IFormulas formulas, IGain gain, ICache cache, IQuestLog quest, IDice dice, IRandomItem randomItem)
         {
             _writer = writer;
             _clientUi = clientUi;
@@ -40,6 +41,7 @@ namespace ArchaicQuestII.GameLogic.Combat
             _cache = cache;
             _quest = quest;
             _dice = dice;
+            _randomItem = randomItem;
 
         }
 
@@ -504,7 +506,7 @@ namespace ArchaicQuestII.GameLogic.Combat
                             x.SkillName.Equals("Hand To Hand", StringComparison.CurrentCultureIgnoreCase));
                     }
 
-                    if (getWeaponSkill != null)
+                    if (getWeaponSkill != null && getWeaponSkill.Proficiency < 100)
                     {
                         getWeaponSkill.Proficiency += 1;
                         _writer.WriteLine(
@@ -823,6 +825,16 @@ namespace ArchaicQuestII.GameLogic.Combat
             foreach (var item in target.Inventory) {
                 item.Equipped = false;
                 corpse.Container.Items.Add(item);
+            }
+
+            if (target.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
+            {
+                var randomItem = _randomItem.WeaponDrop(player);
+
+                if (randomItem != null)
+                {
+                    corpse.Container.Items.Add(randomItem);
+                }
             }
 
             // clear list

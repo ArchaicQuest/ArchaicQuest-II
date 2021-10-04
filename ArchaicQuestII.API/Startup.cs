@@ -44,6 +44,7 @@ using ArchaicQuestII.GameLogic.Commands.Skills;
 using ArchaicQuestII.GameLogic.Crafting;
 using ArchaicQuestII.GameLogic.Hubs.Telnet;
 using ArchaicQuestII.GameLogic.Item;
+using ArchaicQuestII.GameLogic.Item.RandomItemTypes;
 using ArchaicQuestII.GameLogic.Skill;
 using ArchaicQuestII.GameLogic.Skill.Core;
 using ArchaicQuestII.GameLogic.Skill.Model;
@@ -145,6 +146,9 @@ namespace ArchaicQuestII.API
             services.AddSingleton<ISpellList, SpellList>();
             services.AddSingleton<ISkillList, GameLogic.Skill.SkillList>();
             services.AddSingleton<ISKill, DoSkill>();
+            services.AddSingleton<IWeather, Weather>();
+            services.AddSingleton<IRandomWeapon, RandomWeapons>();
+            services.AddSingleton<IRandomItem, RandomItem>();
             services.AddSingleton<IWriteToClient, WriteToClient>((factory) => new WriteToClient(_hubContext, TelnetHub.Instance));
            
         }

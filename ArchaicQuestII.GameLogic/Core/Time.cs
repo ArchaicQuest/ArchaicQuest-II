@@ -55,19 +55,23 @@ namespace ArchaicQuestII.GameLogic.Core
             _cache = cache;
         }
 
+        //public string CurrentDate()
+        //{
+
+        //}
+
         //public string UpdateCalendar()
         //{
         //    var startDate = new DateTime(2016, 04, 14);
         //    var dateNow = DateTime.Today;
- 
 
-         
+
 
         //    var monthsSinceStart = dateNow.Subtract(startDate);
         //    // game year is 2 years for 1 year in real life
         //    var gameYearSinceStart = monthsSinceStart * 2;
         //    var gameDaysSinceStart = 17 * 30 * gameYearSinceStart;
-        //    var yearsSinceStart = gameDaysSinceStart / (gameYearSinceStart / 17)
+        //    var yearsSinceStart = gameDaysSinceStart / (gameYearSinceStart / 17);
         //}
 
         public void DisplayTimeOfDayMessage(string TickMessage)

@@ -103,8 +103,9 @@ namespace ArchaicQuestII.GameLogic.Combat
             {
 
                 var skill = player.Skills.FirstOrDefault(x =>
-                    x.SkillName.Equals(Enum.GetName(typeof(Item.Item.WeaponTypes), weapon.WeaponType)));
-
+                    x.SkillName.Replace(" ", string.Empty)
+                        .Equals(Enum.GetName(typeof(Item.Item.WeaponTypes), weapon.WeaponType)));
+ 
                 damage = _dice.Roll(1, weapon.Damage.Minimum, weapon.Damage.Maximum);
 
                 if (skill != null)
