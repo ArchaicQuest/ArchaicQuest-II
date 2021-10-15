@@ -149,6 +149,11 @@ namespace ArchaicQuestII.API
             services.AddSingleton<IWeather, Weather>();
             services.AddSingleton<IRandomWeapon, RandomWeapons>();
             services.AddSingleton<IRandomItem, RandomItem>();
+            services.AddSingleton<IRandomClothItems, RandomClothItems>();
+            services.AddSingleton<IRandomLeatherItems, RandomLeatherItems>();
+            services.AddSingleton<IRandomStuddedLeatherArmour, RandomStuddedLeatherItems>();
+            services.AddSingleton<IRandomChainMailArmour, RandomChainMailItems>();
+            services.AddSingleton<IRandomPlateMailArmour, IRandomPlateMailArmour>();
             services.AddSingleton<IWriteToClient, WriteToClient>((factory) => new WriteToClient(_hubContext, TelnetHub.Instance));
            
         }

@@ -8,12 +8,12 @@ using ArchaicQuestII.GameLogic.Core;
 
 namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
 {
-    public class RandomClothItems : IRandomClothItems
+    public class RandomLeatherItems: IRandomLeatherItems
     {
 
         private IDice _dice;
 
-        public RandomClothItems(IDice dice)
+        public RandomLeatherItems(IDice dice)
         {
             _dice = dice;
         }
@@ -21,154 +21,94 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
         {
             new PrefixItemMods()
             {
-                Name = "Silk Cloth",
+                Name = "Brown Leather",
+                MinArmour = 3,
+                MaxArmour = 7,
+            },
+            new PrefixItemMods()
+            {
+                Name = "Leather",
+                MinArmour = 3,
+                MaxArmour = 6
+            },
+            new PrefixItemMods()
+            {
+                Name = "Tan Leather",
+                MinArmour = 3,
+                MaxArmour = 8
+            },
+            new PrefixItemMods()
+            {
+                Name = "Embossed leather",
+                MinArmour = 3,
+                MaxArmour = 9
+            },
+            new PrefixItemMods()
+            {
+                Name = "Brightly coloured leather",
+                MinArmour = 3,
+                MaxArmour = 9
+            },
+            new PrefixItemMods()
+            {
+                Name = "Deer Leather",
+                MinArmour = 3,
+                MaxArmour = 3
+            },
+            new PrefixItemMods()
+            {
+                Name = "Cow Leather",
+                MinArmour = 3,
+                MaxArmour = 6
+            },
+            new PrefixItemMods()
+            {
+                Name = "Bull Leather",
+                MinArmour = 3,
+                MaxArmour = 7
+            },
+            new PrefixItemMods()
+            {
+                Name = "Moose Leather",
                 MinArmour = 4,
-                MaxArmour = 8,
+                MaxArmour = 8
             },
             new PrefixItemMods()
             {
-                Name = "Golden silk",
-                MinArmour = 6,
-                MaxArmour = 12
-            },
-            new PrefixItemMods()
-            {
-                Name = "Sylvan Cloth",
+                Name = "Bear Leather",
                 MinArmour = 5,
                 MaxArmour = 10
             },
             new PrefixItemMods()
             {
-                Name = "Seamist Cloth",
+                Name = "Whale leather",
                 MinArmour = 5,
                 MaxArmour = 11
             },
             new PrefixItemMods()
             {
-                Name = "Woolen Cloth",
-                MinArmour = 3,
-                MaxArmour = 3
+                Name = "Bull elephant leather",
+                MinArmour = 7,
+                MaxArmour = 14
             },
             new PrefixItemMods()
             {
-                Name = "Iridescent silk",
-                MinArmour = 3,
-                MaxArmour = 8
-            },
-            new PrefixItemMods()
-            {
-                Name = "Simple cloth",
-                MinArmour = 1,
-                MaxArmour = 3
-            },
-            new PrefixItemMods()
-            {
-                Name = "Embroidered wool",
-                MinArmour = 3,
-                MaxArmour = 6
-            },
-            new PrefixItemMods()
-            {
-                Name = "Strange",
-                MinArmour = 3,
-                MaxArmour = 7
-            },
-            new PrefixItemMods()
-            {
-                Name = "wizard",
-                MinArmour = 3,
-                MaxArmour = 8
-            },
-            new PrefixItemMods()
-            {
-                Name = "Green felt",
-                MinArmour = 3,
-                MaxArmour = 10
-            },
-            new PrefixItemMods()
-            {
-                Name = "Red felt",
-                MinArmour = 3,
-                MaxArmour = 10
-            },
-            new PrefixItemMods()
-            {
-                Name = "Blue felt",
-                MinArmour = 3,
-                MaxArmour = 10
-            },
-            new PrefixItemMods()
-            {
-                Name = "Pink felt",
-                MinArmour = 3,
-                MaxArmour = 10
-            },
-            new PrefixItemMods()
-            {
-                Name = "Orange felt",
-                MinArmour = 3,
-                MaxArmour = 10
-            },
-            new PrefixItemMods()
-            {
-                Name = "Yellow felt",
-                MinArmour = 3,
-                MaxArmour = 10
-            },
-            new PrefixItemMods()
-            {
-                Name = "Black felt",
-                MinArmour = 3,
-                MaxArmour = 10
-            },
-            new PrefixItemMods()
-            {
-                Name = "White felt",
-                MinArmour = 3,
-                MaxArmour = 10
-            },
-            new PrefixItemMods()
-            {
-                Name = "Brocade cloth",
-                MinArmour = 3,
-                MaxArmour = 7
-            },
-            new PrefixItemMods()
-            {
-                Name = "Dragonskin cloth",
+                Name = "dragonskin leather",
                 MinArmour = 7,
                 MaxArmour = 15
             },
             new PrefixItemMods()
             {
-                Name = "Gossamer cloth",
+                Name = "bull moose leather",
                 MinArmour = 4,
                 MaxArmour = 9
             },
             new PrefixItemMods()
             {
-                Name = "Linen cloth",
-                MinArmour = 3,
-                MaxArmour = 6
-            },
-            new PrefixItemMods()
-            {
-                Name = "Nightshade cloth",
+                Name = "Shark Leather",
                 MinArmour = 6,
                 MaxArmour = 12
-            },
-            new PrefixItemMods()
-            {
-                Name = "Wyvernskin cloth",
-                MinArmour = 6,
-                MaxArmour = 13
-            },
-            new PrefixItemMods()
-            {
-                Name = "Silksteel cloth",
-                MinArmour = 7,
-                MaxArmour = 14
-            },
+            }
         };
 
         public List<Item> HeadItemName = new List<Item>()
@@ -209,35 +149,13 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
             },
             new Item()
             {
-                Name = "Cap",
+                Name = "Skull Cap",
                 ArmourType = Item.ArmourTypes.Cloth,
                 Slot = Equipment.EqSlot.Head,
                 Description = new Description()
                 {
-                    Look = "A fitted #prefix# cap.",
-                    Exam = "A fitted #prefix# cap."
-                }
-            },
-            new Item()
-            {
-                Name = "Cowl",
-                ArmourType = Item.ArmourTypes.Cloth,
-                Slot = Equipment.EqSlot.Head,
-                Description = new Description()
-                {
-                    Look = "A soft #prefix# cowl.",
-                    Exam =  "A soft #prefix# cowl.",
-                }
-            },
-            new Item()
-            {
-                Name = "Turban",
-                ArmourType = Item.ArmourTypes.Cloth,
-                Slot = Equipment.EqSlot.Head,
-                Description = new Description()
-                {
-                    Look = "A #prefix# turban.",
-                    Exam = "A #prefix# turban.",
+                    Look = "A fitted #prefix# skull cap.",
+                    Exam = "A fitted #prefix# skull cap."
                 }
             },
             new Item()
@@ -249,50 +167,6 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
                 {
                     Look = "A fitted #prefix# helm.",
                     Exam = "A fitted #prefix# helm."
-                }
-            },
-            new Item()
-            {
-                Name = "Conical Hat",
-                ArmourType = Item.ArmourTypes.Cloth,
-                Slot = Equipment.EqSlot.Head,
-                Description = new Description()
-                {
-                    Look = "A #prefix# conical Hat with a wide brim.",
-                    Exam = "A #prefix# conical Hat with a wide brim."
-                }
-            },
-            new Item()
-            {
-                Name = "Tricorne Hat",
-                ArmourType = Item.ArmourTypes.Cloth,
-                Slot = Equipment.EqSlot.Head,
-                Description = new Description()
-                {
-                    Look = "A #prefix# tricorne hat.",
-                    Exam = "A #prefix# tricorne hat with a broad brim, pinned up on either side of the head and at the back, producing a triangular shape."
-                }
-            },
-            new Item()
-            {
-                Name = "Bicorne Hat",
-                ArmourType = Item.ArmourTypes.Cloth,
-                Slot = Equipment.EqSlot.Head,
-                Description = new Description()
-                {
-                    Look = "A #prefix# bicorne hat.",
-                    Exam = "A #prefix# bicorne hat with a broad brim, the front and the rear halves turned up and pinned together forming a semi-circular fan shape."
-                }
-            },
-            new Item()
-            {
-                Name = "Veil",
-                ArmourType = Item.ArmourTypes.Cloth,
-                Slot = Equipment.EqSlot.Head,
-                Description = new Description()
-                {
-                    Look = "A delicate #prefix# veil.",
-                    Exam = "A delicate #prefix# veil."
                 }
             }
         };
@@ -312,49 +186,27 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
             },
             new Item()
             {
-                Name = "pantaloons",
+                Name = "Trousers",
                 ArmourType = Item.ArmourTypes.Cloth,
                 Slot = Equipment.EqSlot.Legs,
                 Description = new Description()
                 {
-                    Look = "some #prefix# pantaloons.",
-                    Exam = "some #prefix# pantaloons."
+                    Look = "some #prefix# trousers.",
+                    Exam = "some #prefix# trousers."
                 }
             },
             new Item()
             {
-                Name = "baggy trousers",
+                Name = "Skirt",
                 ArmourType = Item.ArmourTypes.Cloth,
                 Slot = Equipment.EqSlot.Legs,
                 Description = new Description()
                 {
-                    Look = "A pair of #prefix# baggy trousers.",
-                    Exam = "A pair of #prefix# baggy trousers."
+                    Look = "A pair of #prefix# skirt.",
+                    Exam = "A pair of #prefix# skirt."
                 }
-            },
-            new Item()
-            {
-                Name = "tights",
-                ArmourType = Item.ArmourTypes.Cloth,
-                Slot = Equipment.EqSlot.Legs,
-                Description = new Description()
-                {
-                    Look = "A pair of #prefix# tights.",
-                    Exam = "A pair of #prefix# tights.",
-                }
-            },
-            new Item()
-            {
-                Name = "trousers",
-                ArmourType = Item.ArmourTypes.Cloth,
-                Slot = Equipment.EqSlot.Legs,
-                Description = new Description()
-                {
-                    Look = "A pair of #prefix# trousers.",
-                    Exam = "A pair of  #prefix# trousers."
-                }
-            },
-
+            }
+         
         };
         public List<Item> ArmItemName = new List<Item>()
         {
@@ -444,6 +296,17 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
                     Look = "A pair #prefix# Moccasins.",
                     Exam = "A pair #prefix# Moccasins."
                 }
+            },
+            new Item()
+            {
+                Name = "Slippers",
+                ArmourType = Item.ArmourTypes.Cloth,
+                Slot = Equipment.EqSlot.Feet,
+                Description = new Description()
+                {
+                    Look = "A pair #prefix# slippers.",
+                    Exam = "A pair #prefix# slippers."
+                }
             }
 
         };
@@ -463,13 +326,13 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
             },
             new Item()
             {
-                Name = "Robe",
+                Name = "Jerkin",
                 ArmourType = Item.ArmourTypes.Cloth,
                 Slot = Equipment.EqSlot.Body,
                 Description = new Description()
                 {
-                    Look = "A #prefix# robe.",
-                    Exam = "A #prefix# robe."
+                    Look = "A #prefix# jerkin.",
+                    Exam = "A #prefix# jerkin."
                 }
             },
             new Item()
@@ -485,35 +348,13 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
             },
             new Item()
             {
-                Name = "Vest",
+                Name = "armour",
                 ArmourType = Item.ArmourTypes.Cloth,
                 Slot = Equipment.EqSlot.Body,
                 Description = new Description()
                 {
-                    Look = "A #prefix# vest.",
-                    Exam = "A #prefix# vest."
-                }
-            },
-            new Item()
-            {
-                Name = "Cape",
-                ArmourType = Item.ArmourTypes.Cloth,
-                Slot = Equipment.EqSlot.Body,
-                Description = new Description()
-                {
-                    Look = "A #prefix# cape.",
-                    Exam = "A #prefix# cape."
-                }
-            },
-            new Item()
-            {
-                Name = "Coat",
-                ArmourType = Item.ArmourTypes.Cloth,
-                Slot = Equipment.EqSlot.Body,
-                Description = new Description()
-                {
-                    Look = "A #prefix# Coat.",
-                    Exam = "A #prefix# Coat."
+                    Look = "A #prefix# armour.",
+                    Exam = "A #prefix# armour."
                 }
             },
             new Item()
@@ -523,30 +364,19 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
                 Slot = Equipment.EqSlot.Body,
                 Description = new Description()
                 {
-                    Look = "A #prefix# Tunic.",
-                    Exam = "A #prefix# Tunic."
+                    Look = "A #prefix# tunic.",
+                    Exam = "A #prefix# tunic."
                 }
             },
             new Item()
             {
-                Name = "Smock",
+                Name = "Vest",
                 ArmourType = Item.ArmourTypes.Cloth,
                 Slot = Equipment.EqSlot.Body,
                 Description = new Description()
                 {
-                    Look = "A #prefix# Smock.",
-                    Exam = "A #prefix# Smock."
-                }
-            },
-            new Item()
-            {
-                Name = "Gothic tailcoat",
-                ArmourType = Item.ArmourTypes.Cloth,
-                Slot = Equipment.EqSlot.Body,
-                Description = new Description()
-                {
-                    Look = "A #prefix# gothic tailcoat.",
-                    Exam = "A #prefix# gothic tailcoat."
+                    Look = "A #prefix# vest.",
+                    Exam = "A #prefix# vest."
                 }
             }
 
@@ -555,28 +385,15 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
 
         public Item CreateRandomItem(Player player, bool legendary)
         {
-
             var items = HeadItemName.Concat(LegItemName).Concat(ArmItemName).Concat(HandItemName).Concat(FeetItemName)
                 .Concat(BodyItemName).ToList();
             var prefix = Prefix[_dice.Roll(1, 0, Prefix.Count)];
             var choice = items[_dice.Roll(1, 0, items.Count)];
 
-            var name = "a " + prefix.Name + " " + choice.Name;
-
-            if (choice.Slot == Equipment.EqSlot.Hands || choice.Slot == Equipment.EqSlot.Legs || choice.Slot == Equipment.EqSlot.Arms)
-            {
-                var pairOrSome = _dice.Roll(1, 1, 2);
-                name = $"{(pairOrSome == 1 ? "A pair of " : "some ")}" + prefix.Name + " " + choice.Name;
-            }
-
-            if (choice.Slot == Equipment.EqSlot.Legs && choice.Name.StartsWith("skirt", StringComparison.CurrentCultureIgnoreCase))
-            {
-                name = "a " + prefix.Name + " " + choice.Name;
-            }
 
             var item = new Item()
             {
-                Name = name.ToLower(),
+                Name = "a " + prefix.Name + " " + choice.Name,
                 ItemType = Item.ItemTypes.Armour,
                 Level = player.Level,
                 Value = player.Level * 75,

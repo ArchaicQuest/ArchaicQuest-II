@@ -39,10 +39,39 @@ namespace ArchaicQuestII.GameLogic.Item
     {
         private IDice _dice;
         private IRandomWeapon _randomWeapon;
-        public RandomItem(IDice dice, IRandomWeapon weapon)
+        private IRandomClothItems _randomClothItems;
+        private IRandomLeatherItems _randomLeatherItems;
+        private IRandomStuddedLeatherArmour _randomStuddedItems;
+        private IRandomChainMailArmour _randomChainMailItems;
+        private IRandomPlateMailArmour _randomPlateMailItems;
+        public RandomItem(IDice dice, IRandomWeapon weapon, IRandomClothItems clothArmor, IRandomLeatherItems leatherItems,
+            IRandomStuddedLeatherArmour studdedLeather,
+            IRandomChainMailArmour chainMail,
+            IRandomPlateMailArmour plateMail)
         {
             _dice = dice;
             _randomWeapon = weapon;
+            _randomClothItems = clothArmor;
+            _randomLeatherItems = leatherItems;
+            _randomStuddedItems = studdedLeather;
+            _randomChainMailItems = chainMail;
+            _randomPlateMailItems = plateMail;
+        }
+
+        public Item CreateRandomItem(Player player, bool legendary)
+        {
+            var roll = _dice.Roll(1, 0, 5);
+
+            return roll switch
+            {
+                0 => _randomWeapon.CreateRandomWeapon(player, legendary),
+                1 => _randomClothItems.CreateRandomItem(player, legendary),
+                2 => _randomLeatherItems.CreateRandomItem(player, legendary),
+                3 => _randomStuddedItems.CreateRandomItem(player, legendary),
+                4 => _randomChainMailItems.CreateRandomItem(player, legendary),
+                5 => _randomPlateMailItems.CreateRandomItem(player, legendary),
+                _ => _randomWeapon.CreateRandomWeapon(player, legendary),
+            };
         }
 
 
@@ -57,7 +86,8 @@ namespace ArchaicQuestII.GameLogic.Item
                 {
                     legendary = true;
                 }
-                return _randomWeapon.CreateRandomWeapon(player, legendary);
+
+                return CreateRandomItem(player, legendary);
             }
 
             return null;
