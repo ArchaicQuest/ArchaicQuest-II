@@ -1,19 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Core
 {
+
+    public class MudTime
+    {
+        public double Hours { get; set; }
+        public double Day { get; set; }
+        public double Month { get; set; }
+        public double Year { get; set; }
+    }
+
     public class Time:ITime
     {
         public int Tick { get; set; }
         public double Hour { get; set; }
         public int Minute { get; set; }
-        public int Day { get; set; }
-        public int Month { get; set; }
-
+    
         public int Year { get; set; }
+        public int SecondsPerMudHour { get; set; } = 60;
+        public int SecondsPerMudDay { get; set; }
+        public int SecondsPerMudMonth { get; set; }
+        public int SecondsPerMudYear { get; set; }
+        public int SecondsPerRealMinute { get; set; } = 60;
+        public int SecondsPerRealHour{ get; set; }
+        public int SecondsPerRealDay { get; set; }
+        public int SecondsPerRealMonth { get; set; }
+        public int SecondsPerRealYear{ get; set; }
+
 
         public List<string> Days { get; set; } = new List<string>
         {
@@ -53,26 +71,71 @@ namespace ArchaicQuestII.GameLogic.Core
         {
             _writeToClient = writeToClient;
             _cache = cache;
+
+            /*
+             *  Real life seconds in one mud day.
+             *  1,440 seconds = 24 real life minutes.
+             */
+            this.SecondsPerMudDay = 24 * SecondsPerMudHour;
+            /*
+             *  Real life seconds per mud month
+             *  43,200 seconds = 12 real life hours
+             */
+            this.SecondsPerMudMonth = 30 * SecondsPerMudDay;
+            /*
+             *  Real life seconds per mud year
+             *  734,400 seconds = 8.5 real life days
+             */
+            this.SecondsPerMudYear = 17 * SecondsPerMudMonth;
+
+            this.SecondsPerRealHour = 60 * SecondsPerRealMinute;
+            this.SecondsPerRealDay = 24 * SecondsPerRealHour;
+            this.SecondsPerRealYear = 365 * SecondsPerRealDay;
+
         }
 
-        //public string CurrentDate()
-        //{
+        public MudTime MudTimePassed(DateTime currentTime, DateTime pastTime)
+        {
+            var mudTime = new MudTime();
+            var seconds = (currentTime - pastTime).TotalSeconds;
 
-        //}
+            mudTime.Hours = (seconds / SecondsPerMudHour) % 24;
+            seconds -= SecondsPerMudHour * mudTime.Hours;
 
-        //public string UpdateCalendar()
-        //{
-        //    var startDate = new DateTime(2016, 04, 14);
-        //    var dateNow = DateTime.Today;
+            mudTime.Day = (seconds / SecondsPerMudDay) % 30;
+            seconds -= SecondsPerMudDay * mudTime.Day;
 
+            mudTime.Month = (seconds / SecondsPerMudMonth) % 17;
+            seconds -= SecondsPerMudMonth * mudTime.Month;
 
+            mudTime.Year = (seconds / SecondsPerMudYear);
 
-        //    var monthsSinceStart = dateNow.Subtract(startDate);
-        //    // game year is 2 years for 1 year in real life
-        //    var gameYearSinceStart = monthsSinceStart * 2;
-        //    var gameDaysSinceStart = 17 * 30 * gameYearSinceStart;
-        //    var yearsSinceStart = gameDaysSinceStart / (gameYearSinceStart / 17);
-        //}
+            return mudTime;
+
+        }
+
+      
+
+        public string GetDay(int day)
+        {
+            // 100% a smarter way to do this
+            var TheMoon = new List<int>() { 0, 7, 14,21,28,35 };
+            var Mars = new List<int>() { 1, 8, 15, 22, 29 };
+            var Mercury  = new List<int>() { 2, 9,16,23,30 };
+            var Jupiter = new List<int>() { 3, 10, 17, 24, 31 };
+            var Venus = new List<int>() { 4, 11, 18, 25, 32 };
+            var Saturn = new List<int>() { 5, 12, 19, 26, 33 };
+            var TheSun = new List<int>() { 6, 13, 20, 27, 34 };
+
+            var nameOfDay = TheMoon.Contains(day) ? "TheMoon" :
+                Mars.Contains(day) ? "Mars" :
+                Mercury.Contains(day) ? "Mercury" :
+                Jupiter.Contains(day) ? "Jupiter" :
+                Venus.Contains(day) ? "Venus" :
+                Saturn.Contains(day) ? "Saturn" : "TheSun";
+
+            return nameOfDay;
+        }
 
         public void DisplayTimeOfDayMessage(string TickMessage)
         {
