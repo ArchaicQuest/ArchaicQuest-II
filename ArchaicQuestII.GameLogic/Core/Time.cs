@@ -13,24 +13,26 @@ namespace ArchaicQuestII.GameLogic.Core
         public double Day { get; set; }
         public double Month { get; set; }
         public double Year { get; set; }
+        public DateTime RLDateTime { get; set; }
     }
 
-    public class Time:ITime
+    public class Time : ITime
     {
         public int Tick { get; set; }
         public double Hour { get; set; }
         public int Minute { get; set; }
-    
+
         public int Year { get; set; }
         public int SecondsPerMudHour { get; set; } = 60;
         public int SecondsPerMudDay { get; set; }
         public int SecondsPerMudMonth { get; set; }
         public int SecondsPerMudYear { get; set; }
         public int SecondsPerRealMinute { get; set; } = 60;
-        public int SecondsPerRealHour{ get; set; }
+        public int SecondsPerRealHour { get; set; }
         public int SecondsPerRealDay { get; set; }
         public int SecondsPerRealMonth { get; set; }
-        public int SecondsPerRealYear{ get; set; }
+        public int SecondsPerRealYear { get; set; }
+        public MudTime GameTime { get; set; }
 
 
         public List<string> Days { get; set; } = new List<string>
@@ -92,10 +94,15 @@ namespace ArchaicQuestII.GameLogic.Core
             this.SecondsPerRealDay = 24 * SecondsPerRealHour;
             this.SecondsPerRealYear = 365 * SecondsPerRealDay;
 
+            var dt = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0);
+
+            this.GameTime = MudTimePassed(dt, new DateTime(2016, 04, 14));
+
         }
 
         public MudTime MudTimePassed(DateTime currentTime, DateTime pastTime)
         {
+
             var mudTime = new MudTime();
             var seconds = (currentTime - pastTime).TotalSeconds;
 
@@ -109,25 +116,28 @@ namespace ArchaicQuestII.GameLogic.Core
             seconds -= SecondsPerMudMonth * mudTime.Month;
 
             mudTime.Year = (seconds / SecondsPerMudYear);
+            mudTime.RLDateTime = currentTime;
 
+
+            this.GameTime = mudTime;
             return mudTime;
 
         }
 
-      
+
 
         public string GetDay(int day)
         {
             // 100% a smarter way to do this
-            var TheMoon = new List<int>() { 0, 7, 14,21,28,35 };
+            var TheMoon = new List<int>() { 0, 7, 14, 21, 28, 35 };
             var Mars = new List<int>() { 1, 8, 15, 22, 29 };
-            var Mercury  = new List<int>() { 2, 9,16,23,30 };
+            var Mercury = new List<int>() { 2, 9, 16, 23, 30 };
             var Jupiter = new List<int>() { 3, 10, 17, 24, 31 };
             var Venus = new List<int>() { 4, 11, 18, 25, 32 };
             var Saturn = new List<int>() { 5, 12, 19, 26, 33 };
             var TheSun = new List<int>() { 6, 13, 20, 27, 34 };
 
-            var nameOfDay = TheMoon.Contains(day) ? "TheMoon" :
+            var nameOfDay = TheMoon.Contains(day) ? "The Moon" :
                 Mars.Contains(day) ? "Mars" :
                 Mercury.Contains(day) ? "Mercury" :
                 Jupiter.Contains(day) ? "Jupiter" :
@@ -141,36 +151,55 @@ namespace ArchaicQuestII.GameLogic.Core
         {
 
             var players = _cache.GetPlayerCache();
-            
+
             foreach (var pc in players.Values)
             {
                 var room = _cache.GetRoom(pc.RoomId);
 
                 if (room.Terrain != Room.TerrainType.Inside && room.Terrain != Room.TerrainType.Underground && !string.IsNullOrEmpty(TickMessage))
                 {
-                    _writeToClient.WriteLine(TickMessage, pc.ConnectionId);
+                    _writeToClient.WriteLine($"<span class='time-of-day'>{TickMessage}</span>", pc.ConnectionId);
                 }
             }
         }
 
-        public string UpdateTime()
+        public string FormatDateString()
         {
-            Minute += 1;
-            
-            if (Tick > 24)
+            var nth = "";
+
+            if (GameTime.Day > 3 && GameTime.Day < 21)
             {
-                Tick = 0;
+                nth = "th";
             }
 
-            if (Minute == 60)
+            switch (GameTime.Day % 10)
             {
-                Minute = 0;
-                Hour += 1;
-                Tick += 1;
+                case 1:
+                    nth = "st";
+                    break;
+                case 2:
+                    nth = "nd";
+                    break;
+                case 3:
+                    nth = "rd";
+                    break;
+                default:
+                    nth = "th";
+                    break;
+            }
+            return $"Day of {GetDay((int)GameTime.Day)}, {GameTime.Day}{nth} month of {Months[(int)GameTime.Month]}, year {GameTime.Year}.";
+        }
 
-                switch (Tick)
+        public string UpdateTime()
+        {
+            var dt = DateTime.Now; 
+
+            MudTimePassed(dt, new DateTime(2016, 04, 14));
+
+                switch (Convert.ToInt32(Math.Floor(GameTime.Hours)))
                 {
                     case 0:
+                         return "The moon is high in the sky.";
                     case 1:
                     case 2:
                     case 3:
@@ -214,30 +243,24 @@ namespace ArchaicQuestII.GameLogic.Core
                     case 23:
                         return "The moon is slowly moving west across the sky.";
 
-                    case 24:
-                        return "The moon is high in the sky.";
 
                 }
-                if (Hour > 12)
-                {
-                    Hour = 1;
-                }
-            }
-
-     
-
-            return string.Empty;
-
+            return String.Empty;
         }
 
         public bool IsNightTime()
         {
-            return Tick >= 6 && Tick <= 18;
+            return Convert.ToInt32(Math.Floor(GameTime.Hours)) >= 6 && Convert.ToInt32(Math.Floor(GameTime.Hours)) <= 18;
+        }
+
+        public string ReturnDate()
+        {
+            return FormatDateString();
         }
 
         public string ReturnTime()
         {
-            return $"{Hour}:{(Minute < 30 ? "00" : "30")}{(Tick >= 12 ? " PM" : " AM")}";
+            return $"{Math.Floor(GameTime.Hours)}:00 {(Convert.ToInt32(Math.Floor(GameTime.Hours)) >= 12 ? " PM" : " AM")}";
         }
 
 

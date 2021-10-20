@@ -153,7 +153,7 @@ namespace ArchaicQuestII.API
             services.AddSingleton<IRandomLeatherItems, RandomLeatherItems>();
             services.AddSingleton<IRandomStuddedLeatherArmour, RandomStuddedLeatherItems>();
             services.AddSingleton<IRandomChainMailArmour, RandomChainMailItems>();
-            services.AddSingleton<IRandomPlateMailArmour, IRandomPlateMailArmour>();
+            services.AddSingleton<IRandomPlateMailArmour, RandomPlateMailItems>();
             services.AddSingleton<IWriteToClient, WriteToClient>((factory) => new WriteToClient(_hubContext, TelnetHub.Instance));
            
         }

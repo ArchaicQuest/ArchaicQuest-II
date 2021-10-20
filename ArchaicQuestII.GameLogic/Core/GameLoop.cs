@@ -71,8 +71,8 @@ namespace ArchaicQuestII.GameLogic.Core
                 var rooms = _cache.GetAllRoomsToRepop();
                 var players = _cache.GetPlayerCache().Values.ToList();
 
-              var weather = _weather.SimulateWeatherTransitions();
-                
+             
+              
                 foreach (var room in rooms)
                 {
                     var originalRoom = JsonConvert.DeserializeObject<Room>(JsonConvert.SerializeObject(_cache.GetOriginalRoom(Helpers.ReturnRoomId(room))));
@@ -164,18 +164,8 @@ namespace ArchaicQuestII.GameLogic.Core
 
                 foreach (var player in players)
                 {
-                    //check if player is not indoors
-                    // TODO:
-
-                    var room = _cache.GetRoom(player.RoomId);
-
-                    if (room.Terrain != Room.TerrainType.Inside && room.Terrain != Room.TerrainType.Underground)
-                    {
-                        _writeToClient.WriteLine(weather, player.ConnectionId);
-                        
-                    }
-
-                    IdleCheck(player);
+          
+                  //  IdleCheck(player);
 
                     var hP = (_dice.Roll(1, 2, 5));
                     var mana = (_dice.Roll(1, 2, 5));
@@ -346,8 +336,24 @@ namespace ArchaicQuestII.GameLogic.Core
                 try
                 {
                     await Task.Delay(60000);
-                   _time.DisplayTimeOfDayMessage(_time.UpdateTime());
-  
+                    _time.DisplayTimeOfDayMessage(_time.UpdateTime());
+
+                    var weather = $"<span class='weather'>{_weather.SimulateWeatherTransitions()}</span>";
+
+                    foreach (var player in _cache.GetPlayerCache().Values.ToList())
+                    {
+                        //check if player is not indoors
+                        // TODO:
+
+                        var room = _cache.GetRoom(player.RoomId);
+
+                        if (room.Terrain != Room.TerrainType.Inside && room.Terrain != Room.TerrainType.Underground)
+                        {
+                            _writeToClient.WriteLine(weather, player.ConnectionId);
+
+                        }
+
+                    }
                 }
                 catch (Exception ex)
                 {

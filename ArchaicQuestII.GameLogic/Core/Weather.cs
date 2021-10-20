@@ -153,7 +153,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
             var sunnyStates = new List<string>()
             {
-                "A beautiful clear blue sky",
+                "It's a beautiful clear blue sky",
                 "The sun blazes brightly in the sky",
             };
 
@@ -303,7 +303,7 @@ namespace ArchaicQuestII.GameLogic.Core
             }
 
 
-            return "A beautiful clear blue sky";
+            return "It's a beautiful clear blue sky";
 
         }
 
@@ -331,7 +331,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
             if (LastRoll == 0)
             {
-                this.LastRoll = currentRoll;
+                this.LastRoll = currentRoll; 
             }
 
             var weatherStates = new List<string>()
@@ -345,7 +345,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
             var weatherGoodToBad = new List<string>()
             {
-                "A beautiful clear blue sky",
+                "It's a beautiful clear blue sky",
                 "The sky is blue with a few wispy clouds",
                 "The sky begins to get more cloudy.",
                 "More clouds roll in creating a blanket over the sky.",
@@ -358,7 +358,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
             var weatherBadToGood = new List<string>()
             {
-                "A beautiful clear blue sky",
+                "It's a beautiful clear blue sky",
                 "A few of the clouds begin to move out leaving only a few clouds left behind.",
                 "Some of the clouds begin to break.",
                 "The clouds appear lighter and brighter",
