@@ -10,15 +10,17 @@ namespace ArchaicQuestII.GameLogic.Tests.Core
     public class Weather
     {
         private readonly Mock<IDice> _dice;
+        private readonly Mock<ITime> _time;
         public Weather()
         {
             _dice = new Mock<IDice>();
+            _time = new Mock<ITime>();
         }
 
         [Fact]
         public void SunnyToCloudy()
         {
-            var weather = new GameLogic.Core.Weather(_dice.Object);
+            var weather = new GameLogic.Core.Weather(_dice.Object, _time.Object);
 
             //// sunny to cloudy
             _dice.Setup(x => x.Roll(1, 1, 100)).Returns(10);
@@ -40,7 +42,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Core
         [Fact]
         public void Cloudy()
         {
-            var weather = new GameLogic.Core.Weather(_dice.Object);
+            var weather = new GameLogic.Core.Weather(_dice.Object, _time.Object);
 
             //// sunny to cloudy
             _dice.Setup(x => x.Roll(1, 1, 100)).Returns(10);
@@ -76,7 +78,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Core
         [Fact]
         public void CloudyToRain()
         {
-            var weather = new GameLogic.Core.Weather(_dice.Object);
+            var weather = new GameLogic.Core.Weather(_dice.Object, _time.Object);
 
             //// sunny to cloudy
             _dice.Setup(x => x.Roll(1, 1, 100)).Returns(10);
@@ -123,7 +125,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Core
         [Fact]
         public void LightRain()
         {
-            var weather = new GameLogic.Core.Weather(_dice.Object);
+            var weather = new GameLogic.Core.Weather(_dice.Object, _time.Object);
 
             //// sunny to cloudy
             _dice.Setup(x => x.Roll(1, 1, 100)).Returns(10);
@@ -182,7 +184,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Core
         [Fact]
         public void LightRainToCloudy()
         {
-            var weather = new GameLogic.Core.Weather(_dice.Object);
+            var weather = new GameLogic.Core.Weather(_dice.Object, _time.Object);
 
             //// sunny to cloudy
             _dice.Setup(x => x.Roll(1, 1, 100)).Returns(10);
@@ -268,7 +270,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Core
         [Fact]
         public void LightRainToHeavyRain()
         {
-            var weather = new GameLogic.Core.Weather(_dice.Object);
+            var weather = new GameLogic.Core.Weather(_dice.Object, _time.Object);
 
             //// sunny to cloudy
             _dice.Setup(x => x.Roll(1, 1, 100)).Returns(10);
@@ -349,7 +351,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Core
         [Fact]
         public void HeavyRainToLightRain()
         {
-            var weather = new GameLogic.Core.Weather(_dice.Object);
+            var weather = new GameLogic.Core.Weather(_dice.Object, _time.Object);
 
             //// sunny to cloudy
             _dice.Setup(x => x.Roll(1, 1, 100)).Returns(10);
@@ -451,7 +453,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Core
         [Fact]
         public void HeavyRainToThunder()
         {
-            var weather = new GameLogic.Core.Weather(_dice.Object);
+            var weather = new GameLogic.Core.Weather(_dice.Object, _time.Object);
 
             //// sunny to cloudy
             _dice.Setup(x => x.Roll(1, 1, 100)).Returns(10);
@@ -554,7 +556,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Core
         [Fact]
         public void ThunderToLightRain()
         {
-            var weather = new GameLogic.Core.Weather(_dice.Object);
+            var weather = new GameLogic.Core.Weather(_dice.Object, _time.Object);
 
             //// sunny to cloudy
             _dice.Setup(x => x.Roll(1, 1, 100)).Returns(10);

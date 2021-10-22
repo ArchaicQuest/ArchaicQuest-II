@@ -337,6 +337,7 @@ namespace ArchaicQuestII.GameLogic.Core
                 {
                     await Task.Delay(60000);
                     _time.DisplayTimeOfDayMessage(_time.UpdateTime());
+                  
 
                     var weather = $"<span class='weather'>{_weather.SimulateWeatherTransitions()}</span>";
 
@@ -344,7 +345,7 @@ namespace ArchaicQuestII.GameLogic.Core
                     {
                         //check if player is not indoors
                         // TODO:
-
+                        _client.UpdateTime(player);
                         var room = _cache.GetRoom(player.RoomId);
 
                         if (room.Terrain != Room.TerrainType.Inside && room.Terrain != Room.TerrainType.Underground)

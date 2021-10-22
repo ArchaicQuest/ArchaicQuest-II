@@ -156,7 +156,8 @@ namespace ArchaicQuestII.GameLogic.Core
             {
                 var room = _cache.GetRoom(pc.RoomId);
 
-                if (room.Terrain != Room.TerrainType.Inside && room.Terrain != Room.TerrainType.Underground && !string.IsNullOrEmpty(TickMessage))
+                //(room.Terrain != Room.TerrainType.Inside && room.Terrain != Room.TerrainType.Underground && 
+                if (!string.IsNullOrEmpty(TickMessage))
                 {
                     _writeToClient.WriteLine($"<span class='time-of-day'>{TickMessage}</span>", pc.ConnectionId);
                 }
@@ -260,7 +261,13 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public string ReturnTime()
         {
-            return $"{Math.Floor(GameTime.Hours)}:00 {(Convert.ToInt32(Math.Floor(GameTime.Hours)) >= 12 ? " PM" : " AM")}";
+
+            var hour = Math.Floor(GameTime.Hours) > 12 ? Math.Floor(GameTime.Hours) - 12 : Math.Floor(GameTime.Hours);
+            if(Math.Floor(GameTime.Hours) == 0)
+            {
+                hour = 12;
+            }
+            return $"{hour}:00 {(Convert.ToInt32(Math.Floor(GameTime.Hours)) >= 12 ? " PM" : " AM")}";
         }
 
 

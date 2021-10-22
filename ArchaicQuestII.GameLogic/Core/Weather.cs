@@ -19,88 +19,92 @@ namespace ArchaicQuestII.GameLogic.Core
        public int HeavyRainToThunderTransitionState = 0;
        public int ThunderToLightRainTransitionState = 0;
 
-        public List<string> sunnyToCloudyTransitionStates = new List<string>()
-       {
-           "The sky is blue with a few wispy clouds.",
-           "The sky begins to get more cloudy.",
-           "More clouds roll in creating a blanket over the sky."
-       };
+        private ITime _time;
+        
 
-       public List<string> cloudyToSunnyTransitionStates = new List<string>()
+        public List<Tuple<string, string>> sunnyToCloudyTransitionStates = new List<Tuple<string, string>>()
        {
-           "The clouds appear lighter and brighter",
-           "Some of the clouds begin to break.",
-           "A few of the clouds begin to move out leaving only a few clouds left behind."
-       };
-
-       public List<string> CloudyStates = new List<string>()
-       {
-           "Clouds cover the sky",
-
-       };
-
-       public List<string> cloudyToRainyTransitionStates = new List<string>()
-       {
-           "The clouds appear darker in the sky.",
-           "Light rain patters on the ground around you.",
-           "The light rain picks up a bit."
-       };
-
-       public List<string> LightRainToCloudTransitionStates = new List<string>()
-       {
-           "The rain slows to a light rain.",
-           "The rain reduces to a drizzle.",
-           "The rain stops."
+            new Tuple<string, string>("The sky is blue with a few wispy clouds.", "The sky is dark with a few wispy clouds."),
+            new Tuple<string, string>("The sky begins to get more cloudy.", "The sky begins to get more cloudy."),
+            new Tuple<string, string>("More clouds roll in creating a blanket over the sky.", "More clouds roll in creating a blanket over the sky."),
        };
 
 
-       public List<string> LightRainState = new List<string>()
+        public List<Tuple<string, string>> cloudyToSunnyTransitionStates = new List<Tuple<string, string>>()
        {
-           "The rain falls steady.",
-           "The rain falls steadily forming small puddles here and there.",
+            new Tuple<string, string>("The clouds appear lighter and brighter", "The clouds appear lighter and brighter"),
+            new Tuple<string, string>("Some of the clouds begin to break.", "Some of the clouds begin to break."),
+            new Tuple<string, string>("A few of the clouds begin to move out leaving only a few clouds left behind.", "A few of the clouds begin to move out leaving only a few clouds left behind.")
+       };
+
+       public List<Tuple<string, string>> CloudyStates = new List<Tuple<string, string>>()
+       {
+           new Tuple<string, string>("Clouds cover the sky", "Clouds cover the night sky")
+
+       };
+
+       public List<Tuple<string, string>> cloudyToRainyTransitionStates = new List<Tuple<string, string>>()
+       {
+            new Tuple<string, string>("The clouds appear darker in the sky.", "The clouds appear darker in the night sky."),
+            new Tuple<string, string>("Light rain patters on the ground around you.","Light rain patters on the ground around you."),
+            new Tuple<string, string>("The light rain picks up a bit.", "The light rain picks up a bit.")
+       };
+
+       public List<Tuple<string, string>> LightRainToCloudTransitionStates = new List<Tuple<string, string>>()
+       {
+            new Tuple<string, string>("The rain slows to a light rain.","The rain slows to a light rain."),
+            new Tuple<string, string>("The rain reduces to a drizzle.", "The rain reduces to a drizzle."),
+            new Tuple<string, string>("The rain stops.", "The rain stops.")
        };
 
 
-       public List<string> LightRainToHeavyRainTransitionStates = new List<string>()
+       public List<Tuple<string, string>> LightRainState = new List<Tuple<string, string>>()
        {
-           "The rain begins to fall heavily.",
-           "The rain falls heavily forming puddles here and there.",
-           "The rain continues to fall heavily."
+           new Tuple<string, string>("The rain falls steady.", "The rain falls steady."),
+           new Tuple<string, string>("The rain falls steadily forming small puddles here and there.", "The rain falls steadily forming small puddles here and there."),
        };
 
-       public List<string> HeavyRainState = new List<string>()
+
+       public List<Tuple<string, string>> LightRainToHeavyRainTransitionStates = new List<Tuple<string, string>>()
        {
-           "The rain falls heavily.",
-           "The rain continues to fall heavily.",
+           new Tuple<string, string>("The rain begins to fall heavily.", "The rain begins to fall heavily."),
+           new Tuple<string, string>("The rain falls heavily forming puddles here and there.", "The rain falls heavily forming puddles here and there."),
+           new Tuple<string, string>("The rain continues to fall heavily.", "The rain continues to fall heavily.")
        };
 
-       public List<string> HeavyRainToLightRainTransitionStates = new List<string>()
+       public List<Tuple<string, string>> HeavyRainState = new List<Tuple<string, string>>()
        {
-           "The rain begins to slow down.",
-           "The rain no longer pounds the ground and lessens some what.",
-           "The rain slows to a light rain."
+            new Tuple<string, string>("The rain falls heavily.", "The rain falls heavily."),
+            new Tuple<string, string>("The rain continues to fall heavily.", "The rain continues to fall heavily.")
        };
 
-       public List<string> HeavyRainToThunderTransitionStates = new List<string>()
+       public List<Tuple<string, string>> HeavyRainToLightRainTransitionStates = new List<Tuple<string, string>>()
        {
-           "The sound of thunder rumbles in the distance.",
-           "Lightning flashes in the sky, accompanied shortly by booming thunder.",
-           "Lightning forks across the sky, followed by a bang of thunder.",
+            new Tuple<string, string>("The rain begins to slow down.", "The rain begins to slow down."),
+            new Tuple<string, string>("The rain no longer pounds the ground and lessens some what.", "The rain no longer pounds the ground and lessens some what."),
+            new Tuple<string, string>("The rain slows to a light rain.", "The rain slows to a light rain.")
+       };
+
+       public List<Tuple<string, string>> HeavyRainToThunderTransitionStates = new List<Tuple<string, string>>()
+       {
+            new Tuple<string, string>("The sound of thunder rumbles in the distance.", "The sound of thunder rumbles in the distance."),
+            new Tuple<string, string>("Lightning flashes in the sky, accompanied shortly by booming thunder.", "Lightning flashes in the sky, accompanied shortly by booming thunder."),
+            new Tuple<string, string>("Lightning forks across the sky, followed by a bang of thunder.", "Lightning forks across the sky, followed by a bang of thunder."),
            
        };
 
-       public List<string> ThunderState = new List<string>()
+       public List<Tuple<string, string>> ThunderState = new List<Tuple<string, string>>()
        {
-           "Lightning forks across the sky, followed by a bang of thunder.",
-           "The rain pours down on the ground. Lightning and thunder light up the sky and shake the ground.",
-           "Thunder cracks, and lightning flashes in the sky as the heavy rain continues to fall."
+           new Tuple<string, string>("Lightning forks across the sky, followed by a bang of thunder.", "Lightning forks across the sky, followed by a bang of thunder."),
+           new Tuple<string, string>("The rain pours down on the ground. Lightning and thunder light up the sky and shake the ground.", "The rain pours down on the ground. Lightning and thunder light up the sky and shake the ground."),
+           new Tuple<string, string>("Thunder cracks, and lightning flashes in the sky as the heavy rain continues to fall.", "Thunder cracks, and lightning flashes in the sky as the heavy rain continues to fall.")
        };
 
-       public List<string> ThunderToLightRainTransitionStates = new List<string>()
+       public List<Tuple<string, string>> ThunderToLightRainTransitionStates = new List<Tuple<string, string>>()
        {
-           "Lightning forks across the sky, followed by a bang of thunder. The rain starts to ease.",
-           "A flash of lighting then a long pause before the rumble of thunder is heard.",
-           "The rain is no longer so heavy, the only sound of thunder is off in the distance.",
+            new Tuple<string, string>("Lightning forks across the sky, followed by a bang of thunder. The rain starts to ease.", "Lightning forks across the sky, followed by a bang of thunder. The rain starts to ease."),
+            new Tuple<string, string>("A flash of lighting then a long pause before the rumble of thunder is heard.", "A flash of lighting then a long pause before the rumble of thunder is heard."),
+            new Tuple<string, string>("The rain is no longer so heavy, the only sound of thunder is off in the distance.", "The rain is no longer so heavy, the only sound of thunder is off in the distance."),
 
        };
 
@@ -117,9 +121,10 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public int weatherGoodToBadPos = 0;
        public int weatherBadToGoodPos = 0;
-        public Weather(IDice dice)
+        public Weather(IDice dice, ITime time)
         {
-            _dice = dice;
+            _time = time;
+             _dice = dice;
         }
 
         public void UpdateWeather()
@@ -151,10 +156,10 @@ namespace ArchaicQuestII.GameLogic.Core
 
             };
 
-            var sunnyStates = new List<string>()
+            var sunnyStates = new List<Tuple<string, string>>()
             {
-                "It's a beautiful clear blue sky",
-                "The sun blazes brightly in the sky",
+                  new Tuple<string, string>("It's a beautiful clear blue sky", "It's a beautiful clear night sky with twinkling stars"),
+                new Tuple<string, string>("The sun blazes brightly in the sky", "The moon illuminates the night sky"),
             };
 
 
@@ -167,8 +172,9 @@ namespace ArchaicQuestII.GameLogic.Core
 
             if (WeatherState == "Cloudy")
             {
-                weatherText = CloudyStates[0];
-                 
+                weatherText = _time.IsNightTime() ? CloudyStates[0].Item1 : CloudyStates[0].Item2;
+
+
                 if (currentRoll <= 70)
                 {
                     WeatherState = "Cloudy";
@@ -189,7 +195,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
             if (WeatherState == "LightRain")
             {
-                weatherText = LightRainState[_dice.Roll(1,0,1)];
+                weatherText = _time.IsNightTime() ? LightRainState[_dice.Roll(1, 0, 1)].Item1 : LightRainState[_dice.Roll(1, 0, 1)].Item2;
 
                 if (currentRoll <= 25)
                 {
@@ -207,7 +213,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
             if (WeatherState == "HeavyRain")
             {
-                weatherText = HeavyRainState[_dice.Roll(1, 0, 1)];
+                weatherText = _time.IsNightTime() ? HeavyRainState[_dice.Roll(1, 0, 1)].Item1 : HeavyRainState[_dice.Roll(1, 0, 1)].Item2;
 
                 if (currentRoll <= 45)
                 {
@@ -225,7 +231,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
             if (WeatherState == "Thunder")
             {
-                weatherText = ThunderState[_dice.Roll(1, 0, 2)];
+                weatherText = _time.IsNightTime() ? ThunderState[_dice.Roll(1, 0, 2)].Item1 : ThunderState[_dice.Roll(1, 0, 2)].Item2;
 
                 if (currentRoll <= 35)
                 {
@@ -303,13 +309,13 @@ namespace ArchaicQuestII.GameLogic.Core
             }
 
 
-            return "It's a beautiful clear blue sky";
+            return _time.IsNightTime() ? "It's a beautiful clear blue sky" : "It's a beautiful clear night sky";
 
         }
 
-        public string WeatherTransition(string NewState, List<string> transitions, ref int transitionCount)
+        public string WeatherTransition(string NewState, List<Tuple<string, string>> transitions, ref int transitionCount)
         {
-            var weatherText = transitions[transitionCount]; 
+            var weatherText = _time.IsNightTime() ? transitions[transitionCount].Item1 : transitions[transitionCount].Item2;
            transitionCount += 1;
 
             if (transitionCount > transitions.Count - 1)
@@ -321,145 +327,145 @@ namespace ArchaicQuestII.GameLogic.Core
             return weatherText;
         }
 
-        public string AutumnWeatherTransitions()
-        {
+        //public string AutumnWeatherTransitions()
+        //{
 
-            var currentRoll = _dice.Roll(1, 1, 100);
-            var state = "clearSkies";
+        //    var currentRoll = _dice.Roll(1, 1, 100);
+        //    var state = "clearSkies";
             
-            var lastRoll = this.LastRoll;
+        //    var lastRoll = this.LastRoll;
 
-            if (LastRoll == 0)
-            {
-                this.LastRoll = currentRoll; 
-            }
+        //    if (LastRoll == 0)
+        //    {
+        //        this.LastRoll = currentRoll; 
+        //    }
 
-            var weatherStates = new List<string>()
-            {
-                "clearSkies",
-                "ClearToCloudy",
-                "CloudyToClear",
-                "CloudyToRain",
-            };
-
-
-            var weatherGoodToBad = new List<string>()
-            {
-                "It's a beautiful clear blue sky",
-                "The sky is blue with a few wispy clouds",
-                "The sky begins to get more cloudy.",
-                "More clouds roll in creating a blanket over the sky.",
-                "The clouds cover the sky.",
-                "The clouds appear darker in the sky",
-                "Light rain patters on the ground around you.",
-                "The light rain picks up a bit.",
-                "The rain falls steadily forming small puddles here and there",
-            };
-
-            var weatherBadToGood = new List<string>()
-            {
-                "It's a beautiful clear blue sky",
-                "A few of the clouds begin to move out leaving only a few clouds left behind.",
-                "Some of the clouds begin to break.",
-                "The clouds appear lighter and brighter",
-                 "The clouds cover the sky.",
-                 "The rain stops",
-                 "The rain reduces to a drizzle",
-                 "The rain slows to a light rain",
-                "The rain falls steadily",
+        //    var weatherStates = new List<Tuple<string, string>>()
+        //    {
+        //        "clearSkies",
+        //        "ClearToCloudy",
+        //        "CloudyToClear",
+        //        "CloudyToRain",
+        //    };
 
 
-            };
+        //    var weatherGoodToBad = new List<Tuple<string, string>>()
+        //    {
+        //        "It's a beautiful clear blue sky",
+        //        "The sky is blue with a few wispy clouds",
+        //        "The sky begins to get more cloudy.",
+        //        "More clouds roll in creating a blanket over the sky.",
+        //        "The clouds cover the sky.",
+        //        "The clouds appear darker in the sky",
+        //        "Light rain patters on the ground around you.",
+        //        "The light rain picks up a bit.",
+        //        "The rain falls steadily forming small puddles here and there",
+        //    };
+
+        //    var weatherBadToGood = new List<Tuple<string, string>>()
+        //    {
+        //        "It's a beautiful clear blue sky",
+        //        "A few of the clouds begin to move out leaving only a few clouds left behind.",
+        //        "Some of the clouds begin to break.",
+        //        "The clouds appear lighter and brighter",
+        //         "The clouds cover the sky.",
+        //         "The rain stops",
+        //         "The rain reduces to a drizzle",
+        //         "The rain slows to a light rain",
+        //        "The rain falls steadily",
 
 
-
-            //var weatherBadToGood = new List<string>()
-            //{
-            //    "The rain falls steadily",
-            //    "The rain slows to a light rain",
-            //    "The rain reduces to a drizzle",
-            //    "The rain stops",
-            //    "The clouds cover the sky.",
-            //    "The clouds appear lighter and brighter",
-            //    "Some of the clouds begin to break.",
-            //    "A few of the clouds begin to move out leaving only a few clouds left behind.",
-            //    "A beautiful clear blue sky",
-            //};
-
-
-            //var CloudTransitionToLightRain = new List<string>()
-            //{
-            //    "The clouds cover the sky.",
-            //    "The clouds appear darker in the sky",
-            //    "Light rain patters on the ground around you.",
-            //    "The light rain picks up a bit.",
-            //    "The rain falls steadily forming small puddles here and there",
-            //};
-
-
-            //var CloudTransitionToClearSky = new List<string>()
-            //{
-            //    "The clouds cover the sky.",
-            //    "The clouds appear lighter and brighter",
-            //    "Some of the clouds begin to break.",
-            //    "A few of the clouds begin to move out leaving only a few clouds left behind.",
-            //    "A beautiful clear blue sky"
-            //};
-
-            //var ClearSkyTransitionToCloundy = new List<string>()
-            //{
-            //    "A beautiful clear blue sky",
-            //    "The sky is blue with a few wispy clouds",
-            //    "The sky begins to get more cloudy.",
-            //    "More clouds roll in creating a blanket over the sky."
-            //};
-
-
-            if (currentRoll > lastRoll)
-            {
-                this.LastRoll = currentRoll;
-                var weatherText = weatherBadToGood[Math.Abs(this.weatherGoodToBadPos)];
-                this.weatherGoodToBadPos += 1;
-                weatherBadToGoodPos -= 1;
-
-                if (this.weatherGoodToBadPos >= 8)
-                {
-                    this.weatherGoodToBadPos = 8;
-                }
-
-                if (this.weatherBadToGoodPos <= 0)
-                {
-                    this.weatherBadToGoodPos =0;
-                }
+        //    };
 
 
 
-                return weatherText;
-            }
+        //    //var weatherBadToGood = new List<Tuple<string, string>>()
+        //    //{
+        //    //    "The rain falls steadily",
+        //    //    "The rain slows to a light rain",
+        //    //    "The rain reduces to a drizzle",
+        //    //    "The rain stops",
+        //    //    "The clouds cover the sky.",
+        //    //    "The clouds appear lighter and brighter",
+        //    //    "Some of the clouds begin to break.",
+        //    //    "A few of the clouds begin to move out leaving only a few clouds left behind.",
+        //    //    "A beautiful clear blue sky",
+        //    //};
 
-            if (currentRoll < lastRoll)
-                {
-                    this.LastRoll = currentRoll;
-                var weather = weatherGoodToBad[Math.Abs(weatherBadToGoodPos)];
-                weatherBadToGoodPos += 1;
-                this.weatherGoodToBadPos -= 1;
 
-                if (weatherBadToGoodPos >= 8)
-                {
-                    weatherBadToGoodPos = 8;
-                }
+        //    //var CloudTransitionToLightRain = new List<Tuple<string, string>>()
+        //    //{
+        //    //    "The clouds cover the sky.",
+        //    //    "The clouds appear darker in the sky",
+        //    //    "Light rain patters on the ground around you.",
+        //    //    "The light rain picks up a bit.",
+        //    //    "The rain falls steadily forming small puddles here and there",
+        //    //};
 
-                if (weatherGoodToBadPos <= 0)
-                {
-                    weatherGoodToBadPos = 0;
-                }
 
-                return weather;
-                }
+        //    //var CloudTransitionToClearSky = new List<Tuple<string, string>>()
+        //    //{
+        //    //    "The clouds cover the sky.",
+        //    //    "The clouds appear lighter and brighter",
+        //    //    "Some of the clouds begin to break.",
+        //    //    "A few of the clouds begin to move out leaving only a few clouds left behind.",
+        //    //    "A beautiful clear blue sky"
+        //    //};
+
+        //    //var ClearSkyTransitionToCloundy = new List<Tuple<string, string>>()
+        //    //{
+        //    //    "A beautiful clear blue sky",
+        //    //    "The sky is blue with a few wispy clouds",
+        //    //    "The sky begins to get more cloudy.",
+        //    //    "More clouds roll in creating a blanket over the sky."
+        //    //};
+
+
+        //    if (currentRoll > lastRoll)
+        //    {
+        //        this.LastRoll = currentRoll;
+        //        var weatherText = weatherBadToGood[Math.Abs(this.weatherGoodToBadPos)];
+        //        this.weatherGoodToBadPos += 1;
+        //        weatherBadToGoodPos -= 1;
+
+        //        if (this.weatherGoodToBadPos >= 8)
+        //        {
+        //            this.weatherGoodToBadPos = 8;
+        //        }
+
+        //        if (this.weatherBadToGoodPos <= 0)
+        //        {
+        //            this.weatherBadToGoodPos =0;
+        //        }
+
+
+
+        //        return weatherText;
+        //    }
+
+        //    if (currentRoll < lastRoll)
+        //        {
+        //            this.LastRoll = currentRoll;
+        //        var weather = weatherGoodToBad[Math.Abs(weatherBadToGoodPos)];
+        //        weatherBadToGoodPos += 1;
+        //        this.weatherGoodToBadPos -= 1;
+
+        //        if (weatherBadToGoodPos >= 8)
+        //        {
+        //            weatherBadToGoodPos = 8;
+        //        }
+
+        //        if (weatherGoodToBadPos <= 0)
+        //        {
+        //            weatherGoodToBadPos = 0;
+        //        }
+
+        //        return weather;
+        //        }
  
 
-            return weatherGoodToBad[0];
-        }
+        //    return weatherGoodToBad[0];
+        //}
  
     }
 }

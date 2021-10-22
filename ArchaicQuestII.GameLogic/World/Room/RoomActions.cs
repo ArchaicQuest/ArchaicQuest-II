@@ -327,14 +327,26 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 return;
             }
             RoomObject roomObjects = null;
-       
+
+            
+            var isDark = RoomIsDark(room, player);
+            if (item == null && room.RoomObjects.Count >= 1 && room.RoomObjects[0].Name != null)
+            {
+                roomObjects =
+                    room.RoomObjects.FirstOrDefault(x =>
+                        x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+
+                _writeToClient.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{roomObjects.Examine}", player.ConnectionId);
+
+                return;
+            }
+
             if (item == null)
             {
                 _writeToClient.WriteLine("<p>You don't see that here.", player.ConnectionId);
                 return;
             }
 
-            var isDark = RoomIsDark(room, player);
             var examMessage = item.Description.Exam == "You don't see anything special."
                 ? $"On closer inspection you don't see anything special to note to what you already see. {item.Description.Look}"
                 : item.Description.Exam;
@@ -352,14 +364,6 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
          
 
-            if (item == null && room.RoomObjects.Count >= 1 && room.RoomObjects[0].Name != null)
-            {
-                roomObjects =
-                    room.RoomObjects.FirstOrDefault(x =>
-                        x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
-
-                _writeToClient.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{roomObjects.Examine}", player.ConnectionId);
-            }
 
 
             //if (item.ItemType == Item.Item.ItemTypes.Container)

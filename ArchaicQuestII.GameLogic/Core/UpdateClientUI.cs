@@ -17,11 +17,13 @@ namespace ArchaicQuestII.GameLogic.Core
    public class UpdateClientUI: IUpdateClientUI
     {
         private readonly IHubContext<GameHub> _hubContext;
-      
+        private readonly ITime _time;
 
-        public UpdateClientUI(IHubContext<GameHub> hubContext)
+
+        public UpdateClientUI(IHubContext<GameHub> hubContext, ITime time)
         {
             _hubContext = hubContext;
+            _time = time;
         }
 
         public async void UpdateScore(Player player)
@@ -263,6 +265,23 @@ namespace ArchaicQuestII.GameLogic.Core
 
                 await _hubContext.Clients.Client(player.ConnectionId).SendAsync("InventoryUpdate", inventory.ToString());
            //     UpdateScore(player);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        public async void UpdateTime(Player player)
+        {
+            if (string.IsNullOrEmpty(player.ConnectionId) && !player.IsTelnet)
+            {
+                return;
+            }
+
+            try
+            {
+                await _hubContext.Clients.Client(player.ConnectionId).SendAsync("UpdateTime", _time.ReturnTime());
             }
             catch (Exception ex)
             {
