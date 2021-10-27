@@ -55,12 +55,12 @@ namespace ArchaicQuestII.GameLogic.Combat
             // If mob
             if (!isMurder && attacker.ConnectionId != "mob")
             {
-                return (Player)room.Mobs.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+                return (Player)room.Players.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
             }
 
             if (attacker.ConnectionId == "mob")
             {
-                return (Player)room.Players.FirstOrDefault(x => x.Name.Equals(target, StringComparison.CurrentCultureIgnoreCase));
+                return (Player)room.Mobs.FirstOrDefault(x => x.Name.Equals(target, StringComparison.CurrentCultureIgnoreCase));
             }
 
             return (Player)room.Players.FirstOrDefault(x => x.Name.StartsWith(target, StringComparison.CurrentCultureIgnoreCase));
@@ -249,6 +249,12 @@ namespace ArchaicQuestII.GameLogic.Combat
             target.Status = (target.Status & CharacterStatus.Status.Stunned) != 0 ? CharacterStatus.Status.Stunned : CharacterStatus.Status.Fighting;
             target.Target = string.IsNullOrEmpty(target.Target) ? player.Name : target.Target; //for group combat, if target is ganged, there target should not be changed when combat is initiated.
 
+            if(player.Target == player.Name)
+            {
+                player.Status = CharacterStatus.Status.Standing;
+                return;
+            }
+
             if (!_cache.IsCharInCombat(player.Id.ToString()))
             {
                 _cache.AddCharToCombat(player.Id.ToString(), player);
@@ -293,6 +299,12 @@ namespace ArchaicQuestII.GameLogic.Combat
 
 
                     _writer.WriteLine("<p>They are not here.</p>", player.ConnectionId);
+                    return;
+                }
+
+                if(target.Name == player.Name)
+                {
+                    _writer.WriteLine("<p>You can't start a fight with yourself!</p>", player.ConnectionId);
                     return;
                 }
 

@@ -15,6 +15,7 @@ namespace ArchaicQuestII.GameLogic.Core
         /// </summary>
         /// <param name="player"></param>
         void Who(Player player);
+        void Affects(Player player);
 
         bool SkillCheckSuccesful(SkillList skill);
 

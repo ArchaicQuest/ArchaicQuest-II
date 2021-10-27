@@ -281,6 +281,7 @@ namespace ArchaicQuestII.GameLogic.Commands
                     _socials.DisplaySocials(player);
                     break;
                 case "follow":
+                case "fol":
                     _movement.Follow(player, room, obj);
                     break;
                 case "group":
@@ -360,6 +361,10 @@ namespace ArchaicQuestII.GameLogic.Commands
                     break;
                 case "second": // see UtilSkills for Mount
                     _passiveSkills.DualWield(player, null, room, obj);
+                    break;
+                case "affects":
+                case "aff":
+                    _core.Affects(player);
                     break;
                 case "/train":
                     _core.TrainSkill(player);

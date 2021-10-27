@@ -290,6 +290,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
             _updateClientUi.UpdateScore(character);
             _updateClientUi.UpdateQuest(character);
             _updateClientUi.UpdateAffects(character);
+            _updateClientUi.UpdateTime(character);
 
             _updateClientUi.GetMap(character,_cache.GetMap($"{room.AreaId}{room.Coords.Z}"));
 
