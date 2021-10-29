@@ -565,7 +565,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
 
             if (player.Status != CharacterStatus.Status.Sleeping)
             {
-                _writeToClient.WriteLine("<p>You are already standing!</p>", player.ConnectionId);
+                _writeToClient.WriteLine("<p>You are already awake!</p>", player.ConnectionId);
                 return;
             }
 

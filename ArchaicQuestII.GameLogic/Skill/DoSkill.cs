@@ -108,7 +108,7 @@ namespace ArchaicQuestII.GameLogic.Skill
 
             if (foundSkill == null)
             {
-                _writer.WriteLine($"You don't know a skill that begins with {skillName}");
+                _writer.WriteLine($"You don't know a skill that begins with {skillName}", player.ConnectionId);
                 return null;
             }
 

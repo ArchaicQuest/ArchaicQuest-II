@@ -17,6 +17,8 @@ namespace ArchaicQuestII.GameLogic.Core
         void Who(Player player);
         void Affects(Player player);
 
+        void Practice(Player player, Room room, string skillName);
+
         bool SkillCheckSuccesful(SkillList skill);
 
         void GainSkillProficiency(SkillList foundSkill, Player player);

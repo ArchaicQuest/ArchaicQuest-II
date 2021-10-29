@@ -74,7 +74,7 @@ namespace ArchaicQuestII.GameLogic.Spell
 
             if (foundSpell == null)
             {
-                _writer.WriteLine($"You don't know a spell that begins with {skill}");
+                _writer.WriteLine($"You don't know a spell that begins with {skill}", player.ConnectionId);
                 return null;
             }
 

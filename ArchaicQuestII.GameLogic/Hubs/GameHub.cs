@@ -178,7 +178,8 @@ namespace ArchaicQuestII.GameLogic.Hubs
                         Proficiency = 1,
                         Level = skill.Level,
                         SkillName = skill.SkillName,
-                        SkillId = skill.SkillId
+                        SkillId = skill.SkillId,
+                        IsSpell = _cache.GetSkill(skill.SkillId).Cost.Table[GameLogic.Skill.Enum.Cost.Mana] > 0 ? true : false
                     }
                     );
                 }
@@ -191,6 +192,8 @@ namespace ArchaicQuestII.GameLogic.Hubs
                 {
                     player.Skills.Remove(player.Skills[i]);
                 }
+                var skill = _cache.GetSkill(player.Skills[i].SkillId);
+                player.Skills[i].IsSpell = skill.Cost.Table.ContainsKey(Skill.Enum.Cost.Mana) && skill.Cost.Table[Skill.Enum.Cost.Mana] > 0 ? true : false;
             }
  
 

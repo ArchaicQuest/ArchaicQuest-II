@@ -12,6 +12,8 @@ namespace ArchaicQuestII.GameLogic.Character.Class
         public string SkillName { get; set; }
         public int Level { get; set; }
         public int? Proficiency { get; set; } = 1;
+
+        public bool IsSpell { get; set; }
     }
 
 

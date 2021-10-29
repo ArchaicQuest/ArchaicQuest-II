@@ -366,6 +366,10 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "aff":
                     _core.Affects(player);
                     break;
+                case "practice":
+                case "prac":
+                    _core.Practice(player, room, obj);
+                    break;
                 case "/train":
                     _core.TrainSkill(player);
                     break;

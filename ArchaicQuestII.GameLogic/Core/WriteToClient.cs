@@ -39,6 +39,26 @@ namespace ArchaicQuestII.GameLogic.Core
             }
         }
 
+        public async void WriteLineMobSay(string mobName, string message, string id)
+        {
+
+            try
+            {
+                if (id.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    return;
+
+                }
+
+                var mobSay = $"<span class='mob'>{mobName} says '{message}'</span>";
+                await _hubContext.Clients.Client(id).SendAsync("SendMessage", mobSay, "");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
         public async void WriteLine(string message, string id, int delay)
         {
 
