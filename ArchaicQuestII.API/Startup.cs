@@ -201,6 +201,8 @@ namespace ArchaicQuestII.API
                             }
                         );
                     }
+
+                    mob.Skills.FirstOrDefault(x => x.SkillName.Equals(skill.SkillName)).SkillId = skill.SkillId;
                 }
 
                 //set mob armor

@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Item;
+using ArchaicQuestII.GameLogic.Spell.Interface;
+using ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells;
 using ArchaicQuestII.GameLogic.World.Room;
 using MoonSharp.Interpreter;
 
@@ -73,8 +76,10 @@ namespace ArchaicQuestII.GameLogic.Core
         private readonly IWriteToClient _writeToClient;
         private readonly IUpdateClientUI _updateClientUi;
         private readonly IGain _gain;
+        private readonly ISpells _spells;
+
         public MobScripts(ICache cache, ICombat
-            combat, IWriteToClient writeToClient, IDice dice, IUpdateClientUI updateClientUi, IGain gain)
+            combat, IWriteToClient writeToClient, IDice dice, IUpdateClientUI updateClientUi, IGain gain, ISpells spells)
         {
             _cache = cache;
             _combat = combat;
@@ -82,7 +87,7 @@ namespace ArchaicQuestII.GameLogic.Core
             _dice = dice;
             _updateClientUi = updateClientUi;
             _gain = gain;
-
+            _spells = spells;
         }
         public bool IsInRoom(Room room, Player player)
         {
@@ -299,6 +304,20 @@ namespace ArchaicQuestII.GameLogic.Core
             }
  
             _updateClientUi.UpdateQuest(player);
+        }
+
+        public void Sleep(int milliseconds)
+        {
+            Task.Delay(milliseconds).Wait();
+        }
+
+
+        public void DoSkill(Player player, Player mob, Room room)
+        {
+     
+
+            _spells.DoSpell("armour", mob, player.Name, room);
+            
         }
     }
 }

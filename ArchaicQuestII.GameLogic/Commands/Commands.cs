@@ -433,6 +433,14 @@ namespace ArchaicQuestII.GameLogic.Commands
                     }
                 }
             }
+            
+            
+            
+            
+            
+            
+            
+            
             catch(Exception ex)
             {
                 Helpers.PostToDiscord($"{player.Name} {ex.Message}", "error", _cache.GetConfig());

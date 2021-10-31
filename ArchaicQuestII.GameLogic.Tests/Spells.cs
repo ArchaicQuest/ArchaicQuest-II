@@ -123,10 +123,10 @@ namespace ArchaicQuestII.GameLogic.Tests
             _spellTargetCharacter = new Mock<ISpellTargetCharacter>();
             _cache = new Mock<ICache>();
             _updateClientUI = new Mock<IUpdateClientUI>();
-            _mobScript = new Mock<IMobScripts>();
+            
             _dice = new Mock<IDice>();
             _spellList = new Mock<ISpellList>();
-            _spell = new CastSpell(_writer.Object, _spellTargetCharacter.Object, _cache.Object, _damage.Object, _updateClientUI.Object, _mobScript.Object,_dice.Object, _spellList.Object);
+            _spell = new CastSpell(_writer.Object, _spellTargetCharacter.Object, _cache.Object, _damage.Object, _updateClientUI.Object,_dice.Object, _spellList.Object);
 
             var newSkill = new Skill.Model.Skill
             {

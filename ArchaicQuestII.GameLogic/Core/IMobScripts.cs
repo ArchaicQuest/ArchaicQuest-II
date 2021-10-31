@@ -34,5 +34,7 @@ namespace ArchaicQuestII.GameLogic.Core
        public bool HasObject(Player player, string name);
        public void AddQuest(Player player, int id);
        void CompleteQuest(Player player, int questId);
+        void DoSkill(Player player, Player mob, Room room);
+        void Sleep(int milliseconds);
    }
 }

@@ -26,17 +26,15 @@ namespace ArchaicQuestII.GameLogic.Spell
         private readonly ICache _cache;
         private readonly IDamage _damage;
         private readonly IUpdateClientUI _updateClientUi;
-        private readonly IMobScripts _mobScripts;
         private readonly IDice _dice;
         private readonly ISpellList _spellList;
-        public CastSpell(IWriteToClient writer, ISpellTargetCharacter spellTargetCharacter, ICache cache, IDamage damage, IUpdateClientUI updateClientUi, IMobScripts mobScripts, IDice dice, ISpellList spellList)
+        public CastSpell(IWriteToClient writer, ISpellTargetCharacter spellTargetCharacter, ICache cache, IDamage damage, IUpdateClientUI updateClientUi, IDice dice, ISpellList spellList)
         {
             _writer = writer;
             _spellTargetCharacter = spellTargetCharacter;
             _cache = cache;
             _damage = damage;
-            _updateClientUi = updateClientUi;
-            _mobScripts = mobScripts;
+            _updateClientUi = updateClientUi; 
             _dice = dice;
             _spellList = spellList;
         }
@@ -78,7 +76,16 @@ namespace ArchaicQuestII.GameLogic.Spell
                 return null;
             }
 
+    
             var spell = _cache.GetSkill(foundSpell.SkillId);
+
+            if(foundSpell.SkillName != spell.Name)
+            {
+                spell = _cache.GetAllSkills().FirstOrDefault(x => x.Name.Equals(foundSpell.SkillName));
+                foundSpell.SkillId = spell.Id;
+            }
+
+            
 
             return spell;
         }
@@ -213,7 +220,7 @@ namespace ArchaicQuestII.GameLogic.Spell
                     {
                         continue;
                     }
-                    _writer.WriteLine($"{origin.Name} looks at {target.Name} and utters the words, '{(!Helpers.isCaster(target.ClassName) ? obsfucatedSpellName : spell.Name)}'.", pc.ConnectionId);
+                    _writer.WriteLine($"{origin.Name} looks at {target.Name} and utters the words, '{(!Helpers.isCaster(pc.ClassName) ? obsfucatedSpellName : spell.Name)}'.", pc.ConnectionId);
                 }
                
             }
@@ -273,14 +280,14 @@ namespace ArchaicQuestII.GameLogic.Spell
                 return;
             }
 
-            //if (!ManaCheck(spell, origin))
-            //{
-            //    return;
-            //}
+            if (origin.ConnectionId != "mob" && !ManaCheck(spell, origin))
+            {
+                return;
+            }
 
             // saves
 
-           
+
 
 
             if (SpellAffectsCharacter(spell))
