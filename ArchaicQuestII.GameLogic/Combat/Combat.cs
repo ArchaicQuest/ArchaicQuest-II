@@ -53,17 +53,17 @@ namespace ArchaicQuestII.GameLogic.Combat
                 return null;
             }
             // If mob
-            if (!isMurder && attacker.ConnectionId != "mob")
+            if (isMurder && attacker.ConnectionId != "mob")
             {
                 return (Player)room.Players.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
             }
 
             if (attacker.ConnectionId == "mob")
             {
-                return (Player)room.Mobs.FirstOrDefault(x => x.Name.Equals(target, StringComparison.CurrentCultureIgnoreCase));
+                return (Player)room.Players.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
             }
 
-            return (Player)room.Players.FirstOrDefault(x => x.Name.StartsWith(target, StringComparison.CurrentCultureIgnoreCase));
+            return (Player)room.Mobs.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
         }
 
 
@@ -294,6 +294,7 @@ namespace ArchaicQuestII.GameLogic.Combat
 
                     if (player.Status != CharacterStatus.Status.Fighting)
                     {
+                        _writer.WriteLine("<p>They are not here.</p>", player.ConnectionId);
                         return;
                     }
 

@@ -565,7 +565,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
                         foreach (var mob in room.Mobs.Where(x => x.Status != CharacterStatus.Status.Fighting).ToList())
                         {
-                            if (mob.Emotes.Any() && mob.Emotes[0] != null)
+                            if (mob.Emotes.Any() && mob.Emotes[0] != null && _dice.Roll(1,0,1) == 1)
                             {
 
                                 var emote = mob.Emotes[_dice.Roll(1, 0, mob.Emotes.Count - 1)];

@@ -100,7 +100,7 @@ namespace ArchaicQuestII.GameLogic.Core
                 return;
 
             }
-            _writeToClient.WriteLine($"<p class='mob-emote'>{n}</p>", player.ConnectionId, delay);
+            _writeToClient.WriteLine($"<p class='mob-emote'>{n.Replace("#name#", player.Name)}</p>", player.ConnectionId, delay);
         }
         public void Say(string n, int delay, Room room, Player player, Player mob)
         {

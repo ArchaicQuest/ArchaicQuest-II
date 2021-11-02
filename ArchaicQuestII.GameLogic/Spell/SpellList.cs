@@ -19,7 +19,7 @@ namespace ArchaicQuestII.GameLogic.Spell
 
             switch (key.ToLower())
             {
-                case "magic missle":
+                case "magic missile":
                     _damageSpells.MagicMissile(player, target, room);
                     break;
                 case "cause light wounds":

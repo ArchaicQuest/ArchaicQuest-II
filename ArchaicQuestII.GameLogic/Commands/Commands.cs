@@ -433,12 +433,7 @@ namespace ArchaicQuestII.GameLogic.Commands
                     }
                 }
             }
-            
-            
-            
-            
-            
-            
+             
             
             
             catch(Exception ex)

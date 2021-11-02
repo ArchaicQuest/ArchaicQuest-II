@@ -69,7 +69,7 @@ namespace ArchaicQuestII.GameLogic.Spell
         public Skill.Model.Skill FindSpell(string skill, Player player)
         {
             var foundSpell = player.Skills.FirstOrDefault(x => x.SkillName.StartsWith(skill, StringComparison.CurrentCultureIgnoreCase));
-
+            
             if (foundSpell == null)
             {
                 _writer.WriteLine($"You don't know a spell that begins with {skill}", player.ConnectionId);
@@ -79,9 +79,11 @@ namespace ArchaicQuestII.GameLogic.Spell
     
             var spell = _cache.GetSkill(foundSpell.SkillId);
 
-            if(foundSpell.SkillName != spell.Name)
+            if(spell == null || spell.Name != foundSpell.SkillName)
             {
-                spell = _cache.GetAllSkills().FirstOrDefault(x => x.Name.Equals(foundSpell.SkillName));
+                var getSpell = _cache.GetAllSkills();
+                    spell = getSpell.FirstOrDefault(x => x.Name.Equals(foundSpell.SkillName, StringComparison.CurrentCultureIgnoreCase));
+               
                 foundSpell.SkillId = spell.Id;
             }
 
