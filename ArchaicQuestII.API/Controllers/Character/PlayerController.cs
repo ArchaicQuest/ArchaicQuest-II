@@ -102,7 +102,33 @@ namespace ArchaicQuestII.Controllers.character
 
             };
 
+
+            var ItemSeed = new ItemSeed().SeedData();
+            var Light = ItemSeed.FirstOrDefault(x => x.Name.Equals("The torch of Illuminatio"));
+            Light.Equipped = true;
+            newPlayer.Inventory.Add(Light);
+            newPlayer.Equipped.Light = Light;
             newPlayer.Skills = playerClass?.Skills ?? new List<SkillList>();
+
+            var shirt = ItemSeed.FirstOrDefault(x => x.Name.Equals("A Ragged Shirt"));
+            shirt.Equipped = true;
+            newPlayer.Inventory.Add(shirt);
+            newPlayer.Equipped.Torso = shirt;
+            newPlayer.Skills = playerClass?.Skills ?? new List<SkillList>();
+
+            var trousers = ItemSeed.FirstOrDefault(x => x.Name.Equals("A pair of Baggy Trousers"));
+            trousers.Equipped = true;
+            newPlayer.Inventory.Add(trousers);
+            newPlayer.Equipped.Legs = trousers;
+            newPlayer.Skills = playerClass?.Skills ?? new List<SkillList>();
+
+            var boots = ItemSeed.FirstOrDefault(x => x.Name.Equals("A pair of Worn Leather Boots"));
+            boots.Equipped = true;
+            newPlayer.Inventory.Add(boots);
+            newPlayer.Equipped.Feet = boots;
+            newPlayer.Skills = playerClass?.Skills ?? new List<SkillList>();
+
+      
 
             if (!string.IsNullOrEmpty(player.Id.ToString()) && player.Id != Guid.Empty)
             {

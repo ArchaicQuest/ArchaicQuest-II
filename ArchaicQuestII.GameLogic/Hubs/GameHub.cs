@@ -129,6 +129,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
                 Name = name
             };
 
+
             _db.Save(newPlayer, DataBase.Collections.Players);
 
         }
