@@ -55,5 +55,13 @@ namespace ArchaicQuestII.GameLogic.Core
         void TrainSkill(Player player);
 
         void Dismount(Player player, Room room);
+
+        /// <summary>
+        /// Admin only used to test mob script events
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="eventName"></param>
+        /// <param name="value"></param>
+        void SetEvent(Player player, string eventName, string value);
     }
 }

@@ -887,6 +887,26 @@ namespace ArchaicQuestII.GameLogic.Core
 
         }
 
+        public void SetEvent(Player player, string eventName, string value)
+        {
+            if(eventName.Equals("/setevent", StringComparison.CurrentCultureIgnoreCase) || string.IsNullOrEmpty(eventName))
+            {
+                foreach (var ev in player.EventState)
+                {
+                    _writeToClient.WriteLine($"{ev.Key} - {ev.Value}", player.ConnectionId);
+                }
 
+                return;
+            }
+
+            if(player.EventState.ContainsKey(eventName))
+            {
+                player.EventState[eventName] = Int32.Parse(value);
+                _writeToClient.WriteLine($"{eventName} state changed to {player.EventState[eventName]}", player.ConnectionId);
+                return;
+            }
+
+            _writeToClient.WriteLine($"Invalid Event state", player.ConnectionId);
+        }
     }
 }

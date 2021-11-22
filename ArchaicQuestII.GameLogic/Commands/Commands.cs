@@ -22,6 +22,7 @@ using ArchaicQuestII.GameLogic.Skill.Skills;
 using ArchaicQuestII.GameLogic.Socials;
 using ArchaicQuestII.GameLogic.Spell.Interface;
 using MoonSharp.Interpreter;
+using System.Threading.Tasks;
 
 namespace ArchaicQuestII.GameLogic.Commands
 {
@@ -373,6 +374,9 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "/train":
                     _core.TrainSkill(player);
                     break;
+                case "/setevent":
+                    _core.SetEvent(player, obj, target);
+                    break;
                 default:
                         _commandHandler.HandleCommand(key,obj,target, player, room);
                     break;
@@ -405,8 +409,10 @@ namespace ArchaicQuestII.GameLogic.Commands
             }
             var parameters = MakeCommandPartsSafe(commandParts);
 
+            CommandList(key, parameters.Item1, parameters.Item2, cleanCommand, player, room);
             try
             {
+             
                 foreach (var mob in room.Mobs)
                 {
 
@@ -429,11 +435,12 @@ namespace ArchaicQuestII.GameLogic.Commands
                         script.Globals["mob"] = mob;
 
 
-                        DynValue res = script.DoString(mob.Events.Act);
+                        DynValue res =   script.DoString(mob.Events.Act);
                     }
                 }
             }
              
+            
             
             
             catch(Exception ex)
@@ -441,7 +448,7 @@ namespace ArchaicQuestII.GameLogic.Commands
                 Helpers.PostToDiscord($"{player.Name} {ex.Message}", "error", _cache.GetConfig());
             }
 
-            CommandList(key, parameters.Item1, parameters.Item2, cleanCommand, player, room);
+           
         }
 
         public Tuple<string, string> MakeCommandPartsSafe(string[] commands)

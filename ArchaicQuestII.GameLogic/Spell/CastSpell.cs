@@ -68,6 +68,13 @@ namespace ArchaicQuestII.GameLogic.Spell
 
         public Skill.Model.Skill FindSpell(string skill, Player player)
         {
+            // I think this is a debug bug where the hot reload doesn't correctly run startup again 
+            // and mobs loose there skills adding this hack just incase, should solve it
+            if(player.Skills == null && player.ConnectionId == "mob")
+            {      
+                    player.Skills = _cache.GetClass(player.ClassName).Skills;          
+            }
+
             var foundSpell = player.Skills.FirstOrDefault(x => x.SkillName.StartsWith(skill, StringComparison.CurrentCultureIgnoreCase));
             
             if (foundSpell == null)

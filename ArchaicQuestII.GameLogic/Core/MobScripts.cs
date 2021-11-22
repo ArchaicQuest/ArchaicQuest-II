@@ -241,6 +241,15 @@ namespace ArchaicQuestII.GameLogic.Core
             }
         }
 
+        public void GiveGold(int value, Player player)
+        {
+            if(player.Money == null)
+            {
+                player.Money = new Character.Model.Money();
+            }
+           player.Money.Gold += value;
+        }
+
         public bool HasObject(Player player, string name)
         {
             return player.Inventory.FirstOrDefault(x => x.Name.StartsWith(name, StringComparison.CurrentCultureIgnoreCase)) !=
@@ -306,18 +315,38 @@ namespace ArchaicQuestII.GameLogic.Core
             _updateClientUi.UpdateQuest(player);
         }
 
-        public void Sleep(int milliseconds)
-        {
-            Task.Delay(milliseconds).Wait();
+        public async Task Sleep(int milliseconds)
+        { 
+
+            await Task.Delay(milliseconds);
         }
 
 
         public void DoSkill(Player player, Player mob, Room room)
         {
-     
 
             _spells.DoSpell("armour", mob, player.Name, room);
             
+        }
+
+        public void MobSay(string n, Room room, Player player, Player mob, int delay = 0)
+        {
+            if (!IsInRoom(room, player))
+            {
+                return;
+
+            }
+            _writeToClient.WriteLine($"<p class='mob'>{mob.Name} says, '{n.Replace("#name#", player.Name)}'</p>", player.ConnectionId, delay);
+        }
+
+        public void MobEmote(string n, Room room, Player player, int delay)
+        {
+            if (!IsInRoom(room, player))
+            {
+                return;
+
+            }
+            _writeToClient.WriteLine($"<p class='mob-emote'>{n.Replace("#name#", player.Name)}</p>", player.ConnectionId, delay);
         }
     }
 }
