@@ -27,7 +27,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
         public void ShowSkills(Player player)
         {
 
-            _writeToClient.WriteLine("Skills:");
+            _writeToClient.WriteLine("Skills:", player.ConnectionId);
 
             foreach (var skill in player.Skills)
             {

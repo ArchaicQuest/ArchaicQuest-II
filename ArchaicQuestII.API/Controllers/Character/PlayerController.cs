@@ -104,28 +104,74 @@ namespace ArchaicQuestII.Controllers.character
 
 
             var ItemSeed = new ItemSeed().SeedData();
-            var Light = ItemSeed.FirstOrDefault(x => x.Name.Equals("The torch of Illuminatio"));
+            var Light = ItemSeed.FirstOrDefault(x => x.Name.Equals("The torch of illuminatio"));
             Light.Equipped = true;
             newPlayer.Inventory.Add(Light);
             newPlayer.Equipped.Light = Light;
-            newPlayer.Skills = playerClass?.Skills ?? new List<SkillList>();
+            
+            var shirt = ItemSeed.FirstOrDefault(x => x.Name.Equals("A ragged shirt"));
+            var robe = ItemSeed.FirstOrDefault(x => x.Name.Equals("A simple cloth robe"));
+            var sleeves = ItemSeed.FirstOrDefault(x => x.Name.Equals("A pair of baggy sleeves"));
+            var trousers = ItemSeed.FirstOrDefault(x => x.Name.Equals("A pair of baggy trousers"));
+            var boots = ItemSeed.FirstOrDefault(x => x.Name.Equals("A pair of worn leather boots"));
+            var dagger = ItemSeed.FirstOrDefault(x => x.Name.Equals("A simple iron dagger"));
+            var sword = ItemSeed.FirstOrDefault(x => x.Name.Equals("A simple iron sword"));
+            var mace = ItemSeed.FirstOrDefault(x => x.Name.Equals("A simple iron mace"));
 
-            var shirt = ItemSeed.FirstOrDefault(x => x.Name.Equals("A Ragged Shirt"));
             shirt.Equipped = true;
             newPlayer.Inventory.Add(shirt);
             newPlayer.Equipped.Torso = shirt;
-            newPlayer.Skills = playerClass?.Skills ?? new List<SkillList>();
 
-            var trousers = ItemSeed.FirstOrDefault(x => x.Name.Equals("A pair of Baggy Trousers"));
+            sleeves.Equipped = true;
+            newPlayer.Inventory.Add(sleeves);
+            newPlayer.Equipped.Arms = sleeves;
+
             trousers.Equipped = true;
             newPlayer.Inventory.Add(trousers);
             newPlayer.Equipped.Legs = trousers;
-            newPlayer.Skills = playerClass?.Skills ?? new List<SkillList>();
 
-            var boots = ItemSeed.FirstOrDefault(x => x.Name.Equals("A pair of Worn Leather Boots"));
             boots.Equipped = true;
             newPlayer.Inventory.Add(boots);
             newPlayer.Equipped.Feet = boots;
+
+            if (newPlayer.ClassName.Equals("Mage"))
+            {
+                newPlayer.Inventory.Remove(shirt);
+
+                robe.Equipped = true;
+                newPlayer.Inventory.Add(robe);
+                newPlayer.Equipped.Torso = robe;
+
+                dagger.Equipped = true;
+                newPlayer.Inventory.Add(dagger);
+                newPlayer.Equipped.Wielded = dagger;
+            }
+
+            if (newPlayer.ClassName.Equals("Thief"))
+            {
+                dagger.Equipped = true;
+                newPlayer.Inventory.Add(dagger);
+                newPlayer.Equipped.Wielded = dagger;
+            }
+
+            if (newPlayer.ClassName.Equals("Fighter"))
+            {
+                sword.Equipped = true;
+                newPlayer.Inventory.Add(sword);
+                newPlayer.Equipped.Wielded = sword;
+            }
+
+            if (newPlayer.ClassName.Equals("Cleric"))
+            {
+                mace.Equipped = true;
+                newPlayer.Inventory.Add(mace);
+                newPlayer.Equipped.Wielded = mace;
+            }
+
+
+
+
+
             newPlayer.Skills = playerClass?.Skills ?? new List<SkillList>();
 
       

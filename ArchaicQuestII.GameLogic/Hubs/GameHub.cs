@@ -169,6 +169,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
 
             foreach (var skill in classSkill.Skills)
             {
+                var theSkill = _cache.GetAllSkills().FirstOrDefault(x => x.Name.Equals(skill.SkillName));
                 // skill doesn't exist and should be added
                 if (player.Skills.FirstOrDefault(x =>
                     x.SkillName.Equals(skill.SkillName, StringComparison.CurrentCultureIgnoreCase)) == null)
@@ -179,10 +180,12 @@ namespace ArchaicQuestII.GameLogic.Hubs
                         Proficiency = 1,
                         Level = skill.Level,
                         SkillName = skill.SkillName,
-                        SkillId = skill.SkillId,
-                        IsSpell = _cache.GetSkill(skill.SkillId).Cost.Table[GameLogic.Skill.Enum.Cost.Mana] > 0 ? true : false
+                        SkillId = _cache.GetSkill(skill.SkillId) == null ? theSkill.Id : skill.SkillId,
+                        IsSpell = _cache.GetSkill(skill.SkillId) == null ? theSkill.Cost.Table[GameLogic.Skill.Enum.Cost.Mana] > 0 ? true : false : _cache.GetSkill(skill.SkillId).Cost.Table[GameLogic.Skill.Enum.Cost.Mana] > 0 ? true : false
                     }
                     );
+
+
                 }
             }
 

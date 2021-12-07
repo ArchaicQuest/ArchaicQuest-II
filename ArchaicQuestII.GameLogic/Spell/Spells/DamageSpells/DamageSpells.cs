@@ -19,11 +19,17 @@ namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
 {
     public interface IDamageSpells
     {
+        // Offensive
         int MagicMissile(Player player, Player target, Room room);
-        int CauseLightWounds(Player player, Player target, Room room);
+
+        // Defensive
         void Armor(Player player, Player target, Room room, bool wearOff);
+
+        // Utility
+        int CauseLightWounds(Player player, Player target, Room room);
         void Bless(Player player, Player target, Room room, bool wearOff);
         void CureLightWounds(Player player, Player target, Room room);
+        void Identify(Player player, string fullCommand, Room room);
     }
 
     public class DamageSpells : IDamageSpells
@@ -261,6 +267,54 @@ namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
            
         }
 
+        public void Identify(Player player, string obj, Room room)
+        {
+ 
+            if (string.IsNullOrEmpty(obj))
+            {
+                _writer.WriteLine("Identify what!?", player.ConnectionId);
+                return;
+            }
+            var item = player.Inventory.FirstOrDefault(x => x.Name.Contains(obj, StringComparison.CurrentCultureIgnoreCase));
 
+            if(item == null)
+            {
+                _writer.WriteLine($"You don't have an item starting with '{item}'", player.ConnectionId);
+                return;
+            }
+
+            var sb = new StringBuilder();
+
+       
+            List<string> itemFlags = new List<string>();
+            foreach (Item.Item.ItemFlags itemFlag in Enum.GetValues(typeof(Item.Item.ItemFlags)))
+            {
+                if ((item.ItemFlag & itemFlag) != 0) itemFlags.Add(itemFlag.ToString());
+            }
+
+            sb.Append($"<p>Object '{item.Name}' is type {item.ItemType}, extra flags: {(itemFlags.Any() ? String.Join(",", itemFlags) : "none")}.<br />");
+            sb.Append($"Weight is {item.Weight}, value is {item.Value}, level is {item.Level}.<br />");
+
+            if (item.ItemType == Item.Item.ItemTypes.Armour)
+            {
+                sb.Append($"Armour Type: {item.ArmourType}, Defense {item.ArmourRating.Armour} and {item.ArmourRating.Magic} vs magic.<br />");
+            }
+
+            if (item.ItemType == Item.Item.ItemTypes.Weapon)
+            {
+                sb.Append($"Weapon Type: {item.WeaponType}, Damage is {item.Damage.Minimum}-{item.Damage.Maximum} (average {item.Damage.Minimum + item.Damage.Maximum / 2}).<br />");
+                sb.Append($"Attack type: {item.AttackType}</br>");
+                sb.Append($"Damage type: {item.DamageType}</br>");
+            }
+
+            // TODO: container? Affects? what else? 
+            // show crafted by
+            // show enchanted by
+
+            sb.Append("</p>");
+
+            _writer.WriteLine(sb.ToString(), player.ConnectionId);
+
+        }
     }
 }

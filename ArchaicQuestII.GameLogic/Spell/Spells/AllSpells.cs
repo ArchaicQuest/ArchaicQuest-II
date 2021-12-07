@@ -174,5 +174,36 @@ namespace ArchaicQuestII.GameLogic.Spell
 
 
         }
+
+        public Skill.Model.Skill Identify()
+        {
+            var skill = new Skill.Model.Skill()
+            {
+                Name = "Identify",
+                Description =
+                    "Tells you the stats of a particular item that identify is cast upon.",
+                ApplyLevelCheck = true,
+                SavingThrow = new SavingThrow(),
+                Rounds = 1,
+                Cost = new SkillCost()
+                {
+                    Table = new Dictionary<Cost, int>()
+                    {
+                        {Cost.Mana, 25}
+                    }
+                },
+                Type = SkillType.Passive,
+                StartsCombat = false,
+                ValidTargets = ValidTargets.TargetObjectInventory | ValidTargets.TargetObjectEquipped,
+                Damage = new Dice()
+                {
+                },
+                UsableFromStatus = CharacterStatus.Status.Standing
+            };
+
+            return skill;
+
+
+        }
     }
 }

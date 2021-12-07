@@ -35,6 +35,9 @@ namespace ArchaicQuestII.GameLogic.Spell
                 case "bless":
                     _damageSpells.Bless(player, target, room, wearOff);
                     break;
+                case "identify":
+                    _damageSpells.Identify(player, obj, room);
+                    break;
             }
         }
     }

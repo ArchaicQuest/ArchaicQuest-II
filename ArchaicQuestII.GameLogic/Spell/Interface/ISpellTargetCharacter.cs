@@ -12,5 +12,6 @@ namespace ArchaicQuestII.GameLogic.Spell.Interface
         public Player GetTarget(string target, Room room);
         public Player CheckTarget(Skill.Model.Skill spell, string target, Room room, Player player);
         public Player ReturnTarget(Skill.Model.Skill spell, string target, Room room, Player player);
+        public Item.Item ReturnTargetItem(Skill.Model.Skill spell, string target, Room room, Player player);
     }
 }

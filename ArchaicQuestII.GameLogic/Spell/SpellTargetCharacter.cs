@@ -109,9 +109,12 @@ namespace ArchaicQuestII.GameLogic.Spell
                 return CheckTarget(spell, target, room, player);
             }
 
+            return player;
+        }
 
-            // casting spell on PC/NPC in the world
-            // example spells, gate, summon, portal
+        public Item.Item ReturnTargetItem(Skill.Model.Skill spell, string target, Room room, Player player)
+        {
+
             if ((spell.ValidTargets & ValidTargets.TargetObjectInventory) != 0 || (spell.ValidTargets & ValidTargets.TargetObjectEquipped) != 0)
             {
                 //find victim from player cache instead
@@ -125,11 +128,11 @@ namespace ArchaicQuestII.GameLogic.Spell
                 }
 
 
-                //  return item;
+                 return item;
             }
 
 
-            return player;
+            return null;
         }
     }
 }

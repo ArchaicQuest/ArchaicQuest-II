@@ -342,6 +342,8 @@ namespace ArchaicQuestII.GameLogic.Tests
             Assert.True(_spell.SpellAffectsCharacter(spell));
         }
 
+      
+
 
         [Fact]
         public void message_for_cast_on_self()

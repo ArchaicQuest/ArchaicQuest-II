@@ -439,7 +439,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
             if (target.Equals("sit", StringComparison.CurrentCultureIgnoreCase))
             {
 
-                SetCharacterStatus(player, "is sitting here.", CharacterStatus.Status.Sitting);
+                SetCharacterStatus(player, "is sitting here", CharacterStatus.Status.Sitting);
                 foreach (var pc in room.Players)
                 {
 
@@ -466,7 +466,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
                     return;
                 }
 
-                SetCharacterStatus(player, $"is sitting down on {obj.Name.ToLower()}", CharacterStatus.Status.Resting);
+                SetCharacterStatus(player, $"is sitting down on {obj.Name.ToLower()}", CharacterStatus.Status.Sitting);
                 foreach (var pc in room.Players)
                 {
 

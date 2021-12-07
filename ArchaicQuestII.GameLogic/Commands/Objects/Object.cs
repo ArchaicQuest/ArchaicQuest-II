@@ -853,6 +853,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
             target.Inventory.Add(item);
             _writer.WriteLine($"<p>{player.Name} gives you {item.Name.ToLower()}.</p>", target.ConnectionId);
             _updateUi.UpdateInventory(player);
+            _updateUi.UpdateInventory(target);
 
             if (!string.IsNullOrEmpty(target.Events.Give))
             {

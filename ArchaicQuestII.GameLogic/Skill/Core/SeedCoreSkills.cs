@@ -42,6 +42,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
                 new AllSpells().CureWounds(),
                 new AllSpells().Armour(),
                 new AllSpells().Bless(),
+                 new AllSpells().Identify(),
                 skill.Kick(),
                 skill.Elbow(),
                 skill.Lore(),

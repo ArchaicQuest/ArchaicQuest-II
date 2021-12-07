@@ -209,7 +209,7 @@ namespace ArchaicQuestII.GameLogic.Spell
                     {
                         continue;
                     }
-                    _writer.WriteLine($"{origin.Name} closes {Helpers.GetPronoun(origin.Gender)} eyes and utters the words, '{spell.Name}'.", pc.ConnectionId);
+                    _writer.WriteLine($"{origin.Name} closes {Helpers.GetPronoun(origin.Gender)} eyes and utters the words, '{ObsfucateSpellName(spell.Name)}'.", pc.ConnectionId);
                 }
 
 
@@ -312,7 +312,7 @@ namespace ArchaicQuestII.GameLogic.Spell
                 //saving throw
                 if (spell.Type == SkillType.Affect)
                 {
-                   
+
 
                     var savingThrow = target.Attributes.Attribute[EffectLocation.Intelligence] / 2;
 
@@ -323,7 +323,7 @@ namespace ArchaicQuestII.GameLogic.Spell
                         //save
                         // half spell affect duration
 
-                      
+
                         if (rollForSave == 1)
                         {
                             // fail
@@ -338,11 +338,11 @@ namespace ArchaicQuestII.GameLogic.Spell
 
 
                 }
- 
-               
+
+
                 ReciteSpellCharacter(origin, target, spell, room);
 
-             
+
 
                 //deduct mana
                 origin.Attributes.Attribute[EffectLocation.Mana] -= spell.Cost.Table[Cost.Mana] == 0 ? 5 : spell.Cost.Table[Cost.Mana];
@@ -350,16 +350,6 @@ namespace ArchaicQuestII.GameLogic.Spell
 
 
 
-                // spell lag
-                // add lag property to player
-                // lag == spell round
-                // stops spell/skill spam
-                // applies after spell is cast
-                // is it needed?
-
-                // hit / miss messages
-
-                //  _writer.WriteLine(spell.SkillStart.ToPlayer);
 
                 if (SpellSuccess(origin, target, spell))
                 {
@@ -406,22 +396,22 @@ namespace ArchaicQuestII.GameLogic.Spell
                     };
 
 
- 
+
 
                     if (string.IsNullOrEmpty(spell.Formula) && spell.Type == SkillType.Damage)
                     {
                         //do this for cast cure
-                         _spellList.CastSpell(spell.Name, "", target, "", origin, room, false);
+                        _spellList.CastSpell(spell.Name, "", target, "", origin, room, false);
 
                     }
 
-            
-                 
+
+
 
                     if (spell.Type != SkillType.Damage)
                     {
 
-                     _spellList.CastSpell(spell.Name, "", target, "", origin, room, false);
+                        _spellList.CastSpell(spell.Name, "", target, "", origin, room, false);
                     }
                 }
                 else
@@ -455,6 +445,61 @@ namespace ArchaicQuestII.GameLogic.Spell
                         origin.ConnectionId);
                 }
 
+            } 
+            else if ((spell.ValidTargets & ValidTargets.TargetObjectInventory) != 0 || (spell.ValidTargets & ValidTargets.TargetObjectEquipped) != 0)
+            {
+                //Item.Item target = null;
+                //target = _spellTargetCharacter.ReturnTargetItem(spell, targetName, room, origin);
+
+                //if (target == null)
+                //{
+                //    return;
+                //}
+                var spellSkill = origin.Skills.FirstOrDefault(x => x.SkillId.Equals(spell.Id));
+
+
+                ReciteSpellCharacter(origin, origin, spell, room);
+
+                //deduct mana
+                origin.Attributes.Attribute[EffectLocation.Mana] -= spell.Cost.Table[Cost.Mana] == 0 ? 5 : spell.Cost.Table[Cost.Mana];
+                _updateClientUi.UpdateMana(origin);
+
+
+                if (SpellSuccess(origin, null, spell))
+                {
+                    _spellList.CastSpell(spell.Name, targetName, null, "", origin, room, false);
+                }
+                else
+                {
+                    var skill = origin.Skills.FirstOrDefault(x => x.SkillId.Equals(spell.Id));
+
+                    if (skill == null)
+                    {
+                        return;
+                    }
+
+                    if (skill.Proficiency == 95)
+                    {
+                        return;
+                    }
+
+
+                    var increase = new Dice().Roll(1, 1, 3);
+
+                    skill.Proficiency += increase;
+
+                    origin.Experience += 100;
+                    origin.ExperienceToNextLevel -= 100;
+
+                    _updateClientUi.UpdateExp(origin);
+
+                    _writer.WriteLine(
+                        $"<p class='improve'>You learn from your mistakes and gain 100 experience points.</p>",
+                        origin.ConnectionId);
+                    _writer.WriteLine(
+                        $"<p class='improve'>Your {skill.SkillName} skill increases by {increase}%.</p>",
+                        origin.ConnectionId);
+                }
             }
             else
             {

@@ -673,7 +673,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
         public string DisplayPlayers(Room room, Player player)
         {
             var players = string.Empty;
-            var isNightTime = !_time.IsNightTime();
+            var isNightTime = RoomIsDark(room, player);
             var pcName = string.Empty;
 
             foreach (var pc in room.Players)
@@ -698,7 +698,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 {
                     pcName += $", is riding {pc.Mounted.Name}";
                 }
-                else
+                else if (string.IsNullOrEmpty(pc.LongName))
                 {
                     pcName += " is here";
                 }
