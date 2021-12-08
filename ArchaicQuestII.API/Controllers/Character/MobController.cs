@@ -74,7 +74,8 @@ namespace ArchaicQuestII.Controllers
                 Roam = mob.Roam,
                 Shopkeeper = mob.Shopkeeper,
                 Trainer = mob.Trainer,
-                Mounted = mob.Mounted
+                Mounted = mob.Mounted,
+                SpellList = mob.SpellList,
             };
 
 

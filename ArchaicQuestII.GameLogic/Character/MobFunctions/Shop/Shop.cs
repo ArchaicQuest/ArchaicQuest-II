@@ -22,6 +22,21 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
             _passiveSkills = passiveSkills;
         }
 
+ //       The cleric of Siccara says 'I offer the following spells:'
+ // light: cure light wounds      10 gold
+ // serious: cure serious wounds  15 gold
+ // critic: cure critical wounds  25 gold
+ // heal: healing spell           50 gold
+ // blind: cure blindness         20 gold
+ // disease: cure disease         15 gold
+ // poison:  cure poison          25 gold
+ // uncurse: remove curse         50 gold
+ // refresh: restore movement      5 gold
+ // mana:  restore mana           10 gold
+ // cancel : cancellation spell   40 gold
+ //Type heal<type> to be healed.
+
+
         public void DisplayInventory(Player mob, Player player)
         {
 
@@ -62,6 +77,18 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
             if (shopKeeper == null)
             {
                 _writer.WriteLine("<p>There is no one selling here.</p>", player.ConnectionId);
+                return;
+            }
+
+            if(!shopKeeper.Inventory.Any())
+            {
+                if (shopKeeper.SpellList.Any())
+                {
+                    _writer.WriteLine("<p>They have nothing for sale but do offer spells. Try 'heal'.</p>", player.ConnectionId);
+                    return;
+                }
+
+                    _writer.WriteLine("<p>They have nothing for sale.</p>", player.ConnectionId);
                 return;
             }
 

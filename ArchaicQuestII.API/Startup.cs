@@ -63,6 +63,7 @@ using Damage = ArchaicQuestII.GameLogic.Core.Damage;
  
 using Object = ArchaicQuestII.GameLogic.Commands.Objects.Object;
 using SkillList = ArchaicQuestII.GameLogic.Character.Class.SkillList;
+using ArchaicQuestII.GameLogic.Character.MobFunctions.Healer;
 
 namespace ArchaicQuestII.API
 {
@@ -135,6 +136,7 @@ namespace ArchaicQuestII.API
             services.AddSingleton<ICore, GameLogic.Core.Core>();
             services.AddSingleton<IQuestLog, QuestLog>();
             services.AddSingleton<IMobFunctions, Shop>();
+            services.AddSingleton<IHealer, Healer>();
             services.AddSingleton<IHelp, HelpFile>();
             services.AddSingleton<ICrafting, Crafting>();
             services.AddSingleton<ICooking, Cooking>();

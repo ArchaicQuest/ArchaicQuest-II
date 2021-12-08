@@ -23,6 +23,7 @@ using ArchaicQuestII.GameLogic.Socials;
 using ArchaicQuestII.GameLogic.Spell.Interface;
 using MoonSharp.Interpreter;
 using System.Threading.Tasks;
+using ArchaicQuestII.GameLogic.Character.MobFunctions.Healer;
 
 namespace ArchaicQuestII.GameLogic.Commands
 {
@@ -51,6 +52,8 @@ namespace ArchaicQuestII.GameLogic.Commands
         private readonly ICooking _cooking;
         private readonly IUtilSkills _utilSkills;
         private readonly IPassiveSkills _passiveSkills;
+        private readonly IHealer _healer;
+
 
         public Commands(
             IMovement movement,
@@ -74,7 +77,8 @@ namespace ArchaicQuestII.GameLogic.Commands
             ICrafting crafting,
             ICooking cooking,
             IUtilSkills utilSkills,
-                 IPassiveSkills passiveSkills
+                 IPassiveSkills passiveSkills,
+                 IHealer healer
             )
         {
             _movement = movement;
@@ -99,6 +103,7 @@ namespace ArchaicQuestII.GameLogic.Commands
             _cooking = cooking;
             _utilSkills = utilSkills;
             _passiveSkills = passiveSkills;
+            _healer = healer;
         }
  
         public void CommandList(string key, string obj, string target, string fullCommand, Player player, Room room)
@@ -325,6 +330,9 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "inspect":
                 case "ins":
                     _mobFunctions.InspectItem(obj, room, player);
+                    break;
+                case "heal":
+                    _healer.List(room, player, obj);
                     break;
                 case "help":
                     _help.DisplayHelpFile(obj, player);

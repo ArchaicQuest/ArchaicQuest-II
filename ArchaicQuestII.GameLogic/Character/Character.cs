@@ -60,7 +60,16 @@ namespace ArchaicQuestII.GameLogic.Character
         public bool IsMount { get; set; }
     }
 
-  public class Character
+    /// <summary>
+    /// Spells for mob to cast upon user
+    /// </summary>
+    public class MobSpellList
+    {
+        public string Name { get; set; }
+        public int Cost { get; set; }
+    }
+
+    public class Character
   {
       /// <summary>
       /// Assigned when player logs in.
@@ -174,5 +183,6 @@ namespace ArchaicQuestII.GameLogic.Character
         public int Lag { get; set; } = 0;
         public Mount Mounted { get; set; } = new Mount();
         public List<Player> Pets { get; set; } = new List<Player>(); //maybe just ID will suffice?
+        public List<MobSpellList> SpellList { get; set; } = new List<MobSpellList>();
     }
 }
