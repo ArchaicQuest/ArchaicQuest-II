@@ -255,12 +255,29 @@ namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
                 Miss = new Messages()
             };
 
-         var hasAffcted = _skillManager.AffectPlayerAttributes("Cure light wounds", EffectLocation.Hitpoints, value, player, target, room, skillMessage.NoEffect.ToPlayer);
+            var skillMessageNoEffect = new SkillMessage()
+            {
+                NoEffect = new Messages(),
+                Hit = new Messages()
+                {
+                    ToPlayer = "#target# is at full health.",
+                    ToTarget = "You are at full health.",
+                    ToRoom = "#target# is at full health."
+                },
+                Death = new Messages(),
+                Miss = new Messages()
+            };
+
+            var hasAffcted = _skillManager.AffectPlayerAttributes("Cure light wounds", EffectLocation.Hitpoints, value, player, target, room, skillMessage.NoEffect.ToPlayer);
 
          if (hasAffcted)
          {
              _skillManager.EmoteAction(player, target, room, skillMessage);
              _skillManager.UpdateClientUI(target);
+         } else
+            {
+                _skillManager.EmoteAction(player, target, room, skillMessageNoEffect);
+                _skillManager.UpdateClientUI(target);
             }
 
          _skillManager.UpdateClientUI(player);

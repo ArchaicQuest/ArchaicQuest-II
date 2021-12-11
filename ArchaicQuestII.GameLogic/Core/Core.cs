@@ -13,6 +13,7 @@ using ArchaicQuestII.GameLogic.Hubs;
 using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.World.Area;
 using ArchaicQuestII.GameLogic.World.Room;
+using Markdig;
 using Microsoft.AspNetCore.SignalR;
 
 namespace ArchaicQuestII.GameLogic.Core
@@ -907,6 +908,46 @@ namespace ArchaicQuestII.GameLogic.Core
             }
 
             _writeToClient.WriteLine($"Invalid Event state", player.ConnectionId);
+        }
+
+        public void Read(Player player, string book, string pageNum)
+        {
+           if(book == "read")
+            {
+                _writeToClient.WriteLine("Read what?", player.ConnectionId);
+                return;
+            }
+
+            var nthTarget = Helpers.findNth(book);
+            var item = Helpers.findObjectInInventory(nthTarget, player);
+
+            if (item == null)
+            {
+                _writeToClient.WriteLine("You can't find that.", player.ConnectionId);
+                return;
+            }
+
+            if (item.ItemType != Item.Item.ItemTypes.Book)
+            {
+                _writeToClient.WriteLine($"{item.Name} is not a book.", player.ConnectionId);
+                return;
+            }
+
+            if (String.IsNullOrEmpty(pageNum))
+            {
+                _writeToClient.WriteLine($"{item.Name} <br /> {item.Description.Look}<br /> To read the pages enter: 'Read {book} 1' to view page 1.", player.ConnectionId);
+                return;
+            }
+            int.TryParse(pageNum, out var n);
+            n--;
+            if (n == item.Book.Pages.Count)
+            {
+                _writeToClient.WriteLine($"That exeeds the page count of {item.Book.Pages.Count}", player.ConnectionId);
+                return;
+            }
+
+            var result = Markdown.ToHtml(item.Book.Pages[n]);
+            _writeToClient.WriteLine($"{result}", player.ConnectionId);
         }
     }
 }

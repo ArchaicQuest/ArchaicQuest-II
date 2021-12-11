@@ -48,6 +48,12 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public static Item.Item findObjectInInventory(Tuple<int, string> keyword, Player player)
         {
+            if(keyword.Item2.Equals("book"))
+            {
+                return keyword.Item1 == -1 ? player.Inventory.FirstOrDefault(x => x.ItemType == Item.Item.ItemTypes.Book) :
+                player.Inventory.FindAll(x => x.ItemType == Item.Item.ItemTypes.Book).Skip(keyword.Item1 - 1).FirstOrDefault();
+            }
+
             return keyword.Item1 == -1 ? player.Inventory.FirstOrDefault(x => x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase)) :
                 player.Inventory.FindAll(x => x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase)).Skip(keyword.Item1 - 1).FirstOrDefault();
         }
