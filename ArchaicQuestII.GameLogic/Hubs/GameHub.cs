@@ -16,6 +16,8 @@ using ArchaicQuestII.GameLogic.Spell;
 using ArchaicQuestII.GameLogic.World.Room;
 using Microsoft.Extensions.Logging;
 using MoonSharp.Interpreter;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace ArchaicQuestII.GameLogic.Hubs
 {
@@ -83,6 +85,63 @@ namespace ArchaicQuestII.GameLogic.Hubs
             }
             player.Buffer.Enqueue(message);
           
+        }
+
+        /// <summary>
+        /// get content from client
+        /// </summary>
+        /// <returns></returns>
+        public void CharContent(string message, string connectionId)
+        {
+
+            var player = _cache.GetPlayer(connectionId);
+
+            if (player == null)
+            {
+                _writeToClient.WriteLine("<p>Refresh the page to reconnect!</p>", player.ConnectionId);
+                return;
+            }
+
+            JObject json = JsonConvert.DeserializeObject<dynamic>(message);
+
+            var contentType = json.GetValue("type")?.ToString();
+
+          if(contentType == "book") {
+
+                var book = new WriteBook()
+                {
+                    Description = json.GetValue("desc")?.ToString(),
+                    PageNumber = int.Parse(json.GetValue("pageNumber")?.ToString()),
+                    Title = json.GetValue("name")?.ToString()
+                };
+
+                var getBook = player.Inventory.FirstOrDefault(x => x.Name.Equals(book.Title));
+
+                if(getBook == null)
+                {
+                    _writeToClient.WriteLine("<p>There's a puff of smoke and all your work is undone. Seek an Immortal</p>", player.ConnectionId);
+                    return;
+                }
+
+                getBook.Book.Pages[book.PageNumber] = book.Description;
+                _writeToClient.WriteLine("You have successfully written in your book.", player.ConnectionId);
+
+            }
+
+            if (contentType == "description")
+            {
+
+                player.Description = json.GetValue("desc")?.ToString();
+                _writeToClient.WriteLine("You have successfully updated your description.", player.ConnectionId);
+                _updateClientUi.UpdateScore(player);
+
+            }
+
+
+
+
+
+
         }
 
         /// <summary>

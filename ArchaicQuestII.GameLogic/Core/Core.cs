@@ -939,10 +939,27 @@ namespace ArchaicQuestII.GameLogic.Core
                 return;
             }
             int.TryParse(pageNum, out var n);
-            n--;
+            if (n != 0)
+            {
+                n--;
+            }
             if (n == item.Book.Pages.Count)
             {
                 _writeToClient.WriteLine($"That exeeds the page count of {item.Book.Pages.Count}", player.ConnectionId);
+                return;
+            }
+
+            if (n >= item.Book.PageCount)
+            {
+
+                _writeToClient.WriteLine($"{item.Name} does not contain that many pages.", player.ConnectionId);
+
+                return;
+            }
+
+            if (string.IsNullOrEmpty(item.Book.Pages[n] ))
+            {
+                _writeToClient.WriteLine($"This page is blank.", player.ConnectionId);
                 return;
             }
 
