@@ -41,6 +41,8 @@ namespace ArchaicQuestII.GameLogic.Core
        void GetMap(Player player, string rooms);
        void UpdateQuest(Player player);
 
+        void UpdateContentPopUp(Player player, WriteBook bookContent);
+
         void UpdateTime(Player player);
     }
 }

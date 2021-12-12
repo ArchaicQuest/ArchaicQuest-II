@@ -949,5 +949,67 @@ namespace ArchaicQuestII.GameLogic.Core
             var result = Markdown.ToHtml(item.Book.Pages[n]);
             _writeToClient.WriteLine($"{result}", player.ConnectionId);
         }
+
+        public void Write(Player player, string book, string pageNum)
+        {
+            if (book == "write")
+            {
+                _writeToClient.WriteLine("Write in what?", player.ConnectionId);
+                return;
+            }
+
+            var nthTarget = Helpers.findNth(book);
+            var item = Helpers.findObjectInInventory(nthTarget, player);
+
+            if (item == null)
+            {
+                _writeToClient.WriteLine("You can't find that.", player.ConnectionId);
+                return;
+            }
+
+            if (item.ItemType != Item.Item.ItemTypes.Book)
+            {
+                _writeToClient.WriteLine($"{item.Name} is not a book.", player.ConnectionId);
+                return;
+            }
+
+            int.TryParse(pageNum, out var n);
+
+            if (n != 0)
+            {
+                n--;
+
+            }
+
+            if(n >= item.Book.PageCount)
+            {
+
+                _writeToClient.WriteLine($"{item.Name} does not contain that many pages.", player.ConnectionId);
+
+                return;
+            }
+
+            if (item.Book.PageCount > item.Book.Pages.Count)
+            {
+                var diff = item.Book.PageCount - item.Book.Pages.Count;
+
+                for (int i = 0; i < diff; i++)
+                {
+                    item.Book.Pages.Add(String.Empty);
+                }
+            }
+
+            var bookContent = new WriteBook()
+            {
+                Title = item.Name,
+                Description =  item.Book.Pages[n],
+                PageNumber = n
+            };
+
+            _clientUi.UpdateContentPopUp(player, bookContent);
+
+            _writeToClient.WriteLine($"You begin to writing in your book.", player.ConnectionId);
+
+        }
     }
 }
