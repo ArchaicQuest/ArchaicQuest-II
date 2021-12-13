@@ -19,9 +19,9 @@ namespace ArchaicQuestII.GameLogic.Core
 
         void Practice(Player player, Room room, string skillName);
 
-        void Read(Player player, string book, string pageNum);
+        void Read(Player player, string book, string pageNum, string fullCommand);
 
-        void Write(Player player, string book, string pageNum);
+        void Write(Player player, string book, string pageNum, string fullCommand);
         bool SkillCheckSuccesful(SkillList skill);
 
         void GainSkillProficiency(SkillList foundSkill, Player player);

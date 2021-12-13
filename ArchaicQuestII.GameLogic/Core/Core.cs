@@ -910,8 +910,12 @@ namespace ArchaicQuestII.GameLogic.Core
             _writeToClient.WriteLine($"Invalid Event state", player.ConnectionId);
         }
 
-        public void Read(Player player, string book, string pageNum)
+        public void Read(Player player, string book, string pageNum, string fullCommand)
         {
+
+            var splitCommand = fullCommand.Split(" ");
+            pageNum = splitCommand.Length == 4 ? splitCommand[3] : pageNum;
+            // Read Book Page 1
            if(book == "read")
             {
                 _writeToClient.WriteLine("Read what?", player.ConnectionId);
@@ -943,6 +947,11 @@ namespace ArchaicQuestII.GameLogic.Core
             {
                 n--;
             }
+
+            if(n < 0)
+            {
+                n = 0;
+            }
             if (n == item.Book.Pages.Count)
             {
                 _writeToClient.WriteLine($"That exeeds the page count of {item.Book.Pages.Count}", player.ConnectionId);
@@ -967,8 +976,11 @@ namespace ArchaicQuestII.GameLogic.Core
             _writeToClient.WriteLine($"{result}", player.ConnectionId);
         }
 
-        public void Write(Player player, string book, string pageNum)
+        public void Write(Player player, string book, string pageNum, string fullCommand)
         {
+            var splitCommand = fullCommand.Split(" ");
+            pageNum = splitCommand.Length == 4 ? splitCommand[3] : pageNum;
+
             if (book == "write")
             {
                 _writeToClient.WriteLine("Write in what?", player.ConnectionId);
@@ -998,7 +1010,12 @@ namespace ArchaicQuestII.GameLogic.Core
 
             }
 
-            if(n >= item.Book.PageCount)
+            if (n < 0)
+            {
+                n = 0;
+            }
+
+            if (n >= item.Book.PageCount)
             {
 
                 _writeToClient.WriteLine($"{item.Name} does not contain that many pages.", player.ConnectionId);

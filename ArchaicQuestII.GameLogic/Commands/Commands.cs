@@ -376,10 +376,10 @@ namespace ArchaicQuestII.GameLogic.Commands
                     _core.Affects(player);
                     break;
                 case "read":
-                    _core.Read(player, obj, target);
+                    _core.Read(player, obj, target, fullCommand);
                     break;
                 case "write":
-                    _core.Write(player, obj, target);
+                    _core.Write(player, obj, target, fullCommand);
                     break;
                 case "practice":
                 case "prac":

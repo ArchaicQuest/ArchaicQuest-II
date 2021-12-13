@@ -156,7 +156,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
 
             if (!string.IsNullOrEmpty(character.Mounted.Name))
             {
-                var mountedMob = room.Mobs.FirstOrDefault(x => x.Mounted.MountedBy.Equals(character.Name));
+                var mountedMob = room.Mobs.FirstOrDefault(x => !string.IsNullOrEmpty(x.Mounted.MountedBy) && x.Mounted.MountedBy.Equals(character.Name));
 
                 if (mountedMob != null)
                 {
