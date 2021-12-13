@@ -979,7 +979,10 @@ namespace ArchaicQuestII.GameLogic.Core
         public void Write(Player player, string book, string pageNum, string fullCommand)
         {
             var splitCommand = fullCommand.Split(" ");
+         
             pageNum = splitCommand.Length == 4 ? splitCommand[3] : pageNum;
+
+            var isTitle = splitCommand[2] == "title" ? true : false;
 
             if (book == "write")
             {
@@ -999,6 +1002,23 @@ namespace ArchaicQuestII.GameLogic.Core
             if (item.ItemType != Item.Item.ItemTypes.Book)
             {
                 _writeToClient.WriteLine($"{item.Name} is not a book.", player.ConnectionId);
+                return;
+            }
+
+            if(isTitle)
+            {
+                // in this context pageNum would be the title
+                // yes this is dumb, future Liam will curse at
+                // this no doubt -_-
+
+                var title = fullCommand.Remove(0, Helpers.GetNthIndex(fullCommand, ' ', 3));
+
+
+                _writeToClient.WriteLine($"{item.Name} has now been titled {title}.", player.ConnectionId);
+                item.Name = title;
+
+                _clientUi.UpdateInventory(player);
+
                 return;
             }
 

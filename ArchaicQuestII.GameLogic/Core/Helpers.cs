@@ -356,6 +356,22 @@ namespace ArchaicQuestII.GameLogic.Core
             return (int)percentage * value / 100;
         }
 
+        public static int GetNthIndex(string s, char t, int n)
+        {
+            int count = 0;
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (s[i] == t)
+                {
+                    count++;
+                    if (count == n)
+                    {
+                        return i;
+                    }
+                }
+            }
+            return -1;
+        }
 
 
         public static int GetWeaponSkill(Item.Item weapon, Player player)

@@ -305,6 +305,11 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
 
             var itemSlot = itemToWear.Slot;
 
+            if(itemToWear.ItemType != Item.Item.ItemTypes.Armour && itemToWear.ItemType != Item.Item.ItemTypes.Weapon && itemToWear.ItemType != Item.Item.ItemTypes.Light)
+            {
+                itemSlot = Equipment.EqSlot.Held;
+            }
+
             if (type == "dual")
             {
                 itemSlot = Equipment.EqSlot.Secondary;
