@@ -769,7 +769,7 @@ namespace ArchaicQuestII.GameLogic.Combat
             }
             else
             {
-                totalDamage *= levelDif;
+                totalDamage += levelDif;
             }
 
             if (armourReduction > 0)

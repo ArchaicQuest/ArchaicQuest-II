@@ -34,7 +34,9 @@ namespace ArchaicQuestII.GameLogic.Item
             SpinningWheel,
             Anvil,
             MortarAndPestle,
-            Cooked
+            Cooked,
+            Ink,
+            Pen
           
         }
 

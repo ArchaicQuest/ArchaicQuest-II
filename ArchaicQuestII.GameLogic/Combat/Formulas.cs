@@ -147,7 +147,7 @@ namespace ArchaicQuestII.GameLogic.Combat
             }
 
 
-            int totalDamage = (int)(damage * strengthMod * criticalHit * levelMod);
+            int totalDamage = (int)((damage * strengthMod) + levelMod) * criticalHit;
 
             if (armourReduction > 0)
             {

@@ -595,9 +595,12 @@ namespace ArchaicQuestII.GameLogic.World.Room
            //    Affects mana by 60. 
            //    Affects hit roll by 4. 
         
-           sb.Append($"It is a level {item.Level} {item.ItemType}, weight {item.Weight}.<br/>Locations it can be worn: {item.Slot}.<br /> This {item.ItemType} has a gold value of {item.Value}.<br />");
+           sb.Append($"It is a level {item.Level} {item.ItemType}, weight {item.Weight}.<br/>Locations it can be worn: {(item.ItemType == Item.Item.ItemTypes.Light || item.ItemType == Item.Item.ItemTypes.Weapon || item.ItemType == Item.Item.ItemTypes.Armour ? item.Slot : Character.Equipment.Equipment.EqSlot.Held)}.<br /> This {item.ItemType} has a gold value of {item.Value}.<br />");
 
-           sb.Append($"Affects armour by {item.ArmourRating.Armour} / {item.ArmourRating.Magic}");
+            if (item.ArmourRating.Armour != 0 || item.ArmourRating.Magic != 0)
+            {
+                sb.Append($"Affects armour by {item.ArmourRating.Armour} / {item.ArmourRating.Magic}");
+            }
 
            if (item.Modifier.Strength != 0)
            {
