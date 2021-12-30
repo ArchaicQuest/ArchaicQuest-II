@@ -946,7 +946,7 @@ namespace ArchaicQuestII.GameLogic.Combat
             else if (diff <= 10)
                 _writer.WriteLine("Are you mad!?", player.ConnectionId);
             else if (diff <= 100)
-                _writer.WriteLine("You ARE mad!", player.ConnectionId);
+                _writer.WriteLine("You ARE mad!? Death stands beside you ready to take your soul.", player.ConnectionId);
         }
 
         /// <summary>

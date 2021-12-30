@@ -927,6 +927,11 @@ namespace ArchaicQuestII.GameLogic.Core
 
             if (item == null)
             {
+                if(book.Contains("sign")  || book.Contains("note") || book.Contains("letter")  || book.Contains("board"))
+                {
+                    _writeToClient.WriteLine("To read signs or notes just look at them instead.", player.ConnectionId);
+                    return;
+                }
                 _writeToClient.WriteLine("You can't find that.", player.ConnectionId);
                 return;
             }
