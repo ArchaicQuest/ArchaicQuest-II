@@ -281,12 +281,31 @@ namespace ArchaicQuestII.GameLogic.Core
 
                         var hasSecondAttack = player.Skills.FirstOrDefault(x =>
                             x.SkillName.Equals("Second Attack", StringComparison.CurrentCultureIgnoreCase));
+                        if (hasSecondAttack != null)
+                        {
+                            hasSecondAttack = player.Level >= hasSecondAttack.Level ? hasSecondAttack : null;
+                        }
+                      
                         var hasThirdAttack = player.Skills.FirstOrDefault(x =>
                             x.SkillName.Equals("Third Attack", StringComparison.CurrentCultureIgnoreCase));
+                        if (hasThirdAttack != null)
+                        {
+                            hasThirdAttack = player.Level >= hasThirdAttack.Level ? hasThirdAttack : null;
+                        }
+
                         var hasFouthAttack = player.Skills.FirstOrDefault(x =>
                             x.SkillName.Equals("Fourth Attack", StringComparison.CurrentCultureIgnoreCase));
+                        if (hasFouthAttack != null)
+                        {
+                            hasFouthAttack = player.Level >= hasFouthAttack.Level ? hasFouthAttack : null;
+                        }
                         var hasFithAttack = player.Skills.FirstOrDefault(x =>
                             x.SkillName.Equals("Fith Attack", StringComparison.CurrentCultureIgnoreCase));
+
+                        if (hasFithAttack != null)
+                        {
+                            hasFithAttack = player.Level >= hasFithAttack.Level ? hasFithAttack : null;
+                        }
 
                         if (hasSecondAttack != null)
                         {

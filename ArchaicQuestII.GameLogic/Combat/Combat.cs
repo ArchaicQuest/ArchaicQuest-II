@@ -467,6 +467,7 @@ namespace ArchaicQuestII.GameLogic.Combat
                         player.Skills.FirstOrDefault(x => x.SkillName.Equals("Enhanced Damage"));
 
 
+
                     if (_formulas.IsCriticalHit())
                     {
                         // double damage
@@ -475,7 +476,7 @@ namespace ArchaicQuestII.GameLogic.Combat
 
                     if (hasEnhancedDamage != null)
                     {
-                        if (hasEnhancedDamage.Proficiency >= enhancedDamageChance)
+                        if (hasEnhancedDamage.Proficiency >= enhancedDamageChance && player.Level >= hasEnhancedDamage.Level)
                         {
                             var bonusDam = Helpers.GetPercentage(15, damage);
                             damage += bonusDam;
@@ -805,9 +806,20 @@ namespace ArchaicQuestII.GameLogic.Combat
             if (target.ConnectionId != "mob")
             {
                 Helpers.PostToDiscord($"{target.Name} got killed by {player.Name}!", "event", _cache.GetConfig());
+
+                if (player.ConnectionId != "mob")
+                {
+                    target.PlayerDeaths += 1;
+                    player.PlayerKills += 1;
+                }
+                else
+                {
+                    target.MobDeaths += 1;
+                }
             }
 
             _writer.WriteLine("<p class='dead'>You are dead. R.I.P.</p>", target.ConnectionId);
+           
 
             var targetName = target.Name.ToLower(CultureInfo.CurrentCulture);
             var corpse = new Item.Item()
@@ -842,6 +854,9 @@ namespace ArchaicQuestII.GameLogic.Combat
 
             if (target.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
             {
+                
+                player.MobKills += 1;
+              
                 var randomItem = _randomItem.WeaponDrop(player);
 
                 if (randomItem != null)

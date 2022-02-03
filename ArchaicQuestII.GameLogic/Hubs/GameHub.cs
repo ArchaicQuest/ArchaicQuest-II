@@ -233,16 +233,22 @@ namespace ArchaicQuestII.GameLogic.Hubs
                 if (player.Skills.FirstOrDefault(x =>
                     x.SkillName.Equals(skill.SkillName, StringComparison.CurrentCultureIgnoreCase)) == null)
                 {
-                    player.Skills.Add(
-                    new SkillList()
+
+
+                    var addSkill = new SkillList()
                     {
                         Proficiency = 1,
                         Level = skill.Level,
                         SkillName = skill.SkillName,
                         SkillId = _cache.GetSkill(skill.SkillId) == null ? theSkill.Id : skill.SkillId,
-                        IsSpell = _cache.GetSkill(skill.SkillId) == null ? theSkill.Cost.Table[GameLogic.Skill.Enum.Cost.Mana] > 0 ? true : false : _cache.GetSkill(skill.SkillId).Cost.Table[GameLogic.Skill.Enum.Cost.Mana] > 0 ? true : false
-                    }
-                    );
+                        IsSpell = false
+                    };
+
+                    if(theSkill.Cost.Table.ContainsKey(GameLogic.Skill.Enum.Cost.Mana)) {
+                    skill.IsSpell = _cache.GetSkill(skill.SkillId) == null ? theSkill.Cost.Table[GameLogic.Skill.Enum.Cost.Mana] > 0 ? true : false : _cache.GetSkill(skill.SkillId).Cost.Table[GameLogic.Skill.Enum.Cost.Mana] > 0 ? true : false;
+                    };
+
+                    player.Skills.Add( addSkill );
 
 
                 }
@@ -255,8 +261,11 @@ namespace ArchaicQuestII.GameLogic.Hubs
                 {
                     player.Skills.Remove(player.Skills[i]);
                 }
-                var skill = _cache.GetSkill(player.Skills[i].SkillId);
-                player.Skills[i].IsSpell = skill.Cost.Table.ContainsKey(Skill.Enum.Cost.Mana) && skill.Cost.Table[Skill.Enum.Cost.Mana] > 0 ? true : false;
+
+                var skill = classSkill.Skills.FirstOrDefault(x => x.SkillName.Equals(player.Skills[i].SkillName));
+
+
+                player.Skills[i].Level = skill.Level;
             }
  
 

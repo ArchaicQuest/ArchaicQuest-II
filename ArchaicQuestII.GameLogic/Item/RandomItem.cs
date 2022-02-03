@@ -77,7 +77,7 @@ namespace ArchaicQuestII.GameLogic.Item
 
         public Item WeaponDrop(Player player)
         {
-            var dropChance = 95;
+            var dropChance = 5;
             var roll = _dice.Roll(1, 1, 100);
             var legendary = false;
             if (roll <= dropChance)
