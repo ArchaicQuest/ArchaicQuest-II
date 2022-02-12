@@ -106,16 +106,16 @@ namespace ArchaicQuestII.GameLogic.Combat
                     x.SkillName.Replace(" ", string.Empty)
                         .Equals(Enum.GetName(typeof(Item.Item.WeaponTypes), weapon.WeaponType)));
  
-                damage = _dice.Roll(1, weapon.Damage.Minimum, weapon.Damage.Maximum);
+                damage = _dice.Roll(1, weapon.Damage.Minimum, weapon.Damage.Maximum); 
 
                 if (skill != null)
                 {
-                    var percentageMastered = 100 - skill.Proficiency;
-                    damage = damage - (int)(damage * percentageMastered / 100);
+
+                    damage = (int)(damage * (skill.Proficiency + 1) / 100) + _dice.Roll(1, 1, 3); // 1-3 to stop hand to hand being OP earlier levels if weapon dam is less than 1d6
                 }
                 else
                 {
-                    damage /= 4;
+                    damage /= 2;
                 }
 
             }

@@ -213,7 +213,7 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "skills":
                 case "slist":
                 case "spells":
-                    _skills.ShowSkills(player);
+                    _skills.ShowSkills(player, fullCommand);
                     break;
                 case "/debug":
                     _debug.DebugRoom(room, player);

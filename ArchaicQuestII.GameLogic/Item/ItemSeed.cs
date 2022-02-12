@@ -302,7 +302,7 @@ namespace ArchaicQuestII.GameLogic.Item
                     ItemType = Item.ItemTypes.Weapon,
                     ArmourType = Item.ArmourTypes.Cloth,
                     AttackType = Item.AttackTypes.Stab,
-                    WeaponType = Item.WeaponTypes.Arrows,
+                    WeaponType = Item.WeaponTypes.LongBlades,
                     Gold = 1,
                     Slot = Equipment.EqSlot.Wielded,
                     Level = 1,

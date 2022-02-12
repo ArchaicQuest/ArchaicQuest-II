@@ -51,7 +51,10 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
                     _writeToClient.WriteLine("<p>NO WAY! you are fighting.</p>", character.ConnectionId);
                     return;
                 case CharacterStatus.Status.Resting:
-                    _writeToClient.WriteLine("<p>Nah... You feel too relaxed to do that..</p>", character.ConnectionId);
+                    _writeToClient.WriteLine("<p>Nah... You feel too relaxed to do that.</p>", character.ConnectionId);
+                    return;
+                case CharacterStatus.Status.Sitting:
+                    _writeToClient.WriteLine("<p>You can't do that while sitting.</p>", character.ConnectionId);
                     return;
                 case CharacterStatus.Status.Sleeping:
                     _writeToClient.WriteLine("<p>In your dreams.</p>", character.ConnectionId);
@@ -221,22 +224,29 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
 
         public string MovementAdjective(Player player, bool onEnter, string direction)
         {
-       
-           
+      
          
             var showDirection = string.IsNullOrEmpty(direction) ? "" : $" {direction.ToLower()}";
-            var enter = onEnter ? "walks in from the" : "walks";
-            var moveType = $"{player.Name} {enter}{showDirection}.";
+            var enterMessage = player.EnterEmote;
+            var leaveMessage = player.LeaveEmote;
+            var enter = onEnter ? enterMessage ?? $"{player.Name} walks in from the " : leaveMessage ?? $"{player.Name} walks ";
+            var moveType = $"{enter} {showDirection}.";
+
+
+     
 
             if (!string.IsNullOrEmpty(player.Mounted.Name))
             {
                 enter = onEnter ? "enters from the" : "leaves";
                 moveType = $"{player.Name} {enter}{showDirection} riding upon {player.Mounted.Name}.";
             }
+        
+
+            // A magic broom sweeping the floor [hovers in from the] [west]. 
 
             return moveType;
         }
-
+        
         public void OnPlayerLeaveEvent(Room room, Player character)
         {
             foreach (var mob in room.Mobs)

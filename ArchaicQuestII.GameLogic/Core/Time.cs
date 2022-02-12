@@ -156,8 +156,8 @@ namespace ArchaicQuestII.GameLogic.Core
             {
                 var room = _cache.GetRoom(pc.RoomId);
 
-                //(room.Terrain != Room.TerrainType.Inside && room.Terrain != Room.TerrainType.Underground && 
-                if (!string.IsNullOrEmpty(TickMessage))
+               
+                if (room.Terrain != Room.TerrainType.Inside && room.Terrain != Room.TerrainType.Underground && !string.IsNullOrEmpty(TickMessage))
                 {
                     _writeToClient.WriteLine($"<span class='time-of-day'>{TickMessage}</span>", pc.ConnectionId);
                 }

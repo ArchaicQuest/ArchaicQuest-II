@@ -76,6 +76,8 @@ namespace ArchaicQuestII.Controllers
                 Trainer = mob.Trainer,
                 Mounted = mob.Mounted,
                 SpellList = mob.SpellList,
+                EnterEmote = mob.EnterEmote,
+                LeaveEmote = mob.LeaveEmote
             };
 
 

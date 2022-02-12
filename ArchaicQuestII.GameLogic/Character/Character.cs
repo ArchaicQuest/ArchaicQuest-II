@@ -167,6 +167,8 @@ namespace ArchaicQuestII.GameLogic.Character
         /// for Mob path, e.g n,e,s,w
         /// </summary>
         public string Commands { get; set; }
+        public string EnterEmote { get; set; }
+        public string LeaveEmote { get; set; }
         /// <summary>
         /// moves around randomly
         /// </summary>

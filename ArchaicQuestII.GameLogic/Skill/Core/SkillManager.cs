@@ -60,6 +60,12 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
             return setTarget;
         }
 
+        public bool HasSkill(Player player, string skill)
+        {
+            return player.Skills.FirstOrDefault(x => x.SkillName.Equals(skill, StringComparison.CurrentCultureIgnoreCase) && x.Level <= player.Level) != null;
+
+        }
+
         public Player findTarget(Player player, string target, Room room, bool murder)
         {
             return _fight.FindTarget(player, target, room, murder);

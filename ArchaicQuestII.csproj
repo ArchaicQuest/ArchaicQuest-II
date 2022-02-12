@@ -10,6 +10,7 @@
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
         <PackageProjectUrl>http://www.archaicquest.com</PackageProjectUrl>
         <UserSecretsId>b3d5c58c-3cfa-450e-9af4-68e746d31d57</UserSecretsId>
+        
     </PropertyGroup>
 
     <ItemGroup>
@@ -24,6 +25,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <DebugType>portable</DebugType>
         <PackageReference Include="Autofac" Version="4.9.2" />
         <PackageReference Include="BCrypt.Net-Next" Version="3.2.0" />
         <PackageReference Include="coverlet.collector" Version="1.2.0">

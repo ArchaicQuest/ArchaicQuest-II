@@ -75,7 +75,7 @@ namespace ArchaicQuestII.GameLogic.Spell
                     player.Skills = _cache.GetClass(player.ClassName).Skills;          
             }
 
-            var foundSpell = player.Skills.FirstOrDefault(x => x.SkillName.StartsWith(skill, StringComparison.CurrentCultureIgnoreCase));
+            var foundSpell = player.Skills.FirstOrDefault(x => x.SkillName.StartsWith(skill, StringComparison.CurrentCultureIgnoreCase) && x.Level <= player.Level);
             
             if (foundSpell == null)
             {
@@ -503,9 +503,9 @@ namespace ArchaicQuestII.GameLogic.Spell
             }
             else
             {
-                _writer.WriteLine(
-                    $"<p>You cannot cast this spell upon another.</p>",
-                    origin.ConnectionId);
+                //_writer.WriteLine(
+                //    $"<p>You cannot cast this spell upon another.</p>",
+                //    origin.ConnectionId);
             }
 
         }

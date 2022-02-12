@@ -11,6 +11,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
 {
     public interface ISkillManager
     {
+        public bool HasSkill(Player player, string skill);
         public void updateCombat(Player player, Player target, Room room);
         public string ReplacePlaceholders(string str, Player player, bool isTarget);
 

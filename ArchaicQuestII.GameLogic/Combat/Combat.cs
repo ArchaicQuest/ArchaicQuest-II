@@ -882,6 +882,7 @@ namespace ArchaicQuestII.GameLogic.Combat
             _clientUi.UpdateInventory(target);
             _clientUi.UpdateEquipment(target);
             _clientUi.UpdateScore(target);
+            _clientUi.UpdateScore(player);
 
             room.Clean = false;
 

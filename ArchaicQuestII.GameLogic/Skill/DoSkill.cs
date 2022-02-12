@@ -104,7 +104,7 @@ namespace ArchaicQuestII.GameLogic.Skill
 
         public Skill.Model.Skill FindSkill(Model.Skill skill, string skillName, Player player)
         {
-            var foundSkill = player.Skills.FirstOrDefault(x => x.SkillName.StartsWith(skillName, StringComparison.CurrentCultureIgnoreCase));
+            var foundSkill = player.Skills.FirstOrDefault(x => x.SkillName.StartsWith(skillName, StringComparison.CurrentCultureIgnoreCase) && x.Level <= player.Level);
 
             if (foundSkill == null)
             {
@@ -191,6 +191,7 @@ namespace ArchaicQuestII.GameLogic.Skill
 
                 if (!AffectsSelf(FoundSkill) && (origin.Status & CharacterStatus.Status.Fighting) == 0 && (!string.IsNullOrEmpty(targetName) &&  targetName == command))
                 {
+
                     _writer.WriteLine(FoundSkill.Name + " whom?");
                     return;
                 }
@@ -350,6 +351,13 @@ namespace ArchaicQuestII.GameLogic.Skill
             }
             else
             {
+                if(FoundSkill.Name.Equals("Axe"))
+                {
+                    _writer.WriteLine(
+                    $"<p>What!? I don't understand.</p>",
+                    origin.ConnectionId);
+                    return;
+                }
                 _writer.WriteLine(
                     $"<p>You cannot cast this spell upon another.</p>",
                     origin.ConnectionId);

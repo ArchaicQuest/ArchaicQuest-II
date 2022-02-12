@@ -3,6 +3,7 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp31</TargetFramework>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+          <DebugType>portable</DebugType>
     </PropertyGroup>
 
     <ItemGroup>
