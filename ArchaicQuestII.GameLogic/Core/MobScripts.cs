@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Item;
+using ArchaicQuestII.GameLogic.Spell.Interface;
+using ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells;
 using ArchaicQuestII.GameLogic.World.Room;
 using MoonSharp.Interpreter;
 
@@ -73,8 +76,10 @@ namespace ArchaicQuestII.GameLogic.Core
         private readonly IWriteToClient _writeToClient;
         private readonly IUpdateClientUI _updateClientUi;
         private readonly IGain _gain;
+        private readonly ISpells _spells;
+
         public MobScripts(ICache cache, ICombat
-            combat, IWriteToClient writeToClient, IDice dice, IUpdateClientUI updateClientUi, IGain gain)
+            combat, IWriteToClient writeToClient, IDice dice, IUpdateClientUI updateClientUi, IGain gain, ISpells spells)
         {
             _cache = cache;
             _combat = combat;
@@ -82,7 +87,7 @@ namespace ArchaicQuestII.GameLogic.Core
             _dice = dice;
             _updateClientUi = updateClientUi;
             _gain = gain;
-
+            _spells = spells;
         }
         public bool IsInRoom(Room room, Player player)
         {
@@ -95,7 +100,7 @@ namespace ArchaicQuestII.GameLogic.Core
                 return;
 
             }
-            _writeToClient.WriteLine($"<p class='mob-emote'>{n}</p>", player.ConnectionId, delay);
+            _writeToClient.WriteLine($"<p class='mob-emote'>{n.Replace("#name#", player.Name)}</p>", player.ConnectionId, delay);
         }
         public void Say(string n, int delay, Room room, Player player, Player mob)
         {
@@ -236,6 +241,15 @@ namespace ArchaicQuestII.GameLogic.Core
             }
         }
 
+        public void GiveGold(int value, Player player)
+        {
+            if(player.Money == null)
+            {
+                player.Money = new Character.Model.Money();
+            }
+           player.Money.Gold += value;
+        }
+
         public bool HasObject(Player player, string name)
         {
             return player.Inventory.FirstOrDefault(x => x.Name.StartsWith(name, StringComparison.CurrentCultureIgnoreCase)) !=
@@ -299,6 +313,40 @@ namespace ArchaicQuestII.GameLogic.Core
             }
  
             _updateClientUi.UpdateQuest(player);
+        }
+
+        public async Task Sleep(int milliseconds)
+        { 
+
+            await Task.Delay(milliseconds);
+        }
+
+
+        public void DoSkill(Player player, Player mob, Room room)
+        {
+
+            _spells.DoSpell("armour", mob, player.Name, room);
+            
+        }
+
+        public void MobSay(string n, Room room, Player player, Player mob, int delay = 0)
+        {
+            if (!IsInRoom(room, player))
+            {
+                return;
+
+            }
+            _writeToClient.WriteLine($"<p class='mob'>{mob.Name} says, '{n.Replace("#name#", player.Name)}'</p>", player.ConnectionId, delay);
+        }
+
+        public void MobEmote(string n, Room room, Player player, int delay)
+        {
+            if (!IsInRoom(room, player))
+            {
+                return;
+
+            }
+            _writeToClient.WriteLine($"<p class='mob-emote'>{n.Replace("#name#", player.Name)}</p>", player.ConnectionId, delay);
         }
     }
 }

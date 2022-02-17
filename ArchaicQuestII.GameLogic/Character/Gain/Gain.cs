@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
 
@@ -75,17 +76,17 @@ namespace ArchaicQuestII.GameLogic.Character.Gain
                 player.Level++;
                 player.ExperienceToNextLevel = player.Level * 2000; //TODO: have class and race mod
 
-                var hpGain = player.MaxAttributes.Attribute[EffectLocation.Constitution] / 100 * 20;
-                var minHPGain = hpGain / 100 * 20;
-                var totalHP = _dice.Roll(1, minHPGain, hpGain);
+                var hpGain = (player.MaxAttributes.Attribute[EffectLocation.Constitution] / 100m) * 20;
+                var minHPGain = (hpGain / 100m) * 20;
+                var totalHP = _dice.Roll(1, (int)minHPGain, (int)hpGain);
 
-                var manaGain = player.MaxAttributes.Attribute[EffectLocation.Intelligence] / 100 * 20;
-                var minManaGain = manaGain / 100 * 20;
-                var totalMana = _dice.Roll(1, minManaGain, manaGain);
+                var manaGain = player.MaxAttributes.Attribute[EffectLocation.Intelligence] / 100m * 20;
+                var minManaGain = manaGain / 100m * 20;
+                var totalMana = _dice.Roll(1, (int)minManaGain, (int)manaGain);
 
-                var moveGain = player.MaxAttributes.Attribute[EffectLocation.Dexterity] / 100 * 20;
+                var moveGain = player.MaxAttributes.Attribute[EffectLocation.Dexterity] / 100m * 20;
                 var minMoveGain = manaGain / 100 * 20;
-                var totalMove = _dice.Roll(1, minMoveGain, moveGain);
+                var totalMove = _dice.Roll(1, (int)minMoveGain, (int)moveGain);
 
                 //player.Attributes.Attribute[EffectLocation.Hitpoints] += totalHP;
                 //player.Attributes.Attribute[EffectLocation.Mana] += totalMana;
@@ -95,6 +96,11 @@ namespace ArchaicQuestII.GameLogic.Character.Gain
                 player.MaxAttributes.Attribute[EffectLocation.Moves] += totalMove;
 
                 _writer.WriteLine($"<p class='improve'>You have advanced to level {player.Level}, you gain: {totalHP} HP, {totalMana} Mana, {totalMove} Moves.</p>", player.ConnectionId);
+
+                _clientUi.UpdateMana(player);
+                _clientUi.UpdateMoves(player);
+                _clientUi.UpdateHP(player);
+                _clientUi.UpdateExp(player);
 
             }
 
@@ -111,6 +117,24 @@ namespace ArchaicQuestII.GameLogic.Character.Gain
             // boost xp if mob is shielded
 
             return exp > maxEXP ? maxEXP : exp;
+        }
+
+        public void GainSkillExperience(Player character, int expGain, SkillList skill, int increase)
+        {
+
+            character.Experience += expGain;
+            character.ExperienceToNextLevel -= expGain;
+            skill.Proficiency += increase;
+
+          GainLevel(character);
+            _clientUi.UpdateExp(character);
+
+            _writer.WriteLine(
+                $"<p class='improve'>You learn from your mistakes and gain {expGain} experience points.</p>",
+                character.ConnectionId);
+            _writer.WriteLine(
+                $"<p class='improve'>Your {skill.SkillName} skill increases by {increase}%.</p>",
+                character.ConnectionId);
         }
     }
 }

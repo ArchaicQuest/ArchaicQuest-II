@@ -114,6 +114,40 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
             Assert.True(chest.Container.Items.FirstOrDefault(x => x.Name == "apple") == null);
         }
 
+        [Fact]
+        public void Get_item_container_weight_of_item_should_not_be_that_of_the_container()
+        {
+            var apple = new GameLogic.Item.Item();
+            apple.Name = "apple";
+            apple.Description = new Description()
+            {
+                Room = "apple"
+            };
+            apple.Weight = 0.5F;
+
+            var chest = new GameLogic.Item.Item
+            {
+                Name = "chest",
+                Container = new Container() { Items = new ItemList { apple }, IsOpen = true },
+                Weight = 5
+            };
+
+            var room = new Room();
+            room.Items.Add(chest);
+
+            var player = new Player();
+            player.ConnectionId = "1";
+            player.Name = "Gary";
+            player.Inventory = new ItemList();
+
+            var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object, _IMobScripts.Object);
+
+            objects.Get("apple", "chest", room, player, "get apple chest");
+
+
+            Assert.True(player.Inventory.FirstOrDefault(x => x.Name == "apple").Weight == 0.5);
+        }
+
 
 
         [Fact]

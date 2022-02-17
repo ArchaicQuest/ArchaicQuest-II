@@ -7,8 +7,12 @@ using System.Net.Http.Headers;
 using System.Security.Cryptography;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Class;
+using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Character.Status;
+using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Skill.Enum;
+using ArchaicQuestII.GameLogic.Spell;
 using ArchaicQuestII.GameLogic.World.Room;
 using Newtonsoft.Json;
 
@@ -44,6 +48,12 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public static Item.Item findObjectInInventory(Tuple<int, string> keyword, Player player)
         {
+            if(keyword.Item2.Equals("book"))
+            {
+                return keyword.Item1 == -1 ? player.Inventory.FirstOrDefault(x => x.ItemType == Item.Item.ItemTypes.Book) :
+                player.Inventory.FindAll(x => x.ItemType == Item.Item.ItemTypes.Book).Skip(keyword.Item1 - 1).FirstOrDefault();
+            }
+
             return keyword.Item1 == -1 ? player.Inventory.FirstOrDefault(x => x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase)) :
                 player.Inventory.FindAll(x => x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase)).Skip(keyword.Item1 - 1).FirstOrDefault();
         }
@@ -82,8 +92,10 @@ namespace ArchaicQuestII.GameLogic.Core
 
             return keyword.Item1 == -1
                 ? room.Mobs.FirstOrDefault(x =>
-                    x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase))
+                    x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase)) ?? room.Mobs.FirstOrDefault(x =>
+                    x.LongName.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase))
                 : room.Mobs.FindAll(x => x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase))
+                    .Skip(keyword.Item1 - 1).FirstOrDefault() ?? room.Mobs.FindAll(x => x.LongName.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase))
                     .Skip(keyword.Item1 - 1).FirstOrDefault();
         }
 
@@ -91,6 +103,14 @@ namespace ArchaicQuestII.GameLogic.Core
         {
             return $"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}";
         }
+
+        public static SkillList FindSkill(string skillName, Player player)
+        {
+
+            return player.Skills.FirstOrDefault(x =>
+                x.SkillName.Equals(skillName, StringComparison.CurrentCultureIgnoreCase));
+        }
+
 
         /// <summary>
         /// Use to remove A / An from word
@@ -176,6 +196,17 @@ namespace ArchaicQuestII.GameLogic.Core
                 "Female" => "her",
                 "Male" => "him",
                 _ => "it",
+            };
+        }
+
+        public static bool isCaster(string classname)
+        {
+            return classname switch
+            {
+                "Mage" => true,
+                "Cleric" => true,
+                "Druid" => true,
+                _ => false,
             };
         }
 
@@ -314,11 +345,167 @@ namespace ArchaicQuestII.GameLogic.Core
             client.Dispose();
         }
 
-       
- 
 
+        public static int GetPercentage(int percentage, int value)
+        {
+            if (percentage == 0)
+            {
+                return percentage;
+            }
+
+            return (int)percentage * value / 100;
+        }
+
+        public static int GetNthIndex(string s, char t, int n)
+        {
+            int count = 0;
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (s[i] == t)
+                {
+                    count++;
+                    if (count == n)
+                    {
+                        return i;
+                    }
+                }
+            }
+            return -1;
+        }
+
+
+        public static int GetWeaponSkill(Item.Item weapon, Player player)
+        {
+
+            var weaponTypeString = Enum.GetName(typeof(Item.Item.WeaponTypes), weapon.WeaponType);
+
+            var weaponSkill = player.Skills.FirstOrDefault(x =>
+                x.SkillName.Equals(weaponTypeString, StringComparison.CurrentCultureIgnoreCase));
+
+           return (int)(weaponSkill == null ? 0 : weaponSkill.Proficiency);
+        }
+
+        public static string ReturnOpositeExitName(string direction)
+        {
+            switch (direction)
+            {
+                case "North":
+                    return "South";
+                case "North East":
+                    return "South West";
+                case "East":
+                    return "West";
+                case "South East":
+                    return "North West";
+                case "South":
+                    return "North";
+                case "South West":
+                    return "North East";
+                case "West":
+                    return "East";
+                case "North West":
+                    return "South East";
+                case "Down":
+                    return "Up";
+                case "Up":
+                    return "Down";
+                default: { return direction; }
+            }
+        }
+        /// <summary>
+        /// Applies bonus affects to player
+        /// </summary>
+        /// <param name="direction"></param>
+        public static void ApplyAffects(Affect affect, Player player)
+        {
+            
+                {
+                    if (affect.Modifier.Strength != 0)
+                    {
+                        player.Attributes.Attribute[EffectLocation.Strength] += affect.Modifier.Strength;
+                    }
+
+                    if (affect.Modifier.Dexterity != 0)
+                    {
+                        player.Attributes.Attribute[EffectLocation.Dexterity] += affect.Modifier.Dexterity;
+                    }
+
+                    if (affect.Modifier.Constitution != 0)
+                    {
+                        player.Attributes.Attribute[EffectLocation.Constitution] += affect.Modifier.Constitution;
+                    }
+
+                    if (affect.Modifier.Intelligence != 0)
+                    {
+                        player.Attributes.Attribute[EffectLocation.Intelligence] += affect.Modifier.Intelligence;
+                    }
+
+                    if (affect.Modifier.Wisdom != 0)
+                    {
+                        player.Attributes.Attribute[EffectLocation.Wisdom] += affect.Modifier.Wisdom;
+                    }
+
+                    if (affect.Modifier.Charisma != 0)
+                    {
+                        player.Attributes.Attribute[EffectLocation.Charisma] += affect.Modifier.Charisma;
+                    }
+
+                    if (affect.Modifier.HitRoll != 0)
+                    {
+                        player.Attributes.Attribute[EffectLocation.HitRoll] += affect.Modifier.HitRoll;
+                    }
+
+                    if (affect.Modifier.DamRoll != 0)
+                    {
+                        player.Attributes.Attribute[EffectLocation.DamageRoll] += affect.Modifier.DamRoll;
+                    }
+
+                    if (affect.Modifier.Armour != 0)
+                    {
+                        player.ArmorRating.Armour += affect.Modifier.Armour;
+                        player.ArmorRating.Magic += affect.Modifier.Armour;
+                  }
+
+                    if (affect.Affects == DefineSpell.SpellAffect.Blind)
+                    {
+                        player.Affects.Blind = true;
+                    }
+                    if (affect.Affects == DefineSpell.SpellAffect.Berserk)
+                    {
+                        player.Affects.Berserk = true;
+                    }
+                    if (affect.Affects == DefineSpell.SpellAffect.NonDetect)
+                    {
+                        player.Affects.NonDectect = true;
+                    }
+                    if (affect.Affects == DefineSpell.SpellAffect.Invis)
+                    {
+                        player.Affects.Invis = true;
+                    }
+                    if (affect.Affects == DefineSpell.SpellAffect.DetectInvis)
+                    {
+                        player.Affects.DetectInvis = true;
+                    }
+                    if (affect.Affects == DefineSpell.SpellAffect.DetectHidden)
+                    {
+                        player.Affects.DetectHidden = true;
+                    }
+                    if (affect.Affects == DefineSpell.SpellAffect.Poison)
+                    {
+                        player.Affects.Poisoned = true;
+                    }
+                    if (affect.Affects == DefineSpell.SpellAffect.Haste
+                    )
+                    {
+                        player.Affects.Haste = true;
+                    }
+
+            }
+        }
 
     }
+
+
 
 
 }

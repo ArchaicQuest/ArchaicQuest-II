@@ -41,6 +41,7 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
                 .Append("<tr><td  title='Worn on wrist'>").Append(" &lt;worn around wrist&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Wrist?.Name ?? "(nothing)").Append("</td></tr>")
                 .Append("<tr><td  title='Worn on wrist'>").Append(" &lt;worn around wrist&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Wrist2?.Name ?? "(nothing)").Append("</td></tr>")
                 .Append("<tr><td  title='worn as weapon'>").Append(" &lt;wielded&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Wielded?.Name ?? "(nothing)").Append("</td></tr>")
+                .Append("<tr><td  title='worn as weapon'>").Append(" &lt;secondary&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Secondary?.Name ?? "(nothing)").Append("</td></tr>")
                 .Append("<tr><td  title='Worn as shield'>").Append(" &lt;worn as shield&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Shield?.Name ?? "(nothing)").Append("</td></tr>")
                 .Append("<tr><td  title='Held'>").Append(" &lt;Held&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Held?.Name ?? "(nothing)").Append("</td></tr>")
                 .Append("<tr><td  title='Floating Nearby'>").Append(" &lt;Floating nearby&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Floating?.Name ?? "(nothing)").Append("</td></tr>").Append("</table");
@@ -71,7 +72,7 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
                     continue;
                 }
 
-                _writer.WriteLine($"<p>{pc.Name} equips {action}</p>", pc.ConnectionId);
+                _writer.WriteLine($"<p>{player.Name} equips {action}</p>", pc.ConnectionId);
             }
         }
 
@@ -114,6 +115,8 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
                     return player.Equipped.Wielded != null;
                 case Equipment.EqSlot.Wrist:
                     return player.Equipped.Wrist != null;
+                case Equipment.EqSlot.Secondary:
+                    return player.Equipped.Secondary != null;
                 default:
                     return false;
             }
@@ -230,12 +233,28 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
                     EmitRemoveActionToRoom(itemToRemove, room, player);
                     break;
                 case Equipment.EqSlot.Wielded:
-                    player.Equipped.Wielded = null;
-                    _writer.WriteLine($"<p>You stop using {itemToRemove.Name.ToLower()}.</p>", player.ConnectionId);
-                    EmitRemoveActionToRoom(itemToRemove, room, player);
+
+                    if (player.Equipped.Secondary != null && itemToRemove.Name.Equals(player.Equipped.Secondary.Name))
+                    {
+                        player.Equipped.Secondary = null;
+                        _writer.WriteLine($"<p>You stop using {itemToRemove.Name.ToLower()}.</p>", player.ConnectionId);
+                        EmitRemoveActionToRoom(itemToRemove, room, player);
+                    }
+                    else
+                    {
+                        player.Equipped.Wielded = null;
+                        _writer.WriteLine($"<p>You stop using {itemToRemove.Name.ToLower()}.</p>", player.ConnectionId);
+                        EmitRemoveActionToRoom(itemToRemove, room, player);
+                    }
+
                     break;
                 case Equipment.EqSlot.Wrist:
                     player.Equipped.Wrist = null; // TODO: slot 2
+                    _writer.WriteLine($"<p>You stop using {itemToRemove.Name.ToLower()}.</p>", player.ConnectionId);
+                    EmitRemoveActionToRoom(itemToRemove, room, player);
+                    break;
+                case Equipment.EqSlot.Secondary:
+                    player.Equipped.Secondary = null; 
                     _writer.WriteLine($"<p>You stop using {itemToRemove.Name.ToLower()}.</p>", player.ConnectionId);
                     EmitRemoveActionToRoom(itemToRemove, room, player);
                     break;
@@ -266,8 +285,8 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
             _writer.WriteLine(displayEquipment, player.ConnectionId);
         }
 
-
-        public void Wear(string item, Room room, Player player)
+        // handle secondary equip
+        public void Wear(string item, Room room, Player player, string type = "")
         {
 
             if(item.Equals("all", StringComparison.CurrentCultureIgnoreCase))
@@ -284,8 +303,20 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
                 return;
             }
 
+            var itemSlot = itemToWear.Slot;
+
+            if(itemToWear.ItemType != Item.Item.ItemTypes.Armour && itemToWear.ItemType != Item.Item.ItemTypes.Weapon && itemToWear.ItemType != Item.Item.ItemTypes.Light)
+            {
+                itemSlot = Equipment.EqSlot.Held;
+            }
+
+            if (type == "dual")
+            {
+                itemSlot = Equipment.EqSlot.Secondary;
+            }
+
             itemToWear.Equipped = true;
-            switch (itemToWear.Slot)
+            switch (itemSlot)
             {
                 case Equipment.EqSlot.Arms:
 
@@ -417,9 +448,20 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
                     break;
                 case Equipment.EqSlot.Shield:
 
+                    if(player.Equipped.Wielded != null && player.Equipped.Wielded.TwoHanded)
+                    {
+                        _writer.WriteLine("Your hands are tied up with your two-handed weapon!", player.ConnectionId);
+                        return;
+                    }
+
                     if (player.Equipped.Shield != null)
                     {
                         Remove(player.Equipped.Shield.Name, room, player);
+                    }
+
+                    if (player.Equipped.Secondary != null)
+                    {
+                        Remove(player.Equipped.Secondary.Name, room, player);
                     }
 
                     player.Equipped.Shield = itemToWear;
@@ -450,6 +492,13 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
                     break;
                 case Equipment.EqSlot.Wielded:
 
+                    if (itemToWear.TwoHanded && player.Equipped.Shield != null)
+                    {
+                        _writer.WriteLine("You need two hands free for that weapon, remove your shield and try again.",player.ConnectionId);
+
+                        return;
+                    }
+
                     if (player.Equipped.Wielded != null)
                     {
                         Remove(player.Equipped.Wielded.Name, room, player);
@@ -469,6 +518,17 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
                     player.Equipped.Wrist = itemToWear; // TODO: slot 2
                     _writer.WriteLine($"<p>You wear {itemToWear.Name.ToLower()} on your wrist.</p>", player.ConnectionId);
                     EmitWearActionToRoom($"{itemToWear.Name.ToLower()} on {Helpers.GetPronoun(player.Gender)} wrist.", room, player);
+                    break;
+                case Equipment.EqSlot.Secondary:
+
+                    if (player.Equipped.Secondary != null)
+                    {
+                        Remove(player.Equipped.Secondary.Name, room, player);
+                    }
+
+                    player.Equipped.Secondary = itemToWear; // TODO: slot 2
+                    _writer.WriteLine($"<p>You wield {itemToWear.Name.ToLower()} as your second weapon.</p>", player.ConnectionId);
+                    EmitWearActionToRoom($"{itemToWear.Name.ToLower()} as {Helpers.GetPronoun(player.Gender)} secondary weapon.", room, player);
                     break;
                 default:
                     itemToWear.Equipped = false;

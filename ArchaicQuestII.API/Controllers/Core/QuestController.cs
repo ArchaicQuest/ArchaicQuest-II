@@ -43,7 +43,8 @@ namespace ArchaicQuestII.API.Controllers.Core
                 ExpGain = Quest.ExpGain,
                 GoldGain = Quest.GoldGain,
                 ItemGain = Quest.ItemGain,
-                MobsToKill = Quest.MobsToKill
+                MobsToKill = Quest.MobsToKill,
+                ItemsToGet = Quest.ItemsToGet,
             };
 
             if (Quest.Id != -1)
@@ -56,7 +57,7 @@ namespace ArchaicQuestII.API.Controllers.Core
                     throw new Exception("quest Id does not exist");
                 }
 
-                newQuest.Id = newQuest.Id;
+                newQuest.Id = foundItem.Id;
             }
 
             _db.Save(newQuest, DataBase.Collections.Quests);

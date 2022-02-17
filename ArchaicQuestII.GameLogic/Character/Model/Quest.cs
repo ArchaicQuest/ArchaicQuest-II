@@ -34,7 +34,7 @@ namespace ArchaicQuestII.GameLogic.Character.Model
         public string Description { get; set; }
         public string Area { get; set; }
         public List<KillQuest> MobsToKill { get; set; } = new List<KillQuest>();
-        public List<Item.Item> ItemsToGet { get; set; } = new List<Item.Item>();
+        public List<KillQuest> ItemsToGet { get; set; } = new List<KillQuest>();
         public int ExpGain { get; set; }
         public int GoldGain { get; set; }
         public List<Item.Item> ItemGain { get; set; }

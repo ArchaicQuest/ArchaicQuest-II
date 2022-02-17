@@ -9,7 +9,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
 {
     public interface IMovement
     {
-        void Move(Room room, Player character, string direction);
+        void Move(Room room, Player character, string direction, bool silence);
 
         void Flee(Room room, Player character, string direction);
 

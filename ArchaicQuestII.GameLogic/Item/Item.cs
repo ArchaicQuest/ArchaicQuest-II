@@ -26,7 +26,7 @@ namespace ArchaicQuestII.GameLogic.Item
             Seating,
             Inanimate,
             Money,
-            Portal,
+            Portal, 
             Crafting,
             Material,
             Cooking,
@@ -34,7 +34,9 @@ namespace ArchaicQuestII.GameLogic.Item
             SpinningWheel,
             Anvil,
             MortarAndPestle,
-            Cooked
+            Cooked,
+            Ink,
+            Pen
           
         }
 
@@ -189,6 +191,8 @@ namespace ArchaicQuestII.GameLogic.Item
         public bool Infinite { get; set; }
 
         public bool Deleted { get; set; }
+
+        public bool TwoHanded { get; set; }
 
         public Portal Portal { get; set; }
     }

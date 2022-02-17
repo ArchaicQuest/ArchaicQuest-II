@@ -140,7 +140,14 @@ namespace ArchaicQuestII.GameLogic.Core
 
             return room;
         }
- 
+
+
+        public List<Skill.Model.Skill> GetAllSkills()
+        {
+            var data = _skillCache.Values.ToList();
+
+            return data;
+        }
 
         public bool UpdateRoom(string id, Room room, Player player)
         {
@@ -167,6 +174,12 @@ namespace ArchaicQuestII.GameLogic.Core
             _skillCache.TryGetValue(id == 0 ? 1 : id, out var skill);
 
             return skill;
+        }
+
+
+        public List<Skill.Model.Skill> ReturnSkills()
+        {
+            return _skillCache.Values.ToList();
         }
 
 

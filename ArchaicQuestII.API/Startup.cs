@@ -44,11 +44,15 @@ using ArchaicQuestII.GameLogic.Commands.Skills;
 using ArchaicQuestII.GameLogic.Crafting;
 using ArchaicQuestII.GameLogic.Hubs.Telnet;
 using ArchaicQuestII.GameLogic.Item;
+using ArchaicQuestII.GameLogic.Item.RandomItemTypes;
+using ArchaicQuestII.GameLogic.Skill;
 using ArchaicQuestII.GameLogic.Skill.Core;
 using ArchaicQuestII.GameLogic.Skill.Model;
+using ArchaicQuestII.GameLogic.Skill.Skills;
 using ArchaicQuestII.GameLogic.Socials;
 using ArchaicQuestII.GameLogic.Spell;
 using ArchaicQuestII.GameLogic.Spell.Interface;
+using ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells;
 using ArchaicQuestII.GameLogic.World.Area;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -56,7 +60,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Newtonsoft.Json;
 using Config = ArchaicQuestII.GameLogic.Core.Config;
 using Damage = ArchaicQuestII.GameLogic.Core.Damage;
+ 
 using Object = ArchaicQuestII.GameLogic.Commands.Objects.Object;
+using SkillList = ArchaicQuestII.GameLogic.Character.Class.SkillList;
+using ArchaicQuestII.GameLogic.Character.MobFunctions.Healer;
 
 namespace ArchaicQuestII.API
 {
@@ -106,7 +113,7 @@ namespace ArchaicQuestII.API
             services.AddSingleton<IDice, Dice>();
             services.AddTransient<IMovement, Movement>();
             services.AddTransient<ISkills, Skills>();
-            services.AddTransient<ISpells, Spells>();
+            services.AddTransient<ISpells, CastSpell>();
             services.AddTransient<IDebug, Debug>();
             services.AddTransient<IInventory, Inventory>();
             services.AddSingleton<Icommunication, Communication>();
@@ -129,9 +136,26 @@ namespace ArchaicQuestII.API
             services.AddSingleton<ICore, GameLogic.Core.Core>();
             services.AddSingleton<IQuestLog, QuestLog>();
             services.AddSingleton<IMobFunctions, Shop>();
+            services.AddSingleton<IHealer, Healer>();
             services.AddSingleton<IHelp, HelpFile>();
             services.AddSingleton<ICrafting, Crafting>();
             services.AddSingleton<ICooking, Cooking>();
+            services.AddSingleton<ISkillManager, SkillManager>();
+            services.AddSingleton<IDamageSpells, DamageSpells>();
+            services.AddSingleton<IDamageSkills, DamageSkills>();
+            services.AddSingleton<IPassiveSkills, PassiveSkills>();
+            services.AddSingleton<IUtilSkills, UtilSkills>();
+            services.AddSingleton<ISpellList, SpellList>();
+            services.AddSingleton<ISkillList, GameLogic.Skill.SkillList>();
+            services.AddSingleton<ISKill, DoSkill>();
+            services.AddSingleton<IWeather, Weather>();
+            services.AddSingleton<IRandomWeapon, RandomWeapons>();
+            services.AddSingleton<IRandomItem, RandomItem>();
+            services.AddSingleton<IRandomClothItems, RandomClothItems>();
+            services.AddSingleton<IRandomLeatherItems, RandomLeatherItems>();
+            services.AddSingleton<IRandomStuddedLeatherArmour, RandomStuddedLeatherItems>();
+            services.AddSingleton<IRandomChainMailArmour, RandomChainMailItems>();
+            services.AddSingleton<IRandomPlateMailArmour, RandomPlateMailItems>();
             services.AddSingleton<IWriteToClient, WriteToClient>((factory) => new WriteToClient(_hubContext, TelnetHub.Instance));
            
         }
@@ -179,7 +203,16 @@ namespace ArchaicQuestII.API
                             }
                         );
                     }
+
+                    mob.Skills.FirstOrDefault(x => x.SkillName.Equals(skill.SkillName, StringComparison.CurrentCultureIgnoreCase)).SkillId = skill.SkillId;
                 }
+
+                //set mob armor
+                mob.ArmorRating = new ArmourRating()
+                {
+                    Armour = mob.Level * 3,
+                    Magic = mob.Level * 3 / 4,
+                };
 
                 //give mob unique IDs
                 mob.UniqueId = Guid.NewGuid();
@@ -331,12 +364,15 @@ namespace ArchaicQuestII.API
             _cache.SetConfig(config);
 
             //add skills
-            var skills = _db.GetList<Skill>(DataBase.Collections.Skill);
+            var skills = new SeedCoreSkills().SeedData();
 
-            foreach (var skill in skills)
+                foreach (var skill in skills)
             {
+                 skill.Id = skills.Count > 0 ? skills.Max(x => x.Id) + 1 : 1;
                 _cache.AddSkill(skill.Id, skill);
             }
+
+                // update player skills id
 
             var quests = _db.GetList<Quest>(DataBase.Collections.Quests);
 
@@ -471,6 +507,7 @@ namespace ArchaicQuestII.API
             Task.Run(loop.UpdateTime);
             Task.Run(loop.UpdateCombat);
             Task.Run(loop.UpdatePlayers);
+            Task.Run(loop.UpdatePlayerLag);
             Task.Run(loop.UpdateRoomEmote).ConfigureAwait(false);
             Task.Run(loop.UpdateMobEmote).ConfigureAwait(false);
             Task.Run(loop.UpdateWorldTime).ConfigureAwait(false);

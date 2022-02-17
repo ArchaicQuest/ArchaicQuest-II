@@ -12,6 +12,8 @@ namespace ArchaicQuestII.GameLogic.Character.Class
         public string SkillName { get; set; }
         public int Level { get; set; }
         public int? Proficiency { get; set; } = 1;
+
+        public bool IsSpell { get; set; }
     }
 
 
@@ -21,6 +23,7 @@ namespace ArchaicQuestII.GameLogic.Character.Class
         public Dice HitDice { get; set; } = new Dice();
         public int ExperiencePointsCost { get; set; } = 0;
         public Attributes AttributeBonus { get; set; } = new Attributes();
+        public string PreferredWeapon { get; set; }
 
         public List<Class> SeedData()
         {
@@ -48,7 +51,8 @@ namespace ArchaicQuestII.GameLogic.Character.Class
                             {EffectLocation.Strength, 1}
                         }
                     },
-                    CreatedBy = "Malleus"
+                    CreatedBy = "Malleus",
+                    PreferredWeapon = "Sword"
                 },
 
                 new Class()
@@ -73,7 +77,8 @@ namespace ArchaicQuestII.GameLogic.Character.Class
                             {EffectLocation.Dexterity, 1}
                         }
                     },
-                    CreatedBy = "Malleus"
+                    CreatedBy = "Malleus",
+                     PreferredWeapon = "Dagger"
                 },
                 new Class()
                 {   
@@ -96,7 +101,8 @@ namespace ArchaicQuestII.GameLogic.Character.Class
                             {EffectLocation.Wisdom, 1}
                         }
                     },
-                    CreatedBy = "Malleus"
+                    CreatedBy = "Malleus",
+                     PreferredWeapon = "Mace"
                 },
                 new Class()
                 {
@@ -121,7 +127,8 @@ namespace ArchaicQuestII.GameLogic.Character.Class
                             {EffectLocation.Intelligence, 1}
                         }
                     },
-                    CreatedBy = "Malleus"
+                    CreatedBy = "Malleus",
+                    PreferredWeapon = "Dagger"
                 }
             };
 

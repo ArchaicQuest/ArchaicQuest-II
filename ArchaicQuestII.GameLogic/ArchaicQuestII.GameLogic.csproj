@@ -3,6 +3,7 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp31</TargetFramework>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+          <DebugType>portable</DebugType>
     </PropertyGroup>
 
     <ItemGroup>
@@ -14,6 +15,10 @@
         <None Remove="Spell\Type\**" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="Core\Time - Copy.cs" />
+    </ItemGroup>
+
  
     <ItemGroup>
       <None Remove="Core\Keys.json" />
@@ -21,6 +26,7 @@
 
  
     <ItemGroup>
+        <PackageReference Include="Markdig" Version="0.26.0" />
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Core" Version="1.1.0" />
         <PackageReference Include="MoonSharp" Version="2.0.0" />
     </ItemGroup>
@@ -35,6 +41,7 @@
 
     <ItemGroup>
       <Folder Include="Commands\Character\" />
+      <Folder Include="Skill\Type\" />
     </ItemGroup>
 
 

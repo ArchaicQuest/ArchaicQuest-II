@@ -30,6 +30,7 @@ namespace ArchaicQuestII.GameLogic.Core
         List<Room> GetOriginalRooms();
         List<Room> GetAllRoomsInArea(int id);
         List<Room> GetAllRooms();
+        List<Skill.Model.Skill> GetAllSkills();
         Room GetRoom(string id);
         Room GetOriginalRoom(string id);
         bool UpdateRoom(string id, Room room, Player player);
@@ -60,6 +61,7 @@ namespace ArchaicQuestII.GameLogic.Core
         Player GetCharFromCombat(string id);
         Player RemoveCharFromCombat(string id);
         List<Player> GetCombatList();
+        List<Skill.Model.Skill> ReturnSkills();
 
         /// <summary>
         /// Experiment, Need to generate the commands list on start up

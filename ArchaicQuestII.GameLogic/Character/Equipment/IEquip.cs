@@ -7,7 +7,7 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
 {
    public interface IEquip
     {
-        void Wear(string item, Room room, Player player);
+        void Wear(string item, Room room, Player player, string type);
         void WearAll(Room room, Player player);
         void Remove(string item, Room room, Player player);
         void RemoveAll(Room room, Player player);

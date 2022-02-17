@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Class;
+using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Effect;
@@ -11,6 +13,7 @@ using ArchaicQuestII.GameLogic.Hubs;
 using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.World.Area;
 using ArchaicQuestII.GameLogic.World.Room;
+using Markdig;
 using Microsoft.AspNetCore.SignalR;
 
 namespace ArchaicQuestII.GameLogic.Core
@@ -22,13 +25,15 @@ namespace ArchaicQuestII.GameLogic.Core
         private readonly IDataBase _db;
         private readonly IUpdateClientUI _clientUi;
         private readonly IDice _dice;
-        public Core(ICache cache, IWriteToClient writeToClient, IDataBase db, IUpdateClientUI clientUi, IDice dice)
+        private readonly IGain _gain;
+        public Core(ICache cache, IWriteToClient writeToClient, IDataBase db, IUpdateClientUI clientUi, IDice dice, IGain gain)
         {
             _cache = cache;
             _writeToClient = writeToClient;
             _db = db;
             _clientUi = clientUi;
             _dice = dice;
+            _gain = gain;
         }
         public void Who(Player player)
         {
@@ -418,8 +423,8 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public void Eat(Player player, Room room, string obj)
         {
-            var food = player.Inventory.FirstOrDefault(x =>
-                x.ItemType.Equals(Item.Item.ItemTypes.Cooked) || x.ItemType.Equals(Item.Item.ItemTypes.Food) && x.Name.Contains(obj, StringComparison.CurrentCultureIgnoreCase));
+            var findNth = Helpers.findNth(obj);
+            var food = Helpers.findObjectInInventory(findNth, player);
 
             if (food == null)
             {
@@ -508,6 +513,81 @@ namespace ArchaicQuestII.GameLogic.Core
 
         }
 
+        public void Drink(Player player, Room room, string obj)
+        {
+            var findNth = Helpers.findNth(obj);
+            var drink = Helpers.findObjectInInventory(findNth, player) ??
+                        Helpers.findRoomObject(findNth, room);
+
+            if (drink == null)
+            {
+                _writeToClient.WriteLine("You can't find that.", player.ConnectionId);
+                return;
+            }
+
+            if (drink.ItemType != Item.Item.ItemTypes.Drink)
+            {
+                _writeToClient.WriteLine($"You can't drink from {drink.Name.ToLower()}.", player.ConnectionId);
+                return;
+            }
+
+            _writeToClient.WriteLine($"You drink from {drink.Name.ToLower()}.", player.ConnectionId);
+
+            foreach (var pc in room.Players)
+            {
+                if (pc.Name == player.Name)
+                {
+                    continue;
+                }
+                _writeToClient.WriteLine($"{player.Name} drink from {drink.Name.ToLower()}.", player.ConnectionId);
+
+            }
+
+        }
+
+        /// <summary>
+        /// for testing
+        /// </summary>
+        /// <param name="player"></param>
+        public void TrainSkill(Player player)
+        {
+            foreach (var skill in player.Skills)
+            {
+                skill.Proficiency = 85;
+            }
+        }
+
+        public void Dismount(Player player, Room room)
+        {
+            if (string.IsNullOrEmpty(player.Mounted.Name))
+            {
+                _writeToClient.WriteLine("You are not using a mount");
+                return;
+            }
+
+            var getMount = player.Pets.FirstOrDefault(x => x.Name.Equals(player.Mounted.Name));
+
+            if (getMount != null)
+            {
+                player.Pets.Remove(getMount);
+                getMount.Mounted.MountedBy = String.Empty;
+                player.Mounted.Name = string.Empty;
+
+                _writeToClient.WriteLine($"You dismount {getMount.Name}.", player.ConnectionId);
+
+                foreach (var pc in room.Players)
+                {
+                    if (pc.Id == player.Id)
+                    {
+                        continue;
+                    }
+
+                    _writeToClient.WriteLine($"{player.Name} dismounts {getMount.Name}.", pc.ConnectionId);
+                }
+            }
+           
+        }
+
 
         public Tuple<string, EffectLocation> GetStatName(string name)
         {
@@ -524,6 +604,471 @@ namespace ArchaicQuestII.GameLogic.Core
                 "mana" => new Tuple<string, EffectLocation>("mana", EffectLocation.Mana),
                 _ => new Tuple<string, EffectLocation>("", EffectLocation.None)
             };
+        }
+
+        /// <summary>
+        /// is basic skill successful?
+        /// </summary>
+        /// <param name="skill"></param>
+        /// <returns></returns>
+        public bool SkillCheckSuccesful(SkillList skill)
+        {
+            var proficiency = skill.Proficiency;
+            var success = _dice.Roll(1, 1, 100);
+
+            if (success == 1 || success == 101)
+            {
+                return false;
+            }
+
+            return proficiency >= success;
+        }
+
+        public void GainSkillProficiency(SkillList foundSkill, Player player)
+        {
+
+            var getSkill = _cache.GetSkill(foundSkill.SkillId);
+
+            if (getSkill == null)
+            {
+                var skill = _cache.GetAllSkills().FirstOrDefault(x => x.Name.Equals(foundSkill.SkillName, StringComparison.CurrentCultureIgnoreCase));
+                foundSkill.SkillId = skill.Id;
+            }
+
+           
+            if (foundSkill.Proficiency == 100)
+            {
+                return;
+            }
+
+            var increase = _dice.Roll(1, 1, 5);
+
+            foundSkill.Proficiency += increase;
+
+            _gain.GainExperiencePoints(player, 100 * foundSkill.Level / 4, false);
+
+            _clientUi.UpdateExp(player);
+
+            _writeToClient.WriteLine(
+                $"<p class='improve'>You learn from your mistakes and gain {100 * foundSkill.Level / 4} experience points.</p>" +
+                $"<p class='improve'>Your knowledge of {foundSkill.SkillName} increases by {increase}%.</p>",
+                player.ConnectionId, 0);
+        }
+
+        public void Affects(Player player)
+        {
+           var sb = new StringBuilder();
+
+            sb.Append("<p>You are affected by the following effects:</p><table class='simple'><thead><tr><td>Skill</td><td>Affect</td></tr></thead>");
+
+            foreach (var affect in player.Affects.Custom)
+            {
+                sb.Append($"<tr> <td> {affect.Name}<div>{affect.Benefits}</div </td>");
+                sb.Append("<td>");
+
+                if (affect.Modifier.Armour != 0)
+                {
+                    sb.Append($"<p>modifies armour by {affect.Modifier.Armour}<br />{affect.Duration}cycles, ({affect.Duration / 2} hours)</p> ");
+                }
+
+                if (affect.Modifier.DamRoll != 0)
+                {
+                    sb.Append($"<p>modifies damage roll by {affect.Modifier.DamRoll}<br />{affect.Duration}cycles, ({affect.Duration / 2} hours)</p> ");
+                }
+
+                if (affect.Modifier.HitRoll != 0)
+                {
+                    sb.Append($"<p>modifies hit roll by {affect.Modifier.HitRoll}<br />{affect.Duration}cycles, ({affect.Duration / 2} hours)</p> ");
+                }
+
+                if (affect.Modifier.Saves != 0)
+                {
+                    sb.Append($"<p>modifies saves by {affect.Modifier.Saves}<br />{affect.Duration}cycles, ({affect.Duration / 2} hours)</p> ");
+                }
+
+                if (affect.Modifier.HP != 0)
+                {
+                    sb.Append($"<p>modifies hit points by {affect.Modifier.HP}<br />{affect.Duration}cycles, ({affect.Duration / 2} hours)</p> ");
+                }
+
+                if (affect.Modifier.Mana != 0)
+                {
+                    sb.Append($"<p>modifies mana by {affect.Modifier.Mana}<br />{affect.Duration}cycles, ({affect.Duration / 2} hours)</p> ");
+                }
+
+                if (affect.Modifier.Moves != 0)
+                {
+                    sb.Append($"<p>modifies moves by {affect.Modifier.Moves}<br />{affect.Duration}cycles, ({affect.Duration / 2} hours)</p> ");
+                }
+
+                if (affect.Modifier.SpellDam != 0)
+                {
+                    sb.Append($"<p>modifies spell damage by {affect.Modifier.SpellDam}<br />{affect.Duration}cycles, ({affect.Duration / 2} hours)</p> ");
+                }
+
+                if (affect.Modifier.Strength != 0)
+                {
+                    sb.Append($"<p>modifies strength by {affect.Modifier.Strength}<br />{affect.Duration}cycles, ({affect.Duration / 2} hours)</p> ");
+                }
+
+                if (affect.Modifier.Dexterity != 0)
+                {
+                    sb.Append($"<p>modifies dexterity by {affect.Modifier.Dexterity}<br />{affect.Duration}cycles, ({affect.Duration / 2} hours)</p> ");
+                }
+
+                if (affect.Modifier.Constitution != 0)
+                {
+                    sb.Append($"<p>modifies constitution by {affect.Modifier.Constitution}<br />{affect.Duration}cycles, ({affect.Duration / 2} hours)</p> ");
+                }
+
+                if (affect.Modifier.Intelligence != 0)
+                {
+                    sb.Append($"<p>modifies intelligence by {affect.Modifier.Intelligence}<br />{affect.Duration}cycles, ({affect.Duration / 2} hours)</p> ");
+                }
+
+                if (affect.Modifier.Wisdom != 0)
+                {
+                    sb.Append($"<p>modifies wisdom by {affect.Modifier.Wisdom}<br />{affect.Duration}cycles, ({affect.Duration / 2} hours)</p> ");
+                }
+
+                if (affect.Modifier.Charisma != 0)
+                {
+                    sb.Append($"<p>modifies charisma by {affect.Modifier.Charisma}<br />{affect.Duration}cycles, ({affect.Duration / 2} hours)</p> ");
+                }
+                sb.Append("</td></tr>");
+            }
+
+            sb.Append("</tr></table>");
+
+            _writeToClient.WriteLine(sb.ToString(), player.ConnectionId);
+
+
+        }
+
+        public void Practice(Player player, Room room, string skillname)
+        {
+            if ((player.Status & CharacterStatus.Status.Sleeping) != 0)
+            {
+                _writeToClient.WriteLine("In your dreams, or what?", player.ConnectionId);
+                return;
+            }
+
+            if (room.Mobs.Find(x => x.Trainer) == null)
+            {
+                _writeToClient.WriteLine("You can't do that here.", player.ConnectionId);
+                return;
+            }
+
+            var trainerName = room.Mobs.Find(x => x.Trainer).Name;
+
+            var skillName = skillname == "prac" || skillname == "practice" ? "" : skillname;
+      
+            if (string.IsNullOrEmpty(skillName))
+            {
+
+                _writeToClient.WriteLine($"You have {player.Practices} practice{(player.Practices <= 1 ? "" : "s")} left.", player.ConnectionId);
+
+                var sb = new StringBuilder();
+
+                sb.Append("<table class='simple'><thead><tr><th></th><th></th><th colspan='2'>Skills</th><th></th><th></th></tr></thead><tbody>");
+
+                var i = 0;
+                foreach (var skill in player.Skills.OrderBy(x => x.SkillName))
+                {
+                    if (i == 0)
+                    {
+                        sb.Append("<tr>");
+                    }
+
+                    if (i <= 2)
+                    {
+                        sb.Append($"<td>{skill.SkillName}</td><td>{skill.Proficiency}%</td>");
+                    }
+
+                    if (i == 2)
+                    {
+                        sb.Append($"</tr>");
+                        i = 0;
+                        continue;
+                    }
+                    i++;
+
+                };
+
+                sb.Append("</tbody></table>");
+
+                //if (player.Skills.Where(x => x.IsSpell == true).Any())
+                //{
+
+                //    sb.Append("<table class='simple'><thead><tr><th></th><th></th><th colspan='2'>Spells</th><th></th><th></th></tr></thead><tbody>");
+
+                //    var j = 0;
+                //    foreach (var skill in player.Skills.Where(x => x.IsSpell == true).OrderBy(x => x.SkillName))
+                //    {
+                //        if (j == 0)
+                //        {
+                //            sb.Append("<tr>");
+                //        }
+
+                //        if (j <= 2)
+                //        {
+                //            sb.Append($"<td>{skill.SkillName}</td><td>{skill.Proficiency}%</td>");
+                //        }
+
+                //        if (j == 2)
+                //        {
+                //            sb.Append($"</tr>");
+                //            i = 0;
+                //            continue;
+                //        }
+
+
+                //        j++;
+
+                //        if (player.Skills.Where(x => x.IsSpell == true).Count() == 2 && j == player.Skills.Where(x => x.IsSpell == true).Count())
+                //        {
+                //            if (j == 2)
+                //            {
+                //                sb.Append($"<td>&nbsp;</td>&nbsp;<td></td>");
+                //                sb.Append($"<td>&nbsp;</td><td>&nbsp;</td>");
+                //            }
+                //        }
+                //    };
+
+                //    sb.Append("</tbody></table>");
+
+                //}
+                _writeToClient.WriteLine(sb.ToString(), player.ConnectionId);
+                return;
+            }
+
+            var foundSkill = player.Skills.Find(x => x.SkillName.StartsWith(skillName, StringComparison.OrdinalIgnoreCase));
+
+            if (foundSkill == null)
+            {
+                _writeToClient.WriteLineMobSay(trainerName, $"You don't have that skill to practice.", player.ConnectionId);
+                return;
+            }
+
+            if (player.Practices == 0)
+            {
+                _writeToClient.WriteLineMobSay(trainerName, $"You have no practices left.", player.ConnectionId);
+                return;
+            }
+
+            if (foundSkill.Proficiency == 100)
+            {
+                _writeToClient.WriteLineMobSay(trainerName, $"You have already mastered {foundSkill.SkillName}.", player.ConnectionId);
+                return;
+            }
+
+            if (foundSkill.Proficiency >= 75)
+            {
+                _writeToClient.WriteLineMobSay(trainerName, $"I've taught you everything I can about {foundSkill.SkillName}.", player.ConnectionId);
+                return;
+            }
+
+            var maxGain = player.Attributes.Attribute[EffectLocation.Intelligence];
+            var minGain = player.Attributes.Attribute[EffectLocation.Intelligence] / 2;
+            var gain = _dice.Roll(1, minGain, maxGain);
+
+            foundSkill.Proficiency += gain;
+            player.Practices -= 1;
+
+            if(foundSkill.Proficiency >= 75)
+            {
+                foundSkill.Proficiency = 75;
+                _writeToClient.WriteLine($"You practice for some time. Your proficiency with {foundSkill.SkillName} is now {foundSkill.Proficiency}%", player.ConnectionId);
+                _writeToClient.WriteLineMobSay(trainerName, $"You'll have to practice it on your own now...", player.ConnectionId);
+                return;
+            }
+
+            _writeToClient.WriteLine($"You practice for some time. Your proficiency with {foundSkill.SkillName} is now {foundSkill.Proficiency}%", player.ConnectionId);
+
+
+        }
+
+        public void SetEvent(Player player, string eventName, string value)
+        {
+            if(eventName.Equals("/setevent", StringComparison.CurrentCultureIgnoreCase) || string.IsNullOrEmpty(eventName))
+            {
+                foreach (var ev in player.EventState)
+                {
+                    _writeToClient.WriteLine($"{ev.Key} - {ev.Value}", player.ConnectionId);
+                }
+
+                return;
+            }
+
+            if(player.EventState.ContainsKey(eventName))
+            {
+                player.EventState[eventName] = Int32.Parse(value);
+                _writeToClient.WriteLine($"{eventName} state changed to {player.EventState[eventName]}", player.ConnectionId);
+                return;
+            }
+
+            _writeToClient.WriteLine($"Invalid Event state", player.ConnectionId);
+        }
+
+        public void Read(Player player, string book, string pageNum, string fullCommand)
+        {
+
+            var splitCommand = fullCommand.Split(" ");
+            pageNum = splitCommand.Length == 4 ? splitCommand[3] : pageNum;
+            // Read Book Page 1
+           if(book == "read")
+            {
+                _writeToClient.WriteLine("Read what?", player.ConnectionId);
+                return;
+            }
+
+            var nthTarget = Helpers.findNth(book);
+            var item = Helpers.findObjectInInventory(nthTarget, player);
+
+            if (item == null)
+            {
+                if(book.Contains("sign")  || book.Contains("note") || book.Contains("letter")  || book.Contains("board"))
+                {
+                    _writeToClient.WriteLine("To read signs or notes just look at them instead.", player.ConnectionId);
+                    return;
+                }
+                _writeToClient.WriteLine("You can't find that.", player.ConnectionId);
+                return;
+            }
+
+            if (item.ItemType != Item.Item.ItemTypes.Book)
+            {
+                _writeToClient.WriteLine($"{item.Name} is not a book.", player.ConnectionId);
+                return;
+            }
+
+            if (String.IsNullOrEmpty(pageNum))
+            {
+                _writeToClient.WriteLine($"{item.Name} <br /> {item.Description.Look}<br /> To read the pages enter: 'Read {book} 1' to view page 1.", player.ConnectionId);
+                return;
+            }
+            int.TryParse(pageNum, out var n);
+            if (n != 0)
+            {
+                n--;
+            }
+
+            if(n < 0)
+            {
+                n = 0;
+            }
+            if (n == item.Book.Pages.Count)
+            {
+                _writeToClient.WriteLine($"That exeeds the page count of {item.Book.Pages.Count}", player.ConnectionId);
+                return;
+            }
+
+            if (n >= item.Book.PageCount)
+            {
+
+                _writeToClient.WriteLine($"{item.Name} does not contain that many pages.", player.ConnectionId);
+
+                return;
+            }
+
+            if (string.IsNullOrEmpty(item.Book.Pages[n] ))
+            {
+                _writeToClient.WriteLine($"This page is blank.", player.ConnectionId);
+                return;
+            }
+
+            var result = Markdown.ToHtml(item.Book.Pages[n]);
+            _writeToClient.WriteLine($"{result}", player.ConnectionId);
+        }
+
+        public void Write(Player player, string book, string pageNum, string fullCommand)
+        {
+            var splitCommand = fullCommand.Split(" ");
+         
+            pageNum = splitCommand.Length == 4 ? splitCommand[3] : pageNum;
+
+            var isTitle = splitCommand[2] == "title" ? true : false;
+
+            if (book == "write")
+            {
+                _writeToClient.WriteLine("Write in what?", player.ConnectionId);
+                return;
+            }
+
+            var nthTarget = Helpers.findNth(book);
+            var item = Helpers.findObjectInInventory(nthTarget, player);
+
+            if (item == null)
+            {
+                _writeToClient.WriteLine("You can't find that.", player.ConnectionId);
+                return;
+            }
+
+            if (item.ItemType != Item.Item.ItemTypes.Book)
+            {
+                _writeToClient.WriteLine($"{item.Name} is not a book.", player.ConnectionId);
+                return;
+            }
+
+            if(isTitle)
+            {
+                // in this context pageNum would be the title
+                // yes this is dumb, future Liam will curse at
+                // this no doubt -_-
+
+                var title = fullCommand.Remove(0, Helpers.GetNthIndex(fullCommand, ' ', 3));
+
+
+                _writeToClient.WriteLine($"{item.Name} has now been titled {title}.", player.ConnectionId);
+                item.Name = title;
+
+                _clientUi.UpdateInventory(player);
+
+                return;
+            }
+
+            int.TryParse(pageNum, out var n);
+
+            if (n != 0)
+            {
+                n--;
+
+            }
+
+            if (n < 0)
+            {
+                n = 0;
+            }
+
+            if (n >= item.Book.PageCount)
+            {
+
+                _writeToClient.WriteLine($"{item.Name} does not contain that many pages.", player.ConnectionId);
+
+                return;
+            }
+
+            if (item.Book.PageCount > item.Book.Pages.Count)
+            {
+                var diff = item.Book.PageCount - item.Book.Pages.Count;
+
+                for (int i = 0; i < diff; i++)
+                {
+                    item.Book.Pages.Add(String.Empty);
+                }
+            }
+
+            var bookContent = new WriteBook()
+            {
+                Title = item.Name,
+                Description =  item.Book.Pages[n],
+                PageNumber = n
+            };
+
+            _clientUi.UpdateContentPopUp(player, bookContent);
+
+            _writeToClient.WriteLine($"You begin to writing in your book.", player.ConnectionId);
+
         }
     }
 }

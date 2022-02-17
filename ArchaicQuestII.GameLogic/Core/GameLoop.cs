@@ -8,6 +8,9 @@ using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Effect;
+using ArchaicQuestII.GameLogic.Skill.Core;
+using ArchaicQuestII.GameLogic.Spell;
+using ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells;
 using ArchaicQuestII.GameLogic.World.Room;
 using Newtonsoft.Json;
 
@@ -27,8 +30,10 @@ namespace ArchaicQuestII.GameLogic.Core
         private IUpdateClientUI _client;
         private ITime _time;
         private ICore _core;
+        private ISpellList _spellList;
+        private IWeather _weather;
 
-        public GameLoop(IWriteToClient writeToClient, ICache cache, ICommands commands, ICombat combat, IDataBase database, IDice dice, IUpdateClientUI client, ITime time, ICore core)
+        public GameLoop(IWriteToClient writeToClient, ICache cache, ICommands commands, ICombat combat, IDataBase database, IDice dice, IUpdateClientUI client, ITime time, ICore core, ISpellList spelllist, IWeather weather)
         {
             _writeToClient = writeToClient;
             _cache = cache;
@@ -39,6 +44,9 @@ namespace ArchaicQuestII.GameLogic.Core
             _client = client;
             _time = time;
             _core = core;
+            _spellList = spelllist;
+            _weather = weather;
+
         }
 
         public int GainAmount(int value, Player player)
@@ -63,7 +71,8 @@ namespace ArchaicQuestII.GameLogic.Core
                 var rooms = _cache.GetAllRoomsToRepop();
                 var players = _cache.GetPlayerCache().Values.ToList();
 
-                
+             
+              
                 foreach (var room in rooms)
                 {
                     var originalRoom = JsonConvert.DeserializeObject<Room>(JsonConvert.SerializeObject(_cache.GetOriginalRoom(Helpers.ReturnRoomId(room))));
@@ -116,7 +125,6 @@ namespace ArchaicQuestII.GameLogic.Core
                         }
                     }
 
-                    
 
                     foreach (var item in originalRoom.Items)
                     {
@@ -156,14 +164,49 @@ namespace ArchaicQuestII.GameLogic.Core
 
                 foreach (var player in players)
                 {
-                    IdleCheck(player);
-                    var hP = (_dice.Roll(1, 2, 5) * player.Level);
-                    var mana = (_dice.Roll(1, 2, 5) * player.Level);
-                    var moves = (_dice.Roll(1, 2, 5) * player.Level);
+          
+                  //  IdleCheck(player);
+
+                    var hP = (_dice.Roll(1, 2, 5));
+                    var mana = (_dice.Roll(1, 2, 5));
+                    var moves = (_dice.Roll(1, 2, 5));
+
+                    // if player has fast healing add the bonus here
+                  var hasFastHealing =  player.Skills.FirstOrDefault(x =>
+                        x.SkillName.Equals("Fast Healing", StringComparison.CurrentCultureIgnoreCase));
+
+         
+
+                  if ((player.Status & CharacterStatus.Status.Sleeping) != 0)
+                  {
+                      hP *= 2;
+                      mana *= 2;
+                      moves *= 2;
+                    }
+
+                  if ((player.Status & CharacterStatus.Status.Resting) != 0)
+                  {
+                      hP *= (int)1.5;
+                      mana *= (int)1.5;
+                      moves *= (int)1.5;
+                    }
 
                     if (player.Attributes.Attribute[EffectLocation.Hitpoints] <
                         player.MaxAttributes.Attribute[EffectLocation.Hitpoints])
                     {
+
+                        if (hasFastHealing != null)
+                        {
+                            if (_core.SkillCheckSuccesful(hasFastHealing))
+                            {
+                                hP *= 2;
+                            }
+                            else
+                            {
+                                _core.GainSkillProficiency(hasFastHealing, player);
+                            }
+                        }
+
                         player.Attributes.Attribute[EffectLocation.Hitpoints] += GainAmount(hP, player);
                         if (player.Attributes.Attribute[EffectLocation.Hitpoints] > player.MaxAttributes.Attribute[EffectLocation.Hitpoints])
                         {
@@ -227,7 +270,74 @@ namespace ArchaicQuestII.GameLogic.Core
                    
                     foreach (var player in validPlayers)
                     {
-                        _combat.Fight(player, player.Target, _cache.GetRoom(player.RoomId), false);
+                        if (player.Lag > 0 &&
+                            player.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            player.Lag -= 1;
+                            continue;
+                        }
+
+                        var attackCount = 1;
+
+                        var hasSecondAttack = player.Skills.FirstOrDefault(x =>
+                            x.SkillName.Equals("Second Attack", StringComparison.CurrentCultureIgnoreCase));
+                        if (hasSecondAttack != null)
+                        {
+                            hasSecondAttack = player.Level >= hasSecondAttack.Level ? hasSecondAttack : null;
+                        }
+                      
+                        var hasThirdAttack = player.Skills.FirstOrDefault(x =>
+                            x.SkillName.Equals("Third Attack", StringComparison.CurrentCultureIgnoreCase));
+                        if (hasThirdAttack != null)
+                        {
+                            hasThirdAttack = player.Level >= hasThirdAttack.Level ? hasThirdAttack : null;
+                        }
+
+                        var hasFouthAttack = player.Skills.FirstOrDefault(x =>
+                            x.SkillName.Equals("Fourth Attack", StringComparison.CurrentCultureIgnoreCase));
+                        if (hasFouthAttack != null)
+                        {
+                            hasFouthAttack = player.Level >= hasFouthAttack.Level ? hasFouthAttack : null;
+                        }
+                        var hasFithAttack = player.Skills.FirstOrDefault(x =>
+                            x.SkillName.Equals("Fith Attack", StringComparison.CurrentCultureIgnoreCase));
+
+                        if (hasFithAttack != null)
+                        {
+                            hasFithAttack = player.Level >= hasFithAttack.Level ? hasFithAttack : null;
+                        }
+
+                        if (hasSecondAttack != null)
+                        {
+                            attackCount += 1;
+                        }
+
+                        if (hasThirdAttack != null)
+                        {
+                            attackCount += 1;
+                        }
+
+                        if (hasFouthAttack != null)
+                        {
+                            attackCount += 1;
+                        }
+
+                        if (hasFithAttack != null)
+                        {
+                            attackCount += 1;
+                        }
+
+                        if (player.Affects.Haste)
+                        {
+                            attackCount += 1;
+                        }
+
+
+                        for (var i = 0; i < attackCount; i++)
+                        {
+                            _combat.Fight(player, player.Target, _cache.GetRoom(player.RoomId), false);
+                        }
+                       
                     }
                 }
                 catch (Exception ex)
@@ -244,9 +354,26 @@ namespace ArchaicQuestII.GameLogic.Core
             {
                 try
                 {
-                    await Task.Delay(500);
-                   _time.DisplayTimeOfDayMessage(_time.UpdateTime());
-  
+                    await Task.Delay(60000);
+                    _time.DisplayTimeOfDayMessage(_time.UpdateTime());
+                  
+
+                    var weather = $"<span class='weather'>{_weather.SimulateWeatherTransitions()}</span>";
+
+                    foreach (var player in _cache.GetPlayerCache().Values.ToList())
+                    {
+                        //check if player is not indoors
+                        // TODO:
+                        _client.UpdateTime(player);
+                        var room = _cache.GetRoom(player.RoomId);
+
+                        if (room.Terrain != Room.TerrainType.Inside && room.Terrain != Room.TerrainType.Underground)
+                        {
+                            _writeToClient.WriteLine(weather, player.ConnectionId);
+
+                        }
+
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -313,10 +440,51 @@ namespace ArchaicQuestII.GameLogic.Core
                                 {
                                     pc.Attributes.Attribute[EffectLocation.DamageRoll] -= aff.Modifier.DamRoll;
                                 }
+                                if (aff.Modifier.Armour != 0)
+                                {
+                                    pc.ArmorRating.Armour -= aff.Modifier.Armour;
+                                    pc.ArmorRating.Magic -= aff.Modifier.Armour;
+                                }
 
-                                _writeToClient.WriteLine($"affects from {aff.Name} have worn off.");
 
                                 pc.Affects.Custom.Remove(aff);
+
+                                _spellList.CastSpell(aff.Name, "", pc, "", pc, _cache.GetRoom(pc.RoomId), true);
+
+                                if (aff.Affects == DefineSpell.SpellAffect.Blind)
+                                {
+                                    pc.Affects.Blind = false;
+                                    _writeToClient.WriteLine("You are no longer blinded.", pc.ConnectionId);
+                                }
+                                if (aff.Affects == DefineSpell.SpellAffect.Berserk)
+                                {
+                                    pc.Affects.Berserk = false;
+                                }
+                                if (aff.Affects == DefineSpell.SpellAffect.NonDetect)
+                                {
+                                    pc.Affects.NonDectect = false;
+                                }
+                                if (aff.Affects == DefineSpell.SpellAffect.Invis)
+                                {
+                                    pc.Affects.Invis = false;
+                                }
+                                if (aff.Affects == DefineSpell.SpellAffect.DetectInvis)
+                                {
+                                    pc.Affects.DetectInvis = false;
+                                }
+                                if (aff.Affects == DefineSpell.SpellAffect.DetectHidden)
+                                {
+                                    pc.Affects.DetectHidden = false;
+                                }
+                                if (aff.Affects == DefineSpell.SpellAffect.Poison)
+                                {
+                                    pc.Affects.Poisoned = false;
+                                }
+                                if (aff.Affects == DefineSpell.SpellAffect.Haste
+                                )
+                                {
+                                    pc.Affects.Haste = false;
+                                }
                             }
                             _client.UpdateAffects(pc);
                         }
@@ -416,7 +584,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
                         foreach (var mob in room.Mobs.Where(x => x.Status != CharacterStatus.Status.Fighting).ToList())
                         {
-                            if (mob.Emotes.Any() && mob.Emotes[0] != null)
+                            if (mob.Emotes.Any() && mob.Emotes[0] != null && _dice.Roll(1,0,1) == 1)
                             {
 
                                 var emote = mob.Emotes[_dice.Roll(1, 0, mob.Emotes.Count - 1)];
@@ -494,6 +662,11 @@ namespace ArchaicQuestII.GameLogic.Core
 
                     foreach (var player in validPlayers)
                     {
+                        // don't action commands if player is lagged
+                        if (player.Value.Lag > 0)
+                        {
+                            continue;
+                        }
 
                         var command = player.Value.Buffer.Dequeue();
                         var room = _cache.GetRoom(player.Value.RoomId);
@@ -509,6 +682,32 @@ namespace ArchaicQuestII.GameLogic.Core
                 }
             }
         }
+
+        public async Task UpdatePlayerLag()
+        {
+            while (true)
+            {
+
+                try
+                {
+                    await Task.Delay(4000);
+                    var players = _cache.GetPlayerCache();
+                    var validPlayers = players.Where(x => x.Value.Lag > 0);
+
+                    foreach (var player in validPlayers)
+                    {
+                         
+                        player.Value.Lag -= 1;
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+        }
+
 
     }
 

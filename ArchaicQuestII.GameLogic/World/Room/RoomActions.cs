@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using ArchaicQuestII.Core.World;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Item;
@@ -20,21 +21,31 @@ namespace ArchaicQuestII.GameLogic.World.Room
         private readonly IWriteToClient _writeToClient;
         private readonly ITime _time;
         private readonly ICache _cache;
-        public RoomActions(IWriteToClient writeToClient, ITime time, ICache cache)
+        private readonly IDice _dice;
+        private readonly IGain _gain;
+        public RoomActions(IWriteToClient writeToClient, ITime time, ICache cache, IDice dice, IGain gain)
         {
             _writeToClient = writeToClient;
             _time = time;
             _cache = cache;
+            _dice = dice;
+            _gain = gain;
         }
         /// <summary>
         /// Displays current room 
         /// </summary>
         public void Look(string target, Room room, Player player)
         {
-            
+
             if (player.Status == CharacterStatus.Status.Sleeping)
             {
                 _writeToClient.WriteLine("You can't do that while asleep.", player.ConnectionId);
+                return;
+            }
+
+            if (player.Affects.Blind)
+            {
+                _writeToClient.WriteLine("<p>You are blind and can't see a thing!</p>", player.ConnectionId);
                 return;
             }
 
@@ -46,14 +57,14 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
             var showVerboseExits = player.Config.VerboseExits;
             string exits = FindValidExits(room, showVerboseExits);
-            
+
             var items = DisplayItems(room, player);
             var mobs = DisplayMobs(room, player);
             var players = DisplayPlayers(room, player);
 
             var roomDesc = new StringBuilder();
             var isDark = RoomIsDark(room, player);
-          
+
             roomDesc
                 .Append($"<p class=\"room-title {(isDark ? "room-dark" : "")}\">{room.Title}<br /></p>")
                 .Append($"<p class=\"room-description  {(isDark ? "room-dark" : "")}\">{room.Description}</p>");
@@ -68,14 +79,14 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 roomDesc.Append(
                     $"<div class=\" {(isDark ? "room-dark" : "")}\">Obvious exits: <table class=\"room-exits\"><tbody>{exits}</tbody></table></div>");
             }
- 
+
             roomDesc.Append($"<p  class=\" {(isDark ? "room-dark" : "")}\">{items}</p>")
                 .Append($"<p  class=\"{(isDark ? "room-dark" : "")}\">{mobs}</p>")
                 .Append($"<p  class=\"  {(isDark ? "room-dark" : "")}\">{players}</p>");
 
 
             _writeToClient.WriteLine(roomDesc.ToString(), player.ConnectionId);
-           
+
         }
 
         public void LookInContainer(string target, Room room, Player player)
@@ -127,7 +138,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 _writeToClient.WriteLine($"<p class='item {(isDark ? "room-dark" : "")}'>{obj.Name}</p>", player.ConnectionId);
             }
 
-           
+
 
             foreach (var pc in room.Players)
             {
@@ -171,9 +182,9 @@ namespace ArchaicQuestII.GameLogic.World.Room
             RoomObject roomObjects = null;
             if (room.RoomObjects.Count >= 1 && room.RoomObjects[0].Name != null)
             {
-                 roomObjects =
-                    room.RoomObjects.FirstOrDefault(x =>
-                        x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+                roomObjects =
+                   room.RoomObjects.FirstOrDefault(x =>
+                       x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
             }
 
             if (target.Equals("self", StringComparison.CurrentCultureIgnoreCase))
@@ -191,6 +202,23 @@ namespace ArchaicQuestII.GameLogic.World.Room
             if (item != null && character == null)
             {
                 _writeToClient.WriteLine($"<p  class='{(isDark ? "room-dark" : "")}'>{item.Description.Look}", player.ConnectionId);
+
+                // display item stats via lore
+                var hasLore = Helpers.FindSkill("lore", player);
+
+                if (hasLore != null)
+                {
+                    var success = LoreSuccess(hasLore.Proficiency ?? 0);
+
+                    if (success)
+                    {
+                        DoLore(item, player);
+                    }
+                    else
+                    {
+                        _gain.GainSkillExperience(player, hasLore.Level * 100, hasLore, _dice.Roll(1, 1, 5));
+                    }
+                }
 
                 if (item.Container != null && !item.Container.CanOpen && item.Container.Items.Any())
                 {
@@ -216,12 +244,12 @@ namespace ArchaicQuestII.GameLogic.World.Room
                     _writeToClient.WriteLine($"<p>{player.Name} looks at {item.Name.ToLower()}.</p>", pc.ConnectionId);
                 }
                 return;
-                
+
             }
             //for player?
             if (roomObjects != null && character == null)
             {
-              
+
                 _writeToClient.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{roomObjects.Look}", player.ConnectionId);
 
                 foreach (var pc in room.Players)
@@ -298,14 +326,26 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 return;
             }
             RoomObject roomObjects = null;
-       
+
+
+            var isDark = RoomIsDark(room, player);
+            if (item == null && room.RoomObjects.Count >= 1 && room.RoomObjects[0].Name != null)
+            {
+                roomObjects =
+                    room.RoomObjects.FirstOrDefault(x =>
+                        x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+
+                _writeToClient.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{roomObjects.Examine}", player.ConnectionId);
+
+                return;
+            }
+
             if (item == null)
             {
                 _writeToClient.WriteLine("<p>You don't see that here.", player.ConnectionId);
                 return;
             }
 
-            var isDark = RoomIsDark(room, player);
             var examMessage = item.Description.Exam == "You don't see anything special."
                 ? $"On closer inspection you don't see anything special to note to what you already see. {item.Description.Look}"
                 : item.Description.Exam;
@@ -321,16 +361,8 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 _writeToClient.WriteLine($"<p>{player.Name} examines {item.Name.ToLower()}.</p>", pc.ConnectionId);
             }
 
-         
 
-            if (item == null && room.RoomObjects.Count >= 1 && room.RoomObjects[0].Name != null)
-            {
-                roomObjects =
-                    room.RoomObjects.FirstOrDefault(x =>
-                        x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
 
-                _writeToClient.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{roomObjects.Examine}", player.ConnectionId);
-            }
 
 
             //if (item.ItemType == Item.Item.ItemTypes.Container)
@@ -480,17 +512,33 @@ namespace ArchaicQuestII.GameLogic.World.Room
         public string DisplayMobs(Room room, Player player)
         {
             var mobs = string.Empty;
+            var mobName = string.Empty;
             var isDark = RoomIsDark(room, player);
 
             foreach (var mob in room.Mobs)
             {
+
                 if (!string.IsNullOrEmpty(mob.LongName))
                 {
-                    mobs += $"<p class='mob {(isDark ? "dark-room" : "")}'>" + mob.LongName + "</p>";
+                    mobName = mob.LongName;
                 }
                 else
                 {
-                    mobs += $"<p class='mob {(isDark ? "dark-room" : "")}'>" + mob.Name + " is here.</p>";
+                    mobName = mob.Name;
+                }
+
+                if (!string.IsNullOrEmpty(mob.Mounted.MountedBy))
+                {
+                    mobName += " tosses it's mane and snorts.";
+                }
+
+                if (!string.IsNullOrEmpty(mob.LongName))
+                {
+                    mobs += $"<p class='mob {(isDark ? "dark-room" : "")}'>" + mobName + "</p>";
+                }
+                else
+                {
+                    mobs += $"<p class='mob {(isDark ? "dark-room" : "")}'>" + mobName + " is here.</p>";
                 }
 
             }
@@ -524,10 +572,117 @@ namespace ArchaicQuestII.GameLogic.World.Room
             return false;
         }
 
+        public bool LoreSuccess(int? skillLevel)
+        {
+            var chance = _dice.Roll(1, 1, 100);
+
+            return skillLevel >= chance;
+        }
+
+        public void DoLore(Item.Item item, Player player)
+        {
+            // only lore items that can be picked up
+            if (item.Stuck)
+            {
+                return;
+            }
+
+            var sb = new StringBuilder();
+
+            //It is a level 45 armor, weight 4.
+            //    Locations it can be worn: finger
+            //    Special properties: evil
+            //    Alignments allowed: evil neutral
+            //This armor has a gold value of 45000.
+            //    Armor class is 6 of 6. 
+            //    Affects strength by 1. 
+            //    Affects wisdom by 1. 
+            //    Affects mana by 60. 
+            //    Affects hit roll by 4. 
+
+            sb.Append($"It is a level {item.Level} {item.ItemType}, weight {item.Weight}.<br/>Locations it can be worn: {(item.ItemType == Item.Item.ItemTypes.Light || item.ItemType == Item.Item.ItemTypes.Weapon || item.ItemType == Item.Item.ItemTypes.Armour ? item.Slot : Character.Equipment.Equipment.EqSlot.Held)}.<br /> This {item.ItemType} has a gold value of {item.Value}.<br />");
+
+            if (item.ArmourRating.Armour != 0 || item.ArmourRating.Magic != 0)
+            {
+                sb.Append($"Affects armour by {item.ArmourRating.Armour} / {item.ArmourRating.Magic}");
+            }
+
+            if (item.Modifier.Strength != 0)
+            {
+                sb.Append($"<br />Affects strength by {item.Modifier.Strength}");
+            }
+
+            if (item.Modifier.Dexterity != 0)
+            {
+                sb.Append($"<br />Affects dexterity by {item.Modifier.Dexterity}");
+            }
+
+            if (item.Modifier.Constitution != 0)
+            {
+                sb.Append($"<br />Affects constitution by {item.Modifier.Constitution}");
+            }
+
+            if (item.Modifier.Wisdom != 0)
+            {
+                sb.Append($"<br />Affects wisdom by {item.Modifier.Wisdom}");
+            }
+
+            if (item.Modifier.Intelligence != 0)
+            {
+                sb.Append($"<br />Affects intelligence by {item.Modifier.Intelligence}");
+            }
+
+            if (item.Modifier.Charisma != 0)
+            {
+                sb.Append($"<br />Affects charisma by {item.Modifier.Charisma}");
+            }
+
+            if (item.Modifier.HP != 0)
+            {
+                sb.Append($"<br />Affects HP by {item.Modifier.HP}");
+            }
+
+
+            if (item.Modifier.Mana != 0)
+            {
+                sb.Append($"<br />Affects mana by {item.Modifier.Mana}");
+            }
+
+            if (item.Modifier.Moves != 0)
+            {
+                sb.Append($"<br />Affects moves by {item.Modifier.Moves}");
+            }
+
+            if (item.Modifier.DamRoll != 0)
+            {
+                sb.Append($"<br />Affects damroll by {item.Modifier.DamRoll}");
+            }
+
+            if (item.Modifier.HitRoll != 0)
+            {
+                sb.Append($"<br />Affects hitroll by {item.Modifier.HitRoll}");
+            }
+
+            if (item.Modifier.Saves != 0)
+            {
+                sb.Append($"<br />Affects saves by {item.Modifier.Saves}");
+            }
+
+            if (item.Modifier.SpellDam != 0)
+            {
+                sb.Append($"<br />Affects spell dam by {item.Modifier.SpellDam}");
+            }
+
+
+            _writeToClient.WriteLine(sb.ToString(), player.ConnectionId);
+
+        }
+
         public string DisplayPlayers(Room room, Player player)
         {
             var players = string.Empty;
-            var isNightTime = !_time.IsNightTime();
+            var isNightTime = RoomIsDark(room, player);
+            var pcName = string.Empty;
 
             foreach (var pc in room.Players)
             {
@@ -535,7 +690,27 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 {
                     continue;
                 }
-                players += string.IsNullOrEmpty(pc.LongName) ? $"<p class='player {(isNightTime ? "dark-room" : "")}'>{pc.Name} is here.</p>" : $"<p class='player'>{pc.Name} {pc.LongName}.</p>";
+
+                if (string.IsNullOrEmpty(pc.LongName))
+                {
+                    pcName = $"{ pc.Name}";
+                }
+                else
+                {
+                    pcName = $"{ pc.Name} {pc.LongName}";
+                }
+
+                if (!string.IsNullOrEmpty(pc.Mounted.Name))
+                {
+                    pcName += $", is riding {pc.Mounted.Name}";
+                }
+                else if (string.IsNullOrEmpty(pc.LongName))
+                {
+                    pcName += " is here";
+                }
+
+
+                players += $"<p class='player {(isNightTime ? "dark-room" : "")}'>{pcName}.</p>";
             }
 
             return players;
@@ -550,7 +725,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 return "";
             }
 
-            
+
             var RoomId = $"{exit.AreaId}{exit.Coords.X}{exit.Coords.Y}{exit.Coords.Z}";
             var room = _cache.GetRoom(RoomId);
 
@@ -566,18 +741,18 @@ namespace ArchaicQuestII.GameLogic.World.Room
             var exits = new List<string>();
             var exitList = string.Empty;
 
-        /* TODO: Click event for simple exit view */
+            /* TODO: Click event for simple exit view */
 
             if (room.Exits.North != null)
             {
-                
+
                 var clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"n\"}))";
                 exits.Add(verbose
                     ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.North)} </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.North)}</a></td></tr>"
                     : Helpers.DisplayDoor(room.Exits.North));
             }
 
-          
+
 
             if (room.Exits.East != null && room.Exits.East.Coords != null)
             {
@@ -587,7 +762,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
                     : Helpers.DisplayDoor(room.Exits.East));
             }
 
-           
+
 
             if (room.Exits.South != null)
             {
@@ -678,7 +853,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 exitList = exitList.Remove(exitList.Length - 2);
 
             }
-            return  exitList;
+            return exitList;
 
         }
 

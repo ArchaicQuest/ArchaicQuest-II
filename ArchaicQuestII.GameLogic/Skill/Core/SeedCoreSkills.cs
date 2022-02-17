@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using ArchaicQuestII.GameLogic.Spell;
+using ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells;
+using AllSpells = ArchaicQuestII.GameLogic.Spell.AllSpells;
 
 namespace ArchaicQuestII.GameLogic.Skill.Core
 {
@@ -13,6 +16,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
         /// <returns></returns>
         public List<Model.Skill> SeedData()
         {
+            var skill = new DefineSkill();
             var seedData = new List<Model.Skill>()
             {
                 new CraftingSkills().Cooking(),
@@ -32,7 +36,43 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
                 new WeaponTypeSkills().Exotic(),
                 new EvasiveTypeSkills().Dodge(),
                 new EvasiveTypeSkills().Parry(),
-                new EvasiveTypeSkills().ShieldBLock()
+                new EvasiveTypeSkills().ShieldBLock(),
+                new AllSpells().MagicMissile(),
+                new AllSpells().CauseWounds(),
+                new AllSpells().CureWounds(),
+                new AllSpells().Armour(),
+                new AllSpells().Bless(),
+                 new AllSpells().Identify(),
+                skill.Kick(),
+                skill.Elbow(),
+                skill.Lore(),
+                skill.Trip(),
+                skill.Haggle(),
+                skill.HeadButt(),
+                skill.Charge(),
+                skill.FastHealing(),
+                skill.Stab(),
+                skill.Uppercut(),
+                skill.DirtKick(),
+                skill.Disarm(),
+                skill.Lunge(),
+                skill.Berserk(),
+                skill.Rescue(),
+                skill.SecondAttack(),
+                skill.ThirdAttack(),
+                skill.FouthAttack(),
+                skill.FithAttack(),
+                skill.Mount(),
+                skill.BlindFighting(),
+                skill.ShieldBash(),
+                skill.DualWield(),
+                skill.EnhancedDamage(),
+                skill.WarCry(), 
+                skill.Hamstring(),
+                skill.Impale(),
+                skill.Slash(),
+                skill.OverheadCrush(),
+                skill.Cleave()
             };
 
             return seedData;

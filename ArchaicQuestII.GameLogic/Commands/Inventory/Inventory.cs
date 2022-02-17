@@ -33,7 +33,15 @@ namespace ArchaicQuestII.GameLogic.Commands.Inventory
 
                 foreach (var item in inv.List(false))
                 {
-                    inventory.Append($"<li>{item.Name}</li>");
+                    if (player.Affects.Blind)
+                    {
+                        inventory.Append($"<li>Something</li>");
+                    }
+                    else
+                    {
+                        inventory.Append($"<li>{item.Name}</li>");
+                    }
+                   
                 }
 
                 inventory.Append("</ul>");

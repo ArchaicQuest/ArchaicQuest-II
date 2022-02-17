@@ -73,7 +73,11 @@ namespace ArchaicQuestII.Controllers
                 Events = mob.Events,
                 Roam = mob.Roam,
                 Shopkeeper = mob.Shopkeeper,
-                Trainer = mob.Trainer
+                Trainer = mob.Trainer,
+                Mounted = mob.Mounted,
+                SpellList = mob.SpellList,
+                EnterEmote = mob.EnterEmote,
+                LeaveEmote = mob.LeaveEmote
             };
 
 

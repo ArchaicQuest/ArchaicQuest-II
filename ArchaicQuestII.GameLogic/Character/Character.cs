@@ -53,7 +53,23 @@ namespace ArchaicQuestII.GameLogic.Character
         public string CombatMessages { get; set; }
     }
 
-  public class Character
+    public class Mount
+    {
+        public string Name { get; set; } = String.Empty;
+        public string MountedBy { get; set; } = String.Empty;
+        public bool IsMount { get; set; }
+    }
+
+    /// <summary>
+    /// Spells for mob to cast upon user
+    /// </summary>
+    public class MobSpellList
+    {
+        public string Name { get; set; }
+        public int Cost { get; set; }
+    }
+
+    public class Character
   {
       /// <summary>
       /// Assigned when player logs in.
@@ -121,8 +137,8 @@ namespace ArchaicQuestII.GameLogic.Character
         [JsonProperty("target")]
         public string Target { get; set; }
         [JsonProperty("armorRating")]
-        public ArmourRating ArmorRating { get; set; }
-        [JsonProperty("money")]
+        public ArmourRating ArmorRating { get; set; } = new ArmourRating();
+            [JsonProperty("money")]
         public Money Money { get; set; }
         [JsonProperty("affects")]
         public Affects Affects { get; set; } = new Affects();
@@ -151,6 +167,8 @@ namespace ArchaicQuestII.GameLogic.Character
         /// for Mob path, e.g n,e,s,w
         /// </summary>
         public string Commands { get; set; }
+        public string EnterEmote { get; set; }
+        public string LeaveEmote { get; set; }
         /// <summary>
         /// moves around randomly
         /// </summary>
@@ -164,5 +182,9 @@ namespace ArchaicQuestII.GameLogic.Character
         public double Weight { get; set; } = 0;
         // Full at 4
         public int Hunger { get; set; } = 0;
-  }
+        public int Lag { get; set; } = 0;
+        public Mount Mounted { get; set; } = new Mount();
+        public List<Player> Pets { get; set; } = new List<Player>(); //maybe just ID will suffice?
+        public List<MobSpellList> SpellList { get; set; } = new List<MobSpellList>();
+    }
 }

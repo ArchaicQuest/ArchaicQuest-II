@@ -18,13 +18,13 @@ namespace ArchaicQuestII.GameLogic.Combat
         {
             _dice = dice;
         }
-        public int OffensivePoints(Player player)
+        public int OffensivePoints(Player player, bool useDualWield = false)
         {
             var offensePoints = player.Attributes.Attribute[EffectLocation.Strength] / 5
                                 + player.Attributes.Attribute[EffectLocation.Dexterity] / 10
                                 + player.Attributes.Attribute[EffectLocation.HitRoll];
 
-            var weapon = player.Equipped.Wielded;
+            var weapon = useDualWield ? player.Equipped.Secondary : player.Equipped.Wielded;
 
            SkillList getWeaponSkill = null;
             if (weapon != null && !player.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
@@ -67,13 +67,13 @@ namespace ArchaicQuestII.GameLogic.Combat
             return BlockPoints(player) * 100 / (BlockPoints(player) + DefensivePoints(target));
         }
 
-        public int ToHitChance(Player player, Player target)
+        public int ToHitChance(Player player, Player target, bool useDualWield)
         {
 
             //var x = OffensivePoints(player);
             //var y = DefensivePoints(target);
             //var z = OffensivePoints(player) * 100 / (OffensivePoints(player) + DefensivePoints(target));
-            return OffensivePoints(player) * 100 / (OffensivePoints(player) + DefensivePoints(target));
+            return OffensivePoints(player, useDualWield) * 100 / (OffensivePoints(player, useDualWield) + DefensivePoints(target));
         }
 
         public int DamageReduction(Player defender, int damage)
@@ -96,12 +96,27 @@ namespace ArchaicQuestII.GameLogic.Combat
 
         public int CalculateDamage(Player player, Player target, Item.Item weapon)
         {
-            
+
             var damage = 0;
 
             if (weapon != null)
             {
-                damage = _dice.Roll(1, weapon.Damage.Minimum, weapon.Damage.Maximum);
+
+                var skill = player.Skills.FirstOrDefault(x =>
+                    x.SkillName.Replace(" ", string.Empty)
+                        .Equals(Enum.GetName(typeof(Item.Item.WeaponTypes), weapon.WeaponType)));
+ 
+                damage = _dice.Roll(1, weapon.Damage.Minimum, weapon.Damage.Maximum); 
+
+                if (skill != null)
+                {
+
+                    damage = (int)(damage * (skill.Proficiency + 1) / 100) + _dice.Roll(1, 1, 3); // 1-3 to stop hand to hand being OP earlier levels if weapon dam is less than 1d6
+                }
+                else
+                {
+                    damage /= 2;
+                }
 
             }
             else
@@ -132,7 +147,7 @@ namespace ArchaicQuestII.GameLogic.Combat
             }
 
 
-            int totalDamage = (int)(damage * strengthMod * criticalHit * levelMod);
+            int totalDamage = (int)((damage * strengthMod) + levelMod) * criticalHit;
 
             if (armourReduction > 0)
             {

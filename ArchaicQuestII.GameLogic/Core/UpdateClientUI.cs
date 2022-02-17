@@ -17,11 +17,13 @@ namespace ArchaicQuestII.GameLogic.Core
    public class UpdateClientUI: IUpdateClientUI
     {
         private readonly IHubContext<GameHub> _hubContext;
-      
+        private readonly ITime _time;
 
-        public UpdateClientUI(IHubContext<GameHub> hubContext)
+
+        public UpdateClientUI(IHubContext<GameHub> hubContext, ITime time)
         {
             _hubContext = hubContext;
+            _time = time;
         }
 
         public async void UpdateScore(Player player)
@@ -177,7 +179,10 @@ namespace ArchaicQuestII.GameLogic.Core
                     .Append("<tr><td  class=\"cell-title\" title='Worn on waist'>").Append(" &lt;worn about waist&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Waist?.Name ?? "(nothing)").Append("</td></tr>")
                     .Append("<tr><td  class=\"cell-title\" title='Worn on wrist'>").Append(" &lt;worn around wrist&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Wrist?.Name ?? "(nothing)").Append("</td></tr>")
                     .Append("<tr><td  class=\"cell-title\" title='Worn on wrist'>").Append(" &lt;worn around wrist&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Wrist2?.Name ?? "(nothing)").Append("</td></tr>")
-                    .Append("<tr><td  class=\"cell-title\" title='worn as weapon'>").Append(" &lt;wielded&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Wielded?.Name ?? "(nothing)").Append("</td></tr>")
+                    .Append("<tr><td  class=\"cell-title\" title='worn as weapon'>").Append(" &lt;wielded&gt;").Append("</td>").Append("<td>")
+                    .Append(player.Equipped.Wielded?.Name ?? "(nothing)").Append("</td></tr>")
+                    .Append("<tr><td  class=\"cell-title\" title='worn as weapon'>").Append(" &lt;secondary&gt;").Append("</td>").Append("<td>")
+                    .Append(player.Equipped.Secondary?.Name ?? "(nothing)").Append("</td></tr>")
                     .Append("<tr><td  class=\"cell-title\" title='Worn as shield'>").Append(" &lt;worn as shield&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Shield?.Name ?? "(nothing)").Append("</td></tr>")
                     .Append("<tr><td  class=\"cell-title\" title='Held'>").Append(" &lt;Held&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Held?.Name ?? "(nothing)").Append("</td></tr>")
                     .Append("<tr><td  class=\"cell-title\" title='Floating Nearby'>").Append(" &lt;Floating nearby&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Floating?.Name ?? "(nothing)").Append("</td></tr>").Append("</table");
@@ -260,6 +265,41 @@ namespace ArchaicQuestII.GameLogic.Core
 
                 await _hubContext.Clients.Client(player.ConnectionId).SendAsync("InventoryUpdate", inventory.ToString());
            //     UpdateScore(player);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        public async void UpdateTime(Player player)
+        {
+            if (string.IsNullOrEmpty(player.ConnectionId) && !player.IsTelnet)
+            {
+                return;
+            }
+
+            try
+            {
+                await _hubContext.Clients.Client(player.ConnectionId).SendAsync("UpdateTime", _time.ReturnTime());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        public async void UpdateContentPopUp(Player player, WriteBook bookContent)
+        {
+            if (string.IsNullOrEmpty(player.ConnectionId) && !player.IsTelnet)
+            {
+                return;
+            }
+
+            try
+            {
+          
+                await _hubContext.Clients.Client(player.ConnectionId).SendAsync("UpdateContentPopUp", bookContent);
             }
             catch (Exception ex)
             {

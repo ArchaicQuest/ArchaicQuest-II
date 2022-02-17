@@ -8,6 +8,7 @@ using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.MobFunctions.Shop;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Item;
+using ArchaicQuestII.GameLogic.Skill.Skills;
 using ArchaicQuestII.GameLogic.World.Room;
 using Xunit;
 
@@ -19,6 +20,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Character.MobFunctions
 
         private readonly Mock<IWriteToClient> _IWriteToClient;
         private readonly Mock<IUpdateClientUI> _IUpdateUI;
+        private readonly Mock<IPassiveSkills> _passiveSkills;
         private readonly Mock<IShop> _IShop;
 
         public ShopTests()
@@ -26,6 +28,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Character.MobFunctions
             _IWriteToClient = new Mock<IWriteToClient>();
             _IUpdateUI = new Mock<IUpdateClientUI>();
             _IShop = new Mock<IShop>();
+            _passiveSkills = new Mock<IPassiveSkills>();
         }
 
         [Fact]
@@ -44,7 +47,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Character.MobFunctions
             room.Mobs.Add(shopkeeper);
 
 
-            var shop = new Shop(_IWriteToClient.Object, _IUpdateUI.Object);
+            var shop = new Shop(_IWriteToClient.Object, _IUpdateUI.Object, _passiveSkills.Object);
             var mob = shop.FindShopKeeper(room);
             Assert.True(mob != null);
         }
@@ -80,7 +83,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Character.MobFunctions
             room.Mobs.Add(shopkeeper);
 
 
-            var shop = new Shop(_IWriteToClient.Object, _IUpdateUI.Object);
+            var shop = new Shop(_IWriteToClient.Object, _IUpdateUI.Object, _passiveSkills.Object);
            shop.List(room, player);
 
 
@@ -119,7 +122,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Character.MobFunctions
             room.Mobs.Add(shopkeeper);
 
 
-            var shop = new Shop(_IWriteToClient.Object, _IUpdateUI.Object);
+            var shop = new Shop(_IWriteToClient.Object, _IUpdateUI.Object, _passiveSkills.Object);
             shop.DisplayInventory(shopkeeper, player);
 
 
@@ -165,7 +168,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Character.MobFunctions
             room.Players.Add(player);
 
 
-            var shop = new Shop(_IWriteToClient.Object, _IUpdateUI.Object);
+            var shop = new Shop(_IWriteToClient.Object, _IUpdateUI.Object, _passiveSkills.Object);
             shop.BuyItem("sword", room, player);
 
             Assert.True(player.Inventory.FirstOrDefault(x => x.Name.Equals("Sword")) != null);
@@ -223,7 +226,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Character.MobFunctions
             room.Players.Add(player);
 
 
-            var shop = new Shop(_IWriteToClient.Object, _IUpdateUI.Object);
+            var shop = new Shop(_IWriteToClient.Object, _IUpdateUI.Object, _passiveSkills.Object);
             shop.SellItem("sword", room, player);
 
             Assert.True(player.Inventory.FirstOrDefault(x => x.Name.Equals("Sword")) == null);

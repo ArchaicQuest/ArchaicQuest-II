@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Core;
+using ArchaicQuestII.GameLogic.Skill;
+using ArchaicQuestII.GameLogic.Skill.Enum;
 using ArchaicQuestII.GameLogic.Socials;
 using ArchaicQuestII.GameLogic.World.Room;
 
@@ -24,30 +26,52 @@ namespace ArchaicQuestII.GameLogic.Commands
         private readonly ISocials _socials;
         private readonly ICache _cache;
         private readonly IWriteToClient _writeToClient;
-        public CommandHandler(ISocials social, ICache cache, IWriteToClient writeToClient)
+        private readonly ISKill _Skill;
+        public CommandHandler(ISocials social, ICache cache, IWriteToClient writeToClient, ISKill skill)
         {
             _socials = social;
             _cache = cache;
             _writeToClient = writeToClient;
+            _Skill = skill;
         }
         public void HandleCommand(string key, string obj, string target, Player player, Room room)
         {
             var foundCommand = false;
-            //check player skills
-            if(false){}
 
-            var logMsg = player.Name + " key: " + key + " obj: " + obj + " target: " + target + "\r\n" + "Buffer: ";
-            foreach (var cmd in player.Buffer)
+            // oddballs is shit name
+            // but might be times where we need a command to trigger
+            // a skill that does not match the name
+            // here second matches on second attack
+            // but I want second to allow selecting a second weapon
+            var oddBalls = new List<Tuple<string, string>>()
             {
-                logMsg += cmd + " ";
+                new Tuple<string, string>("second", "dual wield"),
+                new Tuple<string, string>("warcry", "war cry"),
+            };
+
+            var oddBallMatch = oddBalls.FirstOrDefault(x => x.Item1.StartsWith(key));
+
+            if (oddBallMatch != null)
+            {
+                key = oddBallMatch.Item2;
             }
-            Helpers.PostToDiscord(logMsg, "error", _cache.GetConfig());
+
+
+            //check player skill
+            var foundSkill = _cache.GetAllSkills()
+                .FirstOrDefault(x => x.Name.StartsWith(key, StringComparison.CurrentCultureIgnoreCase) && x.Type != SkillType.Passive);
+            if (foundSkill != null) 
+            {
+                _Skill.PerfromSkill(foundSkill, key, player, obj, room);
+                return;
+            }
+
+ 
 
             //check socials
             var social = _cache.GetSocials().Keys.FirstOrDefault(x => x.StartsWith(key));
             if (social != null)
             {
-                foundCommand = true;
                 var emoteTarget = key == obj ? "" : obj;
                 _socials.EmoteSocial(player, room, _cache.GetSocials()[social], emoteTarget);
                 return;

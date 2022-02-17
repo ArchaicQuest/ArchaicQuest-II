@@ -30,7 +30,8 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
         public Item.Item  Waist { get; set; } 
         public Item.Item  Wrist { get; set; } 
         public Item.Item  Wrist2 { get; set; } 
-        public Item.Item  Wielded { get; set; } 
+        public Item.Item  Wielded { get; set; }
+        public Item.Item Secondary { get; set; }
         public Item.Item  Shield { get; set; } 
         public Item.Item  Held { get; set; } 
         public Item.Item  Floating { get; set; } 
@@ -72,6 +73,8 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
             Wielded = 15,
             [Description("Wrist")]
             Wrist = 16,
+            [Description("Secondary")]
+            Secondary = 17,
 
         }
 

@@ -14,6 +14,7 @@ namespace ArchaicQuestII.GameLogic.Core
         Task UpdateRoomEmote();
         Task UpdateMobEmote();
         Task UpdatePlayers();
+        Task UpdatePlayerLag();
         Task UpdateCombat();
         Task UpdateWorldTime();
         Task Tick();

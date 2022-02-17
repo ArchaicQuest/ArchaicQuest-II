@@ -41,7 +41,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
             _mobScripts = mobScripts;
         }
 
-        public void Move(Room room, Player character, string direction)
+        public void Move(Room room, Player character, string direction, bool silence = false)
         {
              
             switch (character.Status)
@@ -51,7 +51,10 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
                     _writeToClient.WriteLine("<p>NO WAY! you are fighting.</p>", character.ConnectionId);
                     return;
                 case CharacterStatus.Status.Resting:
-                    _writeToClient.WriteLine("<p>Nah... You feel too relaxed to do that..</p>", character.ConnectionId);
+                    _writeToClient.WriteLine("<p>Nah... You feel too relaxed to do that.</p>", character.ConnectionId);
+                    return;
+                case CharacterStatus.Status.Sitting:
+                    _writeToClient.WriteLine("<p>You can't do that while sitting.</p>", character.ConnectionId);
                     return;
                 case CharacterStatus.Status.Sleeping:
                     _writeToClient.WriteLine("<p>In your dreams.</p>", character.ConnectionId);
@@ -103,23 +106,27 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
                 OnPlayerLeaveEvent(room, character);
             }
 
-            if (room.Players.Any())
+            if (room.Players.Any() && !silence)
             {
                 NotifyRoomLeft(room, character, direction);
             }
 
-            if (getNextRoom.Players.Any())
+            if (getNextRoom.Players.Any() && !silence)
             {
                 NotifyRoomEnter(getNextRoom, character, direction);
             }
 
             UpdateCharactersLocation(getExitToNextRoom, character, room);
 
-            character.Attributes.Attribute[EffectLocation.Moves] -= 1;
-
-            if (character.Attributes.Attribute[EffectLocation.Moves] < 0)
+            if (string.IsNullOrEmpty(character.Mounted.Name))
             {
-                character.Attributes.Attribute[EffectLocation.Moves] = 0;
+
+                character.Attributes.Attribute[EffectLocation.Moves] -= 1;
+
+                if (character.Attributes.Attribute[EffectLocation.Moves] < 0)
+                {
+                    character.Attributes.Attribute[EffectLocation.Moves] = 0;
+                }
             }
 
             if (character.ConnectionId == "mob")
@@ -130,7 +137,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
 
             _roomActions.Look("", getNextRoom, character);
 
-            if (room.Mobs.Any())
+            if (getNextRoom.Mobs.Any())
             {
                 OnPlayerEnterEvent(getNextRoom, character);
             }
@@ -149,9 +156,18 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
                     }
                 }
             }
-            
-           
-            
+
+            if (!string.IsNullOrEmpty(character.Mounted.Name))
+            {
+                var mountedMob = room.Mobs.FirstOrDefault(x => !string.IsNullOrEmpty(x.Mounted.MountedBy) && x.Mounted.MountedBy.Equals(character.Name));
+
+                if (mountedMob != null)
+                {
+                    Move(room, mountedMob, direction, true);
+                }
+            }
+
+
         }
 
         public Exit FindExit(Room room, string direction)
@@ -188,7 +204,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
             {
                 if (character.Name != player.Name)
                 {
-                    _writeToClient.WriteLine($"{character.Name} walks {direction.ToLower()}.", player.ConnectionId);
+                    _writeToClient.WriteLine(MovementAdjective(character, false, direction.ToLower()), player.ConnectionId);
                 }
             }
         }
@@ -199,13 +215,38 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
             {
                 if (character.Name != player.Name)
                 {
-                    _writeToClient.WriteLine($"{character.Name} walks in.", player.ConnectionId);
+                    _writeToClient.WriteLine(MovementAdjective(character,true, Helpers.ReturnOpositeExitName(direction)), player.ConnectionId);
                 }
             }
 
           
         }
 
+        public string MovementAdjective(Player player, bool onEnter, string direction)
+        {
+      
+         
+            var showDirection = string.IsNullOrEmpty(direction) ? "" : $" {direction.ToLower()}";
+            var enterMessage = player.EnterEmote;
+            var leaveMessage = player.LeaveEmote;
+            var enter = onEnter ? enterMessage ?? $"{player.Name} walks in from the " : leaveMessage ?? $"{player.Name} walks ";
+            var moveType = $"{enter} {showDirection}.";
+
+
+     
+
+            if (!string.IsNullOrEmpty(player.Mounted.Name))
+            {
+                enter = onEnter ? "enters from the" : "leaves";
+                moveType = $"{player.Name} {enter}{showDirection} riding upon {player.Mounted.Name}.";
+            }
+        
+
+            // A magic broom sweeping the floor [hovers in from the] [west]. 
+
+            return moveType;
+        }
+        
         public void OnPlayerLeaveEvent(Room room, Player character)
         {
             foreach (var mob in room.Mobs)
@@ -393,6 +434,11 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
 
         public void Sit(Player player, Room room, string target)
         {
+            if (!string.IsNullOrEmpty(player.Mounted.Name))
+            {
+                _writeToClient.WriteLine("<p>You can't do that while mounted.</p>", player.ConnectionId);
+                return;
+            }
 
             if (player.Status == CharacterStatus.Status.Sitting)
             {
@@ -403,7 +449,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
             if (target.Equals("sit", StringComparison.CurrentCultureIgnoreCase))
             {
 
-                SetCharacterStatus(player, "is sitting here.", CharacterStatus.Status.Sitting);
+                SetCharacterStatus(player, "is sitting here", CharacterStatus.Status.Sitting);
                 foreach (var pc in room.Players)
                 {
 
@@ -430,7 +476,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
                     return;
                 }
 
-                SetCharacterStatus(player, $"is sitting down on {obj.Name.ToLower()}", CharacterStatus.Status.Resting);
+                SetCharacterStatus(player, $"is sitting down on {obj.Name.ToLower()}", CharacterStatus.Status.Sitting);
                 foreach (var pc in room.Players)
                 {
 
@@ -450,6 +496,12 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
 
         public void Stand(Player player, Room room, string target)
         {
+            if (!string.IsNullOrEmpty(player.Mounted.Name))
+            {
+                _writeToClient.WriteLine("<p>You can't do that while mounted.</p>", player.ConnectionId);
+                return;
+            }
+
             if (player.Status == CharacterStatus.Status.Standing)
             {
                 _writeToClient.WriteLine("<p>You are already standing!</p>", player.ConnectionId);
@@ -485,6 +537,11 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
 
         public void Sleep(Player player, Room room, string target)
         {
+            if (!string.IsNullOrEmpty(player.Mounted.Name))
+            {
+                _writeToClient.WriteLine("<p>You can't do that while mounted.</p>", player.ConnectionId);
+                return;
+            }
 
             if (player.Status == CharacterStatus.Status.Sleeping)
             {
@@ -510,9 +567,15 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
 
         public void Wake(Player player, Room room, string target)
         {
+            if (!string.IsNullOrEmpty(player.Mounted.Name))
+            {
+                _writeToClient.WriteLine("<p>You can't do that while mounted.</p>", player.ConnectionId);
+                return;
+            }
+
             if (player.Status != CharacterStatus.Status.Sleeping)
             {
-                _writeToClient.WriteLine("<p>You are already standing!</p>", player.ConnectionId);
+                _writeToClient.WriteLine("<p>You are already awake!</p>", player.ConnectionId);
                 return;
             }
 
@@ -534,6 +597,12 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
 
         public void Rest(Player player, Room room, string target)
         {
+            if (!string.IsNullOrEmpty(player.Mounted.Name))
+            {
+                _writeToClient.WriteLine("<p>You can't do that while mounted.</p>", player.ConnectionId);
+                return;
+            }
+
             if (player.Status == CharacterStatus.Status.Resting)
             {
                 _writeToClient.WriteLine("<p>You are already resting!</p>", player.ConnectionId);

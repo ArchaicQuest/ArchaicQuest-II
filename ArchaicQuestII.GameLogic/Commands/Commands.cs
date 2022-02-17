@@ -18,9 +18,12 @@ using ArchaicQuestII.GameLogic.Commands.Score;
 using ArchaicQuestII.GameLogic.Commands.Skills;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Crafting;
+using ArchaicQuestII.GameLogic.Skill.Skills;
 using ArchaicQuestII.GameLogic.Socials;
 using ArchaicQuestII.GameLogic.Spell.Interface;
 using MoonSharp.Interpreter;
+using System.Threading.Tasks;
+using ArchaicQuestII.GameLogic.Character.MobFunctions.Healer;
 
 namespace ArchaicQuestII.GameLogic.Commands
 {
@@ -47,6 +50,10 @@ namespace ArchaicQuestII.GameLogic.Commands
         private readonly IMobScripts _mobScripts;
         private readonly ICrafting _crafting;
         private readonly ICooking _cooking;
+        private readonly IUtilSkills _utilSkills;
+        private readonly IPassiveSkills _passiveSkills;
+        private readonly IHealer _healer;
+
 
         public Commands(
             IMovement movement,
@@ -68,7 +75,10 @@ namespace ArchaicQuestII.GameLogic.Commands
             IHelp help,
             IMobScripts mobScripts,
             ICrafting crafting,
-            ICooking cooking
+            ICooking cooking,
+            IUtilSkills utilSkills,
+                 IPassiveSkills passiveSkills,
+                 IHealer healer
             )
         {
             _movement = movement;
@@ -91,6 +101,9 @@ namespace ArchaicQuestII.GameLogic.Commands
             _mobScripts = mobScripts;
             _crafting = crafting;
             _cooking = cooking;
+            _utilSkills = utilSkills;
+            _passiveSkills = passiveSkills;
+            _healer = healer;
         }
  
         public void CommandList(string key, string obj, string target, string fullCommand, Player player, Room room)
@@ -99,43 +112,43 @@ namespace ArchaicQuestII.GameLogic.Commands
             {
                 case "north west":
                 case "nw":
-                    _movement.Move(room, player, "North West");
+                    _movement.Move(room, player, "North West", false);
                     break;
                 case "north east":
                 case "ne":
-                    _movement.Move(room, player, "North East");
+                    _movement.Move(room, player, "North East", false);
                     break;
                 case "south east":
                 case "se":
-                    _movement.Move(room, player, "South East");
+                    _movement.Move(room, player, "South East", false);
                     break;
                 case "south west":
                 case "sw":
-                    _movement.Move(room, player, "South West");
+                    _movement.Move(room, player, "South West", false);
                     break;
                 case "north":
                 case "n":
-                    _movement.Move(room, player, "North");
+                    _movement.Move(room, player, "North", false);
                     break;
                 case "east":
                 case "e":
-                    _movement.Move(room, player, "East");
+                    _movement.Move(room, player, "East", false);
                     break;
                 case "south":
                 case "s":
-                    _movement.Move(room, player, "South");
+                    _movement.Move(room, player, "South", false);
                     break;
                 case "west":
                 case "w":
-                    _movement.Move(room, player, "West");
+                    _movement.Move(room, player, "West", false);
                     break;
                 case "up":
                 case "u":
-                    _movement.Move(room, player, "Up");
+                    _movement.Move(room, player, "Up", false);
                     break;
                 case "down":
                 case "d":
-                    _movement.Move(room, player, "Down");
+                    _movement.Move(room, player, "Down", false);
                     break;
                 case "flee":
                 case "fle":
@@ -200,7 +213,7 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "skills":
                 case "slist":
                 case "spells":
-                    _skills.ShowSkills(player);
+                    _skills.ShowSkills(player, fullCommand);
                     break;
                 case "/debug":
                     _debug.DebugRoom(room, player);
@@ -233,7 +246,7 @@ namespace ArchaicQuestII.GameLogic.Commands
                     break;
                 case "wear":
                 case "wield":
-                    _equipment.Wear(obj, room, player);
+                    _equipment.Wear(obj, room, player, String.Empty);
                     break;
                 case "remove":
                     _equipment.Remove(obj, room, player);
@@ -274,6 +287,7 @@ namespace ArchaicQuestII.GameLogic.Commands
                     _socials.DisplaySocials(player);
                     break;
                 case "follow":
+                case "fol":
                     _movement.Follow(player, room, obj);
                     break;
                 case "group":
@@ -317,6 +331,9 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "ins":
                     _mobFunctions.InspectItem(obj, room, player);
                     break;
+                case "heal":
+                    _healer.List(room, player, obj);
+                    break;
                 case "help":
                     _help.DisplayHelpFile(obj, player);
                     break;
@@ -344,6 +361,35 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "chew":
                 case "munch":
                     _core.Eat(player, room, obj);
+                    break;
+                case "drink":
+                    _core.Drink(player, room, obj);
+                    break;
+                case "dismount": // see UtilSkills for Mount
+                    _core.Dismount(player, room);
+                    break;
+                case "second": // see UtilSkills for Mount
+                    _passiveSkills.DualWield(player, null, room, obj);
+                    break;
+                case "affects":
+                case "aff":
+                    _core.Affects(player);
+                    break;
+                case "read":
+                    _core.Read(player, obj, target, fullCommand);
+                    break;
+                case "write":
+                    _core.Write(player, obj, target, fullCommand);
+                    break;
+                case "practice":
+                case "prac":
+                    _core.Practice(player, room, obj);
+                    break;
+                case "/train":
+                    _core.TrainSkill(player);
+                    break;
+                case "/setevent":
+                    _core.SetEvent(player, obj, target);
                     break;
                 default:
                         _commandHandler.HandleCommand(key,obj,target, player, room);
@@ -377,8 +423,10 @@ namespace ArchaicQuestII.GameLogic.Commands
             }
             var parameters = MakeCommandPartsSafe(commandParts);
 
+            CommandList(key, parameters.Item1, parameters.Item2, cleanCommand, player, room);
             try
             {
+             
                 foreach (var mob in room.Mobs)
                 {
 
@@ -401,16 +449,20 @@ namespace ArchaicQuestII.GameLogic.Commands
                         script.Globals["mob"] = mob;
 
 
-                        DynValue res = script.DoString(mob.Events.Act);
+                        DynValue res =   script.DoString(mob.Events.Act);
                     }
                 }
             }
+             
+            
+            
+            
             catch(Exception ex)
             {
                 Helpers.PostToDiscord($"{player.Name} {ex.Message}", "error", _cache.GetConfig());
             }
 
-            CommandList(key, parameters.Item1, parameters.Item2, cleanCommand, player, room);
+           
         }
 
         public Tuple<string, string> MakeCommandPartsSafe(string[] commands)
