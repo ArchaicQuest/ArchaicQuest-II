@@ -89,7 +89,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             var currentLevelInteration = 0;
             var i = 1;
 
-            foreach (var skill in skillList.OrderBy(x => x.Level))
+            foreach (var skill in skillList.OrderBy(x => x.Level).ThenBy(x => x.SkillName))
             {
                 if (skill.Level != currentLevel)
                 {

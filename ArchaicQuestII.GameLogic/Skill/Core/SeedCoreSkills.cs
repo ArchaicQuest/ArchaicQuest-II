@@ -60,7 +60,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
                 skill.Rescue(),
                 skill.SecondAttack(),
                 skill.ThirdAttack(),
-                skill.FouthAttack(),
+                skill.FourthAttack(),
                 skill.FithAttack(),
                 skill.Mount(),
                 skill.BlindFighting(),

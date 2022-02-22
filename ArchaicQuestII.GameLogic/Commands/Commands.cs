@@ -391,7 +391,7 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "/setevent":
                     _core.SetEvent(player, obj, target);
                     break;
-                default:
+                default:    
                         _commandHandler.HandleCommand(key,obj,target, player, room);
                     break;
 

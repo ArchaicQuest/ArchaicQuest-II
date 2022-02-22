@@ -773,7 +773,7 @@ namespace ArchaicQuestII.GameLogic.Core
                 sb.Append("<table class='simple'><thead><tr><th></th><th></th><th colspan='2'>Skills</th><th></th><th></th></tr></thead><tbody>");
 
                 var i = 0;
-                foreach (var skill in player.Skills.OrderBy(x => x.SkillName))
+                foreach (var skill in player.Skills.Where(x => x.Level <= player.Level).OrderBy(x => x.SkillName))
                 {
                     if (i == 0)
                     {
@@ -842,7 +842,7 @@ namespace ArchaicQuestII.GameLogic.Core
                 return;
             }
 
-            var foundSkill = player.Skills.Find(x => x.SkillName.StartsWith(skillName, StringComparison.OrdinalIgnoreCase));
+            var foundSkill = player.Skills.Find(x => x.SkillName.StartsWith(skillName, StringComparison.OrdinalIgnoreCase) && x.Level <= player.Level);
 
             if (foundSkill == null)
             {

@@ -293,14 +293,14 @@ namespace ArchaicQuestII.GameLogic.Core
                             hasThirdAttack = player.Level >= hasThirdAttack.Level ? hasThirdAttack : null;
                         }
 
-                        var hasFouthAttack = player.Skills.FirstOrDefault(x =>
+                        var hasFourthAttack = player.Skills.FirstOrDefault(x =>
                             x.SkillName.Equals("Fourth Attack", StringComparison.CurrentCultureIgnoreCase));
-                        if (hasFouthAttack != null)
+                        if (hasFourthAttack != null)
                         {
-                            hasFouthAttack = player.Level >= hasFouthAttack.Level ? hasFouthAttack : null;
+                            hasFourthAttack = player.Level >= hasFourthAttack.Level ? hasFourthAttack : null;
                         }
                         var hasFithAttack = player.Skills.FirstOrDefault(x =>
-                            x.SkillName.Equals("Fith Attack", StringComparison.CurrentCultureIgnoreCase));
+                            x.SkillName.Equals("Fifth Attack", StringComparison.CurrentCultureIgnoreCase));
 
                         if (hasFithAttack != null)
                         {
@@ -317,7 +317,7 @@ namespace ArchaicQuestII.GameLogic.Core
                             attackCount += 1;
                         }
 
-                        if (hasFouthAttack != null)
+                        if (hasFourthAttack != null)
                         {
                             attackCount += 1;
                         }

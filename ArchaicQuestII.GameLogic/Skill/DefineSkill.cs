@@ -627,11 +627,11 @@ namespace ArchaicQuestII.GameLogic.Skill
 
         }
 
-        public Skill.Model.Skill FouthAttack()
+        public Skill.Model.Skill FourthAttack()
         {
             return new Skill.Model.Skill()
             {
-                Name = "Fouth Attack",
+                Name = "Fourth Attack",
                 Description =
                     "Allows you attack four times a round if successful",
                 ApplyLevelCheck = true,
