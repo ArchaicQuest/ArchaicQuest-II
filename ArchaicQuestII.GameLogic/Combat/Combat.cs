@@ -824,12 +824,12 @@ namespace ArchaicQuestII.GameLogic.Combat
             var targetName = target.Name.ToLower(CultureInfo.CurrentCulture);
             var corpse = new Item.Item()
             {
-                Name = $"The corpse of {targetName}.",
+                Name = targetName,
                 Description = new Description()
                 {
                     Room = $"The corpse of {targetName} is laying here.",
-                    Exam = $"The corpse of {targetName} is laying here. {target.Description}",
-                    Look = $"The corpse of {targetName} is laying here. {target.Description}",
+                    Exam = target.Description,
+                    Look = target.Description,
 
                 },
                 Slot = Equipment.EqSlot.Held,
@@ -844,7 +844,9 @@ namespace ArchaicQuestII.GameLogic.Combat
 
                 },
                 ItemType = Item.Item.ItemTypes.Container,
-                DecayTimer = 300 // 5 minutes
+                Decay = target.ConnectionId.Equals("mob", StringComparison.OrdinalIgnoreCase) ? 10 : 20,
+                DecayTimer = 300 // 5 minutes,
+                
             };
 
             foreach (var item in target.Inventory) {

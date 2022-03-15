@@ -195,5 +195,20 @@ namespace ArchaicQuestII.GameLogic.Item
         public bool TwoHanded { get; set; }
 
         public Portal Portal { get; set; }
+
+        /// <summary>
+        /// Used to slow corpse removal
+        /// </summary>
+        public int Decay { get; set; } = 5; // 10 for players
+
+        public List<string> DecayMessages = new List<string>()
+        {
+            {"A quivering horde of maggots consumes $n."}, // 0
+            {"The corpse of $n is in the last stages of decay."}, // 1
+            {"The corpse of %n is crawling with vermin."}, // 2
+            {"The corpse of $n fills the air with a foul stench."}, // 3
+            {"The corpse of $n is buzzing with flies."}, // 4
+            {"The corpse of $n lies here."}, // 5 | 10 - 5
+        };
     }
 }

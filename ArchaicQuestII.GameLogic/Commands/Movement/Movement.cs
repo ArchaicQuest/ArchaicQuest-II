@@ -423,6 +423,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
                 if (mob.Target == character.Name)
                 {
                     character.Status = CharacterStatus.Status.Standing;
+                    mob.Status = CharacterStatus.Status.Standing;
                     _cache.RemoveCharFromCombat(mob.Id.ToString());
                 }
             }

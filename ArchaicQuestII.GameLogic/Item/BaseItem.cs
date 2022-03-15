@@ -43,6 +43,7 @@ namespace ArchaicQuestII.GameLogic.Item
         /// how many ticks till item decays
         /// 0 is never
         /// </summary>
+        /// 
         public int DecayTimer { get; set; } = 0;
         public int Condition { get; set; } = 0;
         public bool QuestItem { get; set; }

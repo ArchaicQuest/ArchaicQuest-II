@@ -8,6 +8,7 @@ using System.Linq;
 using ArchaicQuestII.API.Entities;
 using ArchaicQuestII.API.Helpers;
 using ArchaicQuestII.API.Models;
+using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Help;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Core;
@@ -124,6 +125,58 @@ namespace ArchaicQuestII.API.World
         {
             return _addRoom.GetRoomFromCoords(new Coordinates { X = x, Y = y, Z = z }, areaId) != null;
         }
+        
+        public void MapMobRoomId(Room room)
+        {
+            foreach (var mob in room.Mobs)
+            {
+                mob.UniqueId = Guid.NewGuid();
+                mob.RoomId = $"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}";
+            }
+        }
+        
+        public void AddSkillsToMobs(Room room)
+        {
+            foreach (var mob in room.Mobs)
+            {
+
+                mob.Skills = new List<SkillList>();
+             
+                var classSkill = _db.GetCollection<Class>(DataBase.Collections.Class).FindOne(x =>
+                    x.Name.Equals(mob.ClassName, StringComparison.CurrentCultureIgnoreCase));
+
+                foreach (var skill in classSkill.Skills)
+                {
+                    // skill doesn't exist and should be added
+                    if (mob.Skills.FirstOrDefault(x =>
+                            x.SkillName.Equals(skill.SkillName, StringComparison.CurrentCultureIgnoreCase)) == null)
+                    {
+                        mob.Skills.Add(
+                            new SkillList()
+                            {
+                                Proficiency = 100,
+                                Level = skill.Level,
+                                SkillName = skill.SkillName,
+                                SkillId = skill.SkillId
+                            }
+                        );
+                    }
+
+                    mob.Skills.FirstOrDefault(x => x.SkillName.Equals(skill.SkillName, StringComparison.CurrentCultureIgnoreCase)).SkillId = skill.SkillId;
+                }
+
+                //set mob armor
+                mob.ArmorRating = new ArmourRating()
+                {
+                    Armour = mob.Level * 3,
+                    Magic = mob.Level * 3 / 4,
+                };
+
+                //give mob unique IDs
+                mob.UniqueId = Guid.NewGuid();
+            }
+        }
+
 
         [HttpPost]
         [Route("api/World/Room/updateCache")]
@@ -140,7 +193,10 @@ namespace ArchaicQuestII.API.World
 
                 foreach (var room in rooms)
                 {
+                    AddSkillsToMobs(room);
+                    MapMobRoomId(room);
                     _cache.AddRoom($"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}", room);
+                    _cache.AddOriginalRoom($"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}", JsonConvert.DeserializeObject<Room>(JsonConvert.SerializeObject(room)));
                 }
 
                 var areas = _db.GetList<Area>(DataBase.Collections.Area);

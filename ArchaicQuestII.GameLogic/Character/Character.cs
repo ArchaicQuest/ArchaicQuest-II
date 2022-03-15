@@ -157,8 +157,9 @@ namespace ArchaicQuestII.GameLogic.Character
         public string DefaultAttack { get; set; }
         [JsonIgnore]
         public Queue<string> Buffer { get; set; } = new Queue<string>();
-        public List<Spell.Model.Spell> Spells { get; set; }
-        public List<SkillList> Skills { get; set; }
+
+        public List<Spell.Model.Spell> Spells { get; set; } = new List<Spell.Model.Spell>();
+        public List<SkillList> Skills { get; set; } = new List<SkillList>();
         public bool Deleted { get; set; }
         public DateTime? DateCreated { get; set; } = DateTime.Now;
         public DateTime? DateUpdated { get; set; } = DateTime.Now;
@@ -167,8 +168,9 @@ namespace ArchaicQuestII.GameLogic.Character
         /// for Mob path, e.g n,e,s,w
         /// </summary>
         public string Commands { get; set; }
-        public string EnterEmote { get; set; }
-        public string LeaveEmote { get; set; }
+
+        public string EnterEmote { get; set; } = String.Empty;
+        public string LeaveEmote { get; set; }  = String.Empty;
         /// <summary>
         /// moves around randomly
         /// </summary>

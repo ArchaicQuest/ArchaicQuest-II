@@ -286,8 +286,19 @@ namespace ArchaicQuestII.GameLogic.Hubs
             player.ConnectionId = hubId;
             player.LastCommandTime = DateTime.Now;
             player.LastLoginTime = DateTime.Now;
+            
+            SetArmorRating(player);
           
             return player;
+        }
+
+        private void SetArmorRating(Player player)
+        {
+            foreach (var eq in player.Inventory.FindAll(x => x.Equipped.Equals(true)))
+            {
+                player.ArmorRating.Armour += eq.ArmourRating.Armour;
+                player.ArmorRating.Magic += eq.ArmourRating.Magic;
+            }
         }
 
         private async void AddCharacterToCache(string hubId, Player character)

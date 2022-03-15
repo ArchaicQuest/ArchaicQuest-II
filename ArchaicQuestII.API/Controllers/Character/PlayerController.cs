@@ -98,7 +98,8 @@ namespace ArchaicQuestII.Controllers.character
                 HairColour = player.HairColour,
                 HairLength = player.HairLength,
                 HairTexture = player.HairTexture,
-                RoomId = _cache.GetConfig().StartingRoom
+                RoomId = _cache.GetConfig().StartingRoom,
+
 
             };
 

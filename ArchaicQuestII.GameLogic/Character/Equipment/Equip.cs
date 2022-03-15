@@ -133,6 +133,7 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
                 if (!EqSlotSet(itemToWear.Slot, player))
                 {
                     Wear(itemToWear.Name, room, player);
+                    
                 }
             }
         }
@@ -154,7 +155,8 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
             }
 
             itemToRemove.Equipped = false;
-
+            player.ArmorRating.Armour -= itemToRemove.ArmourRating.Armour;
+            player.ArmorRating.Magic -= itemToRemove.ArmourRating.Magic;
             switch (itemToRemove.Slot)
             {
                 case Equipment.EqSlot.Arms:
@@ -263,7 +265,7 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
                     _writer.WriteLine("<p>You don't know how to remove this.</p>", player.ConnectionId);
                     break;
             }
-
+            _clientUi.UpdateScore(player);
             _clientUi.UpdateEquipment(player);
             _clientUi.UpdateInventory(player);
         }
@@ -316,6 +318,8 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
             }
 
             itemToWear.Equipped = true;
+            player.ArmorRating.Armour += itemToWear.ArmourRating.Armour;
+            player.ArmorRating.Magic += itemToWear.ArmourRating.Magic;
             switch (itemSlot)
             {
                 case Equipment.EqSlot.Arms:
@@ -537,6 +541,7 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
             }
 
             _clientUi.UpdateEquipment(player);
+            _clientUi.UpdateScore(player);
             _clientUi.UpdateInventory(player);
         }
 

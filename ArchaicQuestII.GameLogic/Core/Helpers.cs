@@ -108,7 +108,7 @@ namespace ArchaicQuestII.GameLogic.Core
         {
 
             return player.Skills.FirstOrDefault(x =>
-                x.SkillName.Equals(skillName, StringComparison.CurrentCultureIgnoreCase));
+                x.SkillName.Equals(skillName, StringComparison.CurrentCultureIgnoreCase) && player.Level >= x.Level);
         }
 
 
@@ -389,6 +389,7 @@ namespace ArchaicQuestII.GameLogic.Core
         {
             switch (direction)
             {
+                
                 case "North":
                     return "South";
                 case "North East":
@@ -412,6 +413,7 @@ namespace ArchaicQuestII.GameLogic.Core
                 default: { return direction; }
             }
         }
+     
         /// <summary>
         /// Applies bonus affects to player
         /// </summary>

@@ -223,7 +223,7 @@ namespace ArchaicQuestII.API
         {
             foreach (var mob in room.Mobs)
             {
-
+                mob.UniqueId = Guid.NewGuid();
                 mob.RoomId = $"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}";
             }
         }
@@ -257,8 +257,6 @@ namespace ArchaicQuestII.API
            });
 
            app.UseRouting();
-
-
            app.UseAuthentication();
            app.UseAuthorization();
             app.UseEndpoints(endpoints =>

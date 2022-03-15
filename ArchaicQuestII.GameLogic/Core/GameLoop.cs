@@ -8,6 +8,7 @@ using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Effect;
+using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.Skill.Core;
 using ArchaicQuestII.GameLogic.Spell;
 using ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells;
@@ -59,8 +60,50 @@ namespace ArchaicQuestII.GameLogic.Core
             };
         }
 
-        public async Task UpdateTime()
+        public void UpdateCorpse(Item.Item corpse, Room room)
         {
+            
+            switch (corpse.Decay)
+            {
+                case 10:
+                case 9:
+                case 8:
+                case 7:
+                case 6:
+                    corpse.Description.Room = $"The corpse of {corpse.Name.ToLower()} lies here.";
+                    break;
+                case 5:
+                case 4:
+                    corpse.Description.Room = $"The corpse of {corpse.Name.ToLower()} is buzzing with flies.";
+                    break;
+                case 3:
+                    corpse.Description.Room = $"The corpse of {corpse.Name.ToLower()} fills the air with a foul stench.";
+                    break;
+                case 2:
+                    corpse.Description.Room = $"The corpse of {corpse.Name.ToLower()} is crawling with vermin.";
+                    break;
+                case 1:
+                    corpse.Description.Room = $"The corpse of {corpse.Name.ToLower()} is in the last stages of decay.";
+                    break;
+                case 0:
+                  
+                    foreach (var pc in room.Players)
+                    {
+                        _writeToClient.WriteLine($"<p>A quivering horde of maggots consumes {corpse.Name.ToLower()}.</p>", pc.ConnectionId);
+                    }
+                    room.Items.Remove(corpse);
+                    break;
+                default:
+                    corpse.Description.Room = $"The corpse of {corpse.Name.ToLower()} lies here.";
+                    break;
+            }
+            
+            corpse.Decay--;
+      
+        }
+
+        public async Task UpdateTime()
+        {   
 
 
             Console.WriteLine("started loop");
@@ -79,51 +122,54 @@ namespace ArchaicQuestII.GameLogic.Core
 
                     foreach (var mob in originalRoom.Mobs)
                     {
-                        // need to check if mob exists before adding
-                        var mobExist = room.Mobs.FirstOrDefault(x => x.UniqueId.Equals(mob.UniqueId));
-
-                        if (mobExist == null && room.Players.Count == 0)
+                
+                        var mobExist = rooms.Find(x => x.Mobs.Any(y => y.UniqueId.Equals(mob.UniqueId)))
+                            ?.Mobs.FirstOrDefault(z => z.UniqueId.Equals(mob.UniqueId));
+                       
+                        if (mobExist == null)
                         {
                             room.Mobs.Add(mob);
-
-                            //get corpse and remove
-                            var corpse = room.Items.FirstOrDefault(x => x.Name.Contains(mob.Name, StringComparison.CurrentCultureIgnoreCase));
-                            room.Items.Remove(corpse);
                         }
                         else
                         {
-                            if (mobExist != null)
+                            mobExist.Attributes.Attribute[EffectLocation.Hitpoints] +=
+                                _dice.Roll(1, 2, 5) * mobExist.Level;
+                            mobExist.Attributes.Attribute[EffectLocation.Mana] +=
+                                _dice.Roll(1, 2, 5) * mobExist.Level;
+                            mobExist.Attributes.Attribute[EffectLocation.Moves] +=
+                                _dice.Roll(1, 2, 5) * mobExist.Level;
+
+                            if (mobExist.Attributes.Attribute[EffectLocation.Hitpoints] >
+                                mobExist.MaxAttributes.Attribute[EffectLocation.Hitpoints])
                             {
-                                mobExist.Attributes.Attribute[EffectLocation.Hitpoints] +=
-                                    _dice.Roll(1, 2, 5) * mobExist.Level;
-                                mobExist.Attributes.Attribute[EffectLocation.Mana] +=
-                                    _dice.Roll(1, 2, 5) * mobExist.Level;
-                                mobExist.Attributes.Attribute[EffectLocation.Moves] +=
-                                    _dice.Roll(1, 2, 5) * mobExist.Level;
+                                mobExist.Attributes.Attribute[EffectLocation.Hitpoints] =
+                                    mobExist.MaxAttributes.Attribute[EffectLocation.Hitpoints];
+                            }
 
-                                if (mobExist.Attributes.Attribute[EffectLocation.Hitpoints] >
-                                    mobExist.MaxAttributes.Attribute[EffectLocation.Hitpoints])
-                                {
-                                    mobExist.Attributes.Attribute[EffectLocation.Hitpoints] =
-                                        mobExist.MaxAttributes.Attribute[EffectLocation.Hitpoints];
-                                }
+                            if (mobExist.Attributes.Attribute[EffectLocation.Mana] >
+                                mobExist.MaxAttributes.Attribute[EffectLocation.Mana])
+                            {
+                                mobExist.Attributes.Attribute[EffectLocation.Mana] =
+                                    mobExist.MaxAttributes.Attribute[EffectLocation.Mana];
+                            }
 
-                                if (mobExist.Attributes.Attribute[EffectLocation.Mana] >
-                                    mobExist.MaxAttributes.Attribute[EffectLocation.Mana])
-                                {
-                                    mobExist.Attributes.Attribute[EffectLocation.Mana] =
-                                        mobExist.MaxAttributes.Attribute[EffectLocation.Mana];
-                                }
-
-                                if (mobExist.Attributes.Attribute[EffectLocation.Moves] >
-                                    mobExist.MaxAttributes.Attribute[EffectLocation.Moves])
-                                {
-                                    mobExist.Attributes.Attribute[EffectLocation.Moves] =
-                                        mobExist.MaxAttributes.Attribute[EffectLocation.Moves];
-                                }
+                            if (mobExist.Attributes.Attribute[EffectLocation.Moves] >
+                                mobExist.MaxAttributes.Attribute[EffectLocation.Moves])
+                            {
+                                mobExist.Attributes.Attribute[EffectLocation.Moves] =
+                                    mobExist.MaxAttributes.Attribute[EffectLocation.Moves];
                             }
                         }
                     }
+                    
+                    //get corpse and remove
+                    var corpses = room.Items.FindAll(x => x.Description.Room.Contains("corpse", StringComparison.CurrentCultureIgnoreCase));
+
+                    foreach (var corpse in corpses)
+                    {
+                        UpdateCorpse(corpse, room);
+                    }
+
 
 
                     foreach (var item in originalRoom.Items)
@@ -143,6 +189,7 @@ namespace ArchaicQuestII.GameLogic.Core
                             itemExist.Container.IsOpen = item.Container.IsOpen;
                             itemExist.Container.IsLocked = item.Container.IsLocked;
                         }
+
                     }
 
                     // reset doors
@@ -173,7 +220,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
                     // if player has fast healing add the bonus here
                   var hasFastHealing =  player.Skills.FirstOrDefault(x =>
-                        x.SkillName.Equals("Fast Healing", StringComparison.CurrentCultureIgnoreCase));
+                        x.SkillName.Equals("Fast Healing", StringComparison.CurrentCultureIgnoreCase) && player.Level >= x.Level);
 
          
 
@@ -530,7 +577,7 @@ namespace ArchaicQuestII.GameLogic.Core
                 {
                     await Task.Delay(45000).ConfigureAwait(false);
 
-                    var rooms = _cache.GetAllRooms();
+                    var rooms = _cache.GetAllRooms().Where(x => x.Players.Any());
 
                     if (!rooms.Any())
                     {
@@ -572,7 +619,7 @@ namespace ArchaicQuestII.GameLogic.Core
                 {
                     await Task.Delay(30000).ConfigureAwait(false);
 
-                    var rooms = _cache.GetAllRooms().Where(x => x.Players.Any());
+                    var rooms = _cache.GetAllRooms();
 
                     if (!rooms.Any())
                     {

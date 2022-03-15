@@ -136,7 +136,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public List<Room> GetAllRoomsToRepop()
         {
-            var room = _roomCache.Values.Where(x => x.Clean.Equals(false)).ToList();
+            var room = _roomCache.Values.ToList();
 
             return room;
         }
@@ -260,6 +260,7 @@ namespace ArchaicQuestII.GameLogic.Core
         public void ClearRoomCache()
         {
             _roomCache.Clear();
+            _originalRoomCache.Clear();
             _mapCache.Clear();
             _helpCache.Clear();
             _questCache.Clear();

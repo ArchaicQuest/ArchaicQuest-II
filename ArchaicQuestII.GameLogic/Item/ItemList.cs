@@ -44,7 +44,6 @@ namespace ArchaicQuestII.GameLogic.Item
             {
                 if (x.Type == Item.ItemTypes.Money)
                 {
-                    
                     return new ItemObj() {Name = DisplayMoneyAmount(x.Value), Id = x.Id};
                 }
 
