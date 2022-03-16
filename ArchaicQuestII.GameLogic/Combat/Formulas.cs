@@ -78,7 +78,13 @@ namespace ArchaicQuestII.GameLogic.Combat
 
         public int DamageReduction(Player defender, int damage)
         {
-            var ArRating = defender.ArmorRating.Armour + 1;
+            var ArRating = defender.ArmorRating.Armour;
+
+            if (ArRating <= 0)
+            {
+                ArRating = 1;
+            }
+            
             var armourReduction = ArRating / (double)damage;
 
             if (armourReduction > 4)
@@ -132,12 +138,12 @@ namespace ArchaicQuestII.GameLogic.Combat
             }
 
             // calculate damage reduction based on target armour
-            var armourReduction = DamageReduction(target, damage);
+         
 
             //refactor this shit
             var strengthMod = 0.5 + player.Attributes.Attribute[EffectLocation.Strength] / (double)100;
-            var levelDif = player.Level - target.Level <= 0 ? 1 : player.Level - target.Level;
-            var levelMod = levelDif / 2 <= 0 ? 1 : levelDif / 2;
+            var levelDif =  target.Level - player.Level <= 0 ? 1 :  target.Level - player.Level;
+            var levelMod = levelDif; //levelDif / 2 <= 0 ? 1 : levelDif / 2;
             var enduranceMod = player.Attributes.Attribute[EffectLocation.Moves] / (double)player.MaxAttributes.Attribute[EffectLocation.Moves];
             var criticalHit = 1;
 
@@ -147,11 +153,11 @@ namespace ArchaicQuestII.GameLogic.Combat
             }
 
 
-            int totalDamage = (int)((damage * strengthMod) + levelMod) * criticalHit;
-
+            int totalDamage = (int)((damage * strengthMod) + levelMod + player.Attributes.Attribute[EffectLocation.DamageRoll]) * criticalHit;
+            var armourReduction = DamageReduction(target, totalDamage);
             if (armourReduction > 0)
             {
-                totalDamage = totalDamage / armourReduction;
+                totalDamage =  (int)Math.Ceiling((double)totalDamage / (double)armourReduction);
             }
 
             if (totalDamage <= 0)

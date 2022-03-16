@@ -6,6 +6,7 @@ using ArchaicQuestII.API.Helpers;
 using ArchaicQuestII.API.Models;
 using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Equipment;
 using Microsoft.AspNetCore.Mvc;
 
 using ArchaicQuestII.GameLogic.Item;
@@ -79,6 +80,71 @@ namespace ArchaicQuestII.Controllers
                 EnterEmote = mob.EnterEmote,
                 LeaveEmote = mob.LeaveEmote
             };
+
+            foreach (var item in mob.Inventory)
+            {
+                if (item.Equipped)
+                {
+                    switch (item.Slot)
+                    {
+                        case Equipment.EqSlot.Arms:
+                            mob.Equipped.Arms = item;
+                            break;
+                case Equipment.EqSlot.Body:
+                    mob.Equipped.AboutBody = item;
+                    break;
+                case Equipment.EqSlot.Face:
+                    mob.Equipped.Face = item;
+                    break;
+                case Equipment.EqSlot.Feet:
+                    mob.Equipped.Feet = item;
+                    break;
+                case Equipment.EqSlot.Finger:
+                    mob.Equipped.Finger = item;
+                    break;
+                case Equipment.EqSlot.Floating:
+                    mob.Equipped.Floating = item;
+                    break;
+                case Equipment.EqSlot.Hands:
+                    mob.Equipped.Hands = item;
+                    break;
+                case Equipment.EqSlot.Head:
+                    mob.Equipped.Head = item;
+                    break;
+                case Equipment.EqSlot.Held:
+                    mob.Equipped.Held = item;
+                    break;
+                case Equipment.EqSlot.Legs:
+                    mob.Equipped.Legs = item;
+                    break;
+                case Equipment.EqSlot.Light:
+                    mob.Equipped.Light = item;
+                    break;
+                case Equipment.EqSlot.Neck:
+                    mob.Equipped.Neck = item;
+                    break;
+                case Equipment.EqSlot.Shield:
+                    mob.Equipped.Shield = item;
+                    break;
+                case Equipment.EqSlot.Torso:
+                    mob.Equipped.Torso = item;
+                    break;
+                case Equipment.EqSlot.Waist:
+                    mob.Equipped.Waist = item;
+                    break;
+                case Equipment.EqSlot.Wielded:
+                    mob.Equipped.Wielded = item;
+
+                    break;
+                case Equipment.EqSlot.Wrist:
+                    mob.Equipped.Wrist = item;
+                    break;
+                case Equipment.EqSlot.Secondary:
+                    mob.Equipped.Secondary = item;
+                    break;
+                    }
+                }
+            }
 
 
             if (mob.Id != Guid.Empty)
