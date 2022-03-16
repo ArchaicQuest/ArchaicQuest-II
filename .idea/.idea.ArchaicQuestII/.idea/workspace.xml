@@ -9,8 +9,11 @@
   <component name="ChangeListManager">
     <list default="true" id="9c53e88d-cb5e-4250-a25e-dddc68525ffa" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ArchaicQuestII/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ArchaicQuestII/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.API/Controllers/Character/MobController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.API/Controllers/Character/MobController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/Formulas.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/Formulas.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.API/Controllers/World/RoomController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.API/Controllers/World/RoomController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.API/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.API/Startup.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/GameLoop.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/GameLoop.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Hubs/GameHub.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Hubs/GameHub.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/World/Room/RoomActions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/World/Room/RoomActions.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,7 +32,10 @@
     </file-type-list>
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="mock:///Users/liam/Documents/development/personal/ArchaicQuest-II/ArchaicQuestII.GameLogic/Combat/Formulas.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/liam/Documents/development/personal/ArchaicQuest-II/ArchaicQuestII.API/Controllers/Character/MobController.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/2dd9fd9a4d48ea4997d622131917938ef93a116a3c769d67aef28f373a/First.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../Website/package-lock.json" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/1bdbf92c6d1a7a909ac3864acbafcdb4a463d149527ff621288f59cf429749/ThrowHelper.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ArchaicQuestII.API/obj/Debug/netcoreapp31/.NETCoreApp,Version=v3.1.AssemblyAttributes.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/9433ca57f5b54d9a526b9e1a56e36ac1d5e958a636cc20f4318458a844df1e/Guid.cs" root0="SKIP_HIGHLIGHTING" />
@@ -251,7 +257,7 @@
       <workItem from="1647037556456" duration="12284000" />
       <workItem from="1647279848955" duration="6045000" />
       <workItem from="1647333273196" duration="16420000" />
-      <workItem from="1647425544910" duration="8703000" />
+      <workItem from="1647425544910" duration="12400000" />
     </task>
     <servers />
   </component>
@@ -348,19 +354,6 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="25" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/Formulas.cs</url>
-          <line>110</line>
-          <properties documentPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/Formulas.cs" initialLine="104" containingFunctionPresentation="method 'CalculateDamage'">
-            <startOffsets>
-              <option value="4100" />
-            </startOffsets>
-            <endOffsets>
-              <option value="4302" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="27" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

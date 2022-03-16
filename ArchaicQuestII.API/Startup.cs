@@ -210,7 +210,7 @@ namespace ArchaicQuestII.API
                 //set mob armor
                 mob.ArmorRating = new ArmourRating()
                 {
-                    Armour = mob.Level * 3,
+                    Armour = mob.Level > 5 ? mob.Level * 3 : 1,
                     Magic = mob.Level * 3 / 4,
                 };
 

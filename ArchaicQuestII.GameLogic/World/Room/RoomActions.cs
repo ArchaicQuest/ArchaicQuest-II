@@ -9,6 +9,7 @@ using ArchaicQuestII.Core.World;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Status;
+using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Item;
 using Newtonsoft.Json;
@@ -23,13 +24,15 @@ namespace ArchaicQuestII.GameLogic.World.Room
         private readonly ICache _cache;
         private readonly IDice _dice;
         private readonly IGain _gain;
-        public RoomActions(IWriteToClient writeToClient, ITime time, ICache cache, IDice dice, IGain gain)
+        private readonly IFormulas _formulas;
+        public RoomActions(IWriteToClient writeToClient, ITime time, ICache cache, IDice dice, IGain gain, IFormulas formulas)
         {
             _writeToClient = writeToClient;
             _time = time;
             _cache = cache;
             _dice = dice;
             _gain = gain;
+            _formulas = formulas;
         }
         /// <summary>
         /// Displays current room 
@@ -286,7 +289,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
                     $"<tr><td><span class='cell-title'>Face:</span> {character.Face}</td><td><span class='cell-title'>Hair Facial:</span> {character.FacialHair}</td></tr><table>");
             }
 
-            _writeToClient.WriteLine($"{sb}<p class='{(isDark ? "room-dark" : "")}'>{character.Description}", player.ConnectionId);
+            _writeToClient.WriteLine($"{sb}<p class='{(isDark ? "room-dark" : "")}'>{character.Description} <br/>{character.Name} {_formulas.TargetHealth(player, character)}", player.ConnectionId);
 
             foreach (var pc in room.Players)
             {

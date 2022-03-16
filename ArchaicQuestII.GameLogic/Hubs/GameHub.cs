@@ -9,6 +9,7 @@ using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Gain;
+using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Commands;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
@@ -33,8 +34,9 @@ namespace ArchaicQuestII.GameLogic.Hubs
         private readonly ITime _time;
         private readonly IDice _dice;
         private readonly IGain _gain;
+        private readonly IFormulas _formulas;
 
-        public GameHub(IDataBase db, ICache cache, ILogger<GameHub> logger, IWriteToClient writeToClient, ICommands commands, IUpdateClientUI updateClientUi, IMobScripts mobScripts, ITime time, IDice dice, IGain gain)
+        public GameHub(IDataBase db, ICache cache, ILogger<GameHub> logger, IWriteToClient writeToClient, ICommands commands, IUpdateClientUI updateClientUi, IMobScripts mobScripts, ITime time, IDice dice, IGain gain, IFormulas formulas)
         {
             _logger = logger;
             _db = db;
@@ -46,6 +48,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
             _time = time;
             _dice = dice;
             _gain = gain;
+            _formulas = formulas;
         }
 
  
@@ -380,7 +383,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
 
             _updateClientUi.GetMap(character,_cache.GetMap($"{room.AreaId}{room.Coords.Z}"));
 
-            new RoomActions(_writeToClient, _time, _cache, _dice, _gain).Look("", room, character);
+            new RoomActions(_writeToClient, _time, _cache, _dice, _gain, _formulas).Look("", room, character);
 
             foreach (var mob in room.Mobs)
             {

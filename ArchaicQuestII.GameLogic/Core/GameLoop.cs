@@ -132,12 +132,25 @@ namespace ArchaicQuestII.GameLogic.Core
                         }
                         else
                         {
-                            mobExist.Attributes.Attribute[EffectLocation.Hitpoints] +=
-                                _dice.Roll(1, 2, 5) * mobExist.Level;
-                            mobExist.Attributes.Attribute[EffectLocation.Mana] +=
-                                _dice.Roll(1, 2, 5) * mobExist.Level;
-                            mobExist.Attributes.Attribute[EffectLocation.Moves] +=
-                                _dice.Roll(1, 2, 5) * mobExist.Level;
+                            if (mob.Status != CharacterStatus.Status.Fighting)
+                            {
+
+                                mobExist.Attributes.Attribute[EffectLocation.Hitpoints] +=
+                                    _dice.Roll(1, 2, 5) + mobExist.Level;
+                                mobExist.Attributes.Attribute[EffectLocation.Mana] +=
+                                    _dice.Roll(1, 2, 5) + mobExist.Level;
+                                mobExist.Attributes.Attribute[EffectLocation.Moves] +=
+                                    _dice.Roll(1, 2, 5) + mobExist.Level;
+                            }
+                            else
+                            {
+                                mobExist.Attributes.Attribute[EffectLocation.Hitpoints] +=
+                                    (_dice.Roll(1, 1, 5) + mobExist.Level) / 2;
+                                mobExist.Attributes.Attribute[EffectLocation.Mana] +=
+                                    (_dice.Roll(1, 1, 5) + mobExist.Level) / 2;
+                                mobExist.Attributes.Attribute[EffectLocation.Moves] +=
+                                    (_dice.Roll(1, 1, 5) + mobExist.Level) / 2;
+                            }
 
                             if (mobExist.Attributes.Attribute[EffectLocation.Hitpoints] >
                                 mobExist.MaxAttributes.Attribute[EffectLocation.Hitpoints])
