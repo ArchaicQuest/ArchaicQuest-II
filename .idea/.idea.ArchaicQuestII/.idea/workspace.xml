@@ -9,7 +9,6 @@
   <component name="ChangeListManager">
     <list default="true" id="9c53e88d-cb5e-4250-a25e-dddc68525ffa" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ArchaicQuestII/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ArchaicQuestII/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/Combat.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/Combat.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -252,7 +251,7 @@
       <workItem from="1647279848955" duration="6045000" />
       <workItem from="1647333273196" duration="16420000" />
       <workItem from="1647425544910" duration="12737000" />
-      <workItem from="1647472082404" duration="1163000" />
+      <workItem from="1647472082404" duration="2073000" />
     </task>
     <servers />
   </component>
