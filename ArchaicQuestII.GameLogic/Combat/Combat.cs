@@ -126,7 +126,7 @@ namespace ArchaicQuestII.GameLogic.Combat
             //this is breaking
 
             var skill = player.Skills.FirstOrDefault(x =>
-               x.SkillName.Replace(" ", "").Equals(skillName.Replace(" ", ""), StringComparison.CurrentCultureIgnoreCase));
+               x.SkillName.Replace(" ", "").Equals(skillName.Replace(" ", ""), StringComparison.CurrentCultureIgnoreCase) && player.Level >= x.Level);
             return skill;
         }
 
