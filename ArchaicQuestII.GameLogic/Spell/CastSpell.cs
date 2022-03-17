@@ -201,7 +201,7 @@ namespace ArchaicQuestII.GameLogic.Spell
             {
 
                 _writer.WriteLine(
-                    $"You close your eyes and utters the words, '{spell.Name}'.", origin.ConnectionId);
+                    $"You close your eyes and utter the words, '{spell.Name}'.", origin.ConnectionId);
 
                 foreach (var pc in room.Players)
                 {

@@ -229,8 +229,18 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
             var showDirection = string.IsNullOrEmpty(direction) ? "" : $" {direction.ToLower()}";
             var enterMessage = player.EnterEmote;
             var leaveMessage = player.LeaveEmote;
-            var enter = onEnter ? enterMessage ?? $"{player.Name} walks in from the " : leaveMessage ?? $"{player.Name} walks ";
-            var moveType = $"{enter} {showDirection}.";
+
+            if (string.IsNullOrEmpty(enterMessage))
+            {
+                enterMessage = $"{player.Name} walks in from the";
+            }
+            if (string.IsNullOrEmpty(leaveMessage))
+            {
+                leaveMessage = $"{player.Name} walks";
+            }
+            var enter = onEnter ? enterMessage : leaveMessage;
+            var isPlayer = player.ConnectionId != "mob";
+            var moveType = $"<span class='{(isPlayer ? "player" : "mob")}'>{enter}{showDirection}.</span>";
 
 
      

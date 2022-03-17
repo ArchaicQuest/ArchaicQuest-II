@@ -236,9 +236,9 @@ namespace ArchaicQuestII.GameLogic.Tests
         {
 
             _player.Status = CharacterStatus.Status.Standing;
-            var foundSpell = _spell.FindSpell("magic", _player);
+            var foundSpell = _spell.FindSpell("test", _player);
 
-            _writer.Verify(w => w.WriteLine(It.Is<string>(s => s == "You don't know a spell that begins with magic")), Times.Once);
+            _writer.Verify(w => w.WriteLine(It.Is<string>(s => s == "You don't know a spell that begins with test"), _player.ConnectionId), Times.Once);
             Assert.True(foundSpell == null);
         }
 
@@ -366,7 +366,7 @@ namespace ArchaicQuestII.GameLogic.Tests
             _player.Attributes.Attribute[EffectLocation.Mana] = 500;
 
             _spell.ReciteSpellCharacter(_player, _target, spell, room);
-            _writer.Verify(w => w.WriteLine(It.Is<string>(s => s == "Malleus closes his eyes and utters the words, 'Magic missile'."), _player.ConnectionId), Times.Once);
+            _writer.Verify(w => w.WriteLine(It.Is<string>(s => s == "You close your eyes and utter the words, 'Magic missile'."), _player.ConnectionId), Times.Once);
 
         }
 
@@ -390,7 +390,7 @@ namespace ArchaicQuestII.GameLogic.Tests
             _target.ConnectionId = "bcd";
 
             _spell.ReciteSpellCharacter(_player, _target, spell, room);
-            _writer.Verify(w => w.WriteLine(It.Is<string>(s => s == "You look at Bob and utters the words, 'Magic missile'."), _player.ConnectionId), Times.Once);
+            _writer.Verify(w => w.WriteLine(It.Is<string>(s => s == "You look at Bob and utter the words, 'Magic missile'."), _player.ConnectionId), Times.Once);
 
             _writer.Verify(w => w.WriteLine(It.Is<string>(s => s == "Malleus looks at you and utters the words, 'Magic missile'."), _target.ConnectionId), Times.Once);
 

@@ -131,11 +131,11 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Movement
             _cache.AddRoom($"{room2.AreaId}{room2.Coords.X}{room2.Coords.Y}{room2.Coords.Z}", room2);
             _cache.AddRoom($"{_room.AreaId}{_room.Coords.X}{_room.Coords.Y}{_room.Coords.Z}", _room);
 
-
+            _player.EnterEmote = "";
             new GameLogic.Commands.Movement.Movement(_writer.Object, _cache, _roomActions.Object, _clientui.Object, _dice.Object, _combat.Object, _mobScript.Object).Move(_room, _player, "North");
 
             _writer.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("Bob walks north.")), "1"), Times.Never);
-            _writer.Verify(w => w.WriteLine(It.Is<string>(s => s == "Bob walks north."), "2"), Times.Once);
+            _writer.Verify(w => w.WriteLine(It.Is<string>(s => s == "<span class='player'>Bob walks north.</span>"), "2"), Times.Once);
             Assert.Equal("1010", _player.RoomId);
         }
 

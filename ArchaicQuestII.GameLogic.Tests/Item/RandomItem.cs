@@ -59,7 +59,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Item
 
        
             var item = new GameLogic.Item.RandomItem(_dice.Object, _randomWeapon.Object, _randomClothItems.Object,_randomLeatherItems.Object, _randomStuddedLeatherArmour.Object, _randomChainMailArmour.Object, _randomPlateMailArmour.Object).WeaponDrop(player);
-            Assert.Equal(item.Name, "a steel axe");
+            Assert.Equal("a steel axe", item.Name.ToLower());
             Assert.Equal(item.Level,5);
         }
 

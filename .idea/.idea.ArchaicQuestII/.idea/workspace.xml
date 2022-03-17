@@ -9,6 +9,14 @@
   <component name="ChangeListManager">
     <list default="true" id="9c53e88d-cb5e-4250-a25e-dddc68525ffa" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ArchaicQuestII/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ArchaicQuestII/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic.Tests/Commands/Movement/Movement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic.Tests/Commands/Movement/Movement.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic.Tests/Core/Time.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic.Tests/Core/Time.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic.Tests/Core/Weather.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic.Tests/Core/Weather.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic.Tests/Item/RandomItem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic.Tests/Item/RandomItem.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic.Tests/Spells.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic.Tests/Spells.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic.Tests/World/Room/RoomActions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic.Tests/World/Room/RoomActions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Movement/Movement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Movement/Movement.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Spell/CastSpell.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Spell/CastSpell.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -251,7 +259,7 @@
       <workItem from="1647279848955" duration="6045000" />
       <workItem from="1647333273196" duration="16420000" />
       <workItem from="1647425544910" duration="12737000" />
-      <workItem from="1647472082404" duration="2073000" />
+      <workItem from="1647472082404" duration="9032000" />
     </task>
     <servers />
   </component>
@@ -350,17 +358,43 @@
           <option name="timeStamp" value="25" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/GameLoop.cs</url>
-          <line>128</line>
-          <properties documentPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/GameLoop.cs" initialLine="128" containingFunctionPresentation="method 'UpdateTime'">
+          <url>file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Movement/Movement.cs</url>
+          <line>242</line>
+          <properties documentPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Movement/Movement.cs" initialLine="242" containingFunctionPresentation="method 'MovementAdjective'">
             <startOffsets>
-              <option value="4515" />
+              <option value="8411" />
             </startOffsets>
             <endOffsets>
-              <option value="4536" />
+              <option value="8506" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="26" />
+          <option name="timeStamp" value="28" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/Time.cs</url>
+          <line>197</line>
+          <properties documentPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/Time.cs" initialLine="197" containingFunctionPresentation="method 'UpdateTime'">
+            <startOffsets>
+              <option value="6204" />
+            </startOffsets>
+            <endOffsets>
+              <option value="6250" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="31" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/Time.cs</url>
+          <line>105</line>
+          <properties documentPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/Time.cs" initialLine="105" containingFunctionPresentation="method 'MudTimePassed'">
+            <startOffsets>
+              <option value="3234" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3262" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="32" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
