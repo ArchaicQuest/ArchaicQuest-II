@@ -548,6 +548,8 @@ namespace ArchaicQuestII.GameLogic.Core
                             }
                             _client.UpdateAffects(pc);
                         }
+                        
+                        this.IdleCheck(pc);
                     }
                 }
                 catch (Exception ex)
@@ -731,6 +733,13 @@ namespace ArchaicQuestII.GameLogic.Core
                         var command = player.Value.Buffer.Dequeue();
                         var room = _cache.GetRoom(player.Value.RoomId);
                         player.Value.LastCommandTime = DateTime.Now;
+                        
+                        if (player.Value.CommandLog.Count >= 1000)
+                        {
+                            player.Value.CommandLog = new List<string>();
+                        }
+                        
+                        player.Value.CommandLog.Add(command);
                         _commands.ProcessCommand(command, player.Value, room);
 
                     }
