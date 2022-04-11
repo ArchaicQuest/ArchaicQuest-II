@@ -207,8 +207,8 @@ namespace ArchaicQuestII.GameLogic.Hubs
             var playerExist = _cache.PlayerAlreadyExists(player.Id);
             player.LastLoginTime = DateTime.Now;
             player.LastCommandTime = DateTime.Now;
-            
-            player.CommandLog.Add($"{string.Format("{0:f}", DateTime.Now)} - Logged in"));
+
+            player.CommandLog.Add($"{string.Format("{0:f}", DateTime.Now)} - Logged in");
 
             await SendToClient($"<p>Welcome {player.Name}. Your adventure awaits you.</p>", hubId);
 
