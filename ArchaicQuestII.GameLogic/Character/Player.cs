@@ -36,6 +36,6 @@ namespace ArchaicQuestII.GameLogic.Character
         public int QuestPoints { get; set; } = 0;
         public bool Idle { get; set; } = false;
         public bool AFK { get; set; } = false;
-        public List<string> CommandLog = new List<string>();
+        public List<string> CommandLog { get; set; } = new List<string>();
     }
 }

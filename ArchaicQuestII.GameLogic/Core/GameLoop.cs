@@ -739,7 +739,7 @@ namespace ArchaicQuestII.GameLogic.Core
                             player.Value.CommandLog = new List<string>();
                         }
                         
-                        player.Value.CommandLog.Add(command);
+                        player.Value.CommandLog.Add($"{string.Format("{0:f}", DateTime.Now)} - {command}");
                         _commands.ProcessCommand(command, player.Value, room);
 
                     }

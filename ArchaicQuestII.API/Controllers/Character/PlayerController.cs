@@ -228,20 +228,63 @@ namespace ArchaicQuestII.Controllers.character
 
         [HttpGet]
         [API.Helpers.Authorize]
-        [Route("api/character/Player")]
-        public List<Player> Get([FromQuery] string query)
+        [Route("api/character/Player/{id:guid}")]
+        public List<Player> Get(Guid? id)
         {
 
-            var mobs = _db.GetCollection<Player>(DataBase.Collections.Mobs).FindAll().Where(x => x.Name != null);
+            var pc = _db.GetCollection<Account>(DataBase.Collections.Account).FindById(id);
+
+            if (id == null)
+            {
+                return _db.GetCollection<Player>(DataBase.Collections.Players).FindAll().ToList();
+            }
+
+            var players = new List<Player>();
+
+            foreach (var character in pc.Characters)
+            {
+                var foundPC = _db.GetCollection<Player>(DataBase.Collections.Players).FindById(character);
+
+                if (foundPC != null)
+                {
+                    players.Add(foundPC);
+                }
+            }
+
+            return players.OrderByDescending(x => x.LastLoginTime).ToList();
+
+        }
+        
+        [HttpGet]
+        [API.Helpers.Authorize]
+        [Route("api/character/viewPlayer/{id:guid}")]
+        public Player GetPlayer(Guid? id)
+        {
+
+            var pc = _db.GetCollection<Player>(DataBase.Collections.Players).FindById(id);
+            
+            return pc;
+
+        }
+        
+        [HttpGet]
+        [API.Helpers.Authorize]
+        [Route("api/character/accounts")]
+        public List<Account> getAccounts([FromQuery] string query)
+        {
+
+            var account = _db.GetCollection<Account>(DataBase.Collections.Account).FindAll().Where(x => x.Id != null).OrderBy(x => x.DateJoined);
 
             if (string.IsNullOrEmpty(query))
             {
-                return mobs.ToList();
+                return account.ToList();
             }
 
-            return mobs.Where(x => x.Name.IndexOf(query, StringComparison.OrdinalIgnoreCase) != -1).ToList();
+            return account.ToList();
 
         }
+
+
 
 
 
