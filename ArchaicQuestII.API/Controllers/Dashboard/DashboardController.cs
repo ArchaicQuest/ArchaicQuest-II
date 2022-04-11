@@ -47,6 +47,7 @@ namespace ArchaicQuestII.Controllers.Dashboard
     public class DashboardController : Controller
     {
         private IDataBase _db { get; }
+        private IPlayerDataBase _pdb { get; }
         private ICache _cache { get; }
         public DashboardController(IDataBase db, ICache cache)
         {
@@ -126,7 +127,7 @@ namespace ArchaicQuestII.Controllers.Dashboard
                 Name = "Characters"
             };
 
-            var players = _db.GetCollection<Player>(DataBase.Collections.Players).FindAll();
+            var players = _pdb.GetCollection<Player>(PlayerDataBase.Collections.Players).FindAll();
 
 
 
