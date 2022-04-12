@@ -25,10 +25,12 @@ namespace ArchaicQuestII.Controllers.character
     public class PlayerController : ControllerBase
     {
         private IDataBase _db { get; }
+        private IPlayerDataBase _pdb { get; }
         private ICache _cache { get; }
-        public PlayerController(IDataBase db, ICache cache)
+        public PlayerController(IDataBase db, ICache cache, IPlayerDataBase pdb)
         {
             _db = db;
+            _pdb = pdb;
             _cache = cache;
         }
         [HttpPost]
@@ -170,9 +172,6 @@ namespace ArchaicQuestII.Controllers.character
             }
 
 
-
-
-
             newPlayer.Skills = playerClass?.Skills ?? new List<SkillList>();
 
       
@@ -180,7 +179,7 @@ namespace ArchaicQuestII.Controllers.character
             if (!string.IsNullOrEmpty(player.Id.ToString()) && player.Id != Guid.Empty)
             {
 
-                var foundItem = _db.GetById<Character>(player.Id, DataBase.Collections.Players);
+                var foundItem = _pdb.GetById<Character>(player.Id, PlayerDataBase.Collections.Players);
 
                 if (foundItem == null)
                 {
@@ -190,11 +189,27 @@ namespace ArchaicQuestII.Controllers.character
                 newPlayer.Id = player.Id;
             }
 
-            var account = _db.GetById<Account>(player.AccountId, DataBase.Collections.Account);
+            var account = _pdb.GetById<Account>(player.AccountId, PlayerDataBase.Collections.Account);
             account.Characters.Add(newPlayer.Id);
             Helpers.PostToDiscord($"{player.Name} has joined the realms for the first time.", "event", _cache.GetConfig());
-            _db.Save(account, DataBase.Collections.Account);
-            _db.Save(newPlayer, DataBase.Collections.Players);
+
+          
+          var dupeCheck = _pdb.GetCollection<Player>(PlayerDataBase.Collections.Players).FindOne(x => x.Name.Equals(newPlayer.Name));
+
+        if (dupeCheck != null)
+            {
+
+                if(dupeCheck.Id != newPlayer.Id)
+                {
+                    return Ok(newPlayer.Id);
+                }
+
+            }
+
+
+
+            _pdb.Save(account, PlayerDataBase.Collections.Account);
+            _pdb.Save(newPlayer, PlayerDataBase.Collections.Players);
 
             return Ok(newPlayer.Id);
 
@@ -214,7 +229,7 @@ namespace ArchaicQuestII.Controllers.character
         public bool NameAllowed([FromQuery] string name)
         {
 
-            var nameExists = _db.GetCollection<Player>(DataBase.Collections.Players).FindOne(x => x.Name == name);
+            var nameExists = _pdb.GetCollection<Player>(PlayerDataBase.Collections.Players).FindOne(x => x.Name == name);
 
             if (nameExists == null)
             {
@@ -232,18 +247,18 @@ namespace ArchaicQuestII.Controllers.character
         public List<Player> Get(Guid? id)
         {
 
-            var pc = _db.GetCollection<Account>(DataBase.Collections.Account).FindById(id);
+            var pc = _pdb.GetCollection<Account>(PlayerDataBase.Collections.Account).FindById(id);
 
             if (id == null)
             {
-                return _db.GetCollection<Player>(DataBase.Collections.Players).FindAll().ToList();
+                return _pdb.GetCollection<Player>(PlayerDataBase.Collections.Players).FindAll().ToList();
             }
 
             var players = new List<Player>();
 
             foreach (var character in pc.Characters)
             {
-                var foundPC = _db.GetCollection<Player>(DataBase.Collections.Players).FindById(character);
+                var foundPC = _pdb.GetCollection<Player>(PlayerDataBase.Collections.Players).FindById(character);
 
                 if (foundPC != null)
                 {
@@ -261,7 +276,7 @@ namespace ArchaicQuestII.Controllers.character
         public Player GetPlayer(Guid? id)
         {
 
-            var pc = _db.GetCollection<Player>(DataBase.Collections.Players).FindById(id);
+            var pc = _pdb.GetCollection<Player>(PlayerDataBase.Collections.Players).FindById(id);
             
             return pc;
 
@@ -273,7 +288,7 @@ namespace ArchaicQuestII.Controllers.character
         public List<Account> getAccounts([FromQuery] string query)
         {
 
-            var account = _db.GetCollection<Account>(DataBase.Collections.Account).FindAll().Where(x => x.Id != null).OrderBy(x => x.DateJoined);
+            var account = _pdb.GetCollection<Account>(PlayerDataBase.Collections.Account).FindAll().Where(x => x.Id != null).OrderByDescending(x => x.DateLastPlayed);
 
             if (string.IsNullOrEmpty(query))
             {

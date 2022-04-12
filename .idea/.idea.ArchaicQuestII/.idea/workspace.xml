@@ -8,6 +8,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9c53e88d-cb5e-4250-a25e-dddc68525ffa" name="Default Changelist" comment="kick idle players added back, logging for commands added">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.ArchaicQuestII/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ArchaicQuestII/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.API/Controllers/Character/PlayerController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.API/Controllers/Character/PlayerController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.API/Controllers/Dashboard/DashboardController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.API/Controllers/Dashboard/DashboardController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.API/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.API/Startup.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Account/Account.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Account/Account.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Hubs/GameHub.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Hubs/GameHub.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -29,10 +34,8 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/2dd9fd9a4d48ea4997d622131917938ef93a116a3c769d67aef28f373a/First.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../Website/package-lock.json" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/liam/Documents/development/personal/ArchaicQuest-II/ArchaicQuestII.GameLogic/Character/Player.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/1bdbf92c6d1a7a909ac3864acbafcdb4a463d149527ff621288f59cf429749/ThrowHelper.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ArchaicQuestII.API/obj/Debug/netcoreapp31/.NETCoreApp,Version=v3.1.AssemblyAttributes.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/liam/Documents/development/personal/ArchaicQuest-II/ArchaicQuestII.GameLogic/Core/GameLoop.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/9433ca57f5b54d9a526b9e1a56e36ac1d5e958a636cc20f4318458a844df1e/Guid.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -256,6 +259,7 @@
       <workItem from="1647472082404" duration="11096000" />
       <workItem from="1649336331904" duration="1926000" />
       <workItem from="1649508670825" duration="17016000" />
+      <workItem from="1649668810533" duration="5093000" />
     </task>
     <task id="LOCAL-00001" summary="kick idle players added back, logging for commands added">
       <created>1649547311548</created>
@@ -378,13 +382,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/ArchaicQuestII.API/Controllers/Character/PlayerController.cs</url>
-          <line>265</line>
+          <line>267</line>
           <properties documentPath="$PROJECT_DIR$/ArchaicQuestII.API/Controllers/Character/PlayerController.cs" initialLine="265" containingFunctionPresentation="method 'GetPlayer'">
             <startOffsets>
-              <option value="9016" />
+              <option value="9163" />
             </startOffsets>
             <endOffsets>
-              <option value="9026" />
+              <option value="9173" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="42" />

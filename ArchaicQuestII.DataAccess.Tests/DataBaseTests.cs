@@ -9,12 +9,13 @@ namespace ArchaicQuestII.DataAccess.Tests
     public class DataBaseTests
     {
         private readonly Mock<IDataBase> _database;
+        private readonly Mock<IPlayerDataBase> _playerDatabse;
 
 
         public DataBaseTests()
         {
             _database = new Mock<IDataBase>();
-
+            _playerDatabse = new Mock<IPlayerDataBase>();
         }
  
 
@@ -23,11 +24,11 @@ namespace ArchaicQuestII.DataAccess.Tests
         {
             var player = true;
             //arrange
-           _database.Setup((d => d.Save(player,DataBase.Collections.Players))).Returns(true);
+            _playerDatabse.Setup((d => d.Save(player,PlayerDataBase.Collections.Players))).Returns(true);
 
-            var result = _database.Object.Save(player, DataBase.Collections.Players);
+            var result = _playerDatabse.Object.Save(player, PlayerDataBase.Collections.Players);
 
-           _database.Verify(db => db.Save(player, DataBase.Collections.Players), Times.Once());
+            _playerDatabse.Verify(db => db.Save(player, PlayerDataBase.Collections.Players), Times.Once());
 
             Assert.True(result);
 
@@ -37,9 +38,9 @@ namespace ArchaicQuestII.DataAccess.Tests
         public void GetCollection()
         {
 
-             _database.Object.GetCollection<string>(DataBase.Collections.Players);
+             _playerDatabse.Object.GetCollection<string>(PlayerDataBase.Collections.Players);
 
-            _database.Verify(db => db.GetCollection<string>(DataBase.Collections.Players), Times.Once());
+            _playerDatabse.Verify(db => db.GetCollection<string>(PlayerDataBase.Collections.Players), Times.Once());
 
         }
 
@@ -50,11 +51,11 @@ namespace ArchaicQuestII.DataAccess.Tests
 
             var expected = "found object";
 
-            _database.Setup((d => d.GetById<string>(1, DataBase.Collections.Players))).Returns("found object");
+            _playerDatabse.Setup((d => d.GetById<string>(1, PlayerDataBase.Collections.Players))).Returns("found object");
 
-            var result = _database.Object.GetById<string>(1, DataBase.Collections.Players);
+            var result = _playerDatabse.Object.GetById<string>(1, PlayerDataBase.Collections.Players);
 
-            _database.Verify(db => db.GetById<string>(1, DataBase.Collections.Players), Times.Once());
+            _playerDatabse.Verify(db => db.GetById<string>(1, PlayerDataBase.Collections.Players), Times.Once());
 
             Assert.Equal(expected, result);
 

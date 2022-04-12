@@ -26,6 +26,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
     {
         private readonly ILogger<GameHub> _logger;
         private IDataBase _db { get; }
+        private IPlayerDataBase _pdb { get; }
         private ICache _cache { get; }
         private readonly IWriteToClient _writeToClient;
         private readonly ICommands _commands;
@@ -36,10 +37,11 @@ namespace ArchaicQuestII.GameLogic.Hubs
         private readonly IGain _gain;
         private readonly IFormulas _formulas;
 
-        public GameHub(IDataBase db, ICache cache, ILogger<GameHub> logger, IWriteToClient writeToClient, ICommands commands, IUpdateClientUI updateClientUi, IMobScripts mobScripts, ITime time, IDice dice, IGain gain, IFormulas formulas)
+        public GameHub(IDataBase db, IPlayerDataBase pdb, ICache cache, ILogger<GameHub> logger, IWriteToClient writeToClient, ICommands commands, IUpdateClientUI updateClientUi, IMobScripts mobScripts, ITime time, IDice dice, IGain gain, IFormulas formulas)
         {
             _logger = logger;
             _db = db;
+            _pdb = pdb;
             _cache = cache;
             _writeToClient = writeToClient;
             _commands = commands;
@@ -192,7 +194,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
             };
 
 
-            _db.Save(newPlayer, DataBase.Collections.Players);
+            _pdb.Save(newPlayer, PlayerDataBase.Collections.Players);
 
         }
 
@@ -209,6 +211,12 @@ namespace ArchaicQuestII.GameLogic.Hubs
             player.LastCommandTime = DateTime.Now;
 
             player.CommandLog.Add($"{string.Format("{0:f}", DateTime.Now)} - Logged in");
+            var pcAccount = _pdb.GetById<Account.Account>(player.AccountId, PlayerDataBase.Collections.Account);
+            if (pcAccount != null)
+            {
+                pcAccount.DateLastPlayed = DateTime.Now;
+                _pdb.Save<Account.Account>(pcAccount, PlayerDataBase.Collections.Account);
+            }
 
             await SendToClient($"<p>Welcome {player.Name}. Your adventure awaits you.</p>", hubId);
 
@@ -287,7 +295,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
         /// <returns>Player Character</returns>
         private Player GetCharacter(string hubId, Guid characterId)
         {
-            var player = _db.GetById<Player>(characterId, DataBase.Collections.Players);
+            var player = _pdb.GetById<Player>(characterId, PlayerDataBase.Collections.Players);
             player.ConnectionId = hubId;
             player.LastCommandTime = DateTime.Now;
             player.LastLoginTime = DateTime.Now;
@@ -387,7 +395,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
 
             new RoomActions(_writeToClient, _time, _cache, _dice, _gain, _formulas).Look("", room, character);
 
-            foreach (var mob in room.Mobs)
+            foreach (var mob in room.Mobs.ToList())
             {
                 if (!string.IsNullOrEmpty(mob.Events.Enter))
                 {

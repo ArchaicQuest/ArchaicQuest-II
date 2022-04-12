@@ -20,10 +20,12 @@ namespace ArchaicQuestII.API.Controllers
 {
     public class AccountController : Controller
     {
+        private IPlayerDataBase _pdb { get; }
         private IDataBase _db { get; }
         private readonly IUserService _userService;
-        public AccountController(IDataBase db, IUserService adminService)
+        public AccountController(IPlayerDataBase pdb, IDataBase db, IUserService adminService)
         {
+            _pdb = pdb;
             _db = db;
             _userService = adminService;
         }
@@ -39,7 +41,7 @@ namespace ArchaicQuestII.API.Controllers
                 throw exception;
             }
 
-            var hasEmail = _db.GetCollection<Account>(DataBase.Collections.Account).FindOne(x => x.Email.Equals(account.Email));
+            var hasEmail = _pdb.GetCollection<Account>(PlayerDataBase.Collections.Account).FindOne(x => x.Email.Equals(account.Email));
 
             if (hasEmail != null)
             {
@@ -58,7 +60,7 @@ namespace ArchaicQuestII.API.Controllers
                 Stats = new AccountStats(),
             };
 
-            var saved = _db.Save(data, DataBase.Collections.Account);
+            var saved = _pdb.Save(data, PlayerDataBase.Collections.Account);
 
             string json = JsonConvert.SerializeObject(new { toast = "account created successfully", id = data.Id });
             return saved ? (IActionResult)Ok(json) : BadRequest("Error saving account");
@@ -75,7 +77,7 @@ namespace ArchaicQuestII.API.Controllers
                 throw exception;
             }
 
-            var user = _db.GetCollection<Account>(DataBase.Collections.Account).FindOne(x => x.Email.Equals(login.Username));
+            var user = _pdb.GetCollection<Account>(PlayerDataBase.Collections.Account).FindOne(x => x.Email.Equals(login.Username));
 
             if (user == null)
             {
@@ -102,14 +104,14 @@ namespace ArchaicQuestII.API.Controllers
                 throw exception;
             }
 
-            var user = _db.GetCollection<Account>(DataBase.Collections.Account).FindOne(x => x.Id.Equals(id));
+            var user = _pdb.GetCollection<Account>(PlayerDataBase.Collections.Account).FindOne(x => x.Id.Equals(id));
 
             if (user == null)
             {
                 return BadRequest("Sorry that account does not exist.");
             }
 
-            var characters = _db.GetCollection<Player>(DataBase.Collections.Players)
+            var characters = _pdb.GetCollection<Player>(PlayerDataBase.Collections.Players)
                 .Find(x => x.AccountId.Equals(user.Id));
 
             var profile = new AccountViewModel()

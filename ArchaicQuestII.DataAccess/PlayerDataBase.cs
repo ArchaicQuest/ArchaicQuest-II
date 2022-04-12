@@ -7,10 +7,10 @@ using LiteDB;
 
 namespace ArchaicQuestII.DataAccess
 {
-    public class DataBase : IDataBase
+    public class PlayerDataBase : IPlayerDataBase
     {
         private LiteDatabase _db { get; }
-        public DataBase(LiteDatabase db)
+        public PlayerDataBase(LiteDatabase db)
         {
             _db = db;
         }
@@ -22,25 +22,9 @@ namespace ArchaicQuestII.DataAccess
         /// </summary>
         public enum Collections
         {
-           
-            Alignment,
-            Area,
-            AttackType,
-            Class,
-            Help,
-            Items,
-            Mobs,
-        
-            Race,
-            Room,
-            Skill,
-            Status,
-            Config,
-            Socials,
-            Quests,
-            Users,
-            Log,
-            CraftingRecipes
+            Account,
+            Players,
+            Log
         }
 
         public bool Save<T>(T data, Collections collectionName)
@@ -87,23 +71,10 @@ namespace ArchaicQuestII.DataAccess
         {
             return collectionName switch
             {
-                Collections.Alignment => "Alignment", 
-                Collections.Area => "Area",
-                Collections.AttackType => "AttackType",
-                Collections.Class => "Class",
-                Collections.Help => "Help",
-                Collections.Items => "Items",
-                Collections.Mobs => "Mobs", 
-                Collections.Race => "Race",
-                Collections.Room => "Room",
-                Collections.Skill => "Skill",
-                Collections.Status => "Status",
-                Collections.Config => "Config",
-                Collections.Socials => "Socials",
-                Collections.Quests => "Quests",
-                Collections.Users => "Users",
+              
+                Collections.Account => "Account",
+                Collections.Players => "Players",
                 Collections.Log => "Log",
-                Collections.CraftingRecipes => "CraftingRecipes",
                 _ => "error",
             };
         }
@@ -113,12 +84,12 @@ namespace ArchaicQuestII.DataAccess
         private static void SetIndex<T>(LiteCollection<T> collection, Collections collectionName)
         {
 
-            //if (collectionName == Collections.Account)
-            //{
-            //    (collection as LiteCollection<Account>)?.EnsureIndex(x => x.UserName);
-            //    (collection as LiteCollection<Account>)?.EnsureIndex(x => x.Id);
-            //    (collection as LiteCollection<Account>)?.EnsureIndex(x => x.Characters);
-            //}
+            if (collectionName == Collections.Account)
+            {
+                (collection as LiteCollection<Account>)?.EnsureIndex(x => x.UserName);
+                (collection as LiteCollection<Account>)?.EnsureIndex(x => x.Id);
+                (collection as LiteCollection<Account>)?.EnsureIndex(x => x.Characters);
+            }
 
         }
     }
