@@ -22,7 +22,7 @@ namespace ArchaicQuestII.DataAccess
         /// </summary>
         public enum Collections
         {
-            Account,
+           
             Alignment,
             Area,
             AttackType,
@@ -30,7 +30,7 @@ namespace ArchaicQuestII.DataAccess
             Help,
             Items,
             Mobs,
-            Players,
+        
             Race,
             Room,
             Skill,
@@ -87,15 +87,13 @@ namespace ArchaicQuestII.DataAccess
         {
             return collectionName switch
             {
-                Collections.Alignment => "Alignment",
-                Collections.Account => "Account",
+                Collections.Alignment => "Alignment", 
                 Collections.Area => "Area",
                 Collections.AttackType => "AttackType",
                 Collections.Class => "Class",
                 Collections.Help => "Help",
                 Collections.Items => "Items",
-                Collections.Mobs => "Mobs",
-                Collections.Players => "Players",
+                Collections.Mobs => "Mobs", 
                 Collections.Race => "Race",
                 Collections.Room => "Room",
                 Collections.Skill => "Skill",
@@ -115,12 +113,12 @@ namespace ArchaicQuestII.DataAccess
         private static void SetIndex<T>(LiteCollection<T> collection, Collections collectionName)
         {
 
-            if (collectionName == Collections.Account)
-            {
-                (collection as LiteCollection<Account>)?.EnsureIndex(x => x.UserName);
-                (collection as LiteCollection<Account>)?.EnsureIndex(x => x.Id);
-                (collection as LiteCollection<Account>)?.EnsureIndex(x => x.Characters);
-            }
+            //if (collectionName == Collections.Account)
+            //{
+            //    (collection as LiteCollection<Account>)?.EnsureIndex(x => x.UserName);
+            //    (collection as LiteCollection<Account>)?.EnsureIndex(x => x.Id);
+            //    (collection as LiteCollection<Account>)?.EnsureIndex(x => x.Characters);
+            //}
 
         }
     }

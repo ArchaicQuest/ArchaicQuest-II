@@ -23,24 +23,8 @@ namespace ArchaicQuestII.DataAccess
         public enum Collections
         {
             Account,
-            Alignment,
-            Area,
-            AttackType,
-            Class,
-            Help,
-            Items,
-            Mobs,
             Players,
-            Race,
-            Room,
-            Skill,
-            Status,
-            Config,
-            Socials,
-            Quests,
-            Users,
-            Log,
-            CraftingRecipes
+            Log
         }
 
         public bool Save<T>(T data, Collections collectionName)
@@ -87,25 +71,10 @@ namespace ArchaicQuestII.DataAccess
         {
             return collectionName switch
             {
-                Collections.Alignment => "Alignment",
+              
                 Collections.Account => "Account",
-                Collections.Area => "Area",
-                Collections.AttackType => "AttackType",
-                Collections.Class => "Class",
-                Collections.Help => "Help",
-                Collections.Items => "Items",
-                Collections.Mobs => "Mobs",
                 Collections.Players => "Players",
-                Collections.Race => "Race",
-                Collections.Room => "Room",
-                Collections.Skill => "Skill",
-                Collections.Status => "Status",
-                Collections.Config => "Config",
-                Collections.Socials => "Socials",
-                Collections.Quests => "Quests",
-                Collections.Users => "Users",
                 Collections.Log => "Log",
-                Collections.CraftingRecipes => "CraftingRecipes",
                 _ => "error",
             };
         }

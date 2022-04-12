@@ -49,9 +49,10 @@ namespace ArchaicQuestII.Controllers.Dashboard
         private IDataBase _db { get; }
         private IPlayerDataBase _pdb { get; }
         private ICache _cache { get; }
-        public DashboardController(IDataBase db, ICache cache)
+        public DashboardController(IDataBase db, IPlayerDataBase pdb, ICache cache)
         {
             _db = db;
+            _pdb = pdb;
             _cache = cache;
         }
 
@@ -96,7 +97,7 @@ namespace ArchaicQuestII.Controllers.Dashboard
 
           
 
-            var accounts = _db.GetCollection<Account>(DataBase.Collections.Account).FindAll();
+            var accounts = _pdb.GetCollection<Account>(PlayerDataBase.Collections.Account).FindAll();
             
       
            var thisMonth =  accounts.Where(X => X.DateJoined.Month.Equals(DateTime.Now.Month)).Count();

@@ -172,9 +172,6 @@ namespace ArchaicQuestII.Controllers.character
             }
 
 
-
-
-
             newPlayer.Skills = playerClass?.Skills ?? new List<SkillList>();
 
       
@@ -182,7 +179,7 @@ namespace ArchaicQuestII.Controllers.character
             if (!string.IsNullOrEmpty(player.Id.ToString()) && player.Id != Guid.Empty)
             {
 
-                var foundItem = _db.GetById<Character>(player.Id, DataBase.Collections.Players);
+                var foundItem = _pdb.GetById<Character>(player.Id, PlayerDataBase.Collections.Players);
 
                 if (foundItem == null)
                 {
@@ -195,6 +192,22 @@ namespace ArchaicQuestII.Controllers.character
             var account = _pdb.GetById<Account>(player.AccountId, PlayerDataBase.Collections.Account);
             account.Characters.Add(newPlayer.Id);
             Helpers.PostToDiscord($"{player.Name} has joined the realms for the first time.", "event", _cache.GetConfig());
+
+          
+          var dupeCheck = _pdb.GetCollection<Player>(PlayerDataBase.Collections.Players).FindOne(x => x.Name.Equals(newPlayer.Name));
+
+        if (dupeCheck != null)
+            {
+
+                if(dupeCheck.Id != newPlayer.Id)
+                {
+                    return Ok(newPlayer.Id);
+                }
+
+            }
+
+
+
             _pdb.Save(account, PlayerDataBase.Collections.Account);
             _pdb.Save(newPlayer, PlayerDataBase.Collections.Players);
 
@@ -275,7 +288,7 @@ namespace ArchaicQuestII.Controllers.character
         public List<Account> getAccounts([FromQuery] string query)
         {
 
-            var account = _pdb.GetCollection<Account>(PlayerDataBase.Collections.Account).FindAll().Where(x => x.Id != null).OrderByDescending(x => x.DateJoined);
+            var account = _pdb.GetCollection<Account>(PlayerDataBase.Collections.Account).FindAll().Where(x => x.Id != null).OrderByDescending(x => x.DateLastPlayed);
 
             if (string.IsNullOrEmpty(query))
             {

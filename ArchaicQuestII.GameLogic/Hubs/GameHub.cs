@@ -215,6 +215,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
             if (pcAccount != null)
             {
                 pcAccount.DateLastPlayed = DateTime.Now;
+                _pdb.Save<Account.Account>(pcAccount, PlayerDataBase.Collections.Account);
             }
 
             await SendToClient($"<p>Welcome {player.Name}. Your adventure awaits you.</p>", hubId);
@@ -394,7 +395,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
 
             new RoomActions(_writeToClient, _time, _cache, _dice, _gain, _formulas).Look("", room, character);
 
-            foreach (var mob in room.Mobs)
+            foreach (var mob in room.Mobs.ToList())
             {
                 if (!string.IsNullOrEmpty(mob.Events.Enter))
                 {

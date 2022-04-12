@@ -107,10 +107,9 @@ namespace ArchaicQuestII.API
             services.AddScoped<IUserService, UserService>();
             services.AddSingleton<LiteDatabase>(
                 new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AQ.db")));
-            services.AddSingleton<LiteDatabase>(
-                new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AQ-PLAYERS.db")));
+
             services.AddSingleton<IDataBase, DataBase>();
-            services.AddSingleton<IPlayerDataBase, PlayerDataBase>();
+            services.AddSingleton<IPlayerDataBase>(new PlayerDataBase(new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AQ-PLAYERS.db"))));
             services.AddSingleton<ICache>(new Cache());
             services.AddSingleton<IDamage, Damage>();
             services.AddSingleton<IDice, Dice>();
@@ -232,7 +231,7 @@ namespace ArchaicQuestII.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IDataBase db, ICache cache)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IDataBase db,ICache cache)
         {
             if (env.EnvironmentName == "dev")
             {
@@ -242,7 +241,7 @@ namespace ArchaicQuestII.API
             {
                 app.UseExceptionHandler("/Play/Error");
             }
-            _db = db;
+            _db = db; 
             _cache = cache;
 
    

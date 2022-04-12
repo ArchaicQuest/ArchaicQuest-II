@@ -23,14 +23,16 @@ namespace ArchaicQuestII.GameLogic.Core
         private readonly ICache _cache;
         private readonly IWriteToClient _writeToClient;
         private readonly IDataBase _db;
+        private readonly IPlayerDataBase _pdb;
         private readonly IUpdateClientUI _clientUi;
         private readonly IDice _dice;
         private readonly IGain _gain;
-        public Core(ICache cache, IWriteToClient writeToClient, IDataBase db, IUpdateClientUI clientUi, IDice dice, IGain gain)
+        public Core(ICache cache, IWriteToClient writeToClient, IDataBase db, IPlayerDataBase pdb, IUpdateClientUI clientUi, IDice dice, IGain gain)
         {
             _cache = cache;
             _writeToClient = writeToClient;
             _db = db;
+            _pdb = pdb;
             _clientUi = clientUi;
             _dice = dice;
             _gain = gain;
@@ -58,7 +60,8 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public void Save(Player player)
         {
-            _db.Save(player, DataBase.Collections.Players);
+
+            _pdb.Save(player, PlayerDataBase.Collections.Players);
             _writeToClient.WriteLine("Character saved.", player.ConnectionId);
         }
 
@@ -66,6 +69,15 @@ namespace ArchaicQuestII.GameLogic.Core
         {
 
             player.Buffer = new Queue<string>();
+            var lastLoginTime = player.LastLoginTime;
+            var playTime = DateTime.Now.Subtract(lastLoginTime).TotalMinutes;
+            player.PlayTime += (int)DateTime.Now.Subtract(lastLoginTime).TotalMinutes;
+
+            var account = _pdb.GetById<Account.Account>(player.AccountId, PlayerDataBase.Collections.Account);
+            account.Stats.TotalPlayTime += playTime;
+
+            _pdb.Save(account, PlayerDataBase.Collections.Account);
+
             Save(player);
 
             foreach (var pc in room.Players)
