@@ -38,4 +38,12 @@ namespace ArchaicQuestII.GameLogic.Character
         public bool AFK { get; set; } = false;
         public List<string> CommandLog { get; set; } = new List<string>();
     }
+
+    public class MobStats
+    {
+        public int Id { get; set; }
+        public int MobKills { get; set; }
+        public int PlayerDeaths { get; set; }
+        public DateTime Date { get; set; }
+    }
 }

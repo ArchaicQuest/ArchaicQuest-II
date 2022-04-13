@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.AttackTypes;
 using ArchaicQuestII.GameLogic.Character.Class;
@@ -30,8 +31,9 @@ namespace ArchaicQuestII.GameLogic.Combat
         private readonly IQuestLog _quest;
         private readonly IDice _dice;
         private readonly IRandomItem _randomItem;
+        private readonly IPlayerDataBase _pdb;
 
-        public Combat(IWriteToClient writer, IUpdateClientUI clientUi, IDamage damage, IFormulas formulas, IGain gain, ICache cache, IQuestLog quest, IDice dice, IRandomItem randomItem)
+        public Combat(IWriteToClient writer, IUpdateClientUI clientUi, IDamage damage, IFormulas formulas, IGain gain, ICache cache, IQuestLog quest, IDice dice, IRandomItem randomItem, IPlayerDataBase pdb)
         {
             _writer = writer;
             _clientUi = clientUi;
@@ -42,6 +44,7 @@ namespace ArchaicQuestII.GameLogic.Combat
             _quest = quest;
             _dice = dice;
             _randomItem = randomItem;
+            _pdb = pdb;
 
         }
 
@@ -894,10 +897,41 @@ namespace ArchaicQuestII.GameLogic.Combat
             if (target.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
             {
                 room.Mobs.Remove(target);
+                var getTodayMobStats = _pdb.GetList<MobStats>(PlayerDataBase.Collections.MobStats).FirstOrDefault(x => x.Date.Date.Equals(DateTime.Today));
+
+                if(getTodayMobStats != null)
+                {
+                    getTodayMobStats.MobKills += 1;
+                } else
+                {
+                     getTodayMobStats = new MobStats()
+                    {
+                        MobKills = 1,
+                        PlayerDeaths = 0,
+                        Date = DateTime.Now,
+                    };
+                }
+                _pdb.Save<MobStats>(getTodayMobStats, PlayerDataBase.Collections.MobStats);
             }
             else
             {
                 room.Players.Remove(target);
+                 var getTodayMobStats = _pdb.GetList<MobStats>(PlayerDataBase.Collections.MobStats).FirstOrDefault(x => x.Date.Date.Equals(DateTime.Today));
+
+                if (getTodayMobStats != null)
+                {
+                    getTodayMobStats.PlayerDeaths += 1;
+                }
+                else
+                {
+                    getTodayMobStats = new MobStats()
+                    {
+                        MobKills = 0,
+                        PlayerDeaths = 1,
+                        Date = DateTime.Now,
+                    };
+                }
+                _pdb.Save<MobStats>(getTodayMobStats, PlayerDataBase.Collections.MobStats);
             }
             // take player to Temple / recall area
 

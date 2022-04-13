@@ -24,6 +24,8 @@ namespace ArchaicQuestII.DataAccess
         {
             Account,
             Players,
+            LoginStats,
+            MobStats,
             Log
         }
 
@@ -75,6 +77,8 @@ namespace ArchaicQuestII.DataAccess
                 Collections.Account => "Account",
                 Collections.Players => "Players",
                 Collections.Log => "Log",
+                Collections.LoginStats => "LoginStats",
+                Collections.MobStats => "MobStats",
                 _ => "error",
             };
         }

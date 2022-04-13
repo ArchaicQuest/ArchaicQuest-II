@@ -35,6 +35,12 @@ namespace ArchaicQuestII.GameLogic.Account
 
     }
 
+    public class AccountLoginStats
+    {
+        public Guid AccountId { get; set; }
+        public DateTime loginDate { get; set; }
+    }
+
     public class AccountViewModel
     {
         public AccountStats Stats { get; set; } = new AccountStats();
