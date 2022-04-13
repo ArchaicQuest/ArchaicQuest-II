@@ -66,7 +66,7 @@ namespace ArchaicQuestII.Controllers.Dashboard
                 MobCount = _db.GetCollection<Player>(DataBase.Collections.Mobs).Count(),
                 AreaCount = _db.GetCollection<Area>(DataBase.Collections.Area).Count(),
                 RoomCount = _db.GetCollection<Room>(DataBase.Collections.Room).Count(),
-                QuestCount = 0
+                QuestCount = _db.GetCollection<QuestLog>(DataBase.Collections.Quests).Count()
             };
 
             return Json(stats);
@@ -151,9 +151,7 @@ namespace ArchaicQuestII.Controllers.Dashboard
 
                 CharStats.Series.Add(LastMonthData);
             }
-
-            CharStats.Series.Reverse();
-            AccountStats.Series.Reverse();
+ 
 
             lineGraphStats.Data.Add(AccountStats);
             lineGraphStats.Data.Add(CharStats);
@@ -162,7 +160,170 @@ namespace ArchaicQuestII.Controllers.Dashboard
 
         }
 
+        [HttpGet]
+        [Route("api/dashboard/Logins")]
+        public JsonResult LoginStats()
+        {
 
+
+            var lineGraphStats = new LineGraphStats();
+            var AccountStats = new LineStats()
+            {
+                Name = "Logins"
+            };
+
+
+
+            var accounts = _pdb.GetCollection<AccountLoginStats>(PlayerDataBase.Collections.LoginStats).FindAll();
+
+
+            var today = accounts.Where(X => X.loginDate.Date.Equals(DateTime.Now.Date)).Count();
+            var data = new Series();
+            data.Name = DateTime.Now.ToString("dd-MM-yy");
+            data.Value = today;
+            AccountStats.Series.Add(data);
+
+
+            var days = 30;
+
+            for (int i = 1; i < days; i++)
+            {
+                var yesterday = accounts.Where(X => X.loginDate.Date.Equals(DateTime.Today.AddDays(-i).Date)).Count();
+                var yesterdayData = new Series
+                {
+                    Name = DateTime.Today.AddDays(-i).ToString("dd-MM-yy"),
+                Value = yesterday
+                };
+
+                AccountStats.Series.Add(yesterdayData);
+            }
+
+            var UniqueLoginStats = new LineStats()
+            {
+                Name = "Unique Logins"
+            };
+
+
+            var accountLogins = accounts.Where(X => X.loginDate.Equals(DateTime.Now.Date));
+            var uniqueList = new List<AccountLoginStats>();
+
+            foreach (var login in accounts)
+            {
+
+                if(uniqueList.Find(x => x.AccountId == login.AccountId && x.loginDate.Date == login.loginDate.Date) == null)
+                {
+                    uniqueList.Add(login);
+                }
+                
+            }
+
+            var UniqueToday = uniqueList.Count();
+            var uniqueData = new Series();
+            uniqueData.Name = DateTime.Now.ToString("dd-MM-yy");
+            uniqueData.Value = UniqueToday;
+            UniqueLoginStats.Series.Add(uniqueData);
+
+
+            for (int i = 1; i < days; i++)
+            {
+                var yesterday = uniqueList.Where(X => X.loginDate.Date.Equals(DateTime.Today.AddDays(-i).Date)).Count();
+                var yesterdayData = new Series
+                {
+                    Name = DateTime.Today.AddDays(-i).ToString("dd-MM-yy"),
+                    Value = yesterday
+                };
+
+                UniqueLoginStats.Series.Add(yesterdayData);
+            }
+
+          
+
+            lineGraphStats.Data.Add(AccountStats);
+            lineGraphStats.Data.Add(UniqueLoginStats);
+
+            return Json(lineGraphStats);
+
+        }
+
+        [HttpGet]
+        [Route("api/dashboard/MobKills")]
+        public JsonResult MobKillStats()
+        {
+
+
+            var lineGraphStats = new LineGraphStats();
+            var AccountStats = new LineStats()
+            {
+                Name = "Mob Kills"
+            };
+
+
+
+            var accounts = _pdb.GetCollection<MobStats>(PlayerDataBase.Collections.MobStats).FindAll();
+
+            var getKills = accounts.FirstOrDefault(X => X.Date.Date.Equals(DateTime.Now.Date));
+
+            var today = getKills == null ? 0 : getKills.MobKills;
+            var data = new Series();
+            data.Name = DateTime.Now.ToString("dd-MM-yy");
+            data.Value = today;
+            AccountStats.Series.Add(data);
+
+
+            var days = 30;
+
+            for (int i = 1; i < days; i++)
+            {
+                var yesterday = accounts.FirstOrDefault(X => X.Date.Date.Equals(DateTime.Today.AddDays(-i).Date)); 
+                var yesterDayKills = yesterday == null ? 0 : yesterday.MobKills;
+   
+                var yesterdayData = new Series
+                {
+                    Name = DateTime.Today.AddDays(-i).ToString("dd-MM-yy"),
+                    Value = yesterDayKills
+                };
+
+                AccountStats.Series.Add(yesterdayData);
+            }
+
+            var playerDeaths = new LineStats()
+            {
+                Name = "Player Deaths"
+            };
+
+
+            var accountLogins = accounts.FirstOrDefault(X => X.Date.Date.Equals(DateTime.Now.Date));
+            var getPlayerDeaths = accountLogins == null ? 0 : accountLogins.PlayerDeaths;
+
+
+            var UniqueToday = getPlayerDeaths;
+            var uniqueData = new Series();
+            uniqueData.Name = DateTime.Now.ToString("dd-MM-yy");
+            uniqueData.Value = UniqueToday;
+            playerDeaths.Series.Add(uniqueData);
+
+
+            for (int i = 1; i < days; i++)
+            {
+                var yesterday = accounts.FirstOrDefault(X => X.Date.Date.Equals(DateTime.Today.AddDays(-i).Date));
+                var yesterDayKills = yesterday == null ? 0 : yesterday.PlayerDeaths;
+                var yesterdayData = new Series
+                {
+                    Name = DateTime.Today.AddDays(-i).ToString("dd-MM-yy"),
+                    Value = yesterDayKills
+                };
+
+                playerDeaths.Series.Add(yesterdayData);
+            }
+
+
+
+            lineGraphStats.Data.Add(AccountStats);
+            lineGraphStats.Data.Add(playerDeaths);
+
+            return Json(lineGraphStats);
+
+        }
 
     }
 }

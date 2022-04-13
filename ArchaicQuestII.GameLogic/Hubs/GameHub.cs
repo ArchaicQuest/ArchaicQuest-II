@@ -216,6 +216,13 @@ namespace ArchaicQuestII.GameLogic.Hubs
             {
                 pcAccount.DateLastPlayed = DateTime.Now;
                 _pdb.Save<Account.Account>(pcAccount, PlayerDataBase.Collections.Account);
+                var loginStats = new Account.AccountLoginStats()
+                {
+                    AccountId = player.AccountId,
+                    loginDate = DateTime.Now
+                };
+
+                _pdb.Save<Account.AccountLoginStats>(loginStats, PlayerDataBase.Collections.LoginStats);
             }
 
             await SendToClient($"<p>Welcome {player.Name}. Your adventure awaits you.</p>", hubId);
