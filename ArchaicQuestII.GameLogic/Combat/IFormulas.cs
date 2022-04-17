@@ -9,7 +9,7 @@ namespace ArchaicQuestII.GameLogic.Combat
     {
         public int OffensivePoints(Player player, bool useDualWield);
 
-        public int DefensivePoints(Player player);
+        public int DefensivePoints(Player player, Player target);
 
         public int BlockPoints(Player player);
 

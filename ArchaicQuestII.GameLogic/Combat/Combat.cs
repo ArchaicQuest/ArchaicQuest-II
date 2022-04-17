@@ -356,6 +356,11 @@ namespace ArchaicQuestII.GameLogic.Combat
                 var weapon = GetWeapon(player);
                 var chanceToHit = _formulas.ToHitChance(player, target, false);
 
+                if(chanceToHit < 5)
+                {
+                    chanceToHit = 5;
+                }
+
                 //if player bind and don't have blind fighting 
                 // reduce chance to hit by 40%
                 if (player.Affects.Blind && !BlindFighting(player))
@@ -539,6 +544,11 @@ namespace ArchaicQuestII.GameLogic.Combat
                 {
                     weapon = GetWeapon(player, true);
                     chanceToHit = _formulas.ToHitChance(player, target, true);
+
+                    if (player.ConnectionId == "mob" && chanceToHit < 45)
+                    {
+                        chanceToHit = 45;
+                    }
 
                     //if player bind and don't have blind fighting 
                     // reduce chance to hit by 40%
@@ -732,30 +742,18 @@ namespace ArchaicQuestII.GameLogic.Combat
             var ArRating = defender.ArmorRating.Armour + 1;
 
 
-            var armourReduction = ArRating / (double)damage;
+            decimal damageAfterReduction = damage * (damage / (damage + ArRating + (defender.Attributes.Attribute[EffectLocation.Dexterity] / 4)));
 
-            if (armourReduction > 4)
-            {
-                armourReduction = 4;
-            }
-
-            if (armourReduction <= 0)
-            {
-                armourReduction = 1;
-            }
-
-            return (int)armourReduction;
+            return (int)Math.Round(damageAfterReduction, MidpointRounding.ToEven);
         }
 
         public int CalculateSkillDamage(Player player, Player target, int damage)
         {
-            // calculate damage reduction based on target armour
-            var armourReduction = DamageReduction(target, damage);
 
-            //refactor this shit
-            var strengthMod = 0.5 + player.Attributes.Attribute[EffectLocation.Strength] / (double)100;
-            var levelDif = player.Level - target.Level == 0 ? 1 : player.Level - target.Level;
-            //   var levelMod = levelDif / 2 <= 0 ? 1 : levelDif / 2;
+            var strengthMod = Math.Round((decimal)(player.Attributes.Attribute[EffectLocation.Strength] - 20) / 2, MidpointRounding.ToEven);
+            var levelDif = target.Level - player.Level <= 0 ? 0 : target.Level - player.Level;
+
+            var totalDamage = damage + strengthMod + levelDif + player.Attributes.Attribute[EffectLocation.DamageRoll];
 
             var criticalHit = 1;
 
@@ -764,32 +762,13 @@ namespace ArchaicQuestII.GameLogic.Combat
                 criticalHit = 2;
             }
 
+            totalDamage *= criticalHit;
 
-            int totalDamage = (int)(damage * strengthMod * criticalHit);
-
-            if (levelDif < 0)
-            {
-                totalDamage /= Math.Abs(levelDif);
-            }
-            else
-            {
-                totalDamage += levelDif;
-            }
-
-            if (armourReduction > 0)
-            {
-                totalDamage /= armourReduction;
-            }
-
-            if (totalDamage <= 0)
-            {
-                totalDamage = 1;
-            }
-
-            totalDamage += player.Attributes.Attribute[EffectLocation.DamageRoll];  
+            // calculate damage reduction based on target armour
+            var DamageAfterArmourReduction = DamageReduction(target, (int)totalDamage);
 
 
-            return totalDamage;
+            return DamageAfterArmourReduction;
         }
 
         public void TargetKilled(Player player, Player target, Room room)

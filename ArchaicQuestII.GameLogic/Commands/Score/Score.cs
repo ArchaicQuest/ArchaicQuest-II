@@ -41,7 +41,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Score
             var gameHours = TimeSpan.FromMinutes(player.PlayTime);
 
             sb.Append($"<table class=\"score-table\"><tr><td class=\"cell-title\">Level:</td><td>{player.Level}</td><td class=\"cell-title\">Race:</td><td>{player.Race}</td><td class=\"cell-title\">Born on:</td><td>{player.DateCreated}</td></tr>");
-           sb.Append($"<tr><td class=\"cell-title\">Years:</td><td>n/a</td><td class=\"cell-title\">Class:</td><td>{player.ClassName}</td><td class=\"cell-title\">Played:</td><td>{gameHours.TotalHours} hours</td></tr>");
+           sb.Append($"<tr><td class=\"cell-title\">Years:</td><td>19</td><td class=\"cell-title\">Class:</td><td>{player.ClassName}</td><td class=\"cell-title\">Played:</td><td>{Math.Floor(gameHours.TotalHours)} hours</td></tr>");
            sb.Append($"<tr><td class=\"cell-title\">STR:</td><td>{player.Attributes.Attribute[EffectLocation.Strength]}({player.MaxAttributes.Attribute[EffectLocation.Strength]})</td><td class=\"cell-title\"></td> <!-- hit roll --><td></td><td class=\"cell-title\">Sex:</td><td>{player.Gender}</td></tr>");
            sb.Append($"<tr><td class=\"cell-title\">DEX:</td><td>{player.Attributes.Attribute[EffectLocation.Dexterity]}({player.MaxAttributes.Attribute[EffectLocation.Dexterity]})<td class=\"cell-title\"></td><!-- dam roll --><td></td><td class=\"cell-title\">Wimpy:</td><td>XX</td></tr>");
            sb.Append($"<tr><td class=\"cell-title\">Con:</td><td>{player.Attributes.Attribute[EffectLocation.Constitution]}({player.MaxAttributes.Attribute[EffectLocation.Constitution]})<td class=\"cell-title\">Align:</td><td>{player.AlignmentScore}</td><td></td><td></td></tr>");

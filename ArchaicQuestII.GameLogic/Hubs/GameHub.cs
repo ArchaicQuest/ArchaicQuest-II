@@ -287,7 +287,13 @@ namespace ArchaicQuestII.GameLogic.Hubs
 
                 player.Skills[i].Level = skill.Level;
             }
- 
+
+            if(player.ClassName == "Fighter" && player.TotalExperience == 0 && player.Skills.FirstOrDefault(x => x.SkillName.Equals("Long Blades")).Proficiency == 1)
+            {
+                player.Skills.FirstOrDefault(x => x.SkillName.Equals("Long Blades")).Proficiency = 75;
+
+            }
+
 
         }
 

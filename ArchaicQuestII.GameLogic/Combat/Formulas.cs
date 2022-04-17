@@ -20,10 +20,10 @@ namespace ArchaicQuestII.GameLogic.Combat
         }
         public int OffensivePoints(Player player, bool useDualWield = false)
         {
-            var offensePoints = player.Attributes.Attribute[EffectLocation.Strength] / 5
-                                + player.Attributes.Attribute[EffectLocation.Dexterity] / 10
-                                + player.Attributes.Attribute[EffectLocation.HitRoll];
 
+            var strengthMod = Math.Round((double)(player.Attributes.Attribute[EffectLocation.Strength] - 20) / 2, MidpointRounding.ToEven);
+            var offensePoints = strengthMod + player.Attributes.Attribute[EffectLocation.Dexterity] / 2;
+            var maxWeaponDam = 0;
             var weapon = useDualWield ? player.Equipped.Secondary : player.Equipped.Wielded;
 
            SkillList getWeaponSkill = null;
@@ -33,6 +33,8 @@ namespace ArchaicQuestII.GameLogic.Combat
                  getWeaponSkill = player.Skills.FirstOrDefault(x =>
                     x.SkillName.Replace(" ", string.Empty)
                         .Equals(Enum.GetName(typeof(Item.Item.WeaponTypes), weapon.WeaponType)));
+
+                maxWeaponDam = player.Equipped.Wielded.Damage.Maximum;
             }
 
             if (weapon == null && !player.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
@@ -42,62 +44,85 @@ namespace ArchaicQuestII.GameLogic.Combat
             }
 
             // mob always have 100% skills
-            var weaponSkill = player.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase) ? 100 : getWeaponSkill?.Proficiency ?? 1; //weapon types are hardcoded so make hardcoded skills for weapon types
+            var weaponSkill = player.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase) ? 75 : getWeaponSkill?.Proficiency ?? 1; //weapon types are hardcoded so make hardcoded skills for weapon types
 
-            return offensePoints + offensePoints * weaponSkill / 100;
+            return (int)offensePoints + weaponSkill + maxWeaponDam;
         }
 
-        public int DefensivePoints(Player player)
+        public int DefensivePoints(Player player, Player target)
         {
-            return player.Attributes.Attribute[EffectLocation.Dexterity] / 5 + player.Attributes.Attribute[EffectLocation.Strength] / 10;
+            var defensivePoints = player.ArmorRating.Armour;
+
+
+            var levelDif = player.Level - target.Level <= 0 ? 0 : player.Level - target.Level;
+
+            var weapon = player.Equipped.Wielded;
+            SkillList getWeaponSkill = null;
+            if (weapon != null && !player.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
+            {
+                // urgh this is ugly
+                getWeaponSkill = player.Skills.FirstOrDefault(x =>
+                   x.SkillName.Replace(" ", string.Empty)
+                       .Equals(Enum.GetName(typeof(Item.Item.WeaponTypes), weapon.WeaponType)));
+            }
+
+            if (weapon == null && !player.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
+            {
+                getWeaponSkill = player.Skills.FirstOrDefault(x =>
+                    x.SkillName.Equals("Hand To Hand", StringComparison.CurrentCultureIgnoreCase));
+            }
+
+            // mob always have 100% skills
+            var weaponSkill = player.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase) ? 75 : getWeaponSkill?.Proficiency ?? 1; //weapon types are hardcoded so make hardcoded skills for weapon types
+
+            defensivePoints += weaponSkill + (player.Attributes.Attribute[EffectLocation.Dexterity] / 2) + levelDif;
+
+            return defensivePoints;
         }
 
         public int BlockPoints(Player player)
         {
-            var offensePoints = player.Attributes.Attribute[EffectLocation.Strength] / 5
-                                + player.Attributes.Attribute[EffectLocation.Dexterity] / 10;
+            var offensePoints = OffensivePoints(player);
 
-            var blockSkill = 100; //weapon types are hardcoded so make hardcoded skills for weapon types
+            var blockSkill = 1; //weapon types are hardcoded so make hardcoded skills for weapon types
 
-            return offensePoints + offensePoints * blockSkill / 100;
+            return offensePoints + (blockSkill * 100);
         }
 
         public int ToBlockChance(Player player, Player target)
         {
-            return BlockPoints(player) * 100 / (BlockPoints(player) + DefensivePoints(target));
+            return BlockPoints(player) - DefensivePoints(target, player);
         }
 
         public int ToHitChance(Player player, Player target, bool useDualWield)
         {
 
-            //var x = OffensivePoints(player);
-            //var y = DefensivePoints(target);
-            //var z = OffensivePoints(player) * 100 / (OffensivePoints(player) + DefensivePoints(target));
-            return OffensivePoints(player, useDualWield) * 100 / (OffensivePoints(player, useDualWield) + DefensivePoints(target));
+            var baseChance = 45;
+            var levelDif = player.Level - target.Level <= 0 ? 0 : player.Level - target.Level;
+
+            var total = (OffensivePoints(player, useDualWield) - DefensivePoints(target, player)) + baseChance + player.Attributes.Attribute[EffectLocation.HitRoll] + levelDif;
+
+            var off = OffensivePoints(player, useDualWield);
+            var def = DefensivePoints(target, player);
+            var theRest = baseChance + player.Attributes.Attribute[EffectLocation.HitRoll] + levelDif;
+            return (OffensivePoints(player, useDualWield) - DefensivePoints(target, player)) + baseChance + player.Attributes.Attribute[EffectLocation.HitRoll] + levelDif;
         }
 
         public int DamageReduction(Player defender, int damage)
         {
-            var ArRating = defender.ArmorRating.Armour;
-
-            if (ArRating <= 0)
-            {
-                ArRating = 1;
-            }
+            var ArRating = defender.ArmorRating.Armour + 1;
             
-            var armourReduction = ArRating / (double)damage;
-
-            if (armourReduction > 4)
+            if(defender.ConnectionId == "mob")
             {
-                armourReduction = 4;
-            }
-            
-            if (armourReduction <= 0)
-            {
-                armourReduction = 1;
+                ArRating += defender.Attributes.Attribute[EffectLocation.Dexterity] / 2;
             }
 
-            return (int)armourReduction;
+            var x = (damage + ArRating + (defender.Attributes.Attribute[EffectLocation.Dexterity] / 4));
+            var y = (double)(damage / (double)(damage + ArRating + (defender.Attributes.Attribute[EffectLocation.Dexterity] / 4)));
+
+            var damageAfterReduction = damage * (double)(damage / (double)(damage + ArRating + (defender.Attributes.Attribute[EffectLocation.Dexterity] / 4)));
+
+            return (int)Math.Ceiling((decimal)damageAfterReduction);
         }
 
         public int CalculateDamage(Player player, Player target, Item.Item weapon)
@@ -138,13 +163,13 @@ namespace ArchaicQuestII.GameLogic.Combat
             }
 
             // calculate damage reduction based on target armour
-         
 
-            //refactor this shit
-            var strengthMod = 0.5 + player.Attributes.Attribute[EffectLocation.Strength] / (double)100;
-            var levelDif =  target.Level - player.Level <= 0 ? 1 :  target.Level - player.Level;
-            var levelMod = levelDif; //levelDif / 2 <= 0 ? 1 : levelDif / 2;
-            var enduranceMod = player.Attributes.Attribute[EffectLocation.Moves] / (double)player.MaxAttributes.Attribute[EffectLocation.Moves];
+
+            var strengthMod = Math.Round((double)(player.Attributes.Attribute[EffectLocation.Strength] - 20) / 2, MidpointRounding.ToEven);
+            var levelDif = player.Level - target.Level <= 0 ? 0 : player.Level - target.Level;
+
+            var totalDamage = damage + strengthMod + levelDif + player.Attributes.Attribute[EffectLocation.DamageRoll];
+
             var criticalHit = 1;
 
             if (target.Status == CharacterStatus.Status.Sleeping || target.Status == CharacterStatus.Status.Stunned || target.Status == CharacterStatus.Status.Resting)
@@ -152,21 +177,13 @@ namespace ArchaicQuestII.GameLogic.Combat
                 criticalHit = 2;
             }
 
+            totalDamage *= criticalHit;
 
-            int totalDamage = (int)((damage * strengthMod) + levelMod + player.Attributes.Attribute[EffectLocation.DamageRoll]) * criticalHit;
-            var armourReduction = DamageReduction(target, totalDamage);
-            if (armourReduction > 0)
-            {
-                totalDamage =  (int)Math.Ceiling((double)totalDamage / (double)armourReduction);
-            }
-
-            if (totalDamage <= 0)
-            {
-                totalDamage = 1;
-            }
+            // calculate damage reduction based on target armour
+            var DamageAfterArmourReduction = DamageReduction(target, (int)totalDamage);
 
 
-            return totalDamage;
+            return DamageAfterArmourReduction;
         }
 
         public string TargetHealth(Player player, Player target)

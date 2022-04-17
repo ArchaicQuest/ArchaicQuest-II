@@ -137,6 +137,7 @@ namespace ArchaicQuestII.Controllers.character
             newPlayer.Inventory.Add(boots);
             newPlayer.Equipped.Feet = boots;
 
+         
             if (newPlayer.ClassName.Equals("Mage"))
             {
                 newPlayer.Inventory.Remove(shirt);
@@ -148,6 +149,7 @@ namespace ArchaicQuestII.Controllers.character
                 dagger.Equipped = true;
                 newPlayer.Inventory.Add(dagger);
                 newPlayer.Equipped.Wielded = dagger;
+
             }
 
             if (newPlayer.ClassName.Equals("Thief"))

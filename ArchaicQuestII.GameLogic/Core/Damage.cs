@@ -50,34 +50,34 @@ namespace ArchaicQuestII.GameLogic.Core
                 case 30:
                 case 31:
                 case 32:
-                    return new KeyValuePair<string, string>("devastate", "devastates");
+                    return new KeyValuePair<string, string>("<span style='color:yellow'>devastate</span>", "<span style='color:yellow'>devastates</span>");
                 case 33:
                 case 34:
                 case 35:
                 case 36:
-                    return new KeyValuePair<string, string>("maim", "maims");
+                    return new KeyValuePair<string, string>("<span style='color:yellow'>maim</span>", "<span style='color:yellow'>maims</span>");
                 case 37:
                 case 38:
                 case 39:
                 case 40:
-                    return new KeyValuePair<string, string>("MUTILATE", "MUTILATES");
+                    return new KeyValuePair<string, string>("<span style='color:red'>MUTILATE</span>", "<span style='color:red'>MUTILATES</span>");
                 case 41:
                 case 42:
                 case 43:
                 case 44:
-                    return new KeyValuePair<string, string>("DISEMBOWEL", "DISEMBOWELS");
+                    return new KeyValuePair<string, string>("<span style='color:red'>DISEMBOWEL</span>", "<span style='color:red'>DISEMBOWELS</span>");
                 case 45:
                 case 46:
                 case 47:
                 case 48:
-                    return new KeyValuePair<string, string>("MASSACRE", "MASSACRES");
+                    return new KeyValuePair<string, string>("<span style='color:red'>MASSACRE</span>", "<span style='color:red'>MASSACRES</span>");
                 case 49:
                 case 50:
                 case 51:
                 case 52:
-                    return new KeyValuePair<string, string>("*** DEMOLISH ***", "*** DEMOLISHES ***");
+                    return new KeyValuePair<string, string>("*** <span style='color:red'>D</span>E<span style='color:red'>M</span>O<span style='color:red'>L</span>I<span style='color:red'>S</span>H ***", "*** <span style='color:red'>D</span>E<span style='color:red'>M</span>O<span style='color:red'>L</span>I<span style='color:red'>S</span>H ***");
                 default:
-                    return new KeyValuePair<string, string>("*** ANNIHILATES ***", "*** ANNIHILATES ***"); ;
+                    return new KeyValuePair<string, string>("*** <span style='color:red'>A</span>N<span style='color:red'>N</span>I<span style='color:red'>H</span>I<span style='color:red'>L</span>A<span style='color:red'>T</span>E<span style='color:red'>S</span> ***", "*** <span style='color:red'>A</span>N<span style='color:red'>N</span>I<span style='color:red'>H</span>I<span style='color:red'>L</span>A<span style='color:red'>T</span>E<span style='color:red'>S</span> ***"); ;
             }
 
         }
