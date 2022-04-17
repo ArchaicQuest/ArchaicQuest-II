@@ -784,8 +784,9 @@ namespace ArchaicQuestII.GameLogic.Core
             {
                "If you get lost, enter recall to return to the starting room.",
                "If you need help use newbie to send a message. newbie help me",
-               "ArchaicQuest is a new game so might be quite, join the discord to chat to others https://discord.gg/QVF6Uutt"
-            }
+               "ArchaicQuest is a new game so might be quite, join the discord to chat to others https://discord.gg/QVF6Uutt",
+               "To communicate enter say then the message to speak. such as say hello there"
+            };
 
             return hints;
         }
