@@ -562,6 +562,11 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 return false;
             }
 
+            if (room.Terrain == Room.TerrainType.Inside)
+            {
+                return false;
+            }
+
             if (player.Equipped.Light != null)
             {
                 return false;

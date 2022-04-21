@@ -15,6 +15,7 @@ namespace ArchaicQuestII.GameLogic.Core
         /// </summary>
         /// <param name="player"></param>
         void Who(Player player);
+        void Scan(Player player, Room room);
         void Affects(Player player);
 
         void Practice(Player player, Room room, string skillName);

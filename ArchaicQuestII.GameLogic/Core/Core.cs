@@ -58,6 +58,62 @@ namespace ArchaicQuestII.GameLogic.Core
 
         }
 
+        public void Scan(Player player, Room room)
+        {
+
+            var sb = new StringBuilder();
+
+            foreach (var exit in Helpers.GetListOfExits(room.Exits))
+            {
+                var getRoomCoords = Helpers.IsExit(exit, room);
+
+                var getRoomObj = _cache.GetRoom($"{getRoomCoords.AreaId}{getRoomCoords.Coords.X}{getRoomCoords.Coords.Y}{getRoomCoords.Coords.Z}");
+
+                sb.Append($"<p>{exit}:</p>");
+
+                foreach (var obj in getRoomObj.Mobs)
+                {
+                    if (exit.Equals("down", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        sb.Append($"<p class='mob'>{obj.Name} is below you.</p>");
+                    }
+                    else if (exit.Equals("up", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        sb.Append($"<p class='mob'>{obj.Name} is above you.</p>");
+                    }
+                    else
+                    {
+                        sb.Append($"<p class='mob'>{obj.Name} is to the {exit}.</p>");
+                    }
+                }
+
+                foreach (var obj in getRoomObj.Players)
+                {
+                    if (exit.Equals("down", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        sb.Append($"<p class='player'>{obj.Name} is below you.</p>");
+                    }
+                    else if (exit.Equals("up", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        sb.Append($"<p class='player'>{obj.Name} is above you.</p>");
+                    }
+                    else
+                    {
+                        sb.Append($"<p class='player'>{obj.Name} is to the {exit}.</p>");
+                    }
+                }
+
+                if (!getRoomObj.Mobs.Any() && !getRoomObj.Players.Any())
+                {
+
+                    sb.Append($"<p>There is nobody there.</p>");
+
+                }
+
+            }
+            _writeToClient.WriteLine(sb.ToString(), player.ConnectionId);
+        }
+
         public void Save(Player player)
         {
 

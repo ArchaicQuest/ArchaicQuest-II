@@ -644,9 +644,9 @@ namespace ArchaicQuestII.GameLogic.Core
                     foreach (var room in rooms.Where(x => x.Mobs.Any()))
                     {
 
-                        foreach (var mob in room.Mobs.Where(x => x.Status != CharacterStatus.Status.Fighting).ToList())
+                        foreach (var mob in room.Mobs.Where(x => x.Status == CharacterStatus.Status.Standing).ToList())
                         {
-                            if (mob.Emotes.Any() && mob.Emotes[0] != null && _dice.Roll(1,0,1) == 1)
+                            if (mob.Emotes.Any() && mob.Emotes[0] != null && _dice.Roll(1, 0, 1) == 1)
                             {
 
                                 var emote = mob.Emotes[_dice.Roll(1, 0, mob.Emotes.Count - 1)];
@@ -668,37 +668,116 @@ namespace ArchaicQuestII.GameLogic.Core
                             }
 
 
+
                             if (mob.Roam && _dice.Roll(1, 1, 100) >= 50)
                             {
-                                var exits = Helpers.GetListOfExits(room.Exits);
-                                if (exits != null)
+
+                                if (mob.Buffer.Count == 0)
                                 {
-                                    var direction = exits[_dice.Roll(1, 0, exits.Count - 1)];
+                                    var exits = Helpers.GetListOfExits(room.Exits);
+                                    var reveseDirection = "";
+                                    var reveseDirection2 = "";
+                                    var reveseDirection3 = "";
+                                    if (exits != null)
+                                    {
+                                        var direction = exits[_dice.Roll(1, 0, exits.Count - 1)];
 
-                                    mob.Buffer.Enqueue(direction);
+                                        var newExit = Helpers.IsExit(direction, room);
+
+                                        //mob can't roam to a new area or change Z axis
+                                        // to stop mobs appearing in the wrong area
+                                        if (newExit.AreaId == room.AreaId && newExit.Coords.Z == room.Coords.Z)
+                                        {
+
+                                            reveseDirection = Helpers.ReturnOpositeExitName(direction);
+
+                                            mob.Buffer.Enqueue(direction);
+
+                                            // Max mob can roam 3 times away from start loc
+
+                                            var newRoom = _cache.GetRoom($"{newExit.AreaId}{newExit.Coords.X}{newExit.Coords.Y}{newExit.Coords.Z}");
+
+                                            if (newRoom != null)
+                                            {
+                                                exits = Helpers.GetListOfExits(newRoom.Exits);
+                                                direction = exits[_dice.Roll(1, 0, exits.Count - 1)];
+
+                                                newExit = Helpers.IsExit(direction, newRoom);
+
+                                                // to stop mobs appearing in the wrong area
+                                                if (newExit.AreaId == newRoom.AreaId && newExit.Coords.Z == newRoom.Coords.Z)
+                                                {
+                                                    reveseDirection2 = Helpers.ReturnOpositeExitName(direction);
+
+                                                    mob.Buffer.Enqueue(direction);
+
+
+                                                    // 3rd room
+                                                    newRoom = _cache.GetRoom($"{newExit.AreaId}{newExit.Coords.X}{newExit.Coords.Y}{newExit.Coords.Z}");
+
+                                                    if (newRoom != null)
+                                                    {
+                                                        exits = Helpers.GetListOfExits(newRoom.Exits);
+                                                        direction = exits[_dice.Roll(1, 0, exits.Count - 1)];
+
+                                                        newExit = Helpers.IsExit(direction, newRoom);
+
+                                                        // to stop mobs appearing in the wrong area
+                                                        if (newExit.AreaId == newRoom.AreaId && newExit.Coords.Z == newRoom.Coords.Z)
+                                                        {
+                                                            reveseDirection3 = Helpers.ReturnOpositeExitName(direction);
+
+                                                            mob.Buffer.Enqueue(direction);
+                                                            mob.Buffer.Enqueue(reveseDirection3);
+                                                            mob.Buffer.Enqueue(reveseDirection2);
+                                                            mob.Buffer.Enqueue(reveseDirection);
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        mob.Buffer.Enqueue(reveseDirection2);
+                                                        mob.Buffer.Enqueue(reveseDirection);
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    mob.Buffer.Enqueue(reveseDirection2);
+                                                    mob.Buffer.Enqueue(reveseDirection);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                mob.Buffer.Enqueue(reveseDirection);
+                                            }
+
+
+                                        }
+
+                                    }
                                 }
-                            }
 
-                            if (!string.IsNullOrEmpty(mob.Commands) && mob.Buffer.Count == 0)
-                            {
-                                mob.RoomId = $"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}";
-                                var commands = mob.Commands.Split(";");
-
-                                foreach (var command in commands)
+                                if (!string.IsNullOrEmpty(mob.Commands) && mob.Buffer.Count == 0)
                                 {
-                                    mob.Buffer.Enqueue(command);
+                                    mob.RoomId = $"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}";
+                                    var commands = mob.Commands.Split(";");
+
+                                    foreach (var command in commands)
+                                    {
+                                        mob.Buffer.Enqueue(command);
+                                    }
+
                                 }
 
+                                if (mob.Buffer.Count > 0)
+                                {
+                                    var mobCommand = mob.Buffer.Dequeue();
+
+                                    _commands.ProcessCommand(mobCommand, mob, room);
+                                }
+
+                                mobIds.Add(mob.Id);
                             }
 
-                            if (mob.Buffer.Count > 0)
-                            {
-                                var mobCommand = mob.Buffer.Dequeue();
-
-                                _commands.ProcessCommand(mobCommand, mob, room);
-                            }
-
-                            mobIds.Add(mob.Id);
                         }
                     }
                 }

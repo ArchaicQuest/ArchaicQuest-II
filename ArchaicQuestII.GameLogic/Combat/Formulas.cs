@@ -51,7 +51,8 @@ namespace ArchaicQuestII.GameLogic.Combat
 
         public int DefensivePoints(Player player, Player target)
         {
-            var defensivePoints = player.ArmorRating.Armour;
+
+            var defensivePoints = (player.ArmorRating.Armour / 4) + 1;
 
 
             var levelDif = player.Level - target.Level <= 0 ? 0 : player.Level - target.Level;
