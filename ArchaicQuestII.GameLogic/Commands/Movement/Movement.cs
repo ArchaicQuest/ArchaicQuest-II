@@ -167,6 +167,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
                 }
             }
 
+            character.Pose = "";
 
         }
 
@@ -832,6 +833,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
         {
             player.Status = status;
             player.LongName = longName;
+            player.Pose = "";
         }
 
         public void UpdateLightCondition(Player player, Room room)

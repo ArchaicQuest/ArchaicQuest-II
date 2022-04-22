@@ -17,6 +17,10 @@ namespace ArchaicQuestII.GameLogic.Core
         void Who(Player player);
         void Scan(Player player, Room room);
         void Affects(Player player);
+        void Emote(Player player, Room room, string emote);
+        void Pmote(Player player, Room room, string emote);
+        void Pose(Player player, string pose);
+        void CheckPose(Player player);
 
         void Practice(Player player, Room room, string skillName);
 

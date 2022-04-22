@@ -388,6 +388,18 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "scan":
                     _core.Scan(player, room);
                     break;
+                case "emote":
+                    _core.Emote(player, room, fullCommand);
+                    break;
+                case "pmote":
+                    _core.Pmote(player, room, fullCommand);
+                    break;
+                case "pose":
+                    _core.Pose(player, fullCommand);
+                    break;
+                case "checkpose":
+                    _core.CheckPose(player);
+                    break;
                 case "/train":
                     _core.TrainSkill(player);
                     break;

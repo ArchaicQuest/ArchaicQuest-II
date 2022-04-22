@@ -1,20 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using ArchaicQuestII.DataAccess;
+﻿using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Effect;
-using ArchaicQuestII.GameLogic.Hubs;
 using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.World.Area;
 using ArchaicQuestII.GameLogic.World.Room;
 using Markdig;
-using Microsoft.AspNetCore.SignalR;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace ArchaicQuestII.GameLogic.Core
 {
@@ -56,6 +54,73 @@ namespace ArchaicQuestII.GameLogic.Core
             _writeToClient.WriteLine(sb.ToString(), player.ConnectionId);
 
 
+        }
+
+        public void Emote(Player player, Room room, string emote)
+        {
+            var emoteText = emote.Remove(0, 5);
+            var emoteMessage = $"{player.Name} {emoteText}";
+
+            foreach (var players in room.Players)
+            {
+                _writeToClient.WriteLine(emoteMessage, players.ConnectionId);
+            }
+        }
+
+        public void Pmote(Player player, Room room, string emote)
+        {
+            var emoteText = emote.Remove(0, 5);
+            var emoteMessage = emoteText;
+
+            foreach (var players in room.Players)
+            {
+                emoteMessage = emoteMessage.Replace(players.Name, "you", StringComparison.CurrentCultureIgnoreCase);
+
+                _writeToClient.WriteLine(player.Name + " " + emoteMessage, players.ConnectionId);
+            }
+        }
+
+        public void Pose(Player player, string pose)
+        {
+            var poseText = pose.Remove(0, 4);
+            if (string.IsNullOrEmpty(poseText))
+            {
+                player.Pose = poseText;
+            }
+
+        
+            player.Pose = $", {poseText}";
+            _writeToClient.WriteLine("Pose set.", player.ConnectionId);
+        }
+
+
+        public void CheckPose(Player player)
+        {
+
+            var poseText = string.Empty;
+
+            if (string.IsNullOrEmpty(player.LongName))
+            {
+                poseText = $"{ player.Name}";
+            }
+            else
+            {
+                poseText = $"{ player.Name} {player.LongName}";
+            }
+
+            if (!string.IsNullOrEmpty(player.Mounted.Name))
+            {
+                poseText += $", is riding {player.Mounted.Name}";
+            }
+            else if (string.IsNullOrEmpty(player.LongName))
+            {
+                poseText += " is here";
+
+            }
+
+            poseText += player.Pose;
+
+            _writeToClient.WriteLine(poseText, player.ConnectionId);
         }
 
         public void Scan(Player player, Room room)
@@ -138,7 +203,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
             foreach (var pc in room.Players)
             {
-                if (pc.Name.Equals(player.Name))
+                if (player.Name.Equals(player.Name))
                 {
                     _writeToClient.WriteLine("You wave goodbye and vanish.", pc.ConnectionId);
                     continue;
@@ -1137,6 +1202,27 @@ namespace ArchaicQuestII.GameLogic.Core
 
             _writeToClient.WriteLine($"You begin to writing in your book.", player.ConnectionId);
 
+        }
+
+        public static string Replace(string source, string oldString,
+                             string newString, StringComparison comparison,
+                             bool recursive = false)
+        {
+            int index = source.IndexOf(oldString, comparison);
+
+            while (index > -1)
+            {
+                source = source.Remove(index, oldString.Length);
+                source = source.Insert(index, newString);
+
+                if (!recursive)
+                {
+                    return source;
+                }
+                index = source.IndexOf(oldString, index + newString.Length, comparison);
+            }
+
+            return source;
         }
     }
 }

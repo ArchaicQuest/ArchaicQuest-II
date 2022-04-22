@@ -715,7 +715,12 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 else if (string.IsNullOrEmpty(pc.LongName))
                 {
                     pcName += " is here";
+
                 }
+
+                pcName += pc.Pose;
+
+            
 
 
                 players += $"<p class='player {(isNightTime ? "dark-room" : "")}'>{pcName}.</p>";
