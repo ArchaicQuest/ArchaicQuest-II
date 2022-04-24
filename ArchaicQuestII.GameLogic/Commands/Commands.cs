@@ -386,7 +386,7 @@ namespace ArchaicQuestII.GameLogic.Commands
                     _core.Practice(player, room, obj);
                     break;
                 case "scan":
-                    _core.Scan(player, room);
+                    _core.Scan(player, room, obj);
                     break;
                 case "emote":
                     _core.Emote(player, room, fullCommand);

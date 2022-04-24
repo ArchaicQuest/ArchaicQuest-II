@@ -210,6 +210,11 @@ namespace ArchaicQuestII.GameLogic.Core
             return player.AlignmentScore >= -100 && player.AlignmentScore <= 100;
         }
 
+        public int GetLevel(Player player)
+        {
+            return player.Level;
+        }
+
         public bool IsMobHere(string name, Room room)
         {
             return room.Mobs.FirstOrDefault(x => x.Name.StartsWith(name, StringComparison.CurrentCultureIgnoreCase)) !=

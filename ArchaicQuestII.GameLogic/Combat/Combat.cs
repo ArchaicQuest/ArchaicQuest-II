@@ -806,7 +806,7 @@ namespace ArchaicQuestII.GameLogic.Combat
             var targetName = target.Name.ToLower(CultureInfo.CurrentCulture);
             var corpse = new Item.Item()
             {
-                Name = targetName,
+                Name = $"The corpse of {targetName}",
                 Description = new Description()
                 {
                     Room = $"The corpse of {targetName} is laying here.",

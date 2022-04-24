@@ -123,10 +123,39 @@ namespace ArchaicQuestII.GameLogic.Core
             _writeToClient.WriteLine(poseText, player.ConnectionId);
         }
 
-        public void Scan(Player player, Room room)
+        public void Scan(Player player, Room room, string direction)
         {
+            
+            if(!string.IsNullOrEmpty(direction) && direction != "scan")
+            {
+                ScanDirection(player, room, direction);
+                return;
+            }
 
             var sb = new StringBuilder();
+
+            sb.Append($"<span>Right here:</span>");
+
+            foreach (var obj in room.Mobs)
+            {
+            
+                    sb.Append($"<p class='mob'>{obj.Name} is right here.</p>");
+             
+            }
+
+            foreach (var obj in room.Players)
+            {
+              
+                    sb.Append($"<p class='player'>{obj.Name} is right here.</p>");
+               
+            }
+
+            if (!room.Mobs.Any() && !room.Players.Any())
+            {
+
+                sb.Append($"<p>There is nobody here.</p>");
+
+            }
 
             foreach (var exit in Helpers.GetListOfExits(room.Exits))
             {
@@ -134,7 +163,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
                 var getRoomObj = _cache.GetRoom($"{getRoomCoords.AreaId}{getRoomCoords.Coords.X}{getRoomCoords.Coords.Y}{getRoomCoords.Coords.Z}");
 
-                sb.Append($"<p>{exit}:</p>");
+                sb.Append($"<span>{exit}:</span>");
 
                 foreach (var obj in getRoomObj.Mobs)
                 {
@@ -178,6 +207,79 @@ namespace ArchaicQuestII.GameLogic.Core
             }
             _writeToClient.WriteLine(sb.ToString(), player.ConnectionId);
         }
+
+        public void ScanDirection(Player player, Room room, string direction)
+        {
+            var directions = new List<string>()
+           {
+               "North",
+               "East",
+               "South",
+               "West",
+               "North West",
+               "North East",
+               "South East",
+               "South West",
+               "Up",
+               "Down"
+           };
+
+            var getDirection = directions.FirstOrDefault(x => x.StartsWith(direction, StringComparison.CurrentCultureIgnoreCase));
+
+            if(getDirection == null)
+            {
+                _writeToClient.WriteLine("You can't look in that direction.", player.ConnectionId);
+            }
+
+            var getRoomCoords = Helpers.IsExit(getDirection, room);
+
+            var getRoomObj = _cache.GetRoom($"{getRoomCoords.AreaId}{getRoomCoords.Coords.X}{getRoomCoords.Coords.Y}{getRoomCoords.Coords.Z}");
+            var sb = new StringBuilder();
+
+            sb.Append($"<span>You peer intently {getDirection}</span>");
+
+            foreach (var obj in getRoomObj.Mobs)
+            {
+                if (getDirection.Equals("down", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    sb.Append($"<p class='mob'>{obj.Name} is below you.</p>");
+                }
+                else if (getDirection.Equals("up", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    sb.Append($"<p class='mob'>{obj.Name} is above you.</p>");
+                }
+                else
+                {
+                    sb.Append($"<p class='mob'>{obj.Name} is to the {getDirection}.</p>");
+                }
+            }
+
+            foreach (var obj in getRoomObj.Players)
+            {
+                if (getDirection.Equals("down", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    sb.Append($"<p class='player'>{obj.Name} is below you.</p>");
+                }
+                else if (getDirection.Equals("up", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    sb.Append($"<p class='player'>{obj.Name} is above you.</p>");
+                }
+                else
+                {
+                    sb.Append($"<p class='player'>{obj.Name} is to the {getDirection}.</p>");
+                }
+            }
+
+            if (!getRoomObj.Mobs.Any() && !getRoomObj.Players.Any())
+            {
+
+                sb.Append($"<p>There is nobody there.</p>");
+
+            }
+
+            _writeToClient.WriteLine(sb.ToString(), player.ConnectionId);
+        }
+
 
         public void Save(Player player)
         {

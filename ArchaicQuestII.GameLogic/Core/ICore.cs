@@ -15,7 +15,8 @@ namespace ArchaicQuestII.GameLogic.Core
         /// </summary>
         /// <param name="player"></param>
         void Who(Player player);
-        void Scan(Player player, Room room);
+        void Scan(Player player, Room room, string direction);
+        void ScanDirection(Player player, Room room, string direction);
         void Affects(Player player);
         void Emote(Player player, Room room, string emote);
         void Pmote(Player player, Room room, string emote);

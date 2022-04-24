@@ -310,6 +310,26 @@ namespace ArchaicQuestII.GameLogic.Core
                 exitList.Add(exits.Down.Name);
             }
 
+            if (exits.NorthEast != null)
+            {
+                exitList.Add(exits.NorthEast.Name);
+            }
+
+            if (exits.NorthWest != null)
+            {
+                exitList.Add(exits.NorthWest.Name);
+            }
+
+            if (exits.SouthEast != null)
+            {
+                exitList.Add(exits.SouthEast.Name);
+            }
+
+            if (exits.SouthWest != null)
+            {
+                exitList.Add(exits.SouthWest.Name);
+            }
+
             return exitList;
         }
 
