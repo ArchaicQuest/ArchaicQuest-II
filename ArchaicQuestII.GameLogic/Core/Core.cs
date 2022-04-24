@@ -792,6 +792,23 @@ namespace ArchaicQuestII.GameLogic.Core
             }
         }
 
+
+        /// <summary>
+        /// for testing
+        /// </summary>
+        /// <param name="player"></param>
+        public void RestorePlayer(Player player)
+        {
+            player.Attributes.Attribute[EffectLocation.Hitpoints] = player.MaxAttributes.Attribute[EffectLocation.Hitpoints];
+            player.Attributes.Attribute[EffectLocation.Mana] = player.MaxAttributes.Attribute[EffectLocation.Mana];
+            player.Attributes.Attribute[EffectLocation.Moves] = player.MaxAttributes.Attribute[EffectLocation.Moves];
+            _clientUi.UpdateHP(player);
+            _clientUi.UpdateMoves(player);
+            _clientUi.UpdateMana(player);
+
+            _writeToClient.WriteLine("You are restored.");
+        }
+
         public void Dismount(Player player, Room room)
         {
             if (string.IsNullOrEmpty(player.Mounted.Name))

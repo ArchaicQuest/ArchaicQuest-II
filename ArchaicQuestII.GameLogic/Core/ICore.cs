@@ -52,6 +52,7 @@ namespace ArchaicQuestII.GameLogic.Core
         /// <param name="room"></param>
         /// <param name="stat"></param>
         void Train(Player player, Room room, string stat);
+        public void RestorePlayer(Player player);
         /// <summary>
         /// Eat food
         /// </summary>

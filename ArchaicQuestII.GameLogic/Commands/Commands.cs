@@ -403,6 +403,9 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "/train":
                     _core.TrainSkill(player);
                     break;
+                case "/restore":
+                    _core.RestorePlayer(player);
+                    break;
                 case "/setevent":
                     _core.SetEvent(player, obj, target);
                     break;
