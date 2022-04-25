@@ -196,49 +196,49 @@ namespace ArchaicQuestII.GameLogic.Combat
             {
                 if (percentageOfHP >= 100)
                 {
-                    return "is in excellent condition.";
+                    return "is in excellent condition";
                 }
                 if (percentageOfHP >= 95)
                 {
-                    return "has a few scratches.";
+                    return "has a few scratches";
                 }
                 if (percentageOfHP >= 85)
                 {
-                    return "has some small wounds and bruises.";
+                    return "has some small wounds and bruises";
                 }
                 if (percentageOfHP >= 75)
                 {
-                    return "has some minor wounds.";
+                    return "has some minor wounds";
                 }
                 if (percentageOfHP >= 63)
                 {
-                    return "has quite a few wounds.";
+                    return "has quite a few wounds";
                 }
 
                 if (percentageOfHP >= 50)
                 {
-                    return "has some big nasty wounds and scratches.";
+                    return "has some big nasty wounds and scratches";
                 }
             }
 
             if (percentageOfHP >= 40)
             {
-                return "looks pretty hurt.";
+                return "looks pretty hurt";
             }
             if (percentageOfHP >= 30)
             {
-                return "has some large wounds.";
+                return "has some large wounds";
             }
             if (percentageOfHP >= 20)
             {
-                return "is in bad condition.";
+                return "is in bad condition";
             }
             if (percentageOfHP >= 10)
             {
-                return "is nearly dead.";
+                return "is nearly dead";
             }
 
-            return percentageOfHP >= 0 ? "is in awful condition." : "is bleeding awfully from big wounds.";
+            return percentageOfHP >= 0 ? "is in awful condition" : "is bleeding awfully from big wounds";
 
         }
 

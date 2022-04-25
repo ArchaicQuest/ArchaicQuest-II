@@ -108,9 +108,9 @@ namespace ArchaicQuestII.GameLogic.Combat
             }
 
             _writer.WriteLine($"<p class='combat'>Your {attackType} {damText.Value} {target.Name.ToLower(cc)}. <span class='damage'>[{damage}]</span></p>", player.ConnectionId);
-            _writer.WriteLine($"<p class='combat'>{target.Name} {_formulas.TargetHealth(player, target)}</p>", player.ConnectionId);
+            _writer.WriteLine($"<p class='combat'>{target.Name} {_formulas.TargetHealth(player, target)}.</p>", player.ConnectionId);
 
-            _writer.WriteLine($"<p>{player.Name}'s {attackType} {damText.Value} you. ({Enum.GetName(typeof(CharacterStatus.Status), player.Status)}) <span class='damage'>[{damage}]</span></p></p>", target.ConnectionId);
+            _writer.WriteLine($"<p>{player.Name}'s {attackType} {damText.Value} you. <span class='damage'>[{damage}]</span></p></p>", target.ConnectionId);
 
 
             foreach (var pc in room.Players)

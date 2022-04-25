@@ -245,6 +245,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
                     }
 
                     _writeToClient.WriteLine($"<p>{player.Name} looks at {item.Name.ToLower()}.</p>", pc.ConnectionId);
+
                 }
                 return;
 
@@ -289,7 +290,26 @@ namespace ArchaicQuestII.GameLogic.World.Room
                     $"<tr><td><span class='cell-title'>Face:</span> {character.Face}</td><td><span class='cell-title'>Hair Facial:</span> {character.FacialHair}</td></tr><table>");
             }
 
-            _writeToClient.WriteLine($"{sb}<p class='{(isDark ? "room-dark" : "")}'>{character.Description} <br/>{character.Name} {_formulas.TargetHealth(player, character)}", player.ConnectionId);
+
+            var status = Enum.GetName(typeof(CharacterStatus.Status), player.Status);
+
+            var statusText = String.Empty;
+
+            if (status.Equals("fighting", StringComparison.CurrentCultureIgnoreCase))
+            {
+                statusText = $"fighting {(character.Target.Equals(player.Name) ? "YOU!" : character.Target)}.";
+            }
+            else
+            {
+                statusText = $"{Enum.GetName(typeof(CharacterStatus.Status), player.Status)}.";
+
+                statusText = statusText.ToLower();
+            }
+
+            _writeToClient.WriteLine($"{sb}<p class='{(isDark ? "room-dark" : "")}'>{character.Description} <br/>{character.Name} {_formulas.TargetHealth(player, character)} and is {statusText}", player.ConnectionId);
+
+
+
 
             foreach (var pc in room.Players)
             {
