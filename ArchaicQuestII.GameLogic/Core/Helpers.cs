@@ -350,13 +350,25 @@ namespace ArchaicQuestII.GameLogic.Core
             switch (eventName)
             {
                 case "event":
-                    await client.PostAsync(config.EventsDiscordWebHookURL, content);
+                    if (!string.IsNullOrEmpty(config.EventsDiscordWebHookURL))
+                    {
+                        await client.PostAsync(config.EventsDiscordWebHookURL, content);
+                    }
+
                     break;
                 case "channels":
-                    await client.PostAsync(config.ChannelDiscordWebHookURL, content);
+                    if (!string.IsNullOrEmpty(config.ChannelDiscordWebHookURL))
+                    {
+                        await client.PostAsync(config.ChannelDiscordWebHookURL, content);
+                    }
+
                     break;
                 case "error":
-                    await client.PostAsync(config.ErrorDiscordWebHookURL, content);
+                    if (!string.IsNullOrEmpty(config.ErrorDiscordWebHookURL))
+                    {
+                        await client.PostAsync(config.ErrorDiscordWebHookURL, content);
+                    }
+
                     break;
                 default:
                     break;
