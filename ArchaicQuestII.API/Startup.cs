@@ -1,69 +1,40 @@
-﻿using ArchaicQuestII.API.Helpers;
+﻿using ArchaicQuestII.API.Configuration.IoC.GameLogicExtensions;
+using ArchaicQuestII.API.Entities;
+using ArchaicQuestII.API.Helpers;
+using ArchaicQuestII.API.Services;
 using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character.Alignment;
 using ArchaicQuestII.GameLogic.Character.AttackTypes;
 using ArchaicQuestII.GameLogic.Character.Class;
+using ArchaicQuestII.GameLogic.Character.Help;
+using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Character.Race;
 using ArchaicQuestII.GameLogic.Character.Status;
+using ArchaicQuestII.GameLogic.Core;
+using ArchaicQuestII.GameLogic.Crafting;
+using ArchaicQuestII.GameLogic.Hubs;
+using ArchaicQuestII.GameLogic.Hubs.Telnet;
+using ArchaicQuestII.GameLogic.Item;
+using ArchaicQuestII.GameLogic.Skill.Core;
+using ArchaicQuestII.GameLogic.Skill.Model;
+using ArchaicQuestII.GameLogic.Socials;
+using ArchaicQuestII.GameLogic.World.Area;
+using ArchaicQuestII.GameLogic.World.Room;
 using LiteDB;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using ArchaicQuestII.GameLogic.Commands;
-using ArchaicQuestII.GameLogic.Commands.Movement;
-using ArchaicQuestII.GameLogic.Commands.Debug;
-using ArchaicQuestII.GameLogic.Core;
-using ArchaicQuestII.GameLogic.Hubs;
-using ArchaicQuestII.GameLogic.World.Room;
-using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
-using ArchaicQuestII.API.Entities;
-using ArchaicQuestII.API.Services;
-using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Emote;
-using ArchaicQuestII.GameLogic.Character.Equipment;
-using ArchaicQuestII.GameLogic.Character.Gain;
-using ArchaicQuestII.GameLogic.Character.Help;
-using ArchaicQuestII.GameLogic.Character.MobFunctions;
-using ArchaicQuestII.GameLogic.Character.MobFunctions.Shop;
-using ArchaicQuestII.GameLogic.Character.Model;
-using ArchaicQuestII.GameLogic.Combat;
-using ArchaicQuestII.GameLogic.Commands.Communication;
-using ArchaicQuestII.GameLogic.Commands.Inventory;
-using ArchaicQuestII.GameLogic.Commands.Objects;
-using ArchaicQuestII.GameLogic.Commands.Score;
-using ArchaicQuestII.GameLogic.Commands.Skills;
-using ArchaicQuestII.GameLogic.Crafting;
-using ArchaicQuestII.GameLogic.Hubs.Telnet;
-using ArchaicQuestII.GameLogic.Item;
-using ArchaicQuestII.GameLogic.Item.RandomItemTypes;
-using ArchaicQuestII.GameLogic.Skill;
-using ArchaicQuestII.GameLogic.Skill.Core;
-using ArchaicQuestII.GameLogic.Skill.Model;
-using ArchaicQuestII.GameLogic.Skill.Skills;
-using ArchaicQuestII.GameLogic.Socials;
-using ArchaicQuestII.GameLogic.Spell;
-using ArchaicQuestII.GameLogic.Spell.Interface;
-using ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells;
-using ArchaicQuestII.GameLogic.World.Area;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Newtonsoft.Json;
 using Config = ArchaicQuestII.GameLogic.Core.Config;
-using Damage = ArchaicQuestII.GameLogic.Core.Damage;
- 
-using Object = ArchaicQuestII.GameLogic.Commands.Objects.Object;
 using SkillList = ArchaicQuestII.GameLogic.Character.Class.SkillList;
-using ArchaicQuestII.GameLogic.Character.MobFunctions.Healer;
 
 namespace ArchaicQuestII.API
 {
@@ -71,7 +42,7 @@ namespace ArchaicQuestII.API
     {
         private IDataBase _db;
         private ICache _cache;
-      
+
         private IHubContext<GameHub> _hubContext;
         public Startup(IConfiguration configuration)
         {
@@ -80,17 +51,21 @@ namespace ArchaicQuestII.API
 
         public IConfiguration Configuration { get; }
 
-    
-
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddCors(options =>
             {
                 options.AddPolicy("client",
-                    builder => builder.WithOrigins("http://localhost:4200", "http://localhost:1337", "https://admin.archaicquest.com", "https://play.archaicquest.com")
-                        .AllowAnyMethod().AllowAnyHeader().AllowCredentials());
+                    builder => builder
+                            .WithOrigins(
+                                "http://localhost:4200", 
+                                "http://localhost:1337", 
+                                "https://admin.archaicquest.com", 
+                                "https://play.archaicquest.com")
+                            .AllowAnyMethod()
+                            .AllowAnyHeader()
+                            .AllowCredentials());
             });
 
             services.AddControllers().AddNewtonsoftJson();
@@ -98,7 +73,6 @@ namespace ArchaicQuestII.API
             {
                 o.EnableDetailedErrors = true;
             });
-
 
             // configure jwt authentication
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
@@ -110,56 +84,11 @@ namespace ArchaicQuestII.API
 
             services.AddSingleton<IDataBase, DataBase>();
             services.AddSingleton<IPlayerDataBase>(new PlayerDataBase(new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AQ-PLAYERS.db"))));
-            services.AddSingleton<ICache>(new Cache());
-            services.AddSingleton<IDamage, Damage>();
-            services.AddSingleton<IDice, Dice>();
-            services.AddTransient<IMovement, Movement>();
-            services.AddTransient<ISkills, Skills>();
-            services.AddTransient<ISpells, CastSpell>();
-            services.AddTransient<IDebug, Debug>();
-            services.AddTransient<IInventory, Inventory>();
-            services.AddSingleton<Icommunication, Communication>();
-            services.AddTransient<IObject, Object>();
-            services.AddTransient<IEquip, Equip>();
-            services.AddSingleton<ICommands, Commands>();
-            services.AddSingleton<IScore, Score>();
-            services.AddTransient<ISpellTargetCharacter, SpellTargetCharacter>();
-            services.AddSingleton<IGameLoop, GameLoop>();
-            services.AddTransient<IRoomActions, RoomActions>();
-            services.AddTransient<IAddRoom, AddRoom>();
-            services.AddSingleton<ICombat, Combat>();
-            services.AddSingleton<IGain, Gain>();
-            services.AddSingleton<ISocials, Social>();
-            services.AddSingleton<ICommandHandler, CommandHandler>();
-            services.AddSingleton<IFormulas, Formulas>();
-            services.AddSingleton<IUpdateClientUI, UpdateClientUI>();
-            services.AddSingleton<IMobScripts, MobScripts>();
-            services.AddSingleton<ITime, Time>();
-            services.AddSingleton<ICore, GameLogic.Core.Core>();
-            services.AddSingleton<IQuestLog, QuestLog>();
-            services.AddSingleton<IMobFunctions, Shop>();
-            services.AddSingleton<IHealer, Healer>();
-            services.AddSingleton<IHelp, HelpFile>();
-            services.AddSingleton<ICrafting, Crafting>();
-            services.AddSingleton<ICooking, Cooking>();
-            services.AddSingleton<ISkillManager, SkillManager>();
-            services.AddSingleton<IDamageSpells, DamageSpells>();
-            services.AddSingleton<IDamageSkills, DamageSkills>();
-            services.AddSingleton<IPassiveSkills, PassiveSkills>();
-            services.AddSingleton<IUtilSkills, UtilSkills>();
-            services.AddSingleton<ISpellList, SpellList>();
-            services.AddSingleton<ISkillList, GameLogic.Skill.SkillList>();
-            services.AddSingleton<ISKill, DoSkill>();
-            services.AddSingleton<IWeather, Weather>();
-            services.AddSingleton<IRandomWeapon, RandomWeapons>();
-            services.AddSingleton<IRandomItem, RandomItem>();
-            services.AddSingleton<IRandomClothItems, RandomClothItems>();
-            services.AddSingleton<IRandomLeatherItems, RandomLeatherItems>();
-            services.AddSingleton<IRandomStuddedLeatherArmour, RandomStuddedLeatherItems>();
-            services.AddSingleton<IRandomChainMailArmour, RandomChainMailItems>();
-            services.AddSingleton<IRandomPlateMailArmour, RandomPlateMailItems>();
-            services.AddSingleton<IWriteToClient, WriteToClient>((factory) => new WriteToClient(_hubContext, TelnetHub.Instance));
-           
+
+            services.AddSingleton<IWriteToClient, WriteToClient>((factory) =>
+                new WriteToClient(_hubContext, TelnetHub.Instance));
+
+            services.AddGameLogic();
         }
 
         /// <summary>
@@ -185,7 +114,7 @@ namespace ArchaicQuestII.API
             {
 
                 mob.Skills = new List<SkillList>();
-             
+
                 var classSkill = _db.GetCollection<Class>(DataBase.Collections.Class).FindOne(x =>
                     x.Name.Equals(mob.ClassName, StringComparison.CurrentCultureIgnoreCase));
 
@@ -231,7 +160,7 @@ namespace ArchaicQuestII.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IDataBase db,ICache cache)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IDataBase db, ICache cache)
         {
             if (env.EnvironmentName == "dev")
             {
@@ -241,10 +170,9 @@ namespace ArchaicQuestII.API
             {
                 app.UseExceptionHandler("/Play/Error");
             }
-            _db = db; 
+            _db = db;
             _cache = cache;
 
-   
             app.UseDefaultFiles();
             app.UseStaticFiles();
 
@@ -254,13 +182,13 @@ namespace ArchaicQuestII.API
             // Forward headers for Ngnix
 
             app.UseForwardedHeaders(new ForwardedHeadersOptions
-           {
-               ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-           });
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
 
-           app.UseRouting();
-           app.UseAuthentication();
-           app.UseAuthorization();
+            app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
@@ -268,7 +196,7 @@ namespace ArchaicQuestII.API
 
             });
 
-          
+
             _hubContext = app.ApplicationServices.GetService<IHubContext<GameHub>>();
             app.StartLoops();
 
@@ -366,13 +294,13 @@ namespace ArchaicQuestII.API
             //add skills
             var skills = new SeedCoreSkills().SeedData();
 
-                foreach (var skill in skills)
+            foreach (var skill in skills)
             {
-                 skill.Id = skills.Count > 0 ? skills.Max(x => x.Id) + 1 : 1;
+                skill.Id = skills.Count > 0 ? skills.Max(x => x.Id) + 1 : 1;
                 _cache.AddSkill(skill.Id, skill);
             }
 
-                // update player skills id
+            // update player skills id
 
             var quests = _db.GetList<Quest>(DataBase.Collections.Quests);
 
@@ -382,7 +310,7 @@ namespace ArchaicQuestII.API
             }
 
             var areas = _db.GetList<Area>(DataBase.Collections.Area);
-           
+
             //foreach (var area in areas)
             //{
             //    var roomList = rooms.FindAll(x => x.AreaId == area.Id);
@@ -415,7 +343,7 @@ namespace ArchaicQuestII.API
                 _cache.AddSocial(social.Key, social.Value);
             }
 
-            
+
             if (!_db.DoesCollectionExist(DataBase.Collections.Socials))
             {
                 foreach (var social in socials)
@@ -425,7 +353,8 @@ namespace ArchaicQuestII.API
             }
 
 
-            if (!_db.DoesCollectionExist(DataBase.Collections.Items)) {
+            if (!_db.DoesCollectionExist(DataBase.Collections.Items))
+            {
                 foreach (var itemSeed in new ItemSeed().SeedData())
                 {
                     _db.Save(itemSeed, DataBase.Collections.Items);
@@ -483,36 +412,17 @@ namespace ArchaicQuestII.API
             if (!_db.DoesCollectionExist(DataBase.Collections.Users))
             {
 
-                var admin = new AdminUser() {Username = "Admin", Password = "admin", Role = "Admin", CanEdit = true, CanDelete = true};
-               
-                    _db.Save(admin, DataBase.Collections.Users);
-                
+                var admin = new AdminUser() { Username = "Admin", Password = "admin", Role = "Admin", CanEdit = true, CanDelete = true };
+
+                _db.Save(admin, DataBase.Collections.Users);
+
             }
 
             watch.Stop();
             var elapsedMs = watch.ElapsedMilliseconds;
 
             Console.WriteLine($"Start up completed in {elapsedMs}");
-           GameLogic.Core.Helpers.PostToDiscord($"Start up completed in {Math.Ceiling((decimal)elapsedMs / 1000)} seconds", "event", _cache.GetConfig());
+            GameLogic.Core.Helpers.PostToDiscord($"Start up completed in {Math.Ceiling((decimal)elapsedMs / 1000)} seconds", "event", _cache.GetConfig());
         }
     }
-
-    public static class Loops
-    {
-        public static void StartLoops(this IApplicationBuilder app)
-        {
-            var loop = app.ApplicationServices.GetRequiredService<IGameLoop>();
-           
-            Task.Run(TelnetHub.Instance.ProcessConnections);
-            Task.Run(loop.UpdateTime);
-            Task.Run(loop.UpdateCombat);
-            Task.Run(loop.UpdatePlayers);
-            Task.Run(loop.UpdatePlayerLag);
-            Task.Run(loop.UpdateRoomEmote).ConfigureAwait(false);
-            Task.Run(loop.UpdateMobEmote).ConfigureAwait(false);
-            Task.Run(loop.UpdateWorldTime).ConfigureAwait(false);
-            Task.Run(loop.Tick);
-        }
-    }
-
 }
