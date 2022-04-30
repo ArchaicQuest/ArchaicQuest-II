@@ -210,24 +210,24 @@ namespace ArchaicQuestII.Controllers.Dashboard
             foreach (var login in accounts)
             {
 
-                if(uniqueList.Find(x => x.AccountId == login.AccountId && x.loginDate.Date == login.loginDate.Date) == null)
+                if(uniqueList.FirstOrDefault(x => x.AccountId == login.AccountId && x.loginDate.Date == login.loginDate.Date) == null)
                 {
                     uniqueList.Add(login);
                 }
                 
             }
 
-            var UniqueToday = uniqueList.Count();
+            var UniqueToday = uniqueList.Where(x => x.loginDate.Date == DateTime.Now.Date).Count();
             var uniqueData = new Series();
             uniqueData.Name = DateTime.Now.ToString("dd-MM-yy");
             uniqueData.Value = UniqueToday;
             UniqueLoginStats.Series.Add(uniqueData);
 
-
+         
             for (int i = 1; i < days; i++)
             {
                 var yesterday = uniqueList.Where(X => X.loginDate.Date.Equals(DateTime.Today.AddDays(-i).Date)).Count();
-                var yesterdayData = new Series
+                  var yesterdayData = new Series
                 {
                     Name = DateTime.Today.AddDays(-i).ToString("dd-MM-yy"),
                     Value = yesterday
