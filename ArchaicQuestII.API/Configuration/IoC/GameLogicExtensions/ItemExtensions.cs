@@ -6,7 +6,7 @@ namespace ArchaicQuestII.API.Configuration.IoC.GameLogicExtensions
 {
     public static class ItemExtensions
     {
-        public static IServiceCollection addItems(this IServiceCollection services)
+        public static IServiceCollection AddItems(this IServiceCollection services)
         {
             services.AddSingleton<IRandomWeapon, RandomWeapons>();
             services.AddSingleton<IRandomItem, RandomItem>();

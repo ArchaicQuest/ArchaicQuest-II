@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character.Emote;
+using ArchaicQuestII.GameLogic.Core;
+using System.Collections.Generic;
 
-namespace ArchaicQuestII.GameLogic.Socials
+namespace ArchaicQuestII.GameLogic.SeedData
 {
-    public class SocialSeedData
+    internal static class Socials
     {
-        public Dictionary<string, Emote> SeedData()
+        private static Dictionary<string, Emote> SeedData()
         {
             var location = System.Reflection.Assembly.GetEntryAssembly().Location;
             var directory = System.IO.Path.GetDirectoryName(location);
@@ -162,6 +162,24 @@ namespace ArchaicQuestII.GameLogic.Socials
             file.Close();
 
             return socialObject;
+        }
+
+        internal static void SeedAndCache(IDataBase db, ICache cache)
+        {
+            var seedData = SeedData();
+
+            if (!db.DoesCollectionExist(DataBase.Collections.Socials))
+            {
+                foreach (var socialSeed in seedData)
+                {
+                    db.Save(socialSeed, DataBase.Collections.Socials);
+                }
+            }
+
+            foreach (var socialSeed in seedData)
+            {
+                cache.AddSocial(socialSeed.Key, socialSeed.Value);
+            }
         }
     }
 }

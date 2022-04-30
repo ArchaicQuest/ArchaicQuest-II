@@ -1,23 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using ArchaicQuestII.DataAccess;
+using ArchaicQuestII.GameLogic.Core;
+using ArchaicQuestII.GameLogic.Skill;
+using ArchaicQuestII.GameLogic.Skill.Core;
 using ArchaicQuestII.GameLogic.Spell;
-using ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells;
-using AllSpells = ArchaicQuestII.GameLogic.Spell.AllSpells;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace ArchaicQuestII.GameLogic.Skill.Core
+namespace ArchaicQuestII.GameLogic.SeedData
 {
-    public class SeedCoreSkills
+    internal static class Skills
     {
-        /// <summary>
-        /// Only called on application start up
-        /// This is to populate the system with sensible defaults
-        /// </summary>
-        /// <returns></returns>
-        public List<Model.Skill> SeedData()
+        internal static void SeedAndCache(IDataBase db, ICache cache)
         {
             var skill = new DefineSkill();
-            var seedData = new List<Model.Skill>()
+            var seedData = new List<Skill.Model.Skill>()
             {
                 new CraftingSkills().Cooking(),
                 new CraftingSkills().Crafting(),
@@ -67,7 +63,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
                 skill.ShieldBash(),
                 skill.DualWield(),
                 skill.EnhancedDamage(),
-                skill.WarCry(), 
+                skill.WarCry(),
                 skill.Hamstring(),
                 skill.Impale(),
                 skill.Slash(),
@@ -75,7 +71,30 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
                 skill.Cleave()
             };
 
-            return seedData;
+            if (!db.DoesCollectionExist(DataBase.Collections.Skill))
+            {
+                foreach (var seed in seedData)
+                {
+                    db.Save(seed, DataBase.Collections.Skill);
+                }
+            }
+            else
+            {
+                var currentSkills = db.GetList<Skill.Model.Skill>(DataBase.Collections.Skill);
+                foreach (var skillSeed in seedData)
+                {
+                    if (!currentSkills.Any(x => x.Name == skillSeed.Name))
+                    {
+                        db.Save(skillSeed, DataBase.Collections.Skill);
+                    }
+                }
+            }
+
+            foreach (var skillSeed in seedData)
+            {
+                skillSeed.Id = seedData.Count > 0 ? seedData.Max(x => x.Id) + 1 : 1;
+                cache.AddSkill(skillSeed.Id, skillSeed);
+            }
         }
     }
 }
