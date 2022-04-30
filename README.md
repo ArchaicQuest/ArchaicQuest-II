@@ -49,7 +49,7 @@ Some of the above can be edited in the admin tool, the rest if required to be ch
 The last important step that isn't seeded yet is the very first room! For now before connecting to the game you will need to fire up the web admin tool and create an area and then create a room in said area. Then the web client will be able to connect correctly. 
 
 ### Running the project
-Use `dotnet run -p ArchaicQuestII.API/ArchaicQuestII.API.csproj`.
+Use `dotnet run --project ArchaicQuestII.API/ArchaicQuestII.API.csproj`.
 
 If on unix you can use the make file in the project to run using `make run`. 
 

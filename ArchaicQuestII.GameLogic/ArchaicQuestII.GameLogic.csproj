@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp31</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
           <DebugType>portable</DebugType>
     </PropertyGroup>
@@ -19,38 +19,29 @@
       <Compile Remove="Core\Time - Copy.cs" />
     </ItemGroup>
 
- 
     <ItemGroup>
       <None Remove="Core\Keys.json" />
     </ItemGroup>
 
- 
     <ItemGroup>
-        <PackageReference Include="Markdig" Version="0.26.0" />
+        <PackageReference Include="Markdig" Version="0.30.2" />
         <PackageReference Include="Microsoft.AspNetCore.SignalR.Core" Version="1.1.0" />
         <PackageReference Include="MoonSharp" Version="2.0.0" />
     </ItemGroup>
 
-
-
     <ItemGroup>
         <ProjectReference Include="..\ArchaicQuestII.DataAccess\ArchaicQuestII.DataAccess.csproj" />
     </ItemGroup>
-
-
 
     <ItemGroup>
       <Folder Include="Commands\Character\" />
       <Folder Include="Skill\Type\" />
     </ItemGroup>
 
-
-
     <ItemGroup>
       <Resource Include="Core\Keys.json">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Resource>
     </ItemGroup>
-
 
 </Project>
