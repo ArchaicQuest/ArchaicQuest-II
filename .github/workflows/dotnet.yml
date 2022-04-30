@@ -1,4 +1,4 @@
-name: .NET Core
+name: .NET
 
 on:
   push:
@@ -12,32 +12,40 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
+    - uses: actions/checkout@v3
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v2
       with:
-        dotnet-version: 3.1.101
-    - name: Install dependencies
+        dotnet-version: '6.0.x'
+
+    - name: Install Dependencies
       run: dotnet restore
-    - name: update event key
+
+    - name: Update Event Key
       uses: deef0000dragon1/json-edit-action/@v1
       env:
         KEY: EventsDiscordWebHookURL
         VALUE: ${{ secrets.DISCORDEVENT }}
         FILE: keys.json
-    - name: update channel key
+
+    - name: Update Channel Key
       uses: deef0000dragon1/json-edit-action/@v1
       env:
         KEY: ChannelDiscordWebHookURL
         VALUE: ${{ secrets.DISCORDEVENT }}
         FILE: keys.json
+
     - name: Build
       run: dotnet build --no-restore --verbosity normal
+
     - name: Test
       run: dotnet test --configuration Release --no-restore
-    - name: dotnet publish
-      run: dotnet publish ArchaicQuestII.API/ArchaicQuestII.API.csproj -c Release -o deploy -r ubuntu.19.04-x64
-    - name: Copy via ssh
+
+    - name: DotNet Publish
+      run: dotnet publish ArchaicQuestII.API/ArchaicQuestII.API.csproj -c Release -o deploy --self-contained true -r linux-x64
+
+    - name: Copy via SSH
       uses: garygrossgarten/github-action-scp@v0.5.3
       with:
         local: deploy
@@ -45,11 +53,11 @@ jobs:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USER }}
         privateKey: ${{ secrets.SSH_KEY }}
-    - name: Run SSH command
+
+    - name: Run SSH Command
       uses: garygrossgarten/github-action-ssh@v0.3.0
       with:
         command: sudo systemctl restart archaicquest_api.service
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USER }}
         privateKey: ${{ secrets.SSH_KEY }}
-    
