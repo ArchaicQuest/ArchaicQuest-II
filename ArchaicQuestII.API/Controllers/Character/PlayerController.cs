@@ -1,26 +1,26 @@
 ﻿
 using ArchaicQuestII.DataAccess;
+using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Character.Status;
+using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Item;
+using ArchaicQuestII.GameLogic.SeedData;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ArchaicQuestII.GameLogic.Account;
-using ArchaicQuestII.GameLogic.Character.Class;
-using ArchaicQuestII.GameLogic.Core;
-using ArchaicQuestII.GameLogic.Skill.Model;
-using Microsoft.AspNetCore.Authorization;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace ArchaicQuestII.Controllers.character
 {
-    
+
     [ApiController]
     public class PlayerController : ControllerBase
     {
@@ -38,8 +38,6 @@ namespace ArchaicQuestII.Controllers.character
         [Route("api/character/Player")]
         public ObjectResult Post([FromBody] Player player)
         {
-
-
             if (!ModelState.IsValid)
             {
                 var exception = new Exception("Invalid player");
@@ -47,7 +45,7 @@ namespace ArchaicQuestII.Controllers.character
             }
 
             var playerClass = _db.GetList<Class>(DataBase.Collections.Class).FirstOrDefault(x => x.Name.Equals(player.ClassName));
-         
+
             var newPlayer = new Player()
             {
                 AccountId = player.AccountId,
@@ -101,17 +99,14 @@ namespace ArchaicQuestII.Controllers.character
                 HairLength = player.HairLength,
                 HairTexture = player.HairTexture,
                 RoomId = _cache.GetConfig().StartingRoom,
-
-
             };
 
-
-            var ItemSeed = new ItemSeed().SeedData();
+            var ItemSeed = Items.seedData;
             var Light = ItemSeed.FirstOrDefault(x => x.Name.Equals("The torch of illuminatio"));
             Light.Equipped = true;
             newPlayer.Inventory.Add(Light);
             newPlayer.Equipped.Light = Light;
-            
+
             var shirt = ItemSeed.FirstOrDefault(x => x.Name.Equals("A ragged shirt"));
             var robe = ItemSeed.FirstOrDefault(x => x.Name.Equals("A simple cloth robe"));
             var sleeves = ItemSeed.FirstOrDefault(x => x.Name.Equals("A pair of baggy sleeves"));
@@ -137,7 +132,7 @@ namespace ArchaicQuestII.Controllers.character
             newPlayer.Inventory.Add(boots);
             newPlayer.Equipped.Feet = boots;
 
-         
+
             if (newPlayer.ClassName.Equals("Mage"))
             {
                 newPlayer.Inventory.Remove(shirt);
@@ -176,7 +171,7 @@ namespace ArchaicQuestII.Controllers.character
 
             newPlayer.Skills = playerClass?.Skills ?? new List<SkillList>();
 
-      
+
 
             if (!string.IsNullOrEmpty(player.Id.ToString()) && player.Id != Guid.Empty)
             {
@@ -195,13 +190,13 @@ namespace ArchaicQuestII.Controllers.character
             account.Characters.Add(newPlayer.Id);
             Helpers.PostToDiscord($"{player.Name} has joined the realms for the first time.", "event", _cache.GetConfig());
 
-          
-          var dupeCheck = _pdb.GetCollection<Player>(PlayerDataBase.Collections.Players).FindOne(x => x.Name.Equals(newPlayer.Name));
 
-        if (dupeCheck != null)
+            var dupeCheck = _pdb.GetCollection<Player>(PlayerDataBase.Collections.Players).FindOne(x => x.Name.Equals(newPlayer.Name));
+
+            if (dupeCheck != null)
             {
 
-                if(dupeCheck.Id != newPlayer.Id)
+                if (dupeCheck.Id != newPlayer.Id)
                 {
                     return Ok(newPlayer.Id);
                 }
@@ -271,7 +266,7 @@ namespace ArchaicQuestII.Controllers.character
             return players.OrderByDescending(x => x.LastLoginTime).ToList();
 
         }
-        
+
         [HttpGet]
         [API.Helpers.Authorize]
         [Route("api/character/viewPlayer/{id:guid}")]
@@ -279,11 +274,11 @@ namespace ArchaicQuestII.Controllers.character
         {
 
             var pc = _pdb.GetCollection<Player>(PlayerDataBase.Collections.Players).FindById(id);
-            
+
             return pc;
 
         }
-        
+
         [HttpGet]
         [API.Helpers.Authorize]
         [Route("api/character/accounts")]
