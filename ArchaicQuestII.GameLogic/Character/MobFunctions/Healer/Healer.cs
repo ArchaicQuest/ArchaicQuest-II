@@ -11,7 +11,7 @@ using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Healer
 {
-    public class Healer: IHealer
+    public class Healer : IHealer
     {
         private readonly IWriteToClient _writer;
         private readonly IUpdateClientUI _clientUi;
@@ -29,7 +29,7 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Healer
         public void DisplayInventory(Player mob, Player player)
         {
 
-           var hagglePriceReduction = Haggle(player, mob);
+            var hagglePriceReduction = Haggle(player, mob);
 
             _writer.WriteLine(mob.Name + " says 'I offer the following spells:'", player.ConnectionId);
             var sb = new StringBuilder();
@@ -82,9 +82,9 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Healer
 
         public int Haggle(Player player, Player target)
         {
-          var priceReduction =  _passiveSkills.Haggle(player, target);
+            var priceReduction = _passiveSkills.Haggle(player, target);
 
-          return priceReduction;
+            return priceReduction;
 
         }
 
@@ -93,7 +93,7 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Healer
             return price * 1.5;
         }
 
-   
+
 
         /// <summary>
         /// Each gold piece is worth 100 silver pieces.
@@ -106,14 +106,14 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Healer
         public string DisplayUnit(int price, int hagglePriceReduction)
         {
             var goldPrice = AddMarkUp(price); // /100
-             
+
             // show haggle price
             return $"{Math.Floor((decimal)goldPrice - Helpers.GetPercentage(hagglePriceReduction, (int)goldPrice))}";
             // return goldPrice < 1 ? $"{Math.Floor(goldPrice * 100)} SP" : $"{Math.Floor(goldPrice)} GP";
         }
 
-      
- 
+
+
         public void BuyItem(string itemName, Room room, Player player)
         {
 
@@ -136,7 +136,7 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Healer
 
             var haggleReduction = _passiveSkills.Haggle(player, vendor);
             var goldValue = AddMarkUp(hasItem.Cost);
-            var trueGoldValue = goldValue - Helpers.GetPercentage(haggleReduction, (int) goldValue);
+            var trueGoldValue = goldValue - Helpers.GetPercentage(haggleReduction, (int)goldValue);
             if (player.Money.Gold < trueGoldValue)
             {
                 _writer.WriteLine($"<p>{vendor.Name} says 'Sorry you can't afford that.'</p>", player.ConnectionId);
@@ -147,17 +147,17 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Healer
 
 
             _spells.DoSpell("cure light wounds", vendor, player.Name, room);
-            
+
 
             // MOB CAST SPELL
 
             _clientUi.UpdateScore(player);
             _clientUi.UpdateInventory(player);
-  
+
             _writer.WriteLine($"<p>You buy {hasItem.Name.ToLower()} for {Math.Floor(trueGoldValue)} gold.</p>", player.ConnectionId);
         }
 
-   
+
         public void InspectItem(int itemNumber, Room room, Player player)
         {
             throw new NotImplementedException();

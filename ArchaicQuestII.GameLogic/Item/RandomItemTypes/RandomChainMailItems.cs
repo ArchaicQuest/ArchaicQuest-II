@@ -8,7 +8,7 @@ using ArchaicQuestII.GameLogic.Core;
 
 namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
 {
-    public class RandomChainMailItems: IRandomChainMailArmour
+    public class RandomChainMailItems : IRandomChainMailArmour
     {
 
         private IDice _dice;
@@ -166,7 +166,7 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
                     Exam = "A protective #prefix# skirt."
                 }
             }
-         
+
         };
         public List<Item> ArmItemName = new List<Item>()
         {
@@ -246,13 +246,13 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
                     Exam = "A pair of #prefix# boots",
                 }
             },
-           
+
 
         };
         public List<Item> BodyItemName = new List<Item>()
         {
 
- 
+
             new Item()
             {
                 Name = "Jerkin",
@@ -323,7 +323,7 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
 
             if (choice.Slot == Equipment.EqSlot.Hands || choice.Slot == Equipment.EqSlot.Legs || choice.Slot == Equipment.EqSlot.Arms)
             {
-                var pairOrSome = _dice.Roll(1, 1, 2); 
+                var pairOrSome = _dice.Roll(1, 1, 2);
                 name = $"{(pairOrSome == 1 ? "A pair of " : "some ")}" + prefix.Name + " " + choice.Name;
             }
 

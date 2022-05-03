@@ -27,8 +27,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
         }
         public void ShowSkills(Player player, string fullCommand)
         {
-              
-            if(fullCommand.Equals("skills all", StringComparison.CurrentCultureIgnoreCase))
+
+            if (fullCommand.Equals("skills all", StringComparison.CurrentCultureIgnoreCase))
             {
                 ReturnSkillList(player.Skills.Where(x => x.IsSpell == false).ToList(), player, "Skills:");
                 return;
@@ -71,9 +71,9 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 }
             }
 
-        
-                ReturnSkillList(player.Skills.ToList(), player, "Skills &amp; Spells:");
-            
+
+            ReturnSkillList(player.Skills.ToList(), player, "Skills &amp; Spells:");
+
 
 
         }

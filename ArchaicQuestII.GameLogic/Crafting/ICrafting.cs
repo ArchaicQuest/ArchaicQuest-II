@@ -6,7 +6,7 @@ using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Crafting
 {
-    
+
     public interface ICrafting
     {
         /// <summary>

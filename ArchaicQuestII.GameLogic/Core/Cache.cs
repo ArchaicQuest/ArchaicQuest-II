@@ -126,10 +126,10 @@ namespace ArchaicQuestII.GameLogic.Core
             return _originalRoomCache.Values.ToList();
         }
 
-  
+
         public List<Room> GetAllRoomsInArea(int id)
         {
-            var room = _roomCache.Values.Where(x =>x.AreaId.Equals(id)).ToList();
+            var room = _roomCache.Values.Where(x => x.AreaId.Equals(id)).ToList();
 
             return room;
         }
@@ -256,7 +256,7 @@ namespace ArchaicQuestII.GameLogic.Core
             return _configCache;
         }
 
-       
+
         public void ClearRoomCache()
         {
             _roomCache.Clear();
@@ -271,7 +271,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public void AddMap(string areaId, string map)
         {
-             _mapCache.TryAdd(areaId, map);
+            _mapCache.TryAdd(areaId, map);
         }
 
         public string GetMap(string areaId)
@@ -309,12 +309,12 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public List<Player> GetCombatList()
         {
-           return _combatCache.Values.ToList();
+            return _combatCache.Values.ToList();
         }
- 
+
         public void AddCommand(string key, Action action)
         {
-           _commands.Add(key, action);
+            _commands.Add(key, action);
         }
 
         public Dictionary<string, Action> GetCommands()
@@ -334,7 +334,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public bool AddQuest(int id, Quest quest)
         {
-           return _questCache.TryAdd(id, quest);
+            return _questCache.TryAdd(id, quest);
         }
 
         public Quest GetQuest(int id)

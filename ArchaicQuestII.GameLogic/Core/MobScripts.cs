@@ -65,7 +65,7 @@ namespace ArchaicQuestII.GameLogic.Core
     }
 
 
-    public class MobScripts: IMobScripts
+    public class MobScripts : IMobScripts
     {
         public Player _player;
         public Player _mob;
@@ -248,11 +248,11 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public void GiveGold(int value, Player player)
         {
-            if(player.Money == null)
+            if (player.Money == null)
             {
                 player.Money = new Character.Model.Money();
             }
-           player.Money.Gold += value;
+            player.Money.Gold += value;
         }
 
         public bool HasObject(Player player, string name)
@@ -279,27 +279,27 @@ namespace ArchaicQuestII.GameLogic.Core
         public void AddQuest(Player player, int questId)
         {
 
-          var quest =  _cache.GetQuest(questId);
+            var quest = _cache.GetQuest(questId);
 
-          if (player.QuestLog.FirstOrDefault(x => x.Id == quest.Id) == null)
-          {
+            if (player.QuestLog.FirstOrDefault(x => x.Id == quest.Id) == null)
+            {
 
-              player.QuestLog.Add(new Quest()
-              {
-                  Id = quest.Id,
-                  Area = quest.Area,
-                  Title = quest.Title,
-                  Description = quest.Description,
-                  Type = quest.Type,
-                  ExpGain = quest.ExpGain,
-                  GoldGain = quest.GoldGain,
-                  MobsToKill = quest.MobsToKill,
-                  ItemGain = quest.ItemGain,
-                  
-              });
-          }
+                player.QuestLog.Add(new Quest()
+                {
+                    Id = quest.Id,
+                    Area = quest.Area,
+                    Title = quest.Title,
+                    Description = quest.Description,
+                    Type = quest.Type,
+                    ExpGain = quest.ExpGain,
+                    GoldGain = quest.GoldGain,
+                    MobsToKill = quest.MobsToKill,
+                    ItemGain = quest.ItemGain,
 
-          _writeToClient.WriteLine($"<p class='gain'>New Quest: {quest.Title}!</p>", player.ConnectionId);
+                });
+            }
+
+            _writeToClient.WriteLine($"<p class='gain'>New Quest: {quest.Title}!</p>", player.ConnectionId);
             _updateClientUi.UpdateQuest(player);
         }
 
@@ -316,12 +316,12 @@ namespace ArchaicQuestII.GameLogic.Core
                 _gain.GainExperiencePoints(player, quest.ExpGain, true);
                 player.Money.Gold = quest.GoldGain;
             }
- 
+
             _updateClientUi.UpdateQuest(player);
         }
 
         public async Task Sleep(int milliseconds)
-        { 
+        {
 
             await Task.Delay(milliseconds);
         }
@@ -331,7 +331,7 @@ namespace ArchaicQuestII.GameLogic.Core
         {
 
             _spells.DoSpell("armour", mob, player.Name, room);
-            
+
         }
 
         public void MobSay(string n, Room room, Player player, Player mob, int delay = 0)

@@ -51,7 +51,7 @@ namespace ArchaicQuestII.GameLogic.Account
         public List<Player> Characters { get; set; } = new List<Player>();
         [BsonField("dj")]
         public DateTime DateJoined { get; set; } = DateTime.Now;
-        
+
         [BsonField("c")]
         public int Credits { get; set; }
 

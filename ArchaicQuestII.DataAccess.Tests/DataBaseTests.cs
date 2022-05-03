@@ -17,14 +17,14 @@ namespace ArchaicQuestII.DataAccess.Tests
             _database = new Mock<IDataBase>();
             _playerDatabse = new Mock<IPlayerDataBase>();
         }
- 
+
 
         [Fact]
         public void Save()
         {
             var player = true;
             //arrange
-            _playerDatabse.Setup((d => d.Save(player,PlayerDataBase.Collections.Players))).Returns(true);
+            _playerDatabse.Setup((d => d.Save(player, PlayerDataBase.Collections.Players))).Returns(true);
 
             var result = _playerDatabse.Object.Save(player, PlayerDataBase.Collections.Players);
 
@@ -38,7 +38,7 @@ namespace ArchaicQuestII.DataAccess.Tests
         public void GetCollection()
         {
 
-             _playerDatabse.Object.GetCollection<string>(PlayerDataBase.Collections.Players);
+            _playerDatabse.Object.GetCollection<string>(PlayerDataBase.Collections.Players);
 
             _playerDatabse.Verify(db => db.GetCollection<string>(PlayerDataBase.Collections.Players), Times.Once());
 

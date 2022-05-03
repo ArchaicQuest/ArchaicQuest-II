@@ -12,7 +12,7 @@ using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Crafting
 {
-    public class Crafting: ICrafting
+    public class Crafting : ICrafting
     {
         private IWriteToClient _writeToClient;
         private ICache _cache;
@@ -60,7 +60,7 @@ namespace ArchaicQuestII.GameLogic.Crafting
                 return;
             }
 
-         
+
             var sb = new StringBuilder();
             sb.Append("<p>You can craft the following items:</p>");
             sb.Append("<table class='simple'>");
@@ -90,7 +90,7 @@ namespace ArchaicQuestII.GameLogic.Crafting
             if (!string.IsNullOrEmpty(keyword))
             {
                 if (keyword.StartsWith("list"))
-                {  
+                {
                     ListCrafts(player);
                     return;
                 }
@@ -99,7 +99,7 @@ namespace ArchaicQuestII.GameLogic.Crafting
                 return;
             }
 
-           
+
         }
 
         public void CraftItem(Player player, Room room, string item)
@@ -116,12 +116,13 @@ namespace ArchaicQuestII.GameLogic.Crafting
                 craftingRecipes.FirstOrDefault(x =>
                     x.Title.StartsWith(item, StringComparison.CurrentCultureIgnoreCase));
 
-            if (recipe == null) {
+            if (recipe == null)
+            {
                 _writeToClient.WriteLine("<p>You can't craft that.</p>", player.ConnectionId);
                 return;
             }
             _writeToClient.WriteLine($"<p>You begin crafting {Helpers.AddArticle(recipe.Title).ToLower()}.</p>", player.ConnectionId);
-            
+
             var success = _skills.SuccessCheck(player, "crafting");
 
             if (success)
@@ -182,7 +183,7 @@ namespace ArchaicQuestII.GameLogic.Crafting
 
                 if (recipe.CreatedItemDropsInRoom)
                 {
-                   
+
 
                     _writeToClient.WriteLine($"<p>You have failed in making {recipe.Title}.</p>",
                         player.ConnectionId, 2000);
@@ -190,16 +191,16 @@ namespace ArchaicQuestII.GameLogic.Crafting
                 else
                 {
 
-                   
+
                     _writeToClient.WriteLine($"<p>You have failed to craft {recipe.Title}. It looks nothing like!</p>",
                         player.ConnectionId, 2000);
                 }
 
                 _skills.LearnMistakes(player, "Crafting", 2000);
             }
-            
 
-          
+
+
 
         }
 

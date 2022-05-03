@@ -77,7 +77,7 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
                     }
                 }
             };
-         
+
             var exits = new RoomActions(_writer.Object, _time.Object, _cache.Object, _dice.Object, _gain.Object, _formulas.Object).FindValidExits(_room, false);
 
             Assert.Equal("North", exits);
@@ -295,7 +295,7 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
                         Door = false,
                         Coords = new Coordinates()
                     },
-                   
+
                 }
             };
 
@@ -332,7 +332,7 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
             _player.Config.VerboseExits = false;
             _player.ConnectionId = "1";
 
-            
+
             var item = new GameLogic.Item.Item()
             {
                 Name = "A portal",
@@ -342,9 +342,9 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
                     Destination = "0000"
                 }
             };
-           var currentRoom = new GameLogic.World.Room.Room()
+            var currentRoom = new GameLogic.World.Room.Room()
             {
-                Items = new ItemList() {item},
+                Items = new ItemList() { item },
                 AreaId = 1,
                 Coords =
                 {
@@ -352,11 +352,11 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
                     Y = 0,
                     Z = 0
                 },
-                Players = new List<Player>() {_player}
-                
+                Players = new List<Player>() { _player }
+
             };
 
- 
+
 
             _room = new GameLogic.World.Room.Room()
             {
@@ -374,7 +374,7 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
             _cache.Setup(x => x.GetRoom("0000")).Returns(_room);
             new RoomActions(_writer.Object, _time.Object, _cache.Object, _dice.Object, _gain.Object, _formulas.Object).LookInPortal(item, currentRoom, _player);
 
-             _writer.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("Room description")), "1"), Times.Once());
+            _writer.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("Room description")), "1"), Times.Once());
         }
     }
 }

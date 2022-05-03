@@ -8,12 +8,12 @@ using Xunit;
 
 namespace ArchaicQuestII.GameLogic.Tests.Item
 {
-   
+
     public class ItemListTest
     {
         private ItemList items = new ItemList();
 
-    
+
         [Fact]
         public void Returns_correct_item_count()
         {
@@ -37,7 +37,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Item
             this.items.Add(sword);
             this.items.Add(sword);
 
-            var expected = new List<ItemObj> { new ItemObj(){ Id = 0, Name = "apple"}, new ItemObj() { Id = 1, Name = "(2) sword" }};
+            var expected = new List<ItemObj> { new ItemObj() { Id = 0, Name = "apple" }, new ItemObj() { Id = 1, Name = "(2) sword" } };
 
             Assert.Equal(items.List(true).ToList()[0].Name, expected[0].Name);
             Assert.Equal(items.List(true).ToList()[1].Name, expected[1].Name);

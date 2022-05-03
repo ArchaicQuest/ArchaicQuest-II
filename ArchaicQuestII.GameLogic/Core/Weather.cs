@@ -5,22 +5,23 @@ using System.Text;
 
 namespace ArchaicQuestII.GameLogic.Core
 {
-   public class Weather:IWeather {
+    public class Weather : IWeather
+    {
 
-       private IDice _dice;
-       public int LastRoll = 0;
-       public string WeatherState = "Sunny";
-       public int SunnyToCloudyTransitionState = 0;
-       public int CloudyToSunnyTransitionState = 0;
-       public int CloudyToLightRainTransitionState = 0;
-       public int LightRainToCloudyTransitionState = 0;
-       public int LightRainToHeavyRainTransitionState = 0;
-       public int HeavyRainToLightRainTransitionState = 0;
-       public int HeavyRainToThunderTransitionState = 0;
-       public int ThunderToLightRainTransitionState = 0;
+        private IDice _dice;
+        public int LastRoll = 0;
+        public string WeatherState = "Sunny";
+        public int SunnyToCloudyTransitionState = 0;
+        public int CloudyToSunnyTransitionState = 0;
+        public int CloudyToLightRainTransitionState = 0;
+        public int LightRainToCloudyTransitionState = 0;
+        public int LightRainToHeavyRainTransitionState = 0;
+        public int HeavyRainToLightRainTransitionState = 0;
+        public int HeavyRainToThunderTransitionState = 0;
+        public int ThunderToLightRainTransitionState = 0;
 
         private ITime _time;
-        
+
 
         public List<Tuple<string, string>> sunnyToCloudyTransitionStates = new List<Tuple<string, string>>()
        {
@@ -37,20 +38,20 @@ namespace ArchaicQuestII.GameLogic.Core
             new Tuple<string, string>("A few of the clouds begin to move out leaving only a few clouds left behind.", "A few of the clouds begin to move out leaving only a few clouds left behind.")
        };
 
-       public List<Tuple<string, string>> CloudyStates = new List<Tuple<string, string>>()
+        public List<Tuple<string, string>> CloudyStates = new List<Tuple<string, string>>()
        {
            new Tuple<string, string>("Clouds cover the sky", "Clouds cover the night sky")
 
        };
 
-       public List<Tuple<string, string>> cloudyToRainyTransitionStates = new List<Tuple<string, string>>()
+        public List<Tuple<string, string>> cloudyToRainyTransitionStates = new List<Tuple<string, string>>()
        {
             new Tuple<string, string>("The clouds appear darker in the sky.", "The clouds appear darker in the night sky."),
             new Tuple<string, string>("Light rain patters on the ground around you.","Light rain patters on the ground around you."),
             new Tuple<string, string>("The light rain picks up a bit.", "The light rain picks up a bit.")
        };
 
-       public List<Tuple<string, string>> LightRainToCloudTransitionStates = new List<Tuple<string, string>>()
+        public List<Tuple<string, string>> LightRainToCloudTransitionStates = new List<Tuple<string, string>>()
        {
             new Tuple<string, string>("The rain slows to a light rain.","The rain slows to a light rain."),
             new Tuple<string, string>("The rain reduces to a drizzle.", "The rain reduces to a drizzle."),
@@ -58,49 +59,49 @@ namespace ArchaicQuestII.GameLogic.Core
        };
 
 
-       public List<Tuple<string, string>> LightRainState = new List<Tuple<string, string>>()
+        public List<Tuple<string, string>> LightRainState = new List<Tuple<string, string>>()
        {
            new Tuple<string, string>("The rain falls steady.", "The rain falls steady."),
            new Tuple<string, string>("The rain falls steadily forming small puddles here and there.", "The rain falls steadily forming small puddles here and there."),
        };
 
 
-       public List<Tuple<string, string>> LightRainToHeavyRainTransitionStates = new List<Tuple<string, string>>()
+        public List<Tuple<string, string>> LightRainToHeavyRainTransitionStates = new List<Tuple<string, string>>()
        {
            new Tuple<string, string>("The rain begins to fall heavily.", "The rain begins to fall heavily."),
            new Tuple<string, string>("The rain falls heavily forming puddles here and there.", "The rain falls heavily forming puddles here and there."),
            new Tuple<string, string>("The rain continues to fall heavily.", "The rain continues to fall heavily.")
        };
 
-       public List<Tuple<string, string>> HeavyRainState = new List<Tuple<string, string>>()
+        public List<Tuple<string, string>> HeavyRainState = new List<Tuple<string, string>>()
        {
             new Tuple<string, string>("The rain falls heavily.", "The rain falls heavily."),
             new Tuple<string, string>("The rain continues to fall heavily.", "The rain continues to fall heavily.")
        };
 
-       public List<Tuple<string, string>> HeavyRainToLightRainTransitionStates = new List<Tuple<string, string>>()
+        public List<Tuple<string, string>> HeavyRainToLightRainTransitionStates = new List<Tuple<string, string>>()
        {
             new Tuple<string, string>("The rain begins to slow down.", "The rain begins to slow down."),
             new Tuple<string, string>("The rain no longer pounds the ground and lessens some what.", "The rain no longer pounds the ground and lessens some what."),
             new Tuple<string, string>("The rain slows to a light rain.", "The rain slows to a light rain.")
        };
 
-       public List<Tuple<string, string>> HeavyRainToThunderTransitionStates = new List<Tuple<string, string>>()
+        public List<Tuple<string, string>> HeavyRainToThunderTransitionStates = new List<Tuple<string, string>>()
        {
             new Tuple<string, string>("The sound of thunder rumbles in the distance.", "The sound of thunder rumbles in the distance."),
             new Tuple<string, string>("Lightning flashes in the sky, accompanied shortly by booming thunder.", "Lightning flashes in the sky, accompanied shortly by booming thunder."),
             new Tuple<string, string>("Lightning forks across the sky, followed by a bang of thunder.", "Lightning forks across the sky, followed by a bang of thunder."),
-           
+
        };
 
-       public List<Tuple<string, string>> ThunderState = new List<Tuple<string, string>>()
+        public List<Tuple<string, string>> ThunderState = new List<Tuple<string, string>>()
        {
            new Tuple<string, string>("Lightning forks across the sky, followed by a bang of thunder.", "Lightning forks across the sky, followed by a bang of thunder."),
            new Tuple<string, string>("The rain pours down on the ground. Lightning and thunder light up the sky and shake the ground.", "The rain pours down on the ground. Lightning and thunder light up the sky and shake the ground."),
            new Tuple<string, string>("Thunder cracks, and lightning flashes in the sky as the heavy rain continues to fall.", "Thunder cracks, and lightning flashes in the sky as the heavy rain continues to fall.")
        };
 
-       public List<Tuple<string, string>> ThunderToLightRainTransitionStates = new List<Tuple<string, string>>()
+        public List<Tuple<string, string>> ThunderToLightRainTransitionStates = new List<Tuple<string, string>>()
        {
             new Tuple<string, string>("Lightning forks across the sky, followed by a bang of thunder. The rain starts to ease.", "Lightning forks across the sky, followed by a bang of thunder. The rain starts to ease."),
             new Tuple<string, string>("A flash of lighting then a long pause before the rumble of thunder is heard.", "A flash of lighting then a long pause before the rumble of thunder is heard."),
@@ -120,11 +121,11 @@ namespace ArchaicQuestII.GameLogic.Core
 
 
         public int weatherGoodToBadPos = 0;
-       public int weatherBadToGoodPos = 0;
+        public int weatherBadToGoodPos = 0;
         public Weather(IDice dice, ITime time)
         {
             _time = time;
-             _dice = dice;
+            _dice = dice;
         }
 
         public void UpdateWeather()
@@ -133,7 +134,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
             switch (season)
             {
-                
+
 
             }
         }
@@ -142,7 +143,7 @@ namespace ArchaicQuestII.GameLogic.Core
         {
 
             var currentRoll = _dice.Roll(1, 1, 100);
-            
+
             var states = new List<string>()
             {
                 "Sunny",
@@ -202,7 +203,7 @@ namespace ArchaicQuestII.GameLogic.Core
                     WeatherState = "RainToCloudy";
                 }
 
-                if (currentRoll >= 75 )
+                if (currentRoll >= 75)
                 {
                     WeatherState = "RainToHeavyRain";
                 }
@@ -249,7 +250,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
             if (WeatherState == "SunnyToCloudy")
             {
-               weatherText = WeatherTransition("Cloudy", sunnyToCloudyTransitionStates, ref SunnyToCloudyTransitionState);
+                weatherText = WeatherTransition("Cloudy", sunnyToCloudyTransitionStates, ref SunnyToCloudyTransitionState);
 
                 return weatherText;
             }
@@ -270,7 +271,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
             if (WeatherState == "RainToCloudy")
             {
- 
+
                 weatherText = WeatherTransition("Cloudy", LightRainToCloudTransitionStates, ref LightRainToCloudyTransitionState);
 
                 return weatherText;
@@ -316,7 +317,7 @@ namespace ArchaicQuestII.GameLogic.Core
         public string WeatherTransition(string NewState, List<Tuple<string, string>> transitions, ref int transitionCount)
         {
             var weatherText = _time.IsNightTime() ? transitions[transitionCount].Item1 : transitions[transitionCount].Item2;
-           transitionCount += 1;
+            transitionCount += 1;
 
             if (transitionCount > transitions.Count - 1)
             {
@@ -332,7 +333,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
         //    var currentRoll = _dice.Roll(1, 1, 100);
         //    var state = "clearSkies";
-            
+
         //    var lastRoll = this.LastRoll;
 
         //    if (LastRoll == 0)
@@ -462,10 +463,10 @@ namespace ArchaicQuestII.GameLogic.Core
 
         //        return weather;
         //        }
- 
+
 
         //    return weatherGoodToBad[0];
         //}
- 
+
     }
 }

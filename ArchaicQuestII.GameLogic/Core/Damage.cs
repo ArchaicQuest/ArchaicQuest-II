@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ArchaicQuestII.GameLogic.Core
 {
-    public class Damage: IDamage
+    public class Damage : IDamage
     {
         public KeyValuePair<string, string> DamageText(int damage)
         {

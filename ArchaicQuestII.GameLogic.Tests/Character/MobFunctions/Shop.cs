@@ -14,7 +14,7 @@ using Xunit;
 
 namespace ArchaicQuestII.GameLogic.Tests.Character.MobFunctions
 {
-   
+
     public class ShopTests
     {
 
@@ -84,11 +84,11 @@ namespace ArchaicQuestII.GameLogic.Tests.Character.MobFunctions
 
 
             var shop = new Shop(_IWriteToClient.Object, _IUpdateUI.Object, _passiveSkills.Object);
-           shop.List(room, player);
+            shop.List(room, player);
 
 
             _IWriteToClient.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("<p>There is no one selling here.</p>")), "1"), Times.Once());
- 
+
         }
 
         [Fact]
@@ -175,7 +175,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Character.MobFunctions
             Assert.True(player.Money.Gold < 20);
 
             _IWriteToClient.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("You buy sword for 15 gold.")), "1"), Times.Once());
- 
+
         }
 
         [Fact]
@@ -197,15 +197,15 @@ namespace ArchaicQuestII.GameLogic.Tests.Character.MobFunctions
                 ItemType = GameLogic.Item.Item.ItemTypes.Weapon
 
             };
-        var shopkeeper = new Player
+            var shopkeeper = new Player
             {
                 ConnectionId = "1",
                 Name = "Gary",
                 Inventory = new ItemList(),
                 Shopkeeper = true
             };
-        shopkeeper.Inventory.Add(itemB);
-          
+            shopkeeper.Inventory.Add(itemB);
+
 
             var player = new Player
             {

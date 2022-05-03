@@ -44,12 +44,12 @@ namespace ArchaicQuestII.API.Controllers
             var data = new Help()
             {
                 Description = help.Description,
-               BriefDescription = help.BriefDescription,
-               DateCreated = DateTime.Now,
-               DateUpdated = DateTime.Now,
-               Keywords = help.Keywords,
-               RelatedHelpFiles = help.RelatedHelpFiles,
-               Title = help.Title
+                BriefDescription = help.BriefDescription,
+                DateCreated = DateTime.Now,
+                DateUpdated = DateTime.Now,
+                Keywords = help.Keywords,
+                RelatedHelpFiles = help.RelatedHelpFiles,
+                Title = help.Title
             };
 
             if (!string.IsNullOrEmpty(help.Id.ToString()) && help.Id != -1)

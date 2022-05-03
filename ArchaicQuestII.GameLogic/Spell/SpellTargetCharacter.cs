@@ -40,7 +40,7 @@ namespace ArchaicQuestII.GameLogic.Spell
             {
                 return null;
             }
-            
+
             var victim = string.IsNullOrEmpty(target) ? player : GetTarget(target, room);
 
             if (victim == null)
@@ -65,8 +65,8 @@ namespace ArchaicQuestII.GameLogic.Spell
 
         public Player ReturnTarget(Skill.Model.Skill spell, string target, Room room, Player player)
         {
-            
-         
+
+
             if ((spell.ValidTargets & ValidTargets.TargetSelfOnly) != 0)
             {
                 if (string.IsNullOrEmpty(target) || target == "self")
@@ -101,7 +101,7 @@ namespace ArchaicQuestII.GameLogic.Spell
             {
                 return CheckTarget(spell, target, room, player);
             }
- 
+
             // casting spell on PC/NPC in the world
             // example spells, gate, summon, portal
             if ((spell.ValidTargets & ValidTargets.TargetPlayerWorld) != 0)
@@ -128,7 +128,7 @@ namespace ArchaicQuestII.GameLogic.Spell
                 }
 
 
-                 return item;
+                return item;
             }
 
 

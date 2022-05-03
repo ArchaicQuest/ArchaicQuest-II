@@ -53,7 +53,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
             _formulas = formulas;
         }
 
- 
+
         /// <summary>
         /// Do action when user connects 
         /// </summary>
@@ -72,15 +72,15 @@ namespace ArchaicQuestII.GameLogic.Hubs
             await Clients.All.SendAsync("SendMessage", "", "<p>Someone has left the realm.</p>");
         }
 
- 
 
-    /// <summary>
-    /// get message from client
-    /// </summary>
-    /// <returns></returns>
-    public void SendToServer(string message, string connectionId)
+
+        /// <summary>
+        /// get message from client
+        /// </summary>
+        /// <returns></returns>
+        public void SendToServer(string message, string connectionId)
         {
-           
+
             var player = _cache.GetPlayer(connectionId);
 
             if (player == null)
@@ -89,7 +89,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
                 return;
             }
             player.Buffer.Enqueue(message);
-          
+
         }
 
         /// <summary>
@@ -111,7 +111,8 @@ namespace ArchaicQuestII.GameLogic.Hubs
 
             var contentType = json.GetValue("type")?.ToString();
 
-          if(contentType == "book") {
+            if (contentType == "book")
+            {
 
                 var book = new WriteBook()
                 {
@@ -122,7 +123,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
 
                 var getBook = player.Inventory.FirstOrDefault(x => x.Name.Equals(book.Title));
 
-                if(getBook == null)
+                if (getBook == null)
                 {
                     _writeToClient.WriteLine("<p>There's a puff of smoke and all your work is undone. Seek an Immortal</p>", player.ConnectionId);
                     return;
@@ -181,10 +182,10 @@ namespace ArchaicQuestII.GameLogic.Hubs
             var directory = System.IO.Path.GetDirectoryName(location);
 
             var motd = File.ReadAllText(directory + "/motd");
- 
-           await SendToClient(motd, id);
+
+            await SendToClient(motd, id);
         }
- 
+
 
         public void CreateCharacter(string name = "Liam")
         {
@@ -203,8 +204,8 @@ namespace ArchaicQuestII.GameLogic.Hubs
             var player = GetCharacter(hubId, characterId);
             UpdatePlayerSkills(player);
 
-         
-                AddCharacterToCache(hubId, player);
+
+            AddCharacterToCache(hubId, player);
 
             var playerExist = _cache.PlayerAlreadyExists(player.Id);
             player.LastLoginTime = DateTime.Now;
@@ -237,7 +238,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
                 GetRoom(hubId, player);
             }
 
-            
+
         }
 
 
@@ -264,11 +265,12 @@ namespace ArchaicQuestII.GameLogic.Hubs
                         IsSpell = false
                     };
 
-                    if(theSkill.Cost.Table.ContainsKey(GameLogic.Skill.Enum.Cost.Mana)) {
-                    skill.IsSpell = _cache.GetSkill(skill.SkillId) == null ? theSkill.Cost.Table[GameLogic.Skill.Enum.Cost.Mana] > 0 ? true : false : _cache.GetSkill(skill.SkillId).Cost.Table[GameLogic.Skill.Enum.Cost.Mana] > 0 ? true : false;
+                    if (theSkill.Cost.Table.ContainsKey(GameLogic.Skill.Enum.Cost.Mana))
+                    {
+                        skill.IsSpell = _cache.GetSkill(skill.SkillId) == null ? theSkill.Cost.Table[GameLogic.Skill.Enum.Cost.Mana] > 0 ? true : false : _cache.GetSkill(skill.SkillId).Cost.Table[GameLogic.Skill.Enum.Cost.Mana] > 0 ? true : false;
                     };
 
-                    player.Skills.Add( addSkill );
+                    player.Skills.Add(addSkill);
 
 
                 }
@@ -288,7 +290,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
                 player.Skills[i].Level = skill.Level;
             }
 
-            if(player.ClassName == "Fighter" && player.TotalExperience == 0 && player.Skills.FirstOrDefault(x => x.SkillName.Equals("Long Blades")).Proficiency == 1)
+            if (player.ClassName == "Fighter" && player.TotalExperience == 0 && player.Skills.FirstOrDefault(x => x.SkillName.Equals("Long Blades")).Proficiency == 1)
             {
                 player.Skills.FirstOrDefault(x => x.SkillName.Equals("Long Blades")).Proficiency = 75;
 
@@ -312,9 +314,9 @@ namespace ArchaicQuestII.GameLogic.Hubs
             player.ConnectionId = hubId;
             player.LastCommandTime = DateTime.Now;
             player.LastLoginTime = DateTime.Now;
-            
+
             SetArmorRating(player);
-          
+
             return player;
         }
 
@@ -337,7 +339,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
                 // log char off
                 await SendToClient($"<p style='color:red'>*** You have logged in elsewhere. ***</p>", playerExist.ConnectionId);
                 await this.CloseConnection(string.Empty, playerExist.ConnectionId);
-             
+
                 // remove from _cache
                 _cache.RemovePlayer(playerExist.ConnectionId);
 
@@ -346,36 +348,36 @@ namespace ArchaicQuestII.GameLogic.Hubs
 
                 await SendToClient($"<p style='color:red'>*** You have been reconnected ***</p>", hubId);
 
-              
+
             }
             else
             {
                 _cache.AddPlayer(hubId, character);
             }
-            
 
-          
+
+
 
         }
 
         private void GetRoom(string hubId, Player character, string startingRoom = "")
         {
             //add to DB, configure from admin
-              var roomid = !string.IsNullOrEmpty(startingRoom) ? startingRoom : _cache.GetConfig().StartingRoom;
+            var roomid = !string.IsNullOrEmpty(startingRoom) ? startingRoom : _cache.GetConfig().StartingRoom;
             var room = _cache.GetRoom(roomid);
-           character.RoomId = $"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}";
+            character.RoomId = $"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}";
 
-           if (string.IsNullOrEmpty(character.RecallId))
-           {
-               var defaultRoom = _cache.GetConfig().StartingRoom;
-               character.RecallId = defaultRoom;
+            if (string.IsNullOrEmpty(character.RecallId))
+            {
+                var defaultRoom = _cache.GetConfig().StartingRoom;
+                character.RecallId = defaultRoom;
             }
 
-           var playerAlreadyInRoom = room.Players.ToList().FirstOrDefault(x => x.Id.Equals(character.Id)) != null;
-           if (!playerAlreadyInRoom)
-           {
-               room.Players.Add(character);
-               if(character.Pets.Any())
+            var playerAlreadyInRoom = room.Players.ToList().FirstOrDefault(x => x.Id.Equals(character.Id)) != null;
+            if (!playerAlreadyInRoom)
+            {
+                room.Players.Add(character);
+                if (character.Pets.Any())
                 {
                     foreach (var pet in character.Pets)
                     {
@@ -386,14 +388,14 @@ namespace ArchaicQuestII.GameLogic.Hubs
                             room.Mobs.Add(pet);
                         }
                     }
-                   
+
                 }
-           }
+            }
 
 
-           var rooms = _cache.GetAllRoomsInArea(1);
+            var rooms = _cache.GetAllRoomsInArea(1);
 
-           _updateClientUi.UpdateHP(character);
+            _updateClientUi.UpdateHP(character);
             _updateClientUi.UpdateMana(character);
             _updateClientUi.UpdateMoves(character);
             _updateClientUi.UpdateExp(character);
@@ -404,7 +406,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
             _updateClientUi.UpdateAffects(character);
             _updateClientUi.UpdateTime(character);
 
-            _updateClientUi.GetMap(character,_cache.GetMap($"{room.AreaId}{room.Coords.Z}"));
+            _updateClientUi.GetMap(character, _cache.GetMap($"{room.AreaId}{room.Coords.Z}"));
 
             new RoomActions(_writeToClient, _time, _cache, _dice, _gain, _formulas).Look("", room, character);
 

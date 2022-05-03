@@ -19,7 +19,7 @@ namespace ArchaicQuestII.GameLogic.Skill
         void DoSkill(string key, string obj, Player target, string fullCommand, Player player, Room room, bool wearOff);
     }
 
-    public class SkillList:ISkillList
+    public class SkillList : ISkillList
     {
         private readonly IDamageSkills _damage;
         private readonly IUtilSkills _util;

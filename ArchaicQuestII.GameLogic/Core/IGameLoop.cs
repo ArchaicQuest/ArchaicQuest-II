@@ -6,11 +6,11 @@ using ArchaicQuestII.GameLogic.Character;
 
 namespace ArchaicQuestII.GameLogic.Core
 {
-   public interface IGameLoop
-   {
-       // HP, Mana, Moves gain
-       int GainAmount(int value, Player player);
-       Task UpdateTime();
+    public interface IGameLoop
+    {
+        // HP, Mana, Moves gain
+        int GainAmount(int value, Player player);
+        Task UpdateTime();
         Task UpdateRoomEmote();
         Task UpdateMobEmote();
         Task UpdatePlayers();
@@ -19,5 +19,5 @@ namespace ArchaicQuestII.GameLogic.Core
         Task UpdateWorldTime();
         Task Tick();
         void IdleCheck(Player player);
-   }
+    }
 }

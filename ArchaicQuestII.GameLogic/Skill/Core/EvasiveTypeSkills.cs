@@ -9,7 +9,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
     {
         public Model.Skill Dodge()
         {
-        
+
             /// Note to self to rewrite the descriptions
 
             var coreSkill = new Model.Skill()
@@ -19,7 +19,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
                     "In the words of one wise warrior, 'the best way to block a blow is to not\r\nbe where it lands'.  The dodge skill honors this tradition, by improving the\r\ncharacter's natural agility to the point where many blows will miss the \r\ntarget. The chance of dodging is also affected by the dexterity of the\r\nattacker and the target.  Any class may learn dodging..",
                 Type = SkillType.Passive,
                 DateCreated = DateTime.Now,
-             
+
             };
 
             return coreSkill;
@@ -54,7 +54,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
 
             return coreSkill;
         }
- 
+
 
 
     }

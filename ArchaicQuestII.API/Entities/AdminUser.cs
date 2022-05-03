@@ -30,7 +30,7 @@ namespace ArchaicQuestII.API.Entities
 
     }
 
-    public class EditAdminUser: AddAdminUser
+    public class EditAdminUser : AddAdminUser
     {
         public int Id { get; set; }
     }

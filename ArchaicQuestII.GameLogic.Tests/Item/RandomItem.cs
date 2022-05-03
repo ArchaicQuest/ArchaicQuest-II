@@ -13,7 +13,7 @@ using Damage = ArchaicQuestII.GameLogic.Item.Damage;
 
 namespace ArchaicQuestII.GameLogic.Tests.Item
 {
-   
+
     public class RandomItem
     {
         private readonly Mock<IDice> _dice;
@@ -35,7 +35,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Item
             _randomChainMailArmour = new Mock<IRandomChainMailArmour>();
             _randomPlateMailArmour = new Mock<IRandomPlateMailArmour>();
         }
-    
+
         [Fact]
         public void Returns_RandomItem()
         {
@@ -55,12 +55,12 @@ namespace ArchaicQuestII.GameLogic.Tests.Item
                 Condition = 0,
 
             });
-          
 
-       
-            var item = new GameLogic.Item.RandomItem(_dice.Object, _randomWeapon.Object, _randomClothItems.Object,_randomLeatherItems.Object, _randomStuddedLeatherArmour.Object, _randomChainMailArmour.Object, _randomPlateMailArmour.Object).WeaponDrop(player);
+
+
+            var item = new GameLogic.Item.RandomItem(_dice.Object, _randomWeapon.Object, _randomClothItems.Object, _randomLeatherItems.Object, _randomStuddedLeatherArmour.Object, _randomChainMailArmour.Object, _randomPlateMailArmour.Object).WeaponDrop(player);
             Assert.Equal("a steel axe", item.Name.ToLower());
-            Assert.Equal(item.Level,5);
+            Assert.Equal(item.Level, 5);
         }
 
         [Fact]
@@ -77,12 +77,12 @@ namespace ArchaicQuestII.GameLogic.Tests.Item
             _dice.Setup(x => x.Roll(1, 0, 32)).Returns(15);
 
             _dice.Setup(x => x.Roll(1, 1, 2)).Returns(1);
-            
+
 
             var item = new RandomClothItems(_dice.Object).CreateRandomItem(player, false);
-            
+
             Assert.Equal("a pair of silk cloth trousers", item.Name);
-            Assert.Equal( 5, item.Level);
+            Assert.Equal(5, item.Level);
         }
 
         [Fact]

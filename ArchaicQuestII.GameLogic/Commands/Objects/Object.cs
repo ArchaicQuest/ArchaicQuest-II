@@ -97,7 +97,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                 _writer.WriteLine($"<p>You pick up {item.Name.ToLower()}.</p>", player.ConnectionId);
             }
 
-         
+
             _updateUi.UpdateInventory(player);
             _updateUi.UpdateScore(player);
             room.Clean = false;
@@ -255,7 +255,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                 return;
             }
 
-          
+
 
             if (!string.IsNullOrEmpty(container) && !int.TryParse(target, out var number))
             {
@@ -529,7 +529,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
             }
             _updateUi.UpdateInventory(player);
-             _updateUi.UpdateScore(player);
+            _updateUi.UpdateScore(player);
             // TODO: You are over encumbered 
 
         }
@@ -593,14 +593,14 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                     _writer.WriteLine($"<p>{player.Name} gets {ItemList.DisplayMoneyAmount(item.Value).ToLower()} from {containerObj.Name.ToLower()}</p>",
                         pc.ConnectionId);
 
-                    
+
                 }
                 else
                 {
                     _writer.WriteLine($"<p>{player.Name} gets {item.Name.ToLower()} from {containerObj.Name.ToLower()}.</p>",
                         pc.ConnectionId);
 
-                  
+
                 }
 
 
@@ -683,21 +683,21 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
             if (isExit != null)
             {
 
-                    if (!isExit.Locked)
-                    {
-                        isExit.Closed = false;
-                        _writer.WriteLine($"<p>You open the door {isExit.Name}.", player.ConnectionId);
+                if (!isExit.Locked)
+                {
+                    isExit.Closed = false;
+                    _writer.WriteLine($"<p>You open the door {isExit.Name}.", player.ConnectionId);
 
-                        return;
-                    }
+                    return;
+                }
 
-                    if (isExit.Locked)
-                    {
+                if (isExit.Locked)
+                {
 
-                        _writer.WriteLine($"<p>You try to open it but it's locked.", player.ConnectionId);
+                    _writer.WriteLine($"<p>You try to open it but it's locked.", player.ConnectionId);
 
-                        return;
-                    }
+                    return;
+                }
 
             }
 

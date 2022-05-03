@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using ArchaicQuestII.API.Entities;
 using ArchaicQuestII.API.Helpers;
 using ArchaicQuestII.API.Models;
-using Microsoft.AspNetCore.Authentication.JwtBearer; 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -69,7 +69,7 @@ namespace ArchaicQuestII.Controllers
 
             _db.Save(newArea, DataBase.Collections.Area);
 
-         
+
             user.Contributions += 1;
             _db.Save(user, DataBase.Collections.Users);
 
@@ -100,7 +100,7 @@ namespace ArchaicQuestII.Controllers
         //    return Ok(JsonConvert.SerializeObject(new { toast = $"Room deleted successfully." }));
 
         //}
-       
+
         [HttpGet]
         [Route("api/World/Area")]
         public List<Area> Get()
@@ -140,7 +140,7 @@ namespace ArchaicQuestII.Controllers
 
 
         private bool CheckIfValidFile(IFormFile file)
-        { 
+        {
             var extension = "." + file.FileName.Split('.')[file.FileName.Split('.').Length - 1];
             return (extension == ".json");
         }
@@ -171,7 +171,7 @@ namespace ArchaicQuestII.Controllers
                     _db.Save(editExistingArea, DataBase.Collections.Area);
 
 
-                    
+
                     //create rooms
                     foreach (var room in exitingArea.Rooms)
                     {

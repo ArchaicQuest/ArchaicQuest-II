@@ -5,7 +5,7 @@ using ArchaicQuestII.GameLogic.Character;
 
 namespace ArchaicQuestII.GameLogic.World.Room
 {
-   public interface IRoomActions
+    public interface IRoomActions
     {
         void Look(string target, Room room, Player player);
         void LookInContainer(string target, Room room, Player player);

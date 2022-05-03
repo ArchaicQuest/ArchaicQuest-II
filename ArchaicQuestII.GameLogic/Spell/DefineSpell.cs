@@ -23,7 +23,7 @@ namespace ArchaicQuestII.GameLogic.Spell
         public bool Reflex { get; set; } // check dex
         public bool Mental { get; set; } // check intelligence and wisdom
         public bool Strength { get; set; } // check strength and constitution?
-     
+
     }
 
     public class DefineSpell
@@ -86,12 +86,13 @@ namespace ArchaicQuestII.GameLogic.Spell
             Haste
         }
 
- 
+
     }
 
 
-    public class SeedTestSpells {
+    public class SeedTestSpells
+    {
 
-    
+
     }
 }

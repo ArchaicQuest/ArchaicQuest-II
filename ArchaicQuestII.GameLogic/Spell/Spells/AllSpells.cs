@@ -42,7 +42,7 @@ namespace ArchaicQuestII.GameLogic.Spell
 
             return magicMissile;
 
-     
+
         }
 
         public Skill.Model.Skill CauseWounds()

@@ -7,7 +7,7 @@ using ArchaicQuestII.GameLogic.Effect;
 
 namespace ArchaicQuestII.GameLogic.Character.Gain
 {
-  
+
     public class Gain : IGain
     {
 
@@ -71,7 +71,7 @@ namespace ArchaicQuestII.GameLogic.Character.Gain
 
         public void GainLevel(Player player)
         {
-            if(player.ExperienceToNextLevel <= 0)
+            if (player.ExperienceToNextLevel <= 0)
             {
                 player.Level++;
                 player.ExperienceToNextLevel = player.Level * 2000; //TODO: have class and race mod
@@ -113,7 +113,7 @@ namespace ArchaicQuestII.GameLogic.Character.Gain
             exp += _dice.Roll(1, 25, 175);
             exp += character.Equipped.Wielded?.Damage.Maximum ?? 6; // 6 for hand to hand
             exp += character.Attributes.Attribute[EffectLocation.DamageRoll] * 10;
-            exp += character.Attributes.Attribute[EffectLocation.HitRoll] +  character.Level * 10;
+            exp += character.Attributes.Attribute[EffectLocation.HitRoll] + character.Level * 10;
             exp += character.ArmorRating.Armour;
 
             exp += character.Attributes.Attribute[EffectLocation.Hitpoints] * 3;
@@ -133,7 +133,7 @@ namespace ArchaicQuestII.GameLogic.Character.Gain
             character.ExperienceToNextLevel -= expGain;
             skill.Proficiency += increase;
 
-          GainLevel(character);
+            GainLevel(character);
             _clientUi.UpdateExp(character);
 
             _writer.WriteLine(

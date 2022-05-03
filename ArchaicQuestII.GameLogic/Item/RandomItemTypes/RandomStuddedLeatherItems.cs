@@ -8,7 +8,7 @@ using ArchaicQuestII.GameLogic.Core;
 
 namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
 {
-    public class RandomStuddedLeatherItems: IRandomStuddedLeatherArmour
+    public class RandomStuddedLeatherItems : IRandomStuddedLeatherArmour
     {
 
         private IDice _dice;
@@ -177,7 +177,7 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
                     Exam = "A protective #prefix# skirt."
                 }
             }
-         
+
         };
         public List<Item> ArmItemName = new List<Item>()
         {
@@ -284,7 +284,7 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
         public List<Item> BodyItemName = new List<Item>()
         {
 
- 
+
             new Item()
             {
                 Name = "Jerkin",

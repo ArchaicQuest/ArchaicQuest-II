@@ -5,7 +5,7 @@ using ArchaicQuestII.GameLogic.Character;
 
 namespace ArchaicQuestII.GameLogic.Combat
 {
-   public interface IFormulas
+    public interface IFormulas
     {
         public int OffensivePoints(Player player, bool useDualWield);
 

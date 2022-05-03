@@ -40,7 +40,7 @@ namespace ArchaicQuestII.GameLogic.Hubs.Telnet
         /// Processes accepting/closing telnet connections and telnet input/outpit
         /// </summary>
         public void ProcessConnections()
-		{
+        {
             Console.WriteLine("started processing telnet connections");
             _telnetServer.Start();
             do
@@ -59,7 +59,7 @@ namespace ArchaicQuestII.GameLogic.Hubs.Telnet
 
                 // Process input
                 foreach (var client in _telnetClients)
-				{
+                {
                     var read = client.Value.RetrieveInput();
 
                     // TODO: Process command
@@ -69,30 +69,30 @@ namespace ArchaicQuestII.GameLogic.Hubs.Telnet
                     {
                         client.Value.QueueOutput(read.Data);
                         client.Value.QueueOutput("To play visit \u001B[32mplay.archaicquest.com\u001b[0m");
-                       
+
                     }
                 }
 
                 // Process output
                 foreach (var client in _telnetClients)
-				{
+                {
                     client.Value.SendOutput();
-				}
+                }
 
                 Thread.Sleep(10);
             } while (true);
-		}
+        }
 
         /// <summary>
         /// Sends message to all Telnet clients
         /// </summary>
         /// <param name="message">The message to send to the client</param>
         public void Send(string message)
-		{
+        {
             foreach (var client in _telnetClients)
-			{
+            {
                 client.Value.QueueOutput(message);
-			}
+            }
         }
 
         /// <summary>
@@ -102,13 +102,13 @@ namespace ArchaicQuestII.GameLogic.Hubs.Telnet
         /// <param name="hubId">The Telnet connection ID</param>
         public void SendToClient(string message, string hubId)
         {
-			TelnetClient client;
+            TelnetClient client;
             _telnetClients.TryGetValue(hubId, out client);
 
             if (client != null)
-			{
+            {
                 client.QueueOutput(message);
-			}
+            }
         }
 
         /// <summary>

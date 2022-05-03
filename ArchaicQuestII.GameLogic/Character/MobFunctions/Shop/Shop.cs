@@ -9,7 +9,7 @@ using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
 {
-    public class Shop: IMobFunctions
+    public class Shop : IMobFunctions
     {
         private readonly IWriteToClient _writer;
         private readonly IUpdateClientUI _clientUi;
@@ -22,25 +22,25 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
             _passiveSkills = passiveSkills;
         }
 
- //       The cleric of Siccara says 'I offer the following spells:'
- // light: cure light wounds      10 gold
- // serious: cure serious wounds  15 gold
- // critic: cure critical wounds  25 gold
- // heal: healing spell           50 gold
- // blind: cure blindness         20 gold
- // disease: cure disease         15 gold
- // poison:  cure poison          25 gold
- // uncurse: remove curse         50 gold
- // refresh: restore movement      5 gold
- // mana:  restore mana           10 gold
- // cancel : cancellation spell   40 gold
- //Type heal<type> to be healed.
+        //       The cleric of Siccara says 'I offer the following spells:'
+        // light: cure light wounds      10 gold
+        // serious: cure serious wounds  15 gold
+        // critic: cure critical wounds  25 gold
+        // heal: healing spell           50 gold
+        // blind: cure blindness         20 gold
+        // disease: cure disease         15 gold
+        // poison:  cure poison          25 gold
+        // uncurse: remove curse         50 gold
+        // refresh: restore movement      5 gold
+        // mana:  restore mana           10 gold
+        // cancel : cancellation spell   40 gold
+        //Type heal<type> to be healed.
 
 
         public void DisplayInventory(Player mob, Player player)
         {
 
-           var hagglePriceReduction = Haggle(player, mob);
+            var hagglePriceReduction = Haggle(player, mob);
 
             _writer.WriteLine(mob.Name + " says 'Here's what I have for sale.'", player.ConnectionId);
             var sb = new StringBuilder();
@@ -80,7 +80,7 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
                 return;
             }
 
-            if(!shopKeeper.Inventory.Any())
+            if (!shopKeeper.Inventory.Any())
             {
                 if (shopKeeper.SpellList.Any())
                 {
@@ -88,7 +88,7 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
                     return;
                 }
 
-                    _writer.WriteLine("<p>They have nothing for sale.</p>", player.ConnectionId);
+                _writer.WriteLine("<p>They have nothing for sale.</p>", player.ConnectionId);
                 return;
             }
 
@@ -97,9 +97,9 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
 
         public int Haggle(Player player, Player target)
         {
-          var priceReduction =  _passiveSkills.Haggle(player, target);
+            var priceReduction = _passiveSkills.Haggle(player, target);
 
-          return priceReduction;
+            return priceReduction;
 
         }
 
@@ -108,7 +108,7 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
             return price * 1.5;
         }
 
-   
+
 
         /// <summary>
         /// Each gold piece is worth 100 silver pieces.
@@ -121,7 +121,7 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
         public string DisplayUnit(int price, int hagglePriceReduction)
         {
             var goldPrice = AddMarkUp(price); // /100
-             
+
             // show haggle price
             return $"{Math.Floor((decimal)goldPrice - Helpers.GetPercentage(hagglePriceReduction, (int)goldPrice))}";
             // return goldPrice < 1 ? $"{Math.Floor(goldPrice * 100)} SP" : $"{Math.Floor(goldPrice)} GP";
@@ -314,7 +314,7 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
 
             var haggleReduction = _passiveSkills.Haggle(player, vendor);
             var goldValue = AddMarkUp(hasItem.Value);
-            var trueGoldValue = goldValue - Helpers.GetPercentage(haggleReduction, (int) goldValue);
+            var trueGoldValue = goldValue - Helpers.GetPercentage(haggleReduction, (int)goldValue);
             if (player.Money.Gold < trueGoldValue)
             {
                 _writer.WriteLine($"<p>{vendor.Name} says 'Sorry you can't afford that.'</p>", player.ConnectionId);
@@ -330,7 +330,7 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
 
             _clientUi.UpdateScore(player);
             _clientUi.UpdateInventory(player);
-  
+
             _writer.WriteLine($"<p>You buy {hasItem.Name.ToLower()} for {Math.Floor(trueGoldValue)} gold.</p>", player.ConnectionId);
         }
 

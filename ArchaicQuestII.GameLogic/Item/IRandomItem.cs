@@ -5,9 +5,9 @@ using ArchaicQuestII.GameLogic.Character;
 
 namespace ArchaicQuestII.GameLogic.Item
 {
-   public interface IRandomItem
-   {
+    public interface IRandomItem
+    {
 
-       public Item WeaponDrop(Player player);
-   }
+        public Item WeaponDrop(Player player);
+    }
 }

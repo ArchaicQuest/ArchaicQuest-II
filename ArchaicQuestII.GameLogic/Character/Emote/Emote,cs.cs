@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ArchaicQuestII.GameLogic.Character.Emote
 {
-   public class Emote
+    public class Emote
     {
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace ArchaicQuestII.GameLogic.Character.Emote
         /// </summary>
         public string TargetSelf { get; set; }
         public string RoomSelf { get; set; }
-  
+
 
     }
 }

@@ -130,7 +130,7 @@ namespace ArchaicQuestII.Controllers
 
             var user = (HttpContext.Items["User"] as AdminUser);
             user.Contributions += 1;
-            _db.Save(user, DataBase.Collections.Users); 
+            _db.Save(user, DataBase.Collections.Users);
 
             var log = new AdminLog()
             {

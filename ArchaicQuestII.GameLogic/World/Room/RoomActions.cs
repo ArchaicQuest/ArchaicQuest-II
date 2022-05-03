@@ -740,7 +740,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
                 pcName += pc.Pose;
 
-            
+
 
 
                 players += $"<p class='player {(isNightTime ? "dark-room" : "")}'>{pcName}.</p>";

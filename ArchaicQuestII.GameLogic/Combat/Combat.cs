@@ -247,7 +247,7 @@ namespace ArchaicQuestII.GameLogic.Combat
             target.Status = (target.Status & CharacterStatus.Status.Stunned) != 0 ? CharacterStatus.Status.Stunned : CharacterStatus.Status.Fighting;
             target.Target = string.IsNullOrEmpty(target.Target) ? player.Name : target.Target; //for group combat, if target is ganged, there target should not be changed when combat is initiated.
 
-            if(player.Target == player.Name)
+            if (player.Target == player.Name)
             {
                 player.Status = CharacterStatus.Status.Standing;
                 return;
@@ -301,7 +301,7 @@ namespace ArchaicQuestII.GameLogic.Combat
                     return;
                 }
 
-                if(target.Name == player.Name)
+                if (target.Name == player.Name)
                 {
                     _writer.WriteLine("<p>You can't start a fight with yourself!</p>", player.ConnectionId);
                     return;
@@ -351,7 +351,7 @@ namespace ArchaicQuestII.GameLogic.Combat
                 var weapon = GetWeapon(player);
                 var chanceToHit = _formulas.ToHitChance(player, target, false);
 
-                if(chanceToHit < 5)
+                if (chanceToHit < 5)
                 {
                     chanceToHit = 5;
                 }
@@ -459,7 +459,7 @@ namespace ArchaicQuestII.GameLogic.Combat
                             // block fail
                         }
 
-                      
+
                     }
 
 
@@ -768,7 +768,7 @@ namespace ArchaicQuestII.GameLogic.Combat
 
         public void TargetKilled(Player player, Player target, Room room)
         {
-        
+
             player.Target = String.Empty;
             player.Status = CharacterStatus.Status.Standing;
             target.Status = CharacterStatus.Status.Ghost;
@@ -796,7 +796,7 @@ namespace ArchaicQuestII.GameLogic.Combat
             }
 
             _writer.WriteLine("<p class='dead'>You are dead. R.I.P.</p>", target.ConnectionId);
-           
+
 
             var targetName = target.Name.ToLower(CultureInfo.CurrentCulture);
             var corpse = new Item.Item()
@@ -823,19 +823,20 @@ namespace ArchaicQuestII.GameLogic.Combat
                 ItemType = Item.Item.ItemTypes.Container,
                 Decay = target.ConnectionId.Equals("mob", StringComparison.OrdinalIgnoreCase) ? 10 : 20,
                 DecayTimer = 300 // 5 minutes,
-                
+
             };
 
-            foreach (var item in target.Inventory) {
+            foreach (var item in target.Inventory)
+            {
                 item.Equipped = false;
                 corpse.Container.Items.Add(item);
             }
 
             if (target.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
             {
-                
+
                 player.MobKills += 1;
-              
+
                 var randomItem = _randomItem.WeaponDrop(player);
 
                 if (randomItem != null)
@@ -873,12 +874,13 @@ namespace ArchaicQuestII.GameLogic.Combat
                 room.Mobs.Remove(target);
                 var getTodayMobStats = _pdb.GetList<MobStats>(PlayerDataBase.Collections.MobStats).FirstOrDefault(x => x.Date.Date.Equals(DateTime.Today));
 
-                if(getTodayMobStats != null)
+                if (getTodayMobStats != null)
                 {
                     getTodayMobStats.MobKills += 1;
-                } else
+                }
+                else
                 {
-                     getTodayMobStats = new MobStats()
+                    getTodayMobStats = new MobStats()
                     {
                         MobKills = 1,
                         PlayerDeaths = 0,
@@ -890,7 +892,7 @@ namespace ArchaicQuestII.GameLogic.Combat
             else
             {
                 room.Players.Remove(target);
-                 var getTodayMobStats = _pdb.GetList<MobStats>(PlayerDataBase.Collections.MobStats).FirstOrDefault(x => x.Date.Date.Equals(DateTime.Today));
+                var getTodayMobStats = _pdb.GetList<MobStats>(PlayerDataBase.Collections.MobStats).FirstOrDefault(x => x.Date.Date.Equals(DateTime.Today));
 
                 if (getTodayMobStats != null)
                 {
@@ -922,7 +924,7 @@ namespace ArchaicQuestII.GameLogic.Combat
                 target.Buffer.Enqueue("look");
             }
 
-           
+
         }
 
         public void Consider(Player player, string target, Room room)

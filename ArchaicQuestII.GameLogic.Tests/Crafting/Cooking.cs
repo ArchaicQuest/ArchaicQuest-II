@@ -14,7 +14,7 @@ using Xunit;
 
 namespace ArchaicQuestII.GameLogic.Tests.Crafting
 {
-   
+
     public class CraftingTest
     {
         private readonly Mock<IWriteToClient> _writer;
@@ -60,8 +60,8 @@ namespace ArchaicQuestII.GameLogic.Tests.Crafting
                 Status = CharacterStatus.Status.Standing,
                 Inventory = new ItemList()
             };
- 
-           new GameLogic.Crafting.Crafting(_writer.Object, _cache.Object, _gain.Object, _updateClientUi.Object, _skills.Object).ListCrafts(player);
+
+            new GameLogic.Crafting.Crafting(_writer.Object, _cache.Object, _gain.Object, _updateClientUi.Object, _skills.Object).ListCrafts(player);
 
             _writer.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("<p>You don't have any materials to craft a thing.</p>")), "1"), Times.Once());
         }
@@ -81,7 +81,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Crafting
                 ConnectionId = "1",
                 Name = "Malleus",
                 Status = CharacterStatus.Status.Standing,
-                Inventory = new ItemList(){item}
+                Inventory = new ItemList() { item }
             };
 
             new GameLogic.Crafting.Crafting(_writer.Object, _cache.Object, _gain.Object, _updateClientUi.Object, _skills.Object).ListCrafts(player);
@@ -137,7 +137,8 @@ namespace ArchaicQuestII.GameLogic.Tests.Crafting
         }
 
         [Fact]
-        public void Returns_error_if_not_enough_quantity_of_materials() {
+        public void Returns_error_if_not_enough_quantity_of_materials()
+        {
 
             var item = new GameLogic.Item.Item()
             {
@@ -172,7 +173,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Crafting
             _cache.Setup(x => x.GetCraftingRecipes()).Returns(listOfRecipes);
 
             new GameLogic.Crafting.Crafting(_writer.Object, _cache.Object, _gain.Object, _updateClientUi.Object, _skills.Object).ListCrafts(player);
- 
+
             _writer.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("<p>No crafting recipes found with the current materials you have.</p>")), "1"), Times.Once());
         }
 

@@ -26,7 +26,7 @@ namespace ArchaicQuestII.GameLogic.Hubs.Telnet
 
         private TelnetClient()
         {
-            
+
         }
 
         public TelnetClient(TcpClient tcpClient, string connectionID)
@@ -54,7 +54,7 @@ namespace ArchaicQuestII.GameLogic.Hubs.Telnet
                         streamreadbuffer = new byte[bytesread];
                         for (int i = 0; i < bytesread; i++)
                         {
-                            if ((char) streamread[i] != NUL)
+                            if ((char)streamread[i] != NUL)
                             {
                                 streamreadbuffer[bufpos] = streamread[i];
                                 bufpos += 1;
@@ -72,7 +72,7 @@ namespace ArchaicQuestII.GameLogic.Hubs.Telnet
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception)
             {
 
             }
@@ -105,7 +105,7 @@ namespace ArchaicQuestII.GameLogic.Hubs.Telnet
                 }
                 else
                 {
-					if (newlineindex == 0)
+                    if (newlineindex == 0)
                     {
                         // Only a LF has been sent -- reset the streamreadbuffer and send a newline to be processed
                         streamreadbuffer = null;
@@ -125,13 +125,13 @@ namespace ArchaicQuestII.GameLogic.Hubs.Telnet
                             newlineindex -= 1;
                         }
 
-						// Process a line of input and remove processed data from buffer
-						// The newline index now represents the desired length of input.
-						// Process the input and set streamreadbuffer to null if that's it, otherwise remove the processed line
-						// sb.ToString().TrimEnd( Environment.NewLine.ToCharArray());
-						byte[] inputlinebuffer = new byte[newlineindex];
+                        // Process a line of input and remove processed data from buffer
+                        // The newline index now represents the desired length of input.
+                        // Process the input and set streamreadbuffer to null if that's it, otherwise remove the processed line
+                        // sb.ToString().TrimEnd( Environment.NewLine.ToCharArray());
+                        byte[] inputlinebuffer = new byte[newlineindex];
 
-						for (int i = 0; i < newlineindex; i++)
+                        for (int i = 0; i < newlineindex; i++)
                         {
                             inputlinebuffer[i] = streamreadbuffer[i];
                         }
@@ -194,7 +194,7 @@ namespace ArchaicQuestII.GameLogic.Hubs.Telnet
                     _stream.Write(writelineterminate, 0, 1);
                     _output = "";
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
 
                 }

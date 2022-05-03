@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ArchaicQuestII.API.Controllers.Core
 {
     [Authorize]
-    public class QuestController: Controller
+    public class QuestController : Controller
     {
         private IDataBase _db { get; }
         public QuestController(IDataBase db)
@@ -33,7 +33,7 @@ namespace ArchaicQuestII.API.Controllers.Core
                 throw exception;
             }
 
-            if (Quest == null) {return HttpStatusCode.BadRequest; }
+            if (Quest == null) { return HttpStatusCode.BadRequest; }
 
             var newQuest = new Quest()
             {

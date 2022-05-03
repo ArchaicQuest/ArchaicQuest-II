@@ -21,7 +21,7 @@ namespace ArchaicQuestII.GameLogic.Commands
     /// but when dealing with skills or socials with no prefix and are not hard coded
     /// it's a little more trickier 
     /// </summary>
-    public class CommandHandler: ICommandHandler
+    public class CommandHandler : ICommandHandler
     {
         private readonly ISocials _socials;
         private readonly ICache _cache;
@@ -36,7 +36,6 @@ namespace ArchaicQuestII.GameLogic.Commands
         }
         public void HandleCommand(string key, string obj, string target, Player player, Room room)
         {
-            var foundCommand = false;
 
             // oddballs is shit name
             // but might be times where we need a command to trigger
@@ -60,13 +59,13 @@ namespace ArchaicQuestII.GameLogic.Commands
             //check player skill
             var foundSkill = _cache.GetAllSkills()
                 .FirstOrDefault(x => x.Name.StartsWith(key, StringComparison.CurrentCultureIgnoreCase) && x.Type != SkillType.Passive);
-            if (foundSkill != null) 
+            if (foundSkill != null)
             {
                 _Skill.PerfromSkill(foundSkill, key, player, obj, room);
                 return;
             }
 
- 
+
 
             //check socials
             var social = _cache.GetSocials().Keys.FirstOrDefault(x => x.StartsWith(key));
@@ -76,7 +75,7 @@ namespace ArchaicQuestII.GameLogic.Commands
                 _socials.EmoteSocial(player, room, _cache.GetSocials()[social], emoteTarget);
                 return;
             }
-            
+
 
             _writeToClient.WriteLine("That is not a command.", player.ConnectionId);
         }

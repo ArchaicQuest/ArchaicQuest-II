@@ -7,7 +7,7 @@ using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Character.Equipment
 {
-   public class Equip: IEquip
+    public class Equip : IEquip
     {
         private readonly IWriteToClient _writer;
         private readonly IUpdateClientUI _clientUi;
@@ -81,8 +81,8 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
             switch (slot)
             {
                 case Equipment.EqSlot.Arms:
-                   return player.Equipped.Arms != null;
-                    
+                    return player.Equipped.Arms != null;
+
                 case Equipment.EqSlot.Body:
                     return player.Equipped.AboutBody != null;
                 case Equipment.EqSlot.Face:
@@ -133,7 +133,7 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
                 if (!EqSlotSet(itemToWear.Slot, player))
                 {
                     Wear(itemToWear.Name, room, player);
-                    
+
                 }
             }
         }
@@ -256,7 +256,7 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
                     EmitRemoveActionToRoom(itemToRemove, room, player);
                     break;
                 case Equipment.EqSlot.Secondary:
-                    player.Equipped.Secondary = null; 
+                    player.Equipped.Secondary = null;
                     _writer.WriteLine($"<p>You stop using {itemToRemove.Name.ToLower()}.</p>", player.ConnectionId);
                     EmitRemoveActionToRoom(itemToRemove, room, player);
                     break;
@@ -291,7 +291,7 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
         public void Wear(string item, Room room, Player player, string type = "")
         {
 
-            if(item.Equals("all", StringComparison.CurrentCultureIgnoreCase))
+            if (item.Equals("all", StringComparison.CurrentCultureIgnoreCase))
             {
                 WearAll(room, player);
                 return;
@@ -307,7 +307,7 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
 
             var itemSlot = itemToWear.Slot;
 
-            if(itemToWear.ItemType != Item.Item.ItemTypes.Armour && itemToWear.ItemType != Item.Item.ItemTypes.Weapon && itemToWear.ItemType != Item.Item.ItemTypes.Light)
+            if (itemToWear.ItemType != Item.Item.ItemTypes.Armour && itemToWear.ItemType != Item.Item.ItemTypes.Weapon && itemToWear.ItemType != Item.Item.ItemTypes.Light)
             {
                 itemSlot = Equipment.EqSlot.Held;
             }
@@ -324,7 +324,7 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
             {
                 case Equipment.EqSlot.Arms:
 
-                    if(player.Equipped.Arms != null)
+                    if (player.Equipped.Arms != null)
                     {
                         Remove(player.Equipped.Arms.Name, room, player);
                     }
@@ -452,7 +452,7 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
                     break;
                 case Equipment.EqSlot.Shield:
 
-                    if(player.Equipped.Wielded != null && player.Equipped.Wielded.TwoHanded)
+                    if (player.Equipped.Wielded != null && player.Equipped.Wielded.TwoHanded)
                     {
                         _writer.WriteLine("Your hands are tied up with your two-handed weapon!", player.ConnectionId);
                         return;
@@ -498,7 +498,7 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
 
                     if (itemToWear.TwoHanded && player.Equipped.Shield != null)
                     {
-                        _writer.WriteLine("You need two hands free for that weapon, remove your shield and try again.",player.ConnectionId);
+                        _writer.WriteLine("You need two hands free for that weapon, remove your shield and try again.", player.ConnectionId);
 
                         return;
                     }

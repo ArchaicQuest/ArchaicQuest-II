@@ -61,7 +61,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
         {
             var str = player.Attributes.Attribute[EffectLocation.Strength];
             var damage = _dice.Roll(1, 1, 8) + str / 4;
- 
+
             _skillManager.DamagePlayer("Kick", damage, player, target, room);
 
             player.Lag += 1;
@@ -117,10 +117,10 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             }
 
             var nthTarget = Helpers.findNth(obj);
- 
+
             var character = Helpers.FindMob(nthTarget, room) ?? Helpers.FindPlayer(nthTarget, room);
 
- 
+
             var weaponDam = player.Equipped.Wielded != null ? player.Equipped.Wielded.Damage.Maximum : 1 * 2;
             var str = player.Attributes.Attribute[EffectLocation.Strength];
             var damage = _dice.Roll(1, 1, weaponDam) + str / 5;
@@ -244,7 +244,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
             /* level check */
             chance += player.Level - target.Level;
- 
+
             if (_dice.Roll(1, 1, 100) < chance)
             {
 
@@ -280,7 +280,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                 _writer.WriteLine("Slash with what?", player.ConnectionId);
             }
 
-           
+
             var weaponDam = player.Equipped.Wielded?.Damage.Maximum ?? 1 * 2;
             var str = player.Attributes.Attribute[EffectLocation.Strength];
             var damage = weaponDam + _dice.Roll(1, 2, 10) + str / 5;
@@ -400,7 +400,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
 
             var str = player.Attributes.Attribute[EffectLocation.Strength];
-            var damage =  _dice.Roll(1, 1, 6) + str / 5;
+            var damage = _dice.Roll(1, 1, 6) + str / 5;
 
 
             _skillManager.DamagePlayer("uppercut", damage, player, target, room);
@@ -409,7 +409,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             var chance = _dice.Roll(1, 1, 100);
             if (helmet != null)
             {
-                
+
                 if (chance <= 15)
                 {
                     room.Items.Add(helmet);
@@ -433,7 +433,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             {
                 if (chance <= 15)
                 {
-                   
+
                     var skillMessage = new SkillMessage()
                     {
                         Hit =
@@ -515,7 +515,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                     Affects = DefineSpell.SpellAffect.Blind,
                     Name = "Blindness from dirt kick"
                 };
-                
+
                 target.Affects.Custom.Add(affect);
 
                 Helpers.ApplyAffects(affect, target);
@@ -533,13 +533,13 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                 };
 
                 _skillManager.EmoteAction(player, target, room, skillMessage);
- 
+
             }
 
             player.Lag += 1;
 
             _skillManager.updateCombat(player, target, room);
-           
+
             _updateClientUi.UpdateScore(player);
             _updateClientUi.UpdateMoves(player);
             _updateClientUi.UpdateHP(player);
@@ -552,7 +552,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
         public int Lunge(Player player, Player target, Room room, string obj)
         {
- 
+
             /*dexterity check */
             var chance = 50;
             chance += player.Attributes.Attribute[EffectLocation.Strength];
@@ -611,7 +611,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                 player.Lag += 2;
             }
 
-       
+
             _skillManager.updateCombat(player, target, room);
 
             return 0;
@@ -641,7 +641,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                 chance -= 25;
             }
 
-            if(target.Weight > player.Weight)
+            if (target.Weight > player.Weight)
             {
                 chance -= 10;
             }
@@ -650,7 +650,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                 chance += 5;
             }
 
-            if(target.Equipped.Shield != null)
+            if (target.Equipped.Shield != null)
             {
                 chance += 15;
             }
@@ -747,7 +747,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                 target.Attributes.Attribute[EffectLocation.Moves] -=
                     target.Attributes.Attribute[EffectLocation.Moves] / 2;
 
-                if(target.Attributes.Attribute[EffectLocation.Moves] < 0)
+                if (target.Attributes.Attribute[EffectLocation.Moves] < 0)
                 {
                     target.Attributes.Attribute[EffectLocation.Moves] = 0;
                 }

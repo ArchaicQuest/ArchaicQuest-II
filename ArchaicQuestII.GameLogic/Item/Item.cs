@@ -7,7 +7,7 @@ using static ArchaicQuestII.GameLogic.Character.Equipment.Equipment;
 
 namespace ArchaicQuestII.GameLogic.Item
 {
-    public class Item: BaseItem
+    public class Item : BaseItem
     {
         public enum ItemTypes
         {
@@ -26,7 +26,7 @@ namespace ArchaicQuestII.GameLogic.Item
             Seating,
             Inanimate,
             Money,
-            Portal, 
+            Portal,
             Crafting,
             Material,
             Cooking,
@@ -37,7 +37,7 @@ namespace ArchaicQuestII.GameLogic.Item
             Cooked,
             Ink,
             Pen
-          
+
         }
 
         [Flags]

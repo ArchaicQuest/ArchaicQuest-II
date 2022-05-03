@@ -7,8 +7,8 @@ using ArchaicQuestII.GameLogic.Core;
 
 namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
 {
-   public class RandomWeapons : IRandomWeapon
-   {
+    public class RandomWeapons : IRandomWeapon
+    {
 
         private IDice _dice;
 
@@ -131,7 +131,7 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
                 Name = "rune-covered",
                 MinDamage = 5,
                 MaxDamage = 12,
-                Description = "covered in runes and glows a slight red." 
+                Description = "covered in runes and glows a slight red."
             },
         };
 

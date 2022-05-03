@@ -29,7 +29,7 @@ namespace ArchaicQuestII.GameLogic.Crafting
 
         public void Cook(Player player, Room room)
         {
-            if(room.Items.FirstOrDefault(x => x.ItemType == Item.Item.ItemTypes.Cooking) == null)
+            if (room.Items.FirstOrDefault(x => x.ItemType == Item.Item.ItemTypes.Cooking) == null)
             {
                 _writeToClient.WriteLine($"<p>You require a fire and a cooking pot before you can cook.</p>",
                     player.ConnectionId);
@@ -42,11 +42,11 @@ namespace ArchaicQuestII.GameLogic.Crafting
             // What happens if player throws in random shit which is not a food item
             var items = pot.Container.Items.Where(x => x.ItemType == Item.Item.ItemTypes.Food).ToList();
 
-            if(items.Count < 3)
+            if (items.Count < 3)
             {
                 _writeToClient.WriteLine("<p>You need 3 raw ingredients before you can cook.</p>",
                     player.ConnectionId);
-              
+
 
                 if (pot.Container.Items.FirstOrDefault(x => x.ItemType != Item.Item.ItemTypes.Food) != null)
                 {
@@ -77,7 +77,7 @@ namespace ArchaicQuestII.GameLogic.Crafting
                     player.ConnectionId);
 
                 var sb = new StringBuilder();
-                    sb.Append("<p>");
+                sb.Append("<p>");
                 foreach (var invalidItem in pot.Container.Items.Where(x => x.ItemType != Item.Item.ItemTypes.Food))
                 {
                     sb.Append($"{invalidItem.Name}, ");
@@ -133,8 +133,8 @@ namespace ArchaicQuestII.GameLogic.Crafting
             var cookedItem = GenerateCookedItem(player, room, ingredients);
             _writeToClient.WriteLine("<p>You begin cooking.</p>",
                 player.ConnectionId);
-           _writeToClient.WriteLine("<p>You stir the ingredients.</p>",
-                player.ConnectionId, 1000);
+            _writeToClient.WriteLine("<p>You stir the ingredients.</p>",
+                 player.ConnectionId, 1000);
 
             _writeToClient.WriteLine("<p>You taste and season the dish.</p>",
                 player.ConnectionId, 2500);
@@ -165,7 +165,7 @@ namespace ArchaicQuestII.GameLogic.Crafting
 
                 player.Inventory.Add(cookedItem);
                 player.Weight += cookedItem.Weight;
-               
+
 
             }
             else
@@ -194,7 +194,7 @@ namespace ArchaicQuestII.GameLogic.Crafting
 
         public Item.Item GenerateCookedItem(Player player, Room room, List<Tuple<Item.Item, int>> ingredients)
         {
-          
+
 
             var prefixes = new List<string>()
             {
@@ -220,9 +220,9 @@ namespace ArchaicQuestII.GameLogic.Crafting
             var mainIngredient = ingredientOrder.First();
 
             var foodName = "";
- 
-             
-           
+
+
+
             if (_dice.Roll(1, 1, 2) == 1)
             {
                 var prefix = prefixes[_dice.Roll(1, 0, 6)];
@@ -233,7 +233,7 @@ namespace ArchaicQuestII.GameLogic.Crafting
             {
                 var suffix = suffixes[_dice.Roll(1, 0, 5)];
 
-                foodName =  $"{Helpers.RemoveArticle(mainIngredient.Item1.Name)} {(ingredientOrder.Count() > 1 ? $"with {Helpers.RemoveArticle(ingredientOrder.ElementAt(1).Item1.Name).ToLower()}" : "")} {(ingredientOrder.Count() > 2 ? $"  {Helpers.RemoveArticle(ingredientOrder.ElementAt(2).Item1.Name).ToLower()} " : "")}{suffix}";
+                foodName = $"{Helpers.RemoveArticle(mainIngredient.Item1.Name)} {(ingredientOrder.Count() > 1 ? $"with {Helpers.RemoveArticle(ingredientOrder.ElementAt(1).Item1.Name).ToLower()}" : "")} {(ingredientOrder.Count() > 2 ? $"  {Helpers.RemoveArticle(ingredientOrder.ElementAt(2).Item1.Name).ToLower()} " : "")}{suffix}";
             }
 
             var food = new Item.Item()

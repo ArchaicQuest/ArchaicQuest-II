@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ArchaicQuestII.API.Controllers.Core
 {
     [Authorize]
-    public class ConfigController: Controller
+    public class ConfigController : Controller
     {
         private IDataBase _db { get; }
         public ConfigController(IDataBase db)
@@ -30,7 +30,7 @@ namespace ArchaicQuestII.API.Controllers.Core
                 throw exception;
             }
 
-            if (config == null) {return HttpStatusCode.BadRequest; }
+            if (config == null) { return HttpStatusCode.BadRequest; }
             _db.Save(config, DataBase.Collections.Config);
             return HttpStatusCode.OK;
 

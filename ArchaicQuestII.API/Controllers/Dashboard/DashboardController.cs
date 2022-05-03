@@ -78,7 +78,7 @@ namespace ArchaicQuestII.Controllers.Dashboard
         [Route("api/dashboard/who")]
         public JsonResult WhoList()
         {
-           var playingPlayers = _cache.GetPlayerCache().ToList();
+            var playingPlayers = _cache.GetPlayerCache().ToList();
             return Json(playingPlayers);
 
         }
@@ -95,12 +95,12 @@ namespace ArchaicQuestII.Controllers.Dashboard
                 Name = "Accounts"
             };
 
-          
+
 
             var accounts = _pdb.GetCollection<Account>(PlayerDataBase.Collections.Account).FindAll();
-            
-      
-           var thisMonth =  accounts.Where(X => X.DateJoined.Month.Equals(DateTime.Now.Month)).Count();
+
+
+            var thisMonth = accounts.Where(X => X.DateJoined.Month.Equals(DateTime.Now.Month)).Count();
             var data = new Series();
             data.Name = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(DateTime.Now.Month) + " " + DateTime.Now.Year;
             data.Value = thisMonth;
@@ -151,7 +151,7 @@ namespace ArchaicQuestII.Controllers.Dashboard
 
                 CharStats.Series.Add(LastMonthData);
             }
- 
+
 
             lineGraphStats.Data.Add(AccountStats);
             lineGraphStats.Data.Add(CharStats);
@@ -192,7 +192,7 @@ namespace ArchaicQuestII.Controllers.Dashboard
                 var yesterdayData = new Series
                 {
                     Name = DateTime.Today.AddDays(-i).ToString("dd-MM-yy"),
-                Value = yesterday
+                    Value = yesterday
                 };
 
                 AccountStats.Series.Add(yesterdayData);
@@ -210,11 +210,11 @@ namespace ArchaicQuestII.Controllers.Dashboard
             foreach (var login in accounts)
             {
 
-                if(uniqueList.FirstOrDefault(x => x.AccountId == login.AccountId && x.loginDate.Date == login.loginDate.Date) == null)
+                if (uniqueList.FirstOrDefault(x => x.AccountId == login.AccountId && x.loginDate.Date == login.loginDate.Date) == null)
                 {
                     uniqueList.Add(login);
                 }
-                
+
             }
 
             var UniqueToday = uniqueList.Where(x => x.loginDate.Date == DateTime.Now.Date).Count();
@@ -223,11 +223,11 @@ namespace ArchaicQuestII.Controllers.Dashboard
             uniqueData.Value = UniqueToday;
             UniqueLoginStats.Series.Add(uniqueData);
 
-         
+
             for (int i = 1; i < days; i++)
             {
                 var yesterday = uniqueList.Where(X => X.loginDate.Date.Equals(DateTime.Today.AddDays(-i).Date)).Count();
-                  var yesterdayData = new Series
+                var yesterdayData = new Series
                 {
                     Name = DateTime.Today.AddDays(-i).ToString("dd-MM-yy"),
                     Value = yesterday
@@ -236,7 +236,7 @@ namespace ArchaicQuestII.Controllers.Dashboard
                 UniqueLoginStats.Series.Add(yesterdayData);
             }
 
-          
+
 
             lineGraphStats.Data.Add(AccountStats);
             lineGraphStats.Data.Add(UniqueLoginStats);
@@ -274,9 +274,9 @@ namespace ArchaicQuestII.Controllers.Dashboard
 
             for (int i = 1; i < days; i++)
             {
-                var yesterday = accounts.FirstOrDefault(X => X.Date.Date.Equals(DateTime.Today.AddDays(-i).Date)); 
+                var yesterday = accounts.FirstOrDefault(X => X.Date.Date.Equals(DateTime.Today.AddDays(-i).Date));
                 var yesterDayKills = yesterday == null ? 0 : yesterday.MobKills;
-   
+
                 var yesterdayData = new Series
                 {
                     Name = DateTime.Today.AddDays(-i).ToString("dd-MM-yy"),

@@ -88,7 +88,7 @@ namespace ArchaicQuestII.GameLogic.Core
                 player.Pose = poseText;
             }
 
-        
+
             player.Pose = $", {poseText}";
             _writeToClient.WriteLine("Pose set.", player.ConnectionId);
         }
@@ -125,8 +125,8 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public void Scan(Player player, Room room, string direction)
         {
-            
-            if(!string.IsNullOrEmpty(direction) && direction != "scan")
+
+            if (!string.IsNullOrEmpty(direction) && direction != "scan")
             {
                 ScanDirection(player, room, direction);
                 return;
@@ -138,16 +138,16 @@ namespace ArchaicQuestII.GameLogic.Core
 
             foreach (var obj in room.Mobs)
             {
-            
-                    sb.Append($"<p class='mob'>{obj.Name} is right here.</p>");
-             
+
+                sb.Append($"<p class='mob'>{obj.Name} is right here.</p>");
+
             }
 
             foreach (var obj in room.Players)
             {
-              
-                    sb.Append($"<p class='player'>{obj.Name} is right here.</p>");
-               
+
+                sb.Append($"<p class='player'>{obj.Name} is right here.</p>");
+
             }
 
             if (!room.Mobs.Any() && !room.Players.Any())
@@ -226,7 +226,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
             var getDirection = directions.FirstOrDefault(x => x.StartsWith(direction, StringComparison.CurrentCultureIgnoreCase));
 
-            if(getDirection == null)
+            if (getDirection == null)
             {
                 _writeToClient.WriteLine("You can't look in that direction.", player.ConnectionId);
             }
@@ -693,7 +693,6 @@ namespace ArchaicQuestII.GameLogic.Core
 
             var benefits = new StringBuilder().Append("<table>");
             var modBenefits = "";
-            var hasBenefit = false;
             var hasEffect = player.Affects.Custom.FirstOrDefault(x => x.Name.Equals(food.Name));
             var newEffect = new Affect()
             {
@@ -710,7 +709,7 @@ namespace ArchaicQuestII.GameLogic.Core
                 benefits.Append(
                     $"<tr><td>Food:</td><td>{food.Name}<br />{modBenefits}</td></td>");
                 benefits.Append("</table>");
-              
+
                 newEffect.Name = food.Name;
                 newEffect.Benefits = benefits.ToString();
 
@@ -837,7 +836,7 @@ namespace ArchaicQuestII.GameLogic.Core
                     _writeToClient.WriteLine($"{player.Name} dismounts {getMount.Name}.", pc.ConnectionId);
                 }
             }
-           
+
         }
 
 
@@ -887,7 +886,7 @@ namespace ArchaicQuestII.GameLogic.Core
                 foundSkill.SkillId = skill.Id;
             }
 
-           
+
             if (foundSkill.Proficiency == 100)
             {
                 return;
@@ -909,7 +908,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public void Affects(Player player)
         {
-           var sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             sb.Append("<p>You are affected by the following effects:</p><table class='simple'><thead><tr><td>Skill</td><td>Affect</td></tr></thead>");
 
@@ -1014,7 +1013,7 @@ namespace ArchaicQuestII.GameLogic.Core
             var trainerName = room.Mobs.Find(x => x.Trainer).Name;
 
             var skillName = skillname == "prac" || skillname == "practice" ? "" : skillname;
-      
+
             if (string.IsNullOrEmpty(skillName))
             {
 
@@ -1127,7 +1126,7 @@ namespace ArchaicQuestII.GameLogic.Core
             foundSkill.Proficiency += gain;
             player.Practices -= 1;
 
-            if(foundSkill.Proficiency >= 75)
+            if (foundSkill.Proficiency >= 75)
             {
                 foundSkill.Proficiency = 75;
                 _writeToClient.WriteLine($"You practice for some time. Your proficiency with {foundSkill.SkillName} is now {foundSkill.Proficiency}%", player.ConnectionId);
@@ -1142,7 +1141,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public void SetEvent(Player player, string eventName, string value)
         {
-            if(eventName.Equals("/setevent", StringComparison.CurrentCultureIgnoreCase) || string.IsNullOrEmpty(eventName))
+            if (eventName.Equals("/setevent", StringComparison.CurrentCultureIgnoreCase) || string.IsNullOrEmpty(eventName))
             {
                 foreach (var ev in player.EventState)
                 {
@@ -1152,7 +1151,7 @@ namespace ArchaicQuestII.GameLogic.Core
                 return;
             }
 
-            if(player.EventState.ContainsKey(eventName))
+            if (player.EventState.ContainsKey(eventName))
             {
                 player.EventState[eventName] = Int32.Parse(value);
                 _writeToClient.WriteLine($"{eventName} state changed to {player.EventState[eventName]}", player.ConnectionId);
@@ -1168,7 +1167,7 @@ namespace ArchaicQuestII.GameLogic.Core
             var splitCommand = fullCommand.Split(" ");
             pageNum = splitCommand.Length == 4 ? splitCommand[3] : pageNum;
             // Read Book Page 1
-           if(book == "read")
+            if (book == "read")
             {
                 _writeToClient.WriteLine("Read what?", player.ConnectionId);
                 return;
@@ -1179,7 +1178,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
             if (item == null)
             {
-                if(book.Contains("sign")  || book.Contains("note") || book.Contains("letter")  || book.Contains("board"))
+                if (book.Contains("sign") || book.Contains("note") || book.Contains("letter") || book.Contains("board"))
                 {
                     _writeToClient.WriteLine("To read signs or notes just look at them instead.", player.ConnectionId);
                     return;
@@ -1205,7 +1204,7 @@ namespace ArchaicQuestII.GameLogic.Core
                 n--;
             }
 
-            if(n < 0)
+            if (n < 0)
             {
                 n = 0;
             }
@@ -1223,7 +1222,7 @@ namespace ArchaicQuestII.GameLogic.Core
                 return;
             }
 
-            if (string.IsNullOrEmpty(item.Book.Pages[n] ))
+            if (string.IsNullOrEmpty(item.Book.Pages[n]))
             {
                 _writeToClient.WriteLine($"This page is blank.", player.ConnectionId);
                 return;
@@ -1236,7 +1235,7 @@ namespace ArchaicQuestII.GameLogic.Core
         public void Write(Player player, string book, string pageNum, string fullCommand)
         {
             var splitCommand = fullCommand.Split(" ");
-         
+
             pageNum = splitCommand.Length == 4 ? splitCommand[3] : pageNum;
 
             var isTitle = splitCommand[2] == "title" ? true : false;
@@ -1262,7 +1261,7 @@ namespace ArchaicQuestII.GameLogic.Core
                 return;
             }
 
-            if(isTitle)
+            if (isTitle)
             {
                 // in this context pageNum would be the title
                 // yes this is dumb, future Liam will curse at
@@ -1313,7 +1312,7 @@ namespace ArchaicQuestII.GameLogic.Core
             var bookContent = new WriteBook()
             {
                 Title = item.Name,
-                Description =  item.Book.Pages[n],
+                Description = item.Book.Pages[n],
                 PageNumber = n
             };
 

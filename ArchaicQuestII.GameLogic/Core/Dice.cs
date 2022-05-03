@@ -6,7 +6,7 @@ using ArchaicQuestII.GameLogic.Core;
 
 namespace ArchaicQuestII.GameLogic.Item
 {
-    public class Dice: IDice
+    public class Dice : IDice
     {
 
         public static Random Throws = new Random((int)DateTime.Now.Ticks);

@@ -9,7 +9,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
     {
         public Model.Skill LongBlade()
         {
-        
+
 
             var coreSkill = new Model.Skill()
             {
@@ -19,7 +19,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
                     "Such as Great Swords, Two Handed Swords, Sabre, and Longsword.",
                 Type = SkillType.Passive,
                 DateCreated = DateTime.Now,
-             
+
             };
 
             return coreSkill;
@@ -31,7 +31,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
             var coreSkill = new Model.Skill()
             {
                 Name = "Axe",
-                Description =  "This skill allows the user proficiency in Axes",
+                Description = "This skill allows the user proficiency in Axes",
                 Type = SkillType.Passive,
                 DateCreated = DateTime.Now,
 
@@ -57,8 +57,8 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
 
         public Model.Skill Bows()
         {
-           
-        var coreSkill = new Model.Skill()
+
+            var coreSkill = new Model.Skill()
             {
                 Name = "Bows",
                 Description = "This skill allows the user proficiency with Bows and Arrows",
@@ -72,7 +72,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
 
         public Model.Skill Crossbow()
         {
-         
+
             var coreSkill = new Model.Skill()
             {
                 Name = "Crossbow",
@@ -87,7 +87,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
 
         public Model.Skill Exotic()
         {
-           
+
             var coreSkill = new Model.Skill()
             {
                 Name = "Exotic",
@@ -102,22 +102,22 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
 
         public Model.Skill Flail()
         {
-            
-                var coreSkill = new Model.Skill()
-                {
-                    Name = "Flail",
-                    Description = "This skill allows the user proficiency in Flail weapons.",
-                    Type = SkillType.Passive,
-                    DateCreated = DateTime.Now,
 
-                };
+            var coreSkill = new Model.Skill()
+            {
+                Name = "Flail",
+                Description = "This skill allows the user proficiency in Flail weapons.",
+                Type = SkillType.Passive,
+                DateCreated = DateTime.Now,
+
+            };
 
             return coreSkill;
         }
 
         public Model.Skill HandToHand()
         {
-            
+
             var coreSkill = new Model.Skill()
             {
                 Name = "Hand to hand",
@@ -131,7 +131,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
         }
 
         public Model.Skill Polearm()
-        { 
+        {
             var coreSkill = new Model.Skill()
             {
                 Name = "Polearm",
@@ -146,7 +146,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
 
         public Model.Skill ShortBlades()
         {
-          
+
             var coreSkill = new Model.Skill()
             {
                 Name = "Short Blades",
@@ -161,7 +161,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
         }
         public Model.Skill Spear()
         {
-        
+
             var coreSkill = new Model.Skill()
             {
                 Name = "Spear",

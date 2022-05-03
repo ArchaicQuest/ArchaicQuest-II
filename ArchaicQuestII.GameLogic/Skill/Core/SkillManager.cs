@@ -18,14 +18,14 @@ using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Skill.Core
 {
-   public class SkillManager:ISkillManager
+    public class SkillManager : ISkillManager
     {
         private readonly IWriteToClient _writer;
         private readonly IUpdateClientUI _updateClientUi;
         private readonly IDice _dice;
         private readonly IDamage _damage;
         private readonly ICombat _fight;
-  
+
 
 
         public SkillManager(IWriteToClient writer, IUpdateClientUI updateClientUi, IDice dice, IDamage damage, ICombat fight)
@@ -137,7 +137,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
                 if (!_fight.IsTargetAlive(target))
                 {
                     _fight.TargetKilled(player, target, room);
-                    
+
                     _updateClientUi.UpdateHP(target);
                     return;
                     //TODO: create corpse, refactor fight method from combat.cs
@@ -149,7 +149,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
                 _fight.AddCharToCombat(target);
                 _fight.AddCharToCombat(player);
             }
-         
+
         }
 
         /*
@@ -165,13 +165,13 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
 
             if ((attribute == EffectLocation.Hitpoints || attribute == EffectLocation.Mana || attribute == EffectLocation.Moves) && target.Attributes.Attribute[attribute] == target.MaxAttributes.Attribute[attribute])
             {
-               _writer.WriteLine(ReplacePlaceholders(noAffect, target, false), player.ConnectionId);
-               return false;
+                _writer.WriteLine(ReplacePlaceholders(noAffect, target, false), player.ConnectionId);
+                return false;
             }
 
             target.Attributes.Attribute[attribute] += value;
 
-            if ((attribute == EffectLocation.Hitpoints || attribute ==  EffectLocation.Mana || attribute == EffectLocation.Moves) && target.Attributes.Attribute[attribute] > target.MaxAttributes.Attribute[attribute])
+            if ((attribute == EffectLocation.Hitpoints || attribute == EffectLocation.Mana || attribute == EffectLocation.Moves) && target.Attributes.Attribute[attribute] > target.MaxAttributes.Attribute[attribute])
             {
                 target.Attributes.Attribute[attribute] = target.MaxAttributes.Attribute[attribute];
             }
@@ -348,7 +348,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
 
         public void EmoteEffectWearOffAction(Player player, Room room, SkillMessage emote)
         {
-            
+
             foreach (var pc in room.Players)
             {
                 if (pc.ConnectionId.Equals(player.ConnectionId))

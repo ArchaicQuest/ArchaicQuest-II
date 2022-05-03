@@ -11,7 +11,7 @@ using ArchaicQuestII.GameLogic.Item;
 
 namespace ArchaicQuestII.GameLogic.Combat
 {
-   public class Formulas: IFormulas
+    public class Formulas : IFormulas
     {
         private readonly IDice _dice;
         public Formulas(IDice dice)
@@ -26,13 +26,13 @@ namespace ArchaicQuestII.GameLogic.Combat
             var maxWeaponDam = 0;
             var weapon = useDualWield ? player.Equipped.Secondary : player.Equipped.Wielded;
 
-           SkillList getWeaponSkill = null;
+            SkillList getWeaponSkill = null;
             if (weapon != null && !player.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
             {
                 // urgh this is ugly
-                 getWeaponSkill = player.Skills.FirstOrDefault(x =>
-                    x.SkillName.Replace(" ", string.Empty)
-                        .Equals(Enum.GetName(typeof(Item.Item.WeaponTypes), weapon.WeaponType)));
+                getWeaponSkill = player.Skills.FirstOrDefault(x =>
+                   x.SkillName.Replace(" ", string.Empty)
+                       .Equals(Enum.GetName(typeof(Item.Item.WeaponTypes), weapon.WeaponType)));
 
                 maxWeaponDam = player.Equipped.Wielded.Damage.Maximum;
             }
@@ -112,8 +112,8 @@ namespace ArchaicQuestII.GameLogic.Combat
         public int DamageReduction(Player defender, int damage)
         {
             var ArRating = defender.ArmorRating.Armour + 1;
-            
-            if(defender.ConnectionId == "mob")
+
+            if (defender.ConnectionId == "mob")
             {
                 ArRating += defender.Attributes.Attribute[EffectLocation.Dexterity] / 2;
             }
@@ -137,8 +137,8 @@ namespace ArchaicQuestII.GameLogic.Combat
                 var skill = player.Skills.FirstOrDefault(x =>
                     x.SkillName.Replace(" ", string.Empty)
                         .Equals(Enum.GetName(typeof(Item.Item.WeaponTypes), weapon.WeaponType)));
- 
-                damage = _dice.Roll(1, weapon.Damage.Minimum, weapon.Damage.Maximum); 
+
+                damage = _dice.Roll(1, weapon.Damage.Minimum, weapon.Damage.Maximum);
 
                 if (skill != null)
                 {
@@ -250,8 +250,8 @@ namespace ArchaicQuestII.GameLogic.Combat
         public bool DoesHit(int chance)
         {
             var roll = _dice.Roll(1, 1, 100);
-            
-            
+
+
             return roll switch
             {
                 1 => false,

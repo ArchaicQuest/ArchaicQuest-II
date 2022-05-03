@@ -5,7 +5,7 @@ using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Character.Equipment
 {
-   public interface IEquip
+    public interface IEquip
     {
         void Wear(string item, Room room, Player player, string type);
         void WearAll(Room room, Player player);

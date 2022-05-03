@@ -54,13 +54,13 @@ namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
 
         }
 
-        
-      
+
+
         public int MagicMissile(Player player, Player target, Room room)
         {
             var damage = _dice.Roll(1, 1, 4) + 1;
 
-            _skillManager.DamagePlayer("magic missile", damage, player, target, room );
+            _skillManager.DamagePlayer("magic missile", damage, player, target, room);
 
             return damage;
         }
@@ -107,9 +107,9 @@ namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
                 player.ArmorRating.Armour -= 20;
 
 
-              target.Affects.Custom.Remove(affect);
+                target.Affects.Custom.Remove(affect);
 
-              _skillManager.EmoteEffectWearOffAction(player, room, skillMessage);
+                _skillManager.EmoteEffectWearOffAction(player, room, skillMessage);
 
                 _updateClientUi.UpdateAffects(player);
                 _updateClientUi.UpdateScore(player);
@@ -118,9 +118,9 @@ namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
 
             var skill = new AllSpells().Armour();
             target = _skillManager.GetValidTarget(player, target, skill.ValidTargets);
-          
+
             //create emote effectWear off message
-            _skillManager.EmoteAction(player,target,room, skillMessage);
+            _skillManager.EmoteAction(player, target, room, skillMessage);
 
             if (affect == null)
             {
@@ -147,12 +147,12 @@ namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
                 affect.Duration = player.Level + player.Attributes.Attribute[EffectLocation.Intelligence] / 2;
             }
 
-          
+
 
             _updateClientUi.UpdateAffects(target);
             _updateClientUi.UpdateScore(target);
             _updateClientUi.UpdateScore(player);
-     
+
 
         }
 
@@ -205,17 +205,19 @@ namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
             {
                 var newAffect = new Affect()
                 {
-                    Modifier = new Modifier() {
+                    Modifier = new Modifier()
+                    {
                         Armour = 10,
-                        DamRoll = 10,},
+                        DamRoll = 10,
+                    },
                     Benefits = "Affects armour by 20\r\n Affects Dam by 10",
                     Affects = DefineSpell.SpellAffect.ArmorClass,
-                    Duration =  player.Level + player.Attributes.Attribute[EffectLocation.Intelligence] / 2,
+                    Duration = player.Level + player.Attributes.Attribute[EffectLocation.Intelligence] / 2,
                     Name = "Bless",
-                    
+
                 };
 
-            
+
                 target.Affects.Custom.Add(newAffect);
 
                 Helpers.ApplyAffects(newAffect, target);
@@ -225,7 +227,7 @@ namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
                 affect.Duration = player.Level + player.Attributes.Attribute[EffectLocation.Intelligence] / 2;
             }
 
-            
+
 
             _updateClientUi.UpdateAffects(target);
             _updateClientUi.UpdateScore(target);
@@ -270,23 +272,24 @@ namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
 
             var hasAffcted = _skillManager.AffectPlayerAttributes("Cure light wounds", EffectLocation.Hitpoints, value, player, target, room, skillMessage.NoEffect.ToPlayer);
 
-         if (hasAffcted)
-         {
-             _skillManager.EmoteAction(player, target, room, skillMessage);
-             _skillManager.UpdateClientUI(target);
-         } else
+            if (hasAffcted)
+            {
+                _skillManager.EmoteAction(player, target, room, skillMessage);
+                _skillManager.UpdateClientUI(target);
+            }
+            else
             {
                 _skillManager.EmoteAction(player, target, room, skillMessageNoEffect);
                 _skillManager.UpdateClientUI(target);
             }
 
-         _skillManager.UpdateClientUI(player);
-           
+            _skillManager.UpdateClientUI(player);
+
         }
 
         public void Identify(Player player, string obj, Room room)
         {
- 
+
             if (string.IsNullOrEmpty(obj))
             {
                 _writer.WriteLine("Identify what!?", player.ConnectionId);
@@ -294,7 +297,7 @@ namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
             }
             var item = player.Inventory.FirstOrDefault(x => x.Name.Contains(obj, StringComparison.CurrentCultureIgnoreCase));
 
-            if(item == null)
+            if (item == null)
             {
                 _writer.WriteLine($"You don't have an item starting with '{item}'", player.ConnectionId);
                 return;
@@ -302,7 +305,7 @@ namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
 
             var sb = new StringBuilder();
 
-       
+
             List<string> itemFlags = new List<string>();
             foreach (Item.Item.ItemFlags itemFlag in Enum.GetValues(typeof(Item.Item.ItemFlags)))
             {

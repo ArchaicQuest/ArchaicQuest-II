@@ -21,6 +21,6 @@ namespace ArchaicQuestII.GameLogic.Character.Model
             {EffectLocation.HitRoll, 0},
             {EffectLocation.DamageRoll, 0},
         };
-      
+
     }
 }

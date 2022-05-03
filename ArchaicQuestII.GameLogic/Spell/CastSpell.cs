@@ -12,7 +12,7 @@ using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.Skill.Core;
 using ArchaicQuestII.GameLogic.Skill.Enum;
 using ArchaicQuestII.GameLogic.Skill.Model;
-using ArchaicQuestII.GameLogic.Spell.Interface; 
+using ArchaicQuestII.GameLogic.Spell.Interface;
 using ArchaicQuestII.GameLogic.World.Room;
 using LiteDB;
 using MoonSharp.Interpreter;
@@ -34,7 +34,7 @@ namespace ArchaicQuestII.GameLogic.Spell
             _spellTargetCharacter = spellTargetCharacter;
             _cache = cache;
             _damage = damage;
-            _updateClientUi = updateClientUi; 
+            _updateClientUi = updateClientUi;
             _dice = dice;
             _spellList = spellList;
         }
@@ -70,31 +70,31 @@ namespace ArchaicQuestII.GameLogic.Spell
         {
             // I think this is a debug bug where the hot reload doesn't correctly run startup again 
             // and mobs loose there skills adding this hack just incase, should solve it
-            if(player.Skills == null && player.ConnectionId == "mob")
-            {      
-                    player.Skills = _cache.GetClass(player.ClassName).Skills;          
+            if (player.Skills == null && player.ConnectionId == "mob")
+            {
+                player.Skills = _cache.GetClass(player.ClassName).Skills;
             }
 
             var foundSpell = player.Skills.FirstOrDefault(x => x.SkillName.StartsWith(skill, StringComparison.CurrentCultureIgnoreCase) && x.Level <= player.Level);
-            
+
             if (foundSpell == null)
             {
                 _writer.WriteLine($"You don't know a spell that begins with {skill}", player.ConnectionId);
                 return null;
             }
 
-    
+
             var spell = _cache.GetSkill(foundSpell.SkillId);
 
-            if(spell == null || spell.Name != foundSpell.SkillName)
+            if (spell == null || spell.Name != foundSpell.SkillName)
             {
                 var getSpell = _cache.GetAllSkills();
-                    spell = getSpell.FirstOrDefault(x => x.Name.Equals(foundSpell.SkillName, StringComparison.CurrentCultureIgnoreCase));
-               
+                spell = getSpell.FirstOrDefault(x => x.Name.Equals(foundSpell.SkillName, StringComparison.CurrentCultureIgnoreCase));
+
                 foundSpell.SkillId = spell.Id;
             }
 
-            
+
 
             return spell;
         }
@@ -216,9 +216,9 @@ namespace ArchaicQuestII.GameLogic.Spell
             }
             else if (origin != target)
             {
-                
+
                 var obsfucatedSpellName = ObsfucateSpellName(spell.Name);
-               
+
 
                 _writer.WriteLine($"You look at {target.Name} and utter the words, '{spell.Name}'.", origin.ConnectionId);
                 _writer.WriteLine($"{origin.Name} looks at you and utters the words, '{(!Helpers.isCaster(target.ClassName) ? obsfucatedSpellName : spell.Name)}'.", target.ConnectionId);
@@ -231,7 +231,7 @@ namespace ArchaicQuestII.GameLogic.Spell
                     }
                     _writer.WriteLine($"{origin.Name} looks at {target.Name} and utters the words, '{(!Helpers.isCaster(pc.ClassName) ? obsfucatedSpellName : spell.Name)}'.", pc.ConnectionId);
                 }
-               
+
             }
 
         }
@@ -445,7 +445,7 @@ namespace ArchaicQuestII.GameLogic.Spell
                         origin.ConnectionId);
                 }
 
-            } 
+            }
             else if ((spell.ValidTargets & ValidTargets.TargetObjectInventory) != 0 || (spell.ValidTargets & ValidTargets.TargetObjectEquipped) != 0)
             {
                 //Item.Item target = null;

@@ -6,7 +6,7 @@ using ArchaicQuestII.GameLogic.Character.Model;
 
 namespace ArchaicQuestII.GameLogic.Core
 {
-    public class QuestLog: IQuestLog
+    public class QuestLog : IQuestLog
     {
         private readonly IWriteToClient _writeToClient;
         private readonly IUpdateClientUI _updateClientUi;
@@ -34,7 +34,7 @@ namespace ArchaicQuestII.GameLogic.Core
                     mob.Current = mob.Current + 1;
                     questCompleted = mob.Count == mob.Current;
                 }
-               
+
 
                 if (questCompleted)
                 {

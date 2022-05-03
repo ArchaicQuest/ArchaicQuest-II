@@ -11,7 +11,7 @@ namespace ArchaicQuestII.API.Configuration.IoC.GameLogicExtensions
         {
             services.AddSingleton<ISpellList, SpellList>();
             services.AddSingleton<IDamageSpells, DamageSpells>();
-            
+
             services.AddTransient<ISpellTargetCharacter, SpellTargetCharacter>();
             services.AddTransient<ISpells, CastSpell>();
 

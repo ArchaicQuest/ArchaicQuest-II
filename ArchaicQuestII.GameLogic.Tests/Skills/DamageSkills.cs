@@ -43,7 +43,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Skills
         public DamageSkillsTests()
         {
 
-         
+
             _player = new Player()
             {
                 Id = Guid.NewGuid(),
@@ -69,12 +69,12 @@ namespace ArchaicQuestII.GameLogic.Tests.Skills
                 Skills = new List<SkillList>()
             };
 
-         
+
             _target = new Player()
             {
                 Id = Guid.NewGuid(),
-            Name = "Gary",
-            Status = CharacterStatus.Status.Standing,
+                Name = "Gary",
+                Status = CharacterStatus.Status.Standing,
                 Attributes = new Attributes()
                 {
                     Attribute = new Dictionary<EffectLocation, int>
@@ -101,11 +101,11 @@ namespace ArchaicQuestII.GameLogic.Tests.Skills
             _updateClientUI = new Mock<IUpdateClientUI>();
             _dice = new Mock<IDice>();
 
-            _damageSkills = new DamageSkills(_writer.Object, _updateClientUI.Object, _dice.Object, _damage.Object, _combat.Object,_skillManager.Object);
-           
-         
-           
- 
+            _damageSkills = new DamageSkills(_writer.Object, _updateClientUI.Object, _dice.Object, _damage.Object, _combat.Object, _skillManager.Object);
+
+
+
+
         }
 
 

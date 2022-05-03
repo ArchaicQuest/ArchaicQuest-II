@@ -208,13 +208,13 @@ namespace ArchaicQuestII.API.Controllers
                 return BadRequest(new { message = "User does not exists." });
             }
 
-           
+
             if ((HttpContext.Items["User"] as AdminUser).Role != Role.Admin)
             {
                 return BadRequest(new { message = "You need to be admin to do this" });
             }
 
-           
+
             var deleted = _db.Delete<AdminUser>(userExists.Id, DataBase.Collections.Users);
 
             if (deleted)
@@ -233,8 +233,8 @@ namespace ArchaicQuestII.API.Controllers
         [HttpGet("api/Account/getusers")]
         public IActionResult GetAll()
         {
-          
-            
+
+
             var users = _userService.GetAll();
             var context = (HttpContext.Items["User"] as AdminUser);
             foreach (var user in users)

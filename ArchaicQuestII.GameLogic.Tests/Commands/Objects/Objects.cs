@@ -14,17 +14,17 @@ using Xunit;
 
 namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
 {
-   public class Objects
-   {
-       private readonly Mock<IWriteToClient> _IWriteToClient;
-       private readonly Mock<IUpdateClientUI> _IUpdateUI;
-       private readonly Mock<IMobScripts> _IMobScripts;
+    public class Objects
+    {
+        private readonly Mock<IWriteToClient> _IWriteToClient;
+        private readonly Mock<IUpdateClientUI> _IUpdateUI;
+        private readonly Mock<IMobScripts> _IMobScripts;
 
         public Objects()
-       {
-           _IWriteToClient = new Mock<IWriteToClient>();
-           _IUpdateUI = new Mock<IUpdateClientUI>();
-           _IMobScripts = new Mock<IMobScripts>();
+        {
+            _IWriteToClient = new Mock<IWriteToClient>();
+            _IUpdateUI = new Mock<IUpdateClientUI>();
+            _IMobScripts = new Mock<IMobScripts>();
 
         }
 
@@ -95,7 +95,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
             var chest = new GameLogic.Item.Item
             {
                 Name = "chest",
-                Container = new Container() {Items = new ItemList {apple}, IsOpen = true}
+                Container = new Container() { Items = new ItemList { apple }, IsOpen = true }
             };
 
             var room = new Room();
@@ -181,7 +181,10 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
         {
             var item = new GameLogic.Item.Item
             {
-                Name = "gold", Description = new Description() {Room = "gold"}, Value = 5, ItemType = GameLogic.Item.Item.ItemTypes.Money
+                Name = "gold",
+                Description = new Description() { Room = "gold" },
+                Value = 5,
+                ItemType = GameLogic.Item.Item.ItemTypes.Money
             };
 
             var room = new Room();
@@ -204,9 +207,9 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
         [Fact]
         public void Drop_Gold()
         {
-            
+
             var room = new Room();
-           
+
             var player = new Player();
             player.ConnectionId = "1";
             player.Name = "Gary";
@@ -369,7 +372,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
         {
             var exit = new Exit();
             exit.Name = "North";
-           exit.Closed = true;
+            exit.Closed = true;
             var room = new Room();
             room.Exits.North = exit;
 
@@ -377,7 +380,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
             player.ConnectionId = "1";
             player.Name = "Gary";
             player.Inventory = new ItemList();
-             
+
 
             var objects = new GameLogic.Commands.Objects.Object(_IWriteToClient.Object, _IUpdateUI.Object, _IMobScripts.Object);
 
@@ -415,10 +418,10 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
             {
                 Name = "Chest",
                 Description = new Description(),
-                
+
                 ItemType = GameLogic.Item.Item.ItemTypes.Container,
-                Container = new Container(){CanOpen = true, IsOpen = false, Items = new ItemList()},
-                
+                Container = new Container() { CanOpen = true, IsOpen = false, Items = new ItemList() },
+
             };
 
             var room = new Room();

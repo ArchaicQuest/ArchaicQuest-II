@@ -35,7 +35,7 @@ namespace ArchaicQuestII.DataAccess
             collection.Upsert(data);
             SetIndex((LiteCollection<T>)collection, collectionName);
             _db.Checkpoint();
- 
+
             return true;
         }
 
@@ -66,14 +66,14 @@ namespace ArchaicQuestII.DataAccess
 
         public bool DoesCollectionExist(Collections collectionName)
         {
-           return _db.CollectionExists(GetCollectionName(collectionName));
+            return _db.CollectionExists(GetCollectionName(collectionName));
         }
 
         private static string GetCollectionName(Collections collectionName)
         {
             return collectionName switch
             {
-              
+
                 Collections.Account => "Account",
                 Collections.Players => "Players",
                 Collections.Log => "Log",

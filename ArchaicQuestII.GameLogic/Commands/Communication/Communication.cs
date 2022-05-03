@@ -8,7 +8,7 @@ using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Commands.Communication
 {
-    public class Communication: Icommunication
+    public class Communication : Icommunication
     {
 
         private readonly IWriteToClient _writer;
@@ -54,7 +54,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
             }
 
             Helpers.PostToDiscord($"[Newbie] {player.Name} {text}", "channels", _cache.GetConfig());
-             
+
         }
 
         public void OOC(string text, Room room, Player player)
@@ -125,34 +125,34 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
                     _updateClient.UpdateCommunication(pc, $"<p class='say'>{player.Name} says to {sayTo.Name}, {text}</p>", "room");
                 }
             }
-          
+
         }
 
         public void Tells(string name, string text, Player player)
         {
-                 var foundPlayer =  _cache.GetPlayerCache()
-                .FirstOrDefault(x => x.Value.Name.StartsWith(name, StringComparison.CurrentCultureIgnoreCase)).Value;
+            var foundPlayer = _cache.GetPlayerCache()
+           .FirstOrDefault(x => x.Value.Name.StartsWith(name, StringComparison.CurrentCultureIgnoreCase)).Value;
 
-                 if (foundPlayer == null)
-                 {
-                     _writer.WriteLine($"<p>They are not in this realm.</p>", player.ConnectionId);
-                     return;
-                 }
+            if (foundPlayer == null)
+            {
+                _writer.WriteLine($"<p>They are not in this realm.</p>", player.ConnectionId);
+                return;
+            }
 
-                 if (foundPlayer == player)
-                 {
-                     _writer.WriteLine($"<p>You tell yourself \"{text}\"</p>", player.ConnectionId);
-                     return;
-                 }
+            if (foundPlayer == player)
+            {
+                _writer.WriteLine($"<p>You tell yourself \"{text}\"</p>", player.ConnectionId);
+                return;
+            }
 
-                 player.ReplyTo = foundPlayer.Name;
-                 foundPlayer.ReplyTo = player.Name;
+            player.ReplyTo = foundPlayer.Name;
+            foundPlayer.ReplyTo = player.Name;
 
-                 _writer.WriteLine($"<p class='say'>You tell {foundPlayer.Name} \"{text}\"</p>", player.ConnectionId);
-                 _updateClient.UpdateCommunication(player, $"<p class='say'>You tell {foundPlayer.Name} \"{text}\"</p>", "all");
+            _writer.WriteLine($"<p class='say'>You tell {foundPlayer.Name} \"{text}\"</p>", player.ConnectionId);
+            _updateClient.UpdateCommunication(player, $"<p class='say'>You tell {foundPlayer.Name} \"{text}\"</p>", "all");
 
-                  _writer.WriteLine($"<p class='say'>{player.Name} tells you \"{text}\"</p>", foundPlayer.ConnectionId);
-                 _updateClient.UpdateCommunication(foundPlayer, $"<p class='say'>{player.Name} tells you \"{text}\"</p>", "all");
+            _writer.WriteLine($"<p class='say'>{player.Name} tells you \"{text}\"</p>", foundPlayer.ConnectionId);
+            _updateClient.UpdateCommunication(foundPlayer, $"<p class='say'>{player.Name} tells you \"{text}\"</p>", "all");
 
         }
 
@@ -164,7 +164,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
                 return;
             }
 
-          Tells(player.ReplyTo, text, player);
+            Tells(player.ReplyTo, text, player);
         }
 
         public void Whisper(string text, string target, Room room, Player player)
@@ -174,7 +174,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
 
         public void Yell(string text, Room room, Player player)
         {
-         
+
             var rooms = _cache.GetAllRoomsInArea(room.AreaId);
             _writer.WriteLine($"<p class='yell'>You yell, {text.ToUpper()}</p>", player.ConnectionId);
 
@@ -190,7 +190,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
                     _writer.WriteLine($"<p class='yell'>{player.Name} yells, {text.ToUpper()}</p>", pc.ConnectionId);
                     _updateClient.UpdateCommunication(pc, $"<p class='yell'>{player.Name} yells, {text.ToUpper()}</p>", "room");
                 }
-              
+
             }
 
             _updateClient.UpdateCommunication(player, $"<p class='yell'>You yell, {text.ToUpper()}</p>", "room");

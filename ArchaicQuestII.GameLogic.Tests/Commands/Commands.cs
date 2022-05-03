@@ -136,7 +136,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
 
             _movement.Setup(x => x.Move(_room, _player, "North West", false));
 
-            _commands.CommandList("nw", string.Empty, String.Empty, "",  _player, _room);
+            _commands.CommandList("nw", string.Empty, String.Empty, "", _player, _room);
 
             _movement.Verify(x => x.Move(_room, _player, "North West", false), Times.Once);
 
@@ -172,13 +172,13 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
         [Fact]
         public void Should_call_move_north()
         {
-       
+
             _movement.Setup(x => x.Move(_room, _player, "North", false));
 
             _commands.CommandList("n", string.Empty, string.Empty, "", _player, _room);
 
             _movement.Verify(x => x.Move(_room, _player, "North", false), Times.Once);
-        
+
         }
 
         [Fact]

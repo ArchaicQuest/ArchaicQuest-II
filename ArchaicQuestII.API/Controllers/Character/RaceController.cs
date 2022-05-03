@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ArchaicQuestII.API.Controllers.Character
 {
-    
+
     [ApiController]
     public class RaceController : Controller
     {
@@ -52,9 +52,9 @@ namespace ArchaicQuestII.API.Controllers.Character
         [AllowAnonymous]
         [Route("api/Character/Race")]
         public List<Race> Get()
-        { 
+        {
             return _db.GetList<Race>(DataBase.Collections.Race);
-          
+
         }
     }
 }

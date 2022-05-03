@@ -49,7 +49,7 @@ namespace ArchaicQuestII.API.World
             user.Contributions += 1;
             _db.Save(user, DataBase.Collections.Users);
 
-            
+
 
             return Ok(JsonConvert.SerializeObject(new { toast = $"Room saved successfully." }));
         }
@@ -78,7 +78,7 @@ namespace ArchaicQuestII.API.World
         }
 
         ///
-        
+
         [HttpGet]
         [Route("api/World/Room/returnRoomTypes")]
         public JsonResult ReturnRoomTypes()
@@ -105,17 +105,17 @@ namespace ArchaicQuestII.API.World
             var updateRoom = _addRoom.MapRoom(data);
             _db.Save(updateRoom, DataBase.Collections.Room);
 
-         var user = (HttpContext.Items["User"] as AdminUser);
-         user.Contributions += 1;
-         _db.Save(user, DataBase.Collections.Users);
+            var user = (HttpContext.Items["User"] as AdminUser);
+            user.Contributions += 1;
+            _db.Save(user, DataBase.Collections.Users);
 
-         var log = new AdminLog()
-         {
-             Detail = $"({data.AreaId}, {data.Id}, x: {data.Coords.X} y: {data.Coords.Y}, z: {data.Coords.Z}) {data.Title}",
-             Type = DataBase.Collections.Room,
-             UserName = user.Username
-         };
-         _db.Save(log, DataBase.Collections.Log);
+            var log = new AdminLog()
+            {
+                Detail = $"({data.AreaId}, {data.Id}, x: {data.Coords.X} y: {data.Coords.Y}, z: {data.Coords.Z}) {data.Title}",
+                Type = DataBase.Collections.Room,
+                UserName = user.Username
+            };
+            _db.Save(log, DataBase.Collections.Log);
 
         }
 
@@ -125,7 +125,7 @@ namespace ArchaicQuestII.API.World
         {
             return _addRoom.GetRoomFromCoords(new Coordinates { X = x, Y = y, Z = z }, areaId) != null;
         }
-        
+
         public void MapMobRoomId(Room room)
         {
             foreach (var mob in room.Mobs)
@@ -134,14 +134,14 @@ namespace ArchaicQuestII.API.World
                 mob.RoomId = $"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}";
             }
         }
-        
+
         public void AddSkillsToMobs(Room room)
         {
             foreach (var mob in room.Mobs)
             {
 
                 mob.Skills = new List<SkillList>();
-             
+
                 var classSkill = _db.GetCollection<Class>(DataBase.Collections.Class).FindOne(x =>
                     x.Name.Equals(mob.ClassName, StringComparison.CurrentCultureIgnoreCase));
 
@@ -247,7 +247,7 @@ namespace ArchaicQuestII.API.World
                     _cache.AddCraftingRecipes(craftingRecipe.Id, craftingRecipe);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
             }

@@ -8,7 +8,7 @@ using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Core
 {
- public interface ICore
+    public interface ICore
     {
         /// <summary>
         /// Displays lists of players 

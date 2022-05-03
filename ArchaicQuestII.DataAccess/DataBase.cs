@@ -22,7 +22,7 @@ namespace ArchaicQuestII.DataAccess
         /// </summary>
         public enum Collections
         {
-           
+
             Alignment,
             Area,
             AttackType,
@@ -30,7 +30,7 @@ namespace ArchaicQuestII.DataAccess
             Help,
             Items,
             Mobs,
-        
+
             Race,
             Room,
             Skill,
@@ -49,7 +49,7 @@ namespace ArchaicQuestII.DataAccess
             collection.Upsert(data);
             SetIndex((LiteCollection<T>)collection, collectionName);
             _db.Checkpoint();
- 
+
             return true;
         }
 
@@ -80,20 +80,20 @@ namespace ArchaicQuestII.DataAccess
 
         public bool DoesCollectionExist(Collections collectionName)
         {
-           return _db.CollectionExists(GetCollectionName(collectionName));
+            return _db.CollectionExists(GetCollectionName(collectionName));
         }
 
         private static string GetCollectionName(Collections collectionName)
         {
             return collectionName switch
             {
-                Collections.Alignment => "Alignment", 
+                Collections.Alignment => "Alignment",
                 Collections.Area => "Area",
                 Collections.AttackType => "AttackType",
                 Collections.Class => "Class",
                 Collections.Help => "Help",
                 Collections.Items => "Items",
-                Collections.Mobs => "Mobs", 
+                Collections.Mobs => "Mobs",
                 Collections.Race => "Race",
                 Collections.Room => "Room",
                 Collections.Skill => "Skill",

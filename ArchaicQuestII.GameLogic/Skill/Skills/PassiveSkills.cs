@@ -53,7 +53,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
         }
 
-   
+
         public int Haggle(Player player, Player target)
         {
             var foundSkill = player.Skills.FirstOrDefault(x =>
@@ -91,13 +91,13 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
             _writer.WriteLine("<p>Your haggle attempts fail.</p>",
                 player.ConnectionId);
- 
+
             if (foundSkill.Proficiency == 100)
             {
                 return 0;
             }
 
-            var increase =_dice.Roll(1, 1, 5);
+            var increase = _dice.Roll(1, 1, 5);
 
             foundSkill.Proficiency += increase;
 
@@ -139,29 +139,29 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                 _writer.WriteLine("You can't find that weapon.", player.ConnectionId);
                 return 0;
             }
-           
 
-            if(player.Equipped.Wielded == null)
+
+            if (player.Equipped.Wielded == null)
             {
                 _writer.WriteLine("You need to wield a weapon first.", player.ConnectionId);
                 return 0;
             }
 
-                //// exception for rangers
-                //if (findWeapon.Weight <= player.Equipped.Wielded.Weight)
-                //{
-                //    _writer.WriteLine("Your offhand secondary weapon must be lighter than your primary weapon", player.ConnectionId);
-                //    return 0;
-                //}
+            //// exception for rangers
+            //if (findWeapon.Weight <= player.Equipped.Wielded.Weight)
+            //{
+            //    _writer.WriteLine("Your offhand secondary weapon must be lighter than your primary weapon", player.ConnectionId);
+            //    return 0;
+            //}
 
 
             if (player.Equipped.Shield != null)
             {
                 var shield = player.Equipped.Shield;
-     
-                _equip.Remove(shield.Name,room, player);
+
+                _equip.Remove(shield.Name, room, player);
             }
-          
+
 
             _equip.Wear(findWeapon.Name, room, player, "dual");
 

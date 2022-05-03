@@ -24,7 +24,7 @@ namespace ArchaicQuestII.GameLogic.Spell
         {
             return player.Inventory.FirstOrDefault(x => x.Name.StartsWith(target, StringComparison.CurrentCultureIgnoreCase));
         }
- 
+
 
         public Item.Item CheckTargetItem(Spell.Model.Spell spell, string target, Room room, Player player)
         {

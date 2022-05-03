@@ -15,7 +15,7 @@ namespace ArchaicQuestII.API.Configuration.IoC.GameLogicExtensions
                     .AddSkills()
                     .AddSpells()
                     .AddWorld();
-        
+
             return services;
         }
     }

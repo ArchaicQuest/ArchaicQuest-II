@@ -16,7 +16,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
         public void Sit(Player player, Room room, string target);
         public void Stand(Player player, Room room, string target);
         public void Sleep(Player player, Room room, string target);
-        public void Wake(Player player, Room room,  string target);
+        public void Wake(Player player, Room room, string target);
         public void Rest(Player player, Room room, string target);
         public void Follow(Player player, Room room, string target);
         public void ChangePlayerLocation(Player player, Room room);

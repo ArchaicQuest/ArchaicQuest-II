@@ -32,7 +32,7 @@ namespace ArchaicQuestII.Controllers
         [HttpPost]
         [Route("api/Character/Mob")]
         public IActionResult Post([FromBody] Player mob)
-           {
+        {
 
 
             if (!ModelState.IsValid)
@@ -54,7 +54,7 @@ namespace ArchaicQuestII.Controllers
                 },
                 Affects = mob.Affects,
                 AlignmentScore = mob.AlignmentScore,
-                Attributes =  mob.Attributes,
+                Attributes = mob.Attributes,
                 MaxAttributes = mob.Attributes,
                 Inventory = mob.Inventory,
                 Equipped = mob.Equipped,
@@ -90,58 +90,58 @@ namespace ArchaicQuestII.Controllers
                         case Equipment.EqSlot.Arms:
                             mob.Equipped.Arms = item;
                             break;
-                case Equipment.EqSlot.Body:
-                    mob.Equipped.AboutBody = item;
-                    break;
-                case Equipment.EqSlot.Face:
-                    mob.Equipped.Face = item;
-                    break;
-                case Equipment.EqSlot.Feet:
-                    mob.Equipped.Feet = item;
-                    break;
-                case Equipment.EqSlot.Finger:
-                    mob.Equipped.Finger = item;
-                    break;
-                case Equipment.EqSlot.Floating:
-                    mob.Equipped.Floating = item;
-                    break;
-                case Equipment.EqSlot.Hands:
-                    mob.Equipped.Hands = item;
-                    break;
-                case Equipment.EqSlot.Head:
-                    mob.Equipped.Head = item;
-                    break;
-                case Equipment.EqSlot.Held:
-                    mob.Equipped.Held = item;
-                    break;
-                case Equipment.EqSlot.Legs:
-                    mob.Equipped.Legs = item;
-                    break;
-                case Equipment.EqSlot.Light:
-                    mob.Equipped.Light = item;
-                    break;
-                case Equipment.EqSlot.Neck:
-                    mob.Equipped.Neck = item;
-                    break;
-                case Equipment.EqSlot.Shield:
-                    mob.Equipped.Shield = item;
-                    break;
-                case Equipment.EqSlot.Torso:
-                    mob.Equipped.Torso = item;
-                    break;
-                case Equipment.EqSlot.Waist:
-                    mob.Equipped.Waist = item;
-                    break;
-                case Equipment.EqSlot.Wielded:
-                    mob.Equipped.Wielded = item;
+                        case Equipment.EqSlot.Body:
+                            mob.Equipped.AboutBody = item;
+                            break;
+                        case Equipment.EqSlot.Face:
+                            mob.Equipped.Face = item;
+                            break;
+                        case Equipment.EqSlot.Feet:
+                            mob.Equipped.Feet = item;
+                            break;
+                        case Equipment.EqSlot.Finger:
+                            mob.Equipped.Finger = item;
+                            break;
+                        case Equipment.EqSlot.Floating:
+                            mob.Equipped.Floating = item;
+                            break;
+                        case Equipment.EqSlot.Hands:
+                            mob.Equipped.Hands = item;
+                            break;
+                        case Equipment.EqSlot.Head:
+                            mob.Equipped.Head = item;
+                            break;
+                        case Equipment.EqSlot.Held:
+                            mob.Equipped.Held = item;
+                            break;
+                        case Equipment.EqSlot.Legs:
+                            mob.Equipped.Legs = item;
+                            break;
+                        case Equipment.EqSlot.Light:
+                            mob.Equipped.Light = item;
+                            break;
+                        case Equipment.EqSlot.Neck:
+                            mob.Equipped.Neck = item;
+                            break;
+                        case Equipment.EqSlot.Shield:
+                            mob.Equipped.Shield = item;
+                            break;
+                        case Equipment.EqSlot.Torso:
+                            mob.Equipped.Torso = item;
+                            break;
+                        case Equipment.EqSlot.Waist:
+                            mob.Equipped.Waist = item;
+                            break;
+                        case Equipment.EqSlot.Wielded:
+                            mob.Equipped.Wielded = item;
 
-                    break;
-                case Equipment.EqSlot.Wrist:
-                    mob.Equipped.Wrist = item;
-                    break;
-                case Equipment.EqSlot.Secondary:
-                    mob.Equipped.Secondary = item;
-                    break;
+                            break;
+                        case Equipment.EqSlot.Wrist:
+                            mob.Equipped.Wrist = item;
+                            break;
+                        case Equipment.EqSlot.Secondary:
+                            mob.Equipped.Secondary = item;
+                            break;
                     }
                 }
             }
@@ -168,11 +168,14 @@ namespace ArchaicQuestII.Controllers
                 {
                     foreach (var roomMob in room.Mobs.ToList())
                     {
-                       if(roomMob.Id.Equals(newMob.Id)) {
-                           room.Mobs[room.Mobs.FindIndex(x => x.Id.Equals(newMob.Id))] = newMob;
-                       }
+                        if (roomMob.Id.Equals(newMob.Id))
+                        {
+                            newMob.UniqueId = roomMob.UniqueId;
+                            room.Mobs.Remove(roomMob);
+                            room.Mobs.Add(newMob);
+                        }
                     }
-                   
+
                     _db.Save(room, DataBase.Collections.Room);
                 }
             }
@@ -212,7 +215,7 @@ namespace ArchaicQuestII.Controllers
         public List<Player> Get([FromQuery] string query)
         {
 
-            var mobs =  _db.GetCollection<Player>(DataBase.Collections.Mobs).FindAll().Where(x => x.Name != null && x.Deleted == false);
+            var mobs = _db.GetCollection<Player>(DataBase.Collections.Mobs).FindAll().Where(x => x.Name != null && x.Deleted == false);
 
             if (string.IsNullOrEmpty(query))
             {

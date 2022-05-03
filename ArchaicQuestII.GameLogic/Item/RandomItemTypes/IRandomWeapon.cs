@@ -5,8 +5,8 @@ using ArchaicQuestII.GameLogic.Character;
 
 namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
 {
-   public interface IRandomWeapon
-   {
-       public Item CreateRandomWeapon(Player player, bool legendary);
-   }
+    public interface IRandomWeapon
+    {
+        public Item CreateRandomWeapon(Player player, bool legendary);
+    }
 }

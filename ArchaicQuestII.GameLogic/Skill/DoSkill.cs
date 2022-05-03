@@ -19,7 +19,7 @@ namespace ArchaicQuestII.GameLogic.Skill
     {
         void PerfromSkill(Model.Skill skill, string command, Player origin, string targetName, Room room = null);
     }
-    public class DoSkill: ISKill
+    public class DoSkill : ISKill
     {
         private readonly IWriteToClient _writer;
         private readonly ISpellTargetCharacter _spellTargetCharacter;
@@ -144,8 +144,8 @@ namespace ArchaicQuestII.GameLogic.Skill
         public bool AffectsSelf(Skill.Model.Skill spell)
         {
 
-            return 
-                   (spell.ValidTargets & ValidTargets.TargetSelfOnly) != 0 || 
+            return
+                   (spell.ValidTargets & ValidTargets.TargetSelfOnly) != 0 ||
                    (spell.ValidTargets & ValidTargets.TargetFightSelf) != 0;
         }
 
@@ -182,14 +182,14 @@ namespace ArchaicQuestII.GameLogic.Skill
 
 
 
-                
+
             if (AffectsCharacter(FoundSkill))
             {
                 // check if affects a target
                 // if target blank
                 // error with to  kick whome?
 
-                if (!AffectsSelf(FoundSkill) && (origin.Status & CharacterStatus.Status.Fighting) == 0 && (!string.IsNullOrEmpty(targetName) &&  targetName == command))
+                if (!AffectsSelf(FoundSkill) && (origin.Status & CharacterStatus.Status.Fighting) == 0 && (!string.IsNullOrEmpty(targetName) && targetName == command))
                 {
 
                     _writer.WriteLine(FoundSkill.Name + " whom?");
@@ -240,7 +240,7 @@ namespace ArchaicQuestII.GameLogic.Skill
                 }
 
 
-            
+
 
 
                 // spell lag
@@ -351,7 +351,7 @@ namespace ArchaicQuestII.GameLogic.Skill
             }
             else
             {
-                if(FoundSkill.Name.Equals("Axe"))
+                if (FoundSkill.Name.Equals("Axe"))
                 {
                     _writer.WriteLine(
                     $"<p>What!? I don't understand.</p>",
@@ -364,6 +364,6 @@ namespace ArchaicQuestII.GameLogic.Skill
             }
 
         }
- 
+
     }
 }

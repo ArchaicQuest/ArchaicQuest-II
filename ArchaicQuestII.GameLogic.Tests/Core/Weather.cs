@@ -16,7 +16,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Core
             _dice = new Mock<IDice>();
             _time = new Mock<ITime>();
         }
-        
+
         /* see Time tests */
 
         // [Fact]

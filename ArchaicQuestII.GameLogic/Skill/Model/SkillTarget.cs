@@ -9,6 +9,6 @@ namespace ArchaicQuestII.GameLogic.Skill.Model
         public Player Origin { get; set; }
         public Player Target { get; set; }
         public Room Room { get; set; }
- 
+
     }
 }

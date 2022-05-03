@@ -2,8 +2,8 @@
 
 namespace ArchaicQuestII.GameLogic.Commands.Score
 {
-    public  interface IScore
-   {
-       void DisplayScore(Player player);
-   }
+    public interface IScore
+    {
+        void DisplayScore(Player player);
+    }
 }

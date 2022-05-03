@@ -19,7 +19,7 @@ namespace ArchaicQuestII.API.Services
         AuthenticateResponse Authenticate(AuthenticateRequest model);
         IEnumerable<AdminUser> GetAll();
         AdminUser GetById(int id);
-       
+
     }
 
     public class UserService : IUserService

@@ -5,8 +5,8 @@ using ArchaicQuestII.GameLogic.Character;
 
 namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
 {
-   public interface IRandomPlateMailArmour
-   {
-       public Item CreateRandomItem(Player player, bool legendary);
-   }
+    public interface IRandomPlateMailArmour
+    {
+        public Item CreateRandomItem(Player player, bool legendary);
+    }
 }

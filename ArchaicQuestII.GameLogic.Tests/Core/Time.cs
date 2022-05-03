@@ -12,11 +12,11 @@ namespace ArchaicQuestII.GameLogic.Tests.Core
     {
         private readonly Mock<IWriteToClient> _writeToClient;
         private readonly Mock<ICache> _cache;
- 
+
         public Time()
         {
-        _writeToClient = new Mock<IWriteToClient>();
-        _cache = new Mock<ICache>();
+            _writeToClient = new Mock<IWriteToClient>();
+            _cache = new Mock<ICache>();
         }
 
         // [Fact]

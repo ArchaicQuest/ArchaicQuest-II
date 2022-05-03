@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ArchaicQuestII.API.Character
 {
-    
+
     public class ClassController : Controller
     {
 
@@ -69,13 +69,13 @@ namespace ArchaicQuestII.API.Character
             user.Contributions += 1;
             _db.Save(user, DataBase.Collections.Users);
 
-             var log = new AdminLog()
-         {
-             Detail = $"({newClass.Id}) {newClass.Name}",
-             Type = DataBase.Collections.Class,
-             UserName = user.Username
-         };
-         _db.Save(log, DataBase.Collections.Log);
+            var log = new AdminLog()
+            {
+                Detail = $"({newClass.Id}) {newClass.Name}",
+                Type = DataBase.Collections.Class,
+                UserName = user.Username
+            };
+            _db.Save(log, DataBase.Collections.Log);
         }
 
         [HttpGet]
@@ -83,7 +83,7 @@ namespace ArchaicQuestII.API.Character
         [Route("api/Character/Class/{id:int}")]
         public Class Get(int id)
         {
-           return _db.GetById<Class>(id, DataBase.Collections.Class);
+            return _db.GetById<Class>(id, DataBase.Collections.Class);
         }
 
         [HttpGet]

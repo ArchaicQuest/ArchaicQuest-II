@@ -14,7 +14,7 @@ using Newtonsoft.Json;
 
 namespace ArchaicQuestII.GameLogic.Core
 {
-   public class UpdateClientUI: IUpdateClientUI
+    public class UpdateClientUI : IUpdateClientUI
     {
         private readonly IHubContext<GameHub> _hubContext;
         private readonly ITime _time;
@@ -35,7 +35,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
             try
             {
-                await _hubContext.Clients.Client(player.ConnectionId).SendAsync("ScoreUpdate", JsonConvert.SerializeObject(new {player = player}));
+                await _hubContext.Clients.Client(player.ConnectionId).SendAsync("ScoreUpdate", JsonConvert.SerializeObject(new { player = player }));
             }
             catch (Exception ex)
             {
@@ -70,7 +70,7 @@ namespace ArchaicQuestII.GameLogic.Core
             try
             {
                 await _hubContext.Clients.Client(player.ConnectionId).SendAsync("UpdatePlayerHP", player.Attributes.Attribute[EffectLocation.Hitpoints], player.MaxAttributes.Attribute[EffectLocation.Hitpoints]);
-            //   UpdateScore(player);
+                //   UpdateScore(player);
             }
             catch (Exception ex)
             {
@@ -88,7 +88,7 @@ namespace ArchaicQuestII.GameLogic.Core
             try
             {
                 await _hubContext.Clients.Client(player.ConnectionId).SendAsync("UpdatePlayerMana", player.Attributes.Attribute[EffectLocation.Mana], player.MaxAttributes.Attribute[EffectLocation.Mana]);
-              // UpdateScore(player);
+                // UpdateScore(player);
             }
             catch (Exception ex)
             {
@@ -123,7 +123,7 @@ namespace ArchaicQuestII.GameLogic.Core
             try
             {
                 await _hubContext.Clients.Client(player.ConnectionId).SendAsync("UpdatePlayerExp", player.ExperienceToNextLevel, player.ExperienceToNextLevel);
-               // UpdateScore(player);
+                // UpdateScore(player);
             }
             catch (Exception ex)
             {
@@ -141,7 +141,7 @@ namespace ArchaicQuestII.GameLogic.Core
             try
             {
                 await _hubContext.Clients.Client(player.ConnectionId).SendAsync("UpdatePlayerAffects", player.Affects);
-                
+
             }
             catch (Exception ex)
             {
@@ -188,7 +188,7 @@ namespace ArchaicQuestII.GameLogic.Core
                     .Append("<tr><td  class=\"cell-title\" title='Floating Nearby'>").Append(" &lt;Floating nearby&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Floating?.Name ?? "(nothing)").Append("</td></tr>").Append("</table");
 
                 await _hubContext.Clients.Client(player.ConnectionId).SendAsync("EquipmentUpdate", displayEquipment.ToString());
-               // UpdateScore(player);
+                // UpdateScore(player);
             }
             catch (Exception ex)
             {
@@ -201,7 +201,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
             try
             {
-     
+
                 await _hubContext.Clients.Client(player.ConnectionId).SendAsync("MapUpdate", map, player.RoomId);
             }
             catch (Exception ex)
@@ -264,7 +264,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
 
                 await _hubContext.Clients.Client(player.ConnectionId).SendAsync("InventoryUpdate", inventory.ToString());
-           //     UpdateScore(player);
+                //     UpdateScore(player);
             }
             catch (Exception ex)
             {
@@ -298,7 +298,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
             try
             {
-          
+
                 await _hubContext.Clients.Client(player.ConnectionId).SendAsync("UpdateContentPopUp", bookContent);
             }
             catch (Exception ex)

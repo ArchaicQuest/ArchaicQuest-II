@@ -8,8 +8,8 @@ using ArchaicQuestII.GameLogic.Item;
 
 namespace ArchaicQuestII.GameLogic.Commands.Inventory
 {
-    
-    public class Inventory: IInventory
+
+    public class Inventory : IInventory
     {
         private readonly IWriteToClient _writer;
         public Inventory(IWriteToClient writer)
@@ -41,7 +41,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Inventory
                     {
                         inventory.Append($"<li>{item.Name}</li>");
                     }
-                   
+
                 }
 
                 inventory.Append("</ul>");

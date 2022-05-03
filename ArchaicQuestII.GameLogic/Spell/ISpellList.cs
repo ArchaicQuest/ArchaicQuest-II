@@ -8,6 +8,6 @@ namespace ArchaicQuestII.GameLogic.Spell
 {
     public interface ISpellList
     {
-       void CastSpell(string key, string obj, Player target, string fullCommand, Player player, Room room, bool wearOff);
+        void CastSpell(string key, string obj, Player target, string fullCommand, Player player, Room room, bool wearOff);
     }
 }

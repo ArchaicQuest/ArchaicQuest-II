@@ -14,7 +14,7 @@ using Xunit;
 
 namespace ArchaicQuestII.GameLogic.Tests.Crafting
 {
-   
+
     public class CookingTest
     {
         private readonly Mock<IWriteToClient> _writer;
@@ -106,13 +106,13 @@ namespace ArchaicQuestII.GameLogic.Tests.Crafting
             };
 
 
-            var food =   new GameLogic.Crafting.Cooking(_writer.Object,  _dice.Object, _updateClientUi.Object, _skills.Object).GenerateCookedItem(player, room, ingredients);
+            var food = new GameLogic.Crafting.Cooking(_writer.Object, _dice.Object, _updateClientUi.Object, _skills.Object).GenerateCookedItem(player, room, ingredients);
 
-          Assert.NotNull(food);
+            Assert.NotNull(food);
         }
 
-       
-    
+
+
 
     }
 }

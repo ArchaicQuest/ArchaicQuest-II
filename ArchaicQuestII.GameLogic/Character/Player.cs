@@ -5,7 +5,7 @@ using ArchaicQuestII.GameLogic.Character.Model;
 
 namespace ArchaicQuestII.GameLogic.Character
 {
-    public class Player: Character
+    public class Player : Character
     {
         public DateTime JoinedDate { get; set; }
         public DateTime LastLoginTime { get; set; }
@@ -24,9 +24,9 @@ namespace ArchaicQuestII.GameLogic.Character
         public List<Player> Followers { get; set; } = new List<Player>();
         public string Following { get; set; }
         public bool grouped { get; set; }
-        public Money Money { get; set; } = new Money() {Gold = 0};
-        public Money Bank { get; set; } = new Money() { Gold = 0};
-        public PlayerConfig Config { get; set; } = new PlayerConfig();
+        public new Money Money { get; set; } = new Money() { Gold = 0 };
+        public Money Bank { get; set; } = new Money() { Gold = 0 };
+        public new PlayerConfig Config { get; set; } = new PlayerConfig();
         public int Trains { get; set; } = 5;
         public int Practices { get; set; } = 5;
         public int MobKills { get; set; } = 0;

@@ -8,7 +8,7 @@ using System.Text;
 
 namespace ArchaicQuestII.GameLogic.Commands.Debug
 {
-   public class Debug : IDebug
+    public class Debug : IDebug
     {
         private readonly IWriteToClient _writeToClient;
 

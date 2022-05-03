@@ -10,7 +10,7 @@ namespace ArchaicQuestII.GameLogic.Core
     {
         private readonly IHubContext<GameHub> _hubContext;
         private readonly TelnetHub _telnetHub;
-      
+
 
         public WriteToClient(IHubContext<GameHub> hubContext, TelnetHub telnetHub)
         {
@@ -18,11 +18,11 @@ namespace ArchaicQuestII.GameLogic.Core
             _telnetHub = telnetHub;
         }
 
-    
+
 
         public async void WriteLine(string message, string id)
         {
-          
+
             try
             {
                 if (id.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
@@ -30,7 +30,7 @@ namespace ArchaicQuestII.GameLogic.Core
                     return;
 
                 }
- 
+
                 await _hubContext.Clients.Client(id).SendAsync("SendMessage", message, "");
             }
             catch (Exception ex)
@@ -64,8 +64,8 @@ namespace ArchaicQuestII.GameLogic.Core
 
             try
             {
-               await Task.Delay(delay);
-                await  _hubContext.Clients.Client(id).SendAsync("SendMessage", message, "");
+                await Task.Delay(delay);
+                await _hubContext.Clients.Client(id).SendAsync("SendMessage", message, "");
             }
             catch (Exception ex)
             {
@@ -94,5 +94,4 @@ namespace ArchaicQuestII.GameLogic.Core
         }
     }
 }
-    
- 
+

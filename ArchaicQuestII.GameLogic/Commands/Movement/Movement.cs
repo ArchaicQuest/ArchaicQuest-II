@@ -15,7 +15,7 @@ using MoonSharp.Interpreter;
 
 namespace ArchaicQuestII.GameLogic.Commands.Movement
 {
- 
+
     public class Movement : IMovement
     {
         private readonly IWriteToClient _writeToClient;
@@ -43,7 +43,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
 
         public void Move(Room room, Player character, string direction, bool silence = false)
         {
-             
+
             switch (character.Status)
             {
                 case CharacterStatus.Status.Fighting:
@@ -70,7 +70,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
                 return;
             }
 
-          
+
             var getExitToNextRoom = FindExit(room, direction);
 
             if (getExitToNextRoom == null)
@@ -79,7 +79,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
                 return;
             }
 
-            
+
             var nextRoomKey =
                 $"{getExitToNextRoom.AreaId}{getExitToNextRoom.Coords.X}{getExitToNextRoom.Coords.Y}{getExitToNextRoom.Coords.Z}";
             var getNextRoom = _cache.GetRoom(nextRoomKey);
@@ -216,17 +216,17 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
             {
                 if (character.Name != player.Name)
                 {
-                    _writeToClient.WriteLine(MovementAdjective(character,true, Helpers.ReturnOpositeExitName(direction)), player.ConnectionId);
+                    _writeToClient.WriteLine(MovementAdjective(character, true, Helpers.ReturnOpositeExitName(direction)), player.ConnectionId);
                 }
             }
 
-          
+
         }
 
         public string MovementAdjective(Player player, bool onEnter, string direction)
         {
-      
-         
+
+
             var showDirection = string.IsNullOrEmpty(direction) ? "" : $" {direction.ToLower()}";
             var enterMessage = player.EnterEmote;
             var leaveMessage = player.LeaveEmote;
@@ -244,20 +244,20 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
             var moveType = $"<span class='{(isPlayer ? "player" : "mob")}'>{enter}{showDirection}.</span>";
 
 
-     
+
 
             if (!string.IsNullOrEmpty(player.Mounted.Name))
             {
                 enter = onEnter ? "enters from the" : "leaves";
                 moveType = $"{player.Name} {enter}{showDirection} riding upon {player.Mounted.Name}.";
             }
-        
+
 
             // A magic broom sweeping the floor [hovers in from the] [west]. 
 
             return moveType;
         }
-        
+
         public void OnPlayerLeaveEvent(Room room, Player character)
         {
             foreach (var mob in room.Mobs)
@@ -316,7 +316,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
 
                         DynValue res = script.DoString(mob.Events.Enter);
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
 
                     }
@@ -336,7 +336,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
                 oldRoom.Players.Remove(character);
 
                 //add player to room
-                character.RoomId = $"{exit.AreaId}{exit.Coords.X}{exit.Coords.Y}{exit.Coords.Z}"; 
+                character.RoomId = $"{exit.AreaId}{exit.Coords.X}{exit.Coords.Y}{exit.Coords.Z}";
                 var room = _cache.GetRoom($"{exit.AreaId}{exit.Coords.X}{exit.Coords.Y}{exit.Coords.Z}");
                 room.Players.Add(character);
             }
@@ -347,7 +347,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
                 oldRoom.Mobs.Remove(character);
 
                 //add mob to room
-                character.RoomId = $"{exit.AreaId}{exit.Coords.X}{exit.Coords.Y}{exit.Coords.Z}"; 
+                character.RoomId = $"{exit.AreaId}{exit.Coords.X}{exit.Coords.Y}{exit.Coords.Z}";
                 var room = _cache.GetRoom($"{exit.AreaId}{exit.Coords.X}{exit.Coords.Y}{exit.Coords.Z}");
                 room.Mobs.Add(character);
             }
@@ -655,7 +655,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
 
         public void Group(Player player, Room room, string target)
         {
-            if((string.IsNullOrEmpty(target) || target.Equals("group", StringComparison.CurrentCultureIgnoreCase)) && !player.grouped)
+            if ((string.IsNullOrEmpty(target) || target.Equals("group", StringComparison.CurrentCultureIgnoreCase)) && !player.grouped)
             {
                 _writeToClient.WriteLine($"<p>But you are not the member of a group!</p>", player.ConnectionId);
                 return;
@@ -692,7 +692,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
             var foundPlayer = player.Followers
             .FirstOrDefault(x => x.Name.StartsWith(target, StringComparison.CurrentCultureIgnoreCase));
 
-            if(foundPlayer == null)
+            if (foundPlayer == null)
             {
                 _writeToClient.WriteLine("<p>They are not following you!</p>", player.ConnectionId);
                 return;
@@ -707,7 +707,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
             if (foundPlayer.grouped)
             {
                 foundPlayer.grouped = false;
- 
+
                 _writeToClient.WriteLine($"<p>{foundPlayer.Name} is no longer a member of your group.</p>", player.ConnectionId);
                 _writeToClient.WriteLine($"<p>You are no longer a member of {player.Name}'s group.</p>", foundPlayer.ConnectionId);
                 return;
@@ -722,14 +722,14 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
 
             foreach (var pc in room.Players)
             {
-                if(pc.Id == player.Id || pc.Id == foundPlayer.Id)
+                if (pc.Id == player.Id || pc.Id == foundPlayer.Id)
                 {
                     continue;
                 }
                 _writeToClient.WriteLine($"<p>{foundPlayer.Name} is now a member of {player.Name}'s group.</p>", pc.ConnectionId);
 
             }
- 
+
         }
 
         public void Enter(Player player, Room room, string target)
@@ -782,13 +782,13 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
 
             var rooms = _cache.GetMap($"{newRoom.AreaId}{newRoom.Coords.Z}");
             _updateUi.GetMap(player, rooms);
-            
+
         }
 
         public void Follow(Player player, Room room, string target)
         {
-            if(target.Equals("self", StringComparison.CurrentCultureIgnoreCase))
-            { 
+            if (target.Equals("self", StringComparison.CurrentCultureIgnoreCase))
+            {
 
                 var leader = _cache.GetPlayerCache()
               .FirstOrDefault(x => x.Value.Name.StartsWith(player.Following ?? player.Name, StringComparison.CurrentCultureIgnoreCase));
@@ -803,7 +803,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
                 player.Following = null;
                 player.grouped = false;
 
-              
+
                 return;
             }
 
@@ -816,7 +816,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
                 return;
             }
 
-            if(foundPlayer.Followers.Contains(player))
+            if (foundPlayer.Followers.Contains(player))
             {
                 _writeToClient.WriteLine($"<p>You are already following {foundPlayer.Name}.</p>", player.ConnectionId);
                 return;
@@ -824,7 +824,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
 
             _writeToClient.WriteLine($"<p>{player.Name} now follows you.</p>", foundPlayer.ConnectionId);
             _writeToClient.WriteLine($"<p>You are now following {foundPlayer.Name}.</p>", player.ConnectionId);
-           
+
             player.Following = foundPlayer.Name;
             foundPlayer.Followers.Add(player);
         }

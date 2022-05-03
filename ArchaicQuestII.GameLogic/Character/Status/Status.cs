@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using ArchaicQuestII.GameLogic.Core;
 
 namespace ArchaicQuestII.GameLogic.Character.Status
-{  
+{
     public class CharacterStatus
     {
 

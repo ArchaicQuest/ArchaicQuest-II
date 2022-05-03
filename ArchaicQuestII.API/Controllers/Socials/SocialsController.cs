@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ArchaicQuestII.API.Controllers.Core
 {
     [Authorize]
-    public class SocialsController: Controller
+    public class SocialsController : Controller
     {
         private IDataBase _db { get; }
         public SocialsController(IDataBase db)
@@ -31,7 +31,7 @@ namespace ArchaicQuestII.API.Controllers.Core
                 throw exception;
             }
 
-            if (social == null) {return HttpStatusCode.BadRequest; }
+            if (social == null) { return HttpStatusCode.BadRequest; }
             _db.Save(social, DataBase.Collections.Socials);
             return HttpStatusCode.OK;
 

@@ -7,7 +7,7 @@ using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Spell
 {
-   public class SpellList: ISpellList
+    public class SpellList : ISpellList
     {
         private readonly IDamageSpells _damageSpells;
         public SpellList(IDamageSpells damageSpells)

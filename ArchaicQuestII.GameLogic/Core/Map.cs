@@ -18,7 +18,7 @@ namespace ArchaicQuestII.GameLogic.Core
         [JsonProperty("x")]
         public int X { get; set; }
         [JsonProperty("z")]
-        public int Z{ get; set; }
+        public int Z { get; set; }
         [JsonProperty("y")]
         public int Y { get; set; }
         [JsonProperty("size")]
@@ -94,7 +94,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
                 };
 
-                
+
                 if (node.Type == Room.RoomType.Water || node.Type == Room.RoomType.River || node.Type == Room.RoomType.Sea)
                 {
                     mapNode.Color = "#22A7F0";
@@ -168,8 +168,8 @@ namespace ArchaicQuestII.GameLogic.Core
 
                     };
 
-                     if (edges.FirstOrDefault(x => x.Source == mapEdge.Source && x.Target == mapEdge.Target) == null && node.AreaId ==
-                         node.Exits.East.AreaId)
+                    if (edges.FirstOrDefault(x => x.Source == mapEdge.Source && x.Target == mapEdge.Target) == null && node.AreaId ==
+                        node.Exits.East.AreaId)
                     {
                         edges.Add(mapEdge);
                     }
@@ -185,8 +185,8 @@ namespace ArchaicQuestII.GameLogic.Core
 
                     };
 
-                     if (edges.FirstOrDefault(x => x.Source == mapEdge.Source && x.Target == mapEdge.Target) == null && node.AreaId ==
-                         node.Exits.South.AreaId)
+                    if (edges.FirstOrDefault(x => x.Source == mapEdge.Source && x.Target == mapEdge.Target) == null && node.AreaId ==
+                        node.Exits.South.AreaId)
                     {
                         edges.Add(mapEdge);
                     }
@@ -235,15 +235,15 @@ namespace ArchaicQuestII.GameLogic.Core
 
                     };
 
-                     if (edges.FirstOrDefault(x => x.Source == mapEdge.Source && x.Target == mapEdge.Target) == null && node.AreaId == 
-                         node.Exits.West.AreaId )
+                    if (edges.FirstOrDefault(x => x.Source == mapEdge.Source && x.Target == mapEdge.Target) == null && node.AreaId ==
+                        node.Exits.West.AreaId)
                     {
                         edges.Add(mapEdge);
                     }
                 }
 
             }
- 
+
 
             var json = new SigmaMapJSON()
             {
@@ -264,9 +264,9 @@ namespace ArchaicQuestII.GameLogic.Core
 
             }
 
-           
-          return  JsonConvert.SerializeObject(json);
-                
+
+            return JsonConvert.SerializeObject(json);
+
         }
 
 

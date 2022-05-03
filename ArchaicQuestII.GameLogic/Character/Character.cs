@@ -70,20 +70,20 @@ namespace ArchaicQuestII.GameLogic.Character
     }
 
     public class Character
-  {
-      /// <summary>
-      /// Assigned when player logs in.
-      /// used to find player in cached dictionary and to send data directly to player
-      /// </summary>
-      [BsonIgnore]
-      [JsonProperty("connectionId")]
-      public string ConnectionId { get; set; } = "mob";
+    {
+        /// <summary>
+        /// Assigned when player logs in.
+        /// used to find player in cached dictionary and to send data directly to player
+        /// </summary>
+        [BsonIgnore]
+        [JsonProperty("connectionId")]
+        public string ConnectionId { get; set; } = "mob";
 
-      /// <summary>
-      /// To be assigned to mobs on start up,
-      /// used to repop correct mobs
-      /// </summary>
-      [BsonIgnore]
+        /// <summary>
+        /// To be assigned to mobs on start up,
+        /// used to repop correct mobs
+        /// </summary>
+        [BsonIgnore]
         public Guid UniqueId { get; set; } = Guid.Empty;
         /// <summary>
         /// Associated Account Id
@@ -114,7 +114,7 @@ namespace ArchaicQuestII.GameLogic.Character
         public int AlignmentScore { get; set; } = 0;
         [JsonProperty("totalExperience")]
         public int TotalExperience { get; set; }
-        [JsonProperty("experience")] 
+        [JsonProperty("experience")]
         public int Experience { get; set; }
         [JsonProperty("experienceToNextLevel")]
         public int ExperienceToNextLevel { get; set; } = 1000;
@@ -132,13 +132,13 @@ namespace ArchaicQuestII.GameLogic.Character
         [JsonProperty("attributes")]
         public Attributes Attributes { get; set; }
         [JsonProperty("maxAttributes")]
-        public Attributes MaxAttributes {get; set; }
+        public Attributes MaxAttributes { get; set; }
         [BsonIgnore]
         [JsonProperty("target")]
         public string Target { get; set; }
         [JsonProperty("armorRating")]
         public ArmourRating ArmorRating { get; set; } = new ArmourRating();
-            [JsonProperty("money")]
+        [JsonProperty("money")]
         public Money Money { get; set; }
         [JsonProperty("affects")]
         public Affects Affects { get; set; } = new Affects();
@@ -170,7 +170,7 @@ namespace ArchaicQuestII.GameLogic.Character
         public string Commands { get; set; }
 
         public string EnterEmote { get; set; } = String.Empty;
-        public string LeaveEmote { get; set; }  = String.Empty;
+        public string LeaveEmote { get; set; } = String.Empty;
         /// <summary>
         /// moves around randomly
         /// </summary>

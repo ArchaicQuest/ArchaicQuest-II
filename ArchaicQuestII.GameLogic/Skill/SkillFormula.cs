@@ -6,6 +6,6 @@
         {
             return skill.Damage.Roll(skill.Damage.DiceRoll, skill.Damage.DiceMinSize,
                        skill.Damage.DiceMaxSize) + (level + 1) / 2 + mod;
-        }  
+        }
     }
 }

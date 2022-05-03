@@ -70,7 +70,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
             },
         };
 
-        internal static void Seed(IDataBase db) 
+        internal static void Seed(IDataBase db)
         {
             if (!db.DoesCollectionExist(DataBase.Collections.Alignment))
             {

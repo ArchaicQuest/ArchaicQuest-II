@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ArchaicQuestII.GameLogic.World.Room
 {
-    public class AddRoom: IAddRoom
+    public class AddRoom : IAddRoom
     {
 
         private IDataBase _db { get; }
@@ -39,12 +39,12 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 Terrain = room.Terrain,
                 DateUpdated = DateTime.Now,
                 DateCreated = DateTime.Now,
-                
+
             };
 
             MapRoomId(newRoom);
 
-                if(room.Id != -1)
+            if (room.Id != -1)
             {
                 newRoom.Id = room.Id;
             }

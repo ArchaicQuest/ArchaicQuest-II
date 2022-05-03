@@ -11,7 +11,7 @@ namespace ArchaicQuestII.GameLogic.Item
         public int Id { get; set; }
     }
 
-    public class ItemList: List<Item>, IItemList
+    public class ItemList : List<Item>, IItemList
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -37,19 +37,19 @@ namespace ArchaicQuestII.GameLogic.Item
                 Id = groupedItem.Key.Id,
                 Type = groupedItem.Key.ItemType,
                 Value = groupedItem.Key.Value,
-                Name = (bool)args[0] ? groupedItem.Key.Room.Replace("{name}", groupedItem.Key.Name) 
+                Name = (bool)args[0] ? groupedItem.Key.Room.Replace("{name}", groupedItem.Key.Name)
                 : groupedItem.Key.Name,
                 CountOfItems = groupedItem.Count()
             }).Select(x =>
             {
                 if (x.Type == Item.ItemTypes.Money)
                 {
-                    return new ItemObj() {Name = DisplayMoneyAmount(x.Value), Id = x.Id};
+                    return new ItemObj() { Name = DisplayMoneyAmount(x.Value), Id = x.Id };
                 }
 
                 var itemString = x.CountOfItems > 1 ? $"({x.CountOfItems}) {x.Name}" : x.Name;
 
-                return new ItemObj(){ Name = itemString, Id = x.Id};
+                return new ItemObj() { Name = itemString, Id = x.Id };
             });
         }
 

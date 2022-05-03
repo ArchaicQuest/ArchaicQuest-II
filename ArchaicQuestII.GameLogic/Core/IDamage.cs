@@ -12,4 +12,3 @@ namespace ArchaicQuestII.GameLogic.Core
         public KeyValuePair<string, string> DamageText(int damage);
     }
 }
- 

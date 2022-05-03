@@ -89,8 +89,8 @@ namespace ArchaicQuestII.GameLogic.World.Room
         public DateTime DateUpdated { get; set; }
 
 
- 
+
     }
 
-    
+
 }

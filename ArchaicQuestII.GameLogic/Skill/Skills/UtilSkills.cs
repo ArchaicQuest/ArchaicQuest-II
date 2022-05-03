@@ -81,7 +81,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             var targetWeaponSkill = Helpers.GetWeaponSkill(target.Equipped.Wielded, target);
 
             var playerSkillOfTargetsWeapon = Helpers.GetWeaponSkill(target.Equipped.Wielded, player);
- 
+
             var chance = playerWeaponSkill;
 
             chance += (playerSkillOfTargetsWeapon - targetWeaponSkill) / 2;
@@ -187,7 +187,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                 return 0;
             }
 
-           
+
             if ((target.Status & CharacterStatus.Status.Fighting) == 0)
             {
                 _writer.WriteLine($"{target.Name} is not fighting right now.", player.ConnectionId);
@@ -214,21 +214,21 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                 target.Target = string.Empty;
                 target.Status = CharacterStatus.Status.Standing;
 
-               var findTarget = Helpers.FindMob(Helpers.findNth($"{player.Target}"), room) ?? Helpers.FindPlayer(Helpers.findNth($"{player.Target}"), room);
+                var findTarget = Helpers.FindMob(Helpers.findNth($"{player.Target}"), room) ?? Helpers.FindPlayer(Helpers.findNth($"{player.Target}"), room);
 
-               findTarget.Target = player.Name;
+                findTarget.Target = player.Name;
 
-               var skillMessage = new SkillMessage()
-               {
-                   Hit =
+                var skillMessage = new SkillMessage()
+                {
+                    Hit =
                    {
                        ToPlayer = $"You rescue {target.Name}!",
                        ToRoom = $"{player.Name} rescues {target.Name}!",
                        ToTarget = $"{player.Name} rescues you!"
                    }
-               };
+                };
 
-               _skillManager.EmoteAction(player, target, room, skillMessage);
+                _skillManager.EmoteAction(player, target, room, skillMessage);
 
                 _skillManager.updateCombat(player, findTarget, room);
                 return 0;
@@ -270,12 +270,12 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             {
                 var chance = foundSkill
                     .Proficiency;
-                
+
                 chance += (player.Status & CharacterStatus.Status.Fighting) != 0 ? 10 : 1;
                 var hpPercent = 100 * player.Attributes.Attribute[EffectLocation.Hitpoints] /
                                 player.MaxAttributes.Attribute[EffectLocation.Hitpoints];
                 chance += 25 - hpPercent / 2;
-           
+
 
                 if (_dice.Roll(1, 1, 100) < chance)
                 {
@@ -288,7 +288,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                         {
                             DamRoll = 4 + player.Level / 5,
                             HitRoll = 4 + player.Level / 8,
-                            Armour = 4 +player.Level / 5
+                            Armour = 4 + player.Level / 5
 
                         },
                         Affects = DefineSpell.SpellAffect.Berserk,
@@ -334,7 +334,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                         $"<p class='improve'>Your knowledge of {foundSkill.SkillName} increases by {increase}%.</p>",
                         player.ConnectionId, 0);
 
-                 
+
                 }
             }
 
@@ -344,7 +344,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             _updateClientUi.UpdateHP(player);
             _updateClientUi.UpdateAffects(player);
             _updateClientUi.UpdateExp(player);
-            
+
             return 0;
         }
 
@@ -386,31 +386,31 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                 }
             };
 
-           
+
             target.Mounted.MountedBy = player.Name;
             player.Mounted.Name = target.Name;
             player.Pets.Add(target);
 
             _skillManager.EmoteAction(player, target, room, skillMessage);
 
-           
+
             _updateClientUi.UpdateScore(player);
 
 
-          
+
             return 0;
         }
 
         public int WarCry(Player player, Player target, Room room)
         {
 
-          if(player.Affects.Custom.FirstOrDefault(x => x.Name.Equals("War Cry")) != null)
+            if (player.Affects.Custom.FirstOrDefault(x => x.Name.Equals("War Cry")) != null)
             {
                 _writer.WriteLine("You are already affected by War Cry.", player.ConnectionId);
                 return 0;
             }
-            
-   
+
+
             var skillMessage = new SkillMessage()
             {
                 Hit =
@@ -446,7 +446,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             _updateClientUi.UpdateAffects(player);
             _updateClientUi.UpdateExp(player);
 
-           
+
             return 0;
         }
     }

@@ -11,9 +11,9 @@ using MoonSharp.Interpreter;
 
 namespace ArchaicQuestII.GameLogic.Socials
 {
-    public class Social: ISocials
+    public class Social : ISocials
     {
- 
+
         private readonly IWriteToClient _writeToClient;
         private readonly ICache _cache;
         private readonly IMobScripts _mobScripts;
@@ -30,20 +30,20 @@ namespace ArchaicQuestII.GameLogic.Socials
             {
                 return "You can't do that.";
             }
-           var newText =  text.Replace("#player#", player.Name).Replace("#pgender#", Helpers.GetPronoun(player.Gender))
-                .Replace("#pgender2#", Helpers.GetSubjectPronoun(player.Gender))
-                .Replace("#pgender3#", Helpers.GetObjectPronoun(player.Gender))
-                .Replace("#pgender#", Helpers.GetPronoun(player.Gender));
+            var newText = text.Replace("#player#", player.Name).Replace("#pgender#", Helpers.GetPronoun(player.Gender))
+                 .Replace("#pgender2#", Helpers.GetSubjectPronoun(player.Gender))
+                 .Replace("#pgender3#", Helpers.GetObjectPronoun(player.Gender))
+                 .Replace("#pgender#", Helpers.GetPronoun(player.Gender));
 
-             if (target != null)
-             {
-                 newText = newText.Replace("#target#", target.Name)
-                     .Replace("#tgender#", Helpers.GetPronoun(target.Gender))
-                     .Replace("#tgender2#", Helpers.GetSubjectPronoun(target.Gender))
-                     .Replace("#tgender3#", Helpers.GetObjectPronoun(target.Gender));
-             }
+            if (target != null)
+            {
+                newText = newText.Replace("#target#", target.Name)
+                    .Replace("#tgender#", Helpers.GetPronoun(target.Gender))
+                    .Replace("#tgender2#", Helpers.GetSubjectPronoun(target.Gender))
+                    .Replace("#tgender3#", Helpers.GetObjectPronoun(target.Gender));
+            }
 
-             return newText;
+            return newText;
         }
         public void EmoteSocial(Player player, Room room, Emote social, string target)
         {
@@ -57,7 +57,7 @@ namespace ArchaicQuestII.GameLogic.Socials
             if (string.IsNullOrEmpty(target))
             {
                 _writeToClient.WriteLine($"<p>{social.CharNoTarget}</p>", player.ConnectionId);
-              
+
                 foreach (var pc in room.Players)
                 {
                     if (pc.Id == player.Id)
@@ -90,7 +90,7 @@ namespace ArchaicQuestII.GameLogic.Socials
                     }
                     return;
                 }
-                _writeToClient.WriteLine($"<p>{ReplaceSocialTags(social.TargetFound, player,getTarget)}<p>", player.ConnectionId);
+                _writeToClient.WriteLine($"<p>{ReplaceSocialTags(social.TargetFound, player, getTarget)}<p>", player.ConnectionId);
                 _writeToClient.WriteLine($"<p>{ReplaceSocialTags(social.ToTarget, player, getTarget)}</p>", getTarget.ConnectionId);
                 foreach (var pc in room.Players)
                 {
@@ -98,7 +98,7 @@ namespace ArchaicQuestII.GameLogic.Socials
                     {
                         continue;
                     }
-                    _writeToClient.WriteLine($"<p>{ReplaceSocialTags(social.RoomTarget, player,getTarget)}</p>", pc.ConnectionId);
+                    _writeToClient.WriteLine($"<p>{ReplaceSocialTags(social.RoomTarget, player, getTarget)}</p>", pc.ConnectionId);
                 }
 
                 if (!string.IsNullOrEmpty(getTarget.Events.Act))
@@ -121,8 +121,8 @@ namespace ArchaicQuestII.GameLogic.Socials
 
                     DynValue res = script.DoString(getTarget.Events.Act);
                 }
-   
-  
+
+
             }
             else
             {
@@ -151,7 +151,7 @@ namespace ArchaicQuestII.GameLogic.Socials
                     count = 0;
                 }
 
-               
+
             }
 
             table.Append("</table>");

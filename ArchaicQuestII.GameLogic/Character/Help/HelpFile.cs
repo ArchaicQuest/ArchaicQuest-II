@@ -6,20 +6,20 @@ using ArchaicQuestII.GameLogic.Core;
 
 namespace ArchaicQuestII.GameLogic.Character.Help
 {
-   public class HelpFile: IHelp
+    public class HelpFile : IHelp
     {
         private readonly IWriteToClient _writer;
         private readonly ICache _cache;
         public HelpFile(IWriteToClient writer, ICache cache)
         {
             _writer = writer;
-            _cache = cache; 
+            _cache = cache;
         }
         public List<Help> FindHelpFile(string keyword)
         {
-          var helpFile =  _cache.FindHelp(keyword);
+            var helpFile = _cache.FindHelp(keyword);
 
-          return helpFile;
+            return helpFile;
         }
 
         public string DisplayHelpOptions(List<Help> helpList, string keyword)
@@ -76,10 +76,10 @@ namespace ArchaicQuestII.GameLogic.Character.Help
                         _writer.WriteLine(DisplayHelpOptions(helpFile, keyword), player.ConnectionId);
                         return;
                     }
-                  
-                        SendHelpFileToUser(searchByTitle, player);
-                        return;
-                    
+
+                    SendHelpFileToUser(searchByTitle, player);
+                    return;
+
                 }
 
                 if (helpFile.Count == 1)
@@ -91,8 +91,8 @@ namespace ArchaicQuestII.GameLogic.Character.Help
                     _writer.WriteLine("No help found for that keyword", player.ConnectionId);
                 }
             }
-        
- 
+
+
         }
     }
 }

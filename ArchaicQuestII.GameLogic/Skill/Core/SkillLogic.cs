@@ -9,7 +9,7 @@ using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Skill.Core
 {
-   public class SkillLogic
+    public class SkillLogic
     {
         private readonly IWriteToClient _writer;
         private readonly IUpdateClientUI _updateClientUi;

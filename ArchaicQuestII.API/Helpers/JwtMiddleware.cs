@@ -55,7 +55,7 @@ namespace ArchaicQuestII.API.Helpers
 
                 // attach user to context on successful jwt validation
                 context.Items["User"] = userService.GetById(userId);
-                 
+
             }
             catch
             {

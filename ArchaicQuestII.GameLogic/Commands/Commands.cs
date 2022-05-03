@@ -105,7 +105,7 @@ namespace ArchaicQuestII.GameLogic.Commands
             _passiveSkills = passiveSkills;
             _healer = healer;
         }
- 
+
         public void CommandList(string key, string obj, string target, string fullCommand, Player player, Room room)
         {
             switch (key)
@@ -218,8 +218,8 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "/debug":
                     _debug.DebugRoom(room, player);
                     break;
-                 case "newbie":
-                     _communication.Newbie(obj, room, player);
+                case "newbie":
+                    _communication.Newbie(obj, room, player);
                     break;
                 case "ooc":
                     _communication.OOC(obj, room, player);
@@ -303,7 +303,7 @@ namespace ArchaicQuestII.GameLogic.Commands
                     break;
                 case "con":
                 case "consider":
-                    _combat.Consider(player,obj, room);
+                    _combat.Consider(player, obj, room);
                     break;
                 case "ql":
                 case "questlog":
@@ -326,7 +326,7 @@ namespace ArchaicQuestII.GameLogic.Commands
                     break;
                 case "sell":
                     _mobFunctions.SellItem(obj, room, player);
-                    break; 
+                    break;
                 case "inspect":
                 case "ins":
                     _mobFunctions.InspectItem(obj, room, player);
@@ -410,13 +410,13 @@ namespace ArchaicQuestII.GameLogic.Commands
                     _core.SetEvent(player, obj, target);
                     break;
                 default:
-                        _commandHandler.HandleCommand(key,obj,target, player, room);
+                    _commandHandler.HandleCommand(key, obj, target, player, room);
                     break;
 
             }
         }
 
- 
+
 
         public void ProcessCommand(string command, Player player, Room room)
         {
@@ -429,8 +429,8 @@ namespace ArchaicQuestII.GameLogic.Commands
             var cleanCommand = command;
             var commandParts = cleanCommand.Split(' ');
             var key = commandParts[0].ToLower();
-            
-            
+
+
             if (commandParts.Length >= 2)
             {
                 if (commandParts[1].ToLower() == "in")
@@ -444,7 +444,7 @@ namespace ArchaicQuestII.GameLogic.Commands
             CommandList(key, parameters.Item1, parameters.Item2, cleanCommand, player, room);
             try
             {
-             
+
                 foreach (var mob in room.Mobs)
                 {
 
@@ -467,20 +467,20 @@ namespace ArchaicQuestII.GameLogic.Commands
                         script.Globals["mob"] = mob;
 
 
-                        DynValue res =   script.DoString(mob.Events.Act);
+                        DynValue res = script.DoString(mob.Events.Act);
                     }
                 }
             }
-             
-            
-            
-            
-            catch(Exception ex)
+
+
+
+
+            catch (Exception ex)
             {
                 Helpers.PostToDiscord($"{player.Name} {ex.Message}", "error", _cache.GetConfig());
             }
 
-           
+
         }
 
         public Tuple<string, string> MakeCommandPartsSafe(string[] commands)
@@ -558,7 +558,7 @@ namespace ArchaicQuestII.GameLogic.Commands
                 var say = string.Join(" ", commands);
 
                 say = say.Remove(0, 5);
-                return new Tuple<string, string>(commands[1], say.Remove(0, commands[1].Length+1));
+                return new Tuple<string, string>(commands[1], say.Remove(0, commands[1].Length + 1));
             }
 
             if (cmdCount == 1)

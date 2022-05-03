@@ -4,7 +4,7 @@ using ArchaicQuestII.GameLogic.Core;
 
 namespace ArchaicQuestII.GameLogic.Character.Alignment
 {
-    public class Alignment: Option
+    public class Alignment : Option
     {
         /// <summary>
         /// Value determines Alignment value

@@ -156,7 +156,11 @@ namespace ArchaicQuestII.GameLogic.Core
             {
                 var room = _cache.GetRoom(pc.RoomId);
 
-               
+                if (room == null)
+                {
+                    return;
+                }
+
                 if (room.Terrain != Room.TerrainType.Inside && room.Terrain != Room.TerrainType.Underground && !string.IsNullOrEmpty(TickMessage))
                 {
                     _writeToClient.WriteLine($"<span class='time-of-day'>{TickMessage}</span>", pc.ConnectionId);
@@ -193,59 +197,59 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public string UpdateTime()
         {
-            var dt = DateTime.Now; 
+            var dt = DateTime.Now;
 
             MudTimePassed(dt, new DateTime(2016, 04, 14));
 
-                switch (Convert.ToInt32(Math.Floor(GameTime.Hours)))
-                {
-                    case 0:
-                         return "The moon is high in the sky.";
-                    case 1:
-                    case 2:
-                    case 3:
-                        return "The moon is slowly moving west across the sky.";
+            switch (Convert.ToInt32(Math.Floor(GameTime.Hours)))
+            {
+                case 0:
+                    return "The moon is high in the sky.";
+                case 1:
+                case 2:
+                case 3:
+                    return "The moon is slowly moving west across the sky.";
 
-                    case 4:
-                        return "The moon slowly sets in the west.";
+                case 4:
+                    return "The moon slowly sets in the west.";
 
-                    case 6:
-                        return "The sun slowly rises from the east.";
+                case 6:
+                    return "The sun slowly rises from the east.";
 
-                    case 8:
-                        return "The sun has risen from the east, the day has begun.";
+                case 8:
+                    return "The sun has risen from the east, the day has begun.";
 
-                    case 9:
-                    case 10:
-                    case 11:
-                        return "The sun is slowly moving west across the sky.";
+                case 9:
+                case 10:
+                case 11:
+                    return "The sun is slowly moving west across the sky.";
 
-                    case 12:
-                        return "The sun is high in the sky.";
+                case 12:
+                    return "The sun is high in the sky.";
 
-                    case 13:
-                    case 14:
-                    case 15:
-                    case 16:
-                    case 17:
-                        return "The sun is slowly moving west across the sky.";
+                case 13:
+                case 14:
+                case 15:
+                case 16:
+                case 17:
+                    return "The sun is slowly moving west across the sky.";
 
-                    case 18:
-                        return "The sun slowly sets in the west.";
+                case 18:
+                    return "The sun slowly sets in the west.";
 
-                    case 19:
-                        return "The moon slowly rises in the east.";
+                case 19:
+                    return "The moon slowly rises in the east.";
 
-                    case 20:
-                        return "The moon has risen from the east, the night has begun.";
+                case 20:
+                    return "The moon has risen from the east, the night has begun.";
 
-                    case 21:
-                    case 22:
-                    case 23:
-                        return "The moon is slowly moving west across the sky.";
+                case 21:
+                case 22:
+                case 23:
+                    return "The moon is slowly moving west across the sky.";
 
 
-                }
+            }
             return String.Empty;
         }
 
@@ -263,7 +267,7 @@ namespace ArchaicQuestII.GameLogic.Core
         {
 
             var hour = Math.Floor(GameTime.Hours) > 12 ? Math.Floor(GameTime.Hours) - 12 : Math.Floor(GameTime.Hours);
-            if(Math.Floor(GameTime.Hours) == 0)
+            if (Math.Floor(GameTime.Hours) == 0)
             {
                 hour = 12;
             }

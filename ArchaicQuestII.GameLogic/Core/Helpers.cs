@@ -22,18 +22,18 @@ namespace ArchaicQuestII.GameLogic.Core
     /// Random functions to go here unless there is
     /// enough related random functions to move out to their own class
     /// </summary>
-   public static class Helpers
+    public static class Helpers
     {
         public static Tuple<int, string> findNth(string command)
         {
             var splitCommand = command.Split('.');
-           var isnumber = int.TryParse(splitCommand[0], out int nth);
+            var isnumber = int.TryParse(splitCommand[0], out int nth);
             if (splitCommand[0].Equals(command) || !isnumber)
             {
                 return new Tuple<int, string>(-1, command);
             }
 
-           
+
             var target = splitCommand[1];
 
             return new Tuple<int, string>(nth, target);
@@ -42,13 +42,13 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public static Item.Item findRoomObject(Tuple<int, string> keyword, Room room)
         {
-           return keyword.Item1 == -1 ? room.Items.FirstOrDefault(x => x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase)) :
-                room.Items.FindAll(x => x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase)).Skip(keyword.Item1 - 1).FirstOrDefault();
+            return keyword.Item1 == -1 ? room.Items.FirstOrDefault(x => x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase)) :
+                 room.Items.FindAll(x => x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase)).Skip(keyword.Item1 - 1).FirstOrDefault();
         }
 
         public static Item.Item findObjectInInventory(Tuple<int, string> keyword, Player player)
         {
-            if(keyword.Item2.Equals("book"))
+            if (keyword.Item2.Equals("book"))
             {
                 return keyword.Item1 == -1 ? player.Inventory.FirstOrDefault(x => x.ItemType == Item.Item.ItemTypes.Book) :
                 player.Inventory.FindAll(x => x.ItemType == Item.Item.ItemTypes.Book).Skip(keyword.Item1 - 1).FirstOrDefault();
@@ -122,7 +122,7 @@ namespace ArchaicQuestII.GameLogic.Core
             var wordWithOutArticle = word;
             var splitWord = word.Split(" ");
 
-            if(splitWord[0].Equals("a", StringComparison.CurrentCultureIgnoreCase) || splitWord[0].Equals("an", StringComparison.CurrentCultureIgnoreCase))
+            if (splitWord[0].Equals("a", StringComparison.CurrentCultureIgnoreCase) || splitWord[0].Equals("an", StringComparison.CurrentCultureIgnoreCase))
             {
                 wordWithOutArticle = word.Substring(word.IndexOf(" ") + 1);
             }
@@ -144,7 +144,7 @@ namespace ArchaicQuestII.GameLogic.Core
             var startsWithVowel = "aeiou".Contains(word[0], StringComparison.CurrentCultureIgnoreCase);
             var newWord = string.Empty;
 
-            if(startsWithVowel)
+            if (startsWithVowel)
             {
                 newWord = "An " + word;
             }
@@ -414,14 +414,14 @@ namespace ArchaicQuestII.GameLogic.Core
             var weaponSkill = player.Skills.FirstOrDefault(x =>
                 x.SkillName.Equals(weaponTypeString, StringComparison.CurrentCultureIgnoreCase));
 
-           return (int)(weaponSkill == null ? 0 : weaponSkill.Proficiency);
+            return (int)(weaponSkill == null ? 0 : weaponSkill.Proficiency);
         }
 
         public static string ReturnOpositeExitName(string direction)
         {
             switch (direction)
             {
-                
+
                 case "North":
                     return "South";
                 case "North East":
@@ -445,94 +445,94 @@ namespace ArchaicQuestII.GameLogic.Core
                 default: { return direction; }
             }
         }
-     
+
         /// <summary>
         /// Applies bonus affects to player
         /// </summary>
         /// <param name="direction"></param>
         public static void ApplyAffects(Affect affect, Player player)
         {
-            
+
+            {
+                if (affect.Modifier.Strength != 0)
                 {
-                    if (affect.Modifier.Strength != 0)
-                    {
-                        player.Attributes.Attribute[EffectLocation.Strength] += affect.Modifier.Strength;
-                    }
+                    player.Attributes.Attribute[EffectLocation.Strength] += affect.Modifier.Strength;
+                }
 
-                    if (affect.Modifier.Dexterity != 0)
-                    {
-                        player.Attributes.Attribute[EffectLocation.Dexterity] += affect.Modifier.Dexterity;
-                    }
+                if (affect.Modifier.Dexterity != 0)
+                {
+                    player.Attributes.Attribute[EffectLocation.Dexterity] += affect.Modifier.Dexterity;
+                }
 
-                    if (affect.Modifier.Constitution != 0)
-                    {
-                        player.Attributes.Attribute[EffectLocation.Constitution] += affect.Modifier.Constitution;
-                    }
+                if (affect.Modifier.Constitution != 0)
+                {
+                    player.Attributes.Attribute[EffectLocation.Constitution] += affect.Modifier.Constitution;
+                }
 
-                    if (affect.Modifier.Intelligence != 0)
-                    {
-                        player.Attributes.Attribute[EffectLocation.Intelligence] += affect.Modifier.Intelligence;
-                    }
+                if (affect.Modifier.Intelligence != 0)
+                {
+                    player.Attributes.Attribute[EffectLocation.Intelligence] += affect.Modifier.Intelligence;
+                }
 
-                    if (affect.Modifier.Wisdom != 0)
-                    {
-                        player.Attributes.Attribute[EffectLocation.Wisdom] += affect.Modifier.Wisdom;
-                    }
+                if (affect.Modifier.Wisdom != 0)
+                {
+                    player.Attributes.Attribute[EffectLocation.Wisdom] += affect.Modifier.Wisdom;
+                }
 
-                    if (affect.Modifier.Charisma != 0)
-                    {
-                        player.Attributes.Attribute[EffectLocation.Charisma] += affect.Modifier.Charisma;
-                    }
+                if (affect.Modifier.Charisma != 0)
+                {
+                    player.Attributes.Attribute[EffectLocation.Charisma] += affect.Modifier.Charisma;
+                }
 
-                    if (affect.Modifier.HitRoll != 0)
-                    {
-                        player.Attributes.Attribute[EffectLocation.HitRoll] += affect.Modifier.HitRoll;
-                    }
+                if (affect.Modifier.HitRoll != 0)
+                {
+                    player.Attributes.Attribute[EffectLocation.HitRoll] += affect.Modifier.HitRoll;
+                }
 
-                    if (affect.Modifier.DamRoll != 0)
-                    {
-                        player.Attributes.Attribute[EffectLocation.DamageRoll] += affect.Modifier.DamRoll;
-                    }
+                if (affect.Modifier.DamRoll != 0)
+                {
+                    player.Attributes.Attribute[EffectLocation.DamageRoll] += affect.Modifier.DamRoll;
+                }
 
-                    if (affect.Modifier.Armour != 0)
-                    {
-                        player.ArmorRating.Armour += affect.Modifier.Armour;
-                        player.ArmorRating.Magic += affect.Modifier.Armour;
-                  }
+                if (affect.Modifier.Armour != 0)
+                {
+                    player.ArmorRating.Armour += affect.Modifier.Armour;
+                    player.ArmorRating.Magic += affect.Modifier.Armour;
+                }
 
-                    if (affect.Affects == DefineSpell.SpellAffect.Blind)
-                    {
-                        player.Affects.Blind = true;
-                    }
-                    if (affect.Affects == DefineSpell.SpellAffect.Berserk)
-                    {
-                        player.Affects.Berserk = true;
-                    }
-                    if (affect.Affects == DefineSpell.SpellAffect.NonDetect)
-                    {
-                        player.Affects.NonDectect = true;
-                    }
-                    if (affect.Affects == DefineSpell.SpellAffect.Invis)
-                    {
-                        player.Affects.Invis = true;
-                    }
-                    if (affect.Affects == DefineSpell.SpellAffect.DetectInvis)
-                    {
-                        player.Affects.DetectInvis = true;
-                    }
-                    if (affect.Affects == DefineSpell.SpellAffect.DetectHidden)
-                    {
-                        player.Affects.DetectHidden = true;
-                    }
-                    if (affect.Affects == DefineSpell.SpellAffect.Poison)
-                    {
-                        player.Affects.Poisoned = true;
-                    }
-                    if (affect.Affects == DefineSpell.SpellAffect.Haste
-                    )
-                    {
-                        player.Affects.Haste = true;
-                    }
+                if (affect.Affects == DefineSpell.SpellAffect.Blind)
+                {
+                    player.Affects.Blind = true;
+                }
+                if (affect.Affects == DefineSpell.SpellAffect.Berserk)
+                {
+                    player.Affects.Berserk = true;
+                }
+                if (affect.Affects == DefineSpell.SpellAffect.NonDetect)
+                {
+                    player.Affects.NonDectect = true;
+                }
+                if (affect.Affects == DefineSpell.SpellAffect.Invis)
+                {
+                    player.Affects.Invis = true;
+                }
+                if (affect.Affects == DefineSpell.SpellAffect.DetectInvis)
+                {
+                    player.Affects.DetectInvis = true;
+                }
+                if (affect.Affects == DefineSpell.SpellAffect.DetectHidden)
+                {
+                    player.Affects.DetectHidden = true;
+                }
+                if (affect.Affects == DefineSpell.SpellAffect.Poison)
+                {
+                    player.Affects.Poisoned = true;
+                }
+                if (affect.Affects == DefineSpell.SpellAffect.Haste
+                )
+                {
+                    player.Affects.Haste = true;
+                }
 
             }
         }

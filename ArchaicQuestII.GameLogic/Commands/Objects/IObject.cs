@@ -10,7 +10,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
     /// <summary>
     /// How one can interact with objects
     /// </summary>
-   public interface IObject
+    public interface IObject
     {
         void Get(string target, string container, Room room, Player player, string? fullCommand);
         void Give(string itemName, string targetName, Room room, Player player, string command);
