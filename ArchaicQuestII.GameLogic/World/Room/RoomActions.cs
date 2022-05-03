@@ -305,8 +305,127 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
                 statusText = statusText.ToLower();
             }
+            var displayEquipment = new StringBuilder();
+            displayEquipment.Append("<p>They are using:</p>")
+                 .Append("<table>");
 
-            _writeToClient.WriteLine($"{sb}<p class='{(isDark ? "room-dark" : "")}'>{character.Description} <br/>{character.Name} {_formulas.TargetHealth(player, character)} and is {statusText}", player.ConnectionId);
+            if (player.Equipped.Light != null)
+            {
+                displayEquipment.Append("<tr><td style='width:175px;' class=\"cell-title\" title='Worn as light'>").Append("&lt;used as light&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Light?.Name ?? "(nothing)").Append("</td></tr>");
+            }
+
+            if (player.Equipped.Finger != null)
+            {
+                displayEquipment.Append("<tr><td class=\"cell-title\" title='Worn on finger'>").Append(" &lt;worn on finger&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Finger?.Name ?? "(nothing)").Append("</td></tr>");
+            }
+
+            if (player.Equipped.Finger2 != null)
+            {
+                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn on finger'>").Append(" &lt;worn on finger&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Finger2?.Name ?? "(nothing)").Append("</td></tr>");
+            }
+
+
+            if (player.Equipped.Neck != null)
+            {
+                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn around neck'>").Append(" &lt;worn around neck&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Neck?.Name ?? "(nothing)").Append("</td></tr>");
+            }
+
+
+            if (player.Equipped.Neck2 != null)
+            {
+                displayEquipment.Append("<tr><td class=\"cell-title\" title='Worn around neck'>").Append(" &lt;worn around neck&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Neck2?.Name ?? "(nothing)").Append("</td></tr>");
+            }
+
+            if (player.Equipped.Face != null)
+            {
+                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn on face'>").Append(" &lt;worn on face&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Face?.Name ?? "(nothing)").Append("</td></tr>");
+            }
+
+            if (player.Equipped.Head != null)
+            {
+                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn on head'>").Append(" &lt;worn on head&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Head?.Name ?? "(nothing)").Append("</td></tr>");
+            }
+
+            if (player.Equipped.Head != null)
+            {
+                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn on head'>").Append(" &lt;worn on head&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Head?.Name ?? "(nothing)").Append("</td></tr>");
+            }
+
+            if (player.Equipped.Torso != null)
+            {
+                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn on torso'>").Append(" &lt;worn on torso&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Torso?.Name ?? "(nothing)").Append("</td></tr>");
+            }
+            if (player.Equipped.Legs != null)
+            {
+                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn on legs'>").Append(" &lt;worn on legs&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Legs?.Name ?? "(nothing)").Append("</td></tr>");
+            }
+            if (player.Equipped.Feet != null)
+            {
+                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn on feet'>").Append(" &lt;worn on feet&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Feet?.Name ?? "(nothing)").Append("</td></tr>");
+            }
+
+            if (player.Equipped.Hands != null)
+            {
+                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn on hands'>").Append(" &lt;worn on hands&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Hands?.Name ?? "(nothing)").Append("</td></tr>");
+            }
+
+            if (player.Equipped.Arms != null)
+            {
+                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn on arms'>").Append(" &lt;worn on arms&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Arms?.Name ?? "(nothing)").Append("</td></tr>");
+            }
+
+            if (player.Equipped.AboutBody != null)
+            {
+                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn about body'>").Append(" &lt;worn about body&gt;").Append("</td>").Append("<td>").Append(player.Equipped.AboutBody?.Name ?? "(nothing)").Append("</td></tr>");
+            }
+
+            if (player.Equipped.Waist != null)
+            {
+                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn on waist'>").Append(" &lt;worn about waist&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Waist?.Name ?? "(nothing)").Append("</td></tr>");
+            }
+
+            if (player.Equipped.Wrist != null)
+            {
+                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn on wrist'>").Append(" &lt;worn around wrist&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Wrist?.Name ?? "(nothing)").Append("</td></tr>");
+            }
+
+            if (player.Equipped.Wrist2 != null)
+            {
+                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn on wrist'>").Append(" &lt;worn around wrist&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Wrist2?.Name ?? "(nothing)").Append("</td></tr>");
+            }
+
+
+
+            if (player.Equipped.Wielded != null)
+            {
+                displayEquipment.Append("<tr><td  class=\"cell-title\" title='worn as weapon'>").Append(" &lt;wielded&gt;").Append("</td>").Append("<td>")
+                 .Append(player.Equipped.Wielded?.Name ?? "(nothing)").Append("</td></tr>");
+            }
+
+
+            if (player.Equipped.Secondary != null)
+            {
+                displayEquipment.Append("<tr><td  class=\"cell-title\" title='worn as weapon'>").Append(" &lt;secondary&gt;").Append("</td>").Append("<td>")
+            .Append(player.Equipped.Secondary?.Name ?? "(nothing)").Append("</td></tr>");
+            }
+
+
+            if (player.Equipped.Shield != null)
+            {
+                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn as shield'>").Append(" &lt;worn as shield&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Shield?.Name ?? "(nothing)").Append("</td></tr>");
+            }
+
+            if (player.Equipped.Held != null)
+            {
+                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Held'>").Append(" &lt;Held&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Held?.Name ?? "(nothing)").Append("</td></tr>");
+            }
+
+            if (player.Equipped.Floating != null)
+            {
+                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Floating Nearby'>").Append(" &lt;Floating nearby&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Floating?.Name ?? "(nothing)").Append("</td></tr>").Append("</table");
+            }
+
+            _writeToClient.WriteLine($"{sb}<p class='{(isDark ? "room-dark" : "")}'>{character.Description} <br/>{character.Name} {_formulas.TargetHealth(player, character)} and is {statusText}<br/> {displayEquipment}", player.ConnectionId);
 
 
 
