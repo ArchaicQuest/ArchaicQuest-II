@@ -22,7 +22,7 @@ namespace ArchaicQuestII.GameLogic.Core
         void Pmote(Player player, Room room, string emote);
         void Pose(Player player, string pose);
         void CheckPose(Player player);
-
+        void ImmTeleport(Player player, Room room, string location);
         void Practice(Player player, Room room, string skillName);
 
         void Read(Player player, string book, string pageNum, string fullCommand);

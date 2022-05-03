@@ -55,6 +55,120 @@ namespace ArchaicQuestII.GameLogic.Core
 
 
         }
+        /// <summary>
+        ///  /teleport 1000 (area id,X,Y,Z) || /teleport Malleus
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="room"></param>
+        /// <param name="location"></param>
+        public void ImmTeleport(Player player, Room room, string location)
+        {
+
+            var roomId = 0000;
+            bool locationIsRoomId = int.TryParse(location, out roomId);
+
+            if (locationIsRoomId)
+            {
+
+                var newRoom = _cache.GetRoom(roomId.ToString());
+
+                if (newRoom != null)
+                {
+
+                    room.Players.Remove(player);
+                    player.RoomId = roomId.ToString();
+
+
+                    foreach (var pc in room.Players)
+                    {
+                        if (pc.Id == player.Id)
+                        {
+                            continue;
+                        }
+
+                        _writeToClient.WriteLine($"There's a brilliant white flash and {player.Name} is gone.", pc.ConnectionId);
+                    }
+
+                    foreach (var pc in newRoom.Players)
+                    {
+                        if (pc.Id == player.Id)
+                        {
+                            continue;
+                        }
+
+                        _writeToClient.WriteLine($"There's a brilliant white flash and {player.Name} appears.", pc.ConnectionId);
+                    }
+
+                    newRoom.Players.Add(player);
+
+                    _writeToClient.WriteLine($"You are now in {newRoom.Title}.", player.ConnectionId);
+
+
+                    player.Buffer.Enqueue("look");
+
+                    var rooms = _cache.GetMap($"{newRoom.AreaId}{newRoom.Coords.Z}");
+                    _clientUi.GetMap(player, rooms);
+
+
+                }
+                else
+                {
+                    _writeToClient.WriteLine($"that room does not exist", player.ConnectionId);
+                }
+            }
+            else
+            {
+                Player foundPlayer = null;
+                foreach (var checkRoom in _cache.GetAllRooms())
+                {
+                    if (foundPlayer != null)
+                    {
+                        break;
+                    }
+                    foreach (var checkRoomPlayer in checkRoom.Players)
+                    {
+                        if (foundPlayer != null)
+                        {
+                            break;
+                        }
+                        if (checkRoomPlayer.Name.StartsWith(location, StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            foundPlayer = checkRoomPlayer;
+                        }
+                    }
+                }
+
+                if (foundPlayer == null)
+                {
+                    _writeToClient.WriteLine("They're not here.", player.ConnectionId);
+                    return;
+                }
+                room.Players.Remove(player);
+                player.RoomId = foundPlayer.RoomId;
+                var newRoom = _cache.GetRoom(foundPlayer.RoomId);
+
+                foreach (var pc in newRoom.Players)
+                {
+                    if (pc.Id == player.Id)
+                    {
+                        continue;
+                    }
+
+                    _writeToClient.WriteLine($"There's a brilliant white flash and {player.Name} appears.", pc.ConnectionId);
+                }
+
+                newRoom.Players.Add(player);
+
+                _writeToClient.WriteLine($"You are now in {newRoom.Title}.", player.ConnectionId);
+
+                player.Buffer.Enqueue("look");
+
+                var rooms = _cache.GetMap($"{newRoom.AreaId}{newRoom.Coords.Z}");
+                _clientUi.GetMap(player, rooms);
+
+            }
+
+        }
 
         public void Emote(Player player, Room room, string emote)
         {

@@ -400,7 +400,7 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "checkpose":
                     _core.CheckPose(player);
                     break;
-                case "/train":
+                case "/train": // / denotes admin/imm comands
                     _core.TrainSkill(player);
                     break;
                 case "/restore":
@@ -408,6 +408,9 @@ namespace ArchaicQuestII.GameLogic.Commands
                     break;
                 case "/setevent":
                     _core.SetEvent(player, obj, target);
+                    break;
+                case "/teleport":
+                    _core.ImmTeleport(player, room, obj);
                     break;
                 default:
                     _commandHandler.HandleCommand(key, obj, target, player, room);

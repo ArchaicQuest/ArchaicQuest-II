@@ -427,6 +427,11 @@ namespace ArchaicQuestII.GameLogic.Core
                         _client.UpdateTime(player);
                         var room = _cache.GetRoom(player.RoomId);
 
+                        if (room == null)
+                        {
+                            return;
+                        }
+
                         if (room.Terrain != Room.TerrainType.Inside && room.Terrain != Room.TerrainType.Underground)
                         {
                             _writeToClient.WriteLine(weather, player.ConnectionId);
