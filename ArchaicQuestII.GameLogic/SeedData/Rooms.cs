@@ -97,9 +97,12 @@ namespace ArchaicQuestII.GameLogic.SeedData
                 //set mob armor
                 mob.ArmorRating = new ArmourRating()
                 {
-                    Armour = mob.Level > 5 ? mob.Level * 3 : 1,
+                    Armour = mob.Level > 5 ? mob.Level * 3 : 1, // TODO: AC to also come from worn EQ
                     Magic = mob.Level * 3 / 4,
                 };
+
+
+
 
                 //give mob unique IDs
                 mob.UniqueId = Guid.NewGuid();
