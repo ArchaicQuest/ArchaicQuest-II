@@ -324,12 +324,10 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn on finger'>").Append(" &lt;worn on finger&gt;").Append("</td>").Append("<td>").Append(character.Equipped.Finger2?.Name ?? "(nothing)").Append("</td></tr>");
             }
 
-
             if (character.Equipped.Neck != null)
             {
                 displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn around neck'>").Append(" &lt;worn around neck&gt;").Append("</td>").Append("<td>").Append(character.Equipped.Neck?.Name ?? "(nothing)").Append("</td></tr>");
             }
-
 
             if (character.Equipped.Neck2 != null)
             {
@@ -339,11 +337,6 @@ namespace ArchaicQuestII.GameLogic.World.Room
             if (character.Equipped.Face != null)
             {
                 displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn on face'>").Append(" &lt;worn on face&gt;").Append("</td>").Append("<td>").Append(character.Equipped.Face?.Name ?? "(nothing)").Append("</td></tr>");
-            }
-
-            if (character.Equipped.Head != null)
-            {
-                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn on head'>").Append(" &lt;worn on head&gt;").Append("</td>").Append("<td>").Append(character.Equipped.Head?.Name ?? "(nothing)").Append("</td></tr>");
             }
 
             if (character.Equipped.Head != null)
@@ -395,7 +388,6 @@ namespace ArchaicQuestII.GameLogic.World.Room
             }
 
 
-
             if (character.Equipped.Wielded != null)
             {
                 displayEquipment.Append("<tr><td  class=\"cell-title\" title='worn as weapon'>").Append(" &lt;wielded&gt;").Append("</td>").Append("<td>")
@@ -423,6 +415,16 @@ namespace ArchaicQuestII.GameLogic.World.Room
             if (character.Equipped.Floating != null)
             {
                 displayEquipment.Append("<tr><td  class=\"cell-title\" title='Floating Nearby'>").Append(" &lt;Floating nearby&gt;").Append("</td>").Append("<td>").Append(character.Equipped.Floating?.Name ?? "(nothing)").Append("</td></tr>").Append("</table");
+            }
+
+            if (character.Equipped.Light == null && character.Equipped.Finger == null && character.Equipped.Finger2 == null && character.Equipped.Neck == null && character.Equipped.Neck2 == null &&
+                character.Equipped.Face == null && character.Equipped.Head == null && character.Equipped.Torso == null && character.Equipped.Legs == null && character.Equipped.Feet == null &&
+                character.Equipped.Hands == null && character.Equipped.Arms == null && character.Equipped.AboutBody == null && character.Equipped.Waist == null && character.Equipped.Wrist == null &&
+                character.Equipped.Wrist2 == null && character.Equipped.Wielded == null && character.Equipped.Secondary == null && character.Equipped.Shield == null && character.Equipped.Held == null &&
+                character.Equipped.Held == null && character.Equipped.Floating == null)
+            {
+
+                displayEquipment.Append("</table").Append("<p>Nothing.</p>");
             }
 
 

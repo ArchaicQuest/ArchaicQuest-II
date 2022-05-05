@@ -102,6 +102,134 @@ namespace ArchaicQuestII.GameLogic.SeedData
                 };
 
 
+                if (mob.Equipped.Light != null)
+                {
+                    mob.ArmorRating.Armour += mob.Equipped.Light.ArmourRating.Armour;
+                    mob.ArmorRating.Magic += mob.Equipped.Light.ArmourRating.Magic;
+                }
+
+                if (mob.Equipped.Finger != null)
+                {
+                    mob.ArmorRating.Armour += mob.Equipped.Finger.ArmourRating.Armour;
+                    mob.ArmorRating.Magic += mob.Equipped.Finger.ArmourRating.Magic;
+                }
+
+                if (mob.Equipped.Finger2 != null)
+                {
+                    mob.ArmorRating.Armour += mob.Equipped.Finger2.ArmourRating.Armour;
+                    mob.ArmorRating.Magic += mob.Equipped.Finger2.ArmourRating.Magic;
+                }
+
+                if (mob.Equipped.Neck != null)
+                {
+                    mob.ArmorRating.Armour += mob.Equipped.Neck.ArmourRating.Armour;
+                    mob.ArmorRating.Magic += mob.Equipped.Neck.ArmourRating.Magic;
+                }
+
+                if (mob.Equipped.Neck2 != null)
+                {
+                    mob.ArmorRating.Armour += mob.Equipped.Neck2.ArmourRating.Armour;
+                    mob.ArmorRating.Magic += mob.Equipped.Neck2.ArmourRating.Magic;
+                }
+
+                if (mob.Equipped.Face != null)
+                {
+                    mob.ArmorRating.Armour += mob.Equipped.Face.ArmourRating.Armour;
+                    mob.ArmorRating.Magic += mob.Equipped.Face.ArmourRating.Magic;
+                }
+
+                if (mob.Equipped.Head != null)
+                {
+                    mob.ArmorRating.Armour += mob.Equipped.Head.ArmourRating.Armour;
+                    mob.ArmorRating.Magic += mob.Equipped.Head.ArmourRating.Magic;
+                }
+
+                if (mob.Equipped.Torso != null)
+                {
+                    mob.ArmorRating.Armour += mob.Equipped.Torso.ArmourRating.Armour;
+                    mob.ArmorRating.Magic += mob.Equipped.Torso.ArmourRating.Magic;
+                }
+                if (mob.Equipped.Legs != null)
+                {
+                    mob.ArmorRating.Armour += mob.Equipped.Legs.ArmourRating.Armour;
+                    mob.ArmorRating.Magic += mob.Equipped.Legs.ArmourRating.Magic;
+                }
+                if (mob.Equipped.Feet != null)
+                {
+                    mob.ArmorRating.Armour += mob.Equipped.Feet.ArmourRating.Armour;
+                    mob.ArmorRating.Magic += mob.Equipped.Feet.ArmourRating.Magic;
+                }
+
+                if (mob.Equipped.Hands != null)
+                {
+                    mob.ArmorRating.Armour += mob.Equipped.Hands.ArmourRating.Armour;
+                    mob.ArmorRating.Magic += mob.Equipped.Hands.ArmourRating.Magic;
+                }
+
+                if (mob.Equipped.Arms != null)
+                {
+                    mob.ArmorRating.Armour += mob.Equipped.Arms.ArmourRating.Armour;
+                    mob.ArmorRating.Magic += mob.Equipped.Arms.ArmourRating.Magic;
+                }
+
+                if (mob.Equipped.AboutBody != null)
+                {
+                    mob.ArmorRating.Armour += mob.Equipped.AboutBody.ArmourRating.Armour;
+                    mob.ArmorRating.Magic += mob.Equipped.AboutBody.ArmourRating.Magic;
+                }
+
+                if (mob.Equipped.Waist != null)
+                {
+                    mob.ArmorRating.Armour += mob.Equipped.Waist.ArmourRating.Armour;
+                    mob.ArmorRating.Magic += mob.Equipped.Waist.ArmourRating.Magic;
+                }
+
+                if (mob.Equipped.Wrist != null)
+                {
+                    mob.ArmorRating.Armour += mob.Equipped.Wrist.ArmourRating.Armour;
+                    mob.ArmorRating.Magic += mob.Equipped.Wrist.ArmourRating.Magic;
+                }
+
+                if (mob.Equipped.Wrist2 != null)
+                {
+                    mob.ArmorRating.Armour += mob.Equipped.Wrist2.ArmourRating.Armour;
+                    mob.ArmorRating.Magic += mob.Equipped.Wrist2.ArmourRating.Magic;
+                }
+
+
+                if (mob.Equipped.Wielded != null)
+                {
+                    mob.ArmorRating.Armour += mob.Equipped.Wielded.ArmourRating.Armour;
+                    mob.ArmorRating.Magic += mob.Equipped.Wielded.ArmourRating.Magic;
+                }
+
+
+                if (mob.Equipped.Secondary != null)
+                {
+                    mob.ArmorRating.Armour += mob.Equipped.Secondary.ArmourRating.Armour;
+                    mob.ArmorRating.Magic += mob.Equipped.Secondary.ArmourRating.Magic;
+                }
+
+
+                if (mob.Equipped.Shield != null)
+                {
+                    mob.ArmorRating.Armour += mob.Equipped.Shield.ArmourRating.Armour;
+                    mob.ArmorRating.Magic += mob.Equipped.Shield.ArmourRating.Magic;
+                }
+
+                if (mob.Equipped.Held != null)
+                {
+                    mob.ArmorRating.Armour += mob.Equipped.Light.ArmourRating.Armour;
+                    mob.ArmorRating.Magic += mob.Equipped.Light.ArmourRating.Magic;
+                }
+
+                if (mob.Equipped.Floating != null)
+                {
+                    mob.ArmorRating.Armour += mob.Equipped.Floating.ArmourRating.Armour;
+                    mob.ArmorRating.Magic += mob.Equipped.Floating.ArmourRating.Magic;
+                }
+
+
 
 
                 //give mob unique IDs
