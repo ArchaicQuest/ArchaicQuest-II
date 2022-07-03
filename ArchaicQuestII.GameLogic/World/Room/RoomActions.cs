@@ -69,7 +69,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
             var isDark = RoomIsDark(room, player);
 
             roomDesc
-                .Append($"<p class=\"room-title {(isDark ? "room-dark" : "")}\">{room.Title}<br /></p>")
+                .Append($"<p class=\"room-title {(isDark ? "room-dark" : "")}\">{room.Title} ({room.Coords.X},{room.Coords.Y},{room.Coords.Z})<br /></p>")
                 .Append($"<p class=\"room-description  {(isDark ? "room-dark" : "")}\">{room.Description}</p>");
 
             if (!showVerboseExits)

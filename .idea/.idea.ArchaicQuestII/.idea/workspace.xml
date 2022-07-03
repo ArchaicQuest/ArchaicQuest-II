@@ -10,7 +10,8 @@
     <list default="true" id="9c53e88d-cb5e-4250-a25e-dddc68525ffa" name="Default Changelist" comment="deleted rooms no longer returned">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ArchaicQuestII/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ArchaicQuestII/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/Combat.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/Combat.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Movement/Movement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Movement/Movement.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/Map.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/Map.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/World/Room/RoomActions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/World/Room/RoomActions.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,13 +31,19 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/85446b81968241ebbb5fc771b505999f1cc400/bc/4879a31f/ActionMethodExecutor.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/9ae66f5dd0ba4526971d72f56254c21288c00/4a/c911eea9/Socket.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/bfefd83b0a0148b182aa3027772b16e094de00/43/a9babc75/ExceptionDispatchInfo.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/f2c9ba103bac463e84ba6dd5cdbfa0f06e200/00/f61499bc/Enumerable.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/malleus/Development/Fun/ArchaicQuest-II/ArchaicQuestII.API/Controllers/World/RoomController.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/malleus/Development/Fun/ArchaicQuest-II/ArchaicQuestII.GameLogic/Character/Character.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/ArchaicQuestII.API/Program.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/Combat.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="mock:///home/malleus/Development/Fun/ArchaicQuest-II/ArchaicQuestII.GameLogic/Combat/Combat.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/malleus/Development/Fun/ArchaicQuest-II/ArchaicQuestII.GameLogic/Combat/Combat.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/ICombat.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/CommandHandler.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Commands.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="mock:///home/malleus/Development/Fun/ArchaicQuest-II/ArchaicQuestII.GameLogic/Core/Map.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/malleus/Development/Fun/ArchaicQuest-II/ArchaicQuestII.GameLogic/SeedData/Rooms.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/WriteToClient.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Hubs/Telnet/TelnetHub.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///home/malleus/Development/Fun/ArchaicQuest-II/ArchaicQuestII.GameLogic/World/Room/RoomActions.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -264,7 +271,8 @@
       <workItem from="1652566767128" duration="11393000" />
       <workItem from="1653083537766" duration="11001000" />
       <workItem from="1653259382459" duration="4903000" />
-      <workItem from="1653600010316" duration="10187000" />
+      <workItem from="1653600010316" duration="24350000" />
+      <workItem from="1655541345140" duration="9807000" />
     </task>
     <task id="LOCAL-00001" summary="kick idle players added back, logging for commands added">
       <created>1649547311548</created>
@@ -377,13 +385,13 @@
         </breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/Combat.cs</url>
-          <line>719</line>
+          <line>727</line>
           <properties documentPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/Combat.cs" initialLine="719" containingFunctionPresentation="method 'Fight'">
             <startOffsets>
-              <option value="28195" />
+              <option value="28475" />
             </startOffsets>
             <endOffsets>
-              <option value="28196" />
+              <option value="28476" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="25" />

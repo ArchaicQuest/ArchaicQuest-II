@@ -264,8 +264,16 @@ namespace ArchaicQuestII.GameLogic.Combat
             }
         }
 
+        // TODO refactor FIGHT init
+        // currently can spam kill because of the free init hit
         public void Fight(Player player, string victim, Room room, bool isMurder)
         {
+
+            if (victim == "k" || victim == "kill")
+            {
+                _writer.WriteLine("<p>Kill whom?<p>", player.ConnectionId);
+                return;
+            }
 
             try
             {

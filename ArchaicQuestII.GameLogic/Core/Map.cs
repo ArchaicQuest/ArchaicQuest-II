@@ -100,10 +100,11 @@ namespace ArchaicQuestII.GameLogic.Core
                     mapNode.Color = "#22A7F0";
                 }
 
-                if (node.Type == Room.RoomType.Field)
+                if (node.Type == Room.RoomType.Field || node.Type == Room.RoomType.Forest)
                 {
                     mapNode.Color = "#20bf6b";
                 }
+                
 
                 nodes.Add(mapNode);
 
