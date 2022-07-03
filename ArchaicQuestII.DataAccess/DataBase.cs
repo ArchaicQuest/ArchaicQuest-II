@@ -121,5 +121,30 @@ namespace ArchaicQuestII.DataAccess
             //}
 
         }
+
+        public void ExportDBToJSON()
+        {
+            var dateT = DateTime.Now.ToString("yyyy-dd-M-HH-mm"); ;
+            Directory.CreateDirectory($"backup/{dateT}");
+
+
+            _db.Execute($"select $ into $file('backup/{dateT}/Alignment.json') from Alignment");
+            _db.Execute($"select $ into $file('backup/{dateT}/Area.json') from Area");
+            _db.Execute($"select $ into $file('backup/{dateT}/AttackType.json') from AttackType");
+            _db.Execute($"select $ into $file('backup/{dateT}/Class.json') from Class");
+            _db.Execute($"select $ into $file('backup/{dateT}/Help.json') from Help");
+            _db.Execute($"select $ into $file('backup/{dateT}/Items.json') from Items");
+            _db.Execute($"select $ into $file('backup/{dateT}/Mobs.json') from Mobs");
+            _db.Execute($"select $ into $file('backup/{dateT}/Race.json') from Race");
+            _db.Execute($"select $ into $file('backup/{dateT}/Room.json') from Room");
+            _db.Execute($"select $ into $file('backup/{dateT}/Skill.json') from Skill");
+            _db.Execute($"select $ into $file('backup/{dateT}/Status.json') from Status");
+            _db.Execute($"select $ into $file('backup/{dateT}/Config.json') from Config");
+            _db.Execute($"select $ into $file('backup/{dateT}/Socials.json') from Socials");
+            _db.Execute($"select $ into $file('backup/{dateT}/Quests.json') from Quests");
+            _db.Execute($"select $ into $file('backup/{dateT}/Users.json') from Users");
+            _db.Execute($"select $ into $file('backup/{dateT}/CraftingRecipes.json') from CraftingRecipes");
+
+        }
     }
 }

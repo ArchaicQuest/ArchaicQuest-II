@@ -15,6 +15,7 @@ namespace ArchaicQuestII.GameLogic.Core
         /// </summary>
         /// <param name="player"></param>
         void Who(Player player);
+        void DBDumpToJSON(Player player);
         List<string> Hints();
         void SetTitle(Player player, string title);
         void Scan(Player player, Room room, string direction);

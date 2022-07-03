@@ -415,6 +415,9 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "/teleport":
                     _core.ImmTeleport(player, room, obj);
                     break;
+                    //case "/backup": TODO: this works but need to lock down to admin only
+                    //    _core.DBDumpToJSON(player);
+                    break;
                 default:
                     _commandHandler.HandleCommand(key, obj, target, player, room);
                     break;

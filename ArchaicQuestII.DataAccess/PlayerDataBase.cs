@@ -96,5 +96,10 @@ namespace ArchaicQuestII.DataAccess
             }
 
         }
+
+        public void ExportDBToJSON()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

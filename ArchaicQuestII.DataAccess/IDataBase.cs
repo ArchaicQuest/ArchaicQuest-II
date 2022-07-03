@@ -52,5 +52,7 @@ namespace ArchaicQuestII.DataAccess
 
 
         bool DoesCollectionExist(DataBase.Collections collectionName);
+
+        void ExportDBToJSON();
     }
 }

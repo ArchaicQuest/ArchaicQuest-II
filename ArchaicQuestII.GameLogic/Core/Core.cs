@@ -1500,5 +1500,10 @@ namespace ArchaicQuestII.GameLogic.Core
 
             return hints;
         }
+
+        public void DBDumpToJSON(Player player)
+        {
+            _db.ExportDBToJSON();
+        }
     }
 }
