@@ -166,7 +166,7 @@ namespace ArchaicQuestII.GameLogic.Combat
                     continue;
                 }
 
-                _writer.WriteLine($"<p class='combat'>Your blood freezes as you hear {target.Name}'s death cry.</p>", pc.ConnectionId);
+                _writer.WriteLine($"<p class='combat'>Your blood freezes as you hear {target.Name.ToLower()}'s death cry.</p>", pc.ConnectionId);
             }
 
 

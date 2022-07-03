@@ -131,6 +131,15 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
 
             if (character.ConnectionId == "mob")
             {
+                // do Aggro mob
+                if (!getNextRoom.Players.Any()) return;
+                if (character.Agro && character.Status != CharacterStatus.Status.Fighting)
+                {
+                    //character.Buffer.Clear();
+                    _writeToClient.WriteLine($"{character.Name} attacks you!", getNextRoom.Players.FirstOrDefault()?.ConnectionId);
+                    _mobScripts.AttackPlayer(room, getNextRoom.Players.FirstOrDefault(), character);
+                }
+
                 return;
 
             }
@@ -142,7 +151,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
                 OnPlayerEnterEvent(getNextRoom, character);
             }
 
-
+  
             _updateUi.GetMap(character, _cache.GetMap($"{getExitToNextRoom.AreaId}{getExitToNextRoom.Coords.Z}"));
             _updateUi.UpdateMoves(character);
 
@@ -322,7 +331,11 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
                     }
                 }
 
-
+                if (mob.Agro && mob.Status != CharacterStatus.Status.Fighting && character.ConnectionId != "mob")
+                {
+                    _writeToClient.WriteLine($"{mob.Name} attacks you!", character.ConnectionId);
+                    _mobScripts.AttackPlayer(room, character, mob);
+                }
             }
         }
 

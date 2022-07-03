@@ -19,7 +19,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
             var rooms = db.GetList<Room>(DataBase.Collections.Room);
             var areas = db.GetList<Area>(DataBase.Collections.Area);
 
-            foreach (var room in rooms)
+            foreach (var room in rooms.Where(x => x.Deleted == false))
             {
                 AddSkillsToMobs(db, room);
                 MapMobRoomId(room);
@@ -29,12 +29,12 @@ namespace ArchaicQuestII.GameLogic.SeedData
 
             foreach (var area in areas)
             {
-                var roomList = rooms.FindAll(x => x.AreaId == area.Id);
+                var roomList = rooms.FindAll(x => x.AreaId == area.Id && x.Deleted == false);
                 var areaByZIndex = roomList.FindAll(x => x.Coords.Z != 0).Distinct();
                 foreach (var zarea in areaByZIndex)
                 {
                     var roomsByZ = new List<Room>();
-                    foreach (var room in roomList.FindAll(x => x.Coords.Z == zarea.Coords.Z))
+                    foreach (var room in roomList.FindAll(x => x.Coords.Z == zarea.Coords.Z && x.Deleted == false))
                     {
                         roomsByZ.Add(room);
                     }
@@ -42,7 +42,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
                     cache.AddMap($"{area.Id}{zarea.Coords.Z}", Map.DrawMap(roomsByZ));
                 }
 
-                var rooms0index = roomList.FindAll(x => x.Coords.Z == 0);
+                var rooms0index = roomList.FindAll(x => x.Coords.Z == 0 && x.Deleted == false);
                 cache.AddMap($"{area.Id}0", Map.DrawMap(rooms0index));
             }
         }

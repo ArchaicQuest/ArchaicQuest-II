@@ -191,7 +191,7 @@ namespace ArchaicQuestII.API.World
             {
                 var rooms = _db.GetList<Room>(DataBase.Collections.Room);
 
-                foreach (var room in rooms)
+                foreach (var room in rooms.Where(x => x.Deleted == false))
                 {
                     AddSkillsToMobs(room);
                     MapMobRoomId(room);
@@ -261,15 +261,11 @@ namespace ArchaicQuestII.API.World
         [Route("api/World/Room/delete/{id:int}")]
         public IActionResult Delete(int id)
         {
-            var room = _db.GetCollection<Room>(DataBase.Collections.Room).FindById(id);
-            room.Deleted = true;
-            var saved = _db.Save(room, DataBase.Collections.Room);
-
-            if (saved)
-            {
+           var room = _db.GetCollection<Room>(DataBase.Collections.Room).FindById(id);
+            _db.Delete<Room>(id, DataBase.Collections.Room);
+      
                 return Ok(JsonConvert.SerializeObject(new { toast = $"{room.Title} deleted successfully." }));
-            }
-            return Ok(JsonConvert.SerializeObject(new { toast = $"{room.Title} deletion failed." }));
+         
 
         }
 

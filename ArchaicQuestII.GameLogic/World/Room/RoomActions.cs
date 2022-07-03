@@ -660,7 +660,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
             var mobs = string.Empty;
             var mobName = string.Empty;
             var isDark = RoomIsDark(room, player);
-
+            var isFightingPC = false;
             foreach (var mob in room.Mobs)
             {
 
@@ -675,17 +675,34 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
                 if (!string.IsNullOrEmpty(mob.Mounted.MountedBy))
                 {
-                    mobName += " tosses it's mane and snorts.";
+                    mobName += " tosses it's mane and snorts";
                 }
+                
+                if (player.Target == mob.Name)
+                {
+                    isFightingPC = true; 
+                }
+                
 
                 if (!string.IsNullOrEmpty(mob.LongName))
                 {
-                    mobs += $"<p class='mob {(isDark ? "dark-room" : "")}'>" + mobName + "</p>";
+                    if (mob.Status == CharacterStatus.Status.Fighting)
+                    {
+                        mobs +=
+                            $"<p class='mob {(isDark ? "dark-room" : "")}'>{mob.Name} is here{(isFightingPC ? " fighting YOU!" : "")}</p>";
+                    }
+                    else
+                    {
+                        mobs +=
+                            $"<p class='mob {(isDark ? "dark-room" : "")}'>{mobName}</p>";
+                    }
                 }
                 else
                 {
-                    mobs += $"<p class='mob {(isDark ? "dark-room" : "")}'>" + mobName + " is here.</p>";
+                    mobs += $"<p class='mob {(isDark ? "dark-room" : "")}'>{mobName} is here{(isFightingPC ? " fighting YOU!" : ".")}.</p>";
                 }
+
+              
 
             }
 

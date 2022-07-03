@@ -63,7 +63,7 @@ namespace ArchaicQuestII.GameLogic.Core
             var nodes = new List<SigmaMapNode>();
             var edges = new List<SigmaMapEdge>();
 
-            var list = rooms;
+            var list = rooms.Where(x => x.Deleted == false);
 
             foreach (var node in list)
             {

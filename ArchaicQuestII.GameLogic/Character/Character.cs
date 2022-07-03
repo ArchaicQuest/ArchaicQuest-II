@@ -188,5 +188,6 @@ namespace ArchaicQuestII.GameLogic.Character
         public Mount Mounted { get; set; } = new Mount();
         public List<Player> Pets { get; set; } = new List<Player>(); //maybe just ID will suffice?
         public List<MobSpellList> SpellList { get; set; } = new List<MobSpellList>();
+        public bool Agro { get; set; } = false;
     }
 }

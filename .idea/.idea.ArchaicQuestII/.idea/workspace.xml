@@ -7,13 +7,16 @@
     <projectFile profileName="ArchaicQuestII.API">ArchaicQuestII.API/ArchaicQuestII.API.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9c53e88d-cb5e-4250-a25e-dddc68525ffa" name="Default Changelist" comment="kick idle players added back, logging for commands added">
+    <list default="true" id="9c53e88d-cb5e-4250-a25e-dddc68525ffa" name="Default Changelist" comment="deleted rooms no longer returned">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ArchaicQuestII/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ArchaicQuestII/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.API/Controllers/Character/PlayerController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.API/Controllers/Character/PlayerController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.API/Controllers/Dashboard/DashboardController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.API/Controllers/Dashboard/DashboardController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.API/Startup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.API/Startup.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Account/Account.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Account/Account.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Hubs/GameHub.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Hubs/GameHub.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.API/AQ.db" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.API/AQ.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.API/Controllers/World/RoomController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.API/Controllers/World/RoomController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Character/Character.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Character/Character.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/Combat.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/Combat.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Movement/Movement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Movement/Movement.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/Map.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/Map.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/SeedData/Rooms.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/SeedData/Rooms.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/World/Room/RoomActions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/World/Room/RoomActions.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,11 +35,12 @@
     </file-type-list>
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/2dd9fd9a4d48ea4997d622131917938ef93a116a3c769d67aef28f373a/First.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/../Website/package-lock.json" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/1bdbf92c6d1a7a909ac3864acbafcdb4a463d149527ff621288f59cf429749/ThrowHelper.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/ArchaicQuestII.API/obj/Debug/netcoreapp31/.NETCoreApp,Version=v3.1.AssemblyAttributes.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/9433ca57f5b54d9a526b9e1a56e36ac1d5e958a636cc20f4318458a844df1e/Guid.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/85446b81968241ebbb5fc771b505999f1cc400/bc/4879a31f/ActionMethodExecutor.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///home/malleus/Development/Fun/ArchaicQuest-II/ArchaicQuestII.API/Controllers/World/RoomController.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///home/malleus/Development/Fun/ArchaicQuest-II/ArchaicQuestII.GameLogic/Character/Character.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///home/malleus/Development/Fun/ArchaicQuest-II/ArchaicQuestII.GameLogic/Combat/Combat.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///home/malleus/Development/Fun/ArchaicQuest-II/ArchaicQuestII.GameLogic/Core/Map.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///home/malleus/Development/Fun/ArchaicQuest-II/ArchaicQuestII.GameLogic/SeedData/Rooms.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -128,16 +132,16 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="Rider.DefaultBreakpoints.AreToggled" value="true" />
-    <property name="Rider.ProjectViewActivator.IsNotFirstRun" value="true" />
-    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="nodejs_package_manager_path" value="npm" />
-    <property name="ts.external.directory.path" value="$PROJECT_DIR$/../ArchaicQuest-II-Web-Admin/node_modules/typescript/lib" />
-    <property name="vue.rearranger.settings.migration" value="true" />
-  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
   <component name="RunManager" selected=".NET Launch Settings Profile.ArchaicQuestII.API">
     <configuration name="ArchaicQuestII.DataAccess.Tests" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="" />
@@ -260,6 +264,11 @@
       <workItem from="1649336331904" duration="1926000" />
       <workItem from="1649508670825" duration="17016000" />
       <workItem from="1649668810533" duration="5093000" />
+      <workItem from="1652268517169" duration="33000" />
+      <workItem from="1652566767128" duration="11393000" />
+      <workItem from="1653083537766" duration="11001000" />
+      <workItem from="1653259382459" duration="4903000" />
+      <workItem from="1653600010316" duration="7813000" />
     </task>
     <task id="LOCAL-00001" summary="kick idle players added back, logging for commands added">
       <created>1649547311548</created>
@@ -268,7 +277,21 @@
       <option name="project" value="LOCAL" />
       <updated>1649547311548</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Reduce how much hints are displayed, fixed typo">
+      <created>1652653463894</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1652653463895</updated>
+    </task>
+    <task id="LOCAL-00003" summary="deleted rooms no longer returned">
+      <created>1653239187530</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1653239187530</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -345,7 +368,9 @@
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="kick idle players added back, logging for commands added" />
-    <option name="LAST_COMMIT_MESSAGE" value="kick idle players added back, logging for commands added" />
+    <MESSAGE value="Reduce how much hints are displayed, fixed typo" />
+    <MESSAGE value="deleted rooms no longer returned" />
+    <option name="LAST_COMMIT_MESSAGE" value="deleted rooms no longer returned" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -359,23 +384,23 @@
           <line>719</line>
           <properties documentPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/Combat.cs" initialLine="719" containingFunctionPresentation="method 'Fight'">
             <startOffsets>
-              <option value="28187" />
+              <option value="28197" />
             </startOffsets>
             <endOffsets>
-              <option value="28188" />
+              <option value="28198" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="25" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Movement/Movement.cs</url>
-          <line>242</line>
+          <line>251</line>
           <properties documentPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Movement/Movement.cs" initialLine="242" containingFunctionPresentation="method 'MovementAdjective'">
             <startOffsets>
-              <option value="8411" />
+              <option value="8910" />
             </startOffsets>
             <endOffsets>
-              <option value="8506" />
+              <option value="9005" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="28" />
@@ -392,6 +417,45 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="42" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/ArchaicQuestII.API/Controllers/World/RoomController.cs</url>
+          <line>263</line>
+          <properties documentPath="$PROJECT_DIR$/ArchaicQuestII.API/Controllers/World/RoomController.cs" initialLine="263" containingFunctionPresentation="method 'Delete'">
+            <startOffsets>
+              <option value="8859" />
+            </startOffsets>
+            <endOffsets>
+              <option value="8934" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="43" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/Combat.cs</url>
+          <line>279</line>
+          <properties documentPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/Combat.cs" initialLine="279" containingFunctionPresentation="method 'Fight'">
+            <startOffsets>
+              <option value="10954" />
+            </startOffsets>
+            <endOffsets>
+              <option value="11052" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="44" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Movement/Movement.cs</url>
+          <line>139</line>
+          <properties documentPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Movement/Movement.cs" initialLine="139" containingFunctionPresentation="method 'Move'">
+            <startOffsets>
+              <option value="5154" />
+            </startOffsets>
+            <endOffsets>
+              <option value="5234" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="47" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
