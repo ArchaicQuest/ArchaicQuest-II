@@ -445,8 +445,13 @@ namespace ArchaicQuestII.GameLogic.Core
 
                         }
 
-                        _writeToClient.WriteLine($"<span style='color:lawngreen'>[Hint]</span> { HttpUtility.HtmlEncode(_hints[_dice.Roll(1, 0, _hints.Count)])}", player.ConnectionId);
-
+                        //reduce frequency of hints to only 50% of the time
+                        if (_dice.Roll(1, 0, 1) == 1)
+                        {
+                            _writeToClient.WriteLine(
+                                $"<span style='color:lawngreen'>[Hint]</span> {HttpUtility.HtmlEncode(_hints[_dice.Roll(1, 0, _hints.Count)])}",
+                                player.ConnectionId);
+                        }
                     }
                 }
                 catch (Exception)

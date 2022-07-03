@@ -1485,7 +1485,7 @@ namespace ArchaicQuestII.GameLogic.Core
                "This MUD is in progress and still being worked on.",
                "Some mobs drop randomly generated loot, if you're lucky",
                "Pay attention to room emotes, you may discover a secret",
-               "Enter score to view your chacater information",
+               "Enter score to view your character information",
                "Don't forget to enter a description for your character, this makes the game more immersive for others",
                "The Academy is a playground for new players to explore, there are multiple quests, secrets and areas to explore",
                "If you like AQ let people know about it in r/mud or on the discord",
