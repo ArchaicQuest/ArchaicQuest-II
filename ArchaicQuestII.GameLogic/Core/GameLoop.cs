@@ -14,6 +14,7 @@ using ArchaicQuestII.GameLogic.Spell;
 using ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells;
 using ArchaicQuestII.GameLogic.World.Room;
 using Newtonsoft.Json;
+using System.Web;
 
 namespace ArchaicQuestII.GameLogic.Core
 {
@@ -33,6 +34,7 @@ namespace ArchaicQuestII.GameLogic.Core
         private ICore _core;
         private ISpellList _spellList;
         private IWeather _weather;
+        private List<string> _hints;
 
         public GameLoop(IWriteToClient writeToClient, ICache cache, ICommands commands, ICombat combat, IDataBase database, IDice dice, IUpdateClientUI client, ITime time, ICore core, ISpellList spelllist, IWeather weather)
         {
@@ -47,6 +49,11 @@ namespace ArchaicQuestII.GameLogic.Core
             _core = core;
             _spellList = spelllist;
             _weather = weather;
+
+            if (_hints == null)
+            {
+                _hints = _core.Hints();
+            }
 
         }
 
@@ -438,6 +445,8 @@ namespace ArchaicQuestII.GameLogic.Core
 
                         }
 
+                        _writeToClient.WriteLine($"<span style='color:lawngreen'>[Hint]</span> { HttpUtility.HtmlEncode(_hints[_dice.Roll(1, 0, _hints.Count)])}", player.ConnectionId);
+
                     }
                 }
                 catch (Exception)
@@ -818,7 +827,7 @@ namespace ArchaicQuestII.GameLogic.Core
                         var room = _cache.GetRoom(player.Value.RoomId);
                         player.Value.LastCommandTime = DateTime.Now;
 
-                        if (player.Value.CommandLog.Count >= 1000)
+                        if (player.Value.CommandLog.Count >= 2500)
                         {
                             player.Value.CommandLog = new List<string>();
                         }

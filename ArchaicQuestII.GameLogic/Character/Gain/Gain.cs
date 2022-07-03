@@ -97,6 +97,8 @@ namespace ArchaicQuestII.GameLogic.Character.Gain
 
                 _writer.WriteLine($"<p class='improve'>You have advanced to level {player.Level}, you gain: {totalHP} HP, {totalMana} Mana, {totalMove} Moves.</p>", player.ConnectionId);
 
+                SeedData.Classes.SetGenericTitle(player);
+
                 _clientUi.UpdateMana(player);
                 _clientUi.UpdateMoves(player);
                 _clientUi.UpdateHP(player);

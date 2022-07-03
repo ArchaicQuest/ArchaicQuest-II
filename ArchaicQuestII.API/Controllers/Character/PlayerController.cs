@@ -171,6 +171,7 @@ namespace ArchaicQuestII.Controllers.character
 
             newPlayer.Skills = playerClass?.Skills ?? new List<SkillList>();
 
+            ArchaicQuestII.GameLogic.SeedData.Classes.SetGenericTitle(newPlayer);
 
 
             if (!string.IsNullOrEmpty(player.Id.ToString()) && player.Id != Guid.Empty)

@@ -38,6 +38,7 @@ namespace ArchaicQuestII.GameLogic.Character
         public bool AFK { get; set; } = false;
         public List<string> CommandLog { get; set; } = new List<string>();
         public string Pose { get; set; }
+        public string Title { get; set; }
     }
 
     public class MobStats

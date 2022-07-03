@@ -400,6 +400,9 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "checkpose":
                     _core.CheckPose(player);
                     break;
+                case "title":
+                    _core.SetTitle(player, fullCommand);
+                    break;
                 case "/train": // / denotes admin/imm comands
                     _core.TrainSkill(player);
                     break;
