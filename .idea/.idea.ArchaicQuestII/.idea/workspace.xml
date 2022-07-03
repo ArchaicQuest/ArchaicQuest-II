@@ -18,6 +18,7 @@
       <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/MobScripts.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/MobScripts.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Hubs/GameHub.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Hubs/GameHub.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/SeedData/Rooms.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/SeedData/Rooms.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/Map.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/Map.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/World/Room/RoomActions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/World/Room/RoomActions.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -40,6 +41,7 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/429119adeb3e4e04bf19d4821649b60294dc00/7d/e218ca0a/ExceptionDispatchInfo.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/85446b81968241ebbb5fc771b505999f1cc400/bc/4879a31f/ActionMethodExecutor.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/9ae66f5dd0ba4526971d72f56254c21288c00/4a/c911eea9/Socket.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/9ae66f5dd0ba4526971d72f56254c21288c00/4a/c911eea9/Socket.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/bfefd83b0a0148b182aa3027772b16e094de00/43/a9babc75/ExceptionDispatchInfo.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/f2c9ba103bac463e84ba6dd5cdbfa0f06e200/00/f61499bc/Enumerable.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ArchaicQuestII.API/Program.cs" root0="FORCE_HIGHLIGHTING" />
@@ -49,6 +51,14 @@
     <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Commands.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/WriteToClient.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Hubs/Telnet/TelnetHub.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///home/malleus/Development/Fun/ArchaicQuest-II/ArchaicQuestII.GameLogic/Combat/Combat.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/ICombat.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/CommandHandler.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Commands.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///home/malleus/Development/Fun/ArchaicQuest-II/ArchaicQuestII.GameLogic/Core/Map.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/WriteToClient.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Hubs/Telnet/TelnetHub.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///home/malleus/Development/Fun/ArchaicQuest-II/ArchaicQuestII.GameLogic/World/Room/RoomActions.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -399,6 +409,10 @@
             </startOffsets>
             <endOffsets>
               <option value="28508" />
+              <option value="28475" />
+            </startOffsets>
+            <endOffsets>
+              <option value="28476" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="25" />
