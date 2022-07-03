@@ -109,7 +109,7 @@ namespace ArchaicQuestII.Controllers
 
             foreach (var area in areas)
             {
-                var rooms = _db.GetCollection<Room>(DataBase.Collections.Room).Find(x => x.AreaId == area.Id);
+                var rooms = _db.GetCollection<Room>(DataBase.Collections.Room).Find(x => x.AreaId == area.Id && x.Deleted == false);
                 area.Rooms = rooms.ToList();
             }
 
@@ -121,7 +121,7 @@ namespace ArchaicQuestII.Controllers
         public Area Get(int id)
         {
             var area = _db.GetById<Area>(id, DataBase.Collections.Area);
-            var rooms = _db.GetCollection<Room>(DataBase.Collections.Room).Find(x => x.AreaId == id);
+            var rooms = _db.GetCollection<Room>(DataBase.Collections.Room).Find(x => x.AreaId == id && x.Deleted == false);
 
             area.Rooms = rooms.ToList();
 
