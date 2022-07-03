@@ -18,6 +18,9 @@ namespace ArchaicQuestII.GameLogic.Core
         [Obsolete("Say is deprecated, please use MobSay or MobEmote instead.")]
         public void Say(string n, int delay, Room room, Player player, Player mob);
         public string GetName(Player player);
+        public bool Contains(string word, string expected);
+        public bool StartsWith(string word, string expected);
+        public void GainXP(Player player, int xp);
         public void UpdateInv(Player player);
         public void AttackPlayer(Room room, Player player, Player mob);
         public void AddEventState(Player player, string key, int value);

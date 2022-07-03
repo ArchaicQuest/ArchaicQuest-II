@@ -364,7 +364,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
         {
             //add to DB, configure from admin
             var roomid = !string.IsNullOrEmpty(startingRoom) ? startingRoom : _cache.GetConfig().StartingRoom;
-            var room = _cache.GetRoom(roomid);
+            var room = _cache.GetRoom(roomid) ?? _cache.GetRoom(_cache.GetConfig().StartingRoom);
             character.RoomId = $"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}";
 
             if (string.IsNullOrEmpty(character.RecallId))

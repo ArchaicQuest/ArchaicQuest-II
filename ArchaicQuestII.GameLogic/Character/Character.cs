@@ -177,6 +177,10 @@ namespace ArchaicQuestII.GameLogic.Character
         public bool Roam { get; set; }
         public bool Shopkeeper { get; set; }
         public bool Trainer { get; set; }
+        /// <summary>
+        /// Use for when you want scripting but not for the mob to be visible
+        /// </summary>
+        public bool IsHiddenScriptMob { get; set; }
         public MobEvents Events { get; set; } = new MobEvents();
         public Dictionary<string, int> EventState { get; set; } = new Dictionary<string, int>();
         public List<Quest> QuestLog { get; set; } = new List<Quest>();

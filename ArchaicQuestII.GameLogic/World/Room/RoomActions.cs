@@ -661,7 +661,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
             var mobName = string.Empty;
             var isDark = RoomIsDark(room, player);
             var isFightingPC = false;
-            foreach (var mob in room.Mobs)
+            foreach (var mob in room.Mobs.Where(x => x.IsHiddenScriptMob == false))
             {
 
                 if (!string.IsNullOrEmpty(mob.LongName))

@@ -261,6 +261,16 @@ namespace ArchaicQuestII.GameLogic.Core
                    null;
         }
 
+        public bool Contains(string word, string expected)
+        {
+            var cleanWord = word.Substring(word.IndexOf(" ") + 1);
+            return cleanWord.Contains(expected);
+        }
+
+        public bool StartsWith(string word, string expected)
+        {
+            return word.Contains(expected);
+        }
 
         public void UpdateQuest(Player player, int questId, string message)
         {
@@ -318,6 +328,16 @@ namespace ArchaicQuestII.GameLogic.Core
             }
 
             _updateClientUi.UpdateQuest(player);
+            _updateClientUi.UpdateExp(player);
+            _updateClientUi.UpdateScore(player);
+        }
+
+        public void GainXP(Player player, int xp)
+        {
+            _gain.GainExperiencePoints(player, xp, true);
+            
+        _updateClientUi.UpdateExp(player);
+        _updateClientUi.UpdateScore(player);
         }
 
         public async Task Sleep(int milliseconds)

@@ -61,7 +61,7 @@ namespace ArchaicQuestII.GameLogic.Combat
                 return (Player)room.Players.FirstOrDefault(x => x.Name.Equals(target, StringComparison.CurrentCultureIgnoreCase));
             }
 
-            return (Player)room.Mobs.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+            return (Player)room.Mobs.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase) && x.IsHiddenScriptMob == false);
         }
 
 
@@ -938,7 +938,7 @@ namespace ArchaicQuestII.GameLogic.Combat
         public void Consider(Player player, string target, Room room)
         {
             var victim =
-                room.Mobs.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ??
+                room.Mobs.Where(x => x.IsHiddenScriptMob == false).FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ??
                 room.Players.FirstOrDefault(x => x.Name.StartsWith(target, StringComparison.CurrentCultureIgnoreCase));
 
             if (victim == null)

@@ -267,7 +267,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
             sb.Append($"<span>Right here:</span>");
 
-            foreach (var obj in room.Mobs)
+            foreach (var obj in room.Mobs.Where(x => x.IsHiddenScriptMob == false))
             {
 
                 sb.Append($"<p class='mob'>{obj.Name} is right here.</p>");
@@ -280,10 +280,10 @@ namespace ArchaicQuestII.GameLogic.Core
                 sb.Append($"<p class='player'>{obj.Name} is right here.</p>");
 
             }
-
-            if (!room.Mobs.Any() && !room.Players.Any())
+            
+            if (room.Mobs.Where(x => x.IsHiddenScriptMob == false).Count() == 0 && !room.Players.Any())
             {
-
+                
                 sb.Append($"<p>There is nobody here.</p>");
 
             }
@@ -296,7 +296,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
                 sb.Append($"<span>{exit}:</span>");
 
-                foreach (var obj in getRoomObj.Mobs)
+                foreach (var obj in getRoomObj.Mobs.Where(x => x.IsHiddenScriptMob == false))
                 {
                     if (exit.Equals("down", StringComparison.CurrentCultureIgnoreCase))
                     {
@@ -328,7 +328,7 @@ namespace ArchaicQuestII.GameLogic.Core
                     }
                 }
 
-                if (!getRoomObj.Mobs.Any() && !getRoomObj.Players.Any())
+                if (getRoomObj.Mobs.Where(x => x.IsHiddenScriptMob == false).Count() == 0 && !getRoomObj.Players.Any())
                 {
 
                     sb.Append($"<p>There is nobody there.</p>");

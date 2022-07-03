@@ -91,7 +91,7 @@ namespace ArchaicQuestII.GameLogic.Core
         {
 
             return keyword.Item1 == -1
-                ? room.Mobs.FirstOrDefault(x =>
+                ? room.Mobs.Where(x => x.IsHiddenScriptMob == false).FirstOrDefault(x =>
                     x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase)) ?? room.Mobs.FirstOrDefault(x =>
                     x.LongName.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase))
                 : room.Mobs.FindAll(x => x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase))
