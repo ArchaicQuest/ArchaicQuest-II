@@ -58,7 +58,7 @@ namespace ArchaicQuestII.GameLogic.Combat
 
             if (attacker.ConnectionId == "mob")
             {
-                return (Player)room.Players.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+                return (Player)room.Players.FirstOrDefault(x => x.Name.Equals(target, StringComparison.CurrentCultureIgnoreCase));
             }
 
             return (Player)room.Mobs.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));

@@ -137,7 +137,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
                 {
                     //character.Buffer.Clear();
                     _writeToClient.WriteLine($"{character.Name} attacks you!", getNextRoom.Players.FirstOrDefault()?.ConnectionId);
-                    _mobScripts.AttackPlayer(room, getNextRoom.Players.FirstOrDefault(), character);
+                    _mobScripts.AttackPlayer(getNextRoom, getNextRoom.Players.FirstOrDefault(), character);
                 }
 
                 return;
