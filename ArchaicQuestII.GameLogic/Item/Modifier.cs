@@ -41,5 +41,7 @@ namespace ArchaicQuestII.GameLogic.Item
         public int Wisdom { get; set; }
         public int Charisma { get; set; }
         public int Armour { get; set; }
+        public int AcMagicMod { get; set; }
+        public int AcMod { get; set; }
     }
 }

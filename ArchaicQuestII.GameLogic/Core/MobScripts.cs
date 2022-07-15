@@ -359,9 +359,20 @@ namespace ArchaicQuestII.GameLogic.Core
             if (!IsInRoom(room, player))
             {
                 return;
-
             }
-            _writeToClient.WriteLine($"<p class='mob'>{mob.Name} says, '{n.Replace("#name#", player.Name)}'</p>", player.ConnectionId, delay);
+
+            var says = "says";
+            if (n.EndsWith("!"))
+            {
+                says = "exclaims";
+            }
+            
+            if (n.EndsWith("?"))
+            {
+                says = "wonders";
+            }
+            
+            _writeToClient.WriteLine($"<p class='mob'>{mob.Name} {says}, '{n.Replace("#name#", player.Name)}'</p>", player.ConnectionId, delay);
         }
 
         public void MobEmote(string n, Room room, Player player, int delay)

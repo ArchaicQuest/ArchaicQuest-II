@@ -327,6 +327,21 @@ namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
                 sb.Append($"Damage type: {item.DamageType}</br>");
             }
 
+            sb.Append($"Affects:</br>");
+            if (item.Modifier.AcMod != 0)
+            {
+                sb.Append($"{(item.Modifier.AcMod > 0 ? "+" : "-")} {item.Modifier.AcMod} Armour</br>");
+            }
+            if (item.Modifier.AcMagicMod != 0)
+            {
+                sb.Append($"{(item.Modifier.AcMagicMod > 0 ? "+" : "-")} {item.Modifier.AcMagicMod} Magic Armour</br>");
+            }
+            
+            if (item.Modifier.Strength != 0)
+            {
+                sb.Append($"{(item.Modifier.Strength > 0 ? "+" : "-")} {item.Modifier.Strength} Strength</br>");
+            }
+
             // TODO: container? Affects? what else? 
             // show crafted by
             // show enchanted by

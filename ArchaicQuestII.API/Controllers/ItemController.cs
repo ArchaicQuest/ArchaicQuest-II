@@ -73,7 +73,9 @@ namespace ArchaicQuestII.Controllers
                     Constitution = item.Modifier.Constitution,
                     Wisdom = item.Modifier.Wisdom,
                     Intelligence = item.Modifier.Intelligence,
-                    Charisma = item.Modifier.Charisma
+                    Charisma = item.Modifier.Charisma,
+                    AcMod = item.Modifier.AcMod,
+                    AcMagicMod = item.Modifier.AcMagicMod
                 },
                 DecayTimer = item.DecayTimer,
                 Description = item.Description,
