@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Core;
+using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Character.Equipment
@@ -36,7 +37,7 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
                 .Append("<tr><td  title='Worn on feet'>").Append(" &lt;worn on feet&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Feet?.Name ?? "(nothing)").Append("</td></tr>")
                 .Append("<tr><td  title='Worn on hands'>").Append(" &lt;worn on hands&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Hands?.Name ?? "(nothing)").Append("</td></tr>")
                 .Append("<tr><td  title='Worn on arms'>").Append(" &lt;worn on arms&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Arms?.Name ?? "(nothing)").Append("</td></tr>")
-                .Append("<tr><td  title='Worn about body'>").Append(" &lt;worn about body&gt;").Append("</td>").Append("<td>").Append(player.Equipped.AboutBody?.Name ?? "(nothing)").Append("</td></tr>")
+                .Append("<tr><td  title='Worn about body'>").Append(" &lt;worn about body&gt;").Append("</td>").Append("<td>").Append(Helpers.DisplayEQNameWithFlags(player.Equipped.AboutBody) ?? "(nothing)").Append("</td></tr>")
                 .Append("<tr><td  title='Worn on waist'>").Append(" &lt;worn about waist&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Waist?.Name ?? "(nothing)").Append("</td></tr>")
                 .Append("<tr><td  title='Worn on wrist'>").Append(" &lt;worn around wrist&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Wrist?.Name ?? "(nothing)").Append("</td></tr>")
                 .Append("<tr><td  title='Worn on wrist'>").Append(" &lt;worn around wrist&gt;").Append("</td>").Append("<td>").Append(player.Equipped.Wrist2?.Name ?? "(nothing)").Append("</td></tr>")
@@ -50,6 +51,18 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
             return displayEquipment.ToString();
         }
 
+        private string DisplayEQNameWithFlags(Item.Item item)
+        {
+            var flags = new StringBuilder();
+            if (item.ItemFlag == Item.Item.ItemFlags.Glow)
+            {
+                flags.Append("(glowing)");
+            }
+
+            flags.Append(" " + item.Name);
+
+            return flags.ToString();
+        }
         private void EmitRemoveActionToRoom(Item.Item item, Room room, Player player)
         {
             foreach (var pc in room.Players)
@@ -153,10 +166,32 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
                 _writer.WriteLine("<p>You are not wearing that item.</p>", player.ConnectionId);
                 return;
             }
-
+            
+            if  ((itemToRemove.ItemFlag & Item.Item.ItemFlags.Noremove) != 0)
+            {
+                _writer.WriteLine($"<p>You can't remove {itemToRemove.Name}. It appears to be cursed.</p>", player.ConnectionId);
+                return;
+            }
+            
             itemToRemove.Equipped = false;
-            player.ArmorRating.Armour -= itemToRemove.ArmourRating.Armour;
-            player.ArmorRating.Magic -= itemToRemove.ArmourRating.Magic;
+            player.ArmorRating.Armour -= itemToRemove.ArmourRating.Armour + itemToRemove.Modifier.AcMod;
+            player.ArmorRating.Magic -= itemToRemove.ArmourRating.Magic + itemToRemove.Modifier.AcMagicMod;
+            player.Attributes.Attribute[EffectLocation.Strength] -= itemToRemove.Modifier.Strength;
+            player.Attributes.Attribute[EffectLocation.Dexterity] -= itemToRemove.Modifier.Dexterity;
+            player.Attributes.Attribute[EffectLocation.Constitution] -= itemToRemove.Modifier.Constitution;
+            player.Attributes.Attribute[EffectLocation.Wisdom] -= itemToRemove.Modifier.Wisdom;
+            player.Attributes.Attribute[EffectLocation.Intelligence] -= itemToRemove.Modifier.Intelligence;
+            player.Attributes.Attribute[EffectLocation.Charisma] -= itemToRemove.Modifier.Charisma;
+            
+            player.Attributes.Attribute[EffectLocation.Hitpoints] -= itemToRemove.Modifier.HP;
+            player.Attributes.Attribute[EffectLocation.Mana] -= itemToRemove.Modifier.Mana;
+            player.Attributes.Attribute[EffectLocation.Moves] -= itemToRemove.Modifier.Moves;
+            player.MaxAttributes.Attribute[EffectLocation.Hitpoints] -= itemToRemove.Modifier.HP;
+            player.MaxAttributes.Attribute[EffectLocation.Mana] -= itemToRemove.Modifier.Mana;
+            player.MaxAttributes.Attribute[EffectLocation.Moves] -= itemToRemove.Modifier.Moves;
+            
+            player.Attributes.Attribute[EffectLocation.DamageRoll] -= itemToRemove.Modifier.DamRoll;
+            player.Attributes.Attribute[EffectLocation.HitRoll] -= itemToRemove.Modifier.HitRoll;
             switch (itemToRemove.Slot)
             {
                 case Equipment.EqSlot.Arms:
@@ -268,6 +303,9 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
             _clientUi.UpdateScore(player);
             _clientUi.UpdateEquipment(player);
             _clientUi.UpdateInventory(player);
+            _clientUi.UpdateHP(player);
+            _clientUi.UpdateMana(player);
+            _clientUi.UpdateMoves(player);
         }
 
         public void RemoveAll(Room room, Player player)
@@ -318,8 +356,26 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
             }
 
             itemToWear.Equipped = true;
-            player.ArmorRating.Armour += itemToWear.ArmourRating.Armour;
-            player.ArmorRating.Magic += itemToWear.ArmourRating.Magic;
+            player.ArmorRating.Armour += itemToWear.ArmourRating.Armour + itemToWear.Modifier.AcMod;
+            player.ArmorRating.Magic += itemToWear.ArmourRating.Magic + itemToWear.Modifier.AcMagicMod;
+            player.Attributes.Attribute[EffectLocation.Strength] += itemToWear.Modifier.Strength;
+            player.Attributes.Attribute[EffectLocation.Dexterity] += itemToWear.Modifier.Dexterity;
+            player.Attributes.Attribute[EffectLocation.Constitution] += itemToWear.Modifier.Constitution;
+            player.Attributes.Attribute[EffectLocation.Wisdom] += itemToWear.Modifier.Wisdom;
+            player.Attributes.Attribute[EffectLocation.Intelligence] += itemToWear.Modifier.Intelligence;
+            player.Attributes.Attribute[EffectLocation.Charisma] += itemToWear.Modifier.Charisma;
+            
+            player.Attributes.Attribute[EffectLocation.Hitpoints] += itemToWear.Modifier.HP;
+            player.Attributes.Attribute[EffectLocation.Mana] += itemToWear.Modifier.Mana;
+            player.Attributes.Attribute[EffectLocation.Moves] += itemToWear.Modifier.Moves;
+            player.MaxAttributes.Attribute[EffectLocation.Hitpoints] += itemToWear.Modifier.HP;
+            player.MaxAttributes.Attribute[EffectLocation.Mana] += itemToWear.Modifier.Mana;
+            player.MaxAttributes.Attribute[EffectLocation.Moves] += itemToWear.Modifier.Moves;
+            
+            player.Attributes.Attribute[EffectLocation.DamageRoll] += itemToWear.Modifier.DamRoll;
+            player.Attributes.Attribute[EffectLocation.HitRoll] += itemToWear.Modifier.HitRoll;
+           // player.Attributes.Attribute[EffectLocation.DamageRoll] += itemToWear.Modifier.SpellDam; // spell dam no exist
+           // player.Attributes.Attribute[EffectLocation.SavingSpell] += itemToWear.Modifier.Saves; not implemented
             switch (itemSlot)
             {
                 case Equipment.EqSlot.Arms:
@@ -542,6 +598,9 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
 
             _clientUi.UpdateEquipment(player);
             _clientUi.UpdateScore(player);
+            _clientUi.UpdateHP(player);
+            _clientUi.UpdateMana(player);
+            _clientUi.UpdateMoves(player);
             _clientUi.UpdateInventory(player);
         }
 

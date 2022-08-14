@@ -312,7 +312,7 @@ namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
                 if ((item.ItemFlag & itemFlag) != 0) itemFlags.Add(itemFlag.ToString());
             }
 
-            sb.Append($"<p>Object '{item.Name}' is type {item.ItemType}, extra flags: {(itemFlags.Any() ? String.Join(",", itemFlags) : "none")}.<br />");
+            sb.Append($"<p>Object '{item.Name}' is type {item.ItemType}, extra flags: {(itemFlags.Any() ? String.Join(", ", itemFlags) : "none")}.<br /><br />");
             sb.Append($"Weight is {item.Weight}, value is {item.Value}, level is {item.Level}.<br />");
 
             if (item.ItemType == Item.Item.ItemTypes.Armour)
@@ -328,19 +328,66 @@ namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
             }
 
             sb.Append($"Affects:</br>");
-            if (item.Modifier.AcMod != 0)
-            {
-                sb.Append($"{(item.Modifier.AcMod > 0 ? "+" : "-")} {item.Modifier.AcMod} Armour</br>");
-            }
-            if (item.Modifier.AcMagicMod != 0)
-            {
-                sb.Append($"{(item.Modifier.AcMagicMod > 0 ? "+" : "-")} {item.Modifier.AcMagicMod} Magic Armour</br>");
-            }
+      
             
             if (item.Modifier.Strength != 0)
             {
-                sb.Append($"{(item.Modifier.Strength > 0 ? "+" : "-")} {item.Modifier.Strength} Strength</br>");
+                sb.Append($"{(item.Modifier.Strength > 0 ? "+" : "-")}{item.Modifier.Strength} Strength</br>");
             }
+            if (item.Modifier.Dexterity != 0)
+            {
+                sb.Append($"{(item.Modifier.Dexterity > 0 ? "+" : "-")}{item.Modifier.Dexterity} Dexterity</br>");
+            }
+            if (item.Modifier.Constitution != 0)
+            {
+                sb.Append($"{(item.Modifier.Constitution > 0 ? "+" : "-")}{item.Modifier.Constitution} Constitution</br>");
+            }
+            if (item.Modifier.Wisdom != 0)
+            {
+                sb.Append($"{(item.Modifier.Wisdom > 0 ? "+" : "-")}{item.Modifier.Wisdom} Wisdom</br>");
+            }
+            if (item.Modifier.Intelligence != 0)
+            {
+                sb.Append($"{(item.Modifier.Intelligence > 0 ? "+" : "-")}{item.Modifier.Intelligence} Intelligence</br>");
+            }
+            if (item.Modifier.Charisma != 0)
+            {
+                sb.Append($"{(item.Modifier.Charisma > 0 ? "+" : "-")}{item.Modifier.Charisma} Charisma</br>");
+            }
+            
+            if (item.Modifier.HP != 0)
+            {
+                sb.Append($"{(item.Modifier.HP > 0 ? "+" : "-")}{item.Modifier.HP} HP</br>");
+            }
+            if (item.Modifier.Mana != 0)
+            {
+                sb.Append($"{(item.Modifier.Mana > 0 ? "+" : "-")}{item.Modifier.Mana} Mana</br>");
+            }
+            if (item.Modifier.Moves != 0)
+            {
+                sb.Append($"{(item.Modifier.Moves > 0 ? "+" : "-")}{item.Modifier.Moves} Moves</br>");
+            }
+            if (item.Modifier.DamRoll != 0)
+            {
+                sb.Append($"{(item.Modifier.DamRoll > 0 ? "+" : "-")}{item.Modifier.DamRoll} Damage Roll</br>");
+            }
+            if (item.Modifier.HitRoll != 0)
+            {
+                sb.Append($"{(item.Modifier.HitRoll > 0 ? "+" : "-")}{item.Modifier.HitRoll} Hit Roll</br>");
+            }
+            if (item.Modifier.SpellDam != 0)
+            {
+                sb.Append($"{(item.Modifier.SpellDam > 0 ? "+" : "-")}{item.Modifier.SpellDam} Spell Damage Roll</br>");
+            }
+            if (item.Modifier.AcMod != 0)
+            {
+                sb.Append($"{(item.Modifier.AcMod > 0 ? "+" : "-")}{item.Modifier.AcMod} Armour</br>");
+            }
+            if (item.Modifier.AcMagicMod != 0)
+            {
+                sb.Append($"{(item.Modifier.AcMagicMod > 0 ? "+" : "-")}{item.Modifier.AcMagicMod} Magic Armour</br>");
+            }
+
 
             // TODO: container? Affects? what else? 
             // show crafted by

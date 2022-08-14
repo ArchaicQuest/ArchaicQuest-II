@@ -8,6 +8,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
     public interface IRoomActions
     {
         void Look(string target, Room room, Player player);
+        void Look(string target, Room room, Player player, bool brief);
         void LookInContainer(string target, Room room, Player player);
         void LookInPortal(Item.Item portal, Room room, Player player);
         void ExamineObject(string target, Room room, Player player);

@@ -445,6 +445,35 @@ namespace ArchaicQuestII.GameLogic.Core
                 default: { return direction; }
             }
         }
+        
+        /// <summary>
+        /// Adds flags to display of items
+        /// e.g (glow) A Long sword
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns>name of the weapon with prefixed flags</returns>
+        public static string DisplayEQNameWithFlags(Item.Item item)
+        {
+            var sb = new StringBuilder();
+           if ((item.ItemFlag & Item.Item.ItemFlags.Glow) != 0)
+            {
+                sb.Append("({teal}Glowing{/}) ");
+            }
+           
+           if ((item.ItemFlag & Item.Item.ItemFlags.Hum) != 0)
+           {
+               sb.Append("({yellow}Humming{/}) ");
+           }
+
+           if ((item.ItemFlag & Item.Item.ItemFlags.Holy) != 0)
+           {
+               sb.Append("(Holy) ");
+           }
+
+           sb.Append(item.Name);
+
+            return sb.ToString();
+        }
 
         /// <summary>
         /// Applies bonus affects to player

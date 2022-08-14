@@ -144,7 +144,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
 
             }
 
-            _roomActions.Look("", getNextRoom, character);
+            _roomActions.Look("", getNextRoom, character, character.Config.Brief);
 
             if (getNextRoom.Mobs.Any())
             {
