@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Class;
+using ArchaicQuestII.GameLogic.Character.Config;
 using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Commands;
@@ -203,6 +204,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
         {
             var player = GetCharacter(hubId, characterId);
             UpdatePlayerSkills(player);
+            player.Config ??= new PlayerConfig();
 
 
             AddCharacterToCache(hubId, player);
@@ -314,7 +316,10 @@ namespace ArchaicQuestII.GameLogic.Hubs
             player.ConnectionId = hubId;
             player.LastCommandTime = DateTime.Now;
             player.LastLoginTime = DateTime.Now;
-
+            player.Following = String.Empty;
+            player.Followers = new List<Player>();
+            player.grouped = false;
+            
             SetArmorRating(player);
 
             return player;

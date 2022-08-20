@@ -414,7 +414,6 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public void Save(Player player)
         {
-
             _pdb.Save(player, PlayerDataBase.Collections.Players);
             _writeToClient.WriteLine("Character saved.", player.ConnectionId);
         }
@@ -936,7 +935,7 @@ namespace ArchaicQuestII.GameLogic.Core
             _clientUi.UpdateMoves(player);
             _clientUi.UpdateMana(player);
 
-            _writeToClient.WriteLine("You are restored.");
+            _writeToClient.WriteLine("You are restored.", player.ConnectionId);
         }
 
         public void Dismount(Player player, Room room)
@@ -1495,10 +1494,25 @@ namespace ArchaicQuestII.GameLogic.Core
                "If you're enjoying your time, bring a friend next time and share on social media, lets get more folks playing",
                "ArchaicQuest is a PvE MUD with optional PvP clans for those that enjoy player Vs player combat.",
                "ArchaicQuest features, Cooking and crafting. The cooking is inspired by BOTW",
-               "At the moment you can't turn hints off, that will be coming soon."
+               "At the moment you can't turn hints off, that will be coming soon.",
+               "Click the settings cog to change font type and size as well as other options"
            };
 
             return hints;
+        }
+
+        public void SacrificeCorpse(Player player, Item.Item corpse, Room room)
+        {
+            var itemToRemove = room.Items.FirstOrDefault(u => u.Id == corpse.Id);
+            room.Items.Remove(itemToRemove);
+         
+            var coinCount = _dice.Roll(1, 1, 12);
+            player.Money.Gold += coinCount;
+            _writeToClient.WriteLine($"The gods give you {coinCount} gold coins for your sacrifice.", player.ConnectionId);
+            
+            _writeToClient.WriteToOthersInRoom($"{player.Name} sacrifices {corpse.Name.ToLower()}.",room, player);
+            
+            _clientUi.UpdateScore(player);
         }
 
         public void DBDumpToJSON(Player player)

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
+using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Hubs;
 using ArchaicQuestII.GameLogic.Hubs.Telnet;
+using ArchaicQuestII.GameLogic.World.Room;
 using Microsoft.AspNetCore.SignalR;
 
 namespace ArchaicQuestII.GameLogic.Core
@@ -91,6 +93,20 @@ namespace ArchaicQuestII.GameLogic.Core
         public void WriteLineRoom(string message, string id, int delay)
         {
             throw new NotImplementedException();
+        }
+
+        public void WriteToOthersInRoom(string message, Room room, Player player)
+        {
+            foreach (var pc in room.Players)
+            {
+                if (pc.Id == player.Id)
+                {
+                    continue;
+                }
+                
+                WriteLine(message, pc.ConnectionId);
+                
+            }
         }
     }
 }

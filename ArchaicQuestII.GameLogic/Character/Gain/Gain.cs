@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Core;
@@ -13,13 +14,15 @@ namespace ArchaicQuestII.GameLogic.Character.Gain
 
         private readonly IWriteToClient _writer;
         private readonly IUpdateClientUI _clientUi;
+        private readonly ICache _cache;
         private readonly IDice _dice;
 
-        public Gain(IWriteToClient writer, IUpdateClientUI clientUI, IDice dice)
+        public Gain(IWriteToClient writer, IUpdateClientUI clientUI, IDice dice, ICache cache)
         {
             _writer = writer;
             _clientUi = clientUI;
             _dice = dice;
+            _cache = cache;
         }
         public void GainExperiencePoints(Player player, Player target)
         {
@@ -47,7 +50,33 @@ namespace ArchaicQuestII.GameLogic.Character.Gain
 
             GainLevel(player);
             _clientUi.UpdateExp(player);
+            
 
+        }
+
+        public void GroupGainExperiencePoints(Player player, Player target)
+        {
+            if (player.grouped)
+            {
+                var isGroupLeader = string.IsNullOrEmpty(player.Following);
+
+                var groupLeader = player;
+
+                if (!isGroupLeader)
+                {
+                    groupLeader = _cache.GetPlayerCache().FirstOrDefault(x => x.Value.Name.Equals(player.Following)).Value;
+                }
+         
+                GainExperiencePoints(player, target);  
+         
+                foreach (var follower in groupLeader.Followers)
+                {
+                    if (follower.grouped && follower.Following == groupLeader.Name)
+                    {
+                        GainExperiencePoints(follower, target);
+                    }
+                }
+            }
         }
 
         public void GainExperiencePoints(Player player, int value, bool showMessage = true)

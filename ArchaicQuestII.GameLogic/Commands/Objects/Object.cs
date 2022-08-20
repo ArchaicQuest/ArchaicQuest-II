@@ -182,7 +182,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
             if (container.Container.Items.Count == 0)
             {
-                _writer.WriteLine("<p>You don't see anything here.</p>", player.ConnectionId);
+                _writer.WriteLine($"<p>You see nothing in {container.Name.ToLower()}.</p>", player.ConnectionId);
                 return;
             }
 

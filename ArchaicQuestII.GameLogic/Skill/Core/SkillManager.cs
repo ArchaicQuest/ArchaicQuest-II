@@ -148,6 +148,8 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
 
                 _fight.AddCharToCombat(target);
                 _fight.AddCharToCombat(player);
+
+         
             }
 
         }

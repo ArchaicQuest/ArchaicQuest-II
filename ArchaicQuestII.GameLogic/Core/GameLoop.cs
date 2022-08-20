@@ -77,20 +77,20 @@ namespace ArchaicQuestII.GameLogic.Core
                 case 8:
                 case 7:
                 case 6:
-                    corpse.Description.Room = $"The corpse of {corpse.Name.ToLower()} lies here.";
+                    corpse.Description.Room = $"{corpse.Name.ToLower()} lies here.";
                     break;
                 case 5:
                 case 4:
-                    corpse.Description.Room = $"The corpse of {corpse.Name.ToLower()} is buzzing with flies.";
+                    corpse.Description.Room = $"{corpse.Name.ToLower()} is buzzing with flies.";
                     break;
                 case 3:
-                    corpse.Description.Room = $"The corpse of {corpse.Name.ToLower()} fills the air with a foul stench.";
+                    corpse.Description.Room = $"{corpse.Name.ToLower()} fills the air with a foul stench.";
                     break;
                 case 2:
-                    corpse.Description.Room = $"The corpse of {corpse.Name.ToLower()} is crawling with vermin.";
+                    corpse.Description.Room = $"{corpse.Name.ToLower()} is crawling with vermin.";
                     break;
                 case 1:
-                    corpse.Description.Room = $"The corpse of {corpse.Name.ToLower()} is in the last stages of decay.";
+                    corpse.Description.Room = $"{corpse.Name.ToLower()} is in the last stages of decay.";
                     break;
                 case 0:
 
@@ -101,7 +101,7 @@ namespace ArchaicQuestII.GameLogic.Core
                     room.Items.Remove(corpse);
                     break;
                 default:
-                    corpse.Description.Room = $"The corpse of {corpse.Name.ToLower()} lies here.";
+                    corpse.Description.Room = $"{corpse.Name.ToLower()} lies here.";
                     break;
             }
 
@@ -117,7 +117,7 @@ namespace ArchaicQuestII.GameLogic.Core
             while (true)
             {
                 //2 mins
-                await Task.Delay(30000);
+                await Task.Delay(120000);
                 var rooms = _cache.GetAllRoomsToRepop();
                 var players = _cache.GetPlayerCache().Values.ToList();
 
@@ -446,7 +446,7 @@ namespace ArchaicQuestII.GameLogic.Core
                         }
 
                         //reduce frequency of hints to only 50% of the time
-                        if (_dice.Roll(1, 0, 1) == 1)
+                        if (player.Config.Hints && _dice.Roll(1, 0, 1) == 1)
                         {
                             _writeToClient.WriteLine(
                                 $"<span style='color:lawngreen'>[Hint]</span> {HttpUtility.HtmlEncode(_hints[_dice.Roll(1, 0, _hints.Count)])}",

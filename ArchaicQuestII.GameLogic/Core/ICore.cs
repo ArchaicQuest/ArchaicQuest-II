@@ -68,6 +68,7 @@ namespace ArchaicQuestII.GameLogic.Core
         void TrainSkill(Player player);
 
         void Dismount(Player player, Room room);
+        void SacrificeCorpse(Player player, Item.Item corpse, Room room);
 
         /// <summary>
         /// Admin only used to test mob script events

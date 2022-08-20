@@ -5,6 +5,7 @@ using ArchaicQuestII.GameLogic.Item;
 using LiteDB;
 using System.Collections.Generic;
 using ArchaicQuestII.GameLogic.Character.Class;
+using ArchaicQuestII.GameLogic.Character.Config;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.World.Room;
 using Newtonsoft.Json;
@@ -142,8 +143,9 @@ namespace ArchaicQuestII.GameLogic.Character
         public Money Money { get; set; }
         [JsonProperty("affects")]
         public Affects Affects { get; set; } = new Affects();
-        [JsonProperty("config")]
-        public Model.Config Config { get; set; }
+
+        [JsonProperty("config")] 
+        public PlayerConfig Config { get; set; } = new PlayerConfig();
         [JsonProperty("roomId")]
         /// arearID + X + Y + z e,g "1000"
         public string RoomId { get; set; }

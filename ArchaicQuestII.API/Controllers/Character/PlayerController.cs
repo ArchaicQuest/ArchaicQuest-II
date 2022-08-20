@@ -302,23 +302,29 @@ namespace ArchaicQuestII.Controllers.character
 
         [HttpGet]
         [AllowAnonymous]
-        [Route("api/player/config/{id:guid}")]
-        public PlayerConfig GetConfig(Guid id)
+        [Route("api/player/config/{id}")]
+        public PlayerConfig GetConfig(string id)
         {
-            var pc = _pdb.GetCollection<Player>(PlayerDataBase.Collections.Players).FindById(id);
-            return pc.Config;
+     
+            var player = _cache.GetPlayer(id);
+
+            return player?.Config;
         }
         
         [HttpPost]
         [AllowAnonymous]
-        [Route("api/player/config/{id:guid}")]
-        public IActionResult UpdateConfig(Guid id, [FromBody] PlayerConfig config)
+        [Route("api/player/config/{id}")]
+        public IActionResult UpdateConfig(string id, [FromBody] PlayerConfig config)
         {
-            var pc = _pdb.GetCollection<Player>(PlayerDataBase.Collections.Players).FindById(id);
+            // update cache
+            var player = _cache.GetPlayer(id);
 
-            pc.Config = config;
-            
-            var saved = _pdb.Save(pc, PlayerDataBase.Collections.Players);
+            if (player != null)
+            {
+                player.Config = config;
+            }
+
+            var saved = _pdb.Save(player, PlayerDataBase.Collections.Players);
 
             return saved ? Ok() : BadRequest("Failed Saving config");
         }
