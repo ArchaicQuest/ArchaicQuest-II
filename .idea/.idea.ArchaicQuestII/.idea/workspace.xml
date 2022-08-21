@@ -7,14 +7,13 @@
     <projectFile profileName="ArchaicQuestII.API">ArchaicQuestII.API/ArchaicQuestII.API.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2eff0800-fb31-4811-bfc6-8df5e26cbfe9" name="Changes" comment="Settings WIP, AutoAssist, AutoSacrifice working, other improvements">
+    <list default="true" id="2eff0800-fb31-4811-bfc6-8df5e26cbfe9" name="Changes" comment="Added gsay command, fixed groups, fixed follow circular issue, sacrifice command added">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ArchaicQuestII/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ArchaicQuestII/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Commands.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Commands.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Communication/Communication.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Communication/Communication.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Communication/Icommunication.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Communication/Icommunication.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Character/Gain/Gain.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Character/Gain/Gain.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/Combat.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/Combat.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Movement/IMovement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Movement/IMovement.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Movement/Movement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Movement/Movement.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/Core.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/Core.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/ICore.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/ICore.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Hubs/GameHub.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Hubs/GameHub.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,6 +23,7 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/429119adeb3e4e04bf19d4821649b60294dc00/7d/e218ca0a/ExceptionDispatchInfo.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/429119adeb3e4e04bf19d4821649b60294dc00/9d/b21e51e8/Monitor.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/429119adeb3e4e04bf19d4821649b60294dc00/a6/ba9ccb78/List`1.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/47be80e4df11402fa4b0c9d0d61b251776e00/47/004a1b08/DataPage.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/47be80e4df11402fa4b0c9d0d61b251776e00/54/35053f78/BsonMapper.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/521d9651468243af850d1888e8c8af8588c00/2b/c31496dc/Socket.cs" root0="SKIP_HIGHLIGHTING" />
@@ -36,8 +36,12 @@
     <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/Combat.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/ICombat.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/CommandHandler.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///home/malleus/Development/Fun/ArchaicQuest-II/ArchaicQuestII.GameLogic/Commands/Commands.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Commands.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///home/malleus/Development/Fun/ArchaicQuest-II/ArchaicQuestII.GameLogic/Commands/Communication/Icommunication.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///home/malleus/Development/Fun/ArchaicQuest-II/ArchaicQuestII.GameLogic/Commands/Movement/Movement.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///home/malleus/Development/Fun/ArchaicQuest-II/ArchaicQuestII.GameLogic/Commands/Objects/Object.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///home/malleus/Development/Fun/ArchaicQuest-II/ArchaicQuestII.GameLogic/Core/Core.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/WriteToClient.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Hubs/Telnet/TelnetHub.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
@@ -102,7 +106,7 @@
       <workItem from="1658058266580" duration="2923000" />
       <workItem from="1658266757287" duration="21424000" />
       <workItem from="1659811777215" duration="18515000" />
-      <workItem from="1660945205373" duration="24345000" />
+      <workItem from="1660945205373" duration="28070000" />
     </task>
     <task id="LOCAL-00002" summary="WIP Config settings setup and API">
       <created>1660518380350</created>
@@ -118,7 +122,14 @@
       <option name="project" value="LOCAL" />
       <updated>1661038849764</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Added gsay command, fixed groups, fixed follow circular issue, sacrifice command added">
+      <created>1661074954440</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1661074954440</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -142,7 +153,8 @@
     <MESSAGE value="shitty rider workspace file" />
     <MESSAGE value="WIP Config settings setup and API" />
     <MESSAGE value="Settings WIP, AutoAssist, AutoSacrifice working, other improvements" />
-    <option name="LAST_COMMIT_MESSAGE" value="Settings WIP, AutoAssist, AutoSacrifice working, other improvements" />
+    <MESSAGE value="Added gsay command, fixed groups, fixed follow circular issue, sacrifice command added" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added gsay command, fixed groups, fixed follow circular issue, sacrifice command added" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -165,10 +177,10 @@
           <line>87</line>
           <properties documentPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Movement/Movement.cs" initialLine="87" containingFunctionPresentation="method 'Move'">
             <startOffsets>
-              <option value="3268" />
+              <option value="3287" />
             </startOffsets>
             <endOffsets>
-              <option value="3269" />
+              <option value="3288" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="4" />
@@ -185,34 +197,6 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="11" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/Combat.cs</url>
-          <line>66</line>
-          <properties documentPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/Combat.cs" initialLine="65" containingFunctionPresentation="method 'FindTarget'">
-            <startOffsets>
-              <option value="2565" />
-              <option value="2610" />
-            </startOffsets>
-            <endOffsets>
-              <option value="2710" />
-              <option value="2708" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="27" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/Combat.cs</url>
-          <line>301</line>
-          <properties documentPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/Combat.cs" initialLine="300" containingFunctionPresentation="method 'Fight'">
-            <startOffsets>
-              <option value="11903" />
-            </startOffsets>
-            <endOffsets>
-              <option value="11922" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="28" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Communication/Communication.cs</url>

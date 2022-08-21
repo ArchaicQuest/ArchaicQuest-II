@@ -63,7 +63,6 @@ namespace ArchaicQuestII.GameLogic.Combat
                 return (Player)room.Players.FirstOrDefault(x => x.Name.Equals(target, StringComparison.CurrentCultureIgnoreCase));
             }
             
-            _writer.WriteLine($"Found {attacker.Name} target {(room.Mobs.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase))).Name}");
             return (Player)room.Mobs.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase) && x.IsHiddenScriptMob == false);
         }
 

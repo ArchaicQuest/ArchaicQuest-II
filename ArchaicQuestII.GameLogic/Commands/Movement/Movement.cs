@@ -41,7 +41,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
             _mobScripts = mobScripts;
         }
 
-        public void Move(Room room, Player character, string direction, bool silence = false)
+        public void Move(Room room, Player character, string direction, bool silence = false, bool flee = false)
         {
 
             switch (character.Status)
@@ -101,14 +101,17 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
                 return;
             }
 
-            if (room.Mobs.Any())
+            if (!flee)
             {
-                OnPlayerLeaveEvent(room, character);
-            }
+                if (room.Mobs.Any())
+                {
+                    OnPlayerLeaveEvent(room, character);
+                }
 
-            if (room.Players.Any() && !silence)
-            {
-                NotifyRoomLeft(room, character, direction);
+                if (room.Players.Any() && !silence)
+                {
+                    NotifyRoomLeft(room, character, direction);
+                }
             }
 
             if (getNextRoom.Players.Any() && !silence)
@@ -234,8 +237,6 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
 
         public string MovementAdjective(Player player, bool onEnter, string direction)
         {
-
-
             var showDirection = string.IsNullOrEmpty(direction) ? "" : $" {direction.ToLower()}";
             var enterMessage = player.EnterEmote;
             var leaveMessage = player.LeaveEmote;
@@ -251,17 +252,13 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
             var enter = onEnter ? enterMessage : leaveMessage;
             var isPlayer = player.ConnectionId != "mob";
             var moveType = $"<span class='{(isPlayer ? "player" : "mob")}'>{enter}{showDirection}.</span>";
-
-
-
-
+            
             if (!string.IsNullOrEmpty(player.Mounted.Name))
             {
                 enter = onEnter ? "enters from the" : "leaves";
                 moveType = $"{player.Name} {enter}{showDirection} riding upon {player.Mounted.Name}.";
             }
-
-
+            
             // A magic broom sweeping the floor [hovers in from the] [west]. 
 
             return moveType;
@@ -452,8 +449,21 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
                 }
             }
 
+            var randomFleeMsg = new List<string>
+            {
+                $"{character.Name} turns and flees",
+                $"{character.Name} screams and runs for their life",
+                $"{character.Name} ducks and rolls before running away",
+                $"{character.Name} retreats from combat."
+            };
+
+            var fleeString = randomFleeMsg[_dice.Roll(1, 0, randomFleeMsg.Count)];
+
+            _writeToClient.WriteLine($"You flee {validExits[getExitIndex].Name}.",  character.ConnectionId);
+            _writeToClient.WriteToOthersInRoom($"{fleeString}.", room, character);
+
             //this could be buggy
-            Move(room, character, validExits[getExitIndex].Name);
+            Move(room, character, validExits[getExitIndex].Name, true);
 
         }
 

@@ -391,10 +391,13 @@ namespace ArchaicQuestII.GameLogic.Hubs
                         if (!petAlreadyInRoom)
                         {
                             room.Mobs.Add(pet);
+                            _writeToClient.WriteToOthersInRoom($"{pet.Name} suddenly appears.", room, character);
                         }
                     }
 
                 }
+                
+                _writeToClient.WriteToOthersInRoom($"{character.Name} suddenly appears.", room, character);
             }
 
 

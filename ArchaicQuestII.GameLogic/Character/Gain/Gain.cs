@@ -66,14 +66,20 @@ namespace ArchaicQuestII.GameLogic.Character.Gain
                 {
                     groupLeader = _cache.GetPlayerCache().FirstOrDefault(x => x.Value.Name.Equals(player.Following)).Value;
                 }
-         
-                GainExperiencePoints(player, target);  
-         
+
+                if (groupLeader.RoomId == target.RoomId)
+                {
+                    GainExperiencePoints(groupLeader, target);
+                }
+
                 foreach (var follower in groupLeader.Followers)
                 {
                     if (follower.grouped && follower.Following == groupLeader.Name)
                     {
-                        GainExperiencePoints(follower, target);
+                        if (follower.RoomId == target.RoomId)
+                        {
+                            GainExperiencePoints(follower, target);
+                        }
                     }
                 }
             }
@@ -141,15 +147,20 @@ namespace ArchaicQuestII.GameLogic.Character.Gain
         {
             var maxEXP = 10000;
             var exp = character.Level;
-            exp += _dice.Roll(1, 25, 175);
+            exp += _dice.Roll(1, 25, 275);
             exp += character.Equipped.Wielded?.Damage.Maximum ?? 6; // 6 for hand to hand
             exp += character.Attributes.Attribute[EffectLocation.DamageRoll] * 10;
             exp += character.Attributes.Attribute[EffectLocation.HitRoll] + character.Level * 10;
             exp += character.ArmorRating.Armour;
 
             exp += character.Attributes.Attribute[EffectLocation.Hitpoints] * 3;
+            exp += character.Attributes.Attribute[EffectLocation.Mana];
             exp += character.Attributes.Attribute[EffectLocation.Strength];
             exp += character.Attributes.Attribute[EffectLocation.Dexterity];
+            exp += character.Attributes.Attribute[EffectLocation.Constitution];
+            exp += character.Attributes.Attribute[EffectLocation.Wisdom];
+            exp += character.Attributes.Attribute[EffectLocation.Intelligence];
+            exp += character.ArmorRating.Magic;
             exp += character.Level * 15;
             //exp += character.Attributes.Attribute[EffectLocation.Moves];
             // boost xp if mob is shielded
