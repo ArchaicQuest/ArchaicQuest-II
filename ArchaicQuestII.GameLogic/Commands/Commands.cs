@@ -239,6 +239,11 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case ">":
                     _communication.SayTo(obj, target, room, player);
                     break;
+                case "gsay":
+                case "`":
+                case "gs":
+                    _communication.Gsay(fullCommand, player);
+                    break;
                 case "yell":
                     _communication.Yell(obj, room, player);
                     break;
@@ -403,6 +408,10 @@ namespace ArchaicQuestII.GameLogic.Commands
                     break;
                 case "checkpose":
                     _core.CheckPose(player);
+                    break;
+                case "sacrifice":
+                case "sac":
+                    _core.SacrificeCorpse(player, obj, room);
                     break;
                 case "title":
                     _core.SetTitle(player, fullCommand);

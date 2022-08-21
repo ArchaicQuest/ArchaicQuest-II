@@ -1508,12 +1508,40 @@ namespace ArchaicQuestII.GameLogic.Core
          
             var coinCount = _dice.Roll(1, 1, 12);
             player.Money.Gold += coinCount;
-            _writeToClient.WriteLine($"The gods give you {coinCount} gold coins for your sacrifice.", player.ConnectionId);
-            
+            _writeToClient.WriteLine(
+                coinCount == 1
+                    ? $"The gods give you a measly gold coin for your sacrifice."
+                    : $"The gods give you {coinCount} gold coins for your sacrifice.",
+                player.ConnectionId);
             _writeToClient.WriteToOthersInRoom($"{player.Name} sacrifices {corpse.Name.ToLower()}.",room, player);
             
             _clientUi.UpdateScore(player);
         }
+        
+        public void SacrificeCorpse(Player player, string corpse, Room room)
+        {
+            var itemToRemove = room.Items.FirstOrDefault(u => u.Name.Contains(corpse));
+
+            if (itemToRemove != null)
+            {
+
+                room.Items.Remove(itemToRemove);
+
+                var coinCount = _dice.Roll(1, 1, 12);
+                player.Money.Gold += coinCount;
+                _writeToClient.WriteLine(
+                    coinCount == 1
+                        ? $"The gods give you a measly gold coin for your sacrifice."
+                        : $"The gods give you {coinCount} gold coins for your sacrifice.",
+                    player.ConnectionId);
+
+
+                _writeToClient.WriteToOthersInRoom($"{player.Name} sacrifices {itemToRemove.Name.ToLower()}.", room, player);
+
+                _clientUi.UpdateScore(player);
+            }
+        }
+
 
         public void DBDumpToJSON(Player player)
         {
