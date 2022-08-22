@@ -491,7 +491,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
                     room.RoomObjects.FirstOrDefault(x =>
                         x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
 
-                _writeToClient.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{roomObjects.Examine}", player.ConnectionId);
+                _writeToClient.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{roomObjects.Examine ?? roomObjects.Look}", player.ConnectionId);
 
                 return;
             }

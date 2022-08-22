@@ -27,7 +27,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
             _updateClient.UpdateCommunication(player, $"<p class='gossip'>[<span>Gossip</span>]: {text}</p>", "gossip");
             foreach (var pc in room.Players)
             {
-                if (pc.Name.Equals(player.Name, StringComparison.CurrentCultureIgnoreCase))
+                if (pc.Name.Equals(player.Name, StringComparison.CurrentCultureIgnoreCase) || !pc.Config.GossipChannel)
                 {
                     continue;
                 }
@@ -45,7 +45,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
             _updateClient.UpdateCommunication(player, $"<p class='newbie'>[<span>Newbie</span>]: {text}</p>", "newbie");
             foreach (var pc in room.Players)
             {
-                if (pc.Name.Equals(player.Name, StringComparison.CurrentCultureIgnoreCase))
+                if (pc.Name.Equals(player.Name, StringComparison.CurrentCultureIgnoreCase) || !pc.Config.NewbieChannel)
                 {
                     continue;
                 }
@@ -63,7 +63,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
             _updateClient.UpdateCommunication(player, $"<p class='ooc'>[<span>OOC</span>]: {text}</p>", "ooc");
             foreach (var pc in room.Players)
             {
-                if (pc.Name.Equals(player.Name, StringComparison.CurrentCultureIgnoreCase))
+                if (pc.Name.Equals(player.Name, StringComparison.CurrentCultureIgnoreCase) || !pc.Config.OocChannel)
                 {
                     continue;
                 }
@@ -183,6 +183,12 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
             {
                 _writer.WriteLine($"<p>You tell yourself \"{text}\"</p>", player.ConnectionId);
                 return;
+            }
+
+            if (!foundPlayer.Config.Tells)
+            {
+                _writer.WriteLine($"<p>They can't hear you.</p>", player.ConnectionId);
+                return; 
             }
 
             player.ReplyTo = foundPlayer.Name;

@@ -42,8 +42,11 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public static Item.Item findRoomObject(Tuple<int, string> keyword, Room room)
         {
-            return keyword.Item1 == -1 ? room.Items.FirstOrDefault(x => x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase)) :
-                 room.Items.FindAll(x => x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase)).Skip(keyword.Item1 - 1).FirstOrDefault();
+            return keyword.Item1 == -1
+                ? room.Items.FirstOrDefault(x =>
+                    x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase))
+                : room.Items.FindAll(x => x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase))
+                    .Skip(keyword.Item1 - 1).FirstOrDefault();
         }
 
         public static Item.Item findObjectInInventory(Tuple<int, string> keyword, Player player)

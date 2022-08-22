@@ -865,6 +865,12 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
                 _writeToClient.WriteLine($"<p>You can't follow someone following you. Lest you be running around in circles indefinitely.</p>", player.ConnectionId);
                 return;
             }
+            
+            if (foundPlayer.Config.CanFollow == false)
+            {
+                _writeToClient.WriteLine($"<p>{foundPlayer.Name} doesn't want to be followed.</p>", player.ConnectionId);
+                return;
+            }
 
             _writeToClient.WriteLine($"<p>{player.Name} now follows you.</p>", foundPlayer.ConnectionId);
             _writeToClient.WriteLine($"<p>You are now following {foundPlayer.Name}.</p>", player.ConnectionId);

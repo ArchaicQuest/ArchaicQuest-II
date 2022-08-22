@@ -278,26 +278,24 @@ namespace ArchaicQuestII.GameLogic.Hubs
                 }
             }
 
-            for (var i = player.Skills.Count - 1; i >= 0; i--)
+            if (player.Skills.Count > 0)
             {
-                if (classSkill.Skills.FirstOrDefault(x =>
-                    x.SkillName.Equals(player.Skills[i].SkillName, StringComparison.CurrentCultureIgnoreCase)) == null)
+                for (var i = player.Skills.Count - 1; i >= 0; i--)
                 {
-                    player.Skills.Remove(player.Skills[i]);
+                    if (classSkill.Skills.FirstOrDefault(x =>
+                            x.SkillName.Equals(player.Skills[i].SkillName,
+                                StringComparison.CurrentCultureIgnoreCase)) == null)
+                    {
+                        player.Skills.Remove(player.Skills[i]);
+                    }
+
+                    var skill = classSkill.Skills.FirstOrDefault(x => x.SkillName.Equals(player.Skills[i].SkillName));
+
+
+                    player.Skills[i].Level = skill.Level;
                 }
-
-                var skill = classSkill.Skills.FirstOrDefault(x => x.SkillName.Equals(player.Skills[i].SkillName));
-
-
-                player.Skills[i].Level = skill.Level;
             }
-
-            if (player.ClassName == "Fighter" && player.TotalExperience == 0 && player.Skills.FirstOrDefault(x => x.SkillName.Equals("Long Blades")).Proficiency == 1)
-            {
-                player.Skills.FirstOrDefault(x => x.SkillName.Equals("Long Blades")).Proficiency = 75;
-
-            }
-
+            
 
         }
 

@@ -19,6 +19,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
             Rooms.Cache(db, cache);
             Skills.SeedAndCache(db, cache);
             Socials.SeedAndCache(db, cache);
+            InitialRoomSeed.Seed(db);
 
             ConfigOnInit.SeedAndCache(db, cache);
         }
