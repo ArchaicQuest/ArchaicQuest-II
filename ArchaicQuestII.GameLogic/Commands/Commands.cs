@@ -487,7 +487,7 @@ namespace ArchaicQuestII.GameLogic.Commands
 
 
                         script.Globals["room"] = room;
-                        script.Globals["command"] = command;
+                        script.Globals["command"] = command.ToLower();
                         script.Globals["player"] = player;
                         script.Globals["mob"] = mob;
 
