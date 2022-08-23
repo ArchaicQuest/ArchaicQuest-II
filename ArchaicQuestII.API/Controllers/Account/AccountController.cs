@@ -12,14 +12,22 @@ using ArchaicQuestII.API.Models;
 using ArchaicQuestII.API.Services;
 using ArchaicQuestII.DataAccess.DataModels;
 using Newtonsoft.Json;
+using PostmarkDotNet;
 using Account = ArchaicQuestII.GameLogic.Account.Account;
 using AccountStats = ArchaicQuestII.GameLogic.Account.AccountStats;
 
+public class ForgotPassword
+{
+    public string Email { get; set; }
+    public string BrowserName { get; set; }
+    public string OSName { get; set; }
+}
 
 namespace ArchaicQuestII.API.Controllers
 {
     public class AccountController : Controller
     {
+       
         private IPlayerDataBase _pdb { get; }
         private IDataBase _db { get; }
         private readonly IUserService _userService;
@@ -225,6 +233,50 @@ namespace ArchaicQuestII.API.Controllers
             return BadRequest(new { message = "User deletion failed" });
 
         }
+        
+        [HttpPost]
+        [Route("api/Account/forgot-password")]
+        public async Task<IActionResult> RequestPasswordReset([FromBody] ForgotPassword forgotPassword)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                var exception = new Exception("Invalid request");
+                throw exception;
+            }
+
+            var user = _pdb.GetCollection<Account>(PlayerDataBase.Collections.Account).FindOne(x => x.Email.Equals(forgotPassword.Email));
+            
+            // Send an email asynchronously:
+            var message = new TemplatedPostmarkMessage {
+                From = "noreply@archaicquest.com",  
+                To = "liam.kenneth@hotmail.co.uk",
+                TemplateAlias = "password-reset",
+                TemplateModel = new Dictionary<string,object> {
+                    { "product_url", "https://www.archaicquest.com" },
+                    { "product_name", "//localhost:4200/" },
+                    { "name", "ArchaicQuest" },
+                    { "action_url", $"http://localhost:4200?id={Base64Encode(user.Email)}" },
+                    { "operating_system", forgotPassword.OSName },
+                    { "browser_name", forgotPassword.BrowserName },
+                    { "company_name", "ArchaicQuest" },
+                    { "company_address", "https://www.archaicquest.com" },
+                    { "support_url", "support_url_Value" },
+                },
+            };
+
+            var client = new PostmarkClient("7c3b9790-5b6e-49fe-8be9-786314ace80a");
+
+            var response = await client.SendMessageAsync(message);
+
+            if(response.Status != PostmarkStatus.Success) {
+                Console.WriteLine("Response was: " + response.Message);
+            }
+       
+
+            return Ok(JsonConvert.SerializeObject(new { toast = "Forgot password successfully requested" }));
+
+        }
 
 
 
@@ -263,6 +315,17 @@ namespace ArchaicQuestII.API.Controllers
             var logs = _db.GetList<AdminLog>(DataBase.Collections.Log);
             return Ok(logs);
         }
+        
+        private static string Base64Encode(string plainText) {
+            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
+            return System.Convert.ToBase64String(plainTextBytes);
+        }
+        
+        private static string Base64Decode(string base64EncodedData) {
+            var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
+            return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
+        }
+
     }
 
 
