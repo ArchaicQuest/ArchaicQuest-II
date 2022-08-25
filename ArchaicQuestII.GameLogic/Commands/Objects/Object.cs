@@ -267,18 +267,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
             var nthTarget = Helpers.findNth(target);
             var item = Helpers.findObjectInInventory(nthTarget, player);
             
-            if (item.Equipped)
-            {
-                _writer.WriteLine($"<p>You must remove {item.Name.ToLower()} before you can drop it.</p>", player.ConnectionId);
-                return;
-            }
-            
-            if ((item.ItemFlag & Item.Item.ItemFlags.Nodrop) != 0)
-            {
-                _writer.WriteLine($"<p>You can't let go of {item.Name.ToLower()}. It appears to be cursed.</p>", player.ConnectionId);
-                return;
-            }
-            
+          
             if (item == null)
             {
                 //incase someone tries drop gold as in drop golden sword,
@@ -298,6 +287,19 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                 _writer.WriteLine("<p>You don't have that item.</p>", player.ConnectionId);
                 return;
             }
+            
+            if (item.Equipped)
+            {
+                _writer.WriteLine($"<p>You must remove {item.Name.ToLower()} before you can drop it.</p>", player.ConnectionId);
+                return;
+            }
+            
+            if ((item.ItemFlag & Item.Item.ItemFlags.Nodrop) != 0)
+            {
+                _writer.WriteLine($"<p>You can't let go of {item.Name.ToLower()}. It appears to be cursed.</p>", player.ConnectionId);
+                return;
+            }
+
 
             player.Inventory.Remove(item);
 
