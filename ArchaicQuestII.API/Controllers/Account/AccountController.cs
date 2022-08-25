@@ -45,10 +45,9 @@ namespace ArchaicQuestII.API.Controllers
     {
        
         private IPlayerDataBase _pdb { get; }
-        private ICache _cache { get; }
         private IDataBase _db { get; }
         private readonly IUserService _userService;
-        public AccountController(IPlayerDataBase pdb, IDataBase db, IUserService adminService, ICache cache)
+        public AccountController(IPlayerDataBase pdb, IDataBase db, IUserService adminService)
         {
             _pdb = pdb;
             _db = db;
@@ -297,12 +296,13 @@ namespace ArchaicQuestII.API.Controllers
                 },
             };
 
-            if (string.IsNullOrEmpty(_cache.GetConfig().PostMarkKey))
+            var config = _db.GetById<Config>(1, DataBase.Collections.Config);
+            if (string.IsNullOrEmpty(config.PostMarkKey))
             {
                 return BadRequest(new { message = "PostMark Key required to send emails." });
             }
 
-            var client = new PostmarkClient(_cache.GetConfig().PostMarkKey);
+            var client = new PostmarkClient(config.PostMarkKey);
 
             var response = await client.SendMessageAsync(message);
 
