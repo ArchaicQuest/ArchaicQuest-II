@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using ArchaicQuestII.API.Entities;
 using ArchaicQuestII.API.Helpers;
@@ -22,6 +23,20 @@ public class ForgotPassword
     public string BrowserName { get; set; }
     public string OSName { get; set; }
 }
+
+public class ResetPasswordId
+{
+    public string Email { get; set; }
+    public Guid UserId { get; set; }
+    public DateTime DateTime { get; set; }
+}
+
+public class ResetPassword
+{
+    public string Id { get; set; }
+    public string Password { get; set; }
+}
+
 
 namespace ArchaicQuestII.API.Controllers
 {
@@ -246,17 +261,32 @@ namespace ArchaicQuestII.API.Controllers
             }
 
             var user = _pdb.GetCollection<Account>(PlayerDataBase.Collections.Account).FindOne(x => x.Email.Equals(forgotPassword.Email));
+
+            if (user == null)
+            {
+                return Ok(JsonConvert.SerializeObject(new { toast = "Forgot password successfully requested." }));
+            }
+
+
+            var id = new ResetPasswordId()
+            {
+                Email = user.Email,
+                UserId = user.Id,
+                DateTime = DateTime.Now
+            };
+
+            var encodedId = ToBase64(id);
             
             // Send an email asynchronously:
             var message = new TemplatedPostmarkMessage {
                 From = "noreply@archaicquest.com",  
-                To = "liam.kenneth@hotmail.co.uk",
+                To = forgotPassword.Email,
                 TemplateAlias = "password-reset",
                 TemplateModel = new Dictionary<string,object> {
                     { "product_url", "https://www.archaicquest.com" },
-                    { "product_name", "//localhost:4200/" },
-                    { "name", "ArchaicQuest" },
-                    { "action_url", $"http://localhost:4200?id={Base64Encode(user.Email)}" },
+                    { "product_name", "ArchaicQuest" },
+                    { "name", forgotPassword.Email },
+                    { "action_url", $"https://play.archaicquest.com?id={encodedId}" },
                     { "operating_system", forgotPassword.OSName },
                     { "browser_name", forgotPassword.BrowserName },
                     { "company_name", "ArchaicQuest" },
@@ -274,12 +304,51 @@ namespace ArchaicQuestII.API.Controllers
             }
        
 
-            return Ok(JsonConvert.SerializeObject(new { toast = "Forgot password successfully requested" }));
+            return Ok(JsonConvert.SerializeObject(new { toast = "Forgot password successfully requested." }));
 
         }
 
 
+        [HttpPost]
+        [Route("api/Account/reset-password")]
+        public async Task<IActionResult> PasswordReset([FromBody] ResetPassword resetPassword)
+        {
 
+            if (!ModelState.IsValid)
+            {
+                var exception = new Exception("Invalid request");
+                throw exception;
+            }
+
+            ResetPasswordId decodedId = null;
+            
+            try
+            {
+                 decodedId = FromBase64<ResetPasswordId>(resetPassword.Id);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Invalid reset password id" );
+            }
+
+            var expiry = decodedId.DateTime;
+            var now = DateTime.Now;
+            var difference = now - expiry;
+            if (difference.Days > 0)
+            {
+                return BadRequest("Change password request has expired.");
+
+            }
+
+            var user = _pdb.GetCollection<Account>(PlayerDataBase.Collections.Account).FindOne(x => x.Id.Equals(decodedId.UserId) && x.Email.Equals(decodedId.Email));
+
+            user.Password = BCrypt.Net.BCrypt.HashPassword(resetPassword.Password);
+
+            _pdb.Save(user, PlayerDataBase.Collections.Account);
+
+            return Ok(JsonConvert.SerializeObject(new { toast = "Password successfully updated." }));
+
+        }
 
         [Authorize]
         [HttpGet("api/Account/getusers")]
@@ -316,16 +385,24 @@ namespace ArchaicQuestII.API.Controllers
             return Ok(logs);
         }
         
-        private static string Base64Encode(string plainText) {
-            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
-            return System.Convert.ToBase64String(plainTextBytes);
-        }
-        
-        private static string Base64Decode(string base64EncodedData) {
-            var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
-            return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
-        }
 
+        
+        public static string ToBase64(object obj)
+        {
+            string json = JsonConvert.SerializeObject(obj);
+
+            byte[] bytes = Encoding.Default.GetBytes(json);
+
+            return Convert.ToBase64String(bytes);
+        }
+        public static ResetPasswordId FromBase64<ResetPasswordId>(string base64Text)
+        {
+            byte[] bytes = Convert.FromBase64String(base64Text);
+
+            string json = Encoding.Default.GetString(bytes);
+
+            return JsonConvert.DeserializeObject<ResetPasswordId>(json);
+        }
     }
 
 
