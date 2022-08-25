@@ -47,6 +47,7 @@ namespace ArchaicQuestII.GameLogic.Core
         public string ChannelDiscordWebHookURL { get; set; } = "";
         public string EventsDiscordWebHookURL { get; set; } = "";
         public string ErrorDiscordWebHookURL { get; set; } = "";
+        public string PostMarkKey { get; set; } = "";
 
     }
 }

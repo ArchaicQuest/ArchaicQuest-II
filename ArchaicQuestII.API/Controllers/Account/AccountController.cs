@@ -12,6 +12,7 @@ using ArchaicQuestII.API.Helpers;
 using ArchaicQuestII.API.Models;
 using ArchaicQuestII.API.Services;
 using ArchaicQuestII.DataAccess.DataModels;
+using ArchaicQuestII.GameLogic.Core;
 using Newtonsoft.Json;
 using PostmarkDotNet;
 using Account = ArchaicQuestII.GameLogic.Account.Account;
@@ -44,9 +45,10 @@ namespace ArchaicQuestII.API.Controllers
     {
        
         private IPlayerDataBase _pdb { get; }
+        private ICache _cache { get; }
         private IDataBase _db { get; }
         private readonly IUserService _userService;
-        public AccountController(IPlayerDataBase pdb, IDataBase db, IUserService adminService)
+        public AccountController(IPlayerDataBase pdb, IDataBase db, IUserService adminService, ICache cache)
         {
             _pdb = pdb;
             _db = db;
@@ -295,7 +297,12 @@ namespace ArchaicQuestII.API.Controllers
                 },
             };
 
-            var client = new PostmarkClient("7c3b9790-5b6e-49fe-8be9-786314ace80a");
+            if (string.IsNullOrEmpty(_cache.GetConfig().PostMarkKey))
+            {
+                return BadRequest(new { message = "PostMark Key required to send emails." });
+            }
+
+            var client = new PostmarkClient(_cache.GetConfig().PostMarkKey);
 
             var response = await client.SendMessageAsync(message);
 

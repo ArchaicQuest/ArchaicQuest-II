@@ -1,5 +1,6 @@
 {
   "ChannelDiscordWebHookURL": "${secrets.DISCORDEVENT }",
-  "EventsDiscordWebHookURL": "${secrets.DISCORDEVENT }"
+  "EventsDiscordWebHookURL": "${secrets.DISCORDEVENT }",
+  "PostMarkSecret": "${secrets.POSTMARKKEY }"
 }
 
