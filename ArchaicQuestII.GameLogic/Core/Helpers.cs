@@ -42,8 +42,11 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public static Item.Item findRoomObject(Tuple<int, string> keyword, Room room)
         {
-            return keyword.Item1 == -1 ? room.Items.FirstOrDefault(x => x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase)) :
-                 room.Items.FindAll(x => x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase)).Skip(keyword.Item1 - 1).FirstOrDefault();
+            return keyword.Item1 == -1
+                ? room.Items.FirstOrDefault(x =>
+                    x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase))
+                : room.Items.FindAll(x => x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase))
+                    .Skip(keyword.Item1 - 1).FirstOrDefault();
         }
 
         public static Item.Item findObjectInInventory(Tuple<int, string> keyword, Player player)
@@ -91,7 +94,7 @@ namespace ArchaicQuestII.GameLogic.Core
         {
 
             return keyword.Item1 == -1
-                ? room.Mobs.FirstOrDefault(x =>
+                ? room.Mobs.Where(x => x.IsHiddenScriptMob == false).FirstOrDefault(x =>
                     x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase)) ?? room.Mobs.FirstOrDefault(x =>
                     x.LongName.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase))
                 : room.Mobs.FindAll(x => x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase))
@@ -445,6 +448,35 @@ namespace ArchaicQuestII.GameLogic.Core
                 default: { return direction; }
             }
         }
+        
+        /// <summary>
+        /// Adds flags to display of items
+        /// e.g (glow) A Long sword
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns>name of the weapon with prefixed flags</returns>
+        public static string DisplayEQNameWithFlags(Item.Item item)
+        {
+            var sb = new StringBuilder();
+           if ((item.ItemFlag & Item.Item.ItemFlags.Glow) != 0)
+            {
+                sb.Append("({teal}Glowing{/}) ");
+            }
+           
+           if ((item.ItemFlag & Item.Item.ItemFlags.Hum) != 0)
+           {
+               sb.Append("({yellow}Humming{/}) ");
+           }
+
+           if ((item.ItemFlag & Item.Item.ItemFlags.Holy) != 0)
+           {
+               sb.Append("(Holy) ");
+           }
+
+           sb.Append(item.Name);
+
+            return sb.ToString();
+        }
 
         /// <summary>
         /// Applies bonus affects to player
@@ -536,6 +568,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
             }
         }
+        
 
     }
 

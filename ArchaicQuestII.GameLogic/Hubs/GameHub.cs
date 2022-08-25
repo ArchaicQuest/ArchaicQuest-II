@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Class;
+using ArchaicQuestII.GameLogic.Character.Config;
 using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Commands;
@@ -203,6 +204,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
         {
             var player = GetCharacter(hubId, characterId);
             UpdatePlayerSkills(player);
+            player.Config ??= new PlayerConfig();
 
 
             AddCharacterToCache(hubId, player);
@@ -276,26 +278,24 @@ namespace ArchaicQuestII.GameLogic.Hubs
                 }
             }
 
-            for (var i = player.Skills.Count - 1; i >= 0; i--)
+            if (player.Skills.Count > 0)
             {
-                if (classSkill.Skills.FirstOrDefault(x =>
-                    x.SkillName.Equals(player.Skills[i].SkillName, StringComparison.CurrentCultureIgnoreCase)) == null)
+                for (var i = player.Skills.Count - 1; i >= 0; i--)
                 {
-                    player.Skills.Remove(player.Skills[i]);
+                    if (classSkill.Skills.FirstOrDefault(x =>
+                            x.SkillName.Equals(player.Skills[i].SkillName,
+                                StringComparison.CurrentCultureIgnoreCase)) == null)
+                    {
+                        player.Skills.Remove(player.Skills[i]);
+                    }
+
+                    var skill = classSkill.Skills.FirstOrDefault(x => x.SkillName.Equals(player.Skills[i].SkillName));
+
+
+                    player.Skills[i].Level = skill.Level;
                 }
-
-                var skill = classSkill.Skills.FirstOrDefault(x => x.SkillName.Equals(player.Skills[i].SkillName));
-
-
-                player.Skills[i].Level = skill.Level;
             }
-
-            if (player.ClassName == "Fighter" && player.TotalExperience == 0 && player.Skills.FirstOrDefault(x => x.SkillName.Equals("Long Blades")).Proficiency == 1)
-            {
-                player.Skills.FirstOrDefault(x => x.SkillName.Equals("Long Blades")).Proficiency = 75;
-
-            }
-
+            
 
         }
 
@@ -314,7 +314,10 @@ namespace ArchaicQuestII.GameLogic.Hubs
             player.ConnectionId = hubId;
             player.LastCommandTime = DateTime.Now;
             player.LastLoginTime = DateTime.Now;
-
+            player.Following = String.Empty;
+            player.Followers = new List<Player>();
+            player.grouped = false;
+            
             SetArmorRating(player);
 
             return player;
@@ -364,7 +367,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
         {
             //add to DB, configure from admin
             var roomid = !string.IsNullOrEmpty(startingRoom) ? startingRoom : _cache.GetConfig().StartingRoom;
-            var room = _cache.GetRoom(roomid);
+            var room = _cache.GetRoom(roomid) ?? _cache.GetRoom(_cache.GetConfig().StartingRoom);
             character.RoomId = $"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}";
 
             if (string.IsNullOrEmpty(character.RecallId))
@@ -386,10 +389,13 @@ namespace ArchaicQuestII.GameLogic.Hubs
                         if (!petAlreadyInRoom)
                         {
                             room.Mobs.Add(pet);
+                            _writeToClient.WriteToOthersInRoom($"{pet.Name} suddenly appears.", room, character);
                         }
                     }
 
                 }
+                
+                _writeToClient.WriteToOthersInRoom($"{character.Name} suddenly appears.", room, character);
             }
 
 

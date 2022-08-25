@@ -182,7 +182,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
             if (container.Container.Items.Count == 0)
             {
-                _writer.WriteLine("<p>You don't see anything here.</p>", player.ConnectionId);
+                _writer.WriteLine($"<p>You see nothing in {container.Name.ToLower()}.</p>", player.ConnectionId);
                 return;
             }
 
@@ -266,8 +266,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
             var nthTarget = Helpers.findNth(target);
             var item = Helpers.findObjectInInventory(nthTarget, player);
-
-
+            
+          
             if (item == null)
             {
                 //incase someone tries drop gold as in drop golden sword,
@@ -287,6 +287,19 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                 _writer.WriteLine("<p>You don't have that item.</p>", player.ConnectionId);
                 return;
             }
+            
+            if (item.Equipped)
+            {
+                _writer.WriteLine($"<p>You must remove {item.Name.ToLower()} before you can drop it.</p>", player.ConnectionId);
+                return;
+            }
+            
+            if ((item.ItemFlag & Item.Item.ItemFlags.Nodrop) != 0)
+            {
+                _writer.WriteLine($"<p>You can't let go of {item.Name.ToLower()}. It appears to be cursed.</p>", player.ConnectionId);
+                return;
+            }
+
 
             player.Inventory.Remove(item);
 
@@ -476,6 +489,12 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                 _writer.WriteLine("<p>You don't have that item.</p>", player.ConnectionId);
                 return;
             }
+            
+            if  ((item.ItemFlag & Item.Item.ItemFlags.Nodrop) != 0)
+            {
+                _writer.WriteLine($"<p>You can't let go of {item.Name}. It appears to be cursed.</p>", player.ConnectionId);
+                return;
+            }
 
             player.Inventory.Remove(item);
             player.Weight -= item.Weight;
@@ -510,7 +529,12 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
             for (var i = player.Inventory.Count - 1; i >= 0; i--)
             {
-
+                
+                if((player.Inventory[i].ItemFlag & Item.Item.ItemFlags.Nodrop) != 0)
+                {
+                    _writer.WriteLine($"<p>You can't let go of {player.Inventory[i].Name}. It appears to be cursed.</p>", player.ConnectionId);
+                    continue;
+                }
                 container.Container.Items.Add(player.Inventory[i]);
                 player.Weight -= player.Inventory[i].Weight;
                 _writer.WriteLine($"<p>You place {player.Inventory[i].Name.ToLower()} into {container.Name.ToLower()}.</p>", player.ConnectionId);
@@ -642,6 +666,21 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
             {
                 if (player.Inventory[i].Stuck == false && player.Inventory[i].Equipped == false)
                 {
+
+                    if (player.Inventory[i].Equipped)
+                    {
+                        _writer.WriteLine(
+                            $"<p>You must remove {player.Inventory[i].Name.ToLower()} before you can drop it.</p>",
+                            player.ConnectionId);
+                        return;
+                    }
+                    
+
+                    if ((player.Inventory[i].ItemFlag & Item.Item.ItemFlags.Nodrop) != 0)
+                    {
+                        _writer.WriteLine($"<p>You can't let go of {player.Inventory[i].Name}. It appears to be cursed.</p>", player.ConnectionId);
+                        return;
+                    }
 
                     room.Items.Add(player.Inventory[i]);
                     player.Weight -= player.Inventory[i].Weight;
@@ -801,6 +840,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                 _writer.WriteLine("<p>Give to whom?</p>", player.ConnectionId);
                 return;
             }
+            
+            
             var nthItem = Helpers.findNth(itemName);
             var nthTarget = Helpers.findNth(targetName);
             var target = Helpers.FindMob(nthTarget, room) ?? Helpers.findPlayerObject(nthTarget, room);
@@ -828,6 +869,18 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
             if (item == null)
             {
                 _writer.WriteLine("<p>You do not have that item.</p>", player.ConnectionId);
+                return;
+            }
+            
+            if (item.Equipped)
+            {
+                _writer.WriteLine($"<p>You must remove {item.Name.ToLower()} before you can give it.</p>", player.ConnectionId);
+                return;
+            }
+            
+            if ((item.ItemFlag & Item.Item.ItemFlags.Nodrop) != 0)
+            {
+                _writer.WriteLine($"<p>You can't let go of {item.Name.ToLower()}. It appears to be cursed.</p>", player.ConnectionId);
                 return;
             }
 

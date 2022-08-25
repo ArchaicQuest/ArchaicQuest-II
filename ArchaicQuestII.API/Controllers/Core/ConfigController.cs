@@ -40,7 +40,8 @@ namespace ArchaicQuestII.API.Controllers.Core
         [Route("api/config")]
         public Config Get()
         {
-            return _db.GetById<Config>(1, DataBase.Collections.Config);
+            var config = _db.GetById<Config>(1, DataBase.Collections.Config);
+            return config;
         }
 
     }

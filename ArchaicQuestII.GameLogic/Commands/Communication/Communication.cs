@@ -27,7 +27,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
             _updateClient.UpdateCommunication(player, $"<p class='gossip'>[<span>Gossip</span>]: {text}</p>", "gossip");
             foreach (var pc in room.Players)
             {
-                if (pc.Name.Equals(player.Name, StringComparison.CurrentCultureIgnoreCase))
+                if (pc.Name.Equals(player.Name, StringComparison.CurrentCultureIgnoreCase) || !pc.Config.GossipChannel)
                 {
                     continue;
                 }
@@ -45,7 +45,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
             _updateClient.UpdateCommunication(player, $"<p class='newbie'>[<span>Newbie</span>]: {text}</p>", "newbie");
             foreach (var pc in room.Players)
             {
-                if (pc.Name.Equals(player.Name, StringComparison.CurrentCultureIgnoreCase))
+                if (pc.Name.Equals(player.Name, StringComparison.CurrentCultureIgnoreCase) || !pc.Config.NewbieChannel)
                 {
                     continue;
                 }
@@ -63,7 +63,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
             _updateClient.UpdateCommunication(player, $"<p class='ooc'>[<span>OOC</span>]: {text}</p>", "ooc");
             foreach (var pc in room.Players)
             {
-                if (pc.Name.Equals(player.Name, StringComparison.CurrentCultureIgnoreCase))
+                if (pc.Name.Equals(player.Name, StringComparison.CurrentCultureIgnoreCase) || !pc.Config.OocChannel)
                 {
                     continue;
                 }
@@ -73,6 +73,46 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
 
             Helpers.PostToDiscord($"[OOC] {player.Name} {text}", "channels", _cache.GetConfig());
 
+        }
+
+        public void Gsay(string fullCommand, Player player)
+        {
+            var text = fullCommand.Split(' ', 2)[1]; //.Substring(fullCommand.IndexOf(" ", StringComparison.Ordinal) + 1);
+           
+            if (!player.grouped)
+            {
+                _writer.WriteLine($"You are not in a group.", player.ConnectionId);
+                return;
+            }
+            
+            Player foundLeader = null;
+
+            if (player.grouped && player.Followers.Count > 0)
+            {
+                foundLeader = player;
+            }
+            else
+            {
+                foundLeader = _cache.GetPlayerCache()
+                    .FirstOrDefault(x => x.Value.Name.Equals(player.Following, StringComparison.CurrentCultureIgnoreCase)).Value;
+            }
+            
+            _writer.WriteLine($"<p class='gsay'>[group] You: <span>{text}</span></p>", player.ConnectionId);
+
+            if (!string.IsNullOrEmpty(player.Following) && foundLeader.Name == player.Following)
+            {
+                _writer.WriteLine($"<p class='gsay'>[group] {player.Name}: <span>{text}</span></p>", foundLeader.ConnectionId);
+            }
+            
+            foreach (var follower in foundLeader.Followers)
+            {
+                if (follower.Id.Equals(player.Id))
+                {
+                    continue;
+                }
+                
+                _writer.WriteLine($"<p class='gsay'>[group] {player.Name}: <span>{text}</span></p>", follower.ConnectionId);
+            }
         }
 
         // TODO: newbie, OOC, Gossip,
@@ -143,6 +183,12 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
             {
                 _writer.WriteLine($"<p>You tell yourself \"{text}\"</p>", player.ConnectionId);
                 return;
+            }
+
+            if (!foundPlayer.Config.Tells)
+            {
+                _writer.WriteLine($"<p>They can't hear you.</p>", player.ConnectionId);
+                return; 
             }
 
             player.ReplyTo = foundPlayer.Name;

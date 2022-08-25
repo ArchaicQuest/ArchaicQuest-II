@@ -263,12 +263,12 @@ End
 #SOCIAL
 Name        beckon~
 CharNoArg   Psst, c'mon.  Anyone?~
-OthersNoArg $n beckons to the air.  That might prove wise if $e gets stranded in a medieval submarine.~
-CharFound   You beckon $N follow you through rain, snow, dragons' lairs and even *gulp* lag.~
-OthersFound $n beckons $N follow $m.  You smell a rat.~
-VictFound   $n beckons you follow $m through rain, snow, dragons' lairs and even *gulp* lag.~
+OthersNoArg $n beckons to the air.~
+CharFound   You beckon $N to follow you.~
+OthersFound $n beckons $N to follow $m.~
+VictFound   $n beckons you to follow $m.~
 CharAuto    Psst, c'mon $n.~
-OthersAuto  $n beckons $n follow $n.  Ooooooook.~
+OthersAuto  $n beckons $n follow $n.~
 End
 
 #SOCIAL

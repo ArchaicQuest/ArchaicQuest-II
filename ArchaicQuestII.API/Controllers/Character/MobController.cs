@@ -78,7 +78,8 @@ namespace ArchaicQuestII.Controllers
                 Mounted = mob.Mounted,
                 SpellList = mob.SpellList,
                 EnterEmote = mob.EnterEmote,
-                LeaveEmote = mob.LeaveEmote
+                LeaveEmote = mob.LeaveEmote,
+                IsHiddenScriptMob = mob.IsHiddenScriptMob
             };
 
             foreach (var item in mob.Inventory)

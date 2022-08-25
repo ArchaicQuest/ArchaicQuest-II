@@ -34,10 +34,16 @@ namespace ArchaicQuestII.GameLogic.World.Room
             _gain = gain;
             _formulas = formulas;
         }
+
+        public void Look(string target, Room room, Player player)
+        {
+            Look(target, room, player, false);
+        }
+
         /// <summary>
         /// Displays current room 
         /// </summary>
-        public void Look(string target, Room room, Player player)
+        public void Look(string target, Room room, Player player, bool hasBrief = false)
         {
 
             if (player.Status == CharacterStatus.Status.Sleeping)
@@ -68,9 +74,13 @@ namespace ArchaicQuestII.GameLogic.World.Room
             var roomDesc = new StringBuilder();
             var isDark = RoomIsDark(room, player);
 
-            roomDesc
-                .Append($"<p class=\"room-title {(isDark ? "room-dark" : "")}\">{room.Title}<br /></p>")
-                .Append($"<p class=\"room-description  {(isDark ? "room-dark" : "")}\">{room.Description}</p>");
+            roomDesc.Append($"<p class=\"room-title {(isDark ? "room-dark" : "")}\">{room.Title} ({room.Coords.X},{room.Coords.Y},{room.Coords.Z})<br /></p>");
+
+            // With brief toggled we don't show the room description
+            if (!hasBrief)
+            {
+                roomDesc.Append($"<p class=\"room-description  {(isDark ? "room-dark" : "")}\">{room.Description}</p>");
+            }
 
             if (!showVerboseExits)
             {
@@ -369,7 +379,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
             if (character.Equipped.AboutBody != null)
             {
-                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn about body'>").Append(" &lt;worn about body&gt;").Append("</td>").Append("<td>").Append(character.Equipped.AboutBody?.Name ?? "(nothing)").Append("</td></tr>");
+                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn about body'>").Append(" &lt;worn about body&gt;").Append("</td>").Append("<td>").Append(Helpers.DisplayEQNameWithFlags(character.Equipped.AboutBody) ?? "(nothing)").Append("</td></tr>");
             }
 
             if (character.Equipped.Waist != null)
@@ -481,7 +491,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
                     room.RoomObjects.FirstOrDefault(x =>
                         x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
 
-                _writeToClient.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{roomObjects.Examine}", player.ConnectionId);
+                _writeToClient.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{roomObjects.Examine ?? roomObjects.Look}", player.ConnectionId);
 
                 return;
             }
@@ -661,7 +671,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
             var mobName = string.Empty;
             var isDark = RoomIsDark(room, player);
             var isFightingPC = false;
-            foreach (var mob in room.Mobs)
+            foreach (var mob in room.Mobs.Where(x => x.IsHiddenScriptMob == false))
             {
 
                 if (!string.IsNullOrEmpty(mob.LongName))

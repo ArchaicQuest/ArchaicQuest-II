@@ -14,6 +14,8 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ArchaicQuestII.GameLogic.Character.Config;
+using Newtonsoft.Json;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -298,6 +300,34 @@ namespace ArchaicQuestII.Controllers.character
         }
 
 
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("api/player/config/{id}")]
+        public PlayerConfig GetConfig(string id)
+        {
+     
+            var player = _cache.GetPlayer(id);
+
+            return player?.Config;
+        }
+        
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("api/player/config/{id}")]
+        public IActionResult UpdateConfig(string id, [FromBody] PlayerConfig config)
+        {
+            // update cache
+            var player = _cache.GetPlayer(id);
+
+            if (player != null)
+            {
+                player.Config = config;
+            }
+
+            var saved = _pdb.Save(player, PlayerDataBase.Collections.Players);
+
+            return saved ? Ok() : BadRequest("Failed Saving config");
+        }
 
 
 

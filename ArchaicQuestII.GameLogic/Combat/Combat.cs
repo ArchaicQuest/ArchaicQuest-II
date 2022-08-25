@@ -27,8 +27,9 @@ namespace ArchaicQuestII.GameLogic.Combat
         private readonly IDice _dice;
         private readonly IRandomItem _randomItem;
         private readonly IPlayerDataBase _pdb;
+        private readonly ICore _core;
 
-        public Combat(IWriteToClient writer, IUpdateClientUI clientUi, IDamage damage, IFormulas formulas, IGain gain, ICache cache, IQuestLog quest, IDice dice, IRandomItem randomItem, IPlayerDataBase pdb)
+        public Combat(IWriteToClient writer, IUpdateClientUI clientUi, IDamage damage, IFormulas formulas, IGain gain, ICache cache, IQuestLog quest, IDice dice, IRandomItem randomItem, IPlayerDataBase pdb, ICore core)
         {
             _writer = writer;
             _clientUi = clientUi;
@@ -40,6 +41,7 @@ namespace ArchaicQuestII.GameLogic.Combat
             _dice = dice;
             _randomItem = randomItem;
             _pdb = pdb;
+            _core = core;
 
         }
 
@@ -60,8 +62,8 @@ namespace ArchaicQuestII.GameLogic.Combat
             {
                 return (Player)room.Players.FirstOrDefault(x => x.Name.Equals(target, StringComparison.CurrentCultureIgnoreCase));
             }
-
-            return (Player)room.Mobs.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+            
+            return (Player)room.Mobs.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase) && x.IsHiddenScriptMob == false);
         }
 
 
@@ -242,6 +244,7 @@ namespace ArchaicQuestII.GameLogic.Combat
 
         public void InitFightStatus(Player player, Player target)
         {
+   
             player.Target = string.IsNullOrEmpty(player.Target) ? target.Name : player.Target;
             player.Status = CharacterStatus.Status.Fighting;
             target.Status = (target.Status & CharacterStatus.Status.Stunned) != 0 ? CharacterStatus.Status.Stunned : CharacterStatus.Status.Fighting;
@@ -262,13 +265,29 @@ namespace ArchaicQuestII.GameLogic.Combat
             {
                 _cache.AddCharToCombat(target.Id.ToString(), target);
             }
+            
+    
         }
 
+        // TODO refactor FIGHT init
+        // currently can spam kill because of the free init hit
         public void Fight(Player player, string victim, Room room, bool isMurder)
         {
 
+            if (victim == "k" || victim == "kill")
+            {
+                _writer.WriteLine("<p>Kill whom?<p>", player.ConnectionId);
+                return;
+            }
+
             try
             {
+                
+                /*if (player.Status == CharacterStatus.Status.Fighting)
+                {
+                    _writer.WriteLine("You will try your best.", player.ConnectionId);
+                    return;
+                }*/
 
                 if (player.Affects.Stunned)
                 {
@@ -292,7 +311,6 @@ namespace ArchaicQuestII.GameLogic.Combat
 
                     if (player.Status != CharacterStatus.Status.Fighting)
                     {
-                        _writer.WriteLine("<p>They are not here.</p>", player.ConnectionId);
                         return;
                     }
 
@@ -722,6 +740,27 @@ namespace ArchaicQuestII.GameLogic.Combat
 
                     }
                 }
+                
+                if (player.grouped)
+                {
+                    foreach (var follower in player.Followers)
+                    {
+                        if (follower.grouped && follower.Following == player.Name &&  follower.Status != CharacterStatus.Status.Fighting)
+                        {
+                            if (follower.Config.AutoAssist && string.IsNullOrEmpty(follower.Target))
+                            {
+                                follower.Buffer.Clear();
+                                follower.Target = player.Target;
+                                follower.Status = CharacterStatus.Status.Fighting;
+                                
+                                if (!_cache.IsCharInCombat(follower.Id.ToString()))
+                                {
+                                    _cache.AddCharToCombat(follower.Id.ToString(), follower);
+                                }
+                            }
+                        }
+                    }
+                }
 
             }
             catch (Exception e)
@@ -776,7 +815,41 @@ namespace ArchaicQuestII.GameLogic.Combat
 
             DeathCry(room, target);
 
-            _gain.GainExperiencePoints(player, target);
+          
+            if (player.grouped)
+            {
+                _gain.GroupGainExperiencePoints(player, target);
+
+             // other group members to drop from combat if they're fighting the same target
+             // other group members status set to standing
+             
+             var isGroupLeader = string.IsNullOrEmpty(player.Following);
+
+             var groupLeader = player;
+
+             if (!isGroupLeader)
+             {
+                 groupLeader = _cache.GetPlayerCache().FirstOrDefault(x => x.Value.Name.Equals(player.Following)).Value;
+             }
+         
+        
+         
+             foreach (var follower in groupLeader.Followers)
+             {
+                 if (follower.grouped && follower.Following == groupLeader.Name)
+                 {
+                     follower.Status = CharacterStatus.Status.Standing;
+                     follower.Target = String.Empty;
+                     _cache.RemoveCharFromCombat(follower.Id.ToString());
+                 }
+             }
+             
+             
+            }
+            else
+            {
+                _gain.GainExperiencePoints(player, target);   
+            }
 
             _quest.IsQuestMob(player, target.Name);
 
@@ -843,6 +916,14 @@ namespace ArchaicQuestII.GameLogic.Combat
                 {
                     corpse.Container.Items.Add(randomItem);
                 }
+
+                if (player.Config.AutoLoot)
+                {
+                    var corpseIndex = room.Items.IndexOf(corpse);
+                    player.Buffer.Enqueue($"get all {corpseIndex}.corpse");
+                }
+
+          
             }
 
             // clear list
@@ -863,7 +944,8 @@ namespace ArchaicQuestII.GameLogic.Combat
             _clientUi.UpdateEquipment(target);
             _clientUi.UpdateScore(target);
             _clientUi.UpdateScore(player);
-
+            
+         
             room.Clean = false;
 
             _cache.RemoveCharFromCombat(target.Id.ToString());
@@ -871,6 +953,11 @@ namespace ArchaicQuestII.GameLogic.Combat
 
             if (target.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
             {
+                if (player.Config.AutoSacrifice)
+                {
+                    _core.SacrificeCorpse(player, corpse, room);
+                }
+
                 room.Mobs.Remove(target);
                 var getTodayMobStats = _pdb.GetList<MobStats>(PlayerDataBase.Collections.MobStats).FirstOrDefault(x => x.Date.Date.Equals(DateTime.Today));
 
@@ -930,7 +1017,7 @@ namespace ArchaicQuestII.GameLogic.Combat
         public void Consider(Player player, string target, Room room)
         {
             var victim =
-                room.Mobs.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ??
+                room.Mobs.Where(x => x.IsHiddenScriptMob == false).FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ??
                 room.Players.FirstOrDefault(x => x.Name.StartsWith(target, StringComparison.CurrentCultureIgnoreCase));
 
             if (victim == null)

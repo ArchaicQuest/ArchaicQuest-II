@@ -267,7 +267,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
             sb.Append($"<span>Right here:</span>");
 
-            foreach (var obj in room.Mobs)
+            foreach (var obj in room.Mobs.Where(x => x.IsHiddenScriptMob == false))
             {
 
                 sb.Append($"<p class='mob'>{obj.Name} is right here.</p>");
@@ -280,10 +280,10 @@ namespace ArchaicQuestII.GameLogic.Core
                 sb.Append($"<p class='player'>{obj.Name} is right here.</p>");
 
             }
-
-            if (!room.Mobs.Any() && !room.Players.Any())
+            
+            if (room.Mobs.Where(x => x.IsHiddenScriptMob == false).Count() == 0 && !room.Players.Any())
             {
-
+                
                 sb.Append($"<p>There is nobody here.</p>");
 
             }
@@ -296,7 +296,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
                 sb.Append($"<span>{exit}:</span>");
 
-                foreach (var obj in getRoomObj.Mobs)
+                foreach (var obj in getRoomObj.Mobs.Where(x => x.IsHiddenScriptMob == false))
                 {
                     if (exit.Equals("down", StringComparison.CurrentCultureIgnoreCase))
                     {
@@ -328,7 +328,7 @@ namespace ArchaicQuestII.GameLogic.Core
                     }
                 }
 
-                if (!getRoomObj.Mobs.Any() && !getRoomObj.Players.Any())
+                if (getRoomObj.Mobs.Where(x => x.IsHiddenScriptMob == false).Count() == 0 && !getRoomObj.Players.Any())
                 {
 
                     sb.Append($"<p>There is nobody there.</p>");
@@ -414,7 +414,6 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public void Save(Player player)
         {
-
             _pdb.Save(player, PlayerDataBase.Collections.Players);
             _writeToClient.WriteLine("Character saved.", player.ConnectionId);
         }
@@ -936,7 +935,7 @@ namespace ArchaicQuestII.GameLogic.Core
             _clientUi.UpdateMoves(player);
             _clientUi.UpdateMana(player);
 
-            _writeToClient.WriteLine("You are restored.");
+            _writeToClient.WriteLine("You are restored.", player.ConnectionId);
         }
 
         public void Dismount(Player player, Room room)
@@ -1495,11 +1494,54 @@ namespace ArchaicQuestII.GameLogic.Core
                "If you're enjoying your time, bring a friend next time and share on social media, lets get more folks playing",
                "ArchaicQuest is a PvE MUD with optional PvP clans for those that enjoy player Vs player combat.",
                "ArchaicQuest features, Cooking and crafting. The cooking is inspired by BOTW",
-               "At the moment you can't turn hints off, that will be coming soon."
+               "At the moment you can't turn hints off, that will be coming soon.",
+               "Click the settings cog to change font type and size as well as other options"
            };
 
             return hints;
         }
+
+        public void SacrificeCorpse(Player player, Item.Item corpse, Room room)
+        {
+            var itemToRemove = room.Items.FirstOrDefault(u => u.Id == corpse.Id);
+            room.Items.Remove(itemToRemove);
+         
+            var coinCount = _dice.Roll(1, 1, 12);
+            player.Money.Gold += coinCount;
+            _writeToClient.WriteLine(
+                coinCount == 1
+                    ? $"The gods give you a measly gold coin for your sacrifice."
+                    : $"The gods give you {coinCount} gold coins for your sacrifice.",
+                player.ConnectionId);
+            _writeToClient.WriteToOthersInRoom($"{player.Name} sacrifices {corpse.Name.ToLower()}.",room, player);
+            
+            _clientUi.UpdateScore(player);
+        }
+        
+        public void SacrificeCorpse(Player player, string corpse, Room room)
+        {
+            var itemToRemove = room.Items.FirstOrDefault(u => u.Name.Contains(corpse));
+
+            if (itemToRemove != null)
+            {
+
+                room.Items.Remove(itemToRemove);
+
+                var coinCount = _dice.Roll(1, 1, 12);
+                player.Money.Gold += coinCount;
+                _writeToClient.WriteLine(
+                    coinCount == 1
+                        ? $"The gods give you a measly gold coin for your sacrifice."
+                        : $"The gods give you {coinCount} gold coins for your sacrifice.",
+                    player.ConnectionId);
+
+
+                _writeToClient.WriteToOthersInRoom($"{player.Name} sacrifices {itemToRemove.Name.ToLower()}.", room, player);
+
+                _clientUi.UpdateScore(player);
+            }
+        }
+
 
         public void DBDumpToJSON(Player player)
         {

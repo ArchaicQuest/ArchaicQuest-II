@@ -26,7 +26,6 @@ namespace ArchaicQuestII.GameLogic.Character
         public bool grouped { get; set; }
         public new Money Money { get; set; } = new Money() { Gold = 0 };
         public Money Bank { get; set; } = new Money() { Gold = 0 };
-        public new PlayerConfig Config { get; set; } = new PlayerConfig();
         public int Trains { get; set; } = 5;
         public int Practices { get; set; } = 5;
         public int MobKills { get; set; } = 0;

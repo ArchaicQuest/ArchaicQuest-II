@@ -24,6 +24,7 @@ using ArchaicQuestII.GameLogic.Spell.Interface;
 using MoonSharp.Interpreter;
 using System.Threading.Tasks;
 using ArchaicQuestII.GameLogic.Character.MobFunctions.Healer;
+using ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells;
 
 namespace ArchaicQuestII.GameLogic.Commands
 {
@@ -53,6 +54,7 @@ namespace ArchaicQuestII.GameLogic.Commands
         private readonly IUtilSkills _utilSkills;
         private readonly IPassiveSkills _passiveSkills;
         private readonly IHealer _healer;
+        private readonly IDamageSpells _damageSpells;
 
 
         public Commands(
@@ -77,8 +79,9 @@ namespace ArchaicQuestII.GameLogic.Commands
             ICrafting crafting,
             ICooking cooking,
             IUtilSkills utilSkills,
-                 IPassiveSkills passiveSkills,
-                 IHealer healer
+            IPassiveSkills passiveSkills,
+            IHealer healer,
+            IDamageSpells damageSpells
             )
         {
             _movement = movement;
@@ -104,6 +107,7 @@ namespace ArchaicQuestII.GameLogic.Commands
             _utilSkills = utilSkills;
             _passiveSkills = passiveSkills;
             _healer = healer;
+            _damageSpells = damageSpells;
         }
 
         public void CommandList(string key, string obj, string target, string fullCommand, Player player, Room room)
@@ -234,6 +238,11 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "sayto":
                 case ">":
                     _communication.SayTo(obj, target, room, player);
+                    break;
+                case "gsay":
+                case "`":
+                case "gs":
+                    _communication.Gsay(fullCommand, player);
                     break;
                 case "yell":
                     _communication.Yell(obj, room, player);
@@ -400,6 +409,10 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "checkpose":
                     _core.CheckPose(player);
                     break;
+                case "sacrifice":
+                case "sac":
+                    _core.SacrificeCorpse(player, obj, room);
+                    break;
                 case "title":
                     _core.SetTitle(player, fullCommand);
                     break;
@@ -414,6 +427,9 @@ namespace ArchaicQuestII.GameLogic.Commands
                     break;
                 case "/teleport":
                     _core.ImmTeleport(player, room, obj);
+                    break;
+                case "/id":
+                    _damageSpells.Identify(player, obj, room);
                     break;
                     //case "/backup": TODO: this works but need to lock down to admin only
                     //    _core.DBDumpToJSON(player);
@@ -471,7 +487,7 @@ namespace ArchaicQuestII.GameLogic.Commands
 
 
                         script.Globals["room"] = room;
-                        script.Globals["command"] = command;
+                        script.Globals["command"] = command.ToLower();
                         script.Globals["player"] = player;
                         script.Globals["mob"] = mob;
 
