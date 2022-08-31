@@ -446,6 +446,56 @@ namespace ArchaicQuestII.GameLogic.Commands
         public void ProcessCommand(string command, Player player, Room room)
         {
 
+            var processCommand = command;
+            Player activeMob = null;
+            try
+            {
+
+                foreach (var mob in room.Mobs)
+                {
+            
+                    if (!string.IsNullOrEmpty(mob.Events.Act) && room.Players.Any())
+                    {
+                        activeMob = mob;
+                        UserData.RegisterType<MobScripts>();
+
+                        Script script = new Script();
+
+                        DynValue obj = UserData.Create(_mobScripts);
+                        script.Globals.Set("obj", obj);
+                        UserData.RegisterProxyType<MyProxy, Room>(r => new MyProxy(room));
+                        UserData.RegisterProxyType<ProxyPlayer, Player>(r => new ProxyPlayer(player));
+                        UserData.RegisterProxyType<ProxyCommand, string>(r => new ProxyCommand(command));
+
+
+                        script.Globals["room"] = room;
+                        script.Globals["command"] = command.ToLower();
+                        script.Globals["player"] = player;
+                        script.Globals["mob"] = mob;
+
+
+                        DynValue res = script.DoString(mob.Events.Act);
+
+                        processCommand = res.String;
+                        
+                       
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (activeMob != null)
+                {
+                    Console.WriteLine($"Act script for {activeMob.Name} {ex.Message}");
+                }
+                Helpers.PostToDiscord($"{player.Name} {ex.Message}", "error", _cache.GetConfig());
+            }
+        
+            if (processCommand != null)
+            {
+                command = processCommand;
+            }
+
             if (string.IsNullOrEmpty(command))
             {
                 return;
@@ -467,43 +517,6 @@ namespace ArchaicQuestII.GameLogic.Commands
             var parameters = MakeCommandPartsSafe(commandParts);
 
             CommandList(key, parameters.Item1, parameters.Item2, cleanCommand, player, room);
-            try
-            {
-
-                foreach (var mob in room.Mobs)
-                {
-
-                    if (!string.IsNullOrEmpty(mob.Events.Act) && room.Players.Any())
-                    {
-                        UserData.RegisterType<MobScripts>();
-
-                        Script script = new Script();
-
-                        DynValue obj = UserData.Create(_mobScripts);
-                        script.Globals.Set("obj", obj);
-                        UserData.RegisterProxyType<MyProxy, Room>(r => new MyProxy(room));
-                        UserData.RegisterProxyType<ProxyPlayer, Player>(r => new ProxyPlayer(player));
-                        UserData.RegisterProxyType<ProxyCommand, string>(r => new ProxyCommand(command));
-
-
-                        script.Globals["room"] = room;
-                        script.Globals["command"] = command.ToLower();
-                        script.Globals["player"] = player;
-                        script.Globals["mob"] = mob;
-
-
-                        DynValue res = script.DoString(mob.Events.Act);
-                    }
-                }
-            }
-
-
-
-
-            catch (Exception ex)
-            {
-                Helpers.PostToDiscord($"{player.Name} {ex.Message}", "error", _cache.GetConfig());
-            }
 
 
         }

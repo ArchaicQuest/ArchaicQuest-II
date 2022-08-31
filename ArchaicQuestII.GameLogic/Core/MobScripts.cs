@@ -269,7 +269,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public bool StartsWith(string word, string expected)
         {
-            return word.Contains(expected);
+            return word.StartsWith(expected);
         }
 
         public void UpdateQuest(Player player, int questId, string message)
