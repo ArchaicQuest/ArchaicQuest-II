@@ -306,5 +306,22 @@ namespace ArchaicQuestII.GameLogic.Core
                 Console.WriteLine(ex.Message);
             }
         }
+        
+        public async void PlaySound(string soundName, Player player)
+        {
+            if (string.IsNullOrEmpty(player.ConnectionId) && !player.IsTelnet)
+            {
+                return;
+            }
+
+            try
+            {
+                await _hubContext.Clients.Client(player.ConnectionId).SendAsync("PlaySound", soundName);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
     }
 }

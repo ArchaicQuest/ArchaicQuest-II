@@ -44,5 +44,7 @@ namespace ArchaicQuestII.GameLogic.Core
         void UpdateContentPopUp(Player player, WriteBook bookContent);
 
         void UpdateTime(Player player);
+        
+        void PlaySound(string soundName, Player player);
     }
 }

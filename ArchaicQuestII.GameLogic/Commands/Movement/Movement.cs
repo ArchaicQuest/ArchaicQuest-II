@@ -146,6 +146,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
                 return;
 
             }
+            
+            _updateUi.PlaySound("walk", character);
 
             _roomActions.Look("", getNextRoom, character, character.Config.Brief);
 

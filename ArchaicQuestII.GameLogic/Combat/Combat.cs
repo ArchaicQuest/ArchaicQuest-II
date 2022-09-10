@@ -504,6 +504,8 @@ namespace ArchaicQuestII.GameLogic.Combat
                         }
                     }
 
+                    _clientUi.PlaySound("hit", target);
+                    _clientUi.PlaySound("hit", player);
                     HarmTarget(target, damage);
 
                     DisplayDamage(player, target, room, weapon, damage);
@@ -518,7 +520,8 @@ namespace ArchaicQuestII.GameLogic.Combat
                 }
                 else
                 {
-
+                    _clientUi.PlaySound("miss", target);
+                    _clientUi.PlaySound("miss", player);
                     DisplayMiss(player, target, room, weapon);
                     // miss message
                     // gain improvements on weapon skill

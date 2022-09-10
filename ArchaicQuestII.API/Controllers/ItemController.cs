@@ -8,9 +8,15 @@ using ArchaicQuestII.API.Entities;
 using ArchaicQuestII.API.Helpers;
 using ArchaicQuestII.API.Models;
 using ArchaicQuestII.GameLogic.Character.Equipment;
+using ArchaicQuestII.GameLogic.World.Room;
 using Newtonsoft.Json;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+public class ItemData
+{
+    public Item Item { get; set; }
+    public bool UpdateAllInstances { get; set; }
+}
 
 namespace ArchaicQuestII.Controllers
 {
@@ -24,7 +30,7 @@ namespace ArchaicQuestII.Controllers
         }
         [HttpPost]
         [Route("api/item/PostItem")]
-        public IActionResult PostItem([FromBody] Item item)
+        public IActionResult PostItem([FromBody] ItemData itemData)
         {
 
 
@@ -33,97 +39,134 @@ namespace ArchaicQuestII.Controllers
                 var exception = new Exception("Invalid object");
                 throw exception;
             }
-
+            
+            
             var newItem = new Item()
             {
-                Name = item.Name,
-                Level = item.Level,
+                Name = itemData.Item.Name,
+                Level = itemData.Item.Level,
                 ArmourRating = new ArmourRating()
                 {
-                    Armour = item.ArmourRating.Armour,
-                    Magic = item.ArmourRating.Magic
+                    Armour = itemData.Item.ArmourRating.Armour,
+                    Magic = itemData.Item.ArmourRating.Magic
                 },
-                ArmourType = item.ArmourType,
-                AttackType = item.AttackType,
-                Condition = item.Condition,
-                Container = item.Container,
+                ArmourType = itemData.Item.ArmourType,
+                AttackType = itemData.Item.AttackType,
+                Condition = itemData.Item.Condition,
+                Container = itemData.Item.Container,
                 Book = new Book()
                 {
-                    Blank = item.Book.Blank,
-                    PageCount = item.Book.PageCount,
-                    Pages = item.Book.Pages
+                    Blank = itemData.Item.Book.Blank,
+                    PageCount = itemData.Item.Book.PageCount,
+                    Pages = itemData.Item.Book.Pages
                 },
-                DamageType = item.DamageType,
+                DamageType = itemData.Item.DamageType,
                 Damage = new Damage()
                 {
-                    Maximum = item.Damage.Maximum,
-                    Minimum = item.Damage.Minimum,
+                    Maximum = itemData.Item.Damage.Maximum,
+                    Minimum = itemData.Item.Damage.Minimum,
                 },
                 Modifier = new Modifier()
                 {
-                    DamRoll = item.Modifier.DamRoll,
-                    HitRoll = item.Modifier.HitRoll,
-                    HP = item.Modifier.HP,
-                    Mana = item.Modifier.Mana,
-                    Moves = item.Modifier.Moves,
-                    SpellDam = item.Modifier.SpellDam,
-                    Saves = item.Modifier.Saves,
-                    Strength = item.Modifier.Strength,
-                    Dexterity = item.Modifier.Dexterity,
-                    Constitution = item.Modifier.Constitution,
-                    Wisdom = item.Modifier.Wisdom,
-                    Intelligence = item.Modifier.Intelligence,
-                    Charisma = item.Modifier.Charisma,
-                    AcMod = item.Modifier.AcMod,
-                    AcMagicMod = item.Modifier.AcMagicMod
+                    DamRoll = itemData.Item.Modifier.DamRoll,
+                    HitRoll = itemData.Item.Modifier.HitRoll,
+                    HP = itemData.Item.Modifier.HP,
+                    Mana = itemData.Item.Modifier.Mana,
+                    Moves = itemData.Item.Modifier.Moves,
+                    SpellDam = itemData.Item.Modifier.SpellDam,
+                    Saves = itemData.Item.Modifier.Saves,
+                    Strength = itemData.Item.Modifier.Strength,
+                    Dexterity = itemData.Item.Modifier.Dexterity,
+                    Constitution = itemData.Item.Modifier.Constitution,
+                    Wisdom = itemData.Item.Modifier.Wisdom,
+                    Intelligence = itemData.Item.Modifier.Intelligence,
+                    Charisma = itemData.Item.Modifier.Charisma,
+                    AcMod = itemData.Item.Modifier.AcMod,
+                    AcMagicMod = itemData.Item.Modifier.AcMagicMod
                 },
-                DecayTimer = item.DecayTimer,
-                Description = item.Description,
-                Slot = item.Slot,
-                ForageRank = item.ForageRank,
-                Hidden = item.Hidden,
-                IsHiddenInRoom = item.IsHiddenInRoom,
-                ItemFlag = item.ItemFlag,
-                Keywords = item.Keywords,
-                KnownByName = item.KnownByName,
-                QuestItem = item.QuestItem,
-                Stuck = item.Stuck,
-                ItemType = item.ItemType,
-                Uses = item.Uses,
-                WeaponSpeed = item.WeaponSpeed,
-                WeaponType = item.WeaponType,
-                Weight = item.Weight,
-                Value = item.Value,
-                TwoHanded = item.TwoHanded,
+                DecayTimer = itemData.Item.DecayTimer,
+                Description = itemData.Item.Description,
+                Slot = itemData.Item.Slot,
+                ForageRank = itemData.Item.ForageRank,
+                Hidden = itemData.Item.Hidden,
+                IsHiddenInRoom = itemData.Item.IsHiddenInRoom,
+                ItemFlag = itemData.Item.ItemFlag,
+                Keywords = itemData.Item.Keywords,
+                KnownByName = itemData.Item.KnownByName,
+                QuestItem = itemData.Item.QuestItem,
+                Stuck = itemData.Item.Stuck,
+                ItemType = itemData.Item.ItemType,
+                Uses = itemData.Item.Uses,
+                WeaponSpeed = itemData.Item.WeaponSpeed,
+                WeaponType = itemData.Item.WeaponType,
+                Weight = itemData.Item.Weight,
+                Value = itemData.Item.Value,
+                TwoHanded = itemData.Item.TwoHanded,
                 Portal = new Portal()
                 {
-                    Destination = item.Portal.Destination,
-                    EnterDescription = item.Portal.EnterDescription,
-                    EnterDescriptionRoom = item.Portal.EnterDescriptionRoom,
-                    ExitDescription = item.Portal.ExitDescription,
-                    ExitDescriptionRoom = item.Portal.ExitDescriptionRoom,
-                    Name = item.Portal.Name,
+                    Destination = itemData.Item.Portal.Destination,
+                    EnterDescription = itemData.Item.Portal.EnterDescription,
+                    EnterDescriptionRoom = itemData.Item.Portal.EnterDescriptionRoom,
+                    ExitDescription = itemData.Item.Portal.ExitDescription,
+                    ExitDescriptionRoom = itemData.Item.Portal.ExitDescriptionRoom,
+                    Name = itemData.Item.Portal.Name,
                 }
 
             };
 
-            if (item.ItemType == Item.ItemTypes.Key)
+            if (itemData.Item.ItemType == Item.ItemTypes.Key)
             {
                 newItem.KeyId = Guid.NewGuid();
             }
 
 
-            if (!string.IsNullOrEmpty(item.Id.ToString()) && item.Id != -1)
+            if (!string.IsNullOrEmpty(itemData.Item.Id.ToString()) && itemData.Item.Id != -1)
             {
 
-                var foundItem = _db.GetById<Item>(item.Id, DataBase.Collections.Items);
+                var foundItem = _db.GetById<Item>(itemData.Item.Id, DataBase.Collections.Items);
 
                 if (foundItem == null)
                 {
                     throw new Exception("Item Id does not exist");
                 }
 
-                newItem.Id = item.Id;
+                newItem.Id = itemData.Item.Id;
+                // If you update an item, Update all the objects where it exists in a room
+                // save yourself alot of work huh
+                if (itemData.UpdateAllInstances)
+                {
+                    var rooms = _db.GetList<Room>(DataBase.Collections.Room);
+
+                    foreach (var room in rooms)
+                    {
+                        foreach (var roomItem in room.Items.ToList())
+                        {
+                            if (roomItem.Id.Equals(newItem.Id))
+                            {
+                                newItem.Id = roomItem.Id;
+                                room.Items.Remove(roomItem);
+                                room.Items.Add(roomItem);
+
+                            }
+
+                            if (roomItem.Container.Items.Any())
+                            {
+                                foreach (var containerItem in roomItem.Container.Items.ToList())
+                                {
+                                    if (containerItem.Id.Equals(newItem.Id))
+                                    {
+                                        newItem.Id = containerItem.Id;
+                                        roomItem.Container.Items.Remove(containerItem);
+                                        roomItem.Container.Items.Add(newItem);
+
+                                    }
+                                }
+                            }
+                        }
+
+                        _db.Save(room, DataBase.Collections.Room);
+                    }
+                }
             }
 
 

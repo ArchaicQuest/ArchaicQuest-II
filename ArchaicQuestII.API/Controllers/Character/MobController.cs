@@ -15,6 +15,11 @@ using Newtonsoft.Json;
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+public class MobData
+{
+    public Player Mob { get; set; }
+    public bool UpdateAllInstances { get; set; }
+}
 
 namespace ArchaicQuestII.Controllers
 {
@@ -31,7 +36,7 @@ namespace ArchaicQuestII.Controllers
 
         [HttpPost]
         [Route("api/Character/Mob")]
-        public IActionResult Post([FromBody] Player mob)
+        public IActionResult Post([FromBody] MobData mob)
         {
 
 
@@ -43,141 +48,146 @@ namespace ArchaicQuestII.Controllers
 
             var newMob = new Player()
             {
-                Name = mob.Name,
-                LongName = mob.LongName,
-                Status = mob.Status,
-                Level = mob.Level,
+                Name = mob.Mob.Name,
+                LongName = mob.Mob.LongName,
+                Status = mob.Mob.Status,
+                Level = mob.Mob.Level,
                 ArmorRating = new ArmourRating()
                 {
-                    Armour = mob.ArmorRating.Armour,
-                    Magic = mob.ArmorRating.Magic
+                    Armour = mob.Mob.ArmorRating.Armour,
+                    Magic = mob.Mob.ArmorRating.Magic
                 },
-                Affects = mob.Affects,
-                AlignmentScore = mob.AlignmentScore,
-                Attributes = mob.Attributes,
-                MaxAttributes = mob.Attributes,
-                Inventory = mob.Inventory,
-                Equipped = mob.Equipped,
-                ClassName = mob.ClassName,
+                Affects = mob.Mob.Affects,
+                AlignmentScore = mob.Mob.AlignmentScore,
+                Attributes = mob.Mob.Attributes,
+                MaxAttributes = mob.Mob.Attributes,
+                Inventory = mob.Mob.Inventory,
+                Equipped = mob.Mob.Equipped,
+                ClassName = mob.Mob.ClassName,
                 Config = null,
-                Description = mob.Description,
-                Gender = mob.Gender,
-                Stats = mob.Stats,
-                MaxStats = mob.Stats,
-                Money = mob.Money,
-                Race = mob.Race,
-                DefaultAttack = mob.DefaultAttack,
-                DateCreated = mob.DateCreated ?? DateTime.Now,
+                Description = mob.Mob.Description,
+                Gender = mob.Mob.Gender,
+                Stats = mob.Mob.Stats,
+                MaxStats = mob.Mob.Stats,
+                Money = mob.Mob.Money,
+                Race = mob.Mob.Race,
+                DefaultAttack = mob.Mob.DefaultAttack,
+                DateCreated = mob.Mob.DateCreated ?? DateTime.Now,
                 DateUpdated = DateTime.Now,
-                Emotes = mob.Emotes,
-                Commands = mob.Commands,
-                Events = mob.Events,
-                Roam = mob.Roam,
-                Shopkeeper = mob.Shopkeeper,
-                Trainer = mob.Trainer,
-                Mounted = mob.Mounted,
-                SpellList = mob.SpellList,
-                EnterEmote = mob.EnterEmote,
-                LeaveEmote = mob.LeaveEmote,
-                IsHiddenScriptMob = mob.IsHiddenScriptMob
+                Emotes = mob.Mob.Emotes,
+                Commands = mob.Mob.Commands,
+                Events = mob.Mob.Events,
+                Roam = mob.Mob.Roam,
+                Shopkeeper = mob.Mob.Shopkeeper,
+                Trainer = mob.Mob.Trainer,
+                Mounted = mob.Mob.Mounted,
+                SpellList = mob.Mob.SpellList,
+                EnterEmote = mob.Mob.EnterEmote,
+                LeaveEmote = mob.Mob.LeaveEmote,
+                IsHiddenScriptMob = mob.Mob.IsHiddenScriptMob
             };
 
-            foreach (var item in mob.Inventory)
+            foreach (var item in mob.Mob.Inventory)
             {
                 if (item.Equipped)
                 {
                     switch (item.Slot)
                     {
                         case Equipment.EqSlot.Arms:
-                            mob.Equipped.Arms = item;
+                            mob.Mob.Equipped.Arms = item;
                             break;
                         case Equipment.EqSlot.Body:
-                            mob.Equipped.AboutBody = item;
+                            mob.Mob.Equipped.AboutBody = item;
                             break;
                         case Equipment.EqSlot.Face:
-                            mob.Equipped.Face = item;
+                            mob.Mob.Equipped.Face = item;
                             break;
                         case Equipment.EqSlot.Feet:
-                            mob.Equipped.Feet = item;
+                            mob.Mob.Equipped.Feet = item;
                             break;
                         case Equipment.EqSlot.Finger:
-                            mob.Equipped.Finger = item;
+                            mob.Mob.Equipped.Finger = item;
                             break;
                         case Equipment.EqSlot.Floating:
-                            mob.Equipped.Floating = item;
+                            mob.Mob.Equipped.Floating = item;
                             break;
                         case Equipment.EqSlot.Hands:
-                            mob.Equipped.Hands = item;
+                            mob.Mob.Equipped.Hands = item;
                             break;
                         case Equipment.EqSlot.Head:
-                            mob.Equipped.Head = item;
+                            mob.Mob.Equipped.Head = item;
                             break;
                         case Equipment.EqSlot.Held:
-                            mob.Equipped.Held = item;
+                            mob.Mob.Equipped.Held = item;
                             break;
                         case Equipment.EqSlot.Legs:
-                            mob.Equipped.Legs = item;
+                            mob.Mob.Equipped.Legs = item;
                             break;
                         case Equipment.EqSlot.Light:
-                            mob.Equipped.Light = item;
+                            mob.Mob.Equipped.Light = item;
                             break;
                         case Equipment.EqSlot.Neck:
-                            mob.Equipped.Neck = item;
+                            mob.Mob.Equipped.Neck = item;
                             break;
                         case Equipment.EqSlot.Shield:
-                            mob.Equipped.Shield = item;
+                            mob.Mob.Equipped.Shield = item;
                             break;
                         case Equipment.EqSlot.Torso:
-                            mob.Equipped.Torso = item;
+                            mob.Mob.Equipped.Torso = item;
                             break;
                         case Equipment.EqSlot.Waist:
-                            mob.Equipped.Waist = item;
+                            mob.Mob.Equipped.Waist = item;
                             break;
                         case Equipment.EqSlot.Wielded:
-                            mob.Equipped.Wielded = item;
+                            mob.Mob.Equipped.Wielded = item;
 
                             break;
                         case Equipment.EqSlot.Wrist:
-                            mob.Equipped.Wrist = item;
+                            mob.Mob.Equipped.Wrist = item;
                             break;
                         case Equipment.EqSlot.Secondary:
-                            mob.Equipped.Secondary = item;
+                            mob.Mob.Equipped.Secondary = item;
                             break;
                     }
                 }
             }
 
 
-            if (mob.Id != Guid.Empty)
+            if (mob.Mob.Id != Guid.Empty)
             {
 
-                var foundItem = _db.GetById<Player>(mob.Id, DataBase.Collections.Mobs);
+                var foundItem = _db.GetById<Player>(mob.Mob.Id, DataBase.Collections.Mobs);
 
                 if (foundItem == null)
                 {
                     throw new Exception("mob Id does not exist");
                 }
 
-                newMob.Id = mob.Id;
+                newMob.Id = mob.Mob.Id;
 
 
                 // If you update a mob, Update all the objects where it exists in a room
                 // save yourself alot of work huh
-                var rooms = _db.GetList<Room>(DataBase.Collections.Room);
 
-                foreach (var room in rooms)
+                if (mob.UpdateAllInstances)
                 {
-                    foreach (var roomMob in room.Mobs.ToList())
-                    {
-                        if (roomMob.Id.Equals(newMob.Id))
-                        {
-                            newMob.UniqueId = roomMob.UniqueId;
-                            room.Mobs.Remove(roomMob);
-                            room.Mobs.Add(newMob);
-                        }
-                    }
 
-                    _db.Save(room, DataBase.Collections.Room);
+                    var rooms = _db.GetList<Room>(DataBase.Collections.Room);
+
+                    foreach (var room in rooms)
+                    {
+                        foreach (var roomMob in room.Mobs.ToList())
+                        {
+                            if (roomMob.Id.Equals(newMob.Id))
+                            {
+                                newMob.UniqueId = roomMob.UniqueId;
+                                room.Mobs.Remove(roomMob);
+                                room.Mobs.Add(newMob);
+                            }
+                        }
+
+                        _db.Save(room, DataBase.Collections.Room);
+                    }
                 }
             }
 

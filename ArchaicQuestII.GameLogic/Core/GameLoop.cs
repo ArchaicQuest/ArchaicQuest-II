@@ -116,202 +116,221 @@ namespace ArchaicQuestII.GameLogic.Core
             Console.WriteLine("started loop");
             while (true)
             {
-                //2 mins
-                await Task.Delay(120000);
-                var rooms = _cache.GetAllRoomsToRepop();
-                var players = _cache.GetPlayerCache().Values.ToList();
 
-
-
-                foreach (var room in rooms)
+                try
                 {
-                    var originalRoom = JsonConvert.DeserializeObject<Room>(JsonConvert.SerializeObject(_cache.GetOriginalRoom(Helpers.ReturnRoomId(room))));
+                    //2 mins
+                    await Task.Delay(120000);
+                    var rooms = _cache.GetAllRoomsToRepop();
+                    var players = _cache.GetPlayerCache().Values.ToList();
 
-                    foreach (var mob in originalRoom.Mobs)
+
+
+                    foreach (var room in rooms)
                     {
+                        var originalRoom = JsonConvert.DeserializeObject<Room>(
+                            JsonConvert.SerializeObject(_cache.GetOriginalRoom(Helpers.ReturnRoomId(room))));
 
-                        var mobExist = rooms.Find(x => x.Mobs.Any(y => y.UniqueId.Equals(mob.UniqueId)))
-                            ?.Mobs.FirstOrDefault(z => z.UniqueId.Equals(mob.UniqueId));
+                        foreach (var mob in originalRoom.Mobs)
+                        {
 
-                        if (mobExist == null)
-                        {
-                            room.Mobs.Add(mob);
-                        }
-                        else
-                        {
-                            if (mob.Status != CharacterStatus.Status.Fighting)
+                            var mobExist = rooms.Find(x => x.Mobs.Any(y => y.UniqueId.Equals(mob.UniqueId)))
+                                ?.Mobs.FirstOrDefault(z => z.UniqueId.Equals(mob.UniqueId));
+
+                            if (mobExist == null)
                             {
-
-                                mobExist.Attributes.Attribute[EffectLocation.Hitpoints] +=
-                                    _dice.Roll(1, 2, 5) + mobExist.Level;
-                                mobExist.Attributes.Attribute[EffectLocation.Mana] +=
-                                    _dice.Roll(1, 2, 5) + mobExist.Level;
-                                mobExist.Attributes.Attribute[EffectLocation.Moves] +=
-                                    _dice.Roll(1, 2, 5) + mobExist.Level;
+                                room.Mobs.Add(mob);
                             }
                             else
                             {
-                                mobExist.Attributes.Attribute[EffectLocation.Hitpoints] +=
-                                    (_dice.Roll(1, 1, 5) + mobExist.Level) / 2;
-                                mobExist.Attributes.Attribute[EffectLocation.Mana] +=
-                                    (_dice.Roll(1, 1, 5) + mobExist.Level) / 2;
-                                mobExist.Attributes.Attribute[EffectLocation.Moves] +=
-                                    (_dice.Roll(1, 1, 5) + mobExist.Level) / 2;
-                            }
+                                if (mob.Status != CharacterStatus.Status.Fighting)
+                                {
 
-                            if (mobExist.Attributes.Attribute[EffectLocation.Hitpoints] >
-                                mobExist.MaxAttributes.Attribute[EffectLocation.Hitpoints])
-                            {
-                                mobExist.Attributes.Attribute[EffectLocation.Hitpoints] =
-                                    mobExist.MaxAttributes.Attribute[EffectLocation.Hitpoints];
-                            }
+                                    mobExist.Attributes.Attribute[EffectLocation.Hitpoints] +=
+                                        _dice.Roll(1, 2, 5) + mobExist.Level;
+                                    mobExist.Attributes.Attribute[EffectLocation.Mana] +=
+                                        _dice.Roll(1, 2, 5) + mobExist.Level;
+                                    mobExist.Attributes.Attribute[EffectLocation.Moves] +=
+                                        _dice.Roll(1, 2, 5) + mobExist.Level;
+                                }
+                                else
+                                {
+                                    mobExist.Attributes.Attribute[EffectLocation.Hitpoints] +=
+                                        (_dice.Roll(1, 1, 5) + mobExist.Level) / 2;
+                                    mobExist.Attributes.Attribute[EffectLocation.Mana] +=
+                                        (_dice.Roll(1, 1, 5) + mobExist.Level) / 2;
+                                    mobExist.Attributes.Attribute[EffectLocation.Moves] +=
+                                        (_dice.Roll(1, 1, 5) + mobExist.Level) / 2;
+                                }
 
-                            if (mobExist.Attributes.Attribute[EffectLocation.Mana] >
-                                mobExist.MaxAttributes.Attribute[EffectLocation.Mana])
-                            {
-                                mobExist.Attributes.Attribute[EffectLocation.Mana] =
-                                    mobExist.MaxAttributes.Attribute[EffectLocation.Mana];
-                            }
+                                if (mobExist.Attributes.Attribute[EffectLocation.Hitpoints] >
+                                    mobExist.MaxAttributes.Attribute[EffectLocation.Hitpoints])
+                                {
+                                    mobExist.Attributes.Attribute[EffectLocation.Hitpoints] =
+                                        mobExist.MaxAttributes.Attribute[EffectLocation.Hitpoints];
+                                }
 
-                            if (mobExist.Attributes.Attribute[EffectLocation.Moves] >
-                                mobExist.MaxAttributes.Attribute[EffectLocation.Moves])
-                            {
-                                mobExist.Attributes.Attribute[EffectLocation.Moves] =
-                                    mobExist.MaxAttributes.Attribute[EffectLocation.Moves];
+                                if (mobExist.Attributes.Attribute[EffectLocation.Mana] >
+                                    mobExist.MaxAttributes.Attribute[EffectLocation.Mana])
+                                {
+                                    mobExist.Attributes.Attribute[EffectLocation.Mana] =
+                                        mobExist.MaxAttributes.Attribute[EffectLocation.Mana];
+                                }
+
+                                if (mobExist.Attributes.Attribute[EffectLocation.Moves] >
+                                    mobExist.MaxAttributes.Attribute[EffectLocation.Moves])
+                                {
+                                    mobExist.Attributes.Attribute[EffectLocation.Moves] =
+                                        mobExist.MaxAttributes.Attribute[EffectLocation.Moves];
+                                }
                             }
                         }
-                    }
 
-                    //get corpse and remove
-                    var corpses = room.Items.FindAll(x => x.Description.Room.Contains("corpse", StringComparison.CurrentCultureIgnoreCase));
+                        //get corpse and remove
+                        var corpses = room.Items.FindAll(x =>
+                            x.Description.Room.Contains("corpse", StringComparison.CurrentCultureIgnoreCase));
 
-                    foreach (var corpse in corpses)
-                    {
-                        UpdateCorpse(corpse, room);
-                    }
-
-
-
-                    foreach (var item in originalRoom.Items)
-                    {
-                        // need to check if item exists before adding
-                        var itemExist = room.Items.FirstOrDefault(x => x.Id.Equals(item.Id));
-
-                        if (itemExist == null)
+                        foreach (var corpse in corpses)
                         {
-                            room.Items.Add(item);
+                            UpdateCorpse(corpse, room);
                         }
-                        itemExist = room.Items.FirstOrDefault(x => x.Id.Equals(item.Id));
 
-                        if (itemExist.Container.Items.Count < item.Container.Items.Count)
+
+
+                        foreach (var item in originalRoom.Items)
                         {
-                            itemExist.Container.Items = item.Container.Items;
-                            itemExist.Container.IsOpen = item.Container.IsOpen;
-                            itemExist.Container.IsLocked = item.Container.IsLocked;
+                            // need to check if item exists before adding
+                            var itemExist = room.Items.FirstOrDefault(x => x.Id.Equals(item.Id));
+
+                            if (itemExist == null)
+                            {
+                                room.Items.Add(item);
+                            }
+
+                            itemExist = room.Items.FirstOrDefault(x => x.Id.Equals(item.Id));
+
+                            if (itemExist.Container.Items.Count < item.Container.Items.Count)
+                            {
+                                itemExist.Container.Items = item.Container.Items;
+                                itemExist.Container.IsOpen = item.Container.IsOpen;
+                                itemExist.Container.IsLocked = item.Container.IsLocked;
+                            }
+
                         }
+
+                        // reset doors
+                        room.Exits = originalRoom.Exits;
+
+                        //set room clean
+                       // if (room.Players.Count == 0)
+                     //   {
+                            room.Clean = true;
+
+                            foreach (var player in room.Players)
+                            {
+                                _writeToClient.WriteLine("<p>The hairs on your neck stand up.</p>",
+                                    player.ConnectionId);
+                            }
+                      //  }
+
 
                     }
 
-                    // reset doors
-                    room.Exits = originalRoom.Exits;
-
-                    //set room clean
-                    if (room.Players.Count == 0)
+                    foreach (var player in players)
                     {
-                        room.Clean = true;
 
-                        foreach (var player in room.Players)
+                        //  IdleCheck(player);
+
+                        var hP = (_dice.Roll(1, 2, 5));
+                        var mana = (_dice.Roll(1, 2, 5));
+                        var moves = (_dice.Roll(1, 2, 5));
+
+                        // if player has fast healing add the bonus here
+                        var hasFastHealing = player.Skills.FirstOrDefault(x =>
+                            x.SkillName.Equals("Fast Healing", StringComparison.CurrentCultureIgnoreCase) &&
+                            player.Level >= x.Level);
+
+
+
+                        if ((player.Status & CharacterStatus.Status.Sleeping) != 0)
                         {
-                            _writeToClient.WriteLine("<p>The hairs on your neck stand up.</p>", player.ConnectionId);
+                            hP *= 2;
+                            mana *= 2;
+                            moves *= 2;
                         }
+
+                        if ((player.Status & CharacterStatus.Status.Resting) != 0)
+                        {
+                            hP *= (int)1.5;
+                            mana *= (int)1.5;
+                            moves *= (int)1.5;
+                        }
+
+                        if (player.Attributes.Attribute[EffectLocation.Hitpoints] <
+                            player.MaxAttributes.Attribute[EffectLocation.Hitpoints])
+                        {
+
+                            if (hasFastHealing != null)
+                            {
+                                if (_core.SkillCheckSuccesful(hasFastHealing))
+                                {
+                                    hP *= 2;
+                                }
+                                else
+                                {
+                                    _core.GainSkillProficiency(hasFastHealing, player);
+                                }
+                            }
+
+                            player.Attributes.Attribute[EffectLocation.Hitpoints] += GainAmount(hP, player);
+                            if (player.Attributes.Attribute[EffectLocation.Hitpoints] >
+                                player.MaxAttributes.Attribute[EffectLocation.Hitpoints])
+                            {
+                                player.Attributes.Attribute[EffectLocation.Hitpoints] =
+                                    player.MaxAttributes.Attribute[EffectLocation.Hitpoints];
+                            }
+                        }
+
+                        if (player.Attributes.Attribute[EffectLocation.Mana] <
+                            player.MaxAttributes.Attribute[EffectLocation.Mana])
+                        {
+                            player.Attributes.Attribute[EffectLocation.Mana] += GainAmount(mana, player);
+
+                            if (player.Attributes.Attribute[EffectLocation.Mana] >
+                                player.MaxAttributes.Attribute[EffectLocation.Mana])
+                            {
+                                player.Attributes.Attribute[EffectLocation.Mana] =
+                                    player.MaxAttributes.Attribute[EffectLocation.Mana];
+                            }
+                        }
+
+                        if (player.Attributes.Attribute[EffectLocation.Moves] <
+                            player.MaxAttributes.Attribute[EffectLocation.Moves])
+                        {
+                            player.Attributes.Attribute[EffectLocation.Moves] += GainAmount(moves, player);
+                            if (player.Attributes.Attribute[EffectLocation.Moves] >
+                                player.MaxAttributes.Attribute[EffectLocation.Moves])
+                            {
+                                player.Attributes.Attribute[EffectLocation.Moves] =
+                                    player.MaxAttributes.Attribute[EffectLocation.Moves];
+                            }
+                        }
+
+
+
+
+
+
+                        _client.UpdateHP(player);
+                        _client.UpdateMana(player);
+                        _client.UpdateMoves(player);
+                        _client.UpdateScore(player);
+
                     }
-
-
                 }
-
-                foreach (var player in players)
+                catch (Exception ex)
                 {
-
-                    //  IdleCheck(player);
-
-                    var hP = (_dice.Roll(1, 2, 5));
-                    var mana = (_dice.Roll(1, 2, 5));
-                    var moves = (_dice.Roll(1, 2, 5));
-
-                    // if player has fast healing add the bonus here
-                    var hasFastHealing = player.Skills.FirstOrDefault(x =>
-                         x.SkillName.Equals("Fast Healing", StringComparison.CurrentCultureIgnoreCase) && player.Level >= x.Level);
-
-
-
-                    if ((player.Status & CharacterStatus.Status.Sleeping) != 0)
-                    {
-                        hP *= 2;
-                        mana *= 2;
-                        moves *= 2;
-                    }
-
-                    if ((player.Status & CharacterStatus.Status.Resting) != 0)
-                    {
-                        hP *= (int)1.5;
-                        mana *= (int)1.5;
-                        moves *= (int)1.5;
-                    }
-
-                    if (player.Attributes.Attribute[EffectLocation.Hitpoints] <
-                        player.MaxAttributes.Attribute[EffectLocation.Hitpoints])
-                    {
-
-                        if (hasFastHealing != null)
-                        {
-                            if (_core.SkillCheckSuccesful(hasFastHealing))
-                            {
-                                hP *= 2;
-                            }
-                            else
-                            {
-                                _core.GainSkillProficiency(hasFastHealing, player);
-                            }
-                        }
-
-                        player.Attributes.Attribute[EffectLocation.Hitpoints] += GainAmount(hP, player);
-                        if (player.Attributes.Attribute[EffectLocation.Hitpoints] > player.MaxAttributes.Attribute[EffectLocation.Hitpoints])
-                        {
-                            player.Attributes.Attribute[EffectLocation.Hitpoints] = player.MaxAttributes.Attribute[EffectLocation.Hitpoints];
-                        }
-                    }
-
-                    if (player.Attributes.Attribute[EffectLocation.Mana] <
-                        player.MaxAttributes.Attribute[EffectLocation.Mana])
-                    {
-                        player.Attributes.Attribute[EffectLocation.Mana] += GainAmount(mana, player);
-
-                        if (player.Attributes.Attribute[EffectLocation.Mana] > player.MaxAttributes.Attribute[EffectLocation.Mana])
-                        {
-                            player.Attributes.Attribute[EffectLocation.Mana] = player.MaxAttributes.Attribute[EffectLocation.Mana];
-                        }
-                    }
-
-                    if (player.Attributes.Attribute[EffectLocation.Moves] <
-                        player.MaxAttributes.Attribute[EffectLocation.Moves])
-                    {
-                        player.Attributes.Attribute[EffectLocation.Moves] += GainAmount(moves, player);
-                        if (player.Attributes.Attribute[EffectLocation.Moves] > player.MaxAttributes.Attribute[EffectLocation.Moves])
-                        {
-                            player.Attributes.Attribute[EffectLocation.Moves] = player.MaxAttributes.Attribute[EffectLocation.Moves];
-                        }
-                    }
-
-
-
-
-
-
-                    _client.UpdateHP(player);
-                    _client.UpdateMana(player);
-                    _client.UpdateMoves(player);
-                    _client.UpdateScore(player);
-
+                    
                 }
 
             }

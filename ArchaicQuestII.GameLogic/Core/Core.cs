@@ -421,6 +421,12 @@ namespace ArchaicQuestII.GameLogic.Core
         public void Quit(Player player, Room room)
         {
 
+            if (player.Status == CharacterStatus.Status.Fighting)
+            {
+                _writeToClient.WriteLine("You can't quit in a fight!", player.ConnectionId);
+                return;
+            }
+
             player.Buffer = new Queue<string>();
             var lastLoginTime = player.LastLoginTime;
             var playTime = DateTime.Now.Subtract(lastLoginTime).TotalMinutes;
@@ -790,10 +796,16 @@ namespace ArchaicQuestII.GameLogic.Core
         {
             var findNth = Helpers.findNth(obj);
             var food = Helpers.findObjectInInventory(findNth, player);
-
+            
             if (food == null)
             {
-                _writeToClient.WriteLine("You have no food of that name", player.ConnectionId);
+                _writeToClient.WriteLine("You have no food of that name.", player.ConnectionId);
+                return;
+            }
+            
+            if (food.ItemType != Item.Item.ItemTypes.Food)
+            {
+                _writeToClient.WriteLine($"You can't eat {food.Name.ToLower()}.", player.ConnectionId);
                 return;
             }
 

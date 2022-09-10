@@ -457,6 +457,11 @@ namespace ArchaicQuestII.GameLogic.Core
         /// <returns>name of the weapon with prefixed flags</returns>
         public static string DisplayEQNameWithFlags(Item.Item item)
         {
+            if (item == null)
+            {
+                return null;
+            }
+            
             var sb = new StringBuilder();
            if ((item.ItemFlag & Item.Item.ItemFlags.Glow) != 0)
             {
