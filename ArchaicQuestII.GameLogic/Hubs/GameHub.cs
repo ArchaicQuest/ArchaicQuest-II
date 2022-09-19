@@ -179,11 +179,12 @@ namespace ArchaicQuestII.GameLogic.Hubs
 
         public async void Welcome(string id)
         {
-            var location = System.Reflection.Assembly.GetEntryAssembly().Location;
-            var directory = System.IO.Path.GetDirectoryName(location);
+            // no longer used for ArchaicQuest but if you want to load an ascii MOTD uncomment 
+            //var location = System.Reflection.Assembly.GetEntryAssembly().Location;
+            //var directory = System.IO.Path.GetDirectoryName(location);
+            //var motd = File.ReadAllText(directory + "/motd");
 
-            var motd = File.ReadAllText(directory + "/motd");
-
+            var motd = "<img src='/assets/images/aqdragon.png' alt='ArchaicQuest Logo' class='motd' />";
             await SendToClient(motd, id);
         }
 
