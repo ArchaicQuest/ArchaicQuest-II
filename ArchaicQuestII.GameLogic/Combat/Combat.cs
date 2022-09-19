@@ -306,15 +306,9 @@ namespace ArchaicQuestII.GameLogic.Combat
                         player.Status = CharacterStatus.Status.Standing;
 
                         _cache.RemoveCharFromCombat(player.Id.ToString());
-                    }
-
-
-                    if (player.Status != CharacterStatus.Status.Fighting)
-                    {
                         return;
                     }
-
-
+                    
                     _writer.WriteLine("<p>They are not here.</p>", player.ConnectionId);
                     return;
                 }
@@ -908,27 +902,6 @@ namespace ArchaicQuestII.GameLogic.Combat
                 corpse.Container.Items.Add(item);
             }
 
-            if (target.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
-            {
-
-                player.MobKills += 1;
-
-                var randomItem = _randomItem.WeaponDrop(player);
-
-                if (randomItem != null)
-                {
-                    corpse.Container.Items.Add(randomItem);
-                }
-
-                if (player.Config.AutoLoot)
-                {
-                    var corpseIndex = room.Items.IndexOf(corpse);
-                    player.Buffer.Enqueue($"get all {corpseIndex}.corpse");
-                }
-
-          
-            }
-
             // clear list
             target.Inventory = new ItemList();
             // clear equipped
@@ -947,6 +920,27 @@ namespace ArchaicQuestII.GameLogic.Combat
             _clientUi.UpdateEquipment(target);
             _clientUi.UpdateScore(target);
             _clientUi.UpdateScore(player);
+            
+            if (target.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
+            {
+
+                player.MobKills += 1;
+
+                var randomItem = _randomItem.WeaponDrop(player);
+
+                if (randomItem != null)
+                {
+                    corpse.Container.Items.Add(randomItem);
+                }
+
+                if (player.Config.AutoLoot)
+                {
+                    var corpseIndex = room.Items.IndexOf(corpse) + 1;
+                    player.Buffer.Enqueue($"get all {corpseIndex}.corpse");
+                }
+
+          
+            }
             
          
             room.Clean = false;

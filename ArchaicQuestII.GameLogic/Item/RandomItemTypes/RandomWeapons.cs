@@ -276,6 +276,7 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
                 Condition = _dice.Roll(1, 75, 100),
                 WeaponType = weaponChoice.WeaponType,
                 Weight = 11,
+                Modifier = new Modifier(),
                 Damage = new Damage()
                 {
                     Minimum = prefix.MinDamage,
@@ -290,6 +291,73 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
                 AttackType = weaponChoice.AttackTypes,
 
             };
+        
+           // stats to buff
+
+           for (int i = 0; i < (legendary ? 5 : 3); i++)
+           {
+                  switch (_dice.Roll(1, 1, 16))
+           {
+               case 1:
+                   item.Modifier.Armour = _dice.Roll(1, 1, 10);
+                   break;
+               
+               case 2:
+                   item.Modifier.Charisma = _dice.Roll(1, 1, 10);
+                   break;
+               
+               case 3:
+                   item.Modifier.Constitution = _dice.Roll(1, 1, 10);
+                   break;
+               
+               case 4:
+                   item.Modifier.Dexterity = _dice.Roll(1, 1, 10);
+                   break;
+               
+               case 5:
+                   item.Modifier.Intelligence = _dice.Roll(1, 1, 10);
+                   break;
+               
+               case 6:
+                   item.Modifier.Mana = _dice.Roll(1, 1, 10);
+                   break;
+               
+               case 7:
+                   item.Modifier.Moves = _dice.Roll(1, 1, 10);
+                   break;
+               
+               case 8:
+                   item.Modifier.Saves = _dice.Roll(1, 1, 10);
+                   break;
+               case 9:
+                   item.Modifier.Strength = _dice.Roll(1, 1, 10);
+                   break;
+               case 10:
+                   item.Modifier.Wisdom = _dice.Roll(1, 1, 10);
+                   break;
+               case 11:
+                   item.Modifier.AcMod = _dice.Roll(1, 1, 10);
+                   break;
+               case 12:
+                   item.Modifier.DamRoll = _dice.Roll(1, 1, 10);
+                   break;
+               case 13:
+                   item.Modifier.HitRoll = _dice.Roll(1, 1, 10);
+                   break;
+               case 14:
+                   item.Modifier.HP = _dice.Roll(1, 1, 10);
+                   break;
+               case 15:
+                   item.Modifier.SpellDam = _dice.Roll(1, 1, 10);
+                   break;
+               case 16:
+                   item.Modifier.AcMagicMod = _dice.Roll(1, 1, 10);
+                   
+                   break;
+                
+           }
+           }
+
 
             if (legendary)
             {
