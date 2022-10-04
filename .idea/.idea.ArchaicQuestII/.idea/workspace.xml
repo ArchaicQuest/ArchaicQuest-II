@@ -7,9 +7,12 @@
     <projectFile profileName="ArchaicQuestII.API">ArchaicQuestII.API/ArchaicQuestII.API.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2eff0800-fb31-4811-bfc6-8df5e26cbfe9" name="Changes" comment="random item drop fix, combat fixes">
+    <list default="true" id="2eff0800-fb31-4811-bfc6-8df5e26cbfe9" name="Changes" comment="new motd">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ArchaicQuestII/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ArchaicQuestII/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Hubs/GameHub.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Hubs/GameHub.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/Combat.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/Combat.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Movement/Movement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Movement/Movement.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/IMobScripts.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/IMobScripts.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/MobScripts.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/MobScripts.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,6 +43,7 @@
     <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/CommandHandler.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Commands.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/WriteToClient.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///home/malleus/Development/Fun/ArchaicQuest-II/ArchaicQuestII.GameLogic/Hubs/GameHub.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///home/malleus/Development/Fun/ArchaicQuest-II/ArchaicQuestII.GameLogic/Hubs/GameHub.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///home/malleus/Development/Fun/ArchaicQuest-II/ArchaicQuestII.GameLogic/Hubs/GameHub.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Hubs/Telnet/TelnetHub.cs" root0="FORCE_HIGHLIGHTING" />
@@ -108,7 +112,7 @@
       <workItem from="1660945205373" duration="37171000" />
       <workItem from="1661982382144" duration="12052000" />
       <workItem from="1662242347801" duration="27297000" />
-      <workItem from="1663362617971" duration="7384000" />
+      <workItem from="1663362617971" duration="20876000" />
     </task>
     <task id="LOCAL-00002" summary="WIP Config settings setup and API">
       <created>1660518380350</created>
@@ -152,7 +156,14 @@
       <option name="project" value="LOCAL" />
       <updated>1663591571924</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="new motd">
+      <created>1663609192880</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1663609192880</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -180,7 +191,8 @@
     <MESSAGE value="improved flee messaging, fixed XP gain when group member is not in room, tweaked XP gain formula slightly, Room emote when players login" />
     <MESSAGE value="added some sounds, can't quit in fight, fixed EQ display, fixed instance updates, cleaner item spacing for containers" />
     <MESSAGE value="random item drop fix, combat fixes" />
-    <option name="LAST_COMMIT_MESSAGE" value="random item drop fix, combat fixes" />
+    <MESSAGE value="new motd" />
+    <option name="LAST_COMMIT_MESSAGE" value="new motd" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
