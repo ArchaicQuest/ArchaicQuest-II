@@ -95,19 +95,21 @@ namespace ArchaicQuestII.GameLogic.Combat
             CultureInfo cc = CultureInfo.CurrentCulture;
             var damText = _damage.DamageText(damage);
             var attackType = "";
+            var damageType = "";
             if (weapon == null)
             {
                 attackType = player.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase) ? player.DefaultAttack?.ToLower(cc) : "punch";
             }
             else
             {
-                attackType = Enum.GetName(typeof(Item.Item.AttackTypes), weapon.AttackType)?.ToLower(cc);
+                attackType = Enum.GetName(typeof(Item.Item.AttackTypes), weapon.AttackType)?.ToLower(cc); 
+                damageType =  Enum.GetName(typeof(Item.Item.DamageTypes), weapon.DamageType)?.ToLower(cc);
             }
 
-            _writer.WriteLine($"<p class='combat'>Your {attackType} {damText.Value} {target.Name.ToLower(cc)}. <span class='damage'>[{damage}]</span></p>", player.ConnectionId);
+            _writer.WriteLine($"<p class='combat'>Your {(damageType != "none" ? damageType : "" )} {attackType} {damText.Value} {target.Name.ToLower(cc)}. <span class='damage'>[{damage}]</span></p>", player.ConnectionId);
             _writer.WriteLine($"<p class='combat'>{target.Name} {_formulas.TargetHealth(player, target)}.</p>", player.ConnectionId);
 
-            _writer.WriteLine($"<p>{player.Name}'s {attackType} {damText.Value} you. <span class='damage'>[{damage}]</span></p></p>", target.ConnectionId);
+            _writer.WriteLine($"<p>{player.Name}'s {(damageType != "none" ? damageType : "" )} {attackType} {damText.Value} you. <span class='damage'>[{damage}]</span></p></p>", target.ConnectionId);
 
 
             foreach (var pc in room.Players)

@@ -164,7 +164,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
             {
                 foreach (var follower in character.Followers)
                 {
-                    if (room.Players.Contains(follower))
+                    if (room.Players.Contains(follower) || room.Mobs.Contains(follower))
                     {
                         Move(room, follower, direction);
                     }

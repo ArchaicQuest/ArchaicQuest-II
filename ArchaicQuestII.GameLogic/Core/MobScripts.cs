@@ -384,5 +384,25 @@ namespace ArchaicQuestII.GameLogic.Core
             }
             _writeToClient.WriteLine($"<p class='mob-emote'>{n.Replace("#name#", player.Name)}</p>", player.ConnectionId, delay);
         }
+        
+        public void RemoveMobFromRoom(Player mob, Room room)
+        {
+            room.Mobs.Remove(mob);
+        }
+        public void Follow(Player player, Player mob)
+        {
+            mob.Following = player.Name;
+            player.Followers.Add(mob);
+        }
+        
+        public void UnFollow(Player player, Player mob)
+        {
+            player.Following = string.Empty;
+            player.Followers.Remove(mob);
+        }
+        public bool CanFollow(Player player)
+        {
+            return player.Config.CanFollow;
+        }
     }
 }
