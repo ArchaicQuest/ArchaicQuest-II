@@ -260,6 +260,18 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
                 enter = onEnter ? "enters from the" : "leaves";
                 moveType = $"{player.Name} {enter}{showDirection} riding upon {player.Mounted.Name}.";
             }
+
+            if (moveType.Contains("from the down."))
+            {
+                moveType = moveType.Replace("from the down", "from below");
+                
+            }
+            
+            if (moveType.Contains("from the up."))
+            {
+                moveType = moveType.Replace("from the up", "from above");
+                
+            }
             
             // A magic broom sweeping the floor [hovers in from the] [west]. 
 
