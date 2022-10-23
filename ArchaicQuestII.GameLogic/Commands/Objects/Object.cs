@@ -579,6 +579,18 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                 return;
             }
 
+            if (containerObj.ItemType != Item.Item.ItemTypes.Container)
+            {
+                if (containerObj.ItemType == Item.Item.ItemTypes.Forage)
+                {
+                    _writer.WriteLine("<p>Try forage instead.</p>", player.ConnectionId);
+                    return;
+                }
+
+                _writer.WriteLine("<p>This is not a container.</p>", player.ConnectionId);
+                return;
+            }
+
 
             if (containerObj.Container.CanOpen && !containerObj.Container.IsOpen)
             {

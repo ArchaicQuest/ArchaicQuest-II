@@ -7,12 +7,13 @@
     <projectFile profileName="ArchaicQuestII.API">ArchaicQuestII.API/ArchaicQuestII.API.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2eff0800-fb31-4811-bfc6-8df5e26cbfe9" name="Changes" comment="new motd">
+    <list default="true" id="2eff0800-fb31-4811-bfc6-8df5e26cbfe9" name="Changes" comment="as above, so below">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ArchaicQuestII/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ArchaicQuestII/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/Combat.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/Combat.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Movement/Movement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Movement/Movement.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/IMobScripts.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/IMobScripts.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/MobScripts.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/MobScripts.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.API/Controllers/ItemController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.API/Controllers/ItemController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Objects/Object.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Objects/Object.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Item/Item.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Item/Item.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Item/ItemList.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Item/ItemList.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/SeedData/Rooms.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/SeedData/Rooms.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,6 +21,9 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/1195b757a9634b23be3f5dd403b21ca96e200/87/2bf72c84/Enumerable.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/1195cc8f0df04df0aba8c63158c8988b60000/48/b304ee66/ObjectMethodExecutor.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/1195cc8f0df04df0aba8c63158c8988b60000/ef/1fddbe01/DefaultHubDispatcher`1.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/1262f7ff023e414d88f0ab59b302aeb22d600/fd/064b523b/ConcurrentDictionary`2.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/429119adeb3e4e04bf19d4821649b60294dc00/7d/e218ca0a/ExceptionDispatchInfo.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/429119adeb3e4e04bf19d4821649b60294dc00/9d/b21e51e8/Monitor.cs" root0="SKIP_HIGHLIGHTING" />
@@ -33,19 +37,15 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/85446b81968241ebbb5fc771b505999f1cc400/bc/4879a31f/ActionMethodExecutor.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/9ae66f5dd0ba4526971d72f56254c21288c00/4a/c911eea9/Socket.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/bfefd83b0a0148b182aa3027772b16e094de00/43/a9babc75/ExceptionDispatchInfo.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/f0228cb71e3640cca1ce39483195103994de00/04/6165795e/ExceptionDispatchInfo.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/f2c9ba103bac463e84ba6dd5cdbfa0f06e200/00/f61499bc/Enumerable.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/f85276e481e24deb9dc0cf666dbeb61a6e200/38/7a587b5f/Enumerable.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ArchaicQuestII.API/Program.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/Combat.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///home/malleus/Development/Fun/ArchaicQuest-II/ArchaicQuestII.GameLogic/Combat/Combat.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/malleus/Development/Fun/ArchaicQuest-II/ArchaicQuestII.GameLogic/Combat/Combat.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/ICombat.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/CommandHandler.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Commands.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/WriteToClient.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///home/malleus/Development/Fun/ArchaicQuest-II/ArchaicQuestII.GameLogic/Hubs/GameHub.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/malleus/Development/Fun/ArchaicQuest-II/ArchaicQuestII.GameLogic/Hubs/GameHub.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/malleus/Development/Fun/ArchaicQuest-II/ArchaicQuestII.GameLogic/Hubs/GameHub.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Hubs/Telnet/TelnetHub.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -113,6 +113,8 @@
       <workItem from="1661982382144" duration="12052000" />
       <workItem from="1662242347801" duration="27297000" />
       <workItem from="1663362617971" duration="20876000" />
+      <workItem from="1665607839326" duration="1542000" />
+      <workItem from="1665785106353" duration="17313000" />
     </task>
     <task id="LOCAL-00002" summary="WIP Config settings setup and API">
       <created>1660518380350</created>
@@ -163,7 +165,14 @@
       <option name="project" value="LOCAL" />
       <updated>1663609192880</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="as above, so below">
+      <created>1665648420962</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1665648420962</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -192,7 +201,8 @@
     <MESSAGE value="added some sounds, can't quit in fight, fixed EQ display, fixed instance updates, cleaner item spacing for containers" />
     <MESSAGE value="random item drop fix, combat fixes" />
     <MESSAGE value="new motd" />
-    <option name="LAST_COMMIT_MESSAGE" value="new motd" />
+    <MESSAGE value="as above, so below" />
+    <option name="LAST_COMMIT_MESSAGE" value="as above, so below" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -342,13 +352,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/ArchaicQuestII.API/Controllers/ItemController.cs</url>
-          <line>157</line>
+          <line>156</line>
           <properties documentPath="$PROJECT_DIR$/ArchaicQuestII.API/Controllers/ItemController.cs" initialLine="149" containingFunctionPresentation="method 'PostItem'">
             <startOffsets>
-              <option value="6383" />
+              <option value="6381" />
             </startOffsets>
             <endOffsets>
-              <option value="6413" />
+              <option value="6411" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="76" />
@@ -483,7 +493,64 @@
           </properties>
           <option name="timeStamp" value="89" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/ArchaicQuestII.API/Controllers/ItemController.cs</url>
+          <line>33</line>
+          <properties documentPath="$PROJECT_DIR$/ArchaicQuestII.API/Controllers/ItemController.cs" initialLine="33" containingFunctionPresentation="method 'PostItem'">
+            <startOffsets>
+              <option value="981" />
+            </startOffsets>
+            <endOffsets>
+              <option value="982" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="92" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/ArchaicQuestII.API/Controllers/ItemController.cs</url>
+          <line>155</line>
+          <properties documentPath="$PROJECT_DIR$/ArchaicQuestII.API/Controllers/ItemController.cs" initialLine="156" containingFunctionPresentation="method 'PostItem'">
+            <startOffsets>
+              <option value="6339" />
+            </startOffsets>
+            <endOffsets>
+              <option value="6340" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="95" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/SeedData/Rooms.cs</url>
+          <line>32</line>
+          <properties documentPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/SeedData/Rooms.cs" initialLine="30" containingFunctionPresentation="method 'Cache'">
+            <startOffsets>
+              <option value="1271" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1300" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="101" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/SeedData/Rooms.cs</url>
+          <line>45</line>
+          <properties documentPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/SeedData/Rooms.cs" initialLine="45" containingFunctionPresentation="method 'Cache'">
+            <startOffsets>
+              <option value="1713" />
+            </startOffsets>
+            <endOffsets>
+              <option value="1757" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="102" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo parentTag="Type#ArchaicQuestII.GameLogic.Item.Container" memberName="LockDifficulty" />
+      </pinned-members>
+    </pin-to-top-manager>
   </component>
 </project>

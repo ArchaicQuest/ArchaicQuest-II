@@ -7,6 +7,13 @@ using static ArchaicQuestII.GameLogic.Character.Equipment.Equipment;
 
 namespace ArchaicQuestII.GameLogic.Item
 {
+
+    public class Forage
+    {
+        public int Respawn { get; set; } = 5;
+        public int ItemCount { get; set; } = 3;
+        public int MaxItemCount { get; set; } = 3;
+    }
     public class Item : BaseItem
     {
         public enum ItemTypes
@@ -163,6 +170,7 @@ namespace ArchaicQuestII.GameLogic.Item
         public ItemTypes ItemType { get; set; }
         public AttackTypes AttackType { get; set; }
         public EqSlot Slot { get; set; }
+        public Forage Forage { get; set; } = new Forage();
         public WeaponTypes WeaponType { get; set; }
         public int WeaponSpeed { get; set; }
         public Damage Damage { get; set; }

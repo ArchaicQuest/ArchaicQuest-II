@@ -145,8 +145,7 @@ namespace ArchaicQuestII.Controllers
                             {
                                 newItem.Id = roomItem.Id;
                                 room.Items.Remove(roomItem);
-                                room.Items.Add(roomItem);
-
+                                room.Items.Add(newItem);
                             }
 
                             if (roomItem.Container.Items.Any())

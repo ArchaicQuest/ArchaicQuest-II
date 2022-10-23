@@ -31,7 +31,7 @@ namespace ArchaicQuestII.GameLogic.Item
                 t.Name,
                 t.ItemType,
                 t.Value,
-                t.Description.Room
+                t.Description.Room,
             }).Select(groupedItem => new ItemList()
             {
                 Id = groupedItem.Key.Id,
@@ -39,7 +39,7 @@ namespace ArchaicQuestII.GameLogic.Item
                 Value = groupedItem.Key.Value,
                 Name = (bool)args[0] ? groupedItem.Key.Room.Replace("{name}", groupedItem.Key.Name)
                 : groupedItem.Key.Name,
-                CountOfItems = groupedItem.Count()
+                CountOfItems = groupedItem.Count(),
             }).Select(x =>
             {
                 if (x.Type == Item.ItemTypes.Money)
@@ -47,6 +47,11 @@ namespace ArchaicQuestII.GameLogic.Item
                     return new ItemObj() { Name = DisplayMoneyAmount(x.Value), Id = x.Id };
                 }
 
+              /*  if (x.Type == Item.ItemTypes.Crafting)
+                {
+                    return new ItemObj() { Name = x.CountOfItems > 1 ? $"({x.CountOfItems}) {x.Name} {x.Forage.ItemCount} / {x.Forage.MaxItemCount}" :  $" {x.Name}  {x.Forage.ItemCount} / {x.Forage.ItemCount}", Id = x.Id};
+                }
+*/
                 var itemString = x.CountOfItems > 1 ? $"({x.CountOfItems}) {x.Name}" : x.Name;
 
                 return new ItemObj() { Name = itemString, Id = x.Id };
