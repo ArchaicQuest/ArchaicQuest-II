@@ -416,6 +416,9 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "title":
                     _core.SetTitle(player, fullCommand);
                     break;
+                case "harvest":
+                    _core.Harvest(player, obj, room);
+                    break;
                 case "/train": // / denotes admin/imm comands
                     _core.TrainSkill(player);
                     break;

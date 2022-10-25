@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace ArchaicQuestII.GameLogic.Core
 {
@@ -1552,6 +1553,56 @@ namespace ArchaicQuestII.GameLogic.Core
 
                 _clientUi.UpdateScore(player);
             }
+        }
+
+        public async void Harvest(Player player, string item, Room room)
+        {
+            
+            if (player.Status == CharacterStatus.Status.Busy)
+            {
+                _writeToClient.WriteLine($"You are already doing it.", player.ConnectionId);
+                return;
+            }
+
+            player.Status = CharacterStatus.Status.Busy;
+            
+            var thingToHarvest =
+                room.Items.FirstOrDefault(x => x.Name.StartsWith(item, StringComparison.OrdinalIgnoreCase));
+
+            if (thingToHarvest == null)
+            {
+                _writeToClient.WriteLine($"You don't see that here.", player.ConnectionId);
+                return;
+            }
+
+            if (!thingToHarvest.Container.Items.Any())
+            {
+                _writeToClient.WriteLine($"There's nothing left to harvest.", player.ConnectionId);
+                return;
+            }
+            
+          
+            _writeToClient.WriteLine($"You begin harvesting from {thingToHarvest.Name}.", player.ConnectionId);
+            await Task.Delay(4000);
+            if (!room.Players.Contains(player) && player.Status != CharacterStatus.Status.Busy)
+            {
+                return;
+            }
+
+            _writeToClient.WriteLine($"You rummage through the foliage looking for something to harvest", player.ConnectionId);
+            await Task.Delay(4000);
+            if (!room.Players.Contains(player) && player.Status != CharacterStatus.Status.Busy)
+            {
+                return;
+            }
+            _writeToClient.WriteLine($"You continue searching.", player.ConnectionId);
+            
+            await Task.Delay(4000); 
+            if (!room.Players.Contains(player) && player.Status != CharacterStatus.Status.Busy)
+            {
+                return;
+            }
+            _writeToClient.WriteLine($"Ah you have collected 2 twigs and 5 apples.", player.ConnectionId);
         }
 
 
