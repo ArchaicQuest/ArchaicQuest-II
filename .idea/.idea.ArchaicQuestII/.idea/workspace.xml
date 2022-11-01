@@ -9,15 +9,20 @@
   <component name="ChangeListManager">
     <list default="true" id="2eff0800-fb31-4811-bfc6-8df5e26cbfe9" name="Changes" comment="as above, so below">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ArchaicQuestII/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ArchaicQuestII/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Commands.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Commands.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/Core.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/Core.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/GameLoop.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/GameLoop.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/ICore.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/ICore.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/1195b757a9634b23be3f5dd403b21ca96e200/87/2bf72c84/Enumerable.cs" root0="SKIP_HIGHLIGHTING" />
@@ -335,19 +340,6 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/World/Room/RoomActions.cs</url>
-          <line>115</line>
-          <properties documentPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/World/Room/RoomActions.cs" initialLine="115" containingFunctionPresentation="method 'LookInContainer'">
-            <startOffsets>
-              <option value="4350" />
-            </startOffsets>
-            <endOffsets>
-              <option value="4458" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="73" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/World/Room/RoomActions.cs</url>
           <line>141</line>
           <properties documentPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/World/Room/RoomActions.cs" initialLine="141" containingFunctionPresentation="method 'LookInContainer'">
             <startOffsets>
@@ -358,32 +350,6 @@
             </endOffsets>
           </properties>
           <option name="timeStamp" value="74" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/ArchaicQuestII.API/Controllers/ItemController.cs</url>
-          <line>156</line>
-          <properties documentPath="$PROJECT_DIR$/ArchaicQuestII.API/Controllers/ItemController.cs" initialLine="149" containingFunctionPresentation="method 'PostItem'">
-            <startOffsets>
-              <option value="6381" />
-            </startOffsets>
-            <endOffsets>
-              <option value="6411" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="76" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/ArchaicQuestII.API/Controllers/ItemController.cs</url>
-          <line>135</line>
-          <properties documentPath="$PROJECT_DIR$/ArchaicQuestII.API/Controllers/ItemController.cs" initialLine="135" containingFunctionPresentation="method 'PostItem'">
-            <startOffsets>
-              <option value="5404" />
-            </startOffsets>
-            <endOffsets>
-              <option value="5436" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="77" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/ArchaicQuestII.API/Controllers/Character/MobController.cs</url>
@@ -438,19 +404,6 @@
           <option name="timeStamp" value="82" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/GameLoop.cs</url>
-          <line>331</line>
-          <properties documentPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/GameLoop.cs" initialLine="331" containingFunctionPresentation="method 'UpdateTime'">
-            <startOffsets>
-              <option value="13564" />
-            </startOffsets>
-            <endOffsets>
-              <option value="13565" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="83" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Spell/Spells/DamageSpells/DamageSpells.cs</url>
           <line>292</line>
           <properties documentPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Spell/Spells/DamageSpells/DamageSpells.cs" initialLine="292" containingFunctionPresentation="method 'Identify'">
@@ -490,69 +443,17 @@
           <option name="timeStamp" value="87" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/GameLoop.cs</url>
-          <line>865</line>
-          <properties documentPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/GameLoop.cs" initialLine="865" containingFunctionPresentation="method 'UpdatePlayers'">
+          <url>file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/Combat.cs</url>
+          <line>766</line>
+          <properties documentPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/Combat.cs" initialLine="766" containingFunctionPresentation="method 'Fight'">
             <startOffsets>
-              <option value="35356" />
+              <option value="30291" />
             </startOffsets>
             <endOffsets>
-              <option value="35357" />
+              <option value="30312" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="89" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/ArchaicQuestII.API/Controllers/ItemController.cs</url>
-          <line>33</line>
-          <properties documentPath="$PROJECT_DIR$/ArchaicQuestII.API/Controllers/ItemController.cs" initialLine="33" containingFunctionPresentation="method 'PostItem'">
-            <startOffsets>
-              <option value="981" />
-            </startOffsets>
-            <endOffsets>
-              <option value="982" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="92" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/ArchaicQuestII.API/Controllers/ItemController.cs</url>
-          <line>155</line>
-          <properties documentPath="$PROJECT_DIR$/ArchaicQuestII.API/Controllers/ItemController.cs" initialLine="156" containingFunctionPresentation="method 'PostItem'">
-            <startOffsets>
-              <option value="6339" />
-            </startOffsets>
-            <endOffsets>
-              <option value="6340" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="95" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/SeedData/Rooms.cs</url>
-          <line>32</line>
-          <properties documentPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/SeedData/Rooms.cs" initialLine="30" containingFunctionPresentation="method 'Cache'">
-            <startOffsets>
-              <option value="1271" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1300" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="101" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/SeedData/Rooms.cs</url>
-          <line>45</line>
-          <properties documentPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/SeedData/Rooms.cs" initialLine="45" containingFunctionPresentation="method 'Cache'">
-            <startOffsets>
-              <option value="1713" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1757" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="102" />
+          <option name="timeStamp" value="108" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

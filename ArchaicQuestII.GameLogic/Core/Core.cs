@@ -11,9 +11,11 @@ using ArchaicQuestII.GameLogic.World.Room;
 using Markdig;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Serialization;
 
 namespace ArchaicQuestII.GameLogic.Core
 {
@@ -26,6 +28,7 @@ namespace ArchaicQuestII.GameLogic.Core
         private readonly IUpdateClientUI _clientUi;
         private readonly IDice _dice;
         private readonly IGain _gain;
+        
         public Core(ICache cache, IWriteToClient writeToClient, IDataBase db, IPlayerDataBase pdb, IUpdateClientUI clientUi, IDice dice, IGain gain)
         {
             _cache = cache;
@@ -1557,6 +1560,9 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public async void Harvest(Player player, string item, Room room)
         {
+
+            var canDoSkill = CheckSkillSuccessAndImprove(player, "harvest");
+            
             
             if (player.Status == CharacterStatus.Status.Busy)
             {
@@ -1581,29 +1587,245 @@ namespace ArchaicQuestII.GameLogic.Core
                 return;
             }
             
+            _clientUi.PlaySound("foraging", player);
           
             _writeToClient.WriteLine($"You begin harvesting from {thingToHarvest.Name}.", player.ConnectionId);
             await Task.Delay(4000);
-            if (!room.Players.Contains(player) && player.Status != CharacterStatus.Status.Busy)
+            if (!room.Players.Contains(player) || player.Status != CharacterStatus.Status.Busy)
+            {
+                return;
+            }
+            _clientUi.PlaySound("foraging", player);
+
+            _writeToClient.WriteLine($"You rummage through the foliage looking for something to harvest", player.ConnectionId);
+            await Task.Delay(4000);
+            if (!room.Players.Contains(player) || player.Status != CharacterStatus.Status.Busy)
+            {
+                return;
+            }
+            _clientUi.PlaySound("foraging", player);
+
+            _writeToClient.WriteLine($"You continue searching.", player.ConnectionId);
+            
+            await Task.Delay(4000); 
+            if (!room.Players.Contains(player) || player.Status != CharacterStatus.Status.Busy)
             {
                 return;
             }
 
-            _writeToClient.WriteLine($"You rummage through the foliage looking for something to harvest", player.ConnectionId);
-            await Task.Delay(4000);
-            if (!room.Players.Contains(player) && player.Status != CharacterStatus.Status.Busy)
-            {
-                return;
-            }
-            _writeToClient.WriteLine($"You continue searching.", player.ConnectionId);
+         
             
-            await Task.Delay(4000); 
-            if (!room.Players.Contains(player) && player.Status != CharacterStatus.Status.Busy)
+            var roll = _dice.Roll(1, 1, 1);
+
+              var randomMobObj = roll switch
             {
+                1 => new
+                {
+                    Name = "A snake",
+                    Description = "A black and red snake",
+                    LongName = "A black snake slithers along here.",
+                    DefaultAttack = "bite"
+                },
+                2 => new
+                {
+                    Name = "A giant hornet",
+                    Description = "An red and orange hornet",
+                    LongName = "An angry red and orange hornet buzzes around here.",
+                    DefaultAttack = "sting"
+                },
+                3 => new
+                {
+                    Name = "An angry fairy",
+                    Description = "A short winged fairy, angry at being disturbed",
+                    LongName = "An angry fairy, annoyed at being disturbed is here.",
+                    DefaultAttack = "punch"
+                },
+                _ => new { Name = "A racoon", Description = "A large grey racoon dog", LongName = "A large racoon looks at you angrily", DefaultAttack = "bite" }
+            };
+
+            if (randomMobObj != null)
+            {
+                
+                var randomMob = new Player()
+                {
+                    Name = randomMobObj.Name,
+                    ClassName = "Fighter",
+                    Target = String.Empty,
+                    Status = CharacterStatus.Status.Standing,
+                    Race = "Other",
+                    Level = roll + 2,
+                    RoomId = player.RoomId,
+                    Attributes = new Attributes()
+                    {
+                        Attribute = new Dictionary<EffectLocation, int>
+                        {
+                            { EffectLocation.Mana, 30 },
+                            { EffectLocation.Hitpoints, 300 },
+                            { EffectLocation.Moves, 30 },
+                            { EffectLocation.Strength, 30 },
+                            { EffectLocation.Dexterity, 30 },
+                            { EffectLocation.Constitution, 30 },
+                            { EffectLocation.Intelligence, 30 },
+                            { EffectLocation.Wisdom, 30 },
+                            { EffectLocation.Charisma, 30 },
+                            { EffectLocation.HitRoll, 2 },
+                            { EffectLocation.DamageRoll, 1 },
+                            { EffectLocation.SavingSpell, 1 },
+                        }
+                    },
+                    MaxAttributes = new Attributes()
+                    {
+                        Attribute = new Dictionary<EffectLocation, int>
+                        {
+                            { EffectLocation.Mana, 30 },
+                            { EffectLocation.Hitpoints, 300 },
+                            { EffectLocation.Moves, 30 },
+                            { EffectLocation.Strength, 30 },
+                            { EffectLocation.Dexterity, 30 },
+                            { EffectLocation.Constitution, 30 },
+                            { EffectLocation.Intelligence, 30 },
+                            { EffectLocation.Wisdom, 30 },
+                            { EffectLocation.Charisma, 30 },
+                            { EffectLocation.HitRoll, 2 },
+                            { EffectLocation.DamageRoll, 1 },
+                            { EffectLocation.SavingSpell, 1 },
+                        }
+                    },
+
+                    Description = randomMobObj.Description,
+                    LongName = randomMobObj.LongName,
+                    ArmorRating = new ArmourRating()
+                    {
+                        Armour = 5,
+                        Magic = 5
+                    },
+                    DefaultAttack = randomMobObj.DefaultAttack,
+                    UniqueId = Guid.NewGuid(),
+                    Id = Guid.NewGuid()
+                };
+
+   
+                if (roll <= 1)
+                {
+                    
+                    _clientUi.PlaySound("stop", player);
+                    _writeToClient.WriteLine(
+                        $"{{yellow}}{randomMob.Name} jumps out from the {thingToHarvest.Name} and attacks you !{{/}}",
+                        player.ConnectionId);
+                    room.Mobs.Add(randomMob);
+
+                    InitFightStatus(randomMob, player);
+                    return;
+                }
+                
+                if (roll <= 3)
+                {
+                    
+                    _clientUi.PlaySound("stop", player);
+                    _writeToClient.WriteLine(
+                        $"{{yellow}}You cut yourself foraging, OUCH!{{/}}",
+                        player.ConnectionId);
+                    player.Status = CharacterStatus.Status.Standing;
+                    return;
+                }
+            }
+            
+            if (!canDoSkill)
+            {
+                
+                _clientUi.PlaySound("stop", player);
+                _writeToClient.WriteLine("You fail to harvest a thing.", player.ConnectionId);
+                player.Status = CharacterStatus.Status.Standing;
                 return;
             }
-            _writeToClient.WriteLine($"Ah you have collected 2 twigs and 5 apples.", player.ConnectionId);
+
+            _clientUi.PlaySound("stop", player);
+
+            var collected = "";
+            var collectedCount = 0;
+            foreach (var harvestItem in thingToHarvest.Container.Items)
+            {
+                if (_dice.Roll(1, 1, 10) <= 3)
+                {
+                        collected = harvestItem.Name;
+                        collectedCount++;
+
+                        player.Inventory.Add(harvestItem);
+                }
+            }
+
+            _writeToClient.WriteLine($"Ah you have collected {collectedCount} {collected}{(collectedCount > 1 ? "'s" : "")}", player.ConnectionId);
+            player.Status = CharacterStatus.Status.Standing;
         }
+        
+        public void InitFightStatus(Player player, Player target)
+        {
+   
+            player.Target = string.IsNullOrEmpty(player.Target) ? target.Name : player.Target;
+            player.Status = CharacterStatus.Status.Fighting;
+            target.Status = (target.Status & CharacterStatus.Status.Stunned) != 0 ? CharacterStatus.Status.Stunned : CharacterStatus.Status.Fighting;
+            target.Target = string.IsNullOrEmpty(target.Target) ? player.Name : target.Target; //for group combat, if target is ganged, there target should not be changed when combat is initiated.
+
+            if (player.Target == player.Name)
+            {
+                player.Status = CharacterStatus.Status.Standing;
+                return;
+            }
+
+            if (!_cache.IsCharInCombat(player.Id.ToString()))
+            {
+                _cache.AddCharToCombat(player.Id.ToString(), player);
+            }
+
+            if (!_cache.IsCharInCombat(target.Id.ToString()))
+            {
+                _cache.AddCharToCombat(target.Id.ToString(), target);
+            }
+        }
+
+        public bool CheckSkillSuccessAndImprove(Player player, string skillName)
+        {
+            var foundSkill = player.Skills.FirstOrDefault(x =>
+                x.SkillName.StartsWith(skillName, StringComparison.CurrentCultureIgnoreCase));
+
+            if (foundSkill == null)
+            {
+                return false;
+            }
+            var proficiency = foundSkill.Proficiency;
+            var success = _dice.Roll(1, 1, 100);
+            
+            if (proficiency >= success)
+            {
+                return true;
+            }
+
+            if (success == 1 || success == 101)
+            {
+                return false;
+            }
+
+            if (foundSkill.Proficiency == 100)
+            {
+                return false;
+            }
+
+            var increase = _dice.Roll(1, 1, 5);
+
+            foundSkill.Proficiency += increase;
+
+            _gain.GainExperiencePoints(player, 100 * foundSkill.Level / 4, false);
+
+            _clientUi.UpdateExp(player);
+
+            _writeToClient.WriteLine(
+                $"<p class='improve'>You learn from your mistakes and gain {100 * foundSkill.Level / 4} experience points.</p>" +
+                $"<p class='improve'>Your knowledge of {foundSkill.SkillName} increases by {increase}%.</p>",
+                player.ConnectionId, 0);
+
+            return false;
+        }
+        
 
 
         public void DBDumpToJSON(Player player)
