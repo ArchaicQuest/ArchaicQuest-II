@@ -20,7 +20,6 @@ namespace ArchaicQuestII.GameLogic.World.Room
         string DisplayMobs(Room room, Player player);
         bool RoomIsDark(Room room, Player player);
         bool LoreSuccess(int? skillLevel);
-        void DoLore(Item.Item item, Player player);
 
     }
 }

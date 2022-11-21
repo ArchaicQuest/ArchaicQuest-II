@@ -46,5 +46,23 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
 
             return coreSkill;
         }
+        
+        public Model.Skill Foraging()
+        {
+
+            var coreSkill = new Model.Skill()
+            {
+                Name = "Foraging",
+                Description =
+                    "Foraging allows the the player to pick fruits, herbs, flowers and other flora. The command to use is harvest <item>",
+                Type = SkillType.None,
+                DateCreated = DateTime.Now,
+
+
+            };
+
+
+            return coreSkill;
+        }
     }
 }

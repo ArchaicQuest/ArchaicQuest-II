@@ -254,6 +254,24 @@ namespace ArchaicQuestII.GameLogic.Core
             }
             player.Money.Gold += value;
         }
+        
+        public void Harm(int maxValue, Player player, Room room)
+        {
+            var damage = _dice.Roll(1, 1, maxValue);
+
+            var dummyPlayer = new Player()
+            {
+                Name = "Script damage"
+            };
+            
+            _combat.HarmTarget(player, damage);
+            _updateClientUi.UpdateScore(player);
+            _updateClientUi.UpdateHP(player);
+            if (!_combat.IsTargetAlive(player))
+            {
+                _combat.TargetKilled(dummyPlayer, player, room);
+            }
+        }
 
         public bool HasObject(Player player, string name)
         {

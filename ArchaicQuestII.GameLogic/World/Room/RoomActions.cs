@@ -12,6 +12,7 @@ using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Item;
+using ArchaicQuestII.GameLogic.Skill.Skills;
 using Newtonsoft.Json;
 
 namespace ArchaicQuestII.GameLogic.World.Room
@@ -25,7 +26,8 @@ namespace ArchaicQuestII.GameLogic.World.Room
         private readonly IDice _dice;
         private readonly IGain _gain;
         private readonly IFormulas _formulas;
-        public RoomActions(IWriteToClient writeToClient, ITime time, ICache cache, IDice dice, IGain gain, IFormulas formulas)
+        private readonly IPassiveSkills _passiveSkills;
+        public RoomActions(IWriteToClient writeToClient, ITime time, ICache cache, IDice dice, IGain gain, IFormulas formulas, IPassiveSkills passiveSkills)
         {
             _writeToClient = writeToClient;
             _time = time;
@@ -33,6 +35,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
             _dice = dice;
             _gain = gain;
             _formulas = formulas;
+            _passiveSkills = passiveSkills;
         }
 
         public void Look(string target, Room room, Player player)
@@ -225,7 +228,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
                     if (success)
                     {
-                        DoLore(item, player);
+                        _passiveSkills.Lore(player, room, item.Name);
                     }
                     else
                     {
@@ -756,106 +759,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
             return skillLevel >= chance;
         }
-
-        public void DoLore(Item.Item item, Player player)
-        {
-            // only lore items that can be picked up
-            if (item.Stuck)
-            {
-                return;
-            }
-
-            var sb = new StringBuilder();
-
-            //It is a level 45 armor, weight 4.
-            //    Locations it can be worn: finger
-            //    Special properties: evil
-            //    Alignments allowed: evil neutral
-            //This armor has a gold value of 45000.
-            //    Armor class is 6 of 6. 
-            //    Affects strength by 1. 
-            //    Affects wisdom by 1. 
-            //    Affects mana by 60. 
-            //    Affects hit roll by 4. 
-
-            sb.Append($"It is a level {item.Level} {item.ItemType}, weight {item.Weight}.<br/>Locations it can be worn: {(item.ItemType == Item.Item.ItemTypes.Light || item.ItemType == Item.Item.ItemTypes.Weapon || item.ItemType == Item.Item.ItemTypes.Armour ? item.Slot : Character.Equipment.Equipment.EqSlot.Held)}.<br /> This {item.ItemType} has a gold value of {item.Value}.<br />");
-
-            if (item.ArmourRating.Armour != 0 || item.ArmourRating.Magic != 0)
-            {
-                sb.Append($"Affects armour by {item.ArmourRating.Armour} / {item.ArmourRating.Magic}");
-            }
-
-            if (item.Modifier.Strength != 0)
-            {
-                sb.Append($"<br />Affects strength by {item.Modifier.Strength}");
-            }
-
-            if (item.Modifier.Dexterity != 0)
-            {
-                sb.Append($"<br />Affects dexterity by {item.Modifier.Dexterity}");
-            }
-
-            if (item.Modifier.Constitution != 0)
-            {
-                sb.Append($"<br />Affects constitution by {item.Modifier.Constitution}");
-            }
-
-            if (item.Modifier.Wisdom != 0)
-            {
-                sb.Append($"<br />Affects wisdom by {item.Modifier.Wisdom}");
-            }
-
-            if (item.Modifier.Intelligence != 0)
-            {
-                sb.Append($"<br />Affects intelligence by {item.Modifier.Intelligence}");
-            }
-
-            if (item.Modifier.Charisma != 0)
-            {
-                sb.Append($"<br />Affects charisma by {item.Modifier.Charisma}");
-            }
-
-            if (item.Modifier.HP != 0)
-            {
-                sb.Append($"<br />Affects HP by {item.Modifier.HP}");
-            }
-
-
-            if (item.Modifier.Mana != 0)
-            {
-                sb.Append($"<br />Affects mana by {item.Modifier.Mana}");
-            }
-
-            if (item.Modifier.Moves != 0)
-            {
-                sb.Append($"<br />Affects moves by {item.Modifier.Moves}");
-            }
-
-            if (item.Modifier.DamRoll != 0)
-            {
-                sb.Append($"<br />Affects damroll by {item.Modifier.DamRoll}");
-            }
-
-            if (item.Modifier.HitRoll != 0)
-            {
-                sb.Append($"<br />Affects hitroll by {item.Modifier.HitRoll}");
-            }
-
-            if (item.Modifier.Saves != 0)
-            {
-                sb.Append($"<br />Affects saves by {item.Modifier.Saves}");
-            }
-
-            if (item.Modifier.SpellDam != 0)
-            {
-                sb.Append($"<br />Affects spell dam by {item.Modifier.SpellDam}");
-            }
-
-
-            _writeToClient.WriteLine(sb.ToString(), player.ConnectionId);
-
-        }
-
+        
         public string DisplayPlayers(Room room, Player player)
         {
             var players = string.Empty;

@@ -138,9 +138,26 @@ namespace ArchaicQuestII.GameLogic.Character.Gain
                 _clientUi.UpdateMoves(player);
                 _clientUi.UpdateHP(player);
                 _clientUi.UpdateExp(player);
+                _clientUi.UpdateScore(player);
 
             }
 
+        }
+
+        public void GainLevel(Player player, string target)
+        {
+            var foundTarget = _cache.GetPlayerCache()
+                .FirstOrDefault(x => x.Value.Name.Equals(target, StringComparison.CurrentCultureIgnoreCase));
+
+            if (foundTarget.Value == null)
+            {
+                _writer.WriteLine($"Cannot find {target}.");
+                return;
+            }
+
+            foundTarget.Value.ExperienceToNextLevel = 0;
+            _writer.WriteLine($"{player.Name} has rewarded you with a level.", foundTarget.Value.ConnectionId);
+            GainLevel(foundTarget.Value);
         }
 
         public int GetExpWorth(Player character)

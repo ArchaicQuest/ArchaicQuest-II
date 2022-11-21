@@ -23,6 +23,7 @@ using ArchaicQuestII.GameLogic.Socials;
 using ArchaicQuestII.GameLogic.Spell.Interface;
 using MoonSharp.Interpreter;
 using System.Threading.Tasks;
+using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.MobFunctions.Healer;
 using ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells;
 
@@ -55,6 +56,7 @@ namespace ArchaicQuestII.GameLogic.Commands
         private readonly IPassiveSkills _passiveSkills;
         private readonly IHealer _healer;
         private readonly IDamageSpells _damageSpells;
+        private readonly IGain _gain;
 
 
         public Commands(
@@ -81,7 +83,8 @@ namespace ArchaicQuestII.GameLogic.Commands
             IUtilSkills utilSkills,
             IPassiveSkills passiveSkills,
             IHealer healer,
-            IDamageSpells damageSpells
+            IDamageSpells damageSpells,
+            IGain gain
             )
         {
             _movement = movement;
@@ -108,6 +111,7 @@ namespace ArchaicQuestII.GameLogic.Commands
             _passiveSkills = passiveSkills;
             _healer = healer;
             _damageSpells = damageSpells;
+            _gain = gain;
         }
 
         public void CommandList(string key, string obj, string target, string fullCommand, Player player, Room room)
@@ -424,6 +428,9 @@ namespace ArchaicQuestII.GameLogic.Commands
                     break;
                 case "/restore":
                     _core.RestorePlayer(player);
+                    break;
+                case "/gainlevel":
+                    _gain.GainLevel(player, obj);
                     break;
                 case "/setevent":
                     _core.SetEvent(player, obj, target);

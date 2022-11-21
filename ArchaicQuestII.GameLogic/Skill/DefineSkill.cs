@@ -104,7 +104,7 @@ namespace ArchaicQuestII.GameLogic.Skill
                 },
                 Type = SkillType.Damage,
                 StartsCombat = false,
-                ValidTargets = ValidTargets.TargetSelfOnly,
+                ValidTargets = ValidTargets.TargetObjectInventory,
                 Damage = new Dice()
                 {
                     DiceMaxSize = 4,

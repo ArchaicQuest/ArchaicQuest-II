@@ -14,6 +14,7 @@ using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Commands;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
+using ArchaicQuestII.GameLogic.Skill.Skills;
 using ArchaicQuestII.GameLogic.Spell;
 using ArchaicQuestII.GameLogic.World.Room;
 using Microsoft.Extensions.Logging;
@@ -37,8 +38,9 @@ namespace ArchaicQuestII.GameLogic.Hubs
         private readonly IDice _dice;
         private readonly IGain _gain;
         private readonly IFormulas _formulas;
+        private readonly IPassiveSkills _passiveSkills;
 
-        public GameHub(IDataBase db, IPlayerDataBase pdb, ICache cache, ILogger<GameHub> logger, IWriteToClient writeToClient, ICommands commands, IUpdateClientUI updateClientUi, IMobScripts mobScripts, ITime time, IDice dice, IGain gain, IFormulas formulas)
+        public GameHub(IDataBase db, IPlayerDataBase pdb, ICache cache, ILogger<GameHub> logger, IWriteToClient writeToClient, ICommands commands, IUpdateClientUI updateClientUi, IMobScripts mobScripts, ITime time, IDice dice, IGain gain, IFormulas formulas, IPassiveSkills passiveSkills)
         {
             _logger = logger;
             _db = db;
@@ -52,6 +54,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
             _dice = dice;
             _gain = gain;
             _formulas = formulas;
+            _passiveSkills = passiveSkills;
         }
 
 
@@ -250,9 +253,10 @@ namespace ArchaicQuestII.GameLogic.Hubs
             var classSkill = _db.GetCollection<Class>(DataBase.Collections.Class).FindOne(x =>
                 x.Name.Equals(player.ClassName, StringComparison.CurrentCultureIgnoreCase));
 
-            foreach (var skill in classSkill.Skills)
+             foreach (var skill in classSkill.Skills)
             {
-                var theSkill = _cache.GetAllSkills().FirstOrDefault(x => x.Name.Equals(skill.SkillName));
+                var theSkill = _cache.GetAllSkills().FirstOrDefault(x => x.Name.Equals(skill.SkillName, StringComparison.CurrentCultureIgnoreCase));
+                
                 // skill doesn't exist and should be added
                 if (player.Skills.FirstOrDefault(x =>
                     x.SkillName.Equals(skill.SkillName, StringComparison.CurrentCultureIgnoreCase)) == null)
@@ -414,7 +418,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
 
             _updateClientUi.GetMap(character, _cache.GetMap($"{room.AreaId}{room.Coords.Z}"));
 
-            new RoomActions(_writeToClient, _time, _cache, _dice, _gain, _formulas).Look("", room, character);
+            new RoomActions(_writeToClient, _time, _cache, _dice, _gain, _formulas, _passiveSkills).Look("", room, character);
 
             foreach (var mob in room.Mobs.ToList())
             {

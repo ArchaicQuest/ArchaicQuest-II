@@ -17,6 +17,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
             {
                 new CraftingSkills().Cooking(),
                 new CraftingSkills().Crafting(),
+                new CraftingSkills().Foraging(),
                 new WeaponTypeSkills().Crossbow(),
                 new WeaponTypeSkills().Flail(),
                 new WeaponTypeSkills().HandToHand(),

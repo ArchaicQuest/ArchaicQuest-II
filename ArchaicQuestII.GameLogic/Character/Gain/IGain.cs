@@ -12,6 +12,7 @@ namespace ArchaicQuestII.GameLogic.Character.Gain
         public void GainExperiencePoints(Player player, int value, bool showMessage);
 
         public void GainLevel(Player player);
+        public void GainLevel(Player player, string target);
 
         public void GroupGainExperiencePoints(Player player, Player target);
 

@@ -1561,9 +1561,6 @@ namespace ArchaicQuestII.GameLogic.Core
         public async void Harvest(Player player, string item, Room room)
         {
 
-            var canDoSkill = CheckSkillSuccessAndImprove(player, "harvest");
-            
-            
             if (player.Status == CharacterStatus.Status.Busy)
             {
                 _writeToClient.WriteLine($"You are already doing it.", player.ConnectionId);
@@ -1615,7 +1612,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
          
             
-            var roll = _dice.Roll(1, 1, 1);
+            var roll = _dice.Roll(1, 1, 10);
 
               var randomMobObj = roll switch
             {
@@ -1643,9 +1640,7 @@ namespace ArchaicQuestII.GameLogic.Core
                 _ => new { Name = "A racoon", Description = "A large grey racoon dog", LongName = "A large racoon looks at you angrily", DefaultAttack = "bite" }
             };
 
-            if (randomMobObj != null)
-            {
-                
+     
                 var randomMob = new Player()
                 {
                     Name = randomMobObj.Name,
@@ -1708,7 +1703,6 @@ namespace ArchaicQuestII.GameLogic.Core
                 if (roll <= 1)
                 {
                     
-                    _clientUi.PlaySound("stop", player);
                     _writeToClient.WriteLine(
                         $"{{yellow}}{randomMob.Name} jumps out from the {thingToHarvest.Name} and attacks you !{{/}}",
                         player.ConnectionId);
@@ -1720,27 +1714,24 @@ namespace ArchaicQuestII.GameLogic.Core
                 
                 if (roll <= 3)
                 {
-                    
-                    _clientUi.PlaySound("stop", player);
                     _writeToClient.WriteLine(
                         $"{{yellow}}You cut yourself foraging, OUCH!{{/}}",
                         player.ConnectionId);
                     player.Status = CharacterStatus.Status.Standing;
                     return;
                 }
-            }
+
             
+            var canDoSkill = CheckSkillSuccessAndImprove(player, "foraging");
+
+
             if (!canDoSkill)
             {
-                
-                _clientUi.PlaySound("stop", player);
                 _writeToClient.WriteLine("You fail to harvest a thing.", player.ConnectionId);
                 player.Status = CharacterStatus.Status.Standing;
                 return;
             }
-
-            _clientUi.PlaySound("stop", player);
-
+            
             var collected = "";
             var collectedCount = 0;
             foreach (var harvestItem in thingToHarvest.Container.Items)
@@ -1750,8 +1741,29 @@ namespace ArchaicQuestII.GameLogic.Core
                         collected = harvestItem.Name;
                         collectedCount++;
 
+                        // if the User has herbalism the conditions will be higher rated
+                        // on success skill check the roll could be 50, 100
+                        // if elven the condition can be 10 points higher
+                        harvestItem.Condition = _dice.Roll(1, 1, 65);
+
+                        switch (player.Race)
+                        {
+                            case "Wood-Elf":
+                                harvestItem.Condition += _dice.Roll(1, 10, 20);
+                                break;
+                            case "Elf":
+                            case "Drow":
+                                harvestItem.Condition += _dice.Roll(1, 5, 10);;
+                                break;
+                        }
+
                         player.Inventory.Add(harvestItem);
                 }
+            }
+
+            for (int i = 0; i < thingToHarvest.Container.Items.Count; i++)
+            {
+                thingToHarvest.Container.Items.Remove(thingToHarvest.Container.Items[i]);
             }
 
             _writeToClient.WriteLine($"Ah you have collected {collectedCount} {collected}{(collectedCount > 1 ? "'s" : "")}", player.ConnectionId);

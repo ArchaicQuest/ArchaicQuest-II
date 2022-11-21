@@ -148,6 +148,17 @@ namespace ArchaicQuestII.GameLogic.Skill
                    (spell.ValidTargets & ValidTargets.TargetSelfOnly) != 0 ||
                    (spell.ValidTargets & ValidTargets.TargetFightSelf) != 0;
         }
+        
+        public bool AffectsObject(Skill.Model.Skill spell)
+        {
+
+            return
+                (spell.ValidTargets & ValidTargets.TargetObjectEquipped) != 0 ||
+                (spell.ValidTargets & ValidTargets.TargetObjectRoom) != 0 ||
+                (spell.ValidTargets & ValidTargets.TargetObjectWorld) != 0 ||
+                (spell.ValidTargets & ValidTargets.TargetObjectInventory) != 0;
+        }
+
 
 
         /// <summary>
@@ -191,7 +202,6 @@ namespace ArchaicQuestII.GameLogic.Skill
 
                 if (!AffectsSelf(FoundSkill) && (origin.Status & CharacterStatus.Status.Fighting) == 0 && (!string.IsNullOrEmpty(targetName) && targetName == command))
                 {
-
                     _writer.WriteLine(FoundSkill.Name + " whom?");
                     return;
                 }
@@ -256,40 +266,7 @@ namespace ArchaicQuestII.GameLogic.Skill
 
                 if (SkillSuccess(origin, target, FoundSkill))
                 {
-
-
-                    //if (spell.Type == SkillType.Damage)
-                    //{
-
-                    //    var savingThrow = origin.Attributes.Attribute[EffectLocation.Dexterity] / 2;
-
-                    //    var rollForSave = _dice.Roll(1, 1, 100);
-
-                    //    if (rollForSave <= savingThrow || rollForSave == 100)
-                    //    {
-                    //        if (rollForSave > 1)
-                    //        {
-                    //            damage /= 2;
-
-                    //            _writer.WriteLine("You partly evade " + origin.Name + "'s " + spell.Name + " by jumping back.", target.ConnectionId);
-
-                    //            _writer.WriteLine($"{target.Name} partly evades your " + spell.Name + " by jumping back.", origin.ConnectionId);
-
-                    //            foreach (var pc in room.Players)
-                    //            {
-                    //                if (pc.ConnectionId.Equals(origin.ConnectionId) ||
-                    //                    pc.ConnectionId.Equals(target.ConnectionId))
-                    //                {
-                    //                    continue;
-                    //                }
-
-                    //                _writer.WriteLine($"{target.Name} partly evades {origin.Name}'s " + spell.Name + " by jumping back.", pc.ConnectionId);
-                    //            }
-                    //        }
-                    //    }
-                    //}
-
-
+                    
                     var skillTarget = new SkillTarget
                     {
                         Origin = origin,
@@ -297,19 +274,14 @@ namespace ArchaicQuestII.GameLogic.Skill
                         Room = room,
                         Skill = FoundSkill
                     };
-
-
-
-
+                    
                     if (string.IsNullOrEmpty(FoundSkill.Formula) && FoundSkill.Type == SkillType.Damage)
                     {
                         //do this for cast cure
                         _skillList.DoSkill(FoundSkill.Name, "", target, "", origin, room, false);
 
                     }
-
-
-
+                    
 
                     if (FoundSkill.Type != SkillType.Damage)
                     {
@@ -349,6 +321,21 @@ namespace ArchaicQuestII.GameLogic.Skill
                 }
 
             }
+            else if (AffectsObject(FoundSkill))
+            {
+                if (SkillSuccess(origin, null, FoundSkill))
+                {
+                    
+                    if (FoundSkill.Type != SkillType.Passive)
+                    {
+                        _skillList.DoSkill(FoundSkill.Name, targetName, null, "", origin, room, false);
+                    }
+                }
+                else
+                {
+                    
+                }
+            }
             else
             {
                 if (FoundSkill.Name.Equals("Axe"))
@@ -359,7 +346,7 @@ namespace ArchaicQuestII.GameLogic.Skill
                     return;
                 }
                 _writer.WriteLine(
-                    $"<p>You cannot cast this spell upon another.</p>",
+                    $"<p>You cannot use this upon another.</p>",
                     origin.ConnectionId);
             }
 
