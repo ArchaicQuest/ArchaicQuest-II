@@ -7,6 +7,8 @@ using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.Character.Help;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Item;
+using ArchaicQuestII.GameLogic.Spell;
+using ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells;
 using ArchaicQuestII.GameLogic.World.Room;
 using MoonSharp.Interpreter;
 
@@ -17,12 +19,14 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
     {
         private readonly IWriteToClient _writer;
         private readonly IUpdateClientUI _updateUi;
+        private readonly ISpellList _castSpell;
         private readonly IMobScripts _mobScripts;
-        public Object(IWriteToClient writer, IUpdateClientUI updateUi, IMobScripts mobScripts)
+        public Object(IWriteToClient writer, IUpdateClientUI updateUi, IMobScripts mobScripts, ISpellList castSpell)
         {
             _writer = writer;
             _updateUi = updateUi;
             _mobScripts = mobScripts;
+            _castSpell = castSpell;
         }
         public void Get(string target, string container, Room room, Player player, string fullCommand)
         {
@@ -1142,6 +1146,46 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
                 return;
             }
+
+        }
+
+        public void Quaff(string target, Room room, Player player)
+        {
+            var nthItem = Helpers.findNth(target);
+            var foundItem =
+                Helpers.findRoomObject(nthItem, room) ?? Helpers.findObjectInInventory(nthItem, player);
+            
+            if (foundItem == null)
+            {
+                _writer.WriteLine("<p>You can't find that potion.</p>", player.ConnectionId);
+                return;
+            }
+
+            player.Inventory.Remove(foundItem);
+            _updateUi.UpdateInventory(player);
+
+            if (string.IsNullOrEmpty(foundItem.SpellName) && foundItem.ItemType == Item.Item.ItemTypes.Potion)
+            {
+                _writer.WriteLine("<p>You quaff the potion but nothing happens.</p>", player.ConnectionId);
+                return;
+            }
+   
+            foreach (var pc in room.Players)
+            {
+                if (pc.Name == player.Name)
+                {
+                    continue;
+                }
+                _writer.WriteLine($"{player.Name} quaffs {foundItem.Name.ToLower()}.", pc.ConnectionId);
+            }
+
+            //potion to cast at level of potion and not the player level
+            var dummyPlayer = new Player()
+            {
+                Level = foundItem.Level
+            };
+
+            _castSpell.CastSpell(foundItem.SpellName, string.Empty, player, foundItem.SpellName, dummyPlayer, room, false);
 
         }
     }

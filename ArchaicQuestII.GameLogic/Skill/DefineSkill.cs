@@ -102,7 +102,7 @@ namespace ArchaicQuestII.GameLogic.Skill
                 {
                     Table = new Dictionary<Cost, int>()
                 },
-                Type = SkillType.Damage,
+                Type = SkillType.None,
                 StartsCombat = false,
                 ValidTargets = ValidTargets.TargetObjectInventory,
                 Damage = new Dice()

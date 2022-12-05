@@ -325,6 +325,12 @@ namespace ArchaicQuestII.GameLogic.Hubs
             
             SetArmorRating(player);
 
+            if (player.Attributes.Attribute[EffectLocation.Hitpoints] <= 0)
+            {
+                player.Attributes.Attribute[EffectLocation.Hitpoints] =
+                    player.MaxAttributes.Attribute[EffectLocation.Hitpoints] / 4;
+            }
+
             return player;
         }
 

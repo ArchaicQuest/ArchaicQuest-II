@@ -200,9 +200,14 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                 sb.Append($"Damage {item.Damage.Minimum} - {item.Damage.Maximum}</br>");
                 sb.Append($"Damage Type {item.DamageType}");
             }
-            if (item.ArmourRating.Armour != 0 || item.ArmourRating.Magic != 0)
+            if (item.ItemType == Item.Item.ItemTypes.Armour && (item.ArmourRating.Armour != 0 || item.ArmourRating.Magic != 0))
             {
                 sb.Append($"Affects armour by {item.ArmourRating.Armour} / {item.ArmourRating.Magic}");
+            }
+            if (item.ItemType == Item.Item.ItemTypes.Potion)
+            {
+                sb.Append($"Potion of {item.SpellName}.<br />");
+                sb.Append($"Potion Strength: {item.SpellLevel}</br>"); 
             }
 
             if (item.Modifier.Strength != 0)

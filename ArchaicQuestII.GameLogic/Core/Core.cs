@@ -1837,8 +1837,6 @@ namespace ArchaicQuestII.GameLogic.Core
 
             return false;
         }
-        
-
 
         public void DBDumpToJSON(Player player)
         {

@@ -102,6 +102,8 @@ namespace ArchaicQuestII.Controllers
                 Weight = itemData.Item.Weight,
                 Value = itemData.Item.Value,
                 TwoHanded = itemData.Item.TwoHanded,
+                SpellName = itemData.Item.SpellName,
+                SpellLevel = itemData.Item.SpellLevel,
                 Portal = new Portal()
                 {
                     Destination = itemData.Item.Portal.Destination,

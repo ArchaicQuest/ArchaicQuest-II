@@ -208,6 +208,13 @@ namespace ArchaicQuestII.GameLogic.Item
         /// Used to slow corpse removal
         /// </summary>
         public int Decay { get; set; } = 5; // 10 for players
+        
+        /// <summary>
+        ///  For potions the spell name and level is used in casting the spell upon the player when quaffing.
+        ///  potentially could be used for on hit spell affects for weapons and armor o.0
+        /// </summary>
+        public string SpellName { get; set; }
+        public string SpellLevel { get; set; }
 
         public List<string> DecayMessages = new List<string>()
         {

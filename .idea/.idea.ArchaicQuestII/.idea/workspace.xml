@@ -7,23 +7,19 @@
     <projectFile profileName="ArchaicQuestII.API">ArchaicQuestII.API/ArchaicQuestII.API.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2eff0800-fb31-4811-bfc6-8df5e26cbfe9" name="Changes" comment="as above, so below">
+    <list default="true" id="2eff0800-fb31-4811-bfc6-8df5e26cbfe9" name="Changes" comment="foraging, lore, lua script update">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ArchaicQuestII/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ArchaicQuestII/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Character/Gain/Gain.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Character/Gain/Gain.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Character/Gain/IGain.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Character/Gain/IGain.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.API/Controllers/ItemController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.API/Controllers/ItemController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Commands.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Commands.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Objects/IObject.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Objects/IObject.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Objects/Object.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Objects/Object.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/Core.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/Core.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/IMobScripts.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/IMobScripts.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/MobScripts.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/MobScripts.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Hubs/GameHub.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Hubs/GameHub.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/SeedData/Skills.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/SeedData/Skills.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Skill/Core/CraftingSkills.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Skill/Core/CraftingSkills.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Item/Item.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Item/Item.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Skill/DefineSkill.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Skill/DefineSkill.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Skill/DoSkill.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Skill/DoSkill.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Skill/SkillList.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Skill/SkillList.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Skill/Skills/PassiveSkills.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Skill/Skills/PassiveSkills.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/World/Room/IRoomActions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/World/Room/IRoomActions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/World/Room/RoomActions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/World/Room/RoomActions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Spell/Spells/DamageSpells/DamageSpells.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Spell/Spells/DamageSpells/DamageSpells.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,12 +34,11 @@
     </option>
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Dummy.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/1195b757a9634b23be3f5dd403b21ca96e200/87/2bf72c84/Enumerable.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/1195cc8f0df04df0aba8c63158c8988b60000/48/b304ee66/ObjectMethodExecutor.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/1195cc8f0df04df0aba8c63158c8988b60000/ef/1fddbe01/DefaultHubDispatcher`1.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/1262f7ff023e414d88f0ab59b302aeb22d600/fd/064b523b/ConcurrentDictionary`2.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/1f37ad4aa02441539d05eed61577511d94de00/2f/a2a78fcc/ExceptionDispatchInfo.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/429119adeb3e4e04bf19d4821649b60294dc00/7d/e218ca0a/ExceptionDispatchInfo.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/429119adeb3e4e04bf19d4821649b60294dc00/9d/b21e51e8/Monitor.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/429119adeb3e4e04bf19d4821649b60294dc00/a6/ba9ccb78/List`1.cs" root0="SKIP_HIGHLIGHTING" />
@@ -59,28 +54,13 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/f0228cb71e3640cca1ce39483195103994de00/04/6165795e/ExceptionDispatchInfo.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/f2c9ba103bac463e84ba6dd5cdbfa0f06e200/00/f61499bc/Enumerable.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/f85276e481e24deb9dc0cf666dbeb61a6e200/38/7a587b5f/Enumerable.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/malleus/Development/Fun/ArchaicQuest-II/ArchaicQuestII.API/Controllers/Account/AccountController.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/malleus/Development/Fun/ArchaicQuest-II/ArchaicQuestII.API/Controllers/Account/AccountController.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/malleus/Development/Fun/ArchaicQuest-II/ArchaicQuestII.API/Controllers/Character/PlayerController.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/malleus/Development/Fun/ArchaicQuest-II/ArchaicQuestII.API/Controllers/ItemController.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ArchaicQuestII.API/Program.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/Combat.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/ICombat.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/CommandHandler.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///home/malleus/Development/Fun/ArchaicQuest-II/ArchaicQuestII.GameLogic/Commands/Commands.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Commands.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///home/malleus/Development/Fun/ArchaicQuest-II/ArchaicQuestII.GameLogic/Commands/Objects/Object.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/malleus/Development/Fun/ArchaicQuest-II/ArchaicQuestII.GameLogic/Commands/Objects/Object.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/malleus/Development/Fun/ArchaicQuest-II/ArchaicQuestII.GameLogic/Core/Core.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/malleus/Development/Fun/ArchaicQuest-II/ArchaicQuestII.GameLogic/Core/Core.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/malleus/Development/Fun/ArchaicQuest-II/ArchaicQuestII.GameLogic/Core/GameLoop.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/malleus/Development/Fun/ArchaicQuest-II/ArchaicQuestII.GameLogic/Core/ICore.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/malleus/Development/Fun/ArchaicQuest-II/ArchaicQuestII.GameLogic/Core/ICore.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/WriteToClient.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Hubs/Telnet/TelnetHub.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="mock:///home/malleus/Development/Fun/ArchaicQuest-II/ArchaicQuestII.GameLogic/Item/Item.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/malleus/Development/Fun/ArchaicQuest-II/ArchaicQuestII.GameLogic/Item/ItemList.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///home/malleus/Development/Fun/ArchaicQuest-II/ArchaicQuestII.GameLogic/SeedData/Rooms.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -90,16 +70,16 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "XThreadsFramesViewSplitterKey": "0.12824428",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;XThreadsFramesViewSplitterKey&quot;: &quot;0.12824428&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="ArchaicQuestII.API: IIS Express" type="LaunchSettings" factoryName=".NET Launch Settings Profile" temporary="true">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/ArchaicQuestII.API/ArchaicQuestII.API.csproj" />
@@ -149,6 +129,7 @@
       <workItem from="1663362617971" duration="20876000" />
       <workItem from="1665607839326" duration="1542000" />
       <workItem from="1665785106353" duration="22661000" />
+      <workItem from="1669074020115" duration="15139000" />
     </task>
     <task id="LOCAL-00002" summary="WIP Config settings setup and API">
       <created>1660518380350</created>
@@ -206,7 +187,14 @@
       <option name="project" value="LOCAL" />
       <updated>1665648420962</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="foraging, lore, lua script update">
+      <created>1668988806779</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1668988806779</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -215,6 +203,390 @@
   <component name="UnityCheckinConfiguration" checkUnsavedScenes="false" />
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="UnityUnitTestConfiguration" currentTestLauncher="Both" />
+  <component name="UnknownFeatures">
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Diagnostics" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Hosting" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Web.HttpUtility" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Mvc.Formatters.Json" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Runtime.InteropServices" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Web" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Serilog.Sinks.File" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Routing.Abstractions" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Localization.Routing" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Security.Cryptography.Encoding" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.IdentityModel.JsonWebTokens" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Net.Requests" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Security.Cryptography.ProtectedData" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Build.Locator" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Mvc.Formatters.Xml" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Data.Common" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.IdentityModel.Logging" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.IO.FileSystem.Primitives" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.VisualStudio.CodeCoverage.Shim" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.CodeAnalysis.CSharp.Scripting" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Composition.Hosting" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Extensions.Logging.EventLog" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.SignalR.Common" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Globalization.Extensions" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Security.Principal" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="LiteDB" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.VisualStudio.Web.CodeGeneration.Templating" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.AppContext" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.IO.IsolatedStorage" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="NuGet.DependencyResolver.Core" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Extensions.Configuration.EnvironmentVariables" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Net.WebProxy" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Mvc.ApiExplorer" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="MessagePack.Annotations" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.HttpOverrides" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Windows.Extensions" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.ObjectModel" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.IO.Pipes" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Rewrite" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Reflection.Metadata" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Net.Http" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="xunit.execution.dotnet" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.CookiePolicy" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Threading.Overlapped" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Security.Claims" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Globalization" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.IdentityModel.Tokens" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Server.Kestrel.Core" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Extensions.Logging.Abstractions" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.IO.Pipes.AccessControl" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Http.Results" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.TestPlatform.Utilities" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Castle.Core" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Diagnostics.FileVersionInfo" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Security.Cryptography.X509Certificates" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Xml.Serialization" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.IO.FileSystem" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Extensions.FileProviders.Embedded" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.JsonPatch" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.IO.Compression.ZipFile" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Collections.Concurrent" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Mvc" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.IO.UnmanagedMemoryStream" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Net.WebClient" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Text.Encoding.CodePages" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Drawing.Primitives" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Net" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Extensions.ObjectPool" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Drawing.Common" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Drawing" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="NuGet.Packaging" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Runtime.Handles" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Cryptography.Internal" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Memory" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Extensions.Logging.Debug" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.CodeAnalysis.Scripting" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Dynamic.Runtime" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Components.Web" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Extensions.Identity.Core" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.VisualStudio.TestPlatform.ObjectModel" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Xml.XmlSerializer" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Mvc.RazorPages" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Threading" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.CodeAnalysis.Workspaces" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Collections.NonGeneric" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Security.Cryptography.Algorithms" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Threading.ThreadPool" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Extensions.Configuration.Abstractions" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Security.Cryptography.OpenSsl" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Reflection.DispatchProxy" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Extensions.Logging.TraceSource" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Antiforgery" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="dotnet-aspnet-codegenerator-design" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Diagnostics.HealthChecks" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Runtime" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Runtime.Serialization.Formatters" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Threading.Tasks.Parallel" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Configuration" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.IO.Compression" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.ServiceModel.Web" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.CodeAnalysis.CSharp.Features" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.WebUtilities" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.ComponentModel.Primitives" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Diagnostics.Tools" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Cors" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Mvc.Razor" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.DataProtection" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Extensions.Options.DataAnnotations" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Net.Security" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Extensions.Localization.Abstractions" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Postmark" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Threading.Tasks.Dataflow" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Runtime.CompilerServices.VisualC" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Security.SecureString" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Routing" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Serilog.Extensions.Hosting" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Extensions.FileSystemGlobbing" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="NuGet.Protocol" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Extensions.Features" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.ValueTuple" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Xml.XmlDocument" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.VisualBasic.Core" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Extensions.Configuration" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Session" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Extensions.Diagnostics.HealthChecks" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.HttpLogging" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.SignalR" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Http.Connections" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.TestPlatform.CoreUtilities" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Mvc.DataAnnotations" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Components.Forms" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Composition.AttributedModel" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Authentication.Core" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Extensions.FileProviders.Physical" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Mvc.Abstractions" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Extensions.Primitives" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="xunit.assert" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Threading.Timer" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="WindowsBase" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.IO" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Xml.ReaderWriter" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="xunit.abstractions" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Server.HttpSys" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.CodeAnalysis.Razor" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.IO.FileSystem.Watcher" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Reflection.Emit" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Extensions.Configuration.UserSecrets" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.HostFiltering" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.DiaSymReader" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Serilog.Settings.Configuration" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Diagnostics.Process" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Diagnostics.TextWriterTraceListener" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.VisualStudio.TestPlatform.Common" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="MoonSharp.Interpreter" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Extensions.DependencyInjection" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Collections" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Security.Cryptography.Xml" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="MessagePack" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Authentication.Cookies" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.CodeAnalysis" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Extensions.Options.ConfigurationExtensions" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Serilog.Formatting.Compact" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Reflection.Emit.ILGeneration" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Http.Connections.Common" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Runtime.Serialization.Json" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Diagnostics.Debug" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Authentication.JwtBearer" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Extensions.Logging.EventSource" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Security.Cryptography.Primitives" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.IO.FileSystem.AccessControl" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Threading.Thread" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Resources.Writer" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Buffers" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.IdentityModel.Tokens.Jwt" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.TestPlatform.CommunicationUtilities" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.IO.Compression.Brotli" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Extensions.Configuration.Binder" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Net.NetworkInformation" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Win32.Registry" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Threading.Tasks" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.TestPlatform.PlatformAbstractions" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Mvc.NewtonsoftJson" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Build" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Xml.XPath.XDocument" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Security.Cryptography.Csp" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.ServiceProcess" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Runtime.Serialization.Xml" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.ResponseCompression" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Newtonsoft.Json.Bson" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.ComponentModel.TypeConverter" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Serilog" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Text.Encodings.Web" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Extensions.Logging" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Server.IIS" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Net.Ping" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.CodeAnalysis.CSharp.Workspaces" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Moq" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Runtime.Loader" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Extensions.Configuration.Ini" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Xml.Linq" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Diagnostics.EventLog" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Extensions.Configuration.FileExtensions" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.DataProtection.Abstractions" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Text.Encoding.Extensions" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="BCrypt.Net-Core" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Threading.Tasks.Extensions" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.IO.FileSystem.DriveInfo" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Transactions.Local" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Mvc.TagHelpers" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Security.Cryptography.Cng" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Security.Principal.Windows" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Components.Server" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Build.Framework" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Authorization" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Net.Http.Headers" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Net.Sockets" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Extensions.Hosting.Abstractions" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.TestPlatform.CrossPlatEngine" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.CodeAnalysis.VisualBasic.Features" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Extensions.Configuration.Xml" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Reflection.TypeExtensions" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="NuGet.LibraryModel" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="NuGet.Common" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Extensions.FileProviders.Abstractions" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="netstandard" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Diagnostics.Contracts" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="mscorlib" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.ComponentModel.Annotations" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Connections.Abstractions" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.IO.Pipelines" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Resources.ResourceManager" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Linq.Queryable" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Text.RegularExpressions" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Extensions.FileProviders.Composite" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.ResponseCaching" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="NuGet.Versioning" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="xunit.core" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Runtime.InteropServices.RuntimeInformation" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Console" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Runtime.CompilerServices.Unsafe" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.VisualStudio.Debugger.Contracts" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Extensions.Caching.Abstractions" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.CSharp" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.ComponentModel.DataAnnotations" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Diagnostics.Tracing" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Linq" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Net.Mail" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Security.AccessControl" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Markdig" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Extensions.Logging.Console" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Runtime.Serialization.Primitives" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.IdentityModel.Protocols.OpenIdConnect" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Razor" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="NuGet.Configuration" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.CodeAnalysis.VisualBasic" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.IdentityModel.Protocols" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Mvc.Localization" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.NET.StringTools" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.SignalR.Protocols.Json" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Hosting.Server.Abstractions" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.VisualStudio.Web.CodeGeneration.Utils" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Razor.Language" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Security.Permissions" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Razor.Runtime" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Extensions.Configuration.Json" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Html.Abstractions" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Diagnostics.TraceSource" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Xml.XPath" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Extensions.Configuration.CommandLine" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.VisualBasic" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Diagnostics.DiagnosticSource" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Security" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Extensions.Options" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Linq.Parallel" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Reflection.Emit.Lightweight" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Runtime.Extensions" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Server.Kestrel.Transport.Quic" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Security.Cryptography.Pkcs" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.ResponseCaching.Abstractions" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Numerics" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Authentication.OAuth" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Cryptography.KeyDerivation" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Text.Json" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.IO.Compression.FileSystem" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Data.DataSetExtensions" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Authentication" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Diagnostics.StackTrace" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Extensions.DependencyModel" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Text.Encoding" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.CodeAnalysis.CSharp" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Threading.Channels" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Mvc.Cors" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Net.WebSockets.Client" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.DotNet.Scaffolding.Shared" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Identity" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Hosting.Abstractions" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Numerics.Vectors" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Reflection.Primitives" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Net.Http.Json" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.JSInterop" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Bcl.AsyncInterfaces" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.ComponentModel" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Extensions.Http" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.StaticFiles" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.WebSockets" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.VisualStudio.Web.CodeGenerators.Mvc" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="NuGet.ProjectModel" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Win32.SystemEvents" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.DataProtection.Extensions" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Net.NameResolution" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Http" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.VisualStudio.Web.CodeGeneration.Core" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.VisualStudio.Web.CodeGeneration" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Net.WebHeaderCollection" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Runtime.Numerics" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Extensions.Caching.Memory" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.CodeAnalysis.Workspaces.MSBuild" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Net.Primitives" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Composition.Runtime" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Composition.Convention" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Xml.XDocument" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Mvc.ViewFeatures" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Serilog.Sinks.Console" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="testhost" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Extensions.Localization" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.CodeAnalysis.Features" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Mvc.Core" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Extensions.Logging.Configuration" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Http.Features" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Http.Abstractions" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Server.Kestrel" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Extensions.Hosting" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Runtime.Intrinsics" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Collections.Specialized" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Extensions.Configuration.KeyPerFile" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Formats.Asn1" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Linq.Expressions" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Globalization.Calendars" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Diagnostics.Abstractions" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.CodeAnalysis.VisualBasic.Workspaces" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Authentication.Abstractions" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Collections.Immutable" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Xml" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Metadata" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Components.Authorization" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.SignalR.Core" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.ComponentModel.EventBasedAsync" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Runtime.Serialization" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Http.Extensions" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="NuGet.Frameworks" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Win32.Primitives" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Reflection.Extensions" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Localization" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Serilog.Sinks.Debug" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Components" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Windows" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Configuration.ConfigurationManager" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Core" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.CodeAnalysis.AnalyzerUtilities" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.IO.MemoryMappedFiles" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Net.WebSockets" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Net.ServicePoint" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Resources.Reader" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Newtonsoft.Json" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Serilog.Extensions.Logging" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Reflection" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Serilog.AspNetCore" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Net.HttpListener" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Server.IISIntegration" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Transactions" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Data" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Extensions.Identity.Stores" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.Authorization.Policy" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="System.Composition.TypedParts" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.Extensions.WebEncoders" />
+    <option featureType="com.jetbrains.rider.solution.reference" implementationName="Microsoft.AspNetCore.HttpsPolicy" />
+  </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
       <map>
@@ -236,7 +608,8 @@
     <MESSAGE value="random item drop fix, combat fixes" />
     <MESSAGE value="new motd" />
     <MESSAGE value="as above, so below" />
-    <option name="LAST_COMMIT_MESSAGE" value="as above, so below" />
+    <MESSAGE value="foraging, lore, lua script update" />
+    <option name="LAST_COMMIT_MESSAGE" value="foraging, lore, lua script update" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -347,19 +720,6 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/World/Room/RoomActions.cs</url>
-          <line>759</line>
-          <properties documentPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/World/Room/RoomActions.cs" initialLine="756" containingFunctionPresentation="method 'LoreSuccess'">
-            <startOffsets>
-              <option value="30740" />
-            </startOffsets>
-            <endOffsets>
-              <option value="30768" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="72" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/World/Room/RoomActions.cs</url>
           <line>144</line>
           <properties documentPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/World/Room/RoomActions.cs" initialLine="141" containingFunctionPresentation="method 'LookInContainer'">
             <startOffsets>
@@ -428,10 +788,10 @@
           <line>292</line>
           <properties documentPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Spell/Spells/DamageSpells/DamageSpells.cs" initialLine="292" containingFunctionPresentation="method 'Identify'">
             <startOffsets>
-              <option value="9859" />
+              <option value="9856" />
             </startOffsets>
             <endOffsets>
-              <option value="9889" />
+              <option value="9886" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="85" />
@@ -441,26 +801,13 @@
           <line>314</line>
           <properties documentPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Spell/Spells/DamageSpells/DamageSpells.cs" initialLine="314" containingFunctionPresentation="method 'Identify'">
             <startOffsets>
-              <option value="10662" />
+              <option value="10659" />
             </startOffsets>
             <endOffsets>
-              <option value="10811" />
+              <option value="10808" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="86" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Spell/Spells/DamageSpells/DamageSpells.cs</url>
-          <line>332</line>
-          <properties documentPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Spell/Spells/DamageSpells/DamageSpells.cs" initialLine="332" containingFunctionPresentation="method 'Identify'">
-            <startOffsets>
-              <option value="11630" />
-            </startOffsets>
-            <endOffsets>
-              <option value="11662" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="87" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/Combat.cs</url>
@@ -476,30 +823,56 @@
           <option name="timeStamp" value="108" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Skill/DoSkill.cs</url>
-          <line>174</line>
-          <properties documentPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Skill/DoSkill.cs" initialLine="163" containingFunctionPresentation="method 'PerfromSkill'">
+          <url>file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/MobScripts.cs</url>
+          <line>259</line>
+          <properties documentPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/MobScripts.cs" initialLine="259" containingFunctionPresentation="method 'Harm'">
             <startOffsets>
-              <option value="6293" />
+              <option value="8110" />
             </startOffsets>
             <endOffsets>
-              <option value="6318" />
+              <option value="8150" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="122" />
+          <option name="timeStamp" value="125" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Skill/Skills/PassiveSkills.cs</url>
-          <line>186</line>
-          <properties documentPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Skill/Skills/PassiveSkills.cs" initialLine="180" containingFunctionPresentation="method 'Lore'">
+          <url>file://$PROJECT_DIR$/ArchaicQuestII.API/Controllers/ItemController.cs</url>
+          <line>43</line>
+          <properties documentPath="$PROJECT_DIR$/ArchaicQuestII.API/Controllers/ItemController.cs" initialLine="43" containingFunctionPresentation="method 'PostItem'">
             <startOffsets>
-              <option value="6057" />
+              <option value="1186" />
             </startOffsets>
             <endOffsets>
-              <option value="6072" />
+              <option value="4816" />
             </endOffsets>
           </properties>
-          <option name="timeStamp" value="123" />
+          <option name="timeStamp" value="127" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/ArchaicQuestII.API/Controllers/ItemController.cs</url>
+          <line>124</line>
+          <properties documentPath="$PROJECT_DIR$/ArchaicQuestII.API/Controllers/ItemController.cs" initialLine="124" containingFunctionPresentation="method 'PostItem'">
+            <startOffsets>
+              <option value="4970" />
+            </startOffsets>
+            <endOffsets>
+              <option value="5051" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="128" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Spell/Spells/DamageSpells/DamageSpells.cs</url>
+          <line>329</line>
+          <properties documentPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Spell/Spells/DamageSpells/DamageSpells.cs" initialLine="329" containingFunctionPresentation="method 'Identify'">
+            <startOffsets>
+              <option value="11578" />
+            </startOffsets>
+            <endOffsets>
+              <option value="11626" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="129" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
