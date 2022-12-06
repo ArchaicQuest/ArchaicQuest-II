@@ -95,6 +95,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
             }
             else
             {
+                _updateUi.PlaySound("get", player);
                 item.IsHiddenInRoom = false;
                 player.Inventory.Add(item);
                 player.Weight += item.Weight;
@@ -136,6 +137,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                     }
                     else
                     {
+                        _updateUi.PlaySound("get", player);
                         room.Items[i].IsHiddenInRoom = false;
                         player.Inventory.Add(room.Items[i]);
                         _writer.WriteLine($"<p>You pick up {room.Items[i].Name.ToLower()}</p>", player.ConnectionId);
@@ -204,6 +206,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                 }
                 else
                 {
+                    _updateUi.PlaySound("get", player);
                     container.Container.Items[i].IsHiddenInRoom = false;
                     player.Inventory.Add(container.Container.Items[i]);
                     player.Weight += container.Container.Items[i].Weight;
@@ -320,7 +323,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
             room.Items.Add(item);
             player.Weight -= item.Weight;
-
+            _updateUi.PlaySound("drop", player);
             _writer.WriteLine($"<p>You drop {item.Name.ToLower()}.</p>", player.ConnectionId);
             _updateUi.UpdateInventory(player);
             _updateUi.UpdateScore(player);
@@ -515,7 +518,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
             }
 
             containerObj.Container.Items.Add(item);
-
+            _updateUi.PlaySound("drop", player);
             _writer.WriteLine($"<p>You put {item.Name.ToLower()} into {containerObj.Name.ToLower()}.</p>", player.ConnectionId);
             _updateUi.UpdateInventory(player);
             _updateUi.UpdateScore(player);
@@ -539,6 +542,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                     _writer.WriteLine($"<p>You can't let go of {player.Inventory[i].Name}. It appears to be cursed.</p>", player.ConnectionId);
                     continue;
                 }
+                _updateUi.PlaySound("drop", player);
                 container.Container.Items.Add(player.Inventory[i]);
                 player.Weight -= player.Inventory[i].Weight;
                 _writer.WriteLine($"<p>You place {player.Inventory[i].Name.ToLower()} into {container.Name.ToLower()}.</p>", player.ConnectionId);
@@ -654,6 +658,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
             }
             else
             {
+                _updateUi.PlaySound("get", player);
                 item.IsHiddenInRoom = false;
                 player.Inventory.Add(item);
                 player.Weight += item.Weight;
@@ -697,7 +702,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                         _writer.WriteLine($"<p>You can't let go of {player.Inventory[i].Name}. It appears to be cursed.</p>", player.ConnectionId);
                         return;
                     }
-
+                    _updateUi.PlaySound("drop", player);
                     room.Items.Add(player.Inventory[i]);
                     player.Weight -= player.Inventory[i].Weight;
 
@@ -1163,6 +1168,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
             player.Inventory.Remove(foundItem);
             _updateUi.UpdateInventory(player);
+            
+            _updateUi.PlaySound("quaff", player);
 
             if (string.IsNullOrEmpty(foundItem.SpellName) && foundItem.ItemType == Item.Item.ItemTypes.Potion)
             {
