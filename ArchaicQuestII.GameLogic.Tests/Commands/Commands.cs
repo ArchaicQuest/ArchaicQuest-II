@@ -20,6 +20,7 @@ using ArchaicQuestII.GameLogic.Skill.Skills;
 using ArchaicQuestII.GameLogic.Socials;
 using ArchaicQuestII.GameLogic.Spell.Interface;
 using ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells;
+using ArchaicQuestII.GameLogic.World.Area;
 using ArchaicQuestII.GameLogic.World.Room;
 using Moq;
 using Xunit;
@@ -55,6 +56,8 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
         private readonly Mock<IPassiveSkills> _passiveSkills;
         private readonly Mock<IHealer> _healer;
         private readonly Mock<IDamageSpells> _damageSpells;
+        private readonly Mock<IAreaActions> _areaActions;
+        
         public CommandsTests()
         {
             _movement = new Mock<IMovement>();
@@ -82,6 +85,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
             _passiveSkills = new Mock<IPassiveSkills>();
             _healer = new Mock<IHealer>();
             _damageSpells = new Mock<IDamageSpells>();
+            _areaActions = new Mock<IAreaActions>();
 
             _player.ConnectionId = "1";
             _player.Name = "Bob";
@@ -105,7 +109,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
                 }
             };
 
-            _commands = new GameLogic.Commands.Commands(_movement.Object, _roomActions.Object, _debug.Object, _skill.Object, _spell.Object, _object.Object, _inventory.Object, _communication.Object, _equipment.Object, _score.Object, _combat.Object, _cache.Object, _socials.Object, _commandHandler.Object, _core.Object, _mobFunctions.Object, _help.Object, _mobScripts.Object, _crafting.Object, _cooking.Object, _utilSkills.Object, _passiveSkills.Object, _healer.Object, _damageSpells.Object);
+            _commands = new GameLogic.Commands.Commands(_movement.Object, _roomActions.Object, _debug.Object, _skill.Object, _spell.Object, _object.Object, _inventory.Object, _communication.Object, _equipment.Object, _score.Object, _combat.Object, _cache.Object, _socials.Object, _commandHandler.Object, _core.Object, _mobFunctions.Object, _help.Object, _mobScripts.Object, _crafting.Object, _cooking.Object, _utilSkills.Object, _passiveSkills.Object, _healer.Object, _damageSpells.Object, _areaActions.Object);
 
         }
 

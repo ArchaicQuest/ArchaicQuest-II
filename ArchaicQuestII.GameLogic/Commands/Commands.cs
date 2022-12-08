@@ -25,6 +25,7 @@ using MoonSharp.Interpreter;
 using System.Threading.Tasks;
 using ArchaicQuestII.GameLogic.Character.MobFunctions.Healer;
 using ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells;
+using ArchaicQuestII.GameLogic.World.Area;
 
 namespace ArchaicQuestII.GameLogic.Commands
 {
@@ -55,6 +56,7 @@ namespace ArchaicQuestII.GameLogic.Commands
         private readonly IPassiveSkills _passiveSkills;
         private readonly IHealer _healer;
         private readonly IDamageSpells _damageSpells;
+        private readonly IAreaActions _areaActions;
 
 
         public Commands(
@@ -81,7 +83,8 @@ namespace ArchaicQuestII.GameLogic.Commands
             IUtilSkills utilSkills,
             IPassiveSkills passiveSkills,
             IHealer healer,
-            IDamageSpells damageSpells
+            IDamageSpells damageSpells,
+            IAreaActions areaActions
             )
         {
             _movement = movement;
@@ -108,6 +111,7 @@ namespace ArchaicQuestII.GameLogic.Commands
             _passiveSkills = passiveSkills;
             _healer = healer;
             _damageSpells = damageSpells;
+            _areaActions = areaActions;
         }
 
         public void CommandList(string key, string obj, string target, string fullCommand, Player player, Room room)
@@ -433,6 +437,14 @@ namespace ArchaicQuestII.GameLogic.Commands
                     break;
                     //case "/backup": TODO: this works but need to lock down to admin only
                     //    _core.DBDumpToJSON(player);
+                    break;
+                case "area":
+                    _areaActions.AreaInfo(player, room);
+                    break;
+                case "areaconsider":
+                case "aconsider":
+                case "areac":
+                    _areaActions.AreaConsider(player, room);
                     break;
                 default:
                     _commandHandler.HandleCommand(key, obj, target, player, room);
