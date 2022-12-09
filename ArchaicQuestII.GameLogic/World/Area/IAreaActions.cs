@@ -8,5 +8,6 @@ namespace ArchaicQuestII.GameLogic.World.Area
         void AreaEntered(Player player, Room.Room room);
         void AreaConsider(Player player, Room.Room room);
         void AreaPopulation(Player player, Room.Room room);
+        void AreaList(Player player);
     }
 }

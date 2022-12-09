@@ -451,10 +451,13 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "areap":
                     _areaActions.AreaPopulation(player, room);
                     break;
+                case "areas":
+                case "arealist":
+                    _areaActions.AreaList(player);
+                    break;
                 default:
                     _commandHandler.HandleCommand(key, obj, target, player, room);
                     break;
-
             }
         }
 

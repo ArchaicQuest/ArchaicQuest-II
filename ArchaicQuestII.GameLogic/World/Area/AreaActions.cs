@@ -100,11 +100,53 @@ namespace ArchaicQuestII.GameLogic.World.Area
                     break;
             }
         }
+        
+        //Display info about All areas
+        public void AreaList(Player player)
+        {
+            var sb = new StringBuilder();
+            var areas = _db.GetCollection<Area>(DataBase.Collections.Area).FindAll().ToList();
+            
+            sb.Append($"Total Areas: {areas.Count}");
+            sb.Append("<ul>");
+            
+            foreach (var area in areas)
+            {
+                sb.Append($"<li>[{GetAreaLevelScale(area)}] {area.Title}");
+                if (area.CreatedBy != null)
+                    sb.Append($" ({area.CreatedBy})");
+                sb.Append("</li>");
+            }
+            
+            sb.Append("</ul>");
+            
+            _writeToClient.WriteLine(sb.ToString(), player.ConnectionId);
+        }
 
         //Helper to get area from room
         private Area GetAreaFromRoom(Room.Room room)
         {
             return _db.GetCollection<Area>(DataBase.Collections.Area).FindById(room.AreaId);
+        }
+        
+        //Helper to get area levels
+        private string GetAreaLevelScale(Area area)
+        {
+            var minLvl = 999;
+            var maxLvl = 0;
+            var mobCount = 0;
+
+            foreach (var mob in area.Rooms.SelectMany(room => room.Mobs))
+            {
+                if (mob.Level < minLvl)
+                    minLvl = mob.Level;
+                if (mob.Level > maxLvl)
+                    maxLvl = mob.Level;
+
+                mobCount++;
+            }
+
+            return mobCount == 0 ? "0 - 0" : $"{minLvl} - {maxLvl}";
         }
     }
 }
