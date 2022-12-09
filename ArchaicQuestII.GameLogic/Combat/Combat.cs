@@ -8,6 +8,7 @@ using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Status;
+using ArchaicQuestII.GameLogic.Commands.Movement;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Item;
@@ -28,8 +29,9 @@ namespace ArchaicQuestII.GameLogic.Combat
         private readonly IRandomItem _randomItem;
         private readonly IPlayerDataBase _pdb;
         private readonly ICore _core;
+        private readonly IMovement _movement;
 
-        public Combat(IWriteToClient writer, IUpdateClientUI clientUi, IDamage damage, IFormulas formulas, IGain gain, ICache cache, IQuestLog quest, IDice dice, IRandomItem randomItem, IPlayerDataBase pdb, ICore core)
+        public Combat(IWriteToClient writer, IUpdateClientUI clientUi, IDamage damage, IFormulas formulas, IGain gain, ICache cache, IQuestLog quest, IDice dice, IRandomItem randomItem, IPlayerDataBase pdb, ICore core, IMovement movement)
         {
             _writer = writer;
             _clientUi = clientUi;
@@ -42,6 +44,7 @@ namespace ArchaicQuestII.GameLogic.Combat
             _randomItem = randomItem;
             _pdb = pdb;
             _core = core;
+            _movement = movement;
 
         }
 
@@ -73,7 +76,7 @@ namespace ArchaicQuestII.GameLogic.Combat
             return dualWield ? player.Equipped.Secondary : player.Equipped.Wielded;
         }
 
-        public void HarmTarget(Player victim, int damage)
+        public void HarmTarget(Room room, Player victim, int damage)
         {
             victim.Attributes.Attribute[EffectLocation.Hitpoints] -= damage;
 
@@ -82,6 +85,11 @@ namespace ArchaicQuestII.GameLogic.Combat
                 victim.Attributes.Attribute[EffectLocation.Hitpoints] = 0;
             }
 
+            if (victim.Config.Wimpy > 0 && 
+                victim.Attributes.Attribute[EffectLocation.Hitpoints] <= victim.Config.Wimpy)
+            {
+                _movement.Flee(room, victim, "");
+            }
         }
 
         public bool IsTargetAlive(Player victim)
@@ -430,7 +438,7 @@ namespace ArchaicQuestII.GameLogic.Combat
 
                                 ripDamage /= 3;
 
-                                HarmTarget(player, ripDamage);
+                                HarmTarget(room, player, ripDamage);
 
                                 DisplayDamage(target, player, room, weapon, ripDamage);
 
@@ -502,7 +510,7 @@ namespace ArchaicQuestII.GameLogic.Combat
 
                     _clientUi.PlaySound("hit", target);
                     _clientUi.PlaySound("hit", player);
-                    HarmTarget(target, damage);
+                    HarmTarget(room, target, damage);
 
                     DisplayDamage(player, target, room, weapon, damage);
 
@@ -622,7 +630,7 @@ namespace ArchaicQuestII.GameLogic.Combat
 
                                     ripDamage /= 3;
 
-                                    HarmTarget(player, ripDamage);
+                                    HarmTarget(room, player, ripDamage);
 
                                     DisplayDamage(target, player, room, weapon, ripDamage);
 
@@ -690,7 +698,7 @@ namespace ArchaicQuestII.GameLogic.Combat
                             }
                         }
 
-                        HarmTarget(target, damage);
+                        HarmTarget(room, target, damage);
 
                         DisplayDamage(player, target, room, weapon, damage);
 

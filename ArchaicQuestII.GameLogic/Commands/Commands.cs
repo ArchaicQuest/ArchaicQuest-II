@@ -1,8 +1,5 @@
 ﻿using ArchaicQuestII.GameLogic.Character;
 using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Text;
 using ArchaicQuestII.GameLogic.Commands.Movement;
 using ArchaicQuestII.GameLogic.World.Room;
 using System.Linq;
@@ -22,8 +19,8 @@ using ArchaicQuestII.GameLogic.Skill.Skills;
 using ArchaicQuestII.GameLogic.Socials;
 using ArchaicQuestII.GameLogic.Spell.Interface;
 using MoonSharp.Interpreter;
-using System.Threading.Tasks;
 using ArchaicQuestII.GameLogic.Character.MobFunctions.Healer;
+using ArchaicQuestII.GameLogic.Commands.Character;
 using ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells;
 using ArchaicQuestII.GameLogic.World.Area;
 
@@ -57,7 +54,7 @@ namespace ArchaicQuestII.GameLogic.Commands
         private readonly IHealer _healer;
         private readonly IDamageSpells _damageSpells;
         private readonly IAreaActions _areaActions;
-
+        private readonly ICharacterCommands _characterActions;
 
         public Commands(
             IMovement movement,
@@ -84,7 +81,8 @@ namespace ArchaicQuestII.GameLogic.Commands
             IPassiveSkills passiveSkills,
             IHealer healer,
             IDamageSpells damageSpells,
-            IAreaActions areaActions
+            IAreaActions areaActions,
+            ICharacterCommands characterActions
             )
         {
             _movement = movement;
@@ -112,6 +110,7 @@ namespace ArchaicQuestII.GameLogic.Commands
             _healer = healer;
             _damageSpells = damageSpells;
             _areaActions = areaActions;
+            _characterActions = characterActions;
         }
 
         public void CommandList(string key, string obj, string target, string fullCommand, Player player, Room room)
@@ -454,6 +453,9 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "areas":
                 case "arealist":
                     _areaActions.AreaList(player);
+                    break;
+                case "wimpy":
+                    _characterActions.Wimpy(player, obj);
                     break;
                 default:
                     _commandHandler.HandleCommand(key, obj, target, player, room);

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ArchaicQuestII.GameLogic.Character.Config
+﻿namespace ArchaicQuestII.GameLogic.Character.Config
 {
     public class PlayerConfig
     {
@@ -53,5 +49,10 @@ namespace ArchaicQuestII.GameLogic.Character.Config
         public bool Hints { get; set; } = true;
         public int GameFontSize { get; set; } = 16; //
         public string GameFont { get; set; } = "Open Sans"; //
+
+        /// <summary>
+        /// The health player should automatically flee (0 for disabled)
+        /// </summary>
+        public int Wimpy { get; set; } = 0;
     }
 }

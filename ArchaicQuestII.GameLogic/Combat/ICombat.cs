@@ -20,7 +20,7 @@ namespace ArchaicQuestII.GameLogic.Combat
 
         public Item.Item GetWeapon(Player player, bool dualWield);
 
-        public void HarmTarget(Player victim, int damage);
+        public void HarmTarget(Room room, Player victim, int damage);
 
         public bool IsTargetAlive(Player victim);
 

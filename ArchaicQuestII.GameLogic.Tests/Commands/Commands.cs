@@ -7,6 +7,7 @@ using ArchaicQuestII.GameLogic.Character.MobFunctions;
 using ArchaicQuestII.GameLogic.Character.MobFunctions.Healer;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Commands;
+using ArchaicQuestII.GameLogic.Commands.Character;
 using ArchaicQuestII.GameLogic.Commands.Communication;
 using ArchaicQuestII.GameLogic.Commands.Debug;
 using ArchaicQuestII.GameLogic.Commands.Inventory;
@@ -57,6 +58,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
         private readonly Mock<IHealer> _healer;
         private readonly Mock<IDamageSpells> _damageSpells;
         private readonly Mock<IAreaActions> _areaActions;
+        private readonly Mock<ICharacterCommands> _characterCommands;
         
         public CommandsTests()
         {
@@ -86,6 +88,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
             _healer = new Mock<IHealer>();
             _damageSpells = new Mock<IDamageSpells>();
             _areaActions = new Mock<IAreaActions>();
+            _characterCommands = new Mock<ICharacterCommands>();
 
             _player.ConnectionId = "1";
             _player.Name = "Bob";
@@ -109,7 +112,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
                 }
             };
 
-            _commands = new GameLogic.Commands.Commands(_movement.Object, _roomActions.Object, _debug.Object, _skill.Object, _spell.Object, _object.Object, _inventory.Object, _communication.Object, _equipment.Object, _score.Object, _combat.Object, _cache.Object, _socials.Object, _commandHandler.Object, _core.Object, _mobFunctions.Object, _help.Object, _mobScripts.Object, _crafting.Object, _cooking.Object, _utilSkills.Object, _passiveSkills.Object, _healer.Object, _damageSpells.Object, _areaActions.Object);
+            _commands = new GameLogic.Commands.Commands(_movement.Object, _roomActions.Object, _debug.Object, _skill.Object, _spell.Object, _object.Object, _inventory.Object, _communication.Object, _equipment.Object, _score.Object, _combat.Object, _cache.Object, _socials.Object, _commandHandler.Object, _core.Object, _mobFunctions.Object, _help.Object, _mobScripts.Object, _crafting.Object, _cooking.Object, _utilSkills.Object, _passiveSkills.Object, _healer.Object, _damageSpells.Object, _areaActions.Object, _characterCommands.Object);
 
         }
 
