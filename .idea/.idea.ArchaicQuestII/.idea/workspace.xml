@@ -7,9 +7,8 @@
     <projectFile>ArchaicQuestII.GameLogic.Tests/ArchaicQuestII.GameLogic.Tests.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2eff0800-fb31-4811-bfc6-8df5e26cbfe9" name="Changes" comment="Added &quot;areapopulation&quot; command. Fixed &quot;areacon&quot; message format. Added AreaActions to CoreFunctionalityExtensions.cs">
+    <list default="true" id="2eff0800-fb31-4811-bfc6-8df5e26cbfe9" name="Changes" comment="Added &quot;areas&quot; command to list all areas and the level scale of mobs in those areas">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ArchaicQuestII/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ArchaicQuestII/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Commands.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Commands.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/World/Area/AreaActions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/World/Area/AreaActions.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/World/Area/IAreaActions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/World/Area/IAreaActions.cs" afterDir="false" />
     </list>
@@ -26,6 +25,7 @@
     <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Commands.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/WriteToClient.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Hubs/Telnet/TelnetHub.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///Users/daniel/RiderProjects/Mud-Server/ArchaicQuestII.GameLogic/World/Area/AreaActions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Users/daniel/RiderProjects/Mud-Server/ArchaicQuestII.GameLogic/World/Area/AreaActions.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -104,7 +104,7 @@
       <workItem from="1661982382144" duration="12052000" />
       <workItem from="1662242347801" duration="27297000" />
       <workItem from="1663362617971" duration="20876000" />
-      <workItem from="1670533094480" duration="6319000" />
+      <workItem from="1670533094480" duration="8009000" />
     </task>
     <task id="LOCAL-00002" summary="WIP Config settings setup and API">
       <created>1660518380350</created>
@@ -169,7 +169,14 @@
       <option name="project" value="LOCAL" />
       <updated>1670550341169</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Added &quot;areas&quot; command to list all areas and the level scale of mobs in those areas">
+      <created>1670587438597</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1670587438597</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -200,7 +207,8 @@
     <MESSAGE value="new motd" />
     <MESSAGE value="Added area command, added areaconsider command, added message for entering new area" />
     <MESSAGE value="Added &quot;areapopulation&quot; command. Fixed &quot;areacon&quot; message format. Added AreaActions to CoreFunctionalityExtensions.cs" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added &quot;areapopulation&quot; command. Fixed &quot;areacon&quot; message format. Added AreaActions to CoreFunctionalityExtensions.cs" />
+    <MESSAGE value="Added &quot;areas&quot; command to list all areas and the level scale of mobs in those areas" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added &quot;areas&quot; command to list all areas and the level scale of mobs in those areas" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

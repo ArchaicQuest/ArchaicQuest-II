@@ -6,6 +6,9 @@ using ArchaicQuestII.GameLogic.Core;
 
 namespace ArchaicQuestII.GameLogic.World.Area
 {
+    /// <summary>
+    /// Handles all actions relating to areas
+    /// </summary>
     public class AreaActions : IAreaActions
     {
         private readonly IWriteToClient _writeToClient;
@@ -18,8 +21,12 @@ namespace ArchaicQuestII.GameLogic.World.Area
             _cache = cache;
             _db = db;
         }
-
-        //Display information about area
+        
+        /// <summary>
+        /// Display basic information about area
+        /// </summary>
+        /// <param name="player">Player entering command</param>
+        /// <param name="room">Room where command was entered</param>
         public void AreaInfo(Player player, Room.Room room)
         {
             var sb = new StringBuilder();
@@ -37,15 +44,24 @@ namespace ArchaicQuestII.GameLogic.World.Area
 
             _writeToClient.WriteLine(sb.ToString(), player.ConnectionId);
         }
-
+        
+        /// <summary>
+        /// Display notice when player enters a new area
+        /// </summary>
+        /// <param name="player">Player entering area</param>
+        /// <param name="room">Room that was entered</param>
         public void AreaEntered(Player player, Room.Room room)
         {
             var area = GetAreaFromRoom(room);
 
-            _writeToClient.WriteLine($"<p>You have traversed into <b>{area.Title}</b>", player.ConnectionId);
+            _writeToClient.WriteLine($"<p>You have traversed into <b>{area.Title}</b>.", player.ConnectionId);
         }
-
-        //Display player difficulty for area 
+        
+        /// <summary>
+        /// Display player difficulty for area 
+        /// </summary>
+        /// <param name="player">Player entering command</param>
+        /// <param name="room">Room where command was entered</param>
         public void AreaConsider(Player player, Room.Room room)
         {
             var mobLevels = 0;
@@ -76,7 +92,11 @@ namespace ArchaicQuestII.GameLogic.World.Area
             }
         }
         
-        //Display player population in area
+        /// <summary>
+        /// Display player population in area
+        /// </summary>
+        /// <param name="player">Player entering command</param>
+        /// <param name="room">Room where command was entered</param>
         public void AreaPopulation(Player player, Room.Room room)
         {
             var playerCount = _cache.GetAllRoomsInArea(room.AreaId).SelectMany(r => r.Players).Count();
@@ -101,7 +121,10 @@ namespace ArchaicQuestII.GameLogic.World.Area
             }
         }
         
-        //Display info about All areas
+        /// <summary>
+        /// Display info about all areas
+        /// </summary>
+        /// <param name="player">Player entering command</param>
         public void AreaList(Player player)
         {
             var sb = new StringBuilder();
@@ -123,13 +146,21 @@ namespace ArchaicQuestII.GameLogic.World.Area
             _writeToClient.WriteLine(sb.ToString(), player.ConnectionId);
         }
 
-        //Helper to get area from room
+        #region Helpers
+
+        /// <summary>
+        /// Helper to get area from room
+        /// </summary>
+        /// <param name="room">Room to get area from</param>
         private Area GetAreaFromRoom(Room.Room room)
         {
             return _db.GetCollection<Area>(DataBase.Collections.Area).FindById(room.AreaId);
         }
         
-        //Helper to get area levels
+        /// <summary>
+        /// Helper to get area levels
+        /// </summary>
+        /// <param name="area">Area to get level scale</param>
         private string GetAreaLevelScale(Area area)
         {
             var minLvl = 999;
@@ -148,5 +179,7 @@ namespace ArchaicQuestII.GameLogic.World.Area
 
             return mobCount == 0 ? "0 - 0" : $"{minLvl} - {maxLvl}";
         }
+        
+        #endregion
     }
 }
