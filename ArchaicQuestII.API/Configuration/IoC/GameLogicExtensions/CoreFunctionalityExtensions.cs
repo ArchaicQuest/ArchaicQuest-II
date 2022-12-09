@@ -1,4 +1,5 @@
 ﻿using ArchaicQuestII.GameLogic.Core;
+using ArchaicQuestII.GameLogic.World.Area;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ArchaicQuestII.API.Configuration.IoC.GameLogicExtensions
@@ -17,6 +18,7 @@ namespace ArchaicQuestII.API.Configuration.IoC.GameLogicExtensions
             services.AddSingleton<ICore, GameLogic.Core.Core>();
             services.AddSingleton<IQuestLog, QuestLog>();
             services.AddSingleton<IWeather, Weather>();
+            services.AddSingleton<IAreaActions, AreaActions>();
 
             return services;
         }
