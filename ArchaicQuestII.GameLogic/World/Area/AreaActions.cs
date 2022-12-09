@@ -65,13 +65,38 @@ namespace ArchaicQuestII.GameLogic.World.Area
                     _writeToClient.WriteLine("{red}You feel nervous here!{/}", player.ConnectionId);
                     break;
                 case > 5:
-                    _writeToClient.WriteLine("{yellow}You feel anxious here.{/}.", player.ConnectionId);
+                    _writeToClient.WriteLine("{yellow}You feel anxious here.{/}", player.ConnectionId);
                     break;
                 case > 1:
-                    _writeToClient.WriteLine("{blue}You feel comfortable here.{/}.", player.ConnectionId);
+                    _writeToClient.WriteLine("{blue}You feel comfortable here.{/}", player.ConnectionId);
                     break;
                 default:
                     _writeToClient.WriteLine("{green}You feel relaxed here.{/}", player.ConnectionId);
+                    break;
+            }
+        }
+        
+        //Display player population in area
+        public void AreaPopulation(Player player, Room.Room room)
+        {
+            var playerCount = _cache.GetAllRoomsInArea(room.AreaId).SelectMany(r => r.Players).Count();
+            
+            switch (playerCount)
+            {
+                case > 30: 
+                    _writeToClient.WriteLine("The area shows signs of being heavily traveled.", player.ConnectionId);
+                    break;
+                case > 20:
+                    _writeToClient.WriteLine("The area shows signs of being well traveled.", player.ConnectionId);
+                    break;
+                case > 10:
+                    _writeToClient.WriteLine("The area shows signs of being traveled.", player.ConnectionId);
+                    break;
+                case > 1:
+                    _writeToClient.WriteLine("The area shows signs of being lightly traveled.", player.ConnectionId);
+                    break;
+                default:
+                    _writeToClient.WriteLine("The area shows no signs of being traveled.", player.ConnectionId);
                     break;
             }
         }

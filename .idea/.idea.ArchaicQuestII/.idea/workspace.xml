@@ -7,14 +7,12 @@
     <projectFile>ArchaicQuestII.GameLogic.Tests/ArchaicQuestII.GameLogic.Tests.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2eff0800-fb31-4811-bfc6-8df5e26cbfe9" name="Changes" comment="new motd">
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/World/Area/AreaActions.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/World/Area/IAreaActions.cs" afterDir="false" />
+    <list default="true" id="2eff0800-fb31-4811-bfc6-8df5e26cbfe9" name="Changes" comment="Added area command, added areaconsider command, added message for entering new area">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ArchaicQuestII/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ArchaicQuestII/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic.Tests/Commands/Commands.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic.Tests/Commands/Commands.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic.Tests/Commands/Movement/Movement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic.Tests/Commands/Movement/Movement.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.API/Configuration/IoC/GameLogicExtensions/CoreFunctionalityExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.API/Configuration/IoC/GameLogicExtensions/CoreFunctionalityExtensions.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Commands.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Commands.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Movement/Movement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Movement/Movement.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/World/Area/AreaActions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/World/Area/AreaActions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/World/Area/IAreaActions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/World/Area/IAreaActions.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,6 +31,7 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+  <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProjectId" id="2BTGiWclVGmXq37FAvURw3JGKR5" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
@@ -105,7 +104,7 @@
       <workItem from="1661982382144" duration="12052000" />
       <workItem from="1662242347801" duration="27297000" />
       <workItem from="1663362617971" duration="20876000" />
-      <workItem from="1670533094480" duration="1688000" />
+      <workItem from="1670533094480" duration="3953000" />
     </task>
     <task id="LOCAL-00002" summary="WIP Config settings setup and API">
       <created>1660518380350</created>
@@ -156,7 +155,14 @@
       <option name="project" value="LOCAL" />
       <updated>1663609192880</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Added area command, added areaconsider command, added message for entering new area">
+      <created>1670534945882</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1670534945882</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -185,7 +191,8 @@
     <MESSAGE value="added some sounds, can't quit in fight, fixed EQ display, fixed instance updates, cleaner item spacing for containers" />
     <MESSAGE value="random item drop fix, combat fixes" />
     <MESSAGE value="new motd" />
-    <option name="LAST_COMMIT_MESSAGE" value="new motd" />
+    <MESSAGE value="Added area command, added areaconsider command, added message for entering new area" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added area command, added areaconsider command, added message for entering new area" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

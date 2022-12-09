@@ -442,9 +442,14 @@ namespace ArchaicQuestII.GameLogic.Commands
                     _areaActions.AreaInfo(player, room);
                     break;
                 case "areaconsider":
-                case "aconsider":
+                case "areacon":
                 case "areac":
                     _areaActions.AreaConsider(player, room);
+                    break;
+                case "areapopulation":
+                case "areapop":
+                case "areap":
+                    _areaActions.AreaPopulation(player, room);
                     break;
                 default:
                     _commandHandler.HandleCommand(key, obj, target, player, room);
