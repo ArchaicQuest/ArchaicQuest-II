@@ -491,8 +491,14 @@ namespace ArchaicQuestII.GameLogic.Core
 
             foreach (var q in player.QuestLog)
             {
-                sb.Append($"<div class='quest-block'><h3>{q.Title}</h3><p>{q.Area}</p><p>Kill:</p><ol>");
+                sb.Append($"<div class='quest-block'><h3>{q.Title}</h3><p>{q.Area}</p>");
 
+                if (q.Type == QuestTypes.Kill)
+                {
+                    sb.Append("<p>Kill:</p>");
+                }
+
+                sb.Append("<ol>");
                 foreach (var mob in q.MobsToKill)
                 {
                     sb.Append($"<li>{mob.Name} {mob.Current}/{mob.Count}</li>");
@@ -1707,7 +1713,7 @@ namespace ArchaicQuestII.GameLogic.Core
                         $"{{yellow}}{randomMob.Name} jumps out from the {thingToHarvest.Name} and attacks you !{{/}}",
                         player.ConnectionId);
                     room.Mobs.Add(randomMob);
-
+                    player.Status = CharacterStatus.Status.Standing;
                     InitFightStatus(randomMob, player);
                     return;
                 }
@@ -1733,7 +1739,7 @@ namespace ArchaicQuestII.GameLogic.Core
             }
             
             var collected = "";
-            var collectedCount = 0;
+            var collectedCount = 1;
             foreach (var harvestItem in thingToHarvest.Container.Items)
             {
                 if (_dice.Roll(1, 1, 10) <= 3)

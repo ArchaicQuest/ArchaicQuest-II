@@ -210,6 +210,19 @@ namespace ArchaicQuestII.GameLogic.Hubs
             UpdatePlayerSkills(player);
             player.Config ??= new PlayerConfig();
 
+            foreach (var quest in player.QuestLog)
+            {
+                var updatedQuest = _cache.GetQuest(quest.Id);
+                quest.Type = updatedQuest.Type;
+                quest.ItemsToGet = updatedQuest.ItemsToGet;
+                quest.MobsToKill = updatedQuest.MobsToKill;
+                quest.Title = updatedQuest.Title;
+                quest.Description = updatedQuest.Description;
+                quest.ExpGain = updatedQuest.ExpGain;
+                quest.GoldGain = updatedQuest.GoldGain;
+                quest.ItemGain = updatedQuest.ItemGain;
+                quest.Area = updatedQuest.Area;
+            }
 
             AddCharacterToCache(hubId, player);
 

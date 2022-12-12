@@ -245,6 +245,20 @@ namespace ArchaicQuestII.GameLogic.Core
                 _updateClientUi.UpdateInventory(player);
             }
         }
+        
+        public void RemoveItem(Player player, string name, int count = 1)
+        {
+            for (int i = 0; i < count; i++)
+                {
+                    var item = player.Inventory.FirstOrDefault(x =>
+                        x.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
+                    if (item != null)
+                    {
+                        player.Inventory.Remove(item);
+                    }
+                }
+                _updateClientUi.UpdateInventory(player);
+        }
 
         public void GiveGold(int value, Player player)
         {
@@ -277,6 +291,14 @@ namespace ArchaicQuestII.GameLogic.Core
         {
             return player.Inventory.FirstOrDefault(x => x.Name.StartsWith(name, StringComparison.CurrentCultureIgnoreCase)) !=
                    null;
+        }
+        
+        public bool HasObjectCount(Player player, string name, int count)
+        {
+            var countx = player.Inventory
+                .FindAll(x => x.Name.StartsWith(name, StringComparison.CurrentCultureIgnoreCase)).Count();
+            var x =  player.Inventory.FindAll(x => x.Name.StartsWith(name, StringComparison.CurrentCultureIgnoreCase)).Count() >= count;
+            return x;
         }
 
         public bool Contains(string word, string expected)

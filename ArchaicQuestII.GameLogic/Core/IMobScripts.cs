@@ -41,6 +41,7 @@ namespace ArchaicQuestII.GameLogic.Core
         public bool IsObjectHere(string name, Room room);
         public bool IsImm(Player player);
         public bool HasObject(Player player, string name);
+        public bool HasObjectCount(Player player, string name, int count);
         public void AddQuest(Player player, int id);
         void CompleteQuest(Player player, int questId);
         void DoSkill(Player player, Player mob, Room room);
