@@ -10,6 +10,7 @@ using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Item;
+using ArchaicQuestII.GameLogic.World.Area;
 using ArchaicQuestII.GameLogic.World.Room;
 using MoonSharp.Interpreter;
 
@@ -20,6 +21,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
     {
         private readonly IWriteToClient _writeToClient;
         private readonly IRoomActions _roomActions;
+        private readonly IAreaActions _areaActions;
         private readonly ICache _cache;
         private readonly IUpdateClientUI _updateUi;
         private readonly IDice _dice;
@@ -30,11 +32,12 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
 
 
 
-        public Movement(IWriteToClient writeToClient, ICache cache, IRoomActions roomActions, IUpdateClientUI updateUI, IDice dice, ICombat combat, IMobScripts mobScripts)
+        public Movement(IWriteToClient writeToClient, ICache cache, IRoomActions roomActions, IAreaActions areaActions, IUpdateClientUI updateUI, IDice dice, ICombat combat, IMobScripts mobScripts)
         {
             _writeToClient = writeToClient;
             _cache = cache;
             _roomActions = roomActions;
+            _areaActions = areaActions;
             _updateUi = updateUI;
             _dice = dice;
             _combat = combat;
@@ -363,6 +366,10 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement
                 character.RoomId = $"{exit.AreaId}{exit.Coords.X}{exit.Coords.Y}{exit.Coords.Z}";
                 var room = _cache.GetRoom($"{exit.AreaId}{exit.Coords.X}{exit.Coords.Y}{exit.Coords.Z}");
                 room.Players.Add(character);
+                
+                //player entered new area
+                if(oldRoom.AreaId != room.AreaId)
+                    _areaActions.AreaEntered(character, room);
             }
             else
             {

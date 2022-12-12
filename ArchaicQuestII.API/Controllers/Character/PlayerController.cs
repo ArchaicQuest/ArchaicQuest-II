@@ -16,6 +16,13 @@ using System.Collections.Generic;
 using System.Linq;
 using ArchaicQuestII.GameLogic.Character.Config;
 using Newtonsoft.Json;
+public class TransferChar
+{
+    public Guid PlayerId { get; set; }
+    public Guid NewAccountId { get; set; }
+}
+
+
 
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -328,7 +335,30 @@ namespace ArchaicQuestII.Controllers.character
 
             return saved ? Ok() : BadRequest("Failed Saving config");
         }
+        
+        [API.Helpers.Authorize]
+        [HttpPost("api/player/transferCharacter")]
+        public IActionResult TransferCharacter([FromBody] TransferChar transferChar)
+        {
+            var character = _pdb.GetById<Player>(transferChar.PlayerId, PlayerDataBase.Collections.Players);
+            if (character == null)
+            {
+                return BadRequest(new { message = "character does not exists." });
+            }
+            
+            var characterAccount = _pdb.GetById<Account>(character.AccountId, PlayerDataBase.Collections.Account);
+            var newCharacterAccount = _pdb.GetById<Account>(transferChar.NewAccountId, PlayerDataBase.Collections.Account);
 
+            characterAccount.Characters.Remove(character.Id);
+            newCharacterAccount.Characters.Add(character.Id);
+
+            character.AccountId = transferChar.NewAccountId;
+            _pdb.Save(character, PlayerDataBase.Collections.Players);
+            _pdb.Save(newCharacterAccount, PlayerDataBase.Collections.Account);
+            _pdb.Save(characterAccount, PlayerDataBase.Collections.Account);
+
+            return Ok(new { message = "Character transferred successfully" });
+        }
 
 
     }

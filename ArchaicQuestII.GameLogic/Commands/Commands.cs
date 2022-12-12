@@ -26,6 +26,7 @@ using System.Threading.Tasks;
 using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.MobFunctions.Healer;
 using ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells;
+using ArchaicQuestII.GameLogic.World.Area;
 
 namespace ArchaicQuestII.GameLogic.Commands
 {
@@ -57,6 +58,7 @@ namespace ArchaicQuestII.GameLogic.Commands
         private readonly IHealer _healer;
         private readonly IDamageSpells _damageSpells;
         private readonly IGain _gain;
+        private readonly IAreaActions _areaActions;
 
 
         public Commands(
@@ -84,7 +86,8 @@ namespace ArchaicQuestII.GameLogic.Commands
             IPassiveSkills passiveSkills,
             IHealer healer,
             IDamageSpells damageSpells,
-            IGain gain
+            IGain gain,
+            IAreaActions areaActions
             )
         {
             _movement = movement;
@@ -111,7 +114,6 @@ namespace ArchaicQuestII.GameLogic.Commands
             _passiveSkills = passiveSkills;
             _healer = healer;
             _damageSpells = damageSpells;
-            _gain = gain;
         }
 
         public void CommandList(string key, string obj, string target, string fullCommand, Player player, Room room)
@@ -420,12 +422,6 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "title":
                     _core.SetTitle(player, fullCommand);
                     break;
-                case "harvest":
-                    _core.Harvest(player, obj, room);
-                    break;
-                case "quaff":
-                    _object.Quaff(obj, room, player);
-                    break;
                 case "/train": // / denotes admin/imm comands
                     _core.TrainSkill(player);
                     break;
@@ -446,6 +442,23 @@ namespace ArchaicQuestII.GameLogic.Commands
                     break;
                     //case "/backup": TODO: this works but need to lock down to admin only
                     //    _core.DBDumpToJSON(player);
+                    break;
+                case "area":
+                    _areaActions.AreaInfo(player, room);
+                    break;
+                case "areaconsider":
+                case "areacon":
+                case "areac":
+                    _areaActions.AreaConsider(player, room);
+                    break;
+                case "areapopulation":
+                case "areapop":
+                case "areap":
+                    _areaActions.AreaPopulation(player, room);
+                    break;
+                case "areas":
+                case "arealist":
+                    _areaActions.AreaList(player);
                     break;
                 default:
                     _commandHandler.HandleCommand(key, obj, target, player, room);
