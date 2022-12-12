@@ -114,6 +114,8 @@ namespace ArchaicQuestII.GameLogic.Commands
             _passiveSkills = passiveSkills;
             _healer = healer;
             _damageSpells = damageSpells;
+            _gain = gain;
+            _areaActions = areaActions;
         }
 
         public void CommandList(string key, string obj, string target, string fullCommand, Player player, Room room)
@@ -442,7 +444,7 @@ namespace ArchaicQuestII.GameLogic.Commands
                     break;
                     //case "/backup": TODO: this works but need to lock down to admin only
                     //    _core.DBDumpToJSON(player);
-                    break;
+                   // break;
                 case "area":
                     _areaActions.AreaInfo(player, room);
                     break;
