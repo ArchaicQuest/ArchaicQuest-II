@@ -78,5 +78,11 @@ namespace ArchaicQuestII.GameLogic.Core
         /// <param name="eventName"></param>
         /// <param name="value"></param>
         void SetEvent(Player player, string eventName, string value);
+
+        void Harvest(Player player, string item, Room room);
+
+        public bool CheckSkillSuccessAndImprove(Player player, string skillName);
+
+        void InitFightStatus(Player player, Player target);
     }
 }

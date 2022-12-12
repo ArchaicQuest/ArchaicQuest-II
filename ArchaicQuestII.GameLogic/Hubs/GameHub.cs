@@ -14,6 +14,7 @@ using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Commands;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
+using ArchaicQuestII.GameLogic.Skill.Skills;
 using ArchaicQuestII.GameLogic.Spell;
 using ArchaicQuestII.GameLogic.World.Room;
 using Microsoft.Extensions.Logging;
@@ -37,8 +38,9 @@ namespace ArchaicQuestII.GameLogic.Hubs
         private readonly IDice _dice;
         private readonly IGain _gain;
         private readonly IFormulas _formulas;
+        private readonly IPassiveSkills _passiveSkills;
 
-        public GameHub(IDataBase db, IPlayerDataBase pdb, ICache cache, ILogger<GameHub> logger, IWriteToClient writeToClient, ICommands commands, IUpdateClientUI updateClientUi, IMobScripts mobScripts, ITime time, IDice dice, IGain gain, IFormulas formulas)
+        public GameHub(IDataBase db, IPlayerDataBase pdb, ICache cache, ILogger<GameHub> logger, IWriteToClient writeToClient, ICommands commands, IUpdateClientUI updateClientUi, IMobScripts mobScripts, ITime time, IDice dice, IGain gain, IFormulas formulas, IPassiveSkills passiveSkills)
         {
             _logger = logger;
             _db = db;
@@ -52,6 +54,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
             _dice = dice;
             _gain = gain;
             _formulas = formulas;
+            _passiveSkills = passiveSkills;
         }
 
 
@@ -207,6 +210,19 @@ namespace ArchaicQuestII.GameLogic.Hubs
             UpdatePlayerSkills(player);
             player.Config ??= new PlayerConfig();
 
+            foreach (var quest in player.QuestLog)
+            {
+                var updatedQuest = _cache.GetQuest(quest.Id);
+                quest.Type = updatedQuest.Type;
+                quest.ItemsToGet = updatedQuest.ItemsToGet;
+                quest.MobsToKill = updatedQuest.MobsToKill;
+                quest.Title = updatedQuest.Title;
+                quest.Description = updatedQuest.Description;
+                quest.ExpGain = updatedQuest.ExpGain;
+                quest.GoldGain = updatedQuest.GoldGain;
+                quest.ItemGain = updatedQuest.ItemGain;
+                quest.Area = updatedQuest.Area;
+            }
 
             AddCharacterToCache(hubId, player);
 
@@ -250,9 +266,10 @@ namespace ArchaicQuestII.GameLogic.Hubs
             var classSkill = _db.GetCollection<Class>(DataBase.Collections.Class).FindOne(x =>
                 x.Name.Equals(player.ClassName, StringComparison.CurrentCultureIgnoreCase));
 
-            foreach (var skill in classSkill.Skills)
+             foreach (var skill in classSkill.Skills)
             {
-                var theSkill = _cache.GetAllSkills().FirstOrDefault(x => x.Name.Equals(skill.SkillName));
+                var theSkill = _cache.GetAllSkills().FirstOrDefault(x => x.Name.Equals(skill.SkillName, StringComparison.CurrentCultureIgnoreCase));
+                
                 // skill doesn't exist and should be added
                 if (player.Skills.FirstOrDefault(x =>
                     x.SkillName.Equals(skill.SkillName, StringComparison.CurrentCultureIgnoreCase)) == null)
@@ -320,6 +337,12 @@ namespace ArchaicQuestII.GameLogic.Hubs
             player.grouped = false;
             
             SetArmorRating(player);
+
+            if (player.Attributes.Attribute[EffectLocation.Hitpoints] <= 0)
+            {
+                player.Attributes.Attribute[EffectLocation.Hitpoints] =
+                    player.MaxAttributes.Attribute[EffectLocation.Hitpoints] / 4;
+            }
 
             return player;
         }
@@ -414,7 +437,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
 
             _updateClientUi.GetMap(character, _cache.GetMap($"{room.AreaId}{room.Coords.Z}"));
 
-            new RoomActions(_writeToClient, _time, _cache, _dice, _gain, _formulas).Look("", room, character);
+            new RoomActions(_writeToClient, _time, _cache, _dice, _gain, _formulas, _passiveSkills).Look("", room, character);
 
             foreach (var mob in room.Mobs.ToList())
             {

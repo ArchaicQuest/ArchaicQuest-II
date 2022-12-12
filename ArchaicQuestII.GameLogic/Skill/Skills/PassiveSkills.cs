@@ -21,6 +21,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
     {
         int Haggle(Player player, Player target);
         int DualWield(Player player, Player target, Room room, string obj);
+        int Lore(Player player, Room room, string obj);
 
 
     }
@@ -171,6 +172,119 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             return 0;
         }
 
+        public int Lore(Player player, Room room, string obj)
+        {
+            if (string.IsNullOrEmpty(obj))
+            {
+                _writer.WriteLine("Lore What!?.", player.ConnectionId);
 
+                return 0;
+            }
+            
+            var nthTarget = Helpers.findNth(obj);
+            var item = Helpers.findRoomObject(nthTarget, room) ?? Helpers.findObjectInInventory(nthTarget, player);
+           // only lore items that can be picked up
+            if (item.Stuck)
+            {
+                _writer.WriteLine("There is nothing more to note about that object.", player.ConnectionId);
+
+                return 0;
+            }
+
+            var sb = new StringBuilder();
+            
+            sb.Append($"It is a level {item.Level} {item.ItemType}, weight {item.Weight}.<br/>Locations it can be worn: {(item.ItemType == Item.Item.ItemTypes.Light || item.ItemType == Item.Item.ItemTypes.Weapon || item.ItemType == Item.Item.ItemTypes.Armour ? item.Slot : Character.Equipment.Equipment.EqSlot.Held)}.<br /> This {item.ItemType} has a gold value of {item.Value}.<br />");
+
+            if (item.ItemType == Item.Item.ItemTypes.Weapon)
+            {
+                sb.Append($"Damage {item.Damage.Minimum} - {item.Damage.Maximum}</br>");
+                sb.Append($"Damage Type {item.DamageType}");
+            }
+            if (item.ItemType == Item.Item.ItemTypes.Armour && (item.ArmourRating.Armour != 0 || item.ArmourRating.Magic != 0))
+            {
+                sb.Append($"Affects armour by {item.ArmourRating.Armour} / {item.ArmourRating.Magic}");
+            }
+            if (item.ItemType == Item.Item.ItemTypes.Potion)
+            {
+                sb.Append($"Potion of {item.SpellName}.<br />");
+                sb.Append($"Potion Strength: {item.SpellLevel}</br>"); 
+            }
+
+            if (item.Modifier.Strength != 0)
+            {
+                sb.Append($"<br />Affects strength by {item.Modifier.Strength}");
+            }
+
+            if (item.Modifier.Dexterity != 0)
+            {
+                sb.Append($"<br />Affects dexterity by {item.Modifier.Dexterity}");
+            }
+
+            if (item.Modifier.Constitution != 0)
+            {
+                sb.Append($"<br />Affects constitution by {item.Modifier.Constitution}");
+            }
+
+            if (item.Modifier.Wisdom != 0)
+            {
+                sb.Append($"<br />Affects wisdom by {item.Modifier.Wisdom}");
+            }
+
+            if (item.Modifier.Intelligence != 0)
+            {
+                sb.Append($"<br />Affects intelligence by {item.Modifier.Intelligence}");
+            }
+
+            if (item.Modifier.Charisma != 0)
+            {
+                sb.Append($"<br />Affects charisma by {item.Modifier.Charisma}");
+            }
+
+            if (item.Modifier.HP != 0)
+            {
+                sb.Append($"<br />Affects HP by {item.Modifier.HP}");
+            }
+
+
+            if (item.Modifier.Mana != 0)
+            {
+                sb.Append($"<br />Affects mana by {item.Modifier.Mana}");
+            }
+
+            if (item.Modifier.Moves != 0)
+            {
+                sb.Append($"<br />Affects moves by {item.Modifier.Moves}");
+            }
+
+            if (item.Modifier.DamRoll != 0)
+            {
+                sb.Append($"<br />Affects damroll by {item.Modifier.DamRoll}");
+            }
+
+            if (item.Modifier.HitRoll != 0)
+            {
+                sb.Append($"<br />Affects hitroll by {item.Modifier.HitRoll}");
+            }
+
+            if (item.Modifier.Saves != 0)
+            {
+                sb.Append($"<br />Affects saves by {item.Modifier.Saves}");
+            }
+
+            if (item.Modifier.SpellDam != 0)
+            {
+                sb.Append($"<br />Affects spell dam by {item.Modifier.SpellDam}");
+            }
+            
+            if (item.ItemType == Item.Item.ItemTypes.Crafting || item.ItemType == Item.Item.ItemTypes.Forage || item.ItemType == Item.Item.ItemTypes.Food)
+            {
+                sb.Append($"<br />Condition: {item.Condition}");
+            }
+
+
+            _writer.WriteLine(sb.ToString(), player.ConnectionId);
+        
+           return 0;
+        }
     }
 }

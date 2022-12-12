@@ -23,5 +23,6 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
         void Delete(string target, Room room, Player player);
         void Unlock(string target, Room room, Player player);
         void Lock(string target, Room room, Player player);
+        void Quaff(string target, Room room, Player player);
     }
 }

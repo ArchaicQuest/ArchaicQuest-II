@@ -18,9 +18,35 @@ namespace ArchaicQuestII.GameLogic.SeedData
         {
             var rooms = db.GetList<Room>(DataBase.Collections.Room);
             var areas = db.GetList<Area>(DataBase.Collections.Area);
-
+            var updatedItems = new ItemList();
+            Random random = new Random();
+            var lastRandom = 0;
+            
             foreach (var room in rooms.Where(x => x.Deleted == false))
             {
+                foreach (var item in room.Items.Where(x => x.ItemType == Item.Item.ItemTypes.Forage))
+                {
+                
+                    foreach (var containerForageItem in item.Container.Items.Where(x => x.ItemType == Item.Item.ItemTypes.Crafting || x.ItemType == Item.Item.ItemTypes.Forage))
+                    {
+                        updatedItems.Clear();
+                        var rnd = random.Next(1, 11);
+                        if (lastRandom == rnd)
+                        {
+                            rnd = random.Next(1, 11);
+                        }
+
+                        lastRandom = rnd;
+                        for (var i = 0; i < rnd; i++)
+                        {
+                            updatedItems.Add(containerForageItem);
+                        }
+                    }
+
+                    item.Container.Items.AddRange(updatedItems);
+                    
+                }
+                
                 AddSkillsToMobs(db, room);
                 MapMobRoomId(room);
                 cache.AddRoom($"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}", room);

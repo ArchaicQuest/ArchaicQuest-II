@@ -45,6 +45,7 @@ namespace ArchaicQuestII.API.Controllers.Core
                 ItemGain = Quest.ItemGain,
                 MobsToKill = Quest.MobsToKill,
                 ItemsToGet = Quest.ItemsToGet,
+                Type = Quest.Type
             };
 
             if (Quest.Id != -1)

@@ -7,6 +7,13 @@ using static ArchaicQuestII.GameLogic.Character.Equipment.Equipment;
 
 namespace ArchaicQuestII.GameLogic.Item
 {
+
+    public class Forage
+    {
+        public int Respawn { get; set; } = 5;
+        public int ItemCount { get; set; } = 3;
+        public int MaxItemCount { get; set; } = 3;
+    }
     public class Item : BaseItem
     {
         public enum ItemTypes
@@ -163,6 +170,7 @@ namespace ArchaicQuestII.GameLogic.Item
         public ItemTypes ItemType { get; set; }
         public AttackTypes AttackType { get; set; }
         public EqSlot Slot { get; set; }
+        public Forage Forage { get; set; } = new Forage();
         public WeaponTypes WeaponType { get; set; }
         public int WeaponSpeed { get; set; }
         public Damage Damage { get; set; }
@@ -200,6 +208,13 @@ namespace ArchaicQuestII.GameLogic.Item
         /// Used to slow corpse removal
         /// </summary>
         public int Decay { get; set; } = 5; // 10 for players
+        
+        /// <summary>
+        ///  For potions the spell name and level is used in casting the spell upon the player when quaffing.
+        ///  potentially could be used for on hit spell affects for weapons and armor o.0
+        /// </summary>
+        public string SpellName { get; set; }
+        public string SpellLevel { get; set; }
 
         public List<string> DecayMessages = new List<string>()
         {

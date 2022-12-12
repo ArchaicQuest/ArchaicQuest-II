@@ -238,8 +238,8 @@ namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
 
         public void CureLightWounds(Player player, Player target, Room room)
         {
-            var casterLevel = player.Level > 10 ? 5 : player.Level;
-            var value = _dice.Roll(1, 1, 4) + 1 + casterLevel / 4;
+            var casterLevel = player.Level > 10 ? 10 : player.Level;
+            var value = _dice.Roll(1, 1, 4) + 1 + casterLevel;
 
             var skillMessage = new SkillMessage()
             {
@@ -325,6 +325,12 @@ namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
                 sb.Append($"Weapon Type: {item.WeaponType}, Damage is {item.Damage.Minimum}-{item.Damage.Maximum} (average {item.Damage.Minimum + item.Damage.Maximum / 2}).<br />");
                 sb.Append($"Attack type: {item.AttackType}</br>");
                 sb.Append($"Damage type: {item.DamageType}</br>");
+            }
+            
+            if (item.ItemType == Item.Item.ItemTypes.Potion)
+            {
+                sb.Append($"Potion of: {item.SpellName}.<br />");
+                sb.Append($"Potion Strength: {item.SpellLevel}</br>"); 
             }
 
             sb.Append($"Affects:</br>");

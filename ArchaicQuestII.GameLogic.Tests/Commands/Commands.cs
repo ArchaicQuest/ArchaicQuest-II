@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Equipment;
+using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Help;
 using ArchaicQuestII.GameLogic.Character.MobFunctions;
 using ArchaicQuestII.GameLogic.Character.MobFunctions.Healer;
@@ -56,6 +57,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
         private readonly Mock<IPassiveSkills> _passiveSkills;
         private readonly Mock<IHealer> _healer;
         private readonly Mock<IDamageSpells> _damageSpells;
+        private readonly Mock<IGain> _gain;
         private readonly Mock<IAreaActions> _areaActions;
         
         public CommandsTests()
@@ -85,6 +87,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
             _passiveSkills = new Mock<IPassiveSkills>();
             _healer = new Mock<IHealer>();
             _damageSpells = new Mock<IDamageSpells>();
+            _gain = new Mock<IGain>();
             _areaActions = new Mock<IAreaActions>();
 
             _player.ConnectionId = "1";
@@ -109,7 +112,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
                 }
             };
 
-            _commands = new GameLogic.Commands.Commands(_movement.Object, _roomActions.Object, _debug.Object, _skill.Object, _spell.Object, _object.Object, _inventory.Object, _communication.Object, _equipment.Object, _score.Object, _combat.Object, _cache.Object, _socials.Object, _commandHandler.Object, _core.Object, _mobFunctions.Object, _help.Object, _mobScripts.Object, _crafting.Object, _cooking.Object, _utilSkills.Object, _passiveSkills.Object, _healer.Object, _damageSpells.Object, _areaActions.Object);
+            _commands = new GameLogic.Commands.Commands(_movement.Object, _roomActions.Object, _debug.Object, _skill.Object, _spell.Object, _object.Object, _inventory.Object, _communication.Object, _equipment.Object, _score.Object, _combat.Object, _cache.Object, _socials.Object, _commandHandler.Object, _core.Object, _mobFunctions.Object, _help.Object, _mobScripts.Object, _crafting.Object, _cooking.Object, _utilSkills.Object, _passiveSkills.Object, _healer.Object, _damageSpells.Object, _gain.Object, _areaActions.Object);
 
         }
 

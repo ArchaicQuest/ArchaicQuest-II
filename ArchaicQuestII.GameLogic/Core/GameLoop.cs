@@ -348,7 +348,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
                 try
                 {
-                    await Task.Delay(4000);
+                    await Task.Delay(3200);
 
 
                     var players = _cache.GetCombatList();

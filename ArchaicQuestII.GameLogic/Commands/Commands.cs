@@ -23,6 +23,7 @@ using ArchaicQuestII.GameLogic.Socials;
 using ArchaicQuestII.GameLogic.Spell.Interface;
 using MoonSharp.Interpreter;
 using System.Threading.Tasks;
+using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.MobFunctions.Healer;
 using ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells;
 using ArchaicQuestII.GameLogic.World.Area;
@@ -56,6 +57,7 @@ namespace ArchaicQuestII.GameLogic.Commands
         private readonly IPassiveSkills _passiveSkills;
         private readonly IHealer _healer;
         private readonly IDamageSpells _damageSpells;
+        private readonly IGain _gain;
         private readonly IAreaActions _areaActions;
 
 
@@ -84,6 +86,7 @@ namespace ArchaicQuestII.GameLogic.Commands
             IPassiveSkills passiveSkills,
             IHealer healer,
             IDamageSpells damageSpells,
+            IGain gain,
             IAreaActions areaActions
             )
         {
@@ -111,6 +114,7 @@ namespace ArchaicQuestII.GameLogic.Commands
             _passiveSkills = passiveSkills;
             _healer = healer;
             _damageSpells = damageSpells;
+            _gain = gain;
             _areaActions = areaActions;
         }
 
@@ -426,6 +430,9 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case "/restore":
                     _core.RestorePlayer(player);
                     break;
+                case "/gainlevel":
+                    _gain.GainLevel(player, obj);
+                    break;
                 case "/setevent":
                     _core.SetEvent(player, obj, target);
                     break;
@@ -437,7 +444,7 @@ namespace ArchaicQuestII.GameLogic.Commands
                     break;
                     //case "/backup": TODO: this works but need to lock down to admin only
                     //    _core.DBDumpToJSON(player);
-                    break;
+                   // break;
                 case "area":
                     _areaActions.AreaInfo(player, room);
                     break;
@@ -458,6 +465,7 @@ namespace ArchaicQuestII.GameLogic.Commands
                 default:
                     _commandHandler.HandleCommand(key, obj, target, player, room);
                     break;
+
             }
         }
 

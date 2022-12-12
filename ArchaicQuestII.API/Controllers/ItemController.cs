@@ -102,6 +102,8 @@ namespace ArchaicQuestII.Controllers
                 Weight = itemData.Item.Weight,
                 Value = itemData.Item.Value,
                 TwoHanded = itemData.Item.TwoHanded,
+                SpellName = itemData.Item.SpellName,
+                SpellLevel = itemData.Item.SpellLevel,
                 Portal = new Portal()
                 {
                     Destination = itemData.Item.Portal.Destination,
@@ -145,8 +147,7 @@ namespace ArchaicQuestII.Controllers
                             {
                                 newItem.Id = roomItem.Id;
                                 room.Items.Remove(roomItem);
-                                room.Items.Add(roomItem);
-
+                                room.Items.Add(newItem);
                             }
 
                             if (roomItem.Container.Items.Any())

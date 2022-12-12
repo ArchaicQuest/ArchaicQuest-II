@@ -7,6 +7,8 @@ using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.Character.Help;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Item;
+using ArchaicQuestII.GameLogic.Spell;
+using ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells;
 using ArchaicQuestII.GameLogic.World.Room;
 using MoonSharp.Interpreter;
 
@@ -17,12 +19,14 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
     {
         private readonly IWriteToClient _writer;
         private readonly IUpdateClientUI _updateUi;
+        private readonly ISpellList _castSpell;
         private readonly IMobScripts _mobScripts;
-        public Object(IWriteToClient writer, IUpdateClientUI updateUi, IMobScripts mobScripts)
+        public Object(IWriteToClient writer, IUpdateClientUI updateUi, IMobScripts mobScripts, ISpellList castSpell)
         {
             _writer = writer;
             _updateUi = updateUi;
             _mobScripts = mobScripts;
+            _castSpell = castSpell;
         }
         public void Get(string target, string container, Room room, Player player, string fullCommand)
         {
@@ -91,6 +95,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
             }
             else
             {
+                _updateUi.PlaySound("get", player);
                 item.IsHiddenInRoom = false;
                 player.Inventory.Add(item);
                 player.Weight += item.Weight;
@@ -132,6 +137,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                     }
                     else
                     {
+                        _updateUi.PlaySound("get", player);
                         room.Items[i].IsHiddenInRoom = false;
                         player.Inventory.Add(room.Items[i]);
                         _writer.WriteLine($"<p>You pick up {room.Items[i].Name.ToLower()}</p>", player.ConnectionId);
@@ -200,6 +206,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                 }
                 else
                 {
+                    _updateUi.PlaySound("get", player);
                     container.Container.Items[i].IsHiddenInRoom = false;
                     player.Inventory.Add(container.Container.Items[i]);
                     player.Weight += container.Container.Items[i].Weight;
@@ -316,7 +323,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
             room.Items.Add(item);
             player.Weight -= item.Weight;
-
+            _updateUi.PlaySound("drop", player);
             _writer.WriteLine($"<p>You drop {item.Name.ToLower()}.</p>", player.ConnectionId);
             _updateUi.UpdateInventory(player);
             _updateUi.UpdateScore(player);
@@ -511,7 +518,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
             }
 
             containerObj.Container.Items.Add(item);
-
+            _updateUi.PlaySound("drop", player);
             _writer.WriteLine($"<p>You put {item.Name.ToLower()} into {containerObj.Name.ToLower()}.</p>", player.ConnectionId);
             _updateUi.UpdateInventory(player);
             _updateUi.UpdateScore(player);
@@ -535,6 +542,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                     _writer.WriteLine($"<p>You can't let go of {player.Inventory[i].Name}. It appears to be cursed.</p>", player.ConnectionId);
                     continue;
                 }
+                _updateUi.PlaySound("drop", player);
                 container.Container.Items.Add(player.Inventory[i]);
                 player.Weight -= player.Inventory[i].Weight;
                 _writer.WriteLine($"<p>You place {player.Inventory[i].Name.ToLower()} into {container.Name.ToLower()}.</p>", player.ConnectionId);
@@ -576,6 +584,18 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
             if (containerObj == null)
             {
                 _writer.WriteLine("<p>You don't see that here.</p>", player.ConnectionId);
+                return;
+            }
+
+            if (containerObj.ItemType != Item.Item.ItemTypes.Container)
+            {
+                if (containerObj.ItemType == Item.Item.ItemTypes.Forage)
+                {
+                    _writer.WriteLine("<p>Try forage instead.</p>", player.ConnectionId);
+                    return;
+                }
+
+                _writer.WriteLine("<p>This is not a container.</p>", player.ConnectionId);
                 return;
             }
 
@@ -638,6 +658,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
             }
             else
             {
+                _updateUi.PlaySound("get", player);
                 item.IsHiddenInRoom = false;
                 player.Inventory.Add(item);
                 player.Weight += item.Weight;
@@ -681,7 +702,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
                         _writer.WriteLine($"<p>You can't let go of {player.Inventory[i].Name}. It appears to be cursed.</p>", player.ConnectionId);
                         return;
                     }
-
+                    _updateUi.PlaySound("drop", player);
                     room.Items.Add(player.Inventory[i]);
                     player.Weight -= player.Inventory[i].Weight;
 
@@ -1130,6 +1151,48 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects
 
                 return;
             }
+
+        }
+
+        public void Quaff(string target, Room room, Player player)
+        {
+            var nthItem = Helpers.findNth(target);
+            var foundItem =
+                Helpers.findRoomObject(nthItem, room) ?? Helpers.findObjectInInventory(nthItem, player);
+            
+            if (foundItem == null)
+            {
+                _writer.WriteLine("<p>You can't find that potion.</p>", player.ConnectionId);
+                return;
+            }
+
+            player.Inventory.Remove(foundItem);
+            _updateUi.UpdateInventory(player);
+            
+            _updateUi.PlaySound("quaff", player);
+
+            if (string.IsNullOrEmpty(foundItem.SpellName) && foundItem.ItemType == Item.Item.ItemTypes.Potion)
+            {
+                _writer.WriteLine("<p>You quaff the potion but nothing happens.</p>", player.ConnectionId);
+                return;
+            }
+   
+            foreach (var pc in room.Players)
+            {
+                if (pc.Name == player.Name)
+                {
+                    continue;
+                }
+                _writer.WriteLine($"{player.Name} quaffs {foundItem.Name.ToLower()}.", pc.ConnectionId);
+            }
+
+            //potion to cast at level of potion and not the player level
+            var dummyPlayer = new Player()
+            {
+                Level = foundItem.Level
+            };
+
+            _castSpell.CastSpell(foundItem.SpellName, string.Empty, player, foundItem.SpellName, dummyPlayer, room, false);
 
         }
     }

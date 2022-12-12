@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Text;
 using ArchaicQuestII.DataAccess;
@@ -129,10 +130,16 @@ namespace ArchaicQuestII.GameLogic.World.Area
         {
             var sb = new StringBuilder();
             var areas = _db.GetCollection<Area>(DataBase.Collections.Area).FindAll().ToList();
-            
+         
+            foreach (var area in areas)
+            {
+                area.Rooms = _cache.GetAllRoomsInArea(area.Id);
+            }
+       
+
             sb.Append($"Total Areas: {areas.Count}");
             sb.Append("<ul>");
-            
+           
             foreach (var area in areas)
             {
                 sb.Append($"<li>[{GetAreaLevelScale(area)}] {area.Title}");
@@ -140,8 +147,8 @@ namespace ArchaicQuestII.GameLogic.World.Area
                     sb.Append($" ({area.CreatedBy})");
                 sb.Append("</li>");
             }
-            
-            sb.Append("</ul>");
+
+                sb.Append("</ul>");
             
             _writeToClient.WriteLine(sb.ToString(), player.ConnectionId);
         }
@@ -167,7 +174,7 @@ namespace ArchaicQuestII.GameLogic.World.Area
             var maxLvl = 0;
             var mobCount = 0;
 
-            foreach (var mob in area.Rooms.SelectMany(room => room.Mobs))
+            foreach (var mob in area.Rooms.Where(x => x.Mobs.Any()).SelectMany(room => room.Mobs))
             {
                 if (mob.Level < minLvl)
                     minLvl = mob.Level;

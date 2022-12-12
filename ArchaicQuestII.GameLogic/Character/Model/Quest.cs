@@ -9,7 +9,9 @@ namespace ArchaicQuestII.GameLogic.Character.Model
         Kill,
         Fetch,
         Discover,
-        Escort
+        Escort,
+        Rescue,
+        Misc
     }
 
     public class KillQuest

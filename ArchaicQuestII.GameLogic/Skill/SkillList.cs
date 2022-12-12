@@ -100,6 +100,9 @@ namespace ArchaicQuestII.GameLogic.Skill
                 case "second":
                     _passive.DualWield(player, target, room, obj);
                     break;
+                case "lore":
+                    _passive.Lore(player, room, obj);
+                    break;
                     //case "cure light wounds":
                     //    _damageSpells.CureLightWounds(player, target, room);
                     //    break;

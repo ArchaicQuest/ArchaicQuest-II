@@ -245,6 +245,20 @@ namespace ArchaicQuestII.GameLogic.Core
                 _updateClientUi.UpdateInventory(player);
             }
         }
+        
+        public void RemoveItem(Player player, string name, int count = 1)
+        {
+            for (int i = 0; i < count; i++)
+                {
+                    var item = player.Inventory.FirstOrDefault(x =>
+                        x.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
+                    if (item != null)
+                    {
+                        player.Inventory.Remove(item);
+                    }
+                }
+                _updateClientUi.UpdateInventory(player);
+        }
 
         public void GiveGold(int value, Player player)
         {
@@ -254,11 +268,37 @@ namespace ArchaicQuestII.GameLogic.Core
             }
             player.Money.Gold += value;
         }
+        
+        public void Harm(int maxValue, Player player, Room room)
+        {
+            var damage = _dice.Roll(1, 1, maxValue);
+
+            var dummyPlayer = new Player()
+            {
+                Name = "Script damage"
+            };
+            
+            _combat.HarmTarget(player, damage);
+            _updateClientUi.UpdateScore(player);
+            _updateClientUi.UpdateHP(player);
+            if (!_combat.IsTargetAlive(player))
+            {
+                _combat.TargetKilled(dummyPlayer, player, room);
+            }
+        }
 
         public bool HasObject(Player player, string name)
         {
             return player.Inventory.FirstOrDefault(x => x.Name.StartsWith(name, StringComparison.CurrentCultureIgnoreCase)) !=
                    null;
+        }
+        
+        public bool HasObjectCount(Player player, string name, int count)
+        {
+            var countx = player.Inventory
+                .FindAll(x => x.Name.StartsWith(name, StringComparison.CurrentCultureIgnoreCase)).Count();
+            var x =  player.Inventory.FindAll(x => x.Name.StartsWith(name, StringComparison.CurrentCultureIgnoreCase)).Count() >= count;
+            return x;
         }
 
         public bool Contains(string word, string expected)
@@ -320,10 +360,10 @@ namespace ArchaicQuestII.GameLogic.Core
             if (quest != null)
             {
                 quest.Completed = true;
-                _writeToClient.WriteLine($"<p class='gain'>Quest Complete: {quest.Title}!</p>", player.ConnectionId);
-                _writeToClient.WriteLine($"<p class='gain'>You gain {quest.ExpGain} experience points{(quest.GoldGain == 0 ? "." : $" and {quest.GoldGain} gold. ")}</p>", player.ConnectionId);
+                _writeToClient.WriteLine($"<p class='improve'>Quest Complete: {quest.Title}!</p>", player.ConnectionId);
+                _writeToClient.WriteLine($"<p class='improve'>You gain {quest.ExpGain} experience points{(quest.GoldGain == 0 ? "." : $" and {quest.GoldGain} gold. ")}</p>", player.ConnectionId);
 
-                _gain.GainExperiencePoints(player, quest.ExpGain, true);
+                _gain.GainExperiencePoints(player, quest.ExpGain, false);
                 player.Money.Gold = quest.GoldGain;
             }
 
