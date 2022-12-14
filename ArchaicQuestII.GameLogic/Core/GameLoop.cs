@@ -8,10 +8,7 @@ using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Effect;
-using ArchaicQuestII.GameLogic.Item;
-using ArchaicQuestII.GameLogic.Skill.Core;
 using ArchaicQuestII.GameLogic.Spell;
-using ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells;
 using ArchaicQuestII.GameLogic.World.Room;
 using Newtonsoft.Json;
 using System.Web;
@@ -25,7 +22,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
         private IWriteToClient _writeToClient;
         private ICache _cache;
-        private ICommands _commands;
+        private ICommandHandler _commandHandler;
         private ICombat _combat;
         private IDataBase _db;
         private IDice _dice;
@@ -36,11 +33,11 @@ namespace ArchaicQuestII.GameLogic.Core
         private IWeather _weather;
         private List<string> _hints;
 
-        public GameLoop(IWriteToClient writeToClient, ICache cache, ICommands commands, ICombat combat, IDataBase database, IDice dice, IUpdateClientUI client, ITime time, ICore core, ISpellList spelllist, IWeather weather)
+        public GameLoop(IWriteToClient writeToClient, ICache cache, ICommandHandler commandHandler, ICombat combat, IDataBase database, IDice dice, IUpdateClientUI client, ITime time, ICore core, ISpellList spelllist, IWeather weather)
         {
             _writeToClient = writeToClient;
             _cache = cache;
-            _commands = commands;
+            _commandHandler = commandHandler;
             _combat = combat;
             _db = database;
             _dice = dice;
@@ -810,7 +807,7 @@ namespace ArchaicQuestII.GameLogic.Core
                                 {
                                     var mobCommand = mob.Buffer.Dequeue();
 
-                                    _commands.ProcessCommand(mobCommand, mob, room);
+                                    _commandHandler.HandleCommand(mob, room, mobCommand);
                                 }
 
                                 mobIds.Add(mob.Id);
@@ -857,7 +854,7 @@ namespace ArchaicQuestII.GameLogic.Core
                         }
 
                         player.Value.CommandLog.Add($"{string.Format("{0:f}", DateTime.Now)} - {command}");
-                        _commands.ProcessCommand(command, player.Value, room);
+                        _commandHandler.HandleCommand(player.Value, room, command);
 
                     }
 

@@ -6,6 +6,7 @@ using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Emote;
 using ArchaicQuestII.GameLogic.Character.Help;
 using ArchaicQuestII.GameLogic.Character.Model;
+using ArchaicQuestII.GameLogic.Commands;
 using ArchaicQuestII.GameLogic.Crafting;
 using ArchaicQuestII.GameLogic.World.Room;
 
@@ -69,9 +70,11 @@ namespace ArchaicQuestII.GameLogic.Core
         /// needing to change the backend code
         /// </summary>
         /// <returns></returns>
-        Dictionary<string, Action> GetCommands();
+        Dictionary<string, ICommand> GetCommands();
 
-        void AddCommand(string key, Action action);
+        bool GetCommand(string key, out ICommand command);
+
+        void AddCommand(string key, ICommand action);
 
         public void AddSocial(string key, Emote emote);
         public Dictionary<string, Emote> GetSocials();

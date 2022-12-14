@@ -1,40 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using System.Linq;
 using System.Text;
+using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.World.Room;
 
-namespace ArchaicQuestII.GameLogic.Commands.Score
+namespace ArchaicQuestII.GameLogic.Commands.Info
 {
-    public class Score : IScore
+    public class ScoreCmd : ICommand
     {
-
-        private readonly IWriteToClient _writer;
-
-        public Score(IWriteToClient writer)
+        public ScoreCmd(IWriteToClient writeToClient, ICache cache, IUpdateClientUI updateClient, IRoomActions roomActions)
         {
-            _writer = writer;
+            Aliases = new[] {"score", "sc"};
+            Description = "Displays detailed information about your character.";
+            Usages = new[] {"Type: score"};
+            UserRole = UserRole.Player;
+            Writer = writeToClient;
+            Cache = cache;
+            UpdateClient = updateClient;
+            RoomActions = roomActions;
         }
+        
+        public string[] Aliases { get; }
+        public string Description { get; }
+        public string[] Usages { get; }
+        public UserRole UserRole { get; }
+        public IWriteToClient Writer { get; }
+        public ICache Cache { get; }
+        public IUpdateClientUI UpdateClient { get; }
+        public IRoomActions RoomActions { get; }
 
-        public float CalculateWeight(Player player)
-        {
-
-            float weight = 0;
-            foreach (var item in player.Inventory)
-            {
-                weight += item.Weight == 0 ? 1 : item.Weight;
-            }
-
-            player.Weight = weight;
-
-            return weight;
-        }
-
-        public void DisplayScore(Player player)
+        public void Execute(Player player, Room room, string[] input)
         {
             var sb = new StringBuilder();
 
@@ -55,7 +53,16 @@ namespace ArchaicQuestII.GameLogic.Commands.Score
             sb.Append($"<tr><td class=\"cell-title\">Gold:</td><td>{player.Money.Gold}</td><td class=\"cell-title\">XP</td><td>{player.Experience}</td><td class=\"cell-title\"></td><td></td></tr>");
             sb.Append($"<tr><td class=\"cell-title\">Bank:</td><td>0</td><td class=\"cell-title\">TNL</td><td>{player.ExperienceToNextLevel}</td><td class=\"cell-title\"></td><td></td></tr></table>");
 
-            _writer.WriteLine(sb.ToString(), player.ConnectionId);
+            Writer.WriteLine(sb.ToString(), player.ConnectionId);
+        }
+
+        private float CalculateWeight(Player player)
+        {
+            var weight = player.Inventory.Sum(item => item.Weight == 0 ? 1 : item.Weight);
+
+            player.Weight = weight;
+
+            return weight;
         }
     }
 }

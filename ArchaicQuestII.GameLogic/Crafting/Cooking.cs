@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Equipment;
-using ArchaicQuestII.GameLogic.Commands.Skills;
+using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.World.Room;
@@ -15,16 +15,15 @@ namespace ArchaicQuestII.GameLogic.Crafting
     {
         private IWriteToClient _writeToClient;
         private IDice _dice;
-        private ISkills _skills;
+        private IGain _gain;
         private IUpdateClientUI _clientUi;
 
-        public Cooking(IWriteToClient writeToClient, IDice dice, IUpdateClientUI clientUi, ISkills skills)
+        public Cooking(IWriteToClient writeToClient, IDice dice, IGain gain, IUpdateClientUI clientUi)
         {
             _writeToClient = writeToClient;
             _dice = dice;
+            _gain = gain;
             _clientUi = clientUi;
-            _skills = skills;
-
         }
 
         public void Cook(Player player, Room room)
@@ -142,7 +141,7 @@ namespace ArchaicQuestII.GameLogic.Crafting
             _writeToClient.WriteLine("<p>You stir the ingredients.</p>",
                 player.ConnectionId, 5000);
 
-            var success = _skills.SuccessCheck(player, "cooking");
+            var success = Helpers.SkillSuccessCheck(player, "cooking");
 
             if (success)
             {
@@ -186,7 +185,7 @@ namespace ArchaicQuestII.GameLogic.Crafting
 
                 }
 
-                _skills.LearnMistakes(player, "Cooking", 6000);
+                Helpers.SkillLearnMistakes(player, "Cooking", _gain, 6000);
             }
             _clientUi.UpdateInventory(player);
             _clientUi.UpdateScore(player);

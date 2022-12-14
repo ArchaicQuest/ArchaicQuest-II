@@ -23,7 +23,7 @@ namespace ArchaicQuestII.GameLogic.Character
         public string ReplyTo { get; set; }
         public List<Player> Followers { get; set; } = new List<Player>();
         public string Following { get; set; }
-        public bool grouped { get; set; }
+        public bool Grouped { get; set; }
         public new Money Money { get; set; } = new Money() { Gold = 0 };
         public Money Bank { get; set; } = new Money() { Gold = 0 };
         public int Trains { get; set; } = 5;

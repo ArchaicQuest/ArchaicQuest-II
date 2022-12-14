@@ -1,11 +1,9 @@
 ﻿using Moq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Status;
-using ArchaicQuestII.GameLogic.Commands.Skills;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Crafting;
 using ArchaicQuestII.GameLogic.Item;
@@ -20,14 +18,14 @@ namespace ArchaicQuestII.GameLogic.Tests.Crafting
         private readonly Mock<IWriteToClient> _writer;
         private readonly Mock<IUpdateClientUI> _updateClientUi;
         private readonly Mock<IDice> _dice;
-        private readonly Mock<ISkills> _skills;
+        private readonly Mock<IGain> _gain;
 
         public CookingTest()
         {
             _writer = new Mock<IWriteToClient>();
             _updateClientUi = new Mock<IUpdateClientUI>();
             _dice = new Mock<IDice>();
-            _skills = new Mock<ISkills>();
+            _gain = new Mock<IGain>();
         }
 
         [Fact]
@@ -106,7 +104,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Crafting
             };
 
 
-            var food = new GameLogic.Crafting.Cooking(_writer.Object, _dice.Object, _updateClientUi.Object, _skills.Object).GenerateCookedItem(player, room, ingredients);
+            var food = new Cooking(_writer.Object, _dice.Object, _gain.Object, _updateClientUi.Object).GenerateCookedItem(player, room, ingredients);
 
             Assert.NotNull(food);
         }

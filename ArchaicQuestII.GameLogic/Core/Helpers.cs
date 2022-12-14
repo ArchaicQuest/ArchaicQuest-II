@@ -8,9 +8,11 @@ using System.Security.Cryptography;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Class;
+using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Effect;
+using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.Skill.Enum;
 using ArchaicQuestII.GameLogic.Spell;
 using ArchaicQuestII.GameLogic.World.Room;
@@ -574,10 +576,39 @@ namespace ArchaicQuestII.GameLogic.Core
             }
         }
         
+        public static bool SkillSuccessCheck(Player player, string skillName)
+        {
+            var skill = player.Skills.FirstOrDefault(x =>
+                x.SkillName.Equals(skillName, StringComparison.CurrentCultureIgnoreCase));
 
+            var chance = new Dice().Roll(1, 1, 100);
+
+            return (skill == null || !(skill.Proficiency <= chance)) && chance != 1;
+        }
+        
+        public static string SkillLearnMistakes(Player player, string skillName, IGain gain, int delay = 0)
+        {
+            var skill = player.Skills.FirstOrDefault(x => x.SkillName.Equals(skillName, StringComparison.CurrentCultureIgnoreCase));
+
+            if (skill == null)
+            {
+                return null;
+            }
+
+            if (skill.Proficiency == 100)
+            {
+                return null;
+            }
+
+            var increase = new Dice().Roll(1, 1, 5);
+
+            skill.Proficiency += increase;
+
+            gain.GainExperiencePoints(player, 100 * skill.Level / 4, false);
+
+            return
+                $"<p class='improve'>You learn from your mistakes and gain {100 * skill.Level / 4} experience points.</p>" +
+                $"<p class='improve'>Your knowledge of {skill.SkillName} increases by {increase}%.</p>";
+        }
     }
-
-
-
-
 }

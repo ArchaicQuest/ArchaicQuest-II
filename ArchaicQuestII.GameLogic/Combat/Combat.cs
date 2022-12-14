@@ -740,11 +740,11 @@ namespace ArchaicQuestII.GameLogic.Combat
                     }
                 }
                 
-                if (player.grouped)
+                if (player.Grouped)
                 {
                     foreach (var follower in player.Followers)
                     {
-                        if (follower.grouped && follower.Following == player.Name &&  follower.Status != CharacterStatus.Status.Fighting)
+                        if (follower.Grouped && follower.Following == player.Name &&  follower.Status != CharacterStatus.Status.Fighting)
                         {
                             if (follower.Config.AutoAssist && string.IsNullOrEmpty(follower.Target))
                             {
@@ -815,7 +815,7 @@ namespace ArchaicQuestII.GameLogic.Combat
             DeathCry(room, target);
 
           
-            if (player.grouped)
+            if (player.Grouped)
             {
                 _gain.GroupGainExperiencePoints(player, target);
 
@@ -835,7 +835,7 @@ namespace ArchaicQuestII.GameLogic.Combat
          
              foreach (var follower in groupLeader.Followers)
              {
-                 if (follower.grouped && follower.Following == groupLeader.Name)
+                 if (follower.Grouped && follower.Following == groupLeader.Name)
                  {
                      follower.Status = CharacterStatus.Status.Standing;
                      follower.Target = String.Empty;

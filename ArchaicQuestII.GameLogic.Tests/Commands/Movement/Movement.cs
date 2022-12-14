@@ -15,7 +15,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Movement
 {
     public class MovementTests
     {
-        private GameLogic.World.Room.Room _room;
+        private Room _room;
         private Player _player;
         private readonly Mock<IWriteToClient> _writer;
         private readonly Mock<IRoomActions> _roomActions;
@@ -138,7 +138,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Movement
             _cache.AddRoom($"{_room.AreaId}{_room.Coords.X}{_room.Coords.Y}{_room.Coords.Z}", _room);
 
             _player.EnterEmote = "";
-            new GameLogic.Commands.Movement.Movement(_writer.Object, _cache, _roomActions.Object, _areaActions.Object, _clientui.Object, _dice.Object, _combat.Object, _mobScript.Object).Move(_room, _player, "North");
+            new GameLogic.Commands.CommandHandler(_cache, _writer.Object, _clientui.Object, _roomActions.Object).HandleCommand(_player, _room, "North");
 
             _writer.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("Bob walks north.")), "1"), Times.Never);
             _writer.Verify(w => w.WriteLine(It.Is<string>(s => s == "<span class='player'>Bob walks north.</span>"), "2"), Times.Once);
@@ -204,8 +204,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Movement
 
             // _cache.AddRoom(1, _room);
 
-            new GameLogic.Commands.Movement.Movement(_writer.Object, _cache, _roomActions.Object, _areaActions.Object, _clientui.Object, _dice.Object, _combat.Object, _mobScript.Object).Move(_room, _player, "North");
-
+            new GameLogic.Commands.CommandHandler(_cache, _writer.Object, _clientui.Object, _roomActions.Object).HandleCommand(_player, _room, "North");
 
             _writer.Verify(w => w.WriteLine(It.Is<string>(s => s == "<p>You are too exhausted to move.</p>"), "1"), Times.Once);
 
@@ -298,8 +297,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Movement
             _cache.AddRoom($"1020", room2);
 
 
-            new GameLogic.Commands.Movement.Movement(_writer.Object, _cache, _roomActions.Object, _areaActions.Object, _clientui.Object, _dice.Object, _combat.Object, _mobScript.Object).Move(_room, _player, "North");
-
+            new GameLogic.Commands.CommandHandler(_cache, _writer.Object, _clientui.Object, _roomActions.Object).HandleCommand(_player, _room, "North");
 
             _writer.Verify(w => w.WriteLine(It.Is<string>(s => s == "<p>A mysterious force prevents you from going that way.</p>"), "1"), Times.Once);
 
@@ -357,9 +355,8 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Movement
                 }
             };
 
-
-
-            new GameLogic.Commands.Movement.Movement(_writer.Object, _cache, _roomActions.Object, _areaActions.Object, _clientui.Object, _dice.Object, _combat.Object, _mobScript.Object).Sit(_player, _room, "sit");
+            
+            new GameLogic.Commands.CommandHandler(_cache, _writer.Object, _clientui.Object, _roomActions.Object).HandleCommand(_player, _room, "sit");
             _writer.Verify(w => w.WriteLine(It.Is<string>(s => s == "<p>You sit down.</p>"), "1"), Times.Once);
             Assert.Equal(CharacterStatus.Status.Sitting, _player.Status);
 

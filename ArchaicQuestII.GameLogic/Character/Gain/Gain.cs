@@ -56,7 +56,7 @@ namespace ArchaicQuestII.GameLogic.Character.Gain
 
         public void GroupGainExperiencePoints(Player player, Player target)
         {
-            if (player.grouped)
+            if (player.Grouped)
             {
                 var isGroupLeader = string.IsNullOrEmpty(player.Following);
 
@@ -74,7 +74,7 @@ namespace ArchaicQuestII.GameLogic.Character.Gain
 
                 foreach (var follower in groupLeader.Followers)
                 {
-                    if (follower.grouped && follower.Following == groupLeader.Name)
+                    if (follower.Grouped && follower.Following == groupLeader.Name)
                     {
                         if (follower.RoomId == target.RoomId)
                         {

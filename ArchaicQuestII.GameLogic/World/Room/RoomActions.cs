@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.Encodings.Web;
 using ArchaicQuestII.Core.World;
@@ -11,9 +9,8 @@ using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Core;
-using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.Skill.Skills;
-using Newtonsoft.Json;
+using MoonSharp.Interpreter;
 
 namespace ArchaicQuestII.GameLogic.World.Room
 {
@@ -27,7 +24,11 @@ namespace ArchaicQuestII.GameLogic.World.Room
         private readonly IGain _gain;
         private readonly IFormulas _formulas;
         private readonly IPassiveSkills _passiveSkills;
-        public RoomActions(IWriteToClient writeToClient, ITime time, ICache cache, IDice dice, IGain gain, IFormulas formulas, IPassiveSkills passiveSkills)
+        private readonly IUpdateClientUI _updateClient;
+        private readonly IMobScripts _mobScripts;
+
+        public RoomActions(IWriteToClient writeToClient, ITime time, ICache cache, IDice dice, IGain gain,
+            IFormulas formulas, IPassiveSkills passiveSkills, IUpdateClientUI updateClient, IMobScripts mobScripts)
         {
             _writeToClient = writeToClient;
             _time = time;
@@ -36,6 +37,8 @@ namespace ArchaicQuestII.GameLogic.World.Room
             _gain = gain;
             _formulas = formulas;
             _passiveSkills = passiveSkills;
+            _updateClient = updateClient;
+            _mobScripts = mobScripts;
         }
 
         public void Look(string target, Room room, Player player)
@@ -61,14 +64,15 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 return;
             }
 
-            if (!string.IsNullOrEmpty(target) && !target.Equals("look", StringComparison.CurrentCultureIgnoreCase) && !string.IsNullOrEmpty(target) && !target.Equals("l", StringComparison.CurrentCultureIgnoreCase))
+            if (!string.IsNullOrEmpty(target) && !target.Equals("look", StringComparison.CurrentCultureIgnoreCase) &&
+                !string.IsNullOrEmpty(target) && !target.Equals("l", StringComparison.CurrentCultureIgnoreCase))
             {
                 LookObject(target, room, player);
                 return;
             }
 
             var showVerboseExits = player.Config.VerboseExits;
-            string exits = FindValidExits(room, showVerboseExits);
+            var exits = FindValidExits(room, showVerboseExits);
 
             var items = DisplayItems(room, player);
             var mobs = DisplayMobs(room, player);
@@ -77,7 +81,8 @@ namespace ArchaicQuestII.GameLogic.World.Room
             var roomDesc = new StringBuilder();
             var isDark = RoomIsDark(room, player);
 
-            roomDesc.Append($"<p class=\"room-title {(isDark ? "room-dark" : "")}\">{room.Title} ({room.Coords.X},{room.Coords.Y},{room.Coords.Z})<br /></p>");
+            roomDesc.Append(
+                $"<p class=\"room-title {(isDark ? "room-dark" : "")}\">{room.Title} ({room.Coords.X},{room.Coords.Y},{room.Coords.Z})<br /></p>");
 
             // With brief toggled we don't show the room description
             if (!hasBrief)
@@ -102,12 +107,10 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
 
             _writeToClient.WriteLine(roomDesc.ToString(), player.ConnectionId);
-
         }
 
         public void LookInContainer(string target, Room room, Player player)
         {
-
             //check room, then check player if no match
             if (player.Status == CharacterStatus.Status.Sleeping)
             {
@@ -118,7 +121,8 @@ namespace ArchaicQuestII.GameLogic.World.Room
             var nthTarget = Helpers.findNth(target);
             var container = Helpers.findRoomObject(nthTarget, room) ?? Helpers.findObjectInInventory(nthTarget, player);
 
-            if (container != null && (container.ItemType != Item.Item.ItemTypes.Container && container.ItemType != Item.Item.ItemTypes.Cooking))
+            if (container != null && (container.ItemType != Item.Item.ItemTypes.Container &&
+                                      container.ItemType != Item.Item.ItemTypes.Cooking))
             {
                 if (container.ItemType == Item.Item.ItemTypes.Portal)
                 {
@@ -143,27 +147,24 @@ namespace ArchaicQuestII.GameLogic.World.Room
             }
 
             _writeToClient.WriteLine($"<p>{container.Name} contains:</p>", player.ConnectionId);
+            
             if (container.Container.Items.Count == 0)
             {
                 _writeToClient.WriteLine($"<p>Nothing.</p>", player.ConnectionId);
             }
 
             var isDark = RoomIsDark(room, player);
+            
             foreach (var obj in container.Container.Items.List(false))
             {
-                _writeToClient.WriteLine($"<span class='item {(isDark ? "room-dark" : "")}'>{obj.Name}</span>", player.ConnectionId);
+                _writeToClient.WriteLine($"<span class='item {(isDark ? "room-dark" : "")}'>{obj.Name}</span>",
+                    player.ConnectionId);
             }
-
-
-
-            foreach (var pc in room.Players)
+            
+            foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
             {
-                if (pc.Name == player.Name)
-                {
-                    continue;
-                }
-
-                _writeToClient.WriteLine($"<p>{player.Name} looks inside {container.Name.ToLower()}.</p>", pc.ConnectionId);
+                _writeToClient.WriteLine($"<p>{player.Name} looks inside {container.Name.ToLower()}.</p>",
+                    pc.ConnectionId);
             }
         }
 
@@ -188,19 +189,19 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 _writeToClient.WriteLine("You can't do that while asleep.", player.ConnectionId);
                 return;
             }
+
             var isDark = RoomIsDark(room, player);
             var nthTarget = Helpers.findNth(target);
 
             var item = Helpers.findRoomObject(nthTarget, room) ?? Helpers.findObjectInInventory(nthTarget, player);
             var character = Helpers.FindMob(nthTarget, room) ?? Helpers.FindPlayer(nthTarget, room);
-
-
+            
             RoomObject roomObjects = null;
             if (room.RoomObjects.Count >= 1 && room.RoomObjects[0].Name != null)
             {
                 roomObjects =
-                   room.RoomObjects.FirstOrDefault(x =>
-                       x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+                    room.RoomObjects.FirstOrDefault(x =>
+                        x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
             }
 
             if (target.Equals("self", StringComparison.CurrentCultureIgnoreCase))
@@ -217,7 +218,8 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
             if (item != null)
             {
-                _writeToClient.WriteLine($"<p  class='{(isDark ? "room-dark" : "")}'>{item.Description.Look}", player.ConnectionId);
+                _writeToClient.WriteLine($"<p  class='{(isDark ? "room-dark" : "")}'>{item.Description.Look}",
+                    player.ConnectionId);
 
                 // display item stats via lore
                 var hasLore = Helpers.FindSkill("lore", player);
@@ -236,47 +238,40 @@ namespace ArchaicQuestII.GameLogic.World.Room
                     }
                 }
 
-                if (item.Container != null && !item.Container.CanOpen && item.Container.Items.Any())
+                if (item.Container is { CanOpen: false } && item.Container.Items.Any())
                 {
-                    _writeToClient.WriteLine($"<p  class='{(isDark ? "room-dark" : "")}'>{item.Name} contains:", player.ConnectionId);
+                    _writeToClient.WriteLine($"<p  class='{(isDark ? "room-dark" : "")}'>{item.Name} contains:",
+                        player.ConnectionId);
 
                     var listOfContainerItems = new StringBuilder();
                     foreach (var containerItem in item.Container.Items.List())
                     {
-                        listOfContainerItems.Append($"<p class='{(isDark ? "room-dark" : "")} container-item'>{containerItem.Name.Replace(" lies here.", "")}</p>");
+                        listOfContainerItems.Append(
+                            $"<p class='{(isDark ? "room-dark" : "")} container-item'>{containerItem.Name.Replace(" lies here.", "")}</p>");
                     }
 
                     _writeToClient.WriteLine(listOfContainerItems.ToString(), player.ConnectionId);
 
                 }
 
-                foreach (var pc in room.Players)
+                foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
                 {
-                    if (pc.Name == player.Name)
-                    {
-                        continue;
-                    }
-
                     _writeToClient.WriteLine($"<p>{player.Name} looks at {item.Name.ToLower()}.</p>", pc.ConnectionId);
-
                 }
-                return;
 
+                return;
             }
+
             //for player?
             if (roomObjects != null)
             {
+                _writeToClient.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{roomObjects.Look}",
+                    player.ConnectionId);
 
-                _writeToClient.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{roomObjects.Look}", player.ConnectionId);
-
-                foreach (var pc in room.Players)
+                foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
                 {
-                    if (pc.Name == player.Name)
-                    {
-                        continue;
-                    }
-
-                    _writeToClient.WriteLine($"<p>{player.Name} looks at {roomObjects.Name.ToLower()}.</p>", pc.ConnectionId);
+                    _writeToClient.WriteLine($"<p>{player.Name} looks at {roomObjects.Name.ToLower()}.</p>",
+                        pc.ConnectionId);
                 }
 
                 return;
@@ -288,9 +283,8 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 return;
             }
 
-
-
             var sb = new StringBuilder();
+            
             if (character.ConnectionId != "mob")
             {
                 sb.Append(
@@ -303,10 +297,9 @@ namespace ArchaicQuestII.GameLogic.World.Room
                     $"<tr><td><span class='cell-title'>Face:</span> {character.Face}</td><td><span class='cell-title'>Hair Facial:</span> {character.FacialHair}</td></tr><table>");
             }
 
-
             var status = Enum.GetName(typeof(CharacterStatus.Status), player.Status);
 
-            var statusText = String.Empty;
+            var statusText = string.Empty;
 
             if (status.Equals("fighting", StringComparison.CurrentCultureIgnoreCase))
             {
@@ -315,151 +308,188 @@ namespace ArchaicQuestII.GameLogic.World.Room
             else
             {
                 statusText = $"{Enum.GetName(typeof(CharacterStatus.Status), player.Status)}.";
-
                 statusText = statusText.ToLower();
             }
+
             var displayEquipment = new StringBuilder();
             displayEquipment.Append("<p>They are using:</p>")
-                 .Append("<table>");
+                .Append("<table>");
 
             if (character.Equipped.Light != null)
             {
-                displayEquipment.Append("<tr><td style='width:175px;' class=\"cell-title\" title='Worn as light'>").Append("&lt;used as light&gt;").Append("</td>").Append("<td>").Append(character.Equipped.Light?.Name ?? "(nothing)").Append("</td></tr>");
+                displayEquipment.Append("<tr><td style='width:175px;' class=\"cell-title\" title='Worn as light'>")
+                    .Append("&lt;used as light&gt;").Append("</td>").Append("<td>")
+                    .Append(character.Equipped.Light?.Name ?? "(nothing)").Append("</td></tr>");
             }
 
             if (character.Equipped.Finger != null)
             {
-                displayEquipment.Append("<tr><td class=\"cell-title\" title='Worn on finger'>").Append(" &lt;worn on finger&gt;").Append("</td>").Append("<td>").Append(character.Equipped.Finger?.Name ?? "(nothing)").Append("</td></tr>");
+                displayEquipment.Append("<tr><td class=\"cell-title\" title='Worn on finger'>")
+                    .Append(" &lt;worn on finger&gt;").Append("</td>").Append("<td>")
+                    .Append(character.Equipped.Finger?.Name ?? "(nothing)").Append("</td></tr>");
             }
 
             if (character.Equipped.Finger2 != null)
             {
-                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn on finger'>").Append(" &lt;worn on finger&gt;").Append("</td>").Append("<td>").Append(character.Equipped.Finger2?.Name ?? "(nothing)").Append("</td></tr>");
+                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn on finger'>")
+                    .Append(" &lt;worn on finger&gt;").Append("</td>").Append("<td>")
+                    .Append(character.Equipped.Finger2?.Name ?? "(nothing)").Append("</td></tr>");
             }
 
             if (character.Equipped.Neck != null)
             {
-                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn around neck'>").Append(" &lt;worn around neck&gt;").Append("</td>").Append("<td>").Append(character.Equipped.Neck?.Name ?? "(nothing)").Append("</td></tr>");
+                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn around neck'>")
+                    .Append(" &lt;worn around neck&gt;").Append("</td>").Append("<td>")
+                    .Append(character.Equipped.Neck?.Name ?? "(nothing)").Append("</td></tr>");
             }
 
             if (character.Equipped.Neck2 != null)
             {
-                displayEquipment.Append("<tr><td class=\"cell-title\" title='Worn around neck'>").Append(" &lt;worn around neck&gt;").Append("</td>").Append("<td>").Append(character.Equipped.Neck2?.Name ?? "(nothing)").Append("</td></tr>");
+                displayEquipment.Append("<tr><td class=\"cell-title\" title='Worn around neck'>")
+                    .Append(" &lt;worn around neck&gt;").Append("</td>").Append("<td>")
+                    .Append(character.Equipped.Neck2?.Name ?? "(nothing)").Append("</td></tr>");
             }
 
             if (character.Equipped.Face != null)
             {
-                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn on face'>").Append(" &lt;worn on face&gt;").Append("</td>").Append("<td>").Append(character.Equipped.Face?.Name ?? "(nothing)").Append("</td></tr>");
+                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn on face'>")
+                    .Append(" &lt;worn on face&gt;").Append("</td>").Append("<td>")
+                    .Append(character.Equipped.Face?.Name ?? "(nothing)").Append("</td></tr>");
             }
 
             if (character.Equipped.Head != null)
             {
-                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn on head'>").Append(" &lt;worn on head&gt;").Append("</td>").Append("<td>").Append(character.Equipped.Head?.Name ?? "(nothing)").Append("</td></tr>");
+                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn on head'>")
+                    .Append(" &lt;worn on head&gt;").Append("</td>").Append("<td>")
+                    .Append(character.Equipped.Head?.Name ?? "(nothing)").Append("</td></tr>");
             }
 
             if (character.Equipped.Torso != null)
             {
-                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn on torso'>").Append(" &lt;worn on torso&gt;").Append("</td>").Append("<td>").Append(character.Equipped.Torso?.Name ?? "(nothing)").Append("</td></tr>");
+                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn on torso'>")
+                    .Append(" &lt;worn on torso&gt;").Append("</td>").Append("<td>")
+                    .Append(character.Equipped.Torso?.Name ?? "(nothing)").Append("</td></tr>");
             }
+
             if (character.Equipped.Legs != null)
             {
-                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn on legs'>").Append(" &lt;worn on legs&gt;").Append("</td>").Append("<td>").Append(character.Equipped.Legs?.Name ?? "(nothing)").Append("</td></tr>");
+                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn on legs'>")
+                    .Append(" &lt;worn on legs&gt;").Append("</td>").Append("<td>")
+                    .Append(character.Equipped.Legs?.Name ?? "(nothing)").Append("</td></tr>");
             }
+
             if (character.Equipped.Feet != null)
             {
-                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn on feet'>").Append(" &lt;worn on feet&gt;").Append("</td>").Append("<td>").Append(character.Equipped.Feet?.Name ?? "(nothing)").Append("</td></tr>");
+                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn on feet'>")
+                    .Append(" &lt;worn on feet&gt;").Append("</td>").Append("<td>")
+                    .Append(character.Equipped.Feet?.Name ?? "(nothing)").Append("</td></tr>");
             }
 
             if (character.Equipped.Hands != null)
             {
-                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn on hands'>").Append(" &lt;worn on hands&gt;").Append("</td>").Append("<td>").Append(character.Equipped.Hands?.Name ?? "(nothing)").Append("</td></tr>");
+                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn on hands'>")
+                    .Append(" &lt;worn on hands&gt;").Append("</td>").Append("<td>")
+                    .Append(character.Equipped.Hands?.Name ?? "(nothing)").Append("</td></tr>");
             }
 
             if (character.Equipped.Arms != null)
             {
-                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn on arms'>").Append(" &lt;worn on arms&gt;").Append("</td>").Append("<td>").Append(character.Equipped.Arms?.Name ?? "(nothing)").Append("</td></tr>");
+                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn on arms'>")
+                    .Append(" &lt;worn on arms&gt;").Append("</td>").Append("<td>")
+                    .Append(character.Equipped.Arms?.Name ?? "(nothing)").Append("</td></tr>");
             }
 
             if (character.Equipped.AboutBody != null)
             {
-                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn about body'>").Append(" &lt;worn about body&gt;").Append("</td>").Append("<td>").Append(Helpers.DisplayEQNameWithFlags(character.Equipped.AboutBody) ?? "(nothing)").Append("</td></tr>");
+                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn about body'>")
+                    .Append(" &lt;worn about body&gt;").Append("</td>").Append("<td>")
+                    .Append(Helpers.DisplayEQNameWithFlags(character.Equipped.AboutBody) ?? "(nothing)")
+                    .Append("</td></tr>");
             }
 
             if (character.Equipped.Waist != null)
             {
-                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn on waist'>").Append(" &lt;worn about waist&gt;").Append("</td>").Append("<td>").Append(character.Equipped.Waist?.Name ?? "(nothing)").Append("</td></tr>");
+                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn on waist'>")
+                    .Append(" &lt;worn about waist&gt;").Append("</td>").Append("<td>")
+                    .Append(character.Equipped.Waist?.Name ?? "(nothing)").Append("</td></tr>");
             }
 
             if (character.Equipped.Wrist != null)
             {
-                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn on wrist'>").Append(" &lt;worn around wrist&gt;").Append("</td>").Append("<td>").Append(character.Equipped.Wrist?.Name ?? "(nothing)").Append("</td></tr>");
+                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn on wrist'>")
+                    .Append(" &lt;worn around wrist&gt;").Append("</td>").Append("<td>")
+                    .Append(character.Equipped.Wrist?.Name ?? "(nothing)").Append("</td></tr>");
             }
 
             if (character.Equipped.Wrist2 != null)
             {
-                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn on wrist'>").Append(" &lt;worn around wrist&gt;").Append("</td>").Append("<td>").Append(character.Equipped.Wrist2?.Name ?? "(nothing)").Append("</td></tr>");
+                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn on wrist'>")
+                    .Append(" &lt;worn around wrist&gt;").Append("</td>").Append("<td>")
+                    .Append(character.Equipped.Wrist2?.Name ?? "(nothing)").Append("</td></tr>");
             }
-
 
             if (character.Equipped.Wielded != null)
             {
-                displayEquipment.Append("<tr><td  class=\"cell-title\" title='worn as weapon'>").Append(" &lt;wielded&gt;").Append("</td>").Append("<td>")
-                 .Append(character.Equipped.Wielded?.Name ?? "(nothing)").Append("</td></tr>");
+                displayEquipment.Append("<tr><td  class=\"cell-title\" title='worn as weapon'>")
+                    .Append(" &lt;wielded&gt;").Append("</td>").Append("<td>")
+                    .Append(character.Equipped.Wielded?.Name ?? "(nothing)").Append("</td></tr>");
             }
-
-
+            
             if (character.Equipped.Secondary != null)
             {
-                displayEquipment.Append("<tr><td  class=\"cell-title\" title='worn as weapon'>").Append(" &lt;secondary&gt;").Append("</td>").Append("<td>")
-            .Append(character.Equipped.Secondary?.Name ?? "(nothing)").Append("</td></tr>");
+                displayEquipment.Append("<tr><td  class=\"cell-title\" title='worn as weapon'>")
+                    .Append(" &lt;secondary&gt;").Append("</td>").Append("<td>")
+                    .Append(character.Equipped.Secondary?.Name ?? "(nothing)").Append("</td></tr>");
             }
-
 
             if (character.Equipped.Shield != null)
             {
-                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn as shield'>").Append(" &lt;worn as shield&gt;").Append("</td>").Append("<td>").Append(character.Equipped.Shield?.Name ?? "(nothing)").Append("</td></tr>");
+                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Worn as shield'>")
+                    .Append(" &lt;worn as shield&gt;").Append("</td>").Append("<td>")
+                    .Append(character.Equipped.Shield?.Name ?? "(nothing)").Append("</td></tr>");
             }
 
             if (character.Equipped.Held != null)
             {
-                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Held'>").Append(" &lt;Held&gt;").Append("</td>").Append("<td>").Append(character.Equipped.Held?.Name ?? "(nothing)").Append("</td></tr>");
+                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Held'>").Append(" &lt;Held&gt;")
+                    .Append("</td>").Append("<td>").Append(character.Equipped.Held?.Name ?? "(nothing)")
+                    .Append("</td></tr>");
             }
 
             if (character.Equipped.Floating != null)
             {
-                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Floating Nearby'>").Append(" &lt;Floating nearby&gt;").Append("</td>").Append("<td>").Append(character.Equipped.Floating?.Name ?? "(nothing)").Append("</td></tr>").Append("</table");
+                displayEquipment.Append("<tr><td  class=\"cell-title\" title='Floating Nearby'>")
+                    .Append(" &lt;Floating nearby&gt;").Append("</td>").Append("<td>")
+                    .Append(character.Equipped.Floating?.Name ?? "(nothing)").Append("</td></tr>").Append("</table");
             }
 
-            if (character.Equipped.Light == null && character.Equipped.Finger == null && character.Equipped.Finger2 == null && character.Equipped.Neck == null && character.Equipped.Neck2 == null &&
-                character.Equipped.Face == null && character.Equipped.Head == null && character.Equipped.Torso == null && character.Equipped.Legs == null && character.Equipped.Feet == null &&
-                character.Equipped.Hands == null && character.Equipped.Arms == null && character.Equipped.AboutBody == null && character.Equipped.Waist == null && character.Equipped.Wrist == null &&
-                character.Equipped.Wrist2 == null && character.Equipped.Wielded == null && character.Equipped.Secondary == null && character.Equipped.Shield == null && character.Equipped.Held == null &&
+            if (character.Equipped.Light == null && character.Equipped.Finger == null &&
+                character.Equipped.Finger2 == null && character.Equipped.Neck == null &&
+                character.Equipped.Neck2 == null &&
+                character.Equipped.Face == null && character.Equipped.Head == null &&
+                character.Equipped.Torso == null && character.Equipped.Legs == null &&
+                character.Equipped.Feet == null &&
+                character.Equipped.Hands == null && character.Equipped.Arms == null &&
+                character.Equipped.AboutBody == null && character.Equipped.Waist == null &&
+                character.Equipped.Wrist == null &&
+                character.Equipped.Wrist2 == null && character.Equipped.Wielded == null &&
+                character.Equipped.Secondary == null && character.Equipped.Shield == null &&
+                character.Equipped.Held == null &&
                 character.Equipped.Held == null && character.Equipped.Floating == null)
             {
 
                 displayEquipment.Append("</table").Append("<p>Nothing.</p>");
             }
 
-
-
-            _writeToClient.WriteLine($"{sb}<p class='{(isDark ? "room-dark" : "")}'>{character.Description} <br/>{character.Name} {_formulas.TargetHealth(player, character)} and is {statusText}<br/> {displayEquipment}", player.ConnectionId);
-
-
-
-
-            foreach (var pc in room.Players)
+            _writeToClient.WriteLine(
+                $"{sb}<p class='{(isDark ? "room-dark" : "")}'>{character.Description} <br/>{character.Name} {_formulas.TargetHealth(player, character)} and is {statusText}<br/> {displayEquipment}",
+                player.ConnectionId);
+            
+            foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
             {
-                if (pc.Name == player.Name)
-                {
-                    continue;
-                }
-
                 _writeToClient.WriteLine($"<p>{player.Name} looks at {character.Name.ToLower()}.</p>", pc.ConnectionId);
             }
-
-
-
-
+            
             //if (item.ItemType == Item.Item.ItemTypes.Container)
             //{
             //  LookInContainer(target, room, player);
@@ -484,17 +514,17 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 LookObject(target, room, player);
                 return;
             }
-            RoomObject roomObjects = null;
-
 
             var isDark = RoomIsDark(room, player);
+            
             if (item == null && room.RoomObjects.Count >= 1 && room.RoomObjects[0].Name != null)
             {
-                roomObjects =
-                    room.RoomObjects.FirstOrDefault(x =>
-                        x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+                var roomObjects = room.RoomObjects.FirstOrDefault(x =>
+                    x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
 
-                _writeToClient.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{roomObjects.Examine ?? roomObjects.Look}", player.ConnectionId);
+                _writeToClient.WriteLine(
+                    $"<p class='{(isDark ? "room-dark" : "")}'>{roomObjects.Examine ?? roomObjects.Look}",
+                    player.ConnectionId);
 
                 return;
             }
@@ -510,20 +540,11 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 : item.Description.Exam;
             _writeToClient.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{examMessage}", player.ConnectionId);
 
-            foreach (var pc in room.Players)
+            foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
             {
-                if (pc.Name == player.Name)
-                {
-                    continue;
-                }
-
                 _writeToClient.WriteLine($"<p>{player.Name} examines {item.Name.ToLower()}.</p>", pc.ConnectionId);
             }
-
-
-
-
-
+            
             //if (item.ItemType == Item.Item.ItemTypes.Container)
             //{
             //    _writeToClient.WriteLine($"<p>You look inside {item.Name}", player.ConnectionId);
@@ -544,24 +565,20 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
             var nthTarget = Helpers.findNth(target);
             var item = Helpers.findRoomObject(nthTarget, room) ?? Helpers.findObjectInInventory(nthTarget, player);
-
-
+            
             if (item == null)
             {
                 _writeToClient.WriteLine("<p>You don't see that here.", player.ConnectionId);
                 return;
             }
+
             var isDark = RoomIsDark(room, player);
 
-            _writeToClient.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{item.Description.Smell}", player.ConnectionId);
+            _writeToClient.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{item.Description.Smell}",
+                player.ConnectionId);
 
-            foreach (var pc in room.Players)
+            foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
             {
-                if (pc.Name == player.Name)
-                {
-                    continue;
-                }
-
                 _writeToClient.WriteLine($"<p>{player.Name} smells {item.Name.ToLower()}.</p>", pc.ConnectionId);
             }
         }
@@ -576,8 +593,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
             var nthTarget = Helpers.findNth(target);
             var item = Helpers.findRoomObject(nthTarget, room) ?? Helpers.findObjectInInventory(nthTarget, player);
-
-
+            
             if (item == null)
             {
                 _writeToClient.WriteLine("<p>You don't see that here.", player.ConnectionId);
@@ -586,19 +602,13 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
             var isDark = RoomIsDark(room, player);
 
-            _writeToClient.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{item.Description.Taste}", player.ConnectionId);
-
-
-            foreach (var pc in room.Players)
+            _writeToClient.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{item.Description.Taste}",
+                player.ConnectionId);
+            
+            foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
             {
-                if (pc.Name == player.Name)
-                {
-                    continue;
-                }
-
                 _writeToClient.WriteLine($"<p>{player.Name} tastes {item.Name.ToLower()}.</p>", pc.ConnectionId);
             }
-
         }
 
         public void TouchObject(string target, Room room, Player player)
@@ -608,8 +618,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 _writeToClient.WriteLine("You can't do that while asleep.", player.ConnectionId);
                 return;
             }
-
-
+            
             var nthTarget = Helpers.findNth(target);
             var item = Helpers.findRoomObject(nthTarget, room) ?? Helpers.findObjectInInventory(nthTarget, player);
 
@@ -621,23 +630,17 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
             var isDark = RoomIsDark(room, player);
 
-            _writeToClient.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{item.Description.Touch}", player.ConnectionId);
+            _writeToClient.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{item.Description.Touch}",
+                player.ConnectionId);
 
-            foreach (var pc in room.Players)
+            foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
             {
-                if (pc.Name == player.Name)
-                {
-                    continue;
-                }
-
                 _writeToClient.WriteLine($"<p>{player.Name} feels {item.Name.ToLower()}.</p>", pc.ConnectionId);
             }
-
         }
 
         public Item.Item GetItemAttributes(int index, Room room)
         {
-
             return room.Items.FirstOrDefault(x => x.Id.Equals(index));
         }
 
@@ -646,26 +649,23 @@ namespace ArchaicQuestII.GameLogic.World.Room
             var isDark = RoomIsDark(room, player);
             var items = room.Items.List();
             var x = string.Empty;
-            int index = 0;
+
             foreach (var item in items)
             {
                 if (!string.IsNullOrEmpty(item.Name))
                 {
-
                     var i = GetItemAttributes(item.Id, room);
                     var keyword = i.Name.Split(" ");
 
-                    var data = $"{{detail: {{name: \" {HtmlEncoder.Default.Encode(i.Name)}\", desc: \"{HtmlEncoder.Default.Encode(i.Description.Look)}\", type: \"{i.ItemType}\", canOpen: \"{i.Container.CanOpen}\", isOpen: \"{i.Container.IsOpen}\", keyword: \"{HtmlEncoder.Default.Encode(keyword[keyword.Length - 1])}\"}}}}";
+                    var data =
+                        $"{{detail: {{name: \" {HtmlEncoder.Default.Encode(i.Name)}\", desc: \"{HtmlEncoder.Default.Encode(i.Description.Look)}\", type: \"{i.ItemType}\", canOpen: \"{i.Container.CanOpen}\", isOpen: \"{i.Container.IsOpen}\", keyword: \"{HtmlEncoder.Default.Encode(keyword[keyword.Length - 1])}\"}}}}";
 
                     var clickEvent = $"window.dispatchEvent(new CustomEvent(\"open-detail\", {data}))";
                     x += $"<p onClick='{clickEvent}' class='item {(isDark ? "dark-room" : "")}' >{item.Name}</p>";
                 }
-                index++;
-
             }
 
             return x;
-
         }
 
         public string DisplayMobs(Room room, Player player)
@@ -674,9 +674,9 @@ namespace ArchaicQuestII.GameLogic.World.Room
             var mobName = string.Empty;
             var isDark = RoomIsDark(room, player);
             var isFightingPC = false;
+            
             foreach (var mob in room.Mobs.Where(x => x.IsHiddenScriptMob == false))
             {
-
                 if (!string.IsNullOrEmpty(mob.LongName))
                 {
                     mobName = mob.LongName;
@@ -690,12 +690,11 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 {
                     mobName += " tosses it's mane and snorts";
                 }
-                
+
                 if (player.Target == mob.Name)
                 {
-                    isFightingPC = true; 
+                    isFightingPC = true;
                 }
-                
 
                 if (!string.IsNullOrEmpty(mob.LongName))
                 {
@@ -712,15 +711,12 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 }
                 else
                 {
-                    mobs += $"<p class='mob {(isDark ? "dark-room" : "")}'>{mobName} is here{(isFightingPC ? " fighting YOU!" : ".")}.</p>";
+                    mobs +=
+                        $"<p class='mob {(isDark ? "dark-room" : "")}'>{mobName} is here{(isFightingPC ? " fighting YOU!" : ".")}.</p>";
                 }
-
-              
-
             }
 
             return mobs;
-
         }
 
         public bool RoomIsDark(Room room, Player player)
@@ -730,7 +726,8 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 return false;
             }
 
-            if (room.Type == Room.RoomType.Inside || room.Type == Room.RoomType.Town || room.Type == Room.RoomType.Shop || room.Type == Room.RoomType.Guild)
+            if (room.Type == Room.RoomType.Inside || room.Type == Room.RoomType.Town ||
+                room.Type == Room.RoomType.Shop || room.Type == Room.RoomType.Guild)
             {
                 return false;
             }
@@ -759,27 +756,22 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
             return skillLevel >= chance;
         }
-        
+
         public string DisplayPlayers(Room room, Player player)
         {
             var players = string.Empty;
             var isNightTime = RoomIsDark(room, player);
             var pcName = string.Empty;
 
-            foreach (var pc in room.Players)
+            foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
             {
-                if (pc.Name == player.Name)
-                {
-                    continue;
-                }
-
                 if (string.IsNullOrEmpty(pc.LongName))
                 {
-                    pcName = $"{ pc.Name}";
+                    pcName = $"{pc.Name}";
                 }
                 else
                 {
-                    pcName = $"{ pc.Name} {pc.LongName}";
+                    pcName = $"{pc.Name} {pc.LongName}";
                 }
 
                 if (!string.IsNullOrEmpty(pc.Mounted.Name))
@@ -789,22 +781,15 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 else if (string.IsNullOrEmpty(pc.LongName))
                 {
                     pcName += " is here";
-
                 }
 
                 pcName += pc.Pose;
-
-
-
-
                 players += $"<p class='player {(isNightTime ? "dark-room" : "")}'>{pcName}.</p>";
             }
 
             return players;
-
         }
-
-
+        
         public string GetRoom(Exit exit)
         {
             if (exit == null)
@@ -812,13 +797,11 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 return "";
             }
 
-
-            var RoomId = $"{exit.AreaId}{exit.Coords.X}{exit.Coords.Y}{exit.Coords.Z}";
-            var room = _cache.GetRoom(RoomId);
+            var roomId = $"{exit.AreaId}{exit.Coords.X}{exit.Coords.Y}{exit.Coords.Z}";
+            var room = _cache.GetRoom(roomId);
 
             return room.Title;
         }
-
 
         /// <summary>
         /// Displays valid exits
@@ -832,28 +815,23 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
             if (room.Exits.North != null)
             {
-
-                var clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"n\"}))";
+                const string clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"n\"}))";
                 exits.Add(verbose
                     ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.North)} </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.North)}</a></td></tr>"
                     : Helpers.DisplayDoor(room.Exits.North));
             }
-
-
-
-            if (room.Exits.East != null && room.Exits.East.Coords != null)
+            
+            if (room.Exits.East is { Coords: { } })
             {
-                var clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"e\"}))";
+                const string clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"e\"}))";
                 exits.Add(verbose
                     ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.East)} </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.East)}</a></td></tr>"
                     : Helpers.DisplayDoor(room.Exits.East));
             }
-
-
-
+            
             if (room.Exits.South != null)
             {
-                var clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"s\"}))";
+                const string clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"s\"}))";
                 exits.Add(verbose
                     ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.South)} </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.South)}</a></td></tr>"
                     : Helpers.DisplayDoor(room.Exits.South));
@@ -861,7 +839,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
             if (room.Exits.West != null)
             {
-                var clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"w\"}))";
+                const string clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"w\"}))";
                 exits.Add(verbose
                     ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.West)} </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.West)}</a></td></tr>"
                     : Helpers.DisplayDoor(room.Exits.West));
@@ -869,7 +847,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
             if (room.Exits.NorthEast != null)
             {
-                var clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"ne\"}))";
+                const string clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"ne\"}))";
                 exits.Add(verbose
                     ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.NorthEast)}  </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.NorthEast)}</a></td></tr>"
                     : Helpers.DisplayDoor(room.Exits.NorthEast));
@@ -877,7 +855,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
             if (room.Exits.SouthEast != null)
             {
-                var clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"se\"}))";
+                const string clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"se\"}))";
                 exits.Add(verbose
                     ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.SouthEast)}  </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.SouthEast)}</a></td></tr>"
                     : Helpers.DisplayDoor(room.Exits.SouthEast));
@@ -885,7 +863,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
             if (room.Exits.SouthWest != null)
             {
-                var clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"sw\"}))";
+                const string clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"sw\"}))";
                 exits.Add(verbose
                     ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.SouthWest)}  </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.SouthWest)}</a></td></tr>"
                     : Helpers.DisplayDoor(room.Exits.SouthWest));
@@ -893,7 +871,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
             if (room.Exits.NorthWest != null)
             {
-                var clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"nw\"}))";
+                const string clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"nw\"}))";
                 exits.Add(verbose
                     ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.NorthWest)}  </td> <td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.NorthWest)}</a></td></tr>"
                     : Helpers.DisplayDoor(room.Exits.NorthWest));
@@ -901,7 +879,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
             if (room.Exits.Down != null)
             {
-                var clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"d\"}))";
+                const string clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"d\"}))";
                 exits.Add(verbose
                     ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.Down)}  </td> <td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.Down)}</a></td></tr>"
                     : Helpers.DisplayDoor(room.Exits.Down));
@@ -909,20 +887,17 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
             if (room.Exits.Up != null)
             {
-                var clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"u\"}))";
+                const string clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"u\"}))";
                 exits.Add(verbose
                     ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.Up)}  </td> <td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.Up)}</a></td></tr>"
                     : Helpers.DisplayDoor(room.Exits.Up));
             }
 
-
-
             if (exits.Count <= 0)
             {
                 exits.Add("None");
             }
-
-
+            
             foreach (var exit in exits)
             {
                 if (!verbose)
@@ -933,17 +908,236 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 {
                     exitList += exit;
                 }
-
             }
+
             if (!verbose)
             {
                 exitList = exitList.Remove(exitList.Length - 2);
-
             }
-            return exitList;
 
+            return exitList;
         }
 
 
+        /// <summary>
+        /// Used to Change Player room
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="oldRoom"></param>
+        /// <param name="newRoom"></param>
+        public void RoomChange(Player player, Room oldRoom, Room newRoom)
+        {
+            player.Pose = "";
+            
+            if (oldRoom.Mobs.Any())
+            {
+                OnPlayerLeaveEvent(oldRoom, player);
+            }
+
+            ExitRoom(player, oldRoom, newRoom);
+            
+            UpdateCharactersLocation(player, oldRoom, newRoom);
+            
+            EnterRoom(player, newRoom, oldRoom);
+            
+            if (newRoom.Mobs.Any())
+            {
+                OnPlayerEnterEvent(newRoom, player);
+            }
+
+            _updateClient.GetMap(player, _cache.GetMap($"{newRoom.AreaId}{newRoom.Coords.Z}"));
+            _updateClient.UpdateMoves(player);
+            
+            Look("", newRoom, player, player.Config.Brief);
+        }
+
+        private void UpdateCharactersLocation(Player character, Room oldRoom, Room newRoom)
+        {
+            if (character.ConnectionId != "mob")
+            {
+                // remove player from room
+                oldRoom.Players.Remove(character);
+
+                //add player to room
+                character.RoomId = $"{newRoom.AreaId}{newRoom.Coords.X}{newRoom.Coords.Y}{newRoom.Coords.Z}";
+                newRoom.Players.Add(character);
+
+                //player entered new area TODO: Add area announce
+                //if(oldRoom.AreaId != newRoom.AreaId)
+                //    _areaActions.AreaEntered(player, newRoom);
+            }
+            else
+            {
+                // remove mob from room
+                oldRoom.Mobs.Remove(character);
+
+                //add mob to room
+                character.RoomId = $"{newRoom.AreaId}{newRoom.Coords.X}{newRoom.Coords.Y}{newRoom.Coords.Z}";
+                newRoom.Mobs.Add(character);
+            }
+        }
+
+        private void EnterRoom(Player character, Room toRoom, Room fromRoom)
+        {
+            var direction = "from nowhere";
+            var movement = "appears";
+
+            if (toRoom.Exits.Down.RoomId == fromRoom.Id)
+                direction = "down";
+            if (toRoom.Exits.Up.RoomId == fromRoom.Id)
+                direction = "up";
+            if (toRoom.Exits.North.RoomId == fromRoom.Id)
+                direction = "in from the north";
+            if (toRoom.Exits.South.RoomId == fromRoom.Id)
+                direction = "in form the south";
+            if (toRoom.Exits.East.RoomId == fromRoom.Id)
+                direction = "in from the east";
+            if (toRoom.Exits.West.RoomId == fromRoom.Id)
+                direction = "in from the west";
+            if (toRoom.Exits.NorthEast.RoomId == fromRoom.Id)
+                direction = "in from the northeast";
+            if (toRoom.Exits.NorthWest.RoomId == fromRoom.Id)
+                direction = "in from the northwest";
+            if (toRoom.Exits.SouthEast.RoomId == fromRoom.Id)
+                direction = "in from the southeast";
+            if (toRoom.Exits.SouthWest.RoomId == fromRoom.Id)
+                direction = "in from the southwest";
+
+            switch (character.Status)
+            {
+                case CharacterStatus.Status.Floating:
+                    movement = "floats";
+                    break;
+                case CharacterStatus.Status.Mounted:
+                    movement = "rides";
+                    break;
+                case CharacterStatus.Status.Fleeing:
+                    movement = "flees";
+                    character.Status = CharacterStatus.Status.Standing;
+                    break;
+                case CharacterStatus.Status.Standing:
+                    _updateClient.PlaySound("walk", character);
+                    movement = "walks";
+                    break;
+            }
+
+            foreach (var p in fromRoom.Players.Where(p => character.Name != p.Name))
+            {
+                _writeToClient.WriteLine(
+                    $"<span class='{(character.ConnectionId != "mob" ? "player" : "mob")}'>{character.Name} {movement} {direction}.</span>",
+                    p.ConnectionId);
+            }
+        }
+
+        private void ExitRoom(Player characterBase, Room toRoom, Room fromRoom)
+        {
+            var direction = "from nowhere";
+            var movement = "appears";
+
+            if (fromRoom.Exits.Down.RoomId == toRoom.Id)
+                direction = "down";
+            if (fromRoom.Exits.Up.RoomId == toRoom.Id)
+                direction = "up";
+            if (fromRoom.Exits.North.RoomId == toRoom.Id)
+                direction = "to the north";
+            if (fromRoom.Exits.South.RoomId == toRoom.Id)
+                direction = "to the south";
+            if (fromRoom.Exits.East.RoomId == toRoom.Id)
+                direction = "to the east";
+            if (fromRoom.Exits.West.RoomId == toRoom.Id)
+                direction = "to the west";
+            if (fromRoom.Exits.NorthEast.RoomId == toRoom.Id)
+                direction = "to the northeast";
+            if (fromRoom.Exits.NorthWest.RoomId == toRoom.Id)
+                direction = "to the northwest";
+            if (fromRoom.Exits.SouthEast.RoomId == toRoom.Id)
+                direction = "to the southeast";
+            if (fromRoom.Exits.SouthWest.RoomId == toRoom.Id)
+                direction = "to the southwest";
+
+            switch (characterBase.Status)
+            {
+                case CharacterStatus.Status.Floating:
+                    movement = "floats";
+                    break;
+                case CharacterStatus.Status.Mounted:
+                    movement = "rides";
+                    break;
+                case CharacterStatus.Status.Fleeing:
+                    movement = "flees";
+                    characterBase.Status = CharacterStatus.Status.Standing;
+                    break;
+                case CharacterStatus.Status.Standing:
+                    movement = "walks";
+                    break;
+            }
+
+            foreach (var p in fromRoom.Players.Where(p => characterBase.Name != p.Name))
+            {
+                _writeToClient.WriteLine(
+                    $"<span class='{(characterBase.ConnectionId != "mob" ? "player" : "mob")}'>{characterBase.Name} {movement} {direction}.</span>",
+                    p.ConnectionId);
+            }
+        }
+
+        private void OnPlayerLeaveEvent(Room room, Player character)
+        {
+            foreach (var mob in room.Mobs.Where(mob => !string.IsNullOrEmpty(mob.Events.Leave)))
+            {
+                UserData.RegisterType<MobScripts>();
+
+                var script = new Script();
+
+                var obj = UserData.Create(_mobScripts);
+                script.Globals.Set("obj", obj);
+                UserData.RegisterProxyType<MyProxy, Room>(r => new MyProxy(room));
+                UserData.RegisterProxyType<ProxyPlayer, Player>(r => new ProxyPlayer(character));
+                    
+                script.Globals["room"] = room;
+                script.Globals["player"] = character;
+                script.Globals["mob"] = mob;
+                    
+                var res = script.DoString(mob.Events.Leave);
+            }
+        }
+
+        private void OnPlayerEnterEvent(Room room, Player character)
+        {
+            foreach (var mob in room.Mobs)
+            {
+                if (!string.IsNullOrEmpty(mob.Events.Enter))
+                {
+                    try
+                    {
+                        UserData.RegisterType<MobScripts>();
+
+                        var script = new Script();
+
+                        var obj = UserData.Create(_mobScripts);
+                        script.Globals.Set("obj", obj);
+                        UserData.RegisterProxyType<MyProxy, Room>(r => new MyProxy(room));
+                        UserData.RegisterProxyType<ProxyPlayer, Player>(r => new ProxyPlayer(character));
+
+
+                        script.Globals["room"] = room;
+
+                        script.Globals["player"] = character;
+                        script.Globals["mob"] = mob;
+
+                        var res = script.DoString(mob.Events.Enter);
+                    }
+                    catch (Exception)
+                    {
+
+                    }
+                }
+
+                if (mob.Agro && mob.Status != CharacterStatus.Status.Fighting && character.ConnectionId != "mob")
+                {
+                    _writeToClient.WriteLine($"{mob.Name} attacks you!", character.ConnectionId);
+                    _mobScripts.AttackPlayer(room, character, mob);
+                }
+            }
+        }
     }
 }

@@ -10,7 +10,6 @@ namespace ArchaicQuestII.API.Configuration.IoC.GameLogicExtensions
                     .AddCharacterLogic()
                     .AddCombatLogic()
                     .AddCrafting()
-                    .AddGameCommands()
                     .AddItems()
                     .AddSkills()
                     .AddSpells()

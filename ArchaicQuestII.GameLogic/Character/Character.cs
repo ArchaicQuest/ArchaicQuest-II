@@ -195,5 +195,8 @@ namespace ArchaicQuestII.GameLogic.Character
         public List<Player> Pets { get; set; } = new List<Player>(); //maybe just ID will suffice?
         public List<MobSpellList> SpellList { get; set; } = new List<MobSpellList>();
         public bool Agro { get; set; } = false;
+        
+        [JsonProperty("flags")]
+        public List<CharacterFlags> Flags { get; set; } = new ();
     }
 }

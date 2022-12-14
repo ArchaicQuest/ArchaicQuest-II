@@ -5,8 +5,6 @@ using System.Text;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Status;
-using ArchaicQuestII.GameLogic.Commands.Objects;
-using ArchaicQuestII.GameLogic.Commands.Skills;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.World.Room;
 
@@ -18,14 +16,12 @@ namespace ArchaicQuestII.GameLogic.Crafting
         private ICache _cache;
         private IGain _gain;
         private IUpdateClientUI _clientUi;
-        private ISkills _skills;
-        public Crafting(IWriteToClient writeToClient, ICache cache, IGain gain, IUpdateClientUI clientUi, ISkills skills)
+        public Crafting(IWriteToClient writeToClient, ICache cache, IGain gain, IUpdateClientUI clientUi)
         {
             _writeToClient = writeToClient;
             _cache = cache;
             _gain = gain;
             _clientUi = clientUi;
-            _skills = skills;
         }
         public void ListCrafts(Player player)
         {
@@ -123,7 +119,7 @@ namespace ArchaicQuestII.GameLogic.Crafting
             }
             _writeToClient.WriteLine($"<p>You begin crafting {Helpers.AddArticle(recipe.Title).ToLower()}.</p>", player.ConnectionId);
 
-            var success = _skills.SuccessCheck(player, "crafting");
+            var success = Helpers.SkillSuccessCheck(player, "crafting");
 
             if (success)
             {
@@ -196,12 +192,8 @@ namespace ArchaicQuestII.GameLogic.Crafting
                         player.ConnectionId, 2000);
                 }
 
-                _skills.LearnMistakes(player, "Crafting", 2000);
+                Helpers.SkillLearnMistakes(player, "Crafting", _gain, 2000);
             }
-
-
-
-
         }
 
         public List<CraftingRecipes> ReturnValidRecipes(Player player)

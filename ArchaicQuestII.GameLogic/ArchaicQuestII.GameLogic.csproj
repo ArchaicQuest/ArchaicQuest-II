@@ -34,7 +34,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Commands\Character\" />
+      <Folder Include="Commands\Utility" />
       <Folder Include="Skill\Type\" />
     </ItemGroup>
 

@@ -1,12 +1,9 @@
 ﻿using Moq;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Status;
-using ArchaicQuestII.GameLogic.Commands.Skills;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Crafting;
 using ArchaicQuestII.GameLogic.Item;
@@ -21,7 +18,6 @@ namespace ArchaicQuestII.GameLogic.Tests.Crafting
         private readonly Mock<ICache> _cache;
         private readonly Mock<IUpdateClientUI> _updateClientUi;
         private readonly Mock<IGain> _gain;
-        private readonly Mock<ISkills> _skills;
 
         public CraftingTest()
         {
@@ -29,7 +25,6 @@ namespace ArchaicQuestII.GameLogic.Tests.Crafting
             _cache = new Mock<ICache>();
             _updateClientUi = new Mock<IUpdateClientUI>();
             _gain = new Mock<IGain>();
-            _skills = new Mock<ISkills>();
         }
 
         [Fact]
@@ -44,7 +39,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Crafting
                 Inventory = new ItemList()
             };
 
-            new GameLogic.Crafting.Crafting(_writer.Object, _cache.Object, _gain.Object, _updateClientUi.Object, _skills.Object).ListCrafts(player);
+            new GameLogic.Crafting.Crafting(_writer.Object, _cache.Object, _gain.Object, _updateClientUi.Object).ListCrafts(player);
 
             _writer.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("<p>You can't do that while sleeping.</p>")), "1"), Times.Once());
         }
@@ -61,7 +56,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Crafting
                 Inventory = new ItemList()
             };
 
-            new GameLogic.Crafting.Crafting(_writer.Object, _cache.Object, _gain.Object, _updateClientUi.Object, _skills.Object).ListCrafts(player);
+            new GameLogic.Crafting.Crafting(_writer.Object, _cache.Object, _gain.Object, _updateClientUi.Object).ListCrafts(player);
 
             _writer.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("<p>You don't have any materials to craft a thing.</p>")), "1"), Times.Once());
         }
@@ -84,7 +79,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Crafting
                 Inventory = new ItemList() { item }
             };
 
-            new GameLogic.Crafting.Crafting(_writer.Object, _cache.Object, _gain.Object, _updateClientUi.Object, _skills.Object).ListCrafts(player);
+            new GameLogic.Crafting.Crafting(_writer.Object, _cache.Object, _gain.Object, _updateClientUi.Object).ListCrafts(player);
 
             _writer.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("<p>No crafting recipes have been set up.</p>")), "1"), Times.Once());
         }
@@ -125,7 +120,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Crafting
             listOfRecipes.Add(recipe);
             _cache.Setup(x => x.GetCraftingRecipes()).Returns(listOfRecipes);
 
-            new GameLogic.Crafting.Crafting(_writer.Object, _cache.Object, _gain.Object, _updateClientUi.Object, _skills.Object).ListCrafts(player);
+            new GameLogic.Crafting.Crafting(_writer.Object, _cache.Object, _gain.Object, _updateClientUi.Object).ListCrafts(player);
 
             var sb = new StringBuilder();
             sb.Append("<p>You can craft the following items:</p>");
@@ -172,7 +167,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Crafting
             listOfRecipes.Add(recipe);
             _cache.Setup(x => x.GetCraftingRecipes()).Returns(listOfRecipes);
 
-            new GameLogic.Crafting.Crafting(_writer.Object, _cache.Object, _gain.Object, _updateClientUi.Object, _skills.Object).ListCrafts(player);
+            new GameLogic.Crafting.Crafting(_writer.Object, _cache.Object, _gain.Object, _updateClientUi.Object).ListCrafts(player);
 
             _writer.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("<p>No crafting recipes found with the current materials you have.</p>")), "1"), Times.Once());
         }
