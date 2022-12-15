@@ -29,7 +29,14 @@ namespace ArchaicQuestII.GameLogic.Commands
 
                 foreach (var alias in command.Aliases)
                 {
-                    Core.Cache.AddCommand(alias, command);
+                    if (Core.Cache.IsCommand(alias))
+                    {
+                        //TODO: Log this;
+                    }
+                    else
+                    {
+                        Core.Cache.AddCommand(alias, command);
+                    }
                 }
             }
         }
@@ -43,8 +50,10 @@ namespace ArchaicQuestII.GameLogic.Commands
         public void HandleCommand(Player player, Room room, string input)
         {
             var commandInput = input.Split(' ', StringSplitOptions.RemoveEmptyEntries);;
-            
-            if (!Core.Cache.GetCommand(commandInput[0].ToLower(), out var command))
+
+            var command = Core.Cache.GetCommand(commandInput[0].ToLower());
+
+            if (command == null)
             {
                 Core.Writer.WriteLine("That is not a command.", player.ConnectionId);
                 return;

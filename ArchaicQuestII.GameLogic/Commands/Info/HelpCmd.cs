@@ -28,19 +28,17 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
         {
             var target = input.ElementAtOrDefault(1);
 
-            ICommand command = null;
-            
             if (string.IsNullOrEmpty(target))
             {
-                Core.Cache.GetCommand("help", out command);
+                target = "help";
             }
-            else
+            
+            var command = Core.Cache.GetCommand(target);
+            
+            if (command == null)
             {
-                if (!Core.Cache.GetCommand(target, out command))
-                {
-                    Core.Writer.WriteLine($"<p>No help found for {target}.", player.ConnectionId);
-                    return;
-                }
+                Core.Writer.WriteLine($"<p>No help found for {target}.", player.ConnectionId);
+                return;
             }
 
             var sb = new StringBuilder();

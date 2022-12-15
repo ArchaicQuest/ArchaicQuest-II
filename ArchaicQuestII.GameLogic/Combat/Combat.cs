@@ -917,7 +917,9 @@ namespace ArchaicQuestII.GameLogic.Combat
 
             if (target.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
             {
-                if (player.Config.AutoSacrifice && _cache.GetCommand("sacrifice", out var command))
+                var command = _cache.GetCommand("sacrifice");
+                
+                if (player.Config.AutoSacrifice && command != null)
                 {
                     command.Execute(player, room, new []{corpse.Name});
                 }

@@ -39,7 +39,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 
             var sb = new StringBuilder();
 
-            sb.Append($"<span>Right here:</span>");
+            sb.Append("<span>Right here:</span>");
 
             foreach (var obj in room.Mobs.Where(x => x.IsHiddenScriptMob == false))
             {
@@ -128,6 +128,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
             if (getDirection == null)
             {
                 Core.Writer.WriteLine("You can't look in that direction.", player.ConnectionId);
+                return;
             }
 
             var getRoomCoords = Helpers.IsExit(getDirection, room);

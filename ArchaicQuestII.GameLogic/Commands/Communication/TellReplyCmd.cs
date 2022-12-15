@@ -40,8 +40,6 @@ public class TellReplyCmd : ICommand
         var replyInput = input.ToList();
         replyInput.Insert(1, player.ReplyTo);
 
-        Core.Cache.GetCommand("tell", out var command);
-        
-        command.Execute(player, room, replyInput.ToArray());
+        Core.Cache.GetCommand("tell").Execute(player, room, replyInput.ToArray());
     }
 }

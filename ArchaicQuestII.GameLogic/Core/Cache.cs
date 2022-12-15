@@ -33,6 +33,31 @@ namespace ArchaicQuestII.GameLogic.Core
         private readonly Dictionary<string, ICommand> _commands = new();
         private Config _configCache = new();
 
+        #region Commands
+
+        public void AddCommand(string key, ICommand action)
+        {
+            _commands.Add(key, action);
+        }
+
+        public Dictionary<string, ICommand> GetCommands()
+        {
+            return _commands;
+        }
+
+        public bool IsCommand(string key)
+        {
+            return _commands.TryGetValue(key, out var c);
+        }
+        
+        public ICommand GetCommand(string key)
+        {
+            _commands.TryGetValue(key, out var command);
+            return command;
+        }
+
+        #endregion
+        
         #region PlayerCache
 
         public bool AddPlayer(string id, Player player)
@@ -304,23 +329,6 @@ namespace ArchaicQuestII.GameLogic.Core
         public List<Player> GetCombatList()
         {
             return _combatCache.Values.ToList();
-        }
-
-        public void AddCommand(string key, ICommand action)
-        {
-            _commands.Add(key, action);
-        }
-
-        public Dictionary<string, ICommand> GetCommands()
-        {
-            return _commands;
-        }
-        
-        public bool GetCommand(string key, out ICommand command)
-        {
-            var found = _commands.TryGetValue(key, out var c);
-            command = c;
-            return found;
         }
 
         public void AddSocial(string key, Emote emote)

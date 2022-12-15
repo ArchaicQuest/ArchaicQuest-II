@@ -7,13 +7,16 @@
     <projectFile>ArchaicQuestII.GameLogic.Tests/ArchaicQuestII.GameLogic.Tests.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2eff0800-fb31-4811-bfc6-8df5e26cbfe9" name="Changes" comment="More commands out of core (questlog &amp; recall)">
+    <list default="true" id="2eff0800-fb31-4811-bfc6-8df5e26cbfe9" name="Changes" comment="Fixed _core in combat.cs and AffectsCmd.cs using wrong alias of &quot;who&quot;">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ArchaicQuestII/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ArchaicQuestII/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic.Tests/Commands/Objects/Objects.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic.Tests/Commands/Objects/Objects.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/Combat.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/Combat.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/CommandHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/CommandHandler.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/ICommandHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/ICommandHandler.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Info/AffectsCmd.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Info/AffectsCmd.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Communication/TellReplyCmd.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Communication/TellReplyCmd.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Info/HelpCmd.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Info/HelpCmd.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Info/ScanCmd.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Info/ScanCmd.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Movement/FleeCmd.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Movement/FleeCmd.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/Cache.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/Cache.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/ICache.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/ICache.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,9 +34,10 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/6817e7532e1d7a287d2a6bb85f7bbb1a2a6854231116296e562a8d83b3fb71/NullReferenceException.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ArchaicQuestII.API/Program.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="mock:///Users/daniel/RiderProjects/Command/Mud-Server/ArchaicQuestII.GameLogic.Tests/Commands/Commands.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock:///Users/daniel/RiderProjects/Command/Mud-Server/ArchaicQuestII.GameLogic/Combat/Combat.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/Combat.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///Users/daniel/RiderProjects/Command/Mud-Server/ArchaicQuestII.GameLogic/Combat/Combat.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/ICombat.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///Users/daniel/RiderProjects/Command/Mud-Server/ArchaicQuestII.GameLogic/Commands/Info/AffectsCmd.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Users/daniel/RiderProjects/Command/Mud-Server/ArchaicQuestII.GameLogic/Core/Cache.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Users/daniel/RiderProjects/Command/Mud-Server/ArchaicQuestII.GameLogic/Core/Cache.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/WriteToClient.cs" root0="FORCE_HIGHLIGHTING" />
@@ -118,7 +122,7 @@
       <workItem from="1665607839326" duration="1542000" />
       <workItem from="1665785106353" duration="22661000" />
       <workItem from="1669074020115" duration="15139000" />
-      <workItem from="1671034008519" duration="41076000" />
+      <workItem from="1671034008519" duration="42590000" />
     </task>
     <task id="LOCAL-00002" summary="WIP Config settings setup and API">
       <created>1660518380350</created>
@@ -239,7 +243,14 @@
       <option name="project" value="LOCAL" />
       <updated>1671117070607</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="Fixed _core in combat.cs and AffectsCmd.cs using wrong alias of &quot;who&quot;">
+      <created>1671120519994</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1671120519994</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -662,7 +673,8 @@
     <MESSAGE value="Using Core.cs as the main holder for singleton classes needed in commands" />
     <MESSAGE value="More commands out of core" />
     <MESSAGE value="More commands out of core (questlog &amp; recall)" />
-    <option name="LAST_COMMIT_MESSAGE" value="More commands out of core (questlog &amp; recall)" />
+    <MESSAGE value="Fixed _core in combat.cs and AffectsCmd.cs using wrong alias of &quot;who&quot;" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed _core in combat.cs and AffectsCmd.cs using wrong alias of &quot;who&quot;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

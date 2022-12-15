@@ -115,9 +115,6 @@ public class FleeCmd : ICommand
 
         Core.Writer.WriteLine($"You flee {validExits[getExitIndex].Name}.",  player.ConnectionId);
         Core.Writer.WriteToOthersInRoom($"{fleeString}.", room, player);
-
-        Core.Cache.GetCommand(validExits[getExitIndex].Name, out var command);
-        
-        command.Execute(player, room, new[]{validExits[getExitIndex].Name});
+        Core.Cache.GetCommand(validExits[getExitIndex].Name).Execute(player, room, new[]{validExits[getExitIndex].Name});
     }
 }
