@@ -12,7 +12,7 @@ public class GetCmd : ICommand
 {
     public GetCmd(ICore core)
     {
-        Aliases = new[] {"get"};
+        Aliases = new[] {"get", "take", "loot"};
         Description = "Your character will get something.";
         Usages = new[] {"Type: get apple"};
         UserRole = UserRole.Player;

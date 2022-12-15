@@ -15,8 +15,8 @@ public class ListSkillsCmd : ICommand
     public ListSkillsCmd(ICore core)
     {
         Aliases = new[] {"skills"};
-        Description = "Shows available sk";
-        Usages = new[] {"Type: north"};
+        Description = "Shows available skills.";
+        Usages = new[] {"Type: skills."};
         UserRole = UserRole.Player;
         Core = core;
     }

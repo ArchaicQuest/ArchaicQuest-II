@@ -11,7 +11,7 @@ public class SacrificeCorpseCmd : ICommand
 {
     public SacrificeCorpseCmd(ICore core)
     {
-        Aliases = new[] {"sacrifice"};
+        Aliases = new[] {"sacrifice", "sac"};
         Description = "You sacrifice a corpse.";
         Usages = new[] {"Type: sacrifice rat"};
         UserRole = UserRole.Player;

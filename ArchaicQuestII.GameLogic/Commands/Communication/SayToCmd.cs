@@ -11,9 +11,9 @@ public class SayToCmd : ICommand
 {
     public SayToCmd(ICore core)
     {
-        Aliases = new[] {"sayto"};
+        Aliases = new[] {"sayto", ">"};
         Description = "Says something to a player.";
-        Usages = new[] {"Type: sayto john 'what ever you want'"};
+        Usages = new[] {"Type: sayto john what ever you want"};
         UserRole = UserRole.Player;
         Core = core;
     }

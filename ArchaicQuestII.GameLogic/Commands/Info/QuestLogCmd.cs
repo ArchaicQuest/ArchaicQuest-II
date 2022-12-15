@@ -11,7 +11,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
     {
         public QuestLogCmd(ICore core)
         {
-            Aliases = new[] {"questlog"};
+            Aliases = new[] {"questlog", "qlog"};
             Description = "Displays your current quests.";
             Usages = new[] {"Type: questlog"};
             UserRole = UserRole.Player;

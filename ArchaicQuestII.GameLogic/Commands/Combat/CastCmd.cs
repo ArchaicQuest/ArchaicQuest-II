@@ -9,7 +9,7 @@ public class CastCmd : ICommand
 {
     public CastCmd(ICore core)
     {
-        Aliases = new[] {"cast"};
+        Aliases = new[] {"cast", "c"};
         Description = "Cast one of your spells";
         Usages = new[] {"Type: cast fireball"};
         UserRole = UserRole.Player;

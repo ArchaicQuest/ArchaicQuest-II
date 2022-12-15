@@ -12,8 +12,8 @@ public class ListInventoryCmd : ICommand
 {
     public ListInventoryCmd(ICore core)
     {
-        Aliases = new[] {"inventory", "inv"};
-        Description = "";
+        Aliases = new[] {"inventory", "inv", "i"};
+        Description = "Lists players inventory";
         Usages = new[] {"Type: inv"};
         UserRole = UserRole.Player;
         Core = core;

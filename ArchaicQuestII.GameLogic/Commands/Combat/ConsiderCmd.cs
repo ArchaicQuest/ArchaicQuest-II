@@ -11,7 +11,7 @@ public class ConsiderCmd : ICommand
 {
     public ConsiderCmd(ICore core)
     {
-        Aliases = new[] {"consider"};
+        Aliases = new[] {"con", "consider"};
         Description = "See your chances of defeating an enemy.";
         Usages = new[] {"Type: consider rat"};
         UserRole = UserRole.Player;

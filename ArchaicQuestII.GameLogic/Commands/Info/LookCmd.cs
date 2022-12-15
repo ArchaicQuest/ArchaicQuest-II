@@ -11,7 +11,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
     {
         public LookCmd(ICore core)
         {
-            Aliases = new[] {"look"};
+            Aliases = new[] {"l", "look"};
             Description = "Shows info about room or object.";
             Usages = new[] {"Type: look"};
             UserRole = UserRole.Player;

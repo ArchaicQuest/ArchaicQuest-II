@@ -11,7 +11,7 @@ public class FollowCmd : ICommand
 {
     public FollowCmd(ICore core)
     {
-        Aliases = new[] {"follow"};
+        Aliases = new[] {"follow", "fol"};
         Description = "Follows another character.";
         Usages = new[] {"Type: follow liam"};
         UserRole = UserRole.Player;

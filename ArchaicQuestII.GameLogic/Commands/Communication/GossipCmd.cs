@@ -11,8 +11,8 @@ public class GossipCmd : ICommand
 {
     public GossipCmd(ICore core)
     {
-        Aliases = new[] {"gossip"};
-        Description = "";
+        Aliases = new[] {"gossip", "goss"};
+        Description = "Talk on the IC gossip channel.";
         Usages = new[] {"Type: gossip some message"};
         UserRole = UserRole.Player;
         Core = core;
