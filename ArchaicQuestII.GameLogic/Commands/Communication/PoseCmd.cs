@@ -33,18 +33,24 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
         {
             if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
             {
-                Writer.WriteLine("Pose how?", player.ConnectionId);
+                var poseText = string.IsNullOrEmpty(player.LongName) ? $"{ player.Name}" : $"{ player.Name} {player.LongName}";
+
+                if (!string.IsNullOrEmpty(player.Mounted.Name))
+                {
+                    poseText += $", is riding {player.Mounted.Name}";
+                }
+                else if (string.IsNullOrEmpty(player.LongName))
+                {
+                    poseText += " is here";
+                }
+
+                poseText += player.Pose;
+
+                Writer.WriteLine(poseText, player.ConnectionId);
                 return;
             }
-            
-            var poseText = string.Join(" ", input.Skip(1));
-            
-            if (string.IsNullOrEmpty(poseText))
-            {
-                player.Pose = poseText;
-            }
-            
-            player.Pose = $", {poseText}";
+
+            player.Pose = $", {string.Join(" ", input.Skip(1))}";
             Writer.WriteLine("Pose set.", player.ConnectionId);
         }
     }

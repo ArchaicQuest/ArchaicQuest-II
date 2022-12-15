@@ -7,14 +7,25 @@
     <projectFile>ArchaicQuestII.GameLogic.Tests/ArchaicQuestII.GameLogic.Tests.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2eff0800-fb31-4811-bfc6-8df5e26cbfe9" name="Changes" comment="Updates &amp; Fixes">
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Combat/ConsiderCmd.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Objects/SacrificeCorpseCmd.cs" afterDir="false" />
+    <list default="true" id="2eff0800-fb31-4811-bfc6-8df5e26cbfe9" name="Changes" comment="Updates &amp; Fixes #2">
+      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Character/DismountCmd.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Character/DrinkCmd.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Character/EatCmd.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Character/QuitCmd.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Immortal/ImmTeleportCmd.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Info/ScanCmd.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Info/WhereCmd.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Objects/HarvestCmd.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ArchaicQuestII/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ArchaicQuestII/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/Combat.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/Combat.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/ICombat.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/ICombat.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Character/Gain/Gain.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Character/Gain/Gain.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Communication/PoseCmd.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Communication/PoseCmd.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/Cache.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/Cache.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/Core.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/Core.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/GameLoop.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/GameLoop.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/Helpers.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/Helpers.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/ICache.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/ICache.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/ICore.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/ICore.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/World/Room/RoomActions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/World/Room/RoomActions.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,6 +42,7 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/ArchaicQuestII.API/Program.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="mock:///Users/daniel/RiderProjects/Command/Mud-Server/ArchaicQuestII.GameLogic.Tests/Commands/Commands.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock:///Users/daniel/RiderProjects/Command/Mud-Server/ArchaicQuestII.GameLogic/Combat/Combat.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/Combat.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/ICombat.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/WriteToClient.cs" root0="FORCE_HIGHLIGHTING" />
@@ -41,6 +53,9 @@
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProjectId" id="2BTGiWclVGmXq37FAvURw3JGKR5" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -112,7 +127,7 @@
       <workItem from="1665607839326" duration="1542000" />
       <workItem from="1665785106353" duration="22661000" />
       <workItem from="1669074020115" duration="15139000" />
-      <workItem from="1671034008519" duration="24124000" />
+      <workItem from="1671034008519" duration="30750000" />
     </task>
     <task id="LOCAL-00002" summary="WIP Config settings setup and API">
       <created>1660518380350</created>
@@ -198,7 +213,14 @@
       <option name="project" value="LOCAL" />
       <updated>1671066030016</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="Updates &amp; Fixes #2">
+      <created>1671071553812</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1671071553812</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -616,7 +638,8 @@
     <MESSAGE value="merge master to foraging" />
     <MESSAGE value="Whole new command system!" />
     <MESSAGE value="Updates &amp; Fixes" />
-    <option name="LAST_COMMIT_MESSAGE" value="Updates &amp; Fixes" />
+    <MESSAGE value="Updates &amp; Fixes #2" />
+    <option name="LAST_COMMIT_MESSAGE" value="Updates &amp; Fixes #2" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

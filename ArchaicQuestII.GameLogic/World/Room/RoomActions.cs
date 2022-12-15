@@ -927,7 +927,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
         /// <param name="newRoom"></param>
         public void RoomChange(Player player, Room oldRoom, Room newRoom)
         {
-            player.Pose = "";
+            player.Pose = string.Empty;
             
             if (oldRoom.Mobs.Any())
             {
@@ -1031,8 +1031,8 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
         private void ExitRoom(Player characterBase, Room toRoom, Room fromRoom)
         {
-            var direction = "from nowhere";
-            var movement = "appears";
+            var direction = "to thin air";
+            var movement = "vanishes";
 
             if (fromRoom.Exits.Down.RoomId == toRoom.Id)
                 direction = "down";

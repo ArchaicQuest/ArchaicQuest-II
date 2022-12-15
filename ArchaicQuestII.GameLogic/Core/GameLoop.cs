@@ -15,16 +15,14 @@ using System.Web;
 
 namespace ArchaicQuestII.GameLogic.Core
 {
-
     public class GameLoop : IGameLoop
     {
-
-
         private IWriteToClient _writeToClient;
         private ICache _cache;
         private ICommandHandler _commandHandler;
         private ICombat _combat;
         private IDataBase _db;
+        private IPlayerDataBase _pdb;
         private IDice _dice;
         private IUpdateClientUI _client;
         private ITime _time;
@@ -33,13 +31,14 @@ namespace ArchaicQuestII.GameLogic.Core
         private IWeather _weather;
         private List<string> _hints;
 
-        public GameLoop(IWriteToClient writeToClient, ICache cache, ICommandHandler commandHandler, ICombat combat, IDataBase database, IDice dice, IUpdateClientUI client, ITime time, ICore core, ISpellList spelllist, IWeather weather)
+        public GameLoop(IWriteToClient writeToClient, ICache cache, ICommandHandler commandHandler, ICombat combat, IDataBase database, IPlayerDataBase playerDataBase, IDice dice, IUpdateClientUI client, ITime time, ICore core, ISpellList spelllist, IWeather weather)
         {
             _writeToClient = writeToClient;
             _cache = cache;
             _commandHandler = commandHandler;
             _combat = combat;
             _db = database;
+            _pdb = playerDataBase;
             _dice = dice;
             _client = client;
             _time = time;
@@ -47,11 +46,9 @@ namespace ArchaicQuestII.GameLogic.Core
             _spellList = spelllist;
             _weather = weather;
 
-            if (_hints == null)
-            {
-                _hints = _core.Hints();
-            }
-
+            _hints = _core.Hints();
+            _cache.SetDatabase(_db);
+            _cache.SetPlayerDatabase(_pdb);
         }
 
         public int GainAmount(int value, Player player)
@@ -614,7 +611,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
             if (idleTime15Mins)
             {
-                _core.Quit(player, _cache.GetRoom(player.RoomId));
+                player.Buffer.Enqueue("quit");
             }
         }
 

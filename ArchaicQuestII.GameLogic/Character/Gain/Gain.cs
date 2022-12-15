@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
 
 namespace ArchaicQuestII.GameLogic.Character.Gain
 {
-
     public class Gain : IGain
     {
-
         private readonly IWriteToClient _writer;
         private readonly IUpdateClientUI _clientUi;
         private readonly ICache _cache;
@@ -26,7 +22,6 @@ namespace ArchaicQuestII.GameLogic.Character.Gain
         }
         public void GainExperiencePoints(Player player, Player target)
         {
-
             var expWorth = GetExpWorth(target);
             if (Math.Floor((double)(player.Level / 2)) > target.Level)
             {
@@ -50,8 +45,6 @@ namespace ArchaicQuestII.GameLogic.Character.Gain
 
             GainLevel(player);
             _clientUi.UpdateExp(player);
-            
-
         }
 
         public void GroupGainExperiencePoints(Player player, Player target)
@@ -72,15 +65,9 @@ namespace ArchaicQuestII.GameLogic.Character.Gain
                     GainExperiencePoints(groupLeader, target);
                 }
 
-                foreach (var follower in groupLeader.Followers)
+                foreach (var follower in groupLeader.Followers.Where(follower => follower.Grouped && follower.Following == groupLeader.Name).Where(follower => follower.RoomId == target.RoomId))
                 {
-                    if (follower.Grouped && follower.Following == groupLeader.Name)
-                    {
-                        if (follower.RoomId == target.RoomId)
-                        {
-                            GainExperiencePoints(follower, target);
-                        }
-                    }
+                    GainExperiencePoints(follower, target);
                 }
             }
         }
@@ -141,7 +128,6 @@ namespace ArchaicQuestII.GameLogic.Character.Gain
                 _clientUi.UpdateScore(player);
 
             }
-
         }
 
         public void GainLevel(Player player, string target)
@@ -187,7 +173,6 @@ namespace ArchaicQuestII.GameLogic.Character.Gain
 
         public void GainSkillExperience(Player character, int expGain, SkillList skill, int increase)
         {
-
             character.Experience += expGain;
             character.ExperienceToNextLevel -= expGain;
             skill.Proficiency += increase;

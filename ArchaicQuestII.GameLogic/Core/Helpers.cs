@@ -583,21 +583,21 @@ namespace ArchaicQuestII.GameLogic.Core
 
             var chance = new Dice().Roll(1, 1, 100);
 
-            return (skill == null || !(skill.Proficiency <= chance)) && chance != 1;
+            return (skill == null || !(skill.Proficiency <= chance)) && chance != 1 && chance != 101;
         }
-        
+
         public static string SkillLearnMistakes(Player player, string skillName, IGain gain, int delay = 0)
         {
             var skill = player.Skills.FirstOrDefault(x => x.SkillName.Equals(skillName, StringComparison.CurrentCultureIgnoreCase));
 
             if (skill == null)
             {
-                return null;
+                return string.Empty;
             }
 
             if (skill.Proficiency == 100)
             {
-                return null;
+                return string.Empty;
             }
 
             var increase = new Dice().Roll(1, 1, 5);
@@ -609,6 +609,125 @@ namespace ArchaicQuestII.GameLogic.Core
             return
                 $"<p class='improve'>You learn from your mistakes and gain {100 * skill.Level / 4} experience points.</p>" +
                 $"<p class='improve'>Your knowledge of {skill.SkillName} increases by {increase}%.</p>";
+        }
+        
+        public static string UpdateAffect(Player player, Item.Item item, Affect affect)
+        {
+            var modBenefits = string.Empty;
+
+            if (item.Modifier.Strength != 0)
+            {
+
+                affect.Duration = 5;
+                player.Attributes.Attribute[EffectLocation.Strength] += item.Modifier.Strength;
+
+                affect.Modifier.Strength = item.Modifier.Strength;
+                modBenefits = $"modifies STR by {item.Modifier.Strength} for { affect.Duration} minutes<br />";
+            }
+
+            if (item.Modifier.Dexterity != 0)
+            {
+                affect.Duration = 5;
+                player.Attributes.Attribute[EffectLocation.Dexterity] += item.Modifier.Dexterity;
+
+                affect.Modifier.Dexterity = item.Modifier.Dexterity;
+                modBenefits = $"modifies DEX by {item.Modifier.Dexterity} for { affect.Duration} minutes<br />";
+            }
+
+            if (item.Modifier.Constitution != 0)
+            {
+                affect.Duration = 5;
+                player.Attributes.Attribute[EffectLocation.Constitution] += item.Modifier.Constitution;
+
+                affect.Modifier.Constitution = item.Modifier.Constitution;
+                modBenefits = $"modifies CON by {item.Modifier.Constitution} for { affect.Duration} minutes<br />";
+            }
+
+            if (item.Modifier.Intelligence != 0)
+            {
+                affect.Duration = 5;
+                player.Attributes.Attribute[EffectLocation.Intelligence] += item.Modifier.Intelligence;
+                affect.Modifier.Intelligence = item.Modifier.Intelligence;
+                modBenefits = $"modifies INT by {item.Modifier.Intelligence} for { affect.Duration} minutes<br />";
+            }
+
+            if (item.Modifier.Wisdom != 0)
+            {
+                affect.Duration = 5;
+                player.Attributes.Attribute[EffectLocation.Wisdom] += item.Modifier.Wisdom;
+
+                affect.Modifier.Wisdom = item.Modifier.Wisdom;
+                modBenefits = $"modifies WIS by {item.Modifier.Wisdom} for { affect.Duration} minutes<br />";
+            }
+
+            if (item.Modifier.Charisma != 0)
+            {
+                affect.Duration = 5;
+                player.Attributes.Attribute[EffectLocation.Charisma] += item.Modifier.Charisma;
+
+                affect.Modifier.Charisma = item.Modifier.Charisma;
+                modBenefits = $"modifies CHA by {item.Modifier.Charisma} for { affect.Duration} minutes<br />";
+
+            }
+
+            if (item.Modifier.HP != 0)
+            {
+                player.Attributes.Attribute[EffectLocation.Hitpoints] += item.Modifier.HP;
+
+                if (player.Attributes.Attribute[EffectLocation.Hitpoints] >
+                    player.MaxAttributes.Attribute[EffectLocation.Hitpoints])
+                {
+                    player.Attributes.Attribute[EffectLocation.Hitpoints] =
+                        player.MaxAttributes.Attribute[EffectLocation.Hitpoints];
+                }
+            }
+
+            if (item.Modifier.Mana != 0)
+            {
+                player.Attributes.Attribute[EffectLocation.Mana] += item.Modifier.Mana;
+
+                if (player.Attributes.Attribute[EffectLocation.Mana] >
+                    player.MaxAttributes.Attribute[EffectLocation.Mana])
+                {
+                    player.Attributes.Attribute[EffectLocation.Mana] =
+                        player.MaxAttributes.Attribute[EffectLocation.Mana];
+                }
+            }
+
+            if (item.Modifier.Moves != 0)
+            {
+                player.Attributes.Attribute[EffectLocation.Moves] += item.Modifier.Moves;
+
+                if (player.Attributes.Attribute[EffectLocation.Moves] >
+                    player.MaxAttributes.Attribute[EffectLocation.Moves])
+                {
+                    player.Attributes.Attribute[EffectLocation.Moves] =
+                        player.MaxAttributes.Attribute[EffectLocation.Moves];
+                }
+            }
+
+            if (item.Modifier.HitRoll != 0)
+            {
+                affect.Duration = 5;
+                player.Attributes.Attribute[EffectLocation.HitRoll] += item.Modifier.HitRoll;
+                affect.Modifier.HitRoll = item.Modifier.HitRoll;
+
+                modBenefits = $"modifies Hit Roll by {item.Modifier.HitRoll} for { affect.Duration} minutes<br />";
+            }
+
+            if (item.Modifier.DamRoll != 0)
+            {
+                affect.Duration = 5;
+                player.Attributes.Attribute[EffectLocation.DamageRoll] += item.Modifier.DamRoll;
+
+                affect.Modifier.DamRoll = item.Modifier.DamRoll;
+                modBenefits = $"modifies Dam Roll by {item.Modifier.DamRoll} for { affect.Duration} minutes<br />";
+
+            }
+
+            // saves / saving spell
+
+            return modBenefits;
         }
     }
 }

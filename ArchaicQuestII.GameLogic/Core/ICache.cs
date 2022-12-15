@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Emote;
@@ -14,12 +15,15 @@ namespace ArchaicQuestII.GameLogic.Core
 {
     public interface ICache
     {
+        void SetDatabase(IDataBase db);
+        IDataBase GetDatabase();
+        void SetPlayerDatabase(IPlayerDataBase pdb);
+        IPlayerDataBase GetPlayerDatabase();
         /// <summary>
         /// Add player to cache
         /// </summary>
         /// <returns>returns player Cache</returns>
         bool AddPlayer(string id, Player player);
-
         Player GetPlayer(string id);
         Player RemovePlayer(string id);
         ConcurrentDictionary<string, Player> GetPlayerCache();
