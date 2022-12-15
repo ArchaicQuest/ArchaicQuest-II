@@ -82,7 +82,7 @@ public class MoveCmd : ICommand
 
         Exit getExitToNextRoom = null;
 
-        switch (input[0])
+        switch (input[0].ToLower())
         {
             case "north":
             case "n":
@@ -163,12 +163,9 @@ public class MoveCmd : ICommand
 
         if (player.Followers.Count >= 1)
         {
-            foreach (var follower in player.Followers)
+            foreach (var follower in player.Followers.Where(follower => room.Players.Contains(follower) || room.Mobs.Contains(follower)))
             {
-                if (room.Players.Contains(follower) || room.Mobs.Contains(follower))
-                {
-                    RoomActions.RoomChange(follower, room, getNextRoom);
-                }
+                RoomActions.RoomChange(follower, room, getNextRoom);
             }
         }
 

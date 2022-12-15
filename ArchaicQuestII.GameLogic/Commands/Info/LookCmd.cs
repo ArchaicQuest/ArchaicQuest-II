@@ -1,6 +1,7 @@
 using System.Linq;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.World.Room;
 
@@ -31,6 +32,18 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 
         public void Execute(Player player, Room room, string[] input)
         {
+            if (player.Status == CharacterStatus.Status.Sleeping)
+            {
+                Writer.WriteLine("You can't do that while asleep.", player.ConnectionId);
+                return;
+            }
+
+            if (player.Affects.Blind)
+            {
+                Writer.WriteLine("<p>You are blind and can't see a thing!</p>", player.ConnectionId);
+                return;
+            }
+            
             var target = input.ElementAtOrDefault(1);
             RoomActions.Look(target, room, player);
         }

@@ -1118,9 +1118,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
                         UserData.RegisterProxyType<MyProxy, Room>(r => new MyProxy(room));
                         UserData.RegisterProxyType<ProxyPlayer, Player>(r => new ProxyPlayer(character));
 
-
                         script.Globals["room"] = room;
-
                         script.Globals["player"] = character;
                         script.Globals["mob"] = mob;
 

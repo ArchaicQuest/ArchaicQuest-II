@@ -7,94 +7,15 @@
     <projectFile>ArchaicQuestII.GameLogic.Tests/ArchaicQuestII.GameLogic.Tests.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2eff0800-fb31-4811-bfc6-8df5e26cbfe9" name="Changes" comment="merge master to foraging">
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Account/UserRole.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Character/Status/Flags.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Character/GroupCmd.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Character/TitleCmd.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Combat/CastCmd.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Combat/SkillCmd.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Communication/EmoteCmd.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Communication/GossipCmd.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Communication/GsayCmd.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Communication/NewbieCmd.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Communication/OOCCmd.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Communication/PmoteCmd.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Communication/PoseCmd.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Communication/SayCmd.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Communication/SayToCmd.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Communication/TellCmd.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Communication/TellReplyCmd.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Communication/YellCmd.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Debug/DebugCmd.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/ICommand.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Info/HelpCmd.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Info/ListInventoryCmd.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Info/ListSkillsCmd.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Info/ListSpellsCmd.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Info/LookCmd.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Info/WhoCmd.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Movement/EnterCmd.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Movement/FleeCmd.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Movement/FollowCmd.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Movement/MoveCmd.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Movement/RestCmd.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Movement/SitCmd.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Movement/SleepCmd.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Movement/StandCmd.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Movement/WakeCmd.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Objects/CloseCmd.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Objects/DropCmd.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Objects/GetCmd.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Objects/GiveCmd.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Objects/LockCmd.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Objects/OpenCmd.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Objects/QuaffCmd.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Objects/UnlockCmd.cs" afterDir="false" />
+    <list default="true" id="2eff0800-fb31-4811-bfc6-8df5e26cbfe9" name="Changes" comment="Whole new command system!">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ArchaicQuestII/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ArchaicQuestII/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.API/Configuration/IoC/GameLogicExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.API/Configuration/IoC/GameLogicExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.API/Configuration/IoC/GameLogicExtensions/CommandExtensions.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.API/Configuration/IoC/GameLogicExtensions/CoreFunctionalityExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.API/Configuration/IoC/GameLogicExtensions/CoreFunctionalityExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.API/Configuration/IoC/GameLogicExtensions/SkillsExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.API/Configuration/IoC/GameLogicExtensions/SkillsExtensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.API/Configuration/IoC/GameLogicExtensions/WorldExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.API/Configuration/IoC/GameLogicExtensions/WorldExtensions.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic.Tests/Commands/Commands.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic.Tests/Commands/Commands.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic.Tests/Commands/Movement/Movement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic.Tests/Commands/Movement/Movement.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic.Tests/Commands/Objects/Objects.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic.Tests/Commands/Objects/Objects.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic.Tests/Crafting/Cooking.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic.Tests/Crafting/Cooking.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic.Tests/Crafting/crafting.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic.Tests/Crafting/crafting.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic.Tests/World/Room/RoomActions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic.Tests/World/Room/RoomActions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/ArchaicQuestII.GameLogic.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/ArchaicQuestII.GameLogic.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Character/Character.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Character/Character.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Character/Gain/Gain.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Character/Gain/Gain.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Character/Player.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Character/Player.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Character/Status/Status.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Character/Status/Status.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/Combat.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/Combat.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/CommandHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/CommandHandler.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Commands.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Communication/Communication.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Communication/Icommunication.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Debug/Debug.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Debug/IDebug.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/ICommandHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/ICommandHandler.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/ICommands.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Inventory/IInventory.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Inventory/Inventory.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Movement/IMovement.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Movement/Movement.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Objects/IObject.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Objects/Object.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Score/IScore.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Score/Score.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Info/ScoreCmd.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Skills/ISkills.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Skills/Skills.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/Cache.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/Cache.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/GameLoop.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/GameLoop.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/Helpers.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/Helpers.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/ICache.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/ICache.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Crafting/Cooking.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Crafting/Cooking.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Crafting/Crafting.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Crafting/Crafting.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Hubs/GameHub.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Hubs/GameHub.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/World/Room/IRoomActions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/World/Room/IRoomActions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Info/LookCmd.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Info/LookCmd.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Movement/MoveCmd.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Movement/MoveCmd.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Movement/SitCmd.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Movement/SitCmd.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Objects/GiveCmd.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Objects/GiveCmd.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/World/Room/RoomActions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/World/Room/RoomActions.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -119,6 +40,7 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+  <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProjectId" id="2BTGiWclVGmXq37FAvURw3JGKR5" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -141,7 +63,7 @@
     ]
   }
 }]]></component>
-  <component name="RunManager">
+  <component name="RunManager" selected=".NET Launch Settings Profile.ArchaicQuestII.API: IIS Express">
     <configuration name="ArchaicQuestII.API: IIS Express" type="LaunchSettings" factoryName=".NET Launch Settings Profile" temporary="true">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/ArchaicQuestII.API/ArchaicQuestII.API.csproj" />
       <option name="LAUNCH_PROFILE_TFM" value="net6.0" />
@@ -191,7 +113,7 @@
       <workItem from="1665607839326" duration="1542000" />
       <workItem from="1665785106353" duration="22661000" />
       <workItem from="1669074020115" duration="15139000" />
-      <workItem from="1671034008519" duration="18184000" />
+      <workItem from="1671034008519" duration="22168000" />
     </task>
     <task id="LOCAL-00002" summary="WIP Config settings setup and API">
       <created>1660518380350</created>
@@ -263,7 +185,14 @@
       <option name="project" value="LOCAL" />
       <updated>1670887972725</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Whole new command system!">
+      <created>1671062109590</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1671062109590</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -679,7 +608,8 @@
     <MESSAGE value="as above, so below" />
     <MESSAGE value="foraging, lore, lua script update" />
     <MESSAGE value="merge master to foraging" />
-    <option name="LAST_COMMIT_MESSAGE" value="merge master to foraging" />
+    <MESSAGE value="Whole new command system!" />
+    <option name="LAST_COMMIT_MESSAGE" value="Whole new command system!" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

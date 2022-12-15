@@ -36,20 +36,24 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
         [Fact]
         public void Remove_Item_from_room()
         {
-            var apple = new GameLogic.Item.Item();
-            apple.Name = "apple";
-            apple.Description = new Description()
+            var apple = new GameLogic.Item.Item
             {
-                Room = "apple"
+                Name = "apple",
+                Description = new Description
+                {
+                    Room = "apple"
+                }
             };
 
             var room = new Room();
             room.Items.Add(apple);
 
-            var player = new Player();
-            player.ConnectionId = "1";
-            player.Name = "Gary";
-            player.Inventory = new ItemList();
+            var player = new Player
+            {
+                ConnectionId = "1",
+                Name = "Gary",
+                Inventory = new ItemList()
+            };
 
             new GameLogic.Commands.CommandHandler(_cache, _writer.Object, _clientui.Object, _roomActions.Object).HandleCommand(player, room, "get apple");
 
@@ -60,20 +64,24 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
         [Fact]
         public void Get_all_from_room()
         {
-            var apple = new GameLogic.Item.Item();
-            apple.Name = "apple";
-            apple.Description = new Description()
+            var apple = new GameLogic.Item.Item
             {
-                Room = "apple"
+                Name = "apple",
+                Description = new Description()
+                {
+                    Room = "apple"
+                }
             };
 
             var room = new Room();
             room.Items.Add(apple);
 
-            var player = new Player();
-            player.ConnectionId = "1";
-            player.Name = "Gary";
-            player.Inventory = new ItemList();
+            var player = new Player
+            {
+                ConnectionId = "1",
+                Name = "Gary",
+                Inventory = new ItemList()
+            };
 
             new GameLogic.Commands.CommandHandler(_cache, _writer.Object, _clientui.Object, _roomActions.Object).HandleCommand(player, room, "get all");
 
@@ -83,27 +91,31 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
         [Fact]
         public void Get_item_container()
         {
-            var apple = new GameLogic.Item.Item();
-            apple.Name = "apple";
-            apple.Description = new Description()
+            var apple = new GameLogic.Item.Item
             {
-                Room = "apple"
+                Name = "apple",
+                Description = new Description()
+                {
+                    Room = "apple"
+                }
             };
 
             var chest = new GameLogic.Item.Item
             {
                 Name = "chest",
                 ItemType = GameLogic.Item.Item.ItemTypes.Container,
-                Container = new Container() { Items = new ItemList { apple }, IsOpen = true }
+                Container = new Container { Items = new ItemList { apple }, IsOpen = true }
             };
 
             var room = new Room();
             room.Items.Add(chest);
 
-            var player = new Player();
-            player.ConnectionId = "1";
-            player.Name = "Gary";
-            player.Inventory = new ItemList();
+            var player = new Player
+            {
+                ConnectionId = "1",
+                Name = "Gary",
+                Inventory = new ItemList()
+            };
 
             new GameLogic.Commands.CommandHandler(_cache, _writer.Object, _clientui.Object, _roomActions.Object).HandleCommand(player, room, "get apple chest");
 
@@ -113,18 +125,20 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
         [Fact]
         public void Get_item_container_weight_of_item_should_not_be_that_of_the_container()
         {
-            var apple = new GameLogic.Item.Item();
-            apple.Name = "apple";
-            apple.Description = new Description()
+            var apple = new GameLogic.Item.Item
             {
-                Room = "apple"
+                Name = "apple",
+                Description = new Description
+                {
+                    Room = "apple"
+                },
+                Weight = 0.5F
             };
-            apple.Weight = 0.5F;
 
             var chest = new GameLogic.Item.Item
             {
                 Name = "chest",
-                Container = new Container() { Items = new ItemList { apple }, IsOpen = true },
+                Container = new Container { Items = new ItemList { apple }, IsOpen = true },
                 Weight = 5,
                 ItemType = GameLogic.Item.Item.ItemTypes.Container
             };
@@ -132,11 +146,13 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
             var room = new Room();
             room.Items.Add(chest);
 
-            var player = new Player();
-            player.ConnectionId = "1";
-            player.Name = "Gary";
-            player.Inventory = new ItemList();
-            player.Weight = 0;
+            var player = new Player
+            {
+                ConnectionId = "1",
+                Name = "Gary",
+                Inventory = new ItemList(),
+                Weight = 0
+            };
 
             new GameLogic.Commands.CommandHandler(_cache, _writer.Object, _clientui.Object, _roomActions.Object).HandleCommand(player, room, "get apple chest");
 
@@ -148,20 +164,24 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
         [Fact]
         public void Add_item_to_inventory()
         {
-            var apple = new GameLogic.Item.Item();
-            apple.Name = "apple";
-            apple.Description = new Description()
+            var apple = new GameLogic.Item.Item
             {
-                Room = "apple"
+                Name = "apple",
+                Description = new Description
+                {
+                    Room = "apple"
+                }
             };
 
             var room = new Room();
             room.Items.Add(apple);
 
-            var player = new Player();
-            player.ConnectionId = "1";
-            player.Name = "Gary";
-            player.Inventory = new ItemList();
+            var player = new Player
+            {
+                ConnectionId = "1",
+                Name = "Gary",
+                Inventory = new ItemList()
+            };
 
             new GameLogic.Commands.CommandHandler(_cache, _writer.Object, _clientui.Object, _roomActions.Object).HandleCommand(player, room, "get apple");
 
@@ -174,7 +194,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
             var item = new GameLogic.Item.Item
             {
                 Name = "gold",
-                Description = new Description() { Room = "gold" },
+                Description = new Description { Room = "gold" },
                 Value = 5,
                 ItemType = GameLogic.Item.Item.ItemTypes.Money
             };
@@ -182,11 +202,13 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
             var room = new Room();
             room.Items.Add(item);
 
-            var player = new Player();
-            player.ConnectionId = "1";
-            player.Name = "Gary";
-            player.Inventory = new ItemList();
-            player.Money = new GameLogic.Character.Model.Money();
+            var player = new Player
+            {
+                ConnectionId = "1",
+                Name = "Gary",
+                Inventory = new ItemList(),
+                Money = new GameLogic.Character.Model.Money()
+            };
 
             new GameLogic.Commands.CommandHandler(_cache, _writer.Object, _clientui.Object, _roomActions.Object).HandleCommand(player, room, "get gold");
 
@@ -199,14 +221,16 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
 
             var room = new Room();
 
-            var player = new Player();
-            player.ConnectionId = "1";
-            player.Name = "Gary";
-            player.Inventory = new ItemList();
-            player.Money = new GameLogic.Character.Model.Money()
+            var player = new Player
             {
-                Gold = 500,
-                Silver = 0
+                ConnectionId = "1",
+                Name = "Gary",
+                Inventory = new ItemList(),
+                Money = new GameLogic.Character.Model.Money
+                {
+                    Gold = 500,
+                    Silver = 0
+                }
             };
 
             new GameLogic.Commands.CommandHandler(_cache, _writer.Object, _clientui.Object, _roomActions.Object).HandleCommand(player, room, "drop 250 gold");
@@ -221,30 +245,34 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
 
             var room = new Room();
 
-            var player = new Player();
-            player.ConnectionId = "1";
-            player.Name = "Gary";
-            player.Inventory = new ItemList();
-            player.Money = new GameLogic.Character.Model.Money()
+            var player = new Player
             {
-                Gold = 500,
-                Silver = 0
+                ConnectionId = "1",
+                Name = "Gary",
+                Inventory = new ItemList(),
+                Money = new GameLogic.Character.Model.Money()
+                {
+                    Gold = 500,
+                    Silver = 0
+                }
             };
 
-            var playerB = new Player();
-            playerB.ConnectionId = "2";
-            playerB.Name = "Barry";
-            playerB.Inventory = new ItemList();
-            playerB.Money = new GameLogic.Character.Model.Money()
+            var playerB = new Player
             {
-                Gold = 0,
-                Silver = 0
+                ConnectionId = "2",
+                Name = "Barry",
+                Inventory = new ItemList(),
+                Money = new GameLogic.Character.Model.Money()
+                {
+                    Gold = 0,
+                    Silver = 0
+                }
             };
 
             room.Players.Add(playerB);
             room.Players.Add(player);
 
-            new GameLogic.Commands.CommandHandler(_cache, _writer.Object, _clientui.Object, _roomActions.Object).HandleCommand(player, room, "give 500 gold barry");
+            new GameLogic.Commands.CommandHandler(_cache, _writer.Object, _clientui.Object, _roomActions.Object).HandleCommand(player, room, "give barry 500 gold");
 
             Assert.True(player.Money.Gold.Equals(0));
             Assert.True(playerB.Money.Gold.Equals(500));
@@ -253,30 +281,35 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
         [Fact]
         public void give_item_to_mob()
         {
-            var apple = new GameLogic.Item.Item();
-            apple.Name = "apple";
-            apple.Description = new Description()
+            var apple = new GameLogic.Item.Item
             {
-                Room = "apple"
+                Name = "apple",
+                Description = new Description
+                {
+                    Room = "apple"
+                }
             };
 
             var room = new Room();
 
-            var player = new Player();
-            player.ConnectionId = "1";
-            player.Name = "Gary";
-            player.Inventory = new ItemList();
-            player.Inventory.Add(apple);
+            var player = new Player
+            {
+                ConnectionId = "1",
+                Name = "Gary",
+                Inventory = new ItemList { apple }
+            };
 
-            var mob = new Player();
-            mob.ConnectionId = "mob";
-            mob.Name = "Mob";
-            mob.Inventory = new ItemList();
+            var mob = new Player
+            {
+                ConnectionId = "mob",
+                Name = "Mob",
+                Inventory = new ItemList()
+            };
 
             room.Players.Add(player);
             room.Players.Add(mob);
 
-            new GameLogic.Commands.CommandHandler(_cache, _writer.Object, _clientui.Object, _roomActions.Object).HandleCommand(player, room, "give apple Mob");
+            new GameLogic.Commands.CommandHandler(_cache, _writer.Object, _clientui.Object, _roomActions.Object).HandleCommand(player, room, "give Mob apple");
 
             Assert.True(player.Inventory.FirstOrDefault(x => x.Name == "apple") == null);
             Assert.True(mob.Inventory.FirstOrDefault(x => x.Name == "apple") != null);
@@ -285,30 +318,35 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
         [Fact]
         public void show_error_if_item_not_found_to_give()
         {
-            var apple = new GameLogic.Item.Item();
-            apple.Name = "apple";
-            apple.Description = new Description()
+            var apple = new GameLogic.Item.Item
             {
-                Room = "apple"
+                Name = "apple",
+                Description = new Description()
+                {
+                    Room = "apple"
+                }
             };
 
             var room = new Room();
 
-            var player = new Player();
-            player.ConnectionId = "1";
-            player.Name = "Gary";
-            player.Inventory = new ItemList();
-            player.Inventory.Add(apple);
+            var player = new Player
+            {
+                ConnectionId = "1",
+                Name = "Gary",
+                Inventory = new ItemList { apple }
+            };
 
-            var mob = new Player();
-            mob.ConnectionId = "mob";
-            mob.Name = "Mob";
-            mob.Inventory = new ItemList();
+            var mob = new Player
+            {
+                ConnectionId = "mob",
+                Name = "Mob",
+                Inventory = new ItemList()
+            };
 
             room.Players.Add(player);
             room.Players.Add(mob);
 
-            new GameLogic.Commands.CommandHandler(_cache, _writer.Object, _clientui.Object, _roomActions.Object).HandleCommand(player, room, "give bread Mob");
+            new GameLogic.Commands.CommandHandler(_cache, _writer.Object, _clientui.Object, _roomActions.Object).HandleCommand(player, room, "give Mob bread");
 
             _writer.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("You do not have that item.")), "1"), Times.Once());
         }
@@ -316,30 +354,35 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
         [Fact]
         public void show_error_if_char_not_found_to_give()
         {
-            var apple = new GameLogic.Item.Item();
-            apple.Name = "apple";
-            apple.Description = new Description()
+            var apple = new GameLogic.Item.Item
             {
-                Room = "apple"
+                Name = "apple",
+                Description = new Description
+                {
+                    Room = "apple"
+                }
             };
 
             var room = new Room();
 
-            var player = new Player();
-            player.ConnectionId = "1";
-            player.Name = "Gary";
-            player.Inventory = new ItemList();
-            player.Inventory.Add(apple);
+            var player = new Player
+            {
+                ConnectionId = "1",
+                Name = "Gary",
+                Inventory = new ItemList { apple }
+            };
 
-            var mob = new Player();
-            mob.ConnectionId = "mob";
-            mob.Name = "Mob";
-            mob.Inventory = new ItemList();
+            var mob = new Player
+            {
+                ConnectionId = "mob",
+                Name = "Mob",
+                Inventory = new ItemList()
+            };
 
             room.Players.Add(player);
             room.Players.Add(mob);
 
-            new GameLogic.Commands.CommandHandler(_cache, _writer.Object, _clientui.Object, _roomActions.Object).HandleCommand(player, room, "give apple max");
+            new GameLogic.Commands.CommandHandler(_cache, _writer.Object, _clientui.Object, _roomActions.Object).HandleCommand(player, room, "give Max apple");
 
             _writer.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("They aren't here.")), "1"), Times.Once());
         }
@@ -348,16 +391,25 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
         [Fact]
         public void Should_open_closed_door()
         {
-            var exit = new Exit();
-            exit.Name = "North";
-            exit.Closed = true;
-            var room = new Room();
-            room.Exits.North = exit;
+            var exit = new Exit
+            {
+                Name = "North",
+                Closed = true
+            };
+            var room = new Room
+            {
+                Exits =
+                {
+                    North = exit
+                }
+            };
 
-            var player = new Player();
-            player.ConnectionId = "1";
-            player.Name = "Gary";
-            player.Inventory = new ItemList();
+            var player = new Player
+            {
+                ConnectionId = "1",
+                Name = "Gary",
+                Inventory = new ItemList()
+            };
 
             new GameLogic.Commands.CommandHandler(_cache, _writer.Object, _clientui.Object, _roomActions.Object).HandleCommand(player, room, "open north");
 
@@ -395,17 +447,19 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
                 Description = new Description(),
 
                 ItemType = GameLogic.Item.Item.ItemTypes.Container,
-                Container = new Container() { CanOpen = true, IsOpen = false, Items = new ItemList() },
+                Container = new Container { CanOpen = true, IsOpen = false, Items = new ItemList() },
 
             };
 
             var room = new Room();
             room.Items.Add(item);
 
-            var player = new Player();
-            player.ConnectionId = "1";
-            player.Name = "Gary";
-            player.Inventory = new ItemList();
+            var player = new Player
+            {
+                ConnectionId = "1",
+                Name = "Gary",
+                Inventory = new ItemList()
+            };
 
             new GameLogic.Commands.CommandHandler(_cache, _writer.Object, _clientui.Object, _roomActions.Object).HandleCommand(player, room, "open chest");
 
@@ -422,17 +476,19 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
                 Description = new Description(),
 
                 ItemType = GameLogic.Item.Item.ItemTypes.Container,
-                Container = new Container() { CanOpen = true, IsOpen = true, Items = new ItemList() },
+                Container = new Container { CanOpen = true, IsOpen = true, Items = new ItemList() },
 
             };
 
             var room = new Room();
             room.Items.Add(item);
 
-            var player = new Player();
-            player.ConnectionId = "1";
-            player.Name = "Gary";
-            player.Inventory = new ItemList();
+            var player = new Player
+            {
+                ConnectionId = "1",
+                Name = "Gary",
+                Inventory = new ItemList()
+            };
 
             new GameLogic.Commands.CommandHandler(_cache, _writer.Object, _clientui.Object, _roomActions.Object).HandleCommand(player, room, "close chest");
 
@@ -440,5 +496,4 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
             Assert.True(!item.Container.IsOpen);
         }
     }
-
 }

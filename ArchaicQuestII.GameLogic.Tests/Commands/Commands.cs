@@ -25,11 +25,12 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
     {
         private Room _room;
         private Player _player;
+        private ICommandHandler _commandHandler;
+        private readonly Mock<ICommand> _commandMove;
         private readonly Mock<IRoomActions> _roomActions;
         private readonly Mock<ISpells> _spell;
         private readonly Mock<IEquip> _equipment;
         private readonly Mock<ICombat> _combat;
-        private readonly Mock<ICommandHandler> _commandHandler;
         private readonly Mock<ICache> _cache;
         private readonly Mock<ISocials> _socials;
         private readonly Mock<ICore> _core;
@@ -53,7 +54,6 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
             _spell = new Mock<ISpells>();
             _equipment = new Mock<IEquip>();
             _combat = new Mock<ICombat>();
-            _commandHandler = new Mock<ICommandHandler>();
             _cache = new Mock<ICache>();
             _socials = new Mock<ISocials>();
             _core = new Mock<ICore>();
@@ -71,6 +71,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
             _areaActions = new Mock<IAreaActions>();
             _writer = new Mock<IWriteToClient>();
             _clientui = new Mock<IUpdateClientUI>();
+            _commandMove = new Mock<ICommand>();
 
             _player.ConnectionId = "1";
             _player.Name = "Bob";
@@ -93,6 +94,8 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
                     _player
                 }
             };
+
+            _commandHandler = new CommandHandler(_cache.Object, _writer.Object, _clientui.Object, _roomActions.Object);
         }
 
         [Fact]
@@ -101,7 +104,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
 
             //_movement.Setup(x => x.Move(_room, _player, "North", false, false));
             
-            new CommandHandler(_cache.Object, _writer.Object, _clientui.Object, _roomActions.Object).HandleCommand(_player, _room, "NoRth");
+            _commandHandler.HandleCommand(_player, _room, "NoRth");
 
             //_movement.Verify(x => x.Move(_room, _player, "North", false, false), Times.Once);
 
@@ -113,7 +116,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
 
             //_movement.Setup(x => x.Move(_room, _player, "North East", false, false));
             
-            new CommandHandler(_cache.Object, _writer.Object, _clientui.Object, _roomActions.Object).HandleCommand(_player, _room, "ne");
+            _commandHandler.HandleCommand(_player, _room, "ne");
 
             //_movement.Verify(x => x.Move(_room, _player, "North East", false, false), Times.Once);
 
@@ -125,7 +128,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
 
             //_movement.Setup(x => x.Move(_room, _player, "North West", false, false));
 
-            new CommandHandler(_cache.Object, _writer.Object, _clientui.Object, _roomActions.Object).HandleCommand(_player, _room, "nw");
+            _commandHandler.HandleCommand(_player, _room, "nw");
 
             //_movement.Verify(x => x.Move(_room, _player, "North West", false, false), Times.Once);
 
@@ -138,7 +141,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
 
             //_movement.Setup(x => x.Move(_room, _player, "South West", false, false));
 
-            new CommandHandler(_cache.Object, _writer.Object, _clientui.Object, _roomActions.Object).HandleCommand(_player, _room, "sw");
+            _commandHandler.HandleCommand(_player, _room, "sw");
 
             //_movement.Verify(x => x.Move(_room, _player, "South West", false, false), Times.Once);
 
@@ -150,7 +153,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
 
             //_movement.Setup(x => x.Move(_room, _player, "South East", false, false));
 
-            new CommandHandler(_cache.Object, _writer.Object, _clientui.Object, _roomActions.Object).HandleCommand(_player, _room, "se");
+            _commandHandler.HandleCommand(_player, _room, "se");
 
             //_movement.Verify(x => x.Move(_room, _player, "South East", false, false), Times.Once);
 
@@ -164,7 +167,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
 
             //_movement.Setup(x => x.Move(_room, _player, "North", false, false));
 
-            new CommandHandler(_cache.Object, _writer.Object, _clientui.Object, _roomActions.Object).HandleCommand(_player, _room, "n");
+            _commandHandler.HandleCommand(_player, _room, "n");
 
             //_movement.Verify(x => x.Move(_room, _player, "North", false, false), Times.Once);
 
@@ -176,7 +179,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
 
             //_movement.Setup(x => x.Move(_room, _player, "East", false, false));
 
-            new CommandHandler(_cache.Object, _writer.Object, _clientui.Object, _roomActions.Object).HandleCommand(_player, _room, "e");
+            _commandHandler.HandleCommand(_player, _room, "e");
 
             //_movement.Verify(x => x.Move(_room, _player, "East", false, false), Times.Once);
 
@@ -188,7 +191,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
 
             //_movement.Setup(x => x.Move(_room, _player, "South", false, false));
 
-            new CommandHandler(_cache.Object, _writer.Object, _clientui.Object, _roomActions.Object).HandleCommand(_player, _room, "s");
+            _commandHandler.HandleCommand(_player, _room, "s");
 
             //_movement.Verify(x => x.Move(_room, _player, "South", false, false), Times.Once);
 
@@ -200,7 +203,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
 
             //_movement.Setup(x => x.Move(_room, _player, "Up", false, false));
 
-            new CommandHandler(_cache.Object, _writer.Object, _clientui.Object, _roomActions.Object).HandleCommand(_player, _room, "u");
+            _commandHandler.HandleCommand(_player, _room, "u");
 
             //_movement.Verify(x => x.Move(_room, _player, "Up", false, false), Times.Once);
 
@@ -210,23 +213,22 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
         public void Should_call_move_Down()
         {
 
-            //_movement.Setup(x => x.Move(_room, _player, "Down", false, false));
+            _commandMove.Setup(x => x.Execute(_player, _room, new[]{"d"}));
 
-            new CommandHandler(_cache.Object, _writer.Object, _clientui.Object, _roomActions.Object).HandleCommand(_player, _room, "d");
+            _commandHandler.HandleCommand(_player, _room, "d");
 
-            //_movement.Verify(x => x.Move(_room, _player, "Down", false, false), Times.Once);
+            _commandMove.Verify(x => x.Execute(_player, _room, new[]{"d"}), Times.Once);
 
         }
 
         [Fact]
         public void Should_call_debug()
         {
+            //_commandHandler.Setup(x => x.HandleCommand(_player, _room, "/debug"));
+            
+            //_commandHandler.HandleCommand(_player, _room, "/debug");
 
-            //_debug.Setup(x => x.DebugRoom(_room, _player));
-
-            new CommandHandler(_cache.Object, _writer.Object, _clientui.Object, _roomActions.Object).HandleCommand(_player, _room, "/debug");
-
-            //_debug.Verify(x => x.DebugRoom(_room, _player), Times.Once);
+            //_commandHandler.Verify(x => x.HandleCommand(_player, _room, "/debug"), Times.Once);
 
         }
     }

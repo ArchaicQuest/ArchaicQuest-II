@@ -68,6 +68,12 @@ public class GiveCmd : ICommand
         var nthItem = Helpers.findNth(itemName);
         var nthTarget = Helpers.findNth(targetName);
         var target = Helpers.FindMob(nthTarget, room) ?? Helpers.findPlayerObject(nthTarget, room);
+        
+        if (target == null)
+        {
+            Writer.WriteLine("<p>They aren't here.</p>", player.ConnectionId);
+            return;
+        }
 
         if (itemName == "gold" && int.TryParse(itemAmount, out var amount))
         {

@@ -34,13 +34,7 @@ public class SitCmd : ICommand
     public void Execute(Player player, Room room, string[] input)
     {
         var target = input.ElementAtOrDefault(1);
-        
-        if (string.IsNullOrEmpty(target))
-        {
-            Writer.WriteLine("<p>Sit on what?</p>", player.ConnectionId);
-            return;
-        }
-        
+
         if (!string.IsNullOrEmpty(player.Mounted.Name))
         {
             Writer.WriteLine("<p>You can't do that while mounted.</p>", player.ConnectionId);
@@ -53,10 +47,10 @@ public class SitCmd : ICommand
             return;
         }
 
-        if (target.Equals("sit", StringComparison.CurrentCultureIgnoreCase))
+        if (string.IsNullOrEmpty(target))
         {
-
             SetCharacterStatus(player, "is sitting here", CharacterStatus.Status.Sitting);
+            
             foreach (var pc in room.Players)
             {
 
@@ -73,7 +67,6 @@ public class SitCmd : ICommand
         }
         else
         {
-
             var obj = room.Items.FirstOrDefault(x =>
                 x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
 
@@ -98,7 +91,6 @@ public class SitCmd : ICommand
                 }
             }
         }
-
     }
 
     private void SetCharacterStatus(Player player, string longName, CharacterStatus.Status status)
