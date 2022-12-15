@@ -11,11 +11,9 @@ using ArchaicQuestII.GameLogic.World.Room;
 using Markdig;
 using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json.Serialization;
 
 namespace ArchaicQuestII.GameLogic.Core
 {
@@ -39,43 +37,7 @@ namespace ArchaicQuestII.GameLogic.Core
             _dice = dice;
             _gain = gain;
         }
-        public void Who(Player player)
-        {
-
-            var sb = new StringBuilder();
-            sb.Append("<ul>");
-            foreach (var pc in _cache.GetPlayerCache())
-            {
-                sb.Append(
-                    $"<li>[{pc.Value.Level} {pc.Value.Race} {pc.Value.ClassName}] ");
-                sb.Append(
-                    $"<span class='player'>{pc.Value.Name}, {pc.Value.Title}</span></li>");
-            }
-
-            sb.Append("</ul>");
-            sb.Append($"<p>Players found: {_cache.GetPlayerCache().Count}</p>");
-
-            _writeToClient.WriteLine(sb.ToString(), player.ConnectionId);
-
-
-        }
-
-        public void SetTitle(Player player, string title)
-        {
-
-            var titleText = title.Remove(0, 5);
-            if (string.IsNullOrEmpty(titleText))
-            {
-                _writeToClient.WriteLine("Change your title to what?", player.ConnectionId);
-                return;
-            }
-
-            player.Title = new string(titleText.Take(55).ToArray());
-            _writeToClient.WriteLine($"Title changes to {player.Title}", player.ConnectionId);
-
-        }
-
-
+        
         /// <summary>
         ///  /teleport 1000 (area id,X,Y,Z) || /teleport Malleus
         /// </summary>
@@ -190,45 +152,7 @@ namespace ArchaicQuestII.GameLogic.Core
             }
 
         }
-
-        public void Emote(Player player, Room room, string emote)
-        {
-            var emoteText = emote.Remove(0, 5);
-            var emoteMessage = $"{player.Name} {emoteText}";
-
-            foreach (var players in room.Players)
-            {
-                _writeToClient.WriteLine(emoteMessage, players.ConnectionId);
-            }
-        }
-
-        public void Pmote(Player player, Room room, string emote)
-        {
-            var emoteText = emote.Remove(0, 5);
-            var emoteMessage = emoteText;
-
-            foreach (var players in room.Players)
-            {
-                emoteMessage = emoteMessage.Replace(players.Name, "you", StringComparison.CurrentCultureIgnoreCase);
-
-                _writeToClient.WriteLine(player.Name + " " + emoteMessage, players.ConnectionId);
-            }
-        }
-
-        public void Pose(Player player, string pose)
-        {
-            var poseText = pose.Remove(0, 4);
-            if (string.IsNullOrEmpty(poseText))
-            {
-                player.Pose = poseText;
-            }
-
-
-            player.Pose = $", {poseText}";
-            _writeToClient.WriteLine("Pose set.", player.ConnectionId);
-        }
-
-
+        
         public void CheckPose(Player player)
         {
 
@@ -414,7 +338,6 @@ namespace ArchaicQuestII.GameLogic.Core
 
             _writeToClient.WriteLine(sb.ToString(), player.ConnectionId);
         }
-
 
         public void Save(Player player)
         {
@@ -1521,47 +1444,6 @@ namespace ArchaicQuestII.GameLogic.Core
            };
 
             return hints;
-        }
-
-        public void SacrificeCorpse(Player player, Item.Item corpse, Room room)
-        {
-            var itemToRemove = room.Items.FirstOrDefault(u => u.Id == corpse.Id);
-            room.Items.Remove(itemToRemove);
-         
-            var coinCount = _dice.Roll(1, 1, 12);
-            player.Money.Gold += coinCount;
-            _writeToClient.WriteLine(
-                coinCount == 1
-                    ? $"The gods give you a measly gold coin for your sacrifice."
-                    : $"The gods give you {coinCount} gold coins for your sacrifice.",
-                player.ConnectionId);
-            _writeToClient.WriteToOthersInRoom($"{player.Name} sacrifices {corpse.Name.ToLower()}.",room, player);
-            
-            _clientUi.UpdateScore(player);
-        }
-        
-        public void SacrificeCorpse(Player player, string corpse, Room room)
-        {
-            var itemToRemove = room.Items.FirstOrDefault(u => u.Name.Contains(corpse));
-
-            if (itemToRemove != null)
-            {
-
-                room.Items.Remove(itemToRemove);
-
-                var coinCount = _dice.Roll(1, 1, 12);
-                player.Money.Gold += coinCount;
-                _writeToClient.WriteLine(
-                    coinCount == 1
-                        ? $"The gods give you a measly gold coin for your sacrifice."
-                        : $"The gods give you {coinCount} gold coins for your sacrifice.",
-                    player.ConnectionId);
-
-
-                _writeToClient.WriteToOthersInRoom($"{player.Name} sacrifices {itemToRemove.Name.ToLower()}.", room, player);
-
-                _clientUi.UpdateScore(player);
-            }
         }
 
         public async void Harvest(Player player, string item, Room room)

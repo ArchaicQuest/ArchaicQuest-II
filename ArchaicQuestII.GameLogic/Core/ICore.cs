@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Class;
-using ArchaicQuestII.GameLogic.Character.Help;
 using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Core
@@ -14,25 +11,17 @@ namespace ArchaicQuestII.GameLogic.Core
         /// Displays lists of players 
         /// </summary>
         /// <param name="player"></param>
-        void Who(Player player);
         void DBDumpToJSON(Player player);
         List<string> Hints();
-        void SetTitle(Player player, string title);
         void Scan(Player player, Room room, string direction);
         void ScanDirection(Player player, Room room, string direction);
         void Affects(Player player);
-        void Emote(Player player, Room room, string emote);
-        void Pmote(Player player, Room room, string emote);
-        void Pose(Player player, string pose);
         void CheckPose(Player player);
         void ImmTeleport(Player player, Room room, string location);
         void Practice(Player player, Room room, string skillName);
-
         void Read(Player player, string book, string pageNum, string fullCommand);
-
         void Write(Player player, string book, string pageNum, string fullCommand);
         bool SkillCheckSuccesful(SkillList skill);
-
         void GainSkillProficiency(SkillList foundSkill, Player player);
         void Save(Player player);
         void Quit(Player player, Room room);
@@ -68,8 +57,6 @@ namespace ArchaicQuestII.GameLogic.Core
         void TrainSkill(Player player);
 
         void Dismount(Player player, Room room);
-        void SacrificeCorpse(Player player, Item.Item corpse, Room room);
-        void SacrificeCorpse(Player player, string corpse, Room room);
 
         /// <summary>
         /// Admin only used to test mob script events

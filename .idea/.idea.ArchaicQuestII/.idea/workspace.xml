@@ -7,16 +7,14 @@
     <projectFile>ArchaicQuestII.GameLogic.Tests/ArchaicQuestII.GameLogic.Tests.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2eff0800-fb31-4811-bfc6-8df5e26cbfe9" name="Changes" comment="Whole new command system!">
+    <list default="true" id="2eff0800-fb31-4811-bfc6-8df5e26cbfe9" name="Changes" comment="Updates &amp; Fixes">
+      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Combat/ConsiderCmd.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Objects/SacrificeCorpseCmd.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ArchaicQuestII/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ArchaicQuestII/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic.Tests/Commands/Commands.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic.Tests/Commands/Commands.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic.Tests/Commands/Movement/Movement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic.Tests/Commands/Movement/Movement.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic.Tests/Commands/Objects/Objects.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic.Tests/Commands/Objects/Objects.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Info/LookCmd.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Info/LookCmd.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Movement/MoveCmd.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Movement/MoveCmd.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Movement/SitCmd.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Movement/SitCmd.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Objects/GiveCmd.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Objects/GiveCmd.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/World/Room/RoomActions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/World/Room/RoomActions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/Combat.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/Combat.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/ICombat.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/ICombat.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/Core.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/Core.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/ICore.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/ICore.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,6 +30,7 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/ArchaicQuestII.API/Program.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///Users/daniel/RiderProjects/Command/Mud-Server/ArchaicQuestII.GameLogic.Tests/Commands/Commands.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/Combat.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/ICombat.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/WriteToClient.cs" root0="FORCE_HIGHLIGHTING" />
@@ -113,7 +112,7 @@
       <workItem from="1665607839326" duration="1542000" />
       <workItem from="1665785106353" duration="22661000" />
       <workItem from="1669074020115" duration="15139000" />
-      <workItem from="1671034008519" duration="22168000" />
+      <workItem from="1671034008519" duration="24124000" />
     </task>
     <task id="LOCAL-00002" summary="WIP Config settings setup and API">
       <created>1660518380350</created>
@@ -192,7 +191,14 @@
       <option name="project" value="LOCAL" />
       <updated>1671062109590</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="Updates &amp; Fixes">
+      <created>1671066030016</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1671066030016</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -609,7 +615,8 @@
     <MESSAGE value="foraging, lore, lua script update" />
     <MESSAGE value="merge master to foraging" />
     <MESSAGE value="Whole new command system!" />
-    <option name="LAST_COMMIT_MESSAGE" value="Whole new command system!" />
+    <MESSAGE value="Updates &amp; Fixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Updates &amp; Fixes" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -746,13 +753,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/Combat.cs</url>
-          <line>766</line>
+          <line>750</line>
           <properties documentPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Combat/Combat.cs" initialLine="766" containingFunctionPresentation="method 'Fight'">
             <startOffsets>
-              <option value="30291" />
+              <option value="30223" />
             </startOffsets>
             <endOffsets>
-              <option value="30312" />
+              <option value="30244" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="108" />
