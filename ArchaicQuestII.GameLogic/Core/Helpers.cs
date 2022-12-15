@@ -585,6 +585,19 @@ namespace ArchaicQuestII.GameLogic.Core
 
             return (skill == null || !(skill.Proficiency <= chance)) && chance != 1 && chance != 101;
         }
+        
+        public static bool SkillSuccessCheck(SkillList skill)
+        {
+            var proficiency = skill.Proficiency;
+            var success = new Dice().Roll(1, 1, 100);
+
+            if (success == 1 || success == 101)
+            {
+                return false;
+            }
+
+            return proficiency >= success;
+        }
 
         public static string SkillLearnMistakes(Player player, string skillName, IGain gain, int delay = 0)
         {
@@ -728,6 +741,44 @@ namespace ArchaicQuestII.GameLogic.Core
             // saves / saving spell
 
             return modBenefits;
+        }
+        
+        public static Tuple<string, EffectLocation> GetStatName(string name)
+        {
+            return name switch
+            {
+                "str" => new Tuple<string, EffectLocation>("strength", EffectLocation.Strength),
+                "dex" => new Tuple<string, EffectLocation>("dexterity", EffectLocation.Dexterity),
+                "con" => new Tuple<string, EffectLocation>("constitution", EffectLocation.Constitution),
+                "int" => new Tuple<string, EffectLocation>("intelligence", EffectLocation.Intelligence),
+                "wis" => new Tuple<string, EffectLocation>("wisdom", EffectLocation.Wisdom),
+                "cha" => new Tuple<string, EffectLocation>("charisma", EffectLocation.Charisma),
+                "hp" => new Tuple<string, EffectLocation>("hit points", EffectLocation.Hitpoints),
+                "move" => new Tuple<string, EffectLocation>("moves", EffectLocation.Moves),
+                "mana" => new Tuple<string, EffectLocation>("mana", EffectLocation.Mana),
+                _ => new Tuple<string, EffectLocation>("", EffectLocation.None)
+            };
+        }
+        
+        public static string Replace(string source, string oldString,
+            string newString, StringComparison comparison,
+            bool recursive = false)
+        {
+            var index = source.IndexOf(oldString, comparison);
+
+            while (index > -1)
+            {
+                source = source.Remove(index, oldString.Length);
+                source = source.Insert(index, newString);
+
+                if (!recursive)
+                {
+                    return source;
+                }
+                index = source.IndexOf(oldString, index + newString.Length, comparison);
+            }
+
+            return source;
         }
     }
 }

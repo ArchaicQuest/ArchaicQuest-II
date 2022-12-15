@@ -264,7 +264,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
                             if (hasFastHealing != null)
                             {
-                                if (_core.SkillCheckSuccesful(hasFastHealing))
+                                if (Helpers.SkillSuccessCheck(hasFastHealing))
                                 {
                                     hP *= 2;
                                 }

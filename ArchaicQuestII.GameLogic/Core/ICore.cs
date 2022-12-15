@@ -27,11 +27,8 @@ namespace ArchaicQuestII.GameLogic.Core
         /// <param name="player"></param>
         void DBDumpToJSON(Player player);
         List<string> Hints();
-        void Affects(Player player);
-        void Practice(Player player, Room room, string skillName);
         void Read(Player player, string book, string pageNum, string fullCommand);
         void Write(Player player, string book, string pageNum, string fullCommand);
-        bool SkillCheckSuccesful(SkillList skill);
         void GainSkillProficiency(SkillList foundSkill, Player player);
         /// <summary>
         /// Display questlog
