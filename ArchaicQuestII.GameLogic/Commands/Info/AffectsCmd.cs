@@ -10,9 +10,9 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
     {
         public AffectsCmd(ICore core)
         {
-            Aliases = new[] {"who"};
+            Aliases = new[] {"affects"};
             Description = "Displays current characters online.";
-            Usages = new[] {"Type: who"};
+            Usages = new[] {"Type: affects"};
             UserRole = UserRole.Player;
             Core = core;
         }

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Linq;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Commands;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.World.Room;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 
@@ -13,12 +15,14 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
     {
         private readonly Mock<IWriteToClient> _writer;
         private readonly Mock<ICore> _core;
+        private readonly Mock<ICommandHandler> _commandHandler;
 
 
         public Objects()
         {
             _writer = new Mock<IWriteToClient>();
             _core = new Mock<ICore>();
+            _commandHandler = new Mock<ICommandHandler>();
         }
 
 
@@ -44,7 +48,9 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
                 Inventory = new ItemList()
             };
 
-            new GameLogic.Commands.CommandHandler(_core.Object).HandleCommand(player, room, "get apple");
+            _core.SetupAllProperties();
+            _commandHandler.SetupAllProperties();
+            _commandHandler.Object.HandleCommand(player, room, "get apple");
 
             Assert.True(room.Items.FirstOrDefault(x => x.Name == "apple") == null);
         }
@@ -335,7 +341,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
             room.Players.Add(player);
             room.Players.Add(mob);
 
-            new GameLogic.Commands.CommandHandler(_core.Object).HandleCommand(player, room, "give Mob bread");
+            _commandHandler.Object.HandleCommand(player, room, "give Mob bread");
 
             _writer.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("You do not have that item.")), "1"), Times.Once());
         }

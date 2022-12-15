@@ -27,9 +27,8 @@ namespace ArchaicQuestII.GameLogic.Combat
         private readonly IDice _dice;
         private readonly IRandomItem _randomItem;
         private readonly IPlayerDataBase _pdb;
-        private readonly ICore _core;
 
-        public Combat(IWriteToClient writer, IUpdateClientUI clientUi, IDamage damage, IFormulas formulas, IGain gain, ICache cache, IQuestLog quest, IDice dice, IRandomItem randomItem, IPlayerDataBase pdb, ICore core)
+        public Combat(IWriteToClient writer, IUpdateClientUI clientUi, IDamage damage, IFormulas formulas, IGain gain, ICache cache, IQuestLog quest, IDice dice, IRandomItem randomItem, IPlayerDataBase pdb)
         {
             _writer = writer;
             _clientUi = clientUi;
@@ -41,7 +40,6 @@ namespace ArchaicQuestII.GameLogic.Combat
             _dice = dice;
             _randomItem = randomItem;
             _pdb = pdb;
-            _core = core;
         }
 
         // TODO: explain that player needs to be murdered

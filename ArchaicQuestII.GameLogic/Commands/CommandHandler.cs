@@ -11,11 +11,11 @@ namespace ArchaicQuestII.GameLogic.Commands
     /// </summary>
     public class CommandHandler : ICommandHandler
     {
-        private readonly ICore _core;
+        public ICore Core { get; }
 
         public CommandHandler(ICore core)
         {
-            _core = core;
+            Core = core;
             
             var commandTypes = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(s => s.GetTypes())
@@ -23,13 +23,13 @@ namespace ArchaicQuestII.GameLogic.Commands
 
             foreach (var t in commandTypes)
             {
-                var command = (ICommand)Activator.CreateInstance(t, _core);
+                var command = (ICommand)Activator.CreateInstance(t, Core);
 
                 if (command == null) continue;
 
                 foreach (var alias in command.Aliases)
                 {
-                    _core.Cache.AddCommand(alias, command);
+                    Core.Cache.AddCommand(alias, command);
                 }
             }
         }
@@ -44,9 +44,9 @@ namespace ArchaicQuestII.GameLogic.Commands
         {
             var commandInput = input.Split(' ', StringSplitOptions.RemoveEmptyEntries);;
             
-            if (!_core.Cache.GetCommand(commandInput[0].ToLower(), out var command))
+            if (!Core.Cache.GetCommand(commandInput[0].ToLower(), out var command))
             {
-                _core.Writer.WriteLine("That is not a command.", player.ConnectionId);
+                Core.Writer.WriteLine("That is not a command.", player.ConnectionId);
                 return;
             }
 
