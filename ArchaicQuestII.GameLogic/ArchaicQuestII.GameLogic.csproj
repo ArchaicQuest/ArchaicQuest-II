@@ -38,10 +38,4 @@
       <Folder Include="Skill\Type\" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Resource Include="Core\Keys.json">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Resource>
-    </ItemGroup>
-
 </Project>

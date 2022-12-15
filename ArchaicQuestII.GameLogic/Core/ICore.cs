@@ -31,12 +31,6 @@ namespace ArchaicQuestII.GameLogic.Core
         void Write(Player player, string book, string pageNum, string fullCommand);
         void GainSkillProficiency(SkillList foundSkill, Player player);
         /// <summary>
-        /// Display questlog
-        /// </summary>
-        /// <param name="player"></param>
-        void QuestLog(Player player);
-        void Recall(Player player, Room room);
-        /// <summary>
         /// Train attributes
         /// </summary>
         /// <param name="player"></param>
