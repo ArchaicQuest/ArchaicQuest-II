@@ -15,29 +15,20 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects;
 
 public class HarvestCmd : ICommand
 {
-    public HarvestCmd(IWriteToClient writeToClient, ICache cache, IUpdateClientUI updateClient, IRoomActions roomActions)
+    public HarvestCmd(ICore core)
     {
         Aliases = new[] {"harvest", "forage"};
         Description = "You try to harvest something";
         Usages = new[] {"Type: harvest ore", "Example: forage bushes"};
         UserRole = UserRole.Player;
-        Writer = writeToClient;
-        Cache = cache;
-        UpdateClient = updateClient;
-        RoomActions = roomActions;
-        _dice = new Dice();
+        Core = core;
     }
     
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
     public UserRole UserRole { get; }
-    public IWriteToClient Writer { get; }
-    public ICache Cache { get; }
-    public IUpdateClientUI UpdateClient { get; }
-    public IRoomActions RoomActions { get; }
-
-    private IDice _dice { get; }
+    public ICore Core { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
@@ -45,13 +36,13 @@ public class HarvestCmd : ICommand
 
         if (string.IsNullOrEmpty(target))
         {
-            Writer.WriteLine("Harvest what?", player.ConnectionId);
+            Core.Writer.WriteLine("Harvest what?", player.ConnectionId);
             return;
         }
         
         if (player.Status == CharacterStatus.Status.Busy)
         {
-            Writer.WriteLine("You are already doing it.", player.ConnectionId);
+            Core.Writer.WriteLine("You are already doing it.", player.ConnectionId);
             return;
         }
         
@@ -60,13 +51,13 @@ public class HarvestCmd : ICommand
 
         if (thingToHarvest == null)
         {
-            Writer.WriteLine($"You don't see that here.", player.ConnectionId);
+            Core.Writer.WriteLine($"You don't see that here.", player.ConnectionId);
             return;
         }
 
         if (!thingToHarvest.Container.Items.Any())
         {
-            Writer.WriteLine("There's nothing left to harvest.", player.ConnectionId);
+            Core.Writer.WriteLine("There's nothing left to harvest.", player.ConnectionId);
             return;
         }
 
@@ -77,9 +68,9 @@ public class HarvestCmd : ICommand
     {
         player.Status = CharacterStatus.Status.Busy;
 
-        UpdateClient.PlaySound("foraging", player);
+        Core.UpdateClient.PlaySound("foraging", player);
 
-        Writer.WriteLine($"You begin harvesting from {thingToHarvest.Name}.", player.ConnectionId);
+        Core.Writer.WriteLine($"You begin harvesting from {thingToHarvest.Name}.", player.ConnectionId);
         
         await Task.Delay(4000);
         
@@ -88,9 +79,9 @@ public class HarvestCmd : ICommand
             return;
         }
 
-        UpdateClient.PlaySound("foraging", player);
+        Core.UpdateClient.PlaySound("foraging", player);
 
-        Writer.WriteLine("You rummage through the foliage looking for something to harvest",
+        Core.Writer.WriteLine("You rummage through the foliage looking for something to harvest",
             player.ConnectionId);
         
         await Task.Delay(4000);
@@ -100,9 +91,9 @@ public class HarvestCmd : ICommand
             return;
         }
 
-        UpdateClient.PlaySound("foraging", player);
+        Core.UpdateClient.PlaySound("foraging", player);
 
-        Writer.WriteLine("You continue searching.", player.ConnectionId);
+        Core.Writer.WriteLine("You continue searching.", player.ConnectionId);
 
         await Task.Delay(4000);
         
@@ -111,7 +102,7 @@ public class HarvestCmd : ICommand
             return;
         }
         
-        var roll = _dice.Roll(1, 1, 10);
+        var roll = Core.Dice.Roll(1, 1, 10);
 
         var randomMobObj = roll switch
         {
@@ -204,7 +195,7 @@ public class HarvestCmd : ICommand
         
         if (roll <= 1)
         {
-            Writer.WriteLine(
+            Core.Writer.WriteLine(
                 $"{{yellow}}{randomMob.Name} jumps out from the {thingToHarvest.Name} and attacks you !{{/}}",
                 player.ConnectionId);
             room.Mobs.Add(randomMob);
@@ -215,7 +206,7 @@ public class HarvestCmd : ICommand
 
         if (roll <= 3)
         {
-            Writer.WriteLine(
+            Core.Writer.WriteLine(
                 $"{{yellow}}You cut yourself foraging, OUCH!{{/}}",
                 player.ConnectionId);
             player.Status = CharacterStatus.Status.Standing;
@@ -226,9 +217,8 @@ public class HarvestCmd : ICommand
 
         if (!canDoSkill)
         {
-            Writer.WriteLine("You fail to harvest a thing.", player.ConnectionId);
-            //TODO: fix after moving update ui to automagic
-            //Helpers.SkillLearnMistakes(player, "foraging");
+            Core.Writer.WriteLine("You fail to harvest a thing.", player.ConnectionId);
+            Core.Writer.WriteLine(Helpers.SkillLearnMistakes(player, "foraging", Core.Gain), player.ConnectionId);
             player.Status = CharacterStatus.Status.Standing;
             return;
         }
@@ -236,7 +226,7 @@ public class HarvestCmd : ICommand
         var collected = "";
         var collectedCount = 1;
         
-        foreach (var harvestItem in thingToHarvest.Container.Items.Where(harvestItem => _dice.Roll(1, 1, 10) <= 3))
+        foreach (var harvestItem in thingToHarvest.Container.Items.Where(harvestItem => Core.Dice.Roll(1, 1, 10) <= 3))
         {
             collected = harvestItem.Name;
             collectedCount++;
@@ -244,17 +234,16 @@ public class HarvestCmd : ICommand
             // if the User has herbalism the conditions will be higher rated
             // on success skill check the roll could be 50, 100
             // if elven the condition can be 10 points higher
-            harvestItem.Condition = _dice.Roll(1, 1, 65);
+            harvestItem.Condition = Core.Dice.Roll(1, 1, 65);
 
             switch (player.Race)
             {
                 case "Wood-Elf":
-                    harvestItem.Condition += _dice.Roll(1, 10, 20);
+                    harvestItem.Condition += Core.Dice.Roll(1, 10, 20);
                     break;
                 case "Elf":
                 case "Drow":
-                    harvestItem.Condition += _dice.Roll(1, 5, 10);
-                    ;
+                    harvestItem.Condition += Core.Dice.Roll(1, 5, 10);
                     break;
             }
 
@@ -266,7 +255,7 @@ public class HarvestCmd : ICommand
             thingToHarvest.Container.Items.Remove(thingToHarvest.Container.Items[i]);
         }
 
-        Writer.WriteLine(
+        Core.Writer.WriteLine(
             $"Ah you have collected {collectedCount} {collected}{(collectedCount > 1 ? "'s" : "")}",
             player.ConnectionId);
         player.Status = CharacterStatus.Status.Standing;
@@ -285,14 +274,14 @@ public class HarvestCmd : ICommand
             return;
         }
 
-        if (!Cache.IsCharInCombat(player.Id.ToString()))
+        if (!Core.Cache.IsCharInCombat(player.Id.ToString()))
         {
-            Cache.AddCharToCombat(player.Id.ToString(), player);
+            Core.Cache.AddCharToCombat(player.Id.ToString(), player);
         }
 
-        if (!Cache.IsCharInCombat(target.Id.ToString()))
+        if (!Core.Cache.IsCharInCombat(target.Id.ToString()))
         {
-            Cache.AddCharToCombat(target.Id.ToString(), target);
+            Core.Cache.AddCharToCombat(target.Id.ToString(), target);
         }
     }
 }

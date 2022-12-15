@@ -11,26 +11,20 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 {
     public class EatCmd : ICommand
     {
-        public EatCmd(IWriteToClient writeToClient, ICache cache, IUpdateClientUI updateClient, IRoomActions roomActions)
+        public EatCmd(ICore core)
         {
             Aliases = new[] {"eat"};
             Description = "Consume something.";
             Usages = new[] {"Type: eat apple"};
             UserRole = UserRole.Player;
-            Writer = writeToClient;
-            Cache = cache;
-            UpdateClient = updateClient;
-            RoomActions = roomActions;
+            Core = core;
         }
         
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
         public UserRole UserRole { get; }
-        public IWriteToClient Writer { get; }
-        public ICache Cache { get; }
-        public IUpdateClientUI UpdateClient { get; }
-        public IRoomActions RoomActions { get; }
+        public ICore Core { get; }
 
         public void Execute(Player player, Room room, string[] input)
         {
@@ -38,7 +32,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
             if (string.IsNullOrEmpty(target))
             {
-                Writer.WriteLine("Eat what?", player.ConnectionId);
+                Core.Writer.WriteLine("Eat what?", player.ConnectionId);
                 return;
             }
             
@@ -47,19 +41,19 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
             if (food == null)
             {
-                Writer.WriteLine("You have no food of that name.", player.ConnectionId);
+                Core.Writer.WriteLine("You have no food of that name.", player.ConnectionId);
                 return;
             }
 
             if (food.ItemType != Item.Item.ItemTypes.Food)
             {
-                Writer.WriteLine($"You can't eat {food.Name.ToLower()}.", player.ConnectionId);
+                Core.Writer.WriteLine($"You can't eat {food.Name.ToLower()}.", player.ConnectionId);
                 return;
             }
 
             if (player.Hunger >= 4)
             {
-                Writer.WriteLine("You are too full to eat more.", player.ConnectionId);
+                Core.Writer.WriteLine("You are too full to eat more.", player.ConnectionId);
                 return;
             }
 
@@ -67,11 +61,11 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
             player.Inventory.Remove(food);
 
-            Writer.WriteLine($"You eat {food.Name.ToLower()}.", player.ConnectionId);
+            Core.Writer.WriteLine($"You eat {food.Name.ToLower()}.", player.ConnectionId);
             
             foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
             {
-                Writer.WriteLine($"{player.Name} eats {food.Name.ToLower()}.", pc.ConnectionId);
+                Core.Writer.WriteLine($"{player.Name} eats {food.Name.ToLower()}.", pc.ConnectionId);
             }
 
             var benefits = new StringBuilder().Append("<table>");
@@ -108,15 +102,15 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
             if (player.Hunger >= 4)
             {
-                Writer.WriteLine("You are no longer hungry.", player.ConnectionId);
+                Core.Writer.WriteLine("You are no longer hungry.", player.ConnectionId);
             }
 
-            UpdateClient.UpdateAffects(player);
-            UpdateClient.UpdateScore(player);
-            UpdateClient.UpdateMoves(player);
-            UpdateClient.UpdateHP(player);
-            UpdateClient.UpdateMana(player);
-            UpdateClient.UpdateInventory(player);
+            Core.UpdateClient.UpdateAffects(player);
+            Core.UpdateClient.UpdateScore(player);
+            Core.UpdateClient.UpdateMoves(player);
+            Core.UpdateClient.UpdateHP(player);
+            Core.UpdateClient.UpdateMana(player);
+            Core.UpdateClient.UpdateInventory(player);
         }
     }
 }

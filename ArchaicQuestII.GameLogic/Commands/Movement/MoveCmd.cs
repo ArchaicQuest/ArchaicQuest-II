@@ -10,7 +10,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement;
 
 public class MoveCmd : ICommand
 {
-    public MoveCmd(IWriteToClient writeToClient, ICache cache, IUpdateClientUI updateClient, IRoomActions roomActions)
+    public MoveCmd(ICore core)
     {
         Aliases = new[]
         {
@@ -37,26 +37,20 @@ public class MoveCmd : ICommand
         Description = "Tries to move your character to the direction typed.";
         Usages = new[] { "Type: north", "Type: southwest" };
         UserRole = UserRole.Player;
-        Writer = writeToClient;
-        Cache = cache;
-        UpdateClient = updateClient;
-        RoomActions = roomActions;
+        Core = core;
     }
     
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
     public UserRole UserRole { get; }
-    public IWriteToClient Writer { get; }
-    public ICache Cache { get; }
-    public IUpdateClientUI UpdateClient { get; }
-    public IRoomActions RoomActions { get; }
+    public ICore Core { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
         if (CharacterCanMove(player) == false)
         {
-            Writer.WriteLine("<p>You are too exhausted to move.</p>", player.ConnectionId);
+            Core.Writer.WriteLine("<p>You are too exhausted to move.</p>", player.ConnectionId);
             return;
         }
         
@@ -64,19 +58,19 @@ public class MoveCmd : ICommand
         {
             case CharacterStatus.Status.Fighting:
             case CharacterStatus.Status.Incapacitated:
-                Writer.WriteLine("<p>NO WAY! you are fighting.</p>", player.ConnectionId);
+                Core.Writer.WriteLine("<p>NO WAY! you are fighting.</p>", player.ConnectionId);
                 return;
             case CharacterStatus.Status.Resting:
-                Writer.WriteLine("<p>Nah... You feel too relaxed to do that.</p>", player.ConnectionId);
+                Core.Writer.WriteLine("<p>Nah... You feel too relaxed to do that.</p>", player.ConnectionId);
                 return;
             case CharacterStatus.Status.Sitting:
-                Writer.WriteLine("<p>You can't do that while sitting.</p>", player.ConnectionId);
+                Core.Writer.WriteLine("<p>You can't do that while sitting.</p>", player.ConnectionId);
                 return;
             case CharacterStatus.Status.Sleeping:
-                Writer.WriteLine("<p>In your dreams.</p>", player.ConnectionId);
+                Core.Writer.WriteLine("<p>In your dreams.</p>", player.ConnectionId);
                 return;
             case CharacterStatus.Status.Stunned:
-                Writer.WriteLine("<p>You are too stunned to move.</p>", player.ConnectionId);
+                Core.Writer.WriteLine("<p>You are too stunned to move.</p>", player.ConnectionId);
                 return;
         }
 
@@ -128,24 +122,24 @@ public class MoveCmd : ICommand
 
         if (getExitToNextRoom == null)
         {
-            Writer.WriteLine("<p>You can't go that way.</p>", player.ConnectionId);
+            Core.Writer.WriteLine("<p>You can't go that way.</p>", player.ConnectionId);
             return;
         }
 
         var nextRoomKey =
             $"{getExitToNextRoom.AreaId}{getExitToNextRoom.Coords.X}{getExitToNextRoom.Coords.Y}{getExitToNextRoom.Coords.Z}";
-        var getNextRoom = Cache.GetRoom(nextRoomKey);
+        var getNextRoom = Core.Cache.GetRoom(nextRoomKey);
 
         if (getNextRoom == null)
         {
-            Writer.WriteLine("<p>A mysterious force prevents you from going that way.</p>", player.ConnectionId);
+            Core.Writer.WriteLine("<p>A mysterious force prevents you from going that way.</p>", player.ConnectionId);
             //TODO: log bug that the new room could not be found
             return;
         }
 
         if (getExitToNextRoom.Closed)
         {
-            Writer.WriteLine("<p>The door is close.</p>", player.ConnectionId);
+            Core.Writer.WriteLine("<p>The door is close.</p>", player.ConnectionId);
             return;
         }
 
@@ -159,13 +153,13 @@ public class MoveCmd : ICommand
             }
         }
 
-        RoomActions.RoomChange(player, room, getNextRoom);
+        Core.RoomActions.RoomChange(player, room, getNextRoom);
 
         if (player.Followers.Count >= 1)
         {
             foreach (var follower in player.Followers.Where(follower => room.Players.Contains(follower) || room.Mobs.Contains(follower)))
             {
-                RoomActions.RoomChange(follower, room, getNextRoom);
+                Core.RoomActions.RoomChange(follower, room, getNextRoom);
             }
         }
 
@@ -176,7 +170,7 @@ public class MoveCmd : ICommand
 
             if (mountedMob != null)
             {
-                RoomActions.RoomChange(mountedMob, room, getNextRoom);
+                Core.RoomActions.RoomChange(mountedMob, room, getNextRoom);
             }
         }
     }

@@ -8,26 +8,20 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 {
     public class WhoCmd : ICommand
     {
-        public WhoCmd(IWriteToClient writeToClient, ICache cache, IUpdateClientUI updateClient, IRoomActions roomActions)
+        public WhoCmd(ICore core)
         {
             Aliases = new[] {"who"};
             Description = "Displays current characters online.";
             Usages = new[] {"Type: who"};
             UserRole = UserRole.Player;
-            Writer = writeToClient;
-            Cache = cache;
-            UpdateClient = updateClient;
-            RoomActions = roomActions;
+            Core = core;
         }
         
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
         public UserRole UserRole { get; }
-        public IWriteToClient Writer { get; }
-        public ICache Cache { get; }
-        public IUpdateClientUI UpdateClient { get; }
-        public IRoomActions RoomActions { get; }
+        public ICore Core { get; }
 
         public void Execute(Player player, Room room, string[] input)
         {
@@ -35,7 +29,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
             
             sb.Append("<ul>");
             
-            foreach (var pc in Cache.GetPlayerCache())
+            foreach (var pc in Core.Cache.GetPlayerCache())
             {
                 sb.Append(
                     $"<li>[{pc.Value.Level} {pc.Value.Race} {pc.Value.ClassName}] ");
@@ -44,9 +38,9 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
             }
 
             sb.Append("</ul>");
-            sb.Append($"<p>Players found: {Cache.GetPlayerCache().Count}</p>");
+            sb.Append($"<p>Players found: {Core.Cache.GetPlayerCache().Count}</p>");
 
-            Writer.WriteLine(sb.ToString(), player.ConnectionId);
+            Core.Writer.WriteLine(sb.ToString(), player.ConnectionId);
         }
     }
 }

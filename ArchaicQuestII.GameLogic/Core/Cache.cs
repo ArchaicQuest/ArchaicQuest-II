@@ -2,7 +2,6 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Emote;
@@ -34,33 +33,6 @@ namespace ArchaicQuestII.GameLogic.Core
         private readonly Dictionary<string, ICommand> _commands = new();
         private Config _configCache = new();
 
-        private IDataBase _db;
-        private IPlayerDataBase _pdb;
-
-        #region DataBase Cache
-
-        public void SetDatabase(IDataBase db)
-        {
-            _db = db;
-        }
-
-        public IDataBase GetDatabase()
-        {
-            return _db;
-        }
-
-        public void SetPlayerDatabase(IPlayerDataBase pdb)
-        {
-            _pdb = pdb;
-        }
-
-        public IPlayerDataBase GetPlayerDatabase()
-        {
-            return _pdb;
-        }
-
-        #endregion
-        
         #region PlayerCache
 
         public bool AddPlayer(string id, Player player)

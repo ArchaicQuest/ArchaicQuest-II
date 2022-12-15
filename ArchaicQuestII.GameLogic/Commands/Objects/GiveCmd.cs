@@ -3,31 +3,26 @@ using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.World.Room;
+using MoonSharp.Interpreter;
 
 namespace ArchaicQuestII.GameLogic.Commands.Objects;
 
 public class GiveCmd : ICommand
 {
-    public GiveCmd(IWriteToClient writeToClient, ICache cache, IUpdateClientUI updateClient, IRoomActions roomActions)
+    public GiveCmd(ICore core)
     {
         Aliases = new[] {"give"};
         Description = "You can give items and gold to players or mobs.";
         Usages = new[] {"Type: give 'target' 'object'", "Example: give timmy apple", "Example: give timmy 10 gold"};
         UserRole = UserRole.Player;
-        Writer = writeToClient;
-        Cache = cache;
-        UpdateClient = updateClient;
-        RoomActions = roomActions;
+        Core = core;
     }
     
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
     public UserRole UserRole { get; }
-    public IWriteToClient Writer { get; }
-    public ICache Cache { get; }
-    public IUpdateClientUI UpdateClient { get; }
-    public IRoomActions RoomActions { get; }
+    public ICore Core { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
@@ -35,7 +30,7 @@ public class GiveCmd : ICommand
         
         if (string.IsNullOrEmpty(targetName))
         {
-            Writer.WriteLine("<p>Give what to whom?</p>", player.ConnectionId);
+            Core.Writer.WriteLine("<p>Give what to whom?</p>", player.ConnectionId);
             return;
         }
 
@@ -55,13 +50,13 @@ public class GiveCmd : ICommand
 
         if (player.Affects.Blind)
         {
-            Writer.WriteLine("<p>You are blind and can't see a thing!</p>", player.ConnectionId);
+            Core.Writer.WriteLine("<p>You are blind and can't see a thing!</p>", player.ConnectionId);
             return;
         }
 
         if (string.IsNullOrEmpty(itemName))
         {
-            Writer.WriteLine("<p>Give what to whom?</p>", player.ConnectionId);
+            Core.Writer.WriteLine("<p>Give what to whom?</p>", player.ConnectionId);
             return;
         }
 
@@ -71,7 +66,7 @@ public class GiveCmd : ICommand
         
         if (target == null)
         {
-            Writer.WriteLine("<p>They aren't here.</p>", player.ConnectionId);
+            Core.Writer.WriteLine("<p>They aren't here.</p>", player.ConnectionId);
             return;
         }
 
@@ -85,20 +80,20 @@ public class GiveCmd : ICommand
 
         if (item == null)
         {
-            Writer.WriteLine("<p>You do not have that item.</p>", player.ConnectionId);
+            Core.Writer.WriteLine("<p>You do not have that item.</p>", player.ConnectionId);
             return;
         }
 
         if (item.Equipped)
         {
-            Writer.WriteLine($"<p>You must remove {item.Name.ToLower()} before you can give it.</p>",
+            Core.Writer.WriteLine($"<p>You must remove {item.Name.ToLower()} before you can give it.</p>",
                 player.ConnectionId);
             return;
         }
 
         if ((item.ItemFlag & Item.Item.ItemFlags.Nodrop) != 0)
         {
-            Writer.WriteLine($"<p>You can't let go of {item.Name.ToLower()}. It appears to be cursed.</p>",
+            Core.Writer.WriteLine($"<p>You can't let go of {item.Name.ToLower()}. It appears to be cursed.</p>",
                 player.ConnectionId);
             return;
         }
@@ -110,7 +105,7 @@ public class GiveCmd : ICommand
         {
             if (pc.Name == player.Name)
             {
-                Writer.WriteLine($"<p>You give {item.Name.ToLower()} to {target.Name.ToLower()}.</p>", pc.ConnectionId);
+                Core.Writer.WriteLine($"<p>You give {item.Name.ToLower()} to {target.Name.ToLower()}.</p>", pc.ConnectionId);
                 continue;
             }
 
@@ -119,23 +114,22 @@ public class GiveCmd : ICommand
                 continue;
             }
 
-            Writer.WriteLine($"<p>{player.Name} gives {item.Name.ToLower()} to {target.Name.ToLower()}.</p>",
+            Core.Writer.WriteLine($"<p>{player.Name} gives {item.Name.ToLower()} to {target.Name.ToLower()}.</p>",
                 pc.ConnectionId);
         }
 
         target.Inventory.Add(item);
-        Writer.WriteLine($"<p>{player.Name} gives you {item.Name.ToLower()}.</p>", target.ConnectionId);
-        UpdateClient.UpdateInventory(player);
-        UpdateClient.UpdateInventory(target);
+        Core.Writer.WriteLine($"<p>{player.Name} gives you {item.Name.ToLower()}.</p>", target.ConnectionId);
+        Core.UpdateClient.UpdateInventory(player);
+        Core.UpdateClient.UpdateInventory(target);
         
-        //TODO: Fix this
-        /**
+
         if (!string.IsNullOrEmpty(target.Events.Give))
         {
             UserData.RegisterType<MobScripts>();
 
             var script = new Script();
-            var obj = UserData.Create(_mobScripts);
+            var obj = UserData.Create(Core.MobScripts);
             script.Globals.Set("obj", obj);
             UserData.RegisterProxyType<MyProxy, Room>(r => new MyProxy(room));
             UserData.RegisterProxyType<ProxyPlayer, Player>(r => new ProxyPlayer(player));
@@ -146,7 +140,6 @@ public class GiveCmd : ICommand
 
             var res = script.DoString(target.Events.Give);
         }
-        **/
 
         // TODO: You are over encumbered 
     }
@@ -156,17 +149,17 @@ public class GiveCmd : ICommand
 
         if (player.Money.Gold < amount)
         {
-            Writer.WriteLine("<p>You don't have that much gold to give.</p>", player.ConnectionId);
+            Core.Writer.WriteLine("<p>You don't have that much gold to give.</p>", player.ConnectionId);
             return;
         }
 
         if (target == null)
         {
-            Writer.WriteLine("<p>They aren't here.</p>", player.ConnectionId);
+            Core.Writer.WriteLine("<p>They aren't here.</p>", player.ConnectionId);
             return;
         }
 
-        Writer.WriteLine(
+        Core.Writer.WriteLine(
             $"<p>You give {target.Name} {(amount == 1 ? "1 gold coin." : $"{amount} gold coins.")}</p>",
             player.ConnectionId);
 
@@ -174,19 +167,19 @@ public class GiveCmd : ICommand
         player.Weight -= amount * 0.1;
         target.Money.Gold += amount;
         target.Weight += amount * 0.1;
-        UpdateClient.UpdateScore(player);
+        Core.UpdateClient.UpdateScore(player);
 
         foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
         {
             if (pc.Name == target.Name)
             {
-                Writer.WriteLine(
+                Core.Writer.WriteLine(
                     $"<p>{player.Name} gives you {(amount == 1 ? "1 gold coin." : $"{amount} gold coins.")}</p>",
                     pc.ConnectionId);
                 continue;
             }
 
-            Writer.WriteLine($"<p>{player.Name} gives {target.Name} some gold.</p>",
+            Core.Writer.WriteLine($"<p>{player.Name} gives {target.Name} some gold.</p>",
                 pc.ConnectionId);
         }
     }

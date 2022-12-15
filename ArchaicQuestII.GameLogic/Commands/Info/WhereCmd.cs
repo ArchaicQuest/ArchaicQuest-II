@@ -10,31 +10,25 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 {
     public class WhereCmd : ICommand
     {
-        public WhereCmd(IWriteToClient writeToClient, ICache cache, IUpdateClientUI updateClient, IRoomActions roomActions)
+        public WhereCmd(ICore core)
         {
             Aliases = new[] {"where"};
             Description = "Displays characters whereabouts in the area.";
             Usages = new[] {"Type: where"};
             UserRole = UserRole.Player;
-            Writer = writeToClient;
-            Cache = cache;
-            UpdateClient = updateClient;
-            RoomActions = roomActions;
+            Core = core;
         }
         
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
         public UserRole UserRole { get; }
-        public IWriteToClient Writer { get; }
-        public ICache Cache { get; }
-        public IUpdateClientUI UpdateClient { get; }
-        public IRoomActions RoomActions { get; }
+        public ICore Core { get; }
 
         public void Execute(Player player, Room room, string[] input)
         {
-            var area = Cache.GetAllRoomsInArea(room.AreaId);
-            var areaName = Cache.GetDatabase().GetCollection<Area>(DataBase.Collections.Area).FindById(room.AreaId);
+            var area = Core.Cache.GetAllRoomsInArea(room.AreaId);
+            var areaName = Core.DataBase.GetCollection<Area>(DataBase.Collections.Area).FindById(room.AreaId);
 
             var sb = new StringBuilder();
 
@@ -52,7 +46,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 
             sb.Append("</ul>");
 
-            Writer.WriteLine(sb.ToString(), player.ConnectionId);
+            Core.Writer.WriteLine(sb.ToString(), player.ConnectionId);
         }
     }
 }

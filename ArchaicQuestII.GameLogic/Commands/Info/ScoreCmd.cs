@@ -11,26 +11,20 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 {
     public class ScoreCmd : ICommand
     {
-        public ScoreCmd(IWriteToClient writeToClient, ICache cache, IUpdateClientUI updateClient, IRoomActions roomActions)
+        public ScoreCmd(ICore core)
         {
             Aliases = new[] {"score", "sc"};
             Description = "Displays detailed information about your character.";
             Usages = new[] {"Type: score"};
             UserRole = UserRole.Player;
-            Writer = writeToClient;
-            Cache = cache;
-            UpdateClient = updateClient;
-            RoomActions = roomActions;
+            Core = core;
         }
         
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
         public UserRole UserRole { get; }
-        public IWriteToClient Writer { get; }
-        public ICache Cache { get; }
-        public IUpdateClientUI UpdateClient { get; }
-        public IRoomActions RoomActions { get; }
+        public ICore Core { get; }
 
         public void Execute(Player player, Room room, string[] input)
         {
@@ -53,7 +47,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
             sb.Append($"<tr><td class=\"cell-title\">Gold:</td><td>{player.Money.Gold}</td><td class=\"cell-title\">XP</td><td>{player.Experience}</td><td class=\"cell-title\"></td><td></td></tr>");
             sb.Append($"<tr><td class=\"cell-title\">Bank:</td><td>0</td><td class=\"cell-title\">TNL</td><td>{player.ExperienceToNextLevel}</td><td class=\"cell-title\"></td><td></td></tr></table>");
 
-            Writer.WriteLine(sb.ToString(), player.ConnectionId);
+            Core.Writer.WriteLine(sb.ToString(), player.ConnectionId);
         }
 
         private float CalculateWeight(Player player)

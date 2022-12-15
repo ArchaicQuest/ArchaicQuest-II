@@ -10,26 +10,20 @@ namespace ArchaicQuestII.GameLogic.Commands.Info;
 
 public class ListInventoryCmd : ICommand
 {
-    public ListInventoryCmd(IWriteToClient writeToClient, ICache cache, IUpdateClientUI updateClient, IRoomActions roomActions)
+    public ListInventoryCmd(ICore core)
     {
         Aliases = new[] {"inventory", "inv"};
         Description = "";
         Usages = new[] {"Type: inv"};
         UserRole = UserRole.Player;
-        Writer = writeToClient;
-        Cache = cache;
-        UpdateClient = updateClient;
-        RoomActions = roomActions;
+        Core = core;
     }
     
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
     public UserRole UserRole { get; }
-    public IWriteToClient Writer { get; }
-    public ICache Cache { get; }
-    public IUpdateClientUI UpdateClient { get; }
-    public IRoomActions RoomActions { get; }
+    public ICore Core { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
@@ -62,6 +56,6 @@ public class ListInventoryCmd : ICommand
             inventory.Append("<p>Nothing.</p>");
         }
         
-        Writer.WriteLine(inventory.ToString(), player.ConnectionId);
+        Core.Writer.WriteLine(inventory.ToString(), player.ConnectionId);
     }
 }

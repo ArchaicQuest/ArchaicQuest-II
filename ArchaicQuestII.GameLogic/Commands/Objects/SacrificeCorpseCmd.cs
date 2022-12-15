@@ -9,26 +9,20 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects;
 
 public class SacrificeCorpseCmd : ICommand
 {
-    public SacrificeCorpseCmd(IWriteToClient writeToClient, ICache cache, IUpdateClientUI updateClient, IRoomActions roomActions)
+    public SacrificeCorpseCmd(ICore core)
     {
         Aliases = new[] {"sacrifice"};
         Description = "You sacrifice a corpse.";
         Usages = new[] {"Type: sacrifice rat"};
         UserRole = UserRole.Player;
-        Writer = writeToClient;
-        Cache = cache;
-        UpdateClient = updateClient;
-        RoomActions = roomActions;
+        Core = core;
     }
     
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
     public UserRole UserRole { get; }
-    public IWriteToClient Writer { get; }
-    public ICache Cache { get; }
-    public IUpdateClientUI UpdateClient { get; }
-    public IRoomActions RoomActions { get; }
+    public ICore Core { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
@@ -36,7 +30,7 @@ public class SacrificeCorpseCmd : ICommand
 
         if (string.IsNullOrEmpty(target))
         {
-            Writer.WriteLine("<p>Sacrifice whom?</p>", player.ConnectionId);
+            Core.Writer.WriteLine("<p>Sacrifice whom?</p>", player.ConnectionId);
             return;
         }
 
@@ -47,16 +41,16 @@ public class SacrificeCorpseCmd : ICommand
             room.Items.Remove(itemToRemove);
             var coinCount = new Dice().Roll(1, 1, 12);
             player.Money.Gold += coinCount;
-            Writer.WriteLine(
+            Core.Writer.WriteLine(
                 coinCount == 1
-                    ? $"The gods give you a measly gold coin for your sacrifice."
+                    ? "The gods give you a measly gold coin for your sacrifice."
                     : $"The gods give you {coinCount} gold coins for your sacrifice.",
                 player.ConnectionId);
 
-            Writer.WriteToOthersInRoom($"{player.Name} sacrifices {itemToRemove.Name.ToLower()}.", room,
+            Core.Writer.WriteToOthersInRoom($"{player.Name} sacrifices {itemToRemove.Name.ToLower()}.", room,
                 player);
 
-            UpdateClient.UpdateScore(player);
+            Core.UpdateClient.UpdateScore(player);
         }
     }
 }

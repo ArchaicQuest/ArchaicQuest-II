@@ -10,26 +10,20 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects;
 
 public class GetCmd : ICommand
 {
-    public GetCmd(IWriteToClient writeToClient, ICache cache, IUpdateClientUI updateClient, IRoomActions roomActions)
+    public GetCmd(ICore core)
     {
         Aliases = new[] {"get"};
         Description = "Your character will get something.";
         Usages = new[] {"Type: get apple"};
         UserRole = UserRole.Player;
-        Writer = writeToClient;
-        Cache = cache;
-        UpdateClient = updateClient;
-        RoomActions = roomActions;
+        Core = core;
     }
     
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
     public UserRole UserRole { get; }
-    public IWriteToClient Writer { get; }
-    public ICache Cache { get; }
-    public IUpdateClientUI UpdateClient { get; }
-    public IRoomActions RoomActions { get; }
+    public ICore Core { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
@@ -38,13 +32,13 @@ public class GetCmd : ICommand
         
         if (string.IsNullOrEmpty(target))
         {
-            Writer.WriteLine("<p>Get what?</p>", player.ConnectionId);
+            Core.Writer.WriteLine("<p>Get what?</p>", player.ConnectionId);
             return;
         }
         
         if (player.Affects.Blind)
         {
-            Writer.WriteLine("<p>You are blind and can't see a thing!</p>", player.ConnectionId);
+            Core.Writer.WriteLine("<p>You are blind and can't see a thing!</p>", player.ConnectionId);
             return;
         }
         
@@ -69,7 +63,7 @@ public class GetCmd : ICommand
 
             if (containerObj == null)
             {
-                Writer.WriteLine("<p>You don't see that here.</p>", player.ConnectionId);
+                Core.Writer.WriteLine("<p>You don't see that here.</p>", player.ConnectionId);
                 return;
             }
 
@@ -77,11 +71,11 @@ public class GetCmd : ICommand
             {
                 if (containerObj.ItemType == Item.Item.ItemTypes.Forage)
                 {
-                    Writer.WriteLine("<p>Try forage instead.</p>", player.ConnectionId);
+                    Core.Writer.WriteLine("<p>Try forage instead.</p>", player.ConnectionId);
                     return;
                 }
 
-                Writer.WriteLine("<p>This is not a container.</p>", player.ConnectionId);
+                Core.Writer.WriteLine("<p>This is not a container.</p>", player.ConnectionId);
                 return;
             }
             
@@ -96,13 +90,13 @@ public class GetCmd : ICommand
         
         if (item == null)
         {
-            Writer.WriteLine("<p>You don't see that here.</p>", player.ConnectionId);
+            Core.Writer.WriteLine("<p>You don't see that here.</p>", player.ConnectionId);
             return;
         }
 
         if (item.Stuck)
         {
-            Writer.WriteLine("<p>You can't pick that up.</p>", player.ConnectionId);
+            Core.Writer.WriteLine("<p>You can't pick that up.</p>", player.ConnectionId);
             return;
         }
 
@@ -112,16 +106,16 @@ public class GetCmd : ICommand
         {
             if (item.ItemType == Item.Item.ItemTypes.Money)
             {
-                Writer.WriteLine($"<p>{player.Name} picks up {ItemList.DisplayMoneyAmount(item.Value).ToLower()}.</p>", pc.ConnectionId);
+                Core.Writer.WriteLine($"<p>{player.Name} picks up {ItemList.DisplayMoneyAmount(item.Value).ToLower()}.</p>", pc.ConnectionId);
                 continue;
             }
             
-            Writer.WriteLine($"<p>{player.Name} picks up {item.Name.ToLower()}.</p>", pc.ConnectionId);
+            Core.Writer.WriteLine($"<p>{player.Name} picks up {item.Name.ToLower()}.</p>", pc.ConnectionId);
         }
 
         if (item.ItemType == Item.Item.ItemTypes.Money)
         {
-            Writer.WriteLine($"<p>You pick up {ItemList.DisplayMoneyAmount(item.Value).ToLower()}.</p>", player.ConnectionId);
+            Core.Writer.WriteLine($"<p>You pick up {ItemList.DisplayMoneyAmount(item.Value).ToLower()}.</p>", player.ConnectionId);
             player.Money.Gold += item.Value;
             player.Weight += item.Value * 0.1;
         }
@@ -130,11 +124,11 @@ public class GetCmd : ICommand
             item.IsHiddenInRoom = false;
             player.Inventory.Add(item);
             player.Weight += item.Weight;
-            Writer.WriteLine($"<p>You pick up {item.Name.ToLower()}.</p>", player.ConnectionId);
+            Core.Writer.WriteLine($"<p>You pick up {item.Name.ToLower()}.</p>", player.ConnectionId);
         }
 
-        UpdateClient.UpdateInventory(player);
-        UpdateClient.UpdateScore(player);
+        Core.UpdateClient.UpdateInventory(player);
+        Core.UpdateClient.UpdateScore(player);
         room.Clean = false;
         
         // TODO: You are over encumbered 
@@ -144,7 +138,7 @@ public class GetCmd : ICommand
     {
         if (room.Items.Count == 0)
         {
-            Writer.WriteLine("<p>You don't see anything here.</p>", player.ConnectionId);
+            Core.Writer.WriteLine("<p>You don't see anything here.</p>", player.ConnectionId);
             return;
         }
 
@@ -154,7 +148,7 @@ public class GetCmd : ICommand
             {
                 if (room.Items[i].ItemType == Item.Item.ItemTypes.Money)
                 {
-                    Writer.WriteLine(
+                    Core.Writer.WriteLine(
                         $"<p>You pick up {ItemList.DisplayMoneyAmount(room.Items[i].Value).ToLower()}.</p>",
                         player.ConnectionId);
 
@@ -163,16 +157,16 @@ public class GetCmd : ICommand
                 }
                 else
                 {
-                    UpdateClient.PlaySound("get", player);
+                    Core.UpdateClient.PlaySound("get", player);
                     room.Items[i].IsHiddenInRoom = false;
                     player.Inventory.Add(room.Items[i]);
-                    Writer.WriteLine($"<p>You pick up {room.Items[i].Name.ToLower()}</p>", player.ConnectionId);
+                    Core.Writer.WriteLine($"<p>You pick up {room.Items[i].Name.ToLower()}</p>", player.ConnectionId);
                     player.Weight += room.Items[i].Weight;
                 }
 
                 foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
                 {
-                    Writer.WriteLine(
+                    Core.Writer.WriteLine(
                         room.Items[i].ItemType == Item.Item.ItemTypes.Money
                             ? $"<p>{player.Name} picks up  {ItemList.DisplayMoneyAmount(room.Items[i].Value).ToLower()}</p>"
                             : $"<p>{player.Name} picks up {room.Items[i].Name.ToLower()}.</p>",
@@ -183,13 +177,13 @@ public class GetCmd : ICommand
             }
             else
             {
-                Writer.WriteLine("<p>You can't get that.</p>", player.ConnectionId);
+                Core.Writer.WriteLine("<p>You can't get that.</p>", player.ConnectionId);
             }
         }
 
         room.Clean = false;
-        UpdateClient.UpdateInventory(player);
-        UpdateClient.UpdateScore(player);
+        Core.UpdateClient.UpdateInventory(player);
+        Core.UpdateClient.UpdateScore(player);
         // TODO: You are over encumbered 
     }
 
@@ -197,7 +191,7 @@ public class GetCmd : ICommand
     {
         if (container.Container.CanOpen && !container.Container.IsOpen)
         {
-            Writer.WriteLine("<p>You need to open it first.</p>", player.ConnectionId);
+            Core.Writer.WriteLine("<p>You need to open it first.</p>", player.ConnectionId);
             return;
         }
 
@@ -212,7 +206,7 @@ public class GetCmd : ICommand
 
         if (item == null)
         {
-            Writer.WriteLine("<p>You don't have that item.</p>", player.ConnectionId);
+            Core.Writer.WriteLine("<p>You don't have that item.</p>", player.ConnectionId);
             return;
         }
 
@@ -220,7 +214,7 @@ public class GetCmd : ICommand
 
         foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
         {
-            Writer.WriteLine(
+            Core.Writer.WriteLine(
                 item.ItemType == Item.Item.ItemTypes.Money
                     ? $"<p>{player.Name} gets {ItemList.DisplayMoneyAmount(item.Value).ToLower()} from {container.Name.ToLower()}</p>"
                     : $"<p>{player.Name} gets {item.Name.ToLower()} from {container.Name.ToLower()}.</p>",
@@ -229,7 +223,7 @@ public class GetCmd : ICommand
 
         if (item.ItemType == Item.Item.ItemTypes.Money)
         {
-            Writer.WriteLine(
+            Core.Writer.WriteLine(
                 $"<p>You get {ItemList.DisplayMoneyAmount(item.Value).ToLower()} from {container.Name.ToLower()}.</p>",
                 player.ConnectionId);
             player.Money.Gold += item.Value;
@@ -237,16 +231,16 @@ public class GetCmd : ICommand
         }
         else
         {
-            UpdateClient.PlaySound("get", player);
+            Core.UpdateClient.PlaySound("get", player);
             item.IsHiddenInRoom = false;
             player.Inventory.Add(item);
             player.Weight += item.Weight;
-            Writer.WriteLine($"<p>You get {item.Name.ToLower()} from {container.Name.ToLower()}.</p>",
+            Core.Writer.WriteLine($"<p>You get {item.Name.ToLower()} from {container.Name.ToLower()}.</p>",
                 player.ConnectionId);
         }
 
-        UpdateClient.UpdateInventory(player);
-        UpdateClient.UpdateScore(player);
+        Core.UpdateClient.UpdateInventory(player);
+        Core.UpdateClient.UpdateScore(player);
         room.Clean = false;
     }
 
@@ -254,7 +248,7 @@ public class GetCmd : ICommand
     {
         if (container.Container.Items.Count == 0)
         {
-            Writer.WriteLine($"<p>You see nothing in {container.Name.ToLower()}.</p>", player.ConnectionId);
+            Core.Writer.WriteLine($"<p>You see nothing in {container.Name.ToLower()}.</p>", player.ConnectionId);
             return;
         }
 
@@ -262,7 +256,7 @@ public class GetCmd : ICommand
         {
             if (container.Container.Items[i].ItemType == Item.Item.ItemTypes.Money)
             {
-                Writer.WriteLine(
+                Core.Writer.WriteLine(
                     $"<p>You pick up {ItemList.DisplayMoneyAmount(container.Container.Items[i].Value).ToLower()} from {container.Name.ToLower()}.</p>",
                     player.ConnectionId);
 
@@ -271,18 +265,18 @@ public class GetCmd : ICommand
             }
             else
             {
-                UpdateClient.PlaySound("get", player);
+                Core.UpdateClient.PlaySound("get", player);
                 container.Container.Items[i].IsHiddenInRoom = false;
                 player.Inventory.Add(container.Container.Items[i]);
                 player.Weight += container.Container.Items[i].Weight;
-                Writer.WriteLine(
+                Core.Writer.WriteLine(
                     $"<p>You pick up {container.Container.Items[i].Name.ToLower()} from {container.Name.ToLower()}.</p>",
                     player.ConnectionId);
             }
             
             foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
             {
-                Writer.WriteLine(
+                Core.Writer.WriteLine(
                     container.Container.Items[i].ItemType == Item.Item.ItemTypes.Money
                         ? $"<p>{player.Name} picks up {ItemList.DisplayMoneyAmount(container.Container.Items.Value).ToLower()} from {container.Name.ToLower()}.</p>"
                         : $"<p>{player.Name} picks up {container.Container.Items[i].Name.ToLower()} from {container.Name.ToLower()}</p>",
@@ -292,8 +286,8 @@ public class GetCmd : ICommand
             container.Container.Items.RemoveAt(i);
         }
 
-        UpdateClient.UpdateInventory(player);
-        UpdateClient.UpdateScore(player);
+        Core.UpdateClient.UpdateInventory(player);
+        Core.UpdateClient.UpdateScore(player);
         room.Clean = false;
         // TODO: You are over encumbered 
     }

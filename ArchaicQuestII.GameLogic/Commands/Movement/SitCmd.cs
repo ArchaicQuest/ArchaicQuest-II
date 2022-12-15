@@ -10,26 +10,20 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement;
 
 public class SitCmd : ICommand
 {
-    public SitCmd(IWriteToClient writeToClient, ICache cache, IUpdateClientUI updateClient, IRoomActions roomActions)
+    public SitCmd(ICore core)
     {
         Aliases = new[] {"sit"};
         Description = "Sits on something.";
         Usages = new[] {"Type: sit stool"};
         UserRole = UserRole.Player;
-        Writer = writeToClient;
-        Cache = cache;
-        UpdateClient = updateClient;
-        RoomActions = roomActions;
+        Core = core;
     }
     
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
     public UserRole UserRole { get; }
-    public IWriteToClient Writer { get; }
-    public ICache Cache { get; }
-    public IUpdateClientUI UpdateClient { get; }
-    public IRoomActions RoomActions { get; }
+    public ICore Core { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
@@ -37,13 +31,13 @@ public class SitCmd : ICommand
 
         if (!string.IsNullOrEmpty(player.Mounted.Name))
         {
-            Writer.WriteLine("<p>You can't do that while mounted.</p>", player.ConnectionId);
+            Core.Writer.WriteLine("<p>You can't do that while mounted.</p>", player.ConnectionId);
             return;
         }
 
         if (player.Status == CharacterStatus.Status.Sitting)
         {
-            Writer.WriteLine("<p>You are already sitting!</p>", player.ConnectionId);
+            Core.Writer.WriteLine("<p>You are already sitting!</p>", player.ConnectionId);
             return;
         }
 
@@ -56,11 +50,11 @@ public class SitCmd : ICommand
 
                 if (pc.Id.Equals(player.Id))
                 {
-                    Writer.WriteLine("<p>You sit down.</p>", player.ConnectionId);
+                    Core.Writer.WriteLine("<p>You sit down.</p>", player.ConnectionId);
                 }
                 else
                 {
-                    Writer.WriteLine($"<p>{player.Name} sits down.</p>", pc.ConnectionId);
+                    Core.Writer.WriteLine($"<p>{player.Name} sits down.</p>", pc.ConnectionId);
                 }
             }
 
@@ -72,7 +66,7 @@ public class SitCmd : ICommand
 
             if (obj == null)
             {
-                Writer.WriteLine("<p>You can't sit on that.</p>", player.ConnectionId);
+                Core.Writer.WriteLine("<p>You can't sit on that.</p>", player.ConnectionId);
                 return;
             }
 
@@ -82,11 +76,11 @@ public class SitCmd : ICommand
 
                 if (pc.Id.Equals(player.Id))
                 {
-                    Writer.WriteLine($"<p>You sit down on {obj.Name.ToLower()}.</p>", player.ConnectionId);
+                    Core.Writer.WriteLine($"<p>You sit down on {obj.Name.ToLower()}.</p>", player.ConnectionId);
                 }
                 else
                 {
-                    Writer.WriteLine($"<p>{player.Name} sits down on {obj.Name.ToLower()}.</p>",
+                    Core.Writer.WriteLine($"<p>{player.Name} sits down on {obj.Name.ToLower()}.</p>",
                         pc.ConnectionId);
                 }
             }

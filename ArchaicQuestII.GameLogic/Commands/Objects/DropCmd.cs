@@ -12,26 +12,20 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects;
 
 public class DropCmd : ICommand
 {
-    public DropCmd(IWriteToClient writeToClient, ICache cache, IUpdateClientUI updateClient, IRoomActions roomActions)
+    public DropCmd(ICore core)
     {
         Aliases = new[] { "drop" };
         Description = "Tries to drop items or gold.";
         Usages = new[] { "Example: drop apple", "Example: drop all", "Example: drop apple chest" };
         UserRole = UserRole.Player;
-        Writer = writeToClient;
-        Cache = cache;
-        UpdateClient = updateClient;
-        RoomActions = roomActions;
+        Core = core;
     }
 
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
     public UserRole UserRole { get; }
-    public IWriteToClient Writer { get; }
-    public ICache Cache { get; }
-    public IUpdateClientUI UpdateClient { get; }
-    public IRoomActions RoomActions { get; }
+    public ICore Core { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
@@ -40,13 +34,13 @@ public class DropCmd : ICommand
         
         if (string.IsNullOrEmpty(target))
         {
-            Writer.WriteLine("<p>Drop what?</p>", player.ConnectionId);
+            Core.Writer.WriteLine("<p>Drop what?</p>", player.ConnectionId);
             return;
         }
         
         if (player.Affects.Blind)
         {
-            Writer.WriteLine("<p>You are blind and can't see a thing!</p>", player.ConnectionId);
+            Core.Writer.WriteLine("<p>You are blind and can't see a thing!</p>", player.ConnectionId);
             return;
         }
 
@@ -73,51 +67,45 @@ public class DropCmd : ICommand
 
         if (item == null)
         {
-            Writer.WriteLine("<p>You don't have that item.</p>", player.ConnectionId);
+            Core.Writer.WriteLine("<p>You don't have that item.</p>", player.ConnectionId);
             return;
         }
 
         if (item.Equipped)
         {
-            Writer.WriteLine($"<p>You must remove {item.Name.ToLower()} before you can drop it.</p>",
+            Core.Writer.WriteLine($"<p>You must remove {item.Name.ToLower()} before you can drop it.</p>",
                 player.ConnectionId);
             return;
         }
 
         if ((item.ItemFlag & Item.Item.ItemFlags.Nodrop) != 0)
         {
-            Writer.WriteLine($"<p>You can't let go of {item.Name.ToLower()}. It appears to be cursed.</p>",
+            Core.Writer.WriteLine($"<p>You can't let go of {item.Name.ToLower()}. It appears to be cursed.</p>",
                 player.ConnectionId);
             return;
         }
 
-
         player.Inventory.Remove(item);
 
-        foreach (var pc in room.Players)
+        foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
         {
-            if (pc.Name == player.Name)
-            {
-                continue;
-            }
-
-            Writer.WriteLine($"<p>{player.Name} drops {item.Name.ToLower()}.</p>",
+            Core.Writer.WriteLine($"<p>{player.Name} drops {item.Name.ToLower()}.</p>",
                 pc.ConnectionId);
         }
 
         room.Items.Add(item);
         player.Weight -= item.Weight;
 
-        Writer.WriteLine($"<p>You drop {item.Name.ToLower()}.</p>", player.ConnectionId);
-        UpdateClient.UpdateInventory(player);
-        UpdateClient.UpdateScore(player);
+        Core.Writer.WriteLine($"<p>You drop {item.Name.ToLower()}.</p>", player.ConnectionId);
+        Core.UpdateClient.UpdateInventory(player);
+        Core.UpdateClient.UpdateScore(player);
     }
 
     private void DropAll(Player player, Room room)
     {
         if (player.Inventory.Count == 0)
         {
-            Writer.WriteLine("<p>You don't have anything to drop.</p>", player.ConnectionId);
+            Core.Writer.WriteLine("<p>You don't have anything to drop.</p>", player.ConnectionId);
             return;
         }
 
@@ -128,7 +116,7 @@ public class DropCmd : ICommand
 
                 if (player.Inventory[i].Equipped)
                 {
-                    Writer.WriteLine(
+                    Core.Writer.WriteLine(
                         $"<p>You must remove {player.Inventory[i].Name.ToLower()} before you can drop it.</p>",
                         player.ConnectionId);
                     return;
@@ -136,19 +124,19 @@ public class DropCmd : ICommand
 
                 if ((player.Inventory[i].ItemFlag & Item.Item.ItemFlags.Nodrop) != 0)
                 {
-                    Writer.WriteLine($"<p>You can't let go of {player.Inventory[i].Name}. It appears to be cursed.</p>", player.ConnectionId);
+                    Core.Writer.WriteLine($"<p>You can't let go of {player.Inventory[i].Name}. It appears to be cursed.</p>", player.ConnectionId);
                     return;
                 }
                 
-                UpdateClient.PlaySound("drop", player);
+                Core.UpdateClient.PlaySound("drop", player);
                 room.Items.Add(player.Inventory[i]);
                 player.Weight -= player.Inventory[i].Weight;
 
-                Writer.WriteLine($"<p>You drop {player.Inventory[i].Name.ToLower()}.</p>", player.ConnectionId);
+                Core.Writer.WriteLine($"<p>You drop {player.Inventory[i].Name.ToLower()}.</p>", player.ConnectionId);
 
                 foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
                 {
-                    Writer.WriteLine($"<p>{player.Name} drops {player.Inventory[i].Name.ToLower()}.</p>",
+                    Core.Writer.WriteLine($"<p>{player.Name} drops {player.Inventory[i].Name.ToLower()}.</p>",
                         pc.ConnectionId);
                 }
                 
@@ -156,7 +144,7 @@ public class DropCmd : ICommand
 
             }
         }
-        UpdateClient.UpdateInventory(player);
+        Core.UpdateClient.UpdateInventory(player);
         // TODO: You are over encumbered 
     }
 
@@ -164,7 +152,7 @@ public class DropCmd : ICommand
     {
         if (player.Money.Gold < amount)
         {
-            Writer.WriteLine("<p>You don't have that much gold to drop.</p>", player.ConnectionId);
+            Core.Writer.WriteLine("<p>You don't have that much gold to drop.</p>", player.ConnectionId);
         }
 
         var goldCoin = new Item.Item
@@ -198,12 +186,12 @@ public class DropCmd : ICommand
             }
         };
 
-        Writer.WriteLine($"<p>You drop {(amount == 1 ? "1 gold coin." : $"{amount} gold coins.")}</p>",
+        Core.Writer.WriteLine($"<p>You drop {(amount == 1 ? "1 gold coin." : $"{amount} gold coins.")}</p>",
             player.ConnectionId);
 
         foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
         {
-            Writer.WriteLine($"<p>{player.Name} drops {ItemList.DisplayMoneyAmount(amount).ToLower()}.</p>",
+            Core.Writer.WriteLine($"<p>{player.Name} drops {ItemList.DisplayMoneyAmount(amount).ToLower()}.</p>",
                 pc.ConnectionId);
         }
 
@@ -212,7 +200,7 @@ public class DropCmd : ICommand
 
         player.Weight -= amount * 0.1;
 
-        UpdateClient.UpdateScore(player);
+        Core.UpdateClient.UpdateScore(player);
     }
 
 
@@ -231,13 +219,13 @@ public class DropCmd : ICommand
 
         if (containerObj == null)
         {
-            Writer.WriteLine($"<p>You don't see that here.</p>", player.ConnectionId);
+            Core.Writer.WriteLine($"<p>You don't see that here.</p>", player.ConnectionId);
             return;
         }
 
         if (!containerObj.Container.IsOpen)
         {
-            Writer.WriteLine($"<p>You need to open it first.</p>", player.ConnectionId);
+            Core.Writer.WriteLine($"<p>You need to open it first.</p>", player.ConnectionId);
             return;
         }
 
@@ -252,13 +240,13 @@ public class DropCmd : ICommand
 
         if (item == null)
         {
-            Writer.WriteLine("<p>You don't have that item.</p>", player.ConnectionId);
+            Core.Writer.WriteLine("<p>You don't have that item.</p>", player.ConnectionId);
             return;
         }
 
         if ((item.ItemFlag & Item.Item.ItemFlags.Nodrop) != 0)
         {
-            Writer.WriteLine($"<p>You can't let go of {item.Name}. It appears to be cursed.</p>", player.ConnectionId);
+            Core.Writer.WriteLine($"<p>You can't let go of {item.Name}. It appears to be cursed.</p>", player.ConnectionId);
             return;
         }
 
@@ -267,23 +255,23 @@ public class DropCmd : ICommand
 
         foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
         {
-            Writer.WriteLine($"<p>{player.Name} puts {item.Name.ToLower()} into {containerObj.Name.ToLower()}.</p>",
+            Core.Writer.WriteLine($"<p>{player.Name} puts {item.Name.ToLower()} into {containerObj.Name.ToLower()}.</p>",
                 pc.ConnectionId);
         }
 
         containerObj.Container.Items.Add(item);
-        UpdateClient.PlaySound("drop", player);
-        Writer.WriteLine($"<p>You put {item.Name.ToLower()} into {containerObj.Name.ToLower()}.</p>",
+        Core.UpdateClient.PlaySound("drop", player);
+        Core.Writer.WriteLine($"<p>You put {item.Name.ToLower()} into {containerObj.Name.ToLower()}.</p>",
             player.ConnectionId);
-        UpdateClient.UpdateInventory(player);
-        UpdateClient.UpdateScore(player);
+        Core.UpdateClient.UpdateInventory(player);
+        Core.UpdateClient.UpdateScore(player);
     }
 
     private void DropAllInContainer(Player player, Room room, Item.Item container)
     {
         if (player.Inventory.Count == 0)
         {
-            Writer.WriteLine("<p>You don't have anything to drop.</p>", player.ConnectionId);
+            Core.Writer.WriteLine("<p>You don't have anything to drop.</p>", player.ConnectionId);
             return;
         }
 
@@ -291,24 +279,24 @@ public class DropCmd : ICommand
         {
             if((player.Inventory[i].ItemFlag & Item.Item.ItemFlags.Nodrop) != 0)
             {
-                Writer.WriteLine($"<p>You can't let go of {player.Inventory[i].Name}. It appears to be cursed.</p>", player.ConnectionId);
+                Core.Writer.WriteLine($"<p>You can't let go of {player.Inventory[i].Name}. It appears to be cursed.</p>", player.ConnectionId);
                 continue;
             }
-            UpdateClient.PlaySound("drop", player);
+            Core.UpdateClient.PlaySound("drop", player);
             container.Container.Items.Add(player.Inventory[i]);
             player.Weight -= player.Inventory[i].Weight;
-            Writer.WriteLine($"<p>You place {player.Inventory[i].Name.ToLower()} into {container.Name.ToLower()}.</p>", player.ConnectionId);
+            Core.Writer.WriteLine($"<p>You place {player.Inventory[i].Name.ToLower()} into {container.Name.ToLower()}.</p>", player.ConnectionId);
 
             foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
             {
-                Writer.WriteLine($"<p>{player.Name} puts {player.Inventory.Name.ToLower()} into {container.Name.ToLower()}.</p>",
+                Core.Writer.WriteLine($"<p>{player.Name} puts {player.Inventory.Name.ToLower()} into {container.Name.ToLower()}.</p>",
                     pc.ConnectionId);
             }
             
             player.Inventory.RemoveAt(i);
         }
-        UpdateClient.UpdateInventory(player);
-        UpdateClient.UpdateScore(player);
+        Core.UpdateClient.UpdateInventory(player);
+        Core.UpdateClient.UpdateScore(player);
         // TODO: You are over encumbered 
     }
 }

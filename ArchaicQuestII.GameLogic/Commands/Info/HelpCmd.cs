@@ -9,26 +9,20 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 {
     public class HelpCmd : ICommand
     {
-        public HelpCmd(IWriteToClient writeToClient, ICache cache, IUpdateClientUI updateClient, IRoomActions roomActions)
+        public HelpCmd(ICore core)
         {
             Aliases = new[] {"help"};
             Description = "Displays the description and usage.";
             Usages = new[] {"Type: help quaff"};
             UserRole = UserRole.Player;
-            Writer = writeToClient;
-            Cache = cache;
-            UpdateClient = updateClient;
-            RoomActions = roomActions;
+            Core = core;
         }
         
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
         public UserRole UserRole { get; }
-        public IWriteToClient Writer { get; }
-        public ICache Cache { get; }
-        public IUpdateClientUI UpdateClient { get; }
-        public IRoomActions RoomActions { get; }
+        public ICore Core { get; }
 
         public void Execute(Player player, Room room, string[] input)
         {
@@ -38,13 +32,13 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
             
             if (string.IsNullOrEmpty(target))
             {
-                Cache.GetCommand("help", out command);
+                Core.Cache.GetCommand("help", out command);
             }
             else
             {
-                if (!Cache.GetCommand(target, out command))
+                if (!Core.Cache.GetCommand(target, out command))
                 {
-                    Writer.WriteLine($"<p>No help found for {target}.", player.ConnectionId);
+                    Core.Writer.WriteLine($"<p>No help found for {target}.", player.ConnectionId);
                     return;
                 }
             }
@@ -70,7 +64,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     sb.Append(", ");
             }
             sb.Append("</p>");
-            Writer.WriteLine(sb.ToString(), player.ConnectionId);
+            Core.Writer.WriteLine(sb.ToString(), player.ConnectionId);
         }
     }
 }

@@ -9,26 +9,20 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects;
 
 public class LockCmd : ICommand
 {
-    public LockCmd(IWriteToClient writeToClient, ICache cache, IUpdateClientUI updateClient, IRoomActions roomActions)
+    public LockCmd(ICore core)
     {
         Aliases = new[] {"lock"};
         Description = "Your character locks something.";
         Usages = new[] {"Example: lock chest"};
         UserRole = UserRole.Player;
-        Writer = writeToClient;
-        Cache = cache;
-        UpdateClient = updateClient;
-        RoomActions = roomActions;
+        Core = core;
     }
     
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
     public UserRole UserRole { get; }
-    public IWriteToClient Writer { get; }
-    public ICache Cache { get; }
-    public IUpdateClientUI UpdateClient { get; }
-    public IRoomActions RoomActions { get; }
+    public ICore Core { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
@@ -36,13 +30,13 @@ public class LockCmd : ICommand
         
         if (string.IsNullOrEmpty(target))
         {
-            Writer.WriteLine("<p>Lock what?</p>", player.ConnectionId);
+            Core.Writer.WriteLine("<p>Lock what?</p>", player.ConnectionId);
             return;
         }
         
         if (player.Affects.Blind)
         {
-            Writer.WriteLine("<p>You are blind and can't see a thing!</p>", player.ConnectionId);
+            Core.Writer.WriteLine("<p>You are blind and can't see a thing!</p>", player.ConnectionId);
             return;
         }
 
@@ -61,23 +55,23 @@ public class LockCmd : ICommand
                     x.ItemType == Item.Item.ItemTypes.Key && x.KeyId.Equals(doorToUnlock.LockId));
                 if (playerHasKey == null)
                 {
-                    Writer.WriteLine("<p>You don't have the key to lock this.</p>", player.ConnectionId);
+                    Core.Writer.WriteLine("<p>You don't have the key to lock this.</p>", player.ConnectionId);
                 }
                 else
                 {
 
                     if (doorToUnlock.Locked)
                     {
-                        Writer.WriteLine("<p>It's already locked.</p>", player.ConnectionId);
+                        Core.Writer.WriteLine("<p>It's already locked.</p>", player.ConnectionId);
                         return;
                     }
 
                     doorToUnlock.Locked = true;
-                    Writer.WriteLine("<p>You enter the key and turn it. *CLICK* </p>", player.ConnectionId);
+                    Core.Writer.WriteLine("<p>You enter the key and turn it. *CLICK* </p>", player.ConnectionId);
 
                     foreach (var pc in room.Players.Where(pc => !pc.Name.Equals(player.Name, StringComparison.CurrentCultureIgnoreCase)))
                     {
-                        Writer.WriteLine($"<p>{pc.Name} enters the key and turns it. *CLICK* </p>", pc.ConnectionId);
+                        Core.Writer.WriteLine($"<p>{pc.Name} enters the key and turns it. *CLICK* </p>", pc.ConnectionId);
                     }
 
                     return;
@@ -86,13 +80,13 @@ public class LockCmd : ICommand
                 return;
             }
 
-            Writer.WriteLine("<p>You don't see that here.</p>", player.ConnectionId);
+            Core.Writer.WriteLine("<p>You don't see that here.</p>", player.ConnectionId);
             return;
         }
 
         if (!objToUnlock.Container.CanLock)
         {
-            Writer.WriteLine("<p>You can't lock that.</p>", player.ConnectionId);
+            Core.Writer.WriteLine("<p>You can't lock that.</p>", player.ConnectionId);
             return;
         }
 
@@ -101,22 +95,22 @@ public class LockCmd : ICommand
 
         if (hasKey == null)
         {
-            Writer.WriteLine("<p>You don't have the key to lock this.</p>", player.ConnectionId);
+            Core.Writer.WriteLine("<p>You don't have the key to lock this.</p>", player.ConnectionId);
         }
         else
         {
             if (objToUnlock.Container.IsLocked)
             {
-                Writer.WriteLine("<p>It's already locked.</p>", player.ConnectionId);
+                Core.Writer.WriteLine("<p>It's already locked.</p>", player.ConnectionId);
                 return;
             }
 
             objToUnlock.Container.IsLocked = true;
-            Writer.WriteLine("<p>You enter the key and turn it. *CLICK* </p>", player.ConnectionId);
+            Core.Writer.WriteLine("<p>You enter the key and turn it. *CLICK* </p>", player.ConnectionId);
 
             foreach (var pc in room.Players.Where(pc => !pc.Name.Equals(player.Name, StringComparison.CurrentCultureIgnoreCase)))
             {
-                Writer.WriteLine($"<p>{pc.Name} enters the key into {objToUnlock.Name} and turns it. *CLICK* </p>",
+                Core.Writer.WriteLine($"<p>{pc.Name} enters the key into {objToUnlock.Name} and turns it. *CLICK* </p>",
                     pc.ConnectionId);
             }
         }

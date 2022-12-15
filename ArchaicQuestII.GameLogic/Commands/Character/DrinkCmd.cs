@@ -1,36 +1,27 @@
 using System.Linq;
-using System.Text;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Core;
-using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Commands.Character
 {
     public class DrinkCmd : ICommand
     {
-        public DrinkCmd(IWriteToClient writeToClient, ICache cache, IUpdateClientUI updateClient, IRoomActions roomActions)
+        public DrinkCmd(ICore core)
         {
             Aliases = new[] {"drink"};
             Description = "Drink something.";
             Usages = new[] {"Type: drink ale"};
             UserRole = UserRole.Player;
-            Writer = writeToClient;
-            Cache = cache;
-            UpdateClient = updateClient;
-            RoomActions = roomActions;
+            Core = core;
         }
         
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
         public UserRole UserRole { get; }
-        public IWriteToClient Writer { get; }
-        public ICache Cache { get; }
-        public IUpdateClientUI UpdateClient { get; }
-        public IRoomActions RoomActions { get; }
+        public ICore Core { get; }
 
         public void Execute(Player player, Room room, string[] input)
         {
@@ -38,7 +29,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
             if (string.IsNullOrEmpty(target))
             {
-                Writer.WriteLine("Drink what?", player.ConnectionId);
+                Core.Writer.WriteLine("Drink what?", player.ConnectionId);
                 return;
             }
             
@@ -48,21 +39,21 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
             if (drink == null)
             {
-                Writer.WriteLine("You can't find that.", player.ConnectionId);
+                Core.Writer.WriteLine("You can't find that.", player.ConnectionId);
                 return;
             }
 
             if (drink.ItemType != Item.Item.ItemTypes.Drink)
             {
-                Writer.WriteLine($"You can't drink from {drink.Name.ToLower()}.", player.ConnectionId);
+                Core.Writer.WriteLine($"You can't drink from {drink.Name.ToLower()}.", player.ConnectionId);
                 return;
             }
 
-            Writer.WriteLine($"You drink from {drink.Name.ToLower()}.", player.ConnectionId);
+            Core.Writer.WriteLine($"You drink from {drink.Name.ToLower()}.", player.ConnectionId);
 
             foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
             {
-                Writer.WriteLine($"{player.Name} drink from {drink.Name.ToLower()}.", player.ConnectionId);
+                Core.Writer.WriteLine($"{player.Name} drink from {drink.Name.ToLower()}.", player.ConnectionId);
             }
         }
     }

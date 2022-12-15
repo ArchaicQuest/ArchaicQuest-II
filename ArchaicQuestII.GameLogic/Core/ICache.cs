@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Emote;
@@ -15,10 +14,6 @@ namespace ArchaicQuestII.GameLogic.Core
 {
     public interface ICache
     {
-        void SetDatabase(IDataBase db);
-        IDataBase GetDatabase();
-        void SetPlayerDatabase(IPlayerDataBase pdb);
-        IPlayerDataBase GetPlayerDatabase();
         /// <summary>
         /// Add player to cache
         /// </summary>
@@ -39,15 +34,11 @@ namespace ArchaicQuestII.GameLogic.Core
         Room GetRoom(string id);
         Room GetOriginalRoom(string id);
         bool UpdateRoom(string id, Room room, Player player);
-
-
         bool AddSkill(int id, Skill.Model.Skill skill);
-
         Skill.Model.Skill GetSkill(int id);
         void ClearRoomCache();
         void SetConfig(Config config);
         Config GetConfig();
-
         /// <summary>
         /// areaId + Zindex
         /// </summary>
@@ -60,14 +51,12 @@ namespace ArchaicQuestII.GameLogic.Core
         /// <param name="areaId"></param>
         /// <returns></returns>
         string GetMap(string areaId);
-
         bool IsCharInCombat(string id);
         bool AddCharToCombat(string id, Player character);
         Player GetCharFromCombat(string id);
         Player RemoveCharFromCombat(string id);
         List<Player> GetCombatList();
         List<Skill.Model.Skill> ReturnSkills();
-
         /// <summary>
         /// Experiment, Need to generate the commands list on start up
         /// So things like socials & skills can work dynamically without

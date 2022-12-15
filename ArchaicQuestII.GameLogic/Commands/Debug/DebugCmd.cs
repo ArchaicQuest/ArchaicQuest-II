@@ -8,32 +8,26 @@ namespace ArchaicQuestII.GameLogic.Commands.Debug
 {
     public class DebugCmd : ICommand
     {
-        public DebugCmd(IWriteToClient writeToClient, Cache cache, IUpdateClientUI updateClient, IRoomActions roomActions)
+        public DebugCmd(ICore core)
         {
             Aliases = new[] {"/debug"};
             Description = "Displays debug info for the current room.";
             Usages = new[] {"Type: /debug"};
             UserRole = UserRole.Player;
-            Writer = writeToClient;
-            Cache = cache;
-            UpdateClient = updateClient;
-            RoomActions = roomActions;
+            Core = core;
         }
 
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
         public UserRole UserRole { get; }
-        public IWriteToClient Writer { get; }
-        public ICache Cache { get; }
-        public IUpdateClientUI UpdateClient { get; }
-        public IRoomActions RoomActions { get; }
+        public ICore Core { get; }
 
         public void Execute(Player player, Room room, string[] input)
         {
             var jsonObject = JsonConvert.SerializeObject(room);
 
-            Writer.WriteLine(jsonObject, player.ConnectionId);
+            Core.Writer.WriteLine(jsonObject, player.ConnectionId);
         }
     }
 }

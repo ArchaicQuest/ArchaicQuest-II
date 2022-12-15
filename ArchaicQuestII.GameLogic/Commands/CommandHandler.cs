@@ -11,27 +11,25 @@ namespace ArchaicQuestII.GameLogic.Commands
     /// </summary>
     public class CommandHandler : ICommandHandler
     {
-        private readonly ICache _cache;
-        private readonly IWriteToClient _writeToClient;
+        private readonly ICore _core;
 
-        public CommandHandler(ICache cache, IWriteToClient writeToClient, IUpdateClientUI clientUi, IRoomActions roomActions)
+        public CommandHandler(ICore core)
         {
-            _cache = cache;
-            _writeToClient = writeToClient;
-
+            _core = core;
+            
             var commandTypes = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(s => s.GetTypes())
                 .Where(p => typeof(ICommand).IsAssignableFrom(p) && !p.IsInterface);
 
             foreach (var t in commandTypes)
             {
-                var command = (ICommand)Activator.CreateInstance(t, _writeToClient, _cache, clientUi, roomActions);
+                var command = (ICommand)Activator.CreateInstance(t, _core);
 
                 if (command == null) continue;
 
                 foreach (var alias in command.Aliases)
                 {
-                    _cache.AddCommand(alias, command);
+                    _core.Cache.AddCommand(alias, command);
                 }
             }
         }
@@ -46,9 +44,9 @@ namespace ArchaicQuestII.GameLogic.Commands
         {
             var commandInput = input.Split(' ', StringSplitOptions.RemoveEmptyEntries);;
             
-            if (!_cache.GetCommand(commandInput[0].ToLower(), out var command))
+            if (!_core.Cache.GetCommand(commandInput[0].ToLower(), out var command))
             {
-                _writeToClient.WriteLine("That is not a command.", player.ConnectionId);
+                _core.Writer.WriteLine("That is not a command.", player.ConnectionId);
                 return;
             }
 

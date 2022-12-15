@@ -8,47 +8,41 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication;
 
 public class YellCmd : ICommand
 {
-    public YellCmd(IWriteToClient writeToClient, ICache cache, IUpdateClientUI updateClient, IRoomActions roomActions)
+    public YellCmd(ICore core)
     {
         Aliases = new[] {"yell"};
         Description = "Sends a message to everyone in the area";
         Usages = new[] {"Type: yell 'message'"};
         UserRole = UserRole.Player;
-        Writer = writeToClient;
-        Cache = cache;
-        UpdateClient = updateClient;
-        RoomActions = roomActions;
+        Core = core;
     }
     
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
     public UserRole UserRole { get; }
-    public IWriteToClient Writer { get; }
-    public ICache Cache { get; }
-    public IUpdateClientUI UpdateClient { get; }
-    public IRoomActions RoomActions { get; }
-
+    public ICore Core { get; }
+    
     public void Execute(Player player, Room room, string[] input)
     {
         if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
         {
-            Writer.WriteLine("Yell what?", player.ConnectionId);
+            Core.Writer.WriteLine("Yell what?", player.ConnectionId);
             return;
         }
         
         var text = string.Join(" ", input.Skip(1));
         
-        var rooms = Cache.GetAllRoomsInArea(room.AreaId);
+        var rooms = Core.Cache.GetAllRoomsInArea(room.AreaId);
         
-        Writer.WriteLine($"<p class='yell'>You yell, {text.ToUpper()}</p>", player.ConnectionId);
+        Core.Writer.WriteLine($"<p class='yell'>You yell, {text.ToUpper()}</p>", player.ConnectionId);
 
         foreach (var pc in from rm in rooms from pc in rm.Players where pc.Name != player.Name select pc)
         {
-            Writer.WriteLine($"<p class='yell'>{player.Name} yells, {text.ToUpper()}</p>", pc.ConnectionId);
-            UpdateClient.UpdateCommunication(pc, $"<p class='yell'>{player.Name} yells, {text.ToUpper()}</p>", "room");
+            Core.Writer.WriteLine($"<p class='yell'>{player.Name} yells, {text.ToUpper()}</p>", pc.ConnectionId);
+            Core.UpdateClient.UpdateCommunication(pc, $"<p class='yell'>{player.Name} yells, {text.ToUpper()}</p>", "room");
         }
 
-        UpdateClient.UpdateCommunication(player, $"<p class='yell'>You yell, {text.ToUpper()}</p>", "room");
+        Core.UpdateClient.UpdateCommunication(player, $"<p class='yell'>You yell, {text.ToUpper()}</p>", "room");
     }
 }

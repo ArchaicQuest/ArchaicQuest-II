@@ -9,32 +9,26 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
 {
     public class PmoteCmd : ICommand
     {
-        public PmoteCmd(IWriteToClient writeToClient, ICache cache, IUpdateClientUI updateClient, IRoomActions roomActions)
+        public PmoteCmd(ICore core)
         {
             Aliases = new[] {"pmote"};
             Description = "";
             Usages = new[] {"Type: pmote"};
             UserRole = UserRole.Player;
-            Writer = writeToClient;
-            Cache = cache;
-            UpdateClient = updateClient;
-            RoomActions = roomActions;
+            Core = core;
         }
         
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
         public UserRole UserRole { get; }
-        public IWriteToClient Writer { get; }
-        public ICache Cache { get; }
-        public IUpdateClientUI UpdateClient { get; }
-        public IRoomActions RoomActions { get; }
+        public ICore Core { get; }
 
         public void Execute(Player player, Room room, string[] input)
         {
             if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
             {
-                Writer.WriteLine("Pmote what?", player.ConnectionId);
+                Core.Writer.WriteLine("Pmote what?", player.ConnectionId);
                 return;
             }
             
@@ -44,7 +38,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
             {
                 emoteMessage = emoteMessage.Replace(players.Name, "you", StringComparison.CurrentCultureIgnoreCase);
 
-                Writer.WriteLine(player.Name + " " + emoteMessage, players.ConnectionId);
+                Core.Writer.WriteLine(player.Name + " " + emoteMessage, players.ConnectionId);
             }
         }
     }

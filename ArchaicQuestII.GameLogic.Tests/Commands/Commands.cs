@@ -27,50 +27,12 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
         private Player _player;
         private ICommandHandler _commandHandler;
         private readonly Mock<ICommand> _commandMove;
-        private readonly Mock<IRoomActions> _roomActions;
-        private readonly Mock<ISpells> _spell;
-        private readonly Mock<IEquip> _equipment;
-        private readonly Mock<ICombat> _combat;
-        private readonly Mock<ICache> _cache;
-        private readonly Mock<ISocials> _socials;
         private readonly Mock<ICore> _core;
-        private readonly Mock<IMobFunctions> _mobFunctions;
-        private readonly Mock<IHelp> _help;
-        private readonly Mock<IMobScripts> _mobScripts;
-        private readonly Mock<ICrafting> _crafting;
-        private readonly Mock<ICooking> _cooking;
-        private readonly Mock<IUtilSkills> _utilSkills;
-        private readonly Mock<IPassiveSkills> _passiveSkills;
-        private readonly Mock<IHealer> _healer;
-        private readonly Mock<IDamageSpells> _damageSpells;
-        private readonly Mock<IGain> _gain;
-        private readonly Mock<IAreaActions> _areaActions;
-        private readonly Mock<IWriteToClient> _writer;
-        private readonly Mock<IUpdateClientUI> _clientui;
 
         public CommandsTests()
         {
-            _roomActions = new Mock<IRoomActions>();
-            _spell = new Mock<ISpells>();
-            _equipment = new Mock<IEquip>();
-            _combat = new Mock<ICombat>();
-            _cache = new Mock<ICache>();
-            _socials = new Mock<ISocials>();
             _core = new Mock<ICore>();
-            _mobFunctions = new Mock<IMobFunctions>();
-            _mobScripts = new Mock<IMobScripts>();
             _player = new Player();
-            _help = new Mock<IHelp>();
-            _crafting = new Mock<ICrafting>();
-            _cooking = new Mock<ICooking>();
-            _utilSkills = new Mock<IUtilSkills>();
-            _passiveSkills = new Mock<IPassiveSkills>();
-            _healer = new Mock<IHealer>();
-            _damageSpells = new Mock<IDamageSpells>();
-            _gain = new Mock<IGain>();
-            _areaActions = new Mock<IAreaActions>();
-            _writer = new Mock<IWriteToClient>();
-            _clientui = new Mock<IUpdateClientUI>();
             _commandMove = new Mock<ICommand>();
 
             _player.ConnectionId = "1";
@@ -95,7 +57,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
                 }
             };
 
-            _commandHandler = new CommandHandler(_cache.Object, _writer.Object, _clientui.Object, _roomActions.Object);
+            _commandHandler = new CommandHandler(_core.Object);
         }
 
         [Fact]

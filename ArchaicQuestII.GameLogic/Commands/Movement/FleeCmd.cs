@@ -4,42 +4,32 @@ using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
-using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Commands.Movement;
 
 public class FleeCmd : ICommand
 {
-    public FleeCmd(IWriteToClient writeToClient, ICache cache, IUpdateClientUI updateClient, IRoomActions roomActions)
+    public FleeCmd(ICore core)
     {
         Aliases = new[] {"flee"};
         Description = "Randomly moves your character out of the room during combat.";
         Usages = new[] {"Type: north"};
         UserRole = UserRole.Player;
-        Writer = writeToClient;
-        Cache = cache;
-        UpdateClient = updateClient;
-        RoomActions = roomActions;
-        Dice = new Dice();
+        Core = core;
     }
     
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
     public UserRole UserRole { get; }
-    public IWriteToClient Writer { get; }
-    public ICache Cache { get; }
-    public IUpdateClientUI UpdateClient { get; }
-    public IRoomActions RoomActions { get; }
-
-    public Dice Dice { get; }
+    public ICore Core { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
         if (player.Status != CharacterStatus.Status.Fighting)
         {
-            Writer.WriteLine("<p>You're not in a fight.</p>", player.ConnectionId);
+            Core.Writer.WriteLine("<p>You're not in a fight.</p>", player.ConnectionId);
             return;
         }
 
@@ -54,7 +44,7 @@ public class FleeCmd : ICommand
             room.Exits.SouthWest == null &&
             room.Exits.West == null)
         {
-            Writer.WriteLine("<p>You have no where to go!</p>", player.ConnectionId);
+            Core.Writer.WriteLine("<p>You have no where to go!</p>", player.ConnectionId);
             return;
         }
 
@@ -101,16 +91,16 @@ public class FleeCmd : ICommand
             validExits.Add(room.Exits.Down);
         }
 
-        var getExitIndex = Dice.Roll(1, 0, validExits.Count - 1);
+        var getExitIndex = Core.Dice.Roll(1, 0, validExits.Count - 1);
 
         player.Status = CharacterStatus.Status.Standing;
         
-        Cache.RemoveCharFromCombat(player.Id.ToString());
+        Core.Cache.RemoveCharFromCombat(player.Id.ToString());
 
         foreach (var mob in room.Mobs.Where(mob => mob.Target == player.Name))
         {
             mob.Status = CharacterStatus.Status.Standing;
-            Cache.RemoveCharFromCombat(mob.Id.ToString());
+            Core.Cache.RemoveCharFromCombat(mob.Id.ToString());
         }
 
         var randomFleeMsg = new List<string>
@@ -121,12 +111,12 @@ public class FleeCmd : ICommand
             $"{player.Name} retreats from combat."
         };
 
-        var fleeString = randomFleeMsg[Dice.Roll(1, 0, randomFleeMsg.Count)];
+        var fleeString = randomFleeMsg[Core.Dice.Roll(1, 0, randomFleeMsg.Count)];
 
-        Writer.WriteLine($"You flee {validExits[getExitIndex].Name}.",  player.ConnectionId);
-        Writer.WriteToOthersInRoom($"{fleeString}.", room, player);
+        Core.Writer.WriteLine($"You flee {validExits[getExitIndex].Name}.",  player.ConnectionId);
+        Core.Writer.WriteToOthersInRoom($"{fleeString}.", room, player);
 
-        Cache.GetCommand(validExits[getExitIndex].Name, out var command);
+        Core.Cache.GetCommand(validExits[getExitIndex].Name, out var command);
         
         command.Execute(player, room, new[]{validExits[getExitIndex].Name});
     }

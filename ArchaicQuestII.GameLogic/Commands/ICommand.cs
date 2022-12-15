@@ -26,23 +26,11 @@ namespace ArchaicQuestII.GameLogic.Commands
         /// Player role required to execute command
         /// </summary>
         UserRole UserRole { get; }
-        
-        /// <summary>
-        /// Stored writer
-        /// </summary>
-        IWriteToClient Writer { get; }
-        
+
         /// <summary>
         /// Cached items
         /// </summary>
-        ICache Cache { get; }
-        
-        /// <summary>
-        /// Client update
-        /// </summary>
-        IUpdateClientUI UpdateClient { get; }
-        
-        IRoomActions RoomActions { get; }
+        ICore Core { get; }
 
         /// <summary>
         /// Executes the command

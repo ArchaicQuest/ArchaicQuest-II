@@ -9,32 +9,27 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication;
 
 public class SayToCmd : ICommand
 {
-    public SayToCmd(IWriteToClient writeToClient, ICache cache, IUpdateClientUI updateClient, IRoomActions roomActions)
+    public SayToCmd(ICore core)
     {
         Aliases = new[] {"sayto"};
         Description = "Says something to a player.";
         Usages = new[] {"Type: sayto john 'what ever you want'"};
         UserRole = UserRole.Player;
-        Writer = writeToClient;
-        Cache = cache;
-        UpdateClient = updateClient;
-        RoomActions = roomActions;
+        Core = core;
     }
     
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
     public UserRole UserRole { get; }
-    public IWriteToClient Writer { get; }
-    public ICache Cache { get; }
-    public IUpdateClientUI UpdateClient { get; }
-    public IRoomActions RoomActions { get; }
+    public ICore Core { get; }
+
 
     public void Execute(Player player, Room room, string[] input)
     {
         if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
         {
-            Writer.WriteLine("Say what?", player.ConnectionId);
+            Core.Writer.WriteLine("Say what?", player.ConnectionId);
             return;
         }
         
@@ -45,26 +40,25 @@ public class SayToCmd : ICommand
 
         if (sayTo == null)
         {
-            Writer.WriteLine("<p>They are not here.</p>", player.ConnectionId);
+            Core.Writer.WriteLine("<p>They are not here.</p>", player.ConnectionId);
             return;
         }
 
-        Writer.WriteLine($"<p class='say'>You say to {sayTo.Name}, {text}</p>", player.ConnectionId);
-        UpdateClient.UpdateCommunication(player, $"<p class='say'>You say to {sayTo.Name}, {text}</p>", "room");
+        Core.Writer.WriteLine($"<p class='say'>You say to {sayTo.Name}, {text}</p>", player.ConnectionId);
+        Core.UpdateClient.UpdateCommunication(player, $"<p class='say'>You say to {sayTo.Name}, {text}</p>", "room");
         
         foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
         {
             if (pc.Name == sayTo.Name)
             {
-                Writer.WriteLine($"<p class='say'>{player.Name} says to you, {text}</p>", pc.ConnectionId);
-                UpdateClient.UpdateCommunication(pc, $"<p class='say'>{player.Name} says to you, {text}</p>", "room");
+                Core.Writer.WriteLine($"<p class='say'>{player.Name} says to you, {text}</p>", pc.ConnectionId);
+                Core.UpdateClient.UpdateCommunication(pc, $"<p class='say'>{player.Name} says to you, {text}</p>", "room");
             }
             else
             {
-                Writer.WriteLine($"<p class='say'>{player.Name} says to {sayTo.Name}, {text}</p>", pc.ConnectionId);
-                UpdateClient.UpdateCommunication(pc, $"<p class='say'>{player.Name} says to {sayTo.Name}, {text}</p>", "room");
+                Core.Writer.WriteLine($"<p class='say'>{player.Name} says to {sayTo.Name}, {text}</p>", pc.ConnectionId);
+                Core.UpdateClient.UpdateCommunication(pc, $"<p class='say'>{player.Name} says to {sayTo.Name}, {text}</p>", "room");
             }
         }
-
     }
 }

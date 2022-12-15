@@ -5,34 +5,50 @@ using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Effect;
-using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.World.Room;
 using Markdig;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using ArchaicQuestII.GameLogic.Combat;
 
 namespace ArchaicQuestII.GameLogic.Core
 {
     public class Core : ICore
     {
-        private readonly ICache _cache;
-        private readonly IWriteToClient _writeToClient;
-        private readonly IDataBase _db;
-        private readonly IUpdateClientUI _clientUi;
-        private readonly IDice _dice;
-        private readonly IGain _gain;
+        public ICache Cache { get; }
+        public IWriteToClient Writer { get; }
+        public IDataBase DataBase { get; }
+        public IPlayerDataBase PlayerDataBase { get; }
+        public IUpdateClientUI UpdateClient { get; }
+        public IDice Dice { get; }
+        public IGain Gain { get; }
+        public ICombat Combat { get; }
+        public IRoomActions RoomActions { get; }
+        public IMobScripts MobScripts { get; }
         
-        public Core(ICache cache, IWriteToClient writeToClient, IDataBase db, IUpdateClientUI clientUi, IDice dice, IGain gain)
+        public Core(ICache cache, 
+            IWriteToClient writeToClient, 
+            IDataBase dataBase, 
+            IUpdateClientUI updateClient, 
+            IDice dice, 
+            IGain gain, 
+            ICombat combat, 
+            IPlayerDataBase playerDataBase, 
+            IRoomActions roomActions,
+            IMobScripts mobScripts)
         {
-            _cache = cache;
-            _writeToClient = writeToClient;
-            _db = db;
-            _clientUi = clientUi;
-            _dice = dice;
-            _gain = gain;
+            Cache = cache;
+            Writer = writeToClient;
+            DataBase = dataBase;
+            UpdateClient = updateClient;
+            Dice = dice;
+            Gain = gain;
+            Combat = combat;
+            PlayerDataBase = playerDataBase;
+            RoomActions = roomActions;
+            MobScripts = mobScripts;
         }
 
         public void QuestLog(Player player)
@@ -64,7 +80,7 @@ namespace ArchaicQuestII.GameLogic.Core
                 sb.Append("</ul></div>");
             }
 
-            _writeToClient.WriteLine(sb.ToString(), player.ConnectionId);
+            Writer.WriteLine(sb.ToString(), player.ConnectionId);
 
         }
 
@@ -72,17 +88,17 @@ namespace ArchaicQuestII.GameLogic.Core
         {
             if ((player.Status & CharacterStatus.Status.Sleeping) != 0)
             {
-                _writeToClient.WriteLine("In your dreams, or what?", player.ConnectionId);
+                Writer.WriteLine("In your dreams, or what?", player.ConnectionId);
                 return;
             }
             if ((player.Status & CharacterStatus.Status.Sitting) != 0)
             {
-                _writeToClient.WriteLine("Better stand up first.", player.ConnectionId);
+                Writer.WriteLine("Better stand up first.", player.ConnectionId);
                 return;
             }
             if ((player.Status & CharacterStatus.Status.Resting) != 0)
             {
-                _writeToClient.WriteLine("Nah... You feel too relaxed...", player.ConnectionId);
+                Writer.WriteLine("Nah... You feel too relaxed...", player.ConnectionId);
                 return;
             }
 
@@ -90,15 +106,15 @@ namespace ArchaicQuestII.GameLogic.Core
             {
                 if (pc.Id == player.Id)
                 {
-                    _writeToClient.WriteLine("You glow a bright light before vanishing.", pc.ConnectionId);
+                    Writer.WriteLine("You glow a bright light before vanishing.", pc.ConnectionId);
                     continue;
                 }
-                _writeToClient.WriteLine($"{player.Name} glows a bright light before vanishing.", pc.ConnectionId);
+                Writer.WriteLine($"{player.Name} glows a bright light before vanishing.", pc.ConnectionId);
             }
 
             room.Players.Remove(player);
 
-            var recallRoom = _cache.GetRoom(player.RecallId);
+            var recallRoom = Cache.GetRoom(player.RecallId);
 
             if (!recallRoom.Players.Any(a => a.Id == player.Id))
             {
@@ -114,7 +130,7 @@ namespace ArchaicQuestII.GameLogic.Core
                 {
                     continue;
                 }
-                _writeToClient.WriteLine($"{player.Name} suddenly appears in a flash of bright light.", pc.ConnectionId);
+                Writer.WriteLine($"{player.Name} suddenly appears in a flash of bright light.", pc.ConnectionId);
             }
 
             player.Buffer.Enqueue("l");
@@ -126,9 +142,9 @@ namespace ArchaicQuestII.GameLogic.Core
                 player.Attributes.Attribute[EffectLocation.Moves] = 0;
             }
 
-            _clientUi.UpdateScore(player);
-            _clientUi.UpdateMoves(player);
-            _clientUi.GetMap(player, _cache.GetMap($"{recallRoom.AreaId}{recallRoom.Coords.Z}"));
+            UpdateClient.UpdateScore(player);
+            UpdateClient.UpdateMoves(player);
+            UpdateClient.GetMap(player, Cache.GetMap($"{recallRoom.AreaId}{recallRoom.Coords.Z}"));
 
         }
 
@@ -136,26 +152,26 @@ namespace ArchaicQuestII.GameLogic.Core
         {
             if ((player.Status & CharacterStatus.Status.Sleeping) != 0)
             {
-                _writeToClient.WriteLine("In your dreams, or what?", player.ConnectionId);
+                Writer.WriteLine("In your dreams, or what?", player.ConnectionId);
                 return;
             }
 
             if (room.Mobs.Find(x => x.Trainer) == null)
             {
-                _writeToClient.WriteLine("You can't do that here.", player.ConnectionId);
+                Writer.WriteLine("You can't do that here.", player.ConnectionId);
                 return;
             }
 
             if (player.Trains <= 0)
             {
-                _writeToClient.WriteLine("You have no training sessions left.", player.ConnectionId);
+                Writer.WriteLine("You have no training sessions left.", player.ConnectionId);
                 return;
             }
 
             if (string.IsNullOrEmpty(stat) || stat == "train")
             {
 
-                _writeToClient.WriteLine(
+                Writer.WriteLine(
                     ($"<p>You have {player.Trains} training session{(player.Trains > 1 ? "s" : "")} remaining.<br />You can train: str dex con int wis cha hp mana move.</p>"
                     ), player.ConnectionId);
             }
@@ -164,7 +180,7 @@ namespace ArchaicQuestII.GameLogic.Core
                 var statName = GetStatName(stat);
                 if (string.IsNullOrEmpty(statName.Item1))
                 {
-                    _writeToClient.WriteLine(
+                    Writer.WriteLine(
                         ($"<p>{stat} not found. Please choose from the following. <br /> You can train: str dex con int wis cha hp mana move.</p>"
                         ), player.ConnectionId);
                     return;
@@ -178,26 +194,26 @@ namespace ArchaicQuestII.GameLogic.Core
 
                 if (statName.Item1 == "hit points" || statName.Item1 == "moves" || statName.Item1 == "mana")
                 {
-                    var hitDie = _cache.GetClass(player.ClassName);
-                    var roll = _dice.Roll(1, hitDie.HitDice.DiceMinSize, hitDie.HitDice.DiceMaxSize);
+                    var hitDie = Cache.GetClass(player.ClassName);
+                    var roll = Dice.Roll(1, hitDie.HitDice.DiceMinSize, hitDie.HitDice.DiceMaxSize);
 
                     player.MaxAttributes.Attribute[statName.Item2] += roll;
                     player.Attributes.Attribute[statName.Item2] += roll;
 
-                    _writeToClient.WriteLine(
+                    Writer.WriteLine(
                         ($"<p class='gain'>Your {statName.Item1} increases by {roll}.</p>"
                         ), player.ConnectionId);
 
-                    _clientUi.UpdateHP(player);
-                    _clientUi.UpdateMana(player);
-                    _clientUi.UpdateMoves(player);
+                    UpdateClient.UpdateHP(player);
+                    UpdateClient.UpdateMana(player);
+                    UpdateClient.UpdateMoves(player);
                 }
                 else
                 {
                     player.MaxAttributes.Attribute[statName.Item2] += 1;
                     player.Attributes.Attribute[statName.Item2] += 1;
 
-                    _writeToClient.WriteLine(
+                    Writer.WriteLine(
                         ($"<p class='gain'>Your {statName.Item1} increases by 1.</p>"
                         ), player.ConnectionId);
                 }
@@ -205,7 +221,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
 
 
-                _clientUi.UpdateScore(player);
+                UpdateClient.UpdateScore(player);
 
 
             }
@@ -234,11 +250,11 @@ namespace ArchaicQuestII.GameLogic.Core
             player.Attributes.Attribute[EffectLocation.Hitpoints] = player.MaxAttributes.Attribute[EffectLocation.Hitpoints];
             player.Attributes.Attribute[EffectLocation.Mana] = player.MaxAttributes.Attribute[EffectLocation.Mana];
             player.Attributes.Attribute[EffectLocation.Moves] = player.MaxAttributes.Attribute[EffectLocation.Moves];
-            _clientUi.UpdateHP(player);
-            _clientUi.UpdateMoves(player);
-            _clientUi.UpdateMana(player);
+            UpdateClient.UpdateHP(player);
+            UpdateClient.UpdateMoves(player);
+            UpdateClient.UpdateMana(player);
 
-            _writeToClient.WriteLine("You are restored.", player.ConnectionId);
+            Writer.WriteLine("You are restored.", player.ConnectionId);
         }
 
 
@@ -267,7 +283,7 @@ namespace ArchaicQuestII.GameLogic.Core
         public bool SkillCheckSuccesful(SkillList skill)
         {
             var proficiency = skill.Proficiency;
-            var success = _dice.Roll(1, 1, 100);
+            var success = Dice.Roll(1, 1, 100);
 
             if (success == 1 || success == 101)
             {
@@ -280,11 +296,11 @@ namespace ArchaicQuestII.GameLogic.Core
         public void GainSkillProficiency(SkillList foundSkill, Player player)
         {
 
-            var getSkill = _cache.GetSkill(foundSkill.SkillId);
+            var getSkill = Cache.GetSkill(foundSkill.SkillId);
 
             if (getSkill == null)
             {
-                var skill = _cache.GetAllSkills().FirstOrDefault(x => x.Name.Equals(foundSkill.SkillName, StringComparison.CurrentCultureIgnoreCase));
+                var skill = Cache.GetAllSkills().FirstOrDefault(x => x.Name.Equals(foundSkill.SkillName, StringComparison.CurrentCultureIgnoreCase));
                 foundSkill.SkillId = skill.Id;
             }
 
@@ -294,15 +310,15 @@ namespace ArchaicQuestII.GameLogic.Core
                 return;
             }
 
-            var increase = _dice.Roll(1, 1, 5);
+            var increase = Dice.Roll(1, 1, 5);
 
             foundSkill.Proficiency += increase;
 
-            _gain.GainExperiencePoints(player, 100 * foundSkill.Level / 4, false);
+            Gain.GainExperiencePoints(player, 100 * foundSkill.Level / 4, false);
 
-            _clientUi.UpdateExp(player);
+            UpdateClient.UpdateExp(player);
 
-            _writeToClient.WriteLine(
+            Writer.WriteLine(
                 $"<p class='improve'>You learn from your mistakes and gain {100 * foundSkill.Level / 4} experience points.</p>" +
                 $"<p class='improve'>Your knowledge of {foundSkill.SkillName} increases by {increase}%.</p>",
                 player.ConnectionId, 0);
@@ -393,7 +409,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
             sb.Append("</tr></table>");
 
-            _writeToClient.WriteLine(sb.ToString(), player.ConnectionId);
+            Writer.WriteLine(sb.ToString(), player.ConnectionId);
 
 
         }
@@ -402,13 +418,13 @@ namespace ArchaicQuestII.GameLogic.Core
         {
             if ((player.Status & CharacterStatus.Status.Sleeping) != 0)
             {
-                _writeToClient.WriteLine("In your dreams, or what?", player.ConnectionId);
+                Writer.WriteLine("In your dreams, or what?", player.ConnectionId);
                 return;
             }
 
             if (room.Mobs.Find(x => x.Trainer) == null)
             {
-                _writeToClient.WriteLine("You can't do that here.", player.ConnectionId);
+                Writer.WriteLine("You can't do that here.", player.ConnectionId);
                 return;
             }
 
@@ -419,7 +435,7 @@ namespace ArchaicQuestII.GameLogic.Core
             if (string.IsNullOrEmpty(skillName))
             {
 
-                _writeToClient.WriteLine($"You have {player.Practices} practice{(player.Practices <= 1 ? "" : "s")} left.", player.ConnectionId);
+                Writer.WriteLine($"You have {player.Practices} practice{(player.Practices <= 1 ? "" : "s")} left.", player.ConnectionId);
 
                 var sb = new StringBuilder();
 
@@ -491,7 +507,7 @@ namespace ArchaicQuestII.GameLogic.Core
                 //    sb.Append("</tbody></table>");
 
                 //}
-                _writeToClient.WriteLine(sb.ToString(), player.ConnectionId);
+                Writer.WriteLine(sb.ToString(), player.ConnectionId);
                 return;
             }
 
@@ -499,31 +515,31 @@ namespace ArchaicQuestII.GameLogic.Core
 
             if (foundSkill == null)
             {
-                _writeToClient.WriteLineMobSay(trainerName, $"You don't have that skill to practice.", player.ConnectionId);
+                Writer.WriteLineMobSay(trainerName, $"You don't have that skill to practice.", player.ConnectionId);
                 return;
             }
 
             if (player.Practices == 0)
             {
-                _writeToClient.WriteLineMobSay(trainerName, $"You have no practices left.", player.ConnectionId);
+                Writer.WriteLineMobSay(trainerName, $"You have no practices left.", player.ConnectionId);
                 return;
             }
 
             if (foundSkill.Proficiency == 100)
             {
-                _writeToClient.WriteLineMobSay(trainerName, $"You have already mastered {foundSkill.SkillName}.", player.ConnectionId);
+                Writer.WriteLineMobSay(trainerName, $"You have already mastered {foundSkill.SkillName}.", player.ConnectionId);
                 return;
             }
 
             if (foundSkill.Proficiency >= 75)
             {
-                _writeToClient.WriteLineMobSay(trainerName, $"I've taught you everything I can about {foundSkill.SkillName}.", player.ConnectionId);
+                Writer.WriteLineMobSay(trainerName, $"I've taught you everything I can about {foundSkill.SkillName}.", player.ConnectionId);
                 return;
             }
 
             var maxGain = player.Attributes.Attribute[EffectLocation.Intelligence];
             var minGain = player.Attributes.Attribute[EffectLocation.Intelligence] / 2;
-            var gain = _dice.Roll(1, minGain, maxGain);
+            var gain = Dice.Roll(1, minGain, maxGain);
 
             foundSkill.Proficiency += gain;
             player.Practices -= 1;
@@ -531,12 +547,12 @@ namespace ArchaicQuestII.GameLogic.Core
             if (foundSkill.Proficiency >= 75)
             {
                 foundSkill.Proficiency = 75;
-                _writeToClient.WriteLine($"You practice for some time. Your proficiency with {foundSkill.SkillName} is now {foundSkill.Proficiency}%", player.ConnectionId);
-                _writeToClient.WriteLineMobSay(trainerName, $"You'll have to practice it on your own now...", player.ConnectionId);
+                Writer.WriteLine($"You practice for some time. Your proficiency with {foundSkill.SkillName} is now {foundSkill.Proficiency}%", player.ConnectionId);
+                Writer.WriteLineMobSay(trainerName, $"You'll have to practice it on your own now...", player.ConnectionId);
                 return;
             }
 
-            _writeToClient.WriteLine($"You practice for some time. Your proficiency with {foundSkill.SkillName} is now {foundSkill.Proficiency}%", player.ConnectionId);
+            Writer.WriteLine($"You practice for some time. Your proficiency with {foundSkill.SkillName} is now {foundSkill.Proficiency}%", player.ConnectionId);
 
 
         }
@@ -547,7 +563,7 @@ namespace ArchaicQuestII.GameLogic.Core
             {
                 foreach (var ev in player.EventState)
                 {
-                    _writeToClient.WriteLine($"{ev.Key} - {ev.Value}", player.ConnectionId);
+                    Writer.WriteLine($"{ev.Key} - {ev.Value}", player.ConnectionId);
                 }
 
                 return;
@@ -556,11 +572,11 @@ namespace ArchaicQuestII.GameLogic.Core
             if (player.EventState.ContainsKey(eventName))
             {
                 player.EventState[eventName] = Int32.Parse(value);
-                _writeToClient.WriteLine($"{eventName} state changed to {player.EventState[eventName]}", player.ConnectionId);
+                Writer.WriteLine($"{eventName} state changed to {player.EventState[eventName]}", player.ConnectionId);
                 return;
             }
 
-            _writeToClient.WriteLine($"Invalid Event state", player.ConnectionId);
+            Writer.WriteLine($"Invalid Event state", player.ConnectionId);
         }
 
         public void Read(Player player, string book, string pageNum, string fullCommand)
@@ -571,7 +587,7 @@ namespace ArchaicQuestII.GameLogic.Core
             // Read Book Page 1
             if (book == "read")
             {
-                _writeToClient.WriteLine("Read what?", player.ConnectionId);
+                Writer.WriteLine("Read what?", player.ConnectionId);
                 return;
             }
 
@@ -582,22 +598,22 @@ namespace ArchaicQuestII.GameLogic.Core
             {
                 if (book.Contains("sign") || book.Contains("note") || book.Contains("letter") || book.Contains("board"))
                 {
-                    _writeToClient.WriteLine("To read signs or notes just look at them instead.", player.ConnectionId);
+                    Writer.WriteLine("To read signs or notes just look at them instead.", player.ConnectionId);
                     return;
                 }
-                _writeToClient.WriteLine("You can't find that.", player.ConnectionId);
+                Writer.WriteLine("You can't find that.", player.ConnectionId);
                 return;
             }
 
             if (item.ItemType != Item.Item.ItemTypes.Book)
             {
-                _writeToClient.WriteLine($"{item.Name} is not a book.", player.ConnectionId);
+                Writer.WriteLine($"{item.Name} is not a book.", player.ConnectionId);
                 return;
             }
 
             if (String.IsNullOrEmpty(pageNum))
             {
-                _writeToClient.WriteLine($"{item.Name} <br /> {item.Description.Look}<br /> To read the pages enter: 'Read {book} 1' to view page 1.", player.ConnectionId);
+                Writer.WriteLine($"{item.Name} <br /> {item.Description.Look}<br /> To read the pages enter: 'Read {book} 1' to view page 1.", player.ConnectionId);
                 return;
             }
             int.TryParse(pageNum, out var n);
@@ -612,26 +628,26 @@ namespace ArchaicQuestII.GameLogic.Core
             }
             if (n == item.Book.Pages.Count)
             {
-                _writeToClient.WriteLine($"That exeeds the page count of {item.Book.Pages.Count}", player.ConnectionId);
+                Writer.WriteLine($"That exeeds the page count of {item.Book.Pages.Count}", player.ConnectionId);
                 return;
             }
 
             if (n >= item.Book.PageCount)
             {
 
-                _writeToClient.WriteLine($"{item.Name} does not contain that many pages.", player.ConnectionId);
+                Writer.WriteLine($"{item.Name} does not contain that many pages.", player.ConnectionId);
 
                 return;
             }
 
             if (string.IsNullOrEmpty(item.Book.Pages[n]))
             {
-                _writeToClient.WriteLine($"This page is blank.", player.ConnectionId);
+                Writer.WriteLine($"This page is blank.", player.ConnectionId);
                 return;
             }
 
             var result = Markdown.ToHtml(item.Book.Pages[n]);
-            _writeToClient.WriteLine($"{result}", player.ConnectionId);
+            Writer.WriteLine($"{result}", player.ConnectionId);
         }
 
         public void Write(Player player, string book, string pageNum, string fullCommand)
@@ -644,7 +660,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
             if (book == "write")
             {
-                _writeToClient.WriteLine("Write in what?", player.ConnectionId);
+                Writer.WriteLine("Write in what?", player.ConnectionId);
                 return;
             }
 
@@ -653,13 +669,13 @@ namespace ArchaicQuestII.GameLogic.Core
 
             if (item == null)
             {
-                _writeToClient.WriteLine("You can't find that.", player.ConnectionId);
+                Writer.WriteLine("You can't find that.", player.ConnectionId);
                 return;
             }
 
             if (item.ItemType != Item.Item.ItemTypes.Book)
             {
-                _writeToClient.WriteLine($"{item.Name} is not a book.", player.ConnectionId);
+                Writer.WriteLine($"{item.Name} is not a book.", player.ConnectionId);
                 return;
             }
 
@@ -672,10 +688,10 @@ namespace ArchaicQuestII.GameLogic.Core
                 var title = fullCommand.Remove(0, Helpers.GetNthIndex(fullCommand, ' ', 3));
 
 
-                _writeToClient.WriteLine($"{item.Name} has now been titled {title}.", player.ConnectionId);
+                Writer.WriteLine($"{item.Name} has now been titled {title}.", player.ConnectionId);
                 item.Name = title;
 
-                _clientUi.UpdateInventory(player);
+                UpdateClient.UpdateInventory(player);
 
                 return;
             }
@@ -696,7 +712,7 @@ namespace ArchaicQuestII.GameLogic.Core
             if (n >= item.Book.PageCount)
             {
 
-                _writeToClient.WriteLine($"{item.Name} does not contain that many pages.", player.ConnectionId);
+                Writer.WriteLine($"{item.Name} does not contain that many pages.", player.ConnectionId);
 
                 return;
             }
@@ -718,9 +734,9 @@ namespace ArchaicQuestII.GameLogic.Core
                 PageNumber = n
             };
 
-            _clientUi.UpdateContentPopUp(player, bookContent);
+            UpdateClient.UpdateContentPopUp(player, bookContent);
 
-            _writeToClient.WriteLine($"You begin to writing in your book.", player.ConnectionId);
+            Writer.WriteLine($"You begin to writing in your book.", player.ConnectionId);
 
         }
 
@@ -775,7 +791,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public void DBDumpToJSON(Player player)
         {
-            _db.ExportDBToJSON();
+            DataBase.ExportDBToJSON();
         }
     }
 }

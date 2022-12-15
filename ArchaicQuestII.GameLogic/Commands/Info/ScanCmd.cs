@@ -11,26 +11,21 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 {
     public class ScanCmd : ICommand
     {
-        public ScanCmd(IWriteToClient writeToClient, ICache cache, IUpdateClientUI updateClient, IRoomActions roomActions)
+        public ScanCmd(ICore core)
         {
             Aliases = new[] {"scan"};
             Description = "Scan the current area or a certain direction.";
             Usages = new[] {"Example: scan", "Example: scan north"};
             UserRole = UserRole.Player;
-            Writer = writeToClient;
-            Cache = cache;
-            UpdateClient = updateClient;
-            RoomActions = roomActions;
+            Core = core;
         }
         
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
         public UserRole UserRole { get; }
-        public IWriteToClient Writer { get; }
-        public ICache Cache { get; }
-        public IUpdateClientUI UpdateClient { get; }
-        public IRoomActions RoomActions { get; }
+        public ICore Core { get; }
+
 
         public void Execute(Player player, Room room, string[] input)
         {
@@ -66,7 +61,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                 var getRoomCoords = Helpers.IsExit(exit, room);
 
                 var getRoomObj =
-                    Cache.GetRoom(
+                    Core.Cache.GetRoom(
                         $"{getRoomCoords.AreaId}{getRoomCoords.Coords.X}{getRoomCoords.Coords.Y}{getRoomCoords.Coords.Z}");
 
                 sb.Append($"<span>{exit}:</span>");
@@ -109,7 +104,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                 }
             }
 
-            Writer.WriteLine(sb.ToString(), player.ConnectionId);
+            Core.Writer.WriteLine(sb.ToString(), player.ConnectionId);
         }
 
         private void ScanDirection(Player player, Room room, string direction)
@@ -132,12 +127,12 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 
             if (getDirection == null)
             {
-                Writer.WriteLine("You can't look in that direction.", player.ConnectionId);
+                Core.Writer.WriteLine("You can't look in that direction.", player.ConnectionId);
             }
 
             var getRoomCoords = Helpers.IsExit(getDirection, room);
 
-            var getRoomObj = Cache.GetRoom($"{getRoomCoords.AreaId}{getRoomCoords.Coords.X}{getRoomCoords.Coords.Y}{getRoomCoords.Coords.Z}");
+            var getRoomObj = Core.Cache.GetRoom($"{getRoomCoords.AreaId}{getRoomCoords.Coords.X}{getRoomCoords.Coords.Y}{getRoomCoords.Coords.Z}");
             var sb = new StringBuilder();
 
             sb.Append($"<span>You peer intently {getDirection}</span>");
@@ -179,7 +174,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                 sb.Append("<p>There is nobody there.</p>");
             }
 
-            Writer.WriteLine(sb.ToString(), player.ConnectionId);
+            Core.Writer.WriteLine(sb.ToString(), player.ConnectionId);
         }
     }
 }

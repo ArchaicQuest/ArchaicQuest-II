@@ -7,26 +7,21 @@ namespace ArchaicQuestII.GameLogic.Commands.Combat;
 
 public class CastCmd : ICommand
 {
-    public CastCmd(IWriteToClient writeToClient, ICache cache, IUpdateClientUI updateClient, IRoomActions roomActions)
+    public CastCmd(ICore core)
     {
         Aliases = new[] {"cast"};
         Description = "Cast one of your spells";
         Usages = new[] {"Type: cast fireball"};
         UserRole = UserRole.Player;
-        Writer = writeToClient;
-        Cache = cache;
-        UpdateClient = updateClient;
-        RoomActions = roomActions;
+        Core = core;
     }
     
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
     public UserRole UserRole { get; }
-    public IWriteToClient Writer { get; }
-    public ICache Cache { get; }
-    public IUpdateClientUI UpdateClient { get; }
-    public IRoomActions RoomActions { get; }
+    public ICore Core { get; }
+
 
     public void Execute(Player player, Room room, string[] input)
     {

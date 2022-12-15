@@ -47,8 +47,6 @@ namespace ArchaicQuestII.GameLogic.Core
             _weather = weather;
 
             _hints = _core.Hints();
-            _cache.SetDatabase(_db);
-            _cache.SetPlayerDatabase(_pdb);
         }
 
         public int GainAmount(int value, Player player)

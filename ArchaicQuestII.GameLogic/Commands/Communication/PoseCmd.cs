@@ -8,26 +8,21 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
 {
     public class PoseCmd : ICommand
     {
-        public PoseCmd(IWriteToClient writeToClient, ICache cache, IUpdateClientUI updateClient, IRoomActions roomActions)
+        public PoseCmd(ICore core)
         {
             Aliases = new[] {"pose"};
             Description = "Sets your characters current pose";
             Usages = new[] {"Type: pose Leans against the wall"};
             UserRole = UserRole.Player;
-            Writer = writeToClient;
-            Cache = cache;
-            UpdateClient = updateClient;
-            RoomActions = roomActions;
+            Core = core;
         }
         
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
         public UserRole UserRole { get; }
-        public IWriteToClient Writer { get; }
-        public ICache Cache { get; }
-        public IUpdateClientUI UpdateClient { get; }
-        public IRoomActions RoomActions { get; }
+        public ICore Core { get; }
+
 
         public void Execute(Player player, Room room, string[] input)
         {
@@ -46,12 +41,12 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
 
                 poseText += player.Pose;
 
-                Writer.WriteLine(poseText, player.ConnectionId);
+                Core.Writer.WriteLine(poseText, player.ConnectionId);
                 return;
             }
 
             player.Pose = $", {string.Join(" ", input.Skip(1))}";
-            Writer.WriteLine("Pose set.", player.ConnectionId);
+            Core.Writer.WriteLine("Pose set.", player.ConnectionId);
         }
     }
 }
