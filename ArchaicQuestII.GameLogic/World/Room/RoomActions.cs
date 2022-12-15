@@ -989,7 +989,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
             if (toRoom.Exits?.North?.RoomId == fromRoom.Id)
                 direction = "in from the north";
             if (toRoom.Exits?.South?.RoomId == fromRoom.Id)
-                direction = "in form the south";
+                direction = "in from the south";
             if (toRoom.Exits?.East?.RoomId == fromRoom.Id)
                 direction = "in from the east";
             if (toRoom.Exits?.West?.RoomId == fromRoom.Id)
