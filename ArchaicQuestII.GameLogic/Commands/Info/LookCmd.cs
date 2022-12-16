@@ -40,7 +40,16 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
             }
             
             var target = input.ElementAtOrDefault(1);
+
+            if (!string.IsNullOrEmpty(target) && target.Equals("in") && input.Length == 3)
+            {
+                target = input.ElementAtOrDefault(2);
+               Core.RoomActions.LookInContainer(target, room, player);
+                return;
+            }
+            
             Core.RoomActions.Look(target, room, player);
+            
         }
     }
 }
