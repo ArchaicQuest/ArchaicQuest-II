@@ -14,7 +14,5 @@ namespace ArchaicQuestII.GameLogic.World.Area
         public string[] ModifiedBy { get; set; }
         public List<Room.Room> Rooms { get; set; }
         public bool Deleted { get; set; }
-
-
     }
 }

@@ -16,6 +16,19 @@ public class GetCmd : ICommand
         Aliases = new[] {"get", "take", "loot"};
         Description = "Your character will get something.";
         Usages = new[] {"Type: get apple"};
+        DeniedStatus = new[]
+        {
+            CharacterStatus.Status.Busy,
+            CharacterStatus.Status.Dead,
+            CharacterStatus.Status.Fighting,
+            CharacterStatus.Status.Ghost,
+            CharacterStatus.Status.Fleeing,
+            CharacterStatus.Status.Incapacitated,
+            CharacterStatus.Status.Sleeping,
+            CharacterStatus.Status.Stunned,
+            CharacterStatus.Status.Resting,
+            CharacterStatus.Status.Sitting,
+        };
         UserRole = UserRole.Player;
         Core = core;
     }
@@ -23,6 +36,7 @@ public class GetCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
-using ArchaicQuestII.Core.World;
+using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Status;
@@ -26,9 +26,10 @@ namespace ArchaicQuestII.GameLogic.World.Room
         private readonly IPassiveSkills _passiveSkills;
         private readonly IUpdateClientUI _updateClient;
         private readonly IMobScripts _mobScripts;
+        private readonly IDataBase _database;
 
         public RoomActions(IWriteToClient writeToClient, ITime time, ICache cache, IDice dice, IGain gain,
-            IFormulas formulas, IPassiveSkills passiveSkills, IUpdateClientUI updateClient, IMobScripts mobScripts)
+            IFormulas formulas, IPassiveSkills passiveSkills, IUpdateClientUI updateClient, IMobScripts mobScripts, IDataBase database)
         {
             _writeToClient = writeToClient;
             _time = time;
@@ -39,6 +40,16 @@ namespace ArchaicQuestII.GameLogic.World.Room
             _passiveSkills = passiveSkills;
             _updateClient = updateClient;
             _mobScripts = mobScripts;
+            _database = database;
+        }
+        
+        /// <summary>
+        /// Helper to get area from room
+        /// </summary>
+        /// <param name="room">Room to get area from</param>
+        public Area.Area GetRoomArea(Room room)
+        {
+            return _database.GetCollection<Area.Area>(DataBase.Collections.Area).FindById(room.AreaId);
         }
 
         public void Look(string target, Room room, Player player)

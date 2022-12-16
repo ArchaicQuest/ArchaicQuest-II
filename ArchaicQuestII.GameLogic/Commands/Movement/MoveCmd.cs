@@ -36,6 +36,18 @@ public class MoveCmd : ICommand
         };
         Description = "Tries to move your character to the direction typed.";
         Usages = new[] { "Type: north", "Type: southwest" };
+        DeniedStatus = new[]
+        {
+            CharacterStatus.Status.Busy,
+            CharacterStatus.Status.Dead,
+            CharacterStatus.Status.Fighting,
+            CharacterStatus.Status.Ghost,
+            CharacterStatus.Status.Fleeing,
+            CharacterStatus.Status.Incapacitated,
+            CharacterStatus.Status.Sleeping,
+            CharacterStatus.Status.Stunned,
+            CharacterStatus.Status.Resting
+        };
         UserRole = UserRole.Player;
         Core = core;
     }
@@ -43,6 +55,7 @@ public class MoveCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }
 
@@ -53,30 +66,10 @@ public class MoveCmd : ICommand
             Core.Writer.WriteLine("<p>You are too exhausted to move.</p>", player.ConnectionId);
             return;
         }
-        
-        switch (player.Status)
-        {
-            case CharacterStatus.Status.Fighting:
-            case CharacterStatus.Status.Incapacitated:
-                Core.Writer.WriteLine("<p>NO WAY! you are fighting.</p>", player.ConnectionId);
-                return;
-            case CharacterStatus.Status.Resting:
-                Core.Writer.WriteLine("<p>Nah... You feel too relaxed to do that.</p>", player.ConnectionId);
-                return;
-            case CharacterStatus.Status.Sitting:
-                Core.Writer.WriteLine("<p>You can't do that while sitting.</p>", player.ConnectionId);
-                return;
-            case CharacterStatus.Status.Sleeping:
-                Core.Writer.WriteLine("<p>In your dreams.</p>", player.ConnectionId);
-                return;
-            case CharacterStatus.Status.Stunned:
-                Core.Writer.WriteLine("<p>You are too stunned to move.</p>", player.ConnectionId);
-                return;
-        }
 
         Exit getExitToNextRoom = null;
 
-        switch (input[0].ToLower())
+        switch (input[0])
         {
             case "north":
             case "n":

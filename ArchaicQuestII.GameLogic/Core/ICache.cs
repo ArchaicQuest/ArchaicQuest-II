@@ -65,7 +65,9 @@ namespace ArchaicQuestII.GameLogic.Core
         /// <returns></returns>
         Dictionary<string, ICommand> GetCommands();
 
-        bool GetCommand(string key, out ICommand command);
+        ICommand GetCommand(string key);
+
+        bool IsCommand(string key);
 
         void AddCommand(string key, ICommand action);
 

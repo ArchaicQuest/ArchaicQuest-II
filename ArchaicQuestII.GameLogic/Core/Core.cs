@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Combat;
+using ArchaicQuestII.GameLogic.World.Area;
 
 namespace ArchaicQuestII.GameLogic.Core
 {
@@ -26,7 +27,10 @@ namespace ArchaicQuestII.GameLogic.Core
         public IGain Gain { get; }
         public ICombat Combat { get; }
         public IRoomActions RoomActions { get; }
+        public IAreaActions AreaActions { get; }
         public IMobScripts MobScripts { get; }
+
+        public ErrorLog ErrorLog { get; }
         
         public Core(ICache cache, 
             IWriteToClient writeToClient, 

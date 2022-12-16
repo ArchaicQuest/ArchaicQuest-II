@@ -8,13 +8,6 @@ namespace ArchaicQuestII.GameLogic.World.Area
     public interface IAreaActions
     {
         /// <summary>
-        /// Display basic information about area
-        /// </summary>
-        /// <param name="player">Player entering command</param>
-        /// <param name="room">Room where command was entered</param>
-        void AreaInfo(Player player, Room.Room room);
-        
-        /// <summary>
         /// Display notice when player enters a new area
         /// </summary>
         /// <param name="player">Player entering area</param>

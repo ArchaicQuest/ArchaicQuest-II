@@ -20,6 +20,19 @@ public class HarvestCmd : ICommand
         Aliases = new[] {"harvest", "forage"};
         Description = "You try to harvest something";
         Usages = new[] {"Type: harvest ore", "Example: forage bushes"};
+        DeniedStatus = new[]
+        {
+            CharacterStatus.Status.Busy,
+            CharacterStatus.Status.Dead,
+            CharacterStatus.Status.Fighting,
+            CharacterStatus.Status.Ghost,
+            CharacterStatus.Status.Fleeing,
+            CharacterStatus.Status.Incapacitated,
+            CharacterStatus.Status.Sleeping,
+            CharacterStatus.Status.Stunned,
+            CharacterStatus.Status.Resting,
+            CharacterStatus.Status.Sitting,
+        };
         UserRole = UserRole.Player;
         Core = core;
     }
@@ -27,6 +40,7 @@ public class HarvestCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }
 

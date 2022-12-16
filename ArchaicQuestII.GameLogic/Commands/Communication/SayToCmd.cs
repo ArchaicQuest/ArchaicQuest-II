@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.World.Room;
 
@@ -14,6 +15,7 @@ public class SayToCmd : ICommand
         Aliases = new[] {"sayto", ">"};
         Description = "Says something to a player.";
         Usages = new[] {"Type: sayto john what ever you want"};
+        DeniedStatus = default;
         UserRole = UserRole.Player;
         Core = core;
     }
@@ -21,6 +23,7 @@ public class SayToCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }
 

@@ -15,6 +15,19 @@ public class SitCmd : ICommand
         Aliases = new[] {"sit"};
         Description = "Sits on something.";
         Usages = new[] {"Type: sit stool"};
+        DeniedStatus = new[]
+        {
+            CharacterStatus.Status.Busy,
+            CharacterStatus.Status.Dead,
+            CharacterStatus.Status.Fighting,
+            CharacterStatus.Status.Ghost,
+            CharacterStatus.Status.Fleeing,
+            CharacterStatus.Status.Incapacitated,
+            CharacterStatus.Status.Sleeping,
+            CharacterStatus.Status.Stunned,
+            CharacterStatus.Status.Resting,
+            CharacterStatus.Status.Sitting,
+        };
         UserRole = UserRole.Player;
         Core = core;
     }
@@ -22,6 +35,7 @@ public class SitCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }
 

@@ -22,7 +22,6 @@ namespace ArchaicQuestII.DataAccess
         /// </summary>
         public enum Collections
         {
-
             Alignment,
             Area,
             AttackType,
@@ -30,7 +29,6 @@ namespace ArchaicQuestII.DataAccess
             Help,
             Items,
             Mobs,
-
             Race,
             Room,
             Skill,
@@ -40,7 +38,8 @@ namespace ArchaicQuestII.DataAccess
             Quests,
             Users,
             Log,
-            CraftingRecipes
+            CraftingRecipes,
+            ErrorLog
         }
 
         public bool Save<T>(T data, Collections collectionName)
@@ -126,8 +125,7 @@ namespace ArchaicQuestII.DataAccess
         {
             var dateT = DateTime.Now.ToString("yyyy-dd-M-HH-mm"); ;
             Directory.CreateDirectory($"backup/{dateT}");
-
-
+            
             _db.Execute($"select $ into $file('backup/{dateT}/Alignment.json') from Alignment");
             _db.Execute($"select $ into $file('backup/{dateT}/Area.json') from Area");
             _db.Execute($"select $ into $file('backup/{dateT}/AttackType.json') from AttackType");

@@ -5,6 +5,7 @@ using System.Text;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Class;
+using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.World.Room;
 
@@ -17,6 +18,7 @@ public class ListSpellsCmd : ICommand
         Aliases = new[] {"spells"};
         Description = "Shows available spells";
         Usages = new[] {"Type: spells", "spells all"};
+        DeniedStatus = default;
         UserRole = UserRole.Player;
         Core = core;
     }
@@ -24,6 +26,7 @@ public class ListSpellsCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }
 

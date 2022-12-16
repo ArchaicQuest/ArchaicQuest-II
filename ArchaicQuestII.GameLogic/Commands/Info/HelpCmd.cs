@@ -2,6 +2,7 @@ using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.World.Room;
 
@@ -14,6 +15,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
             Aliases = new[] {"help"};
             Description = "Displays the relevant help files.";
             Usages = new[] {"Type: help quaff"};
+            DeniedStatus = default;
             UserRole = UserRole.Player;
             Core = core;
         }
@@ -21,6 +23,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
+        public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
         public ICore Core { get; }
 
@@ -28,19 +31,17 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
         {
             var target = input.ElementAtOrDefault(1);
 
-            ICommand command = null;
-            
             if (string.IsNullOrEmpty(target))
             {
-                Core.Cache.GetCommand("help", out command);
+                target = "help";
             }
-            else
+            
+            var command = Core.Cache.GetCommand(target);
+            
+            if (command == null)
             {
-                if (!Core.Cache.GetCommand(target, out command))
-                {
-                    Core.Writer.WriteLine($"<p>No help found for {target}.", player.ConnectionId);
-                    return;
-                }
+                Core.Writer.WriteLine($"<p>No help found for {target}.", player.ConnectionId);
+                return;
             }
 
             var sb = new StringBuilder();

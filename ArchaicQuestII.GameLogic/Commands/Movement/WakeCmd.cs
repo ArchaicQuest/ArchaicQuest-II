@@ -13,6 +13,19 @@ public class WakeCmd : ICommand
         Aliases = new[] {"wake"};
         Description = "Your character wakes from sleep.";
         Usages = new[] {"Type: wake"};
+        DeniedStatus = new[]
+        {
+            CharacterStatus.Status.Busy,
+            CharacterStatus.Status.Dead,
+            CharacterStatus.Status.Fighting,
+            CharacterStatus.Status.Ghost,
+            CharacterStatus.Status.Fleeing,
+            CharacterStatus.Status.Incapacitated,
+            CharacterStatus.Status.Stunned,
+            CharacterStatus.Status.Resting,
+            CharacterStatus.Status.Sitting,
+            CharacterStatus.Status.Standing
+        };
         UserRole = UserRole.Player;
         Core = core;
     }
@@ -20,6 +33,7 @@ public class WakeCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }
 
@@ -28,12 +42,6 @@ public class WakeCmd : ICommand
         if (!string.IsNullOrEmpty(player.Mounted.Name))
         {
             Core.Writer.WriteLine("<p>You can't do that while mounted.</p>", player.ConnectionId);
-            return;
-        }
-
-        if (player.Status != CharacterStatus.Status.Sleeping)
-        {
-            Core.Writer.WriteLine("<p>You are already awake!</p>", player.ConnectionId);
             return;
         }
 

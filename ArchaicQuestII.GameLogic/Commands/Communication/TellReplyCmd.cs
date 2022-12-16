@@ -1,6 +1,7 @@
 using System.Linq;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.World.Room;
 
@@ -13,6 +14,7 @@ public class TellReplyCmd : ICommand
         Aliases = new[] {"tellreply", "reply"};
         Description = "Replies to your last incoming tell";
         Usages = new[] {"Type: tellreply 'message'"};
+        DeniedStatus = default;
         UserRole = UserRole.Player;
         Core = core;
     }
@@ -20,6 +22,7 @@ public class TellReplyCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }
 
@@ -40,8 +43,6 @@ public class TellReplyCmd : ICommand
         var replyInput = input.ToList();
         replyInput.Insert(1, player.ReplyTo);
 
-        Core.Cache.GetCommand("tell", out var command);
-        
-        command.Execute(player, room, replyInput.ToArray());
+        Core.Cache.GetCommand("tell").Execute(player, room, replyInput.ToArray());
     }
 }

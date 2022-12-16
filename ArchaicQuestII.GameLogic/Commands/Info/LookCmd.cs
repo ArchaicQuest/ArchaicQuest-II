@@ -14,6 +14,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
             Aliases = new[] {"l", "look"};
             Description = "Shows info about room or object.";
             Usages = new[] {"Type: look"};
+            DeniedStatus = default;
             UserRole = UserRole.Player;
             Core = core;
         }
@@ -21,6 +22,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
+        public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
         public ICore Core { get; }
 

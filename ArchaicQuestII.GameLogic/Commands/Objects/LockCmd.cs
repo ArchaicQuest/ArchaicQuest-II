@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.World.Room;
 
@@ -14,6 +15,19 @@ public class LockCmd : ICommand
         Aliases = new[] {"lock"};
         Description = "Your character locks something.";
         Usages = new[] {"Example: lock chest"};
+        DeniedStatus = new[]
+        {
+            CharacterStatus.Status.Busy,
+            CharacterStatus.Status.Dead,
+            CharacterStatus.Status.Fighting,
+            CharacterStatus.Status.Ghost,
+            CharacterStatus.Status.Fleeing,
+            CharacterStatus.Status.Incapacitated,
+            CharacterStatus.Status.Sleeping,
+            CharacterStatus.Status.Stunned,
+            CharacterStatus.Status.Resting,
+            CharacterStatus.Status.Sitting,
+        };
         UserRole = UserRole.Player;
         Core = core;
     }
@@ -21,6 +35,7 @@ public class LockCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }
 
