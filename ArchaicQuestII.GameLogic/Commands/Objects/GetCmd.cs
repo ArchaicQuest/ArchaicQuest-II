@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.World.Room;
@@ -29,6 +30,12 @@ public class GetCmd : ICommand
     {
         var target = input.ElementAtOrDefault(1);
         var container = input.ElementAtOrDefault(2);
+        
+        if (player.Status == CharacterStatus.Status.Sleeping)
+        {
+            Core.Writer.WriteLine("You can't do that while asleep.", player.ConnectionId);
+            return;
+        }
         
         if (string.IsNullOrEmpty(target))
         {
