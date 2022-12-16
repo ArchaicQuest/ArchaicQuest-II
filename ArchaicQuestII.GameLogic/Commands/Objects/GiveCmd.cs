@@ -1,6 +1,7 @@
 using System.Linq;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.World.Room;
 using MoonSharp.Interpreter;
@@ -14,6 +15,19 @@ public class GiveCmd : ICommand
         Aliases = new[] {"give"};
         Description = "You can give items and gold to players or mobs.";
         Usages = new[] {"Type: give 'target' 'object'", "Example: give timmy apple", "Example: give timmy 10 gold"};
+        DeniedStatus = new[]
+        {
+            CharacterStatus.Status.Busy,
+            CharacterStatus.Status.Dead,
+            CharacterStatus.Status.Fighting,
+            CharacterStatus.Status.Ghost,
+            CharacterStatus.Status.Fleeing,
+            CharacterStatus.Status.Incapacitated,
+            CharacterStatus.Status.Sleeping,
+            CharacterStatus.Status.Stunned,
+            CharacterStatus.Status.Resting,
+            CharacterStatus.Status.Sitting,
+        };
         UserRole = UserRole.Player;
         Core = core;
     }
@@ -21,6 +35,7 @@ public class GiveCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }
 

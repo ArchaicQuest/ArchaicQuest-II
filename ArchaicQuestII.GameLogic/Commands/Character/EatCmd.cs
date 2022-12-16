@@ -3,6 +3,7 @@ using System.Text;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Model;
+using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.World.Room;
@@ -16,6 +17,17 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
             Aliases = new[] {"eat"};
             Description = "Consume something.";
             Usages = new[] {"Type: eat apple"};
+            DeniedStatus = new[]
+            {
+                CharacterStatus.Status.Busy,
+                CharacterStatus.Status.Dead,
+                CharacterStatus.Status.Fighting,
+                CharacterStatus.Status.Ghost,
+                CharacterStatus.Status.Fleeing,
+                CharacterStatus.Status.Incapacitated,
+                CharacterStatus.Status.Sleeping,
+                CharacterStatus.Status.Stunned
+            };
             UserRole = UserRole.Player;
             Core = core;
         }
@@ -23,6 +35,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
+        public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
         public ICore Core { get; }
 

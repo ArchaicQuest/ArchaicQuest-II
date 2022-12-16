@@ -1,6 +1,7 @@
 using System.Text;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.World.Room;
 
@@ -13,6 +14,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
             Aliases = new[] {"affects"};
             Description = "Displays current characters online.";
             Usages = new[] {"Type: affects"};
+            DeniedStatus = default;
             UserRole = UserRole.Player;
             Core = core;
         }
@@ -20,6 +22,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
+        public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
         public ICore Core { get; }
 

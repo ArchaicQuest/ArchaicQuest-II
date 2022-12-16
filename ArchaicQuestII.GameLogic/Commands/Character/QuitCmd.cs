@@ -16,6 +16,11 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
             Aliases = new[] {"quit"};
             Description = "Leave the game.";
             Usages = new[] {"Type: quit"};
+            DeniedStatus = new[]
+            {
+                CharacterStatus.Status.Busy,
+                CharacterStatus.Status.Fighting
+            };
             UserRole = UserRole.Player;
             Core = core;
         }
@@ -23,6 +28,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
+        public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
         public ICore Core { get; }
 

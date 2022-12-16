@@ -14,6 +14,18 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
             Aliases = new[] {"recall"};
             Description = "Transports your character to recall room.";
             Usages = new[] {"Type: recall"};
+            DeniedStatus = new[]
+            {
+                CharacterStatus.Status.Busy,
+                CharacterStatus.Status.Dead,
+                CharacterStatus.Status.Fighting,
+                CharacterStatus.Status.Ghost,
+                CharacterStatus.Status.Fleeing,
+                CharacterStatus.Status.Incapacitated,
+                CharacterStatus.Status.Sleeping,
+                CharacterStatus.Status.Stunned,
+                CharacterStatus.Status.Resting
+            };
             UserRole = UserRole.Player;
             Core = core;
         }
@@ -21,27 +33,12 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
+        public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
         public ICore Core { get; }
 
         public void Execute(Player player, Room room, string[] input)
         {
-            if ((player.Status & CharacterStatus.Status.Sleeping) != 0)
-            {
-                Core.Writer.WriteLine("In your dreams, or what?", player.ConnectionId);
-                return;
-            }
-            if ((player.Status & CharacterStatus.Status.Sitting) != 0)
-            {
-                Core.Writer.WriteLine("Better stand up first.", player.ConnectionId);
-                return;
-            }
-            if ((player.Status & CharacterStatus.Status.Resting) != 0)
-            {
-                Core.Writer.WriteLine("Nah... You feel too relaxed...", player.ConnectionId);
-                return;
-            }
-
             var recallRoom = Core.Cache.GetRoom(player.RecallId);
             
             player.Buffer.Clear();

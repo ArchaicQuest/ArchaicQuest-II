@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Text;
 using ArchaicQuestII.DataAccess;
@@ -22,30 +21,7 @@ namespace ArchaicQuestII.GameLogic.World.Area
             _cache = cache;
             _db = db;
         }
-        
-        /// <summary>
-        /// Display basic information about area
-        /// </summary>
-        /// <param name="player">Player entering command</param>
-        /// <param name="room">Room where command was entered</param>
-        public void AreaInfo(Player player, Room.Room room)
-        {
-            var sb = new StringBuilder();
-            var area = GetAreaFromRoom(room);
-            var roomCount = _cache.GetAllRoomsInArea(room.AreaId).Count;
 
-            sb.Append($"<p>You are currently in <b>{area.Title}</b>.</p><p>{area.Description}</p>");
-
-            sb.Append(roomCount > 1
-                ? $"<p>Area contains <b>{roomCount}</b> rooms.</p>"
-                : "<p>Area contains <b>1</b> room.</p>");
-
-            if (area.CreatedBy != null)
-                sb.Append($"<p>(Created by {area.CreatedBy})</p>");
-
-            _writeToClient.WriteLine(sb.ToString(), player.ConnectionId);
-        }
-        
         /// <summary>
         /// Display notice when player enters a new area
         /// </summary>
@@ -53,7 +29,7 @@ namespace ArchaicQuestII.GameLogic.World.Area
         /// <param name="room">Room that was entered</param>
         public void AreaEntered(Player player, Room.Room room)
         {
-            var area = GetAreaFromRoom(room);
+            var area = _db.GetCollection<Area>(DataBase.Collections.Area).FindById(room.AreaId);
 
             _writeToClient.WriteLine($"<p>You have traversed into <b>{area.Title}</b>.", player.ConnectionId);
         }
@@ -148,22 +124,13 @@ namespace ArchaicQuestII.GameLogic.World.Area
                 sb.Append("</li>");
             }
 
-                sb.Append("</ul>");
+            sb.Append("</ul>");
             
             _writeToClient.WriteLine(sb.ToString(), player.ConnectionId);
         }
 
         #region Helpers
 
-        /// <summary>
-        /// Helper to get area from room
-        /// </summary>
-        /// <param name="room">Room to get area from</param>
-        private Area GetAreaFromRoom(Room.Room room)
-        {
-            return _db.GetCollection<Area>(DataBase.Collections.Area).FindById(room.AreaId);
-        }
-        
         /// <summary>
         /// Helper to get area levels
         /// </summary>

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace ArchaicQuestII.Core.World
+﻿namespace ArchaicQuestII.GameLogic.World.Room
 {
     public class RoomObject
     {

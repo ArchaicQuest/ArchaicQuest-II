@@ -13,6 +13,16 @@ public class StandCmd : ICommand
         Aliases = new[] {"stand"};
         Description = "You character stands up.";
         Usages = new[] {"Type: stand"};
+        DeniedStatus = new[]
+        {
+            CharacterStatus.Status.Busy,
+            CharacterStatus.Status.Dead,
+            CharacterStatus.Status.Fighting,
+            CharacterStatus.Status.Ghost,
+            CharacterStatus.Status.Fleeing,
+            CharacterStatus.Status.Incapacitated,
+            CharacterStatus.Status.Stunned,
+        };
         UserRole = UserRole.Player;
         Core = core;
     }
@@ -20,6 +30,7 @@ public class StandCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }
 

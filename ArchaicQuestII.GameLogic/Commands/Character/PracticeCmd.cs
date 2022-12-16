@@ -17,6 +17,17 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
             Aliases = new[] {"practice"};
             Description = ".";
             Usages = new[] {"Type: "};
+            DeniedStatus = new[]
+            {
+                CharacterStatus.Status.Busy,
+                CharacterStatus.Status.Dead,
+                CharacterStatus.Status.Fighting,
+                CharacterStatus.Status.Ghost,
+                CharacterStatus.Status.Fleeing,
+                CharacterStatus.Status.Incapacitated,
+                CharacterStatus.Status.Sleeping,
+                CharacterStatus.Status.Stunned
+            };
             UserRole = UserRole.Player;
             Core = core;
         }
@@ -24,6 +35,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
+        public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
         public ICore Core { get; }
 
@@ -34,12 +46,6 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
             if (string.IsNullOrEmpty(target))
             {
                 Core.Writer.WriteLine("Practice what?", player.ConnectionId);
-                return;
-            }
-            
-            if ((player.Status & CharacterStatus.Status.Sleeping) != 0)
-            {
-                Core.Writer.WriteLine("In your dreams, or what?", player.ConnectionId);
                 return;
             }
 

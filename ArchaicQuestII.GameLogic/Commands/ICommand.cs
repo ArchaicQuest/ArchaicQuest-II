@@ -1,5 +1,7 @@
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Status;
+using ArchaicQuestII.GameLogic.Commands.Objects;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.World.Room;
 
@@ -22,6 +24,8 @@ namespace ArchaicQuestII.GameLogic.Commands
         /// </summary>
         string[] Usages { get; }
         
+        CharacterStatus.Status[] DeniedStatus { get; }
+
         /// <summary>
         /// Player role required to execute command
         /// </summary>

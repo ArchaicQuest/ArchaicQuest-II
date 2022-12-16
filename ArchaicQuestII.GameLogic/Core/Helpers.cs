@@ -409,8 +409,7 @@ namespace ArchaicQuestII.GameLogic.Core
             }
             return -1;
         }
-
-
+        
         public static int GetWeaponSkill(Item.Item weapon, Player player)
         {
 
@@ -779,6 +778,28 @@ namespace ArchaicQuestII.GameLogic.Core
             }
 
             return source;
+        }
+        
+        public static string ReplaceSocialTags(string text, Player player, Player target)
+        {
+            if (text == "null")
+            {
+                return "You can't do that.";
+            }
+            var newText = text.Replace("#player#", player.Name).Replace("#pgender#", Helpers.GetPronoun(player.Gender))
+                .Replace("#pgender2#", Helpers.GetSubjectPronoun(player.Gender))
+                .Replace("#pgender3#", Helpers.GetObjectPronoun(player.Gender))
+                .Replace("#pgender#", Helpers.GetPronoun(player.Gender));
+
+            if (target != null)
+            {
+                newText = newText.Replace("#target#", target.Name)
+                    .Replace("#tgender#", Helpers.GetPronoun(target.Gender))
+                    .Replace("#tgender2#", Helpers.GetSubjectPronoun(target.Gender))
+                    .Replace("#tgender3#", Helpers.GetObjectPronoun(target.Gender));
+            }
+
+            return newText;
         }
     }
 }

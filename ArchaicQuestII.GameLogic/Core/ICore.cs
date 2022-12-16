@@ -4,6 +4,7 @@ using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Combat;
+using ArchaicQuestII.GameLogic.World.Area;
 using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Core
@@ -19,7 +20,9 @@ namespace ArchaicQuestII.GameLogic.Core
         public IGain Gain { get; }
         public ICombat Combat { get; }
         public IRoomActions RoomActions { get; }
+        public IAreaActions AreaActions { get; }
         public IMobScripts MobScripts { get; }
+        public ErrorLog ErrorLog { get; }
         
         /// <summary>
         /// Displays lists of players 

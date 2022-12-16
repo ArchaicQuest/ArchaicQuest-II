@@ -35,7 +35,6 @@
 
     <ItemGroup>
       <Folder Include="Commands\Utility" />
-      <Folder Include="Skill\Type\" />
     </ItemGroup>
 
 </Project>
