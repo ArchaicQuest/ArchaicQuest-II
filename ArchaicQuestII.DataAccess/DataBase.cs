@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using ArchaicQuestII.DataAccess.DataModels;
 using LiteDB;
 
 namespace ArchaicQuestII.DataAccess
@@ -102,6 +101,7 @@ namespace ArchaicQuestII.DataAccess
                 Collections.Quests => "Quests",
                 Collections.Users => "Users",
                 Collections.Log => "Log",
+                Collections.ErrorLog => "ErrorLog",
                 Collections.CraftingRecipes => "CraftingRecipes",
                 _ => "error",
             };
@@ -142,7 +142,6 @@ namespace ArchaicQuestII.DataAccess
             _db.Execute($"select $ into $file('backup/{dateT}/Quests.json') from Quests");
             _db.Execute($"select $ into $file('backup/{dateT}/Users.json') from Users");
             _db.Execute($"select $ into $file('backup/{dateT}/CraftingRecipes.json') from CraftingRecipes");
-
         }
     }
 }

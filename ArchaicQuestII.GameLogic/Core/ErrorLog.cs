@@ -4,9 +4,9 @@ namespace ArchaicQuestII.GameLogic.Core;
 
 public class ErrorLog : IErrorLog
 {
-    public DataBase Database { get; }
+    public IDataBase Database { get; }
     
-    public ErrorLog(DataBase db)
+    public ErrorLog(IDataBase db)
     {
         Database = db;
     }

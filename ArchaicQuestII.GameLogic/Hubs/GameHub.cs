@@ -29,11 +29,6 @@ namespace ArchaicQuestII.GameLogic.Hubs
         private readonly IWriteToClient _writeToClient;
         private readonly IUpdateClientUI _updateClientUi;
         private readonly IMobScripts _mobScripts;
-        private readonly ITime _time;
-        private readonly IDice _dice;
-        private readonly IGain _gain;
-        private readonly IFormulas _formulas;
-        private readonly IPassiveSkills _passiveSkills;
 
         public GameHub(IDataBase db, IPlayerDataBase pdb, ICache cache, ILogger<GameHub> logger, IWriteToClient writeToClient, IUpdateClientUI updateClientUi, IMobScripts mobScripts, ITime time, IDice dice, IGain gain, IFormulas formulas, IPassiveSkills passiveSkills)
         {
@@ -44,11 +39,6 @@ namespace ArchaicQuestII.GameLogic.Hubs
             _writeToClient = writeToClient;
             _updateClientUi = updateClientUi;
             _mobScripts = mobScripts;
-            _time = time;
-            _dice = dice;
-            _gain = gain;
-            _formulas = formulas;
-            _passiveSkills = passiveSkills;
         }
         
         /// <summary>
