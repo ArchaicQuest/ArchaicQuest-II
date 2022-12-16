@@ -71,10 +71,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
             }
         }
         
-        /// <summary>
-        /// Displays current room 
-        /// </summary>
-        public void Look(Player player, Room room)
+        private void Look(Player player, Room room)
         {
             var showVerboseExits = player.Config.VerboseExits;
             var exits = Core.RoomActions.FindValidExits(room, showVerboseExits);
