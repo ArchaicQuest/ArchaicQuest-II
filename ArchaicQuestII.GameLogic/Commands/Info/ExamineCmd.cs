@@ -14,6 +14,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
             Aliases = new[] {"examine", "exam", "ex"};
             Description = "Shows detailed info about room or object.";
             Usages = new[] {"Type: examine dagger"};
+            DeniedStatus = default;
             UserRole = UserRole.Player;
             Core = core;
         }
@@ -23,6 +24,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
         public string[] Usages { get; }
         public UserRole UserRole { get; }
         public ICore Core { get; }
+        public CharacterStatus.Status[] DeniedStatus { get; }
 
 
         public void Execute(Player player, Room room, string[] input)

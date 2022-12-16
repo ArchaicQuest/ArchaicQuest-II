@@ -2,6 +2,7 @@ using System.Linq;
 using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.World.Room;
 
@@ -15,6 +16,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
             Description = "Save your character manually";
             Usages = new[] {"Type: save"};
             UserRole = UserRole.Player;
+            DeniedStatus = default;
             Core = core;
         }
         
@@ -22,6 +24,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
         public string Description { get; }
         public string[] Usages { get; }
         public UserRole UserRole { get; }
+        public CharacterStatus.Status[] DeniedStatus { get; }
         public ICore Core { get; }
 
         public void Execute(Player player, Room room, string[] input)
