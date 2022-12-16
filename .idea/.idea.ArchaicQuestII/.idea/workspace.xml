@@ -7,17 +7,22 @@
     <projectFile>ArchaicQuestII.GameLogic.Tests/ArchaicQuestII.GameLogic.Tests.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2eff0800-fb31-4811-bfc6-8df5e26cbfe9" name="Changes" comment="Updates. Also added Command check for player status">
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Character/TrainCmd.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Immortal/ImmSetEventCmd.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Immortal/ImmTrainCmd.cs" afterDir="false" />
+    <list default="true" id="2eff0800-fb31-4811-bfc6-8df5e26cbfe9" name="Changes" comment="More updates">
+      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Objects/ExamineCmd.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Objects/SmellCmd.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Objects/TasteCmd.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Objects/TouchCmd.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/IErrorLog.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ArchaicQuestII/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ArchaicQuestII/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/World/AreaCmd.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/World/AreaCmd.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/Config.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/Config.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.API/Configuration/IoC/GameLogicExtensions/CoreFunctionalityExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.API/Configuration/IoC/GameLogicExtensions/CoreFunctionalityExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Info/LookCmd.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Commands/Info/LookCmd.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/Core.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/Core.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/ErrorLog.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/ErrorLog.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/Helpers.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/Helpers.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/ICore.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Core/ICore.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/World/Area/AreaActions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/World/Area/AreaActions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/World/Area/IAreaActions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/World/Area/IAreaActions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Hubs/GameHub.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/Hubs/GameHub.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/World/Room/IRoomActions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/World/Room/IRoomActions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/World/Room/RoomActions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ArchaicQuestII.GameLogic/World/Room/RoomActions.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,6 +51,7 @@
     <setting file="mock:///Users/daniel/RiderProjects/Command/Mud-Server/ArchaicQuestII.GameLogic/Core/Cache.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock:///Users/daniel/RiderProjects/Command/Mud-Server/ArchaicQuestII.GameLogic/Core/Cache.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/ArchaicQuestII.GameLogic/Hubs/Telnet/TelnetHub.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="mock:///Users/daniel/RiderProjects/Command/Mud-Server/ArchaicQuestII.GameLogic/World/Area/AreaActions.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -126,7 +132,7 @@
       <workItem from="1665607839326" duration="1542000" />
       <workItem from="1665785106353" duration="22661000" />
       <workItem from="1669074020115" duration="15139000" />
-      <workItem from="1671034008519" duration="58876000" />
+      <workItem from="1671034008519" duration="63048000" />
     </task>
     <task id="LOCAL-00002" summary="WIP Config settings setup and API">
       <created>1660518380350</created>
@@ -268,7 +274,14 @@
       <option name="project" value="LOCAL" />
       <updated>1671211584972</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="More updates">
+      <created>1671228950870</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1671228950870</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -694,7 +707,8 @@
     <MESSAGE value="Fixed _core in combat.cs and AffectsCmd.cs using wrong alias of &quot;who&quot;" />
     <MESSAGE value="fixed some small bugs" />
     <MESSAGE value="Updates. Also added Command check for player status" />
-    <option name="LAST_COMMIT_MESSAGE" value="Updates. Also added Command check for player status" />
+    <MESSAGE value="More updates" />
+    <option name="LAST_COMMIT_MESSAGE" value="More updates" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

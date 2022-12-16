@@ -4,6 +4,7 @@ using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Combat;
+using ArchaicQuestII.GameLogic.Skill.Skills;
 using ArchaicQuestII.GameLogic.World.Area;
 using ArchaicQuestII.GameLogic.World.Room;
 
@@ -22,7 +23,9 @@ namespace ArchaicQuestII.GameLogic.Core
         public IRoomActions RoomActions { get; }
         public IAreaActions AreaActions { get; }
         public IMobScripts MobScripts { get; }
-        public ErrorLog ErrorLog { get; }
+        public IErrorLog ErrorLog { get; }
+        public IPassiveSkills PassiveSkills { get; }
+        public IFormulas Formulas { get; }
         
         /// <summary>
         /// Displays lists of players 

@@ -597,6 +597,13 @@ namespace ArchaicQuestII.GameLogic.Core
 
             return proficiency >= success;
         }
+        
+        public static bool LoreSuccess(int? skillLevel)
+        {
+            var chance = new Dice().Roll(1, 1, 100);
+
+            return skillLevel >= chance;
+        }
 
         public static string SkillLearnMistakes(Player player, string skillName, IGain gain, int delay = 0)
         {

@@ -15,10 +15,11 @@ namespace ArchaicQuestII.API.Configuration.IoC.GameLogicExtensions
             services.AddSingleton<IUpdateClientUI, UpdateClientUI>();
             services.AddSingleton<IMobScripts, MobScripts>();
             services.AddSingleton<ITime, Time>();
-            services.AddSingleton<ICore, GameLogic.Core.Core>();
+            services.AddSingleton<ICore, Core>();
             services.AddSingleton<IQuestLog, QuestLog>();
             services.AddSingleton<IWeather, Weather>();
             services.AddSingleton<ICommandHandler, CommandHandler>();
+            services.AddSingleton<IErrorLog, ErrorLog>();
 
             return services;
         }

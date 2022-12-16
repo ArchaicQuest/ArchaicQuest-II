@@ -2,13 +2,13 @@ using ArchaicQuestII.DataAccess;
 
 namespace ArchaicQuestII.GameLogic.Core;
 
-public class ErrorLog
+public class ErrorLog : IErrorLog
 {
-    private readonly DataBase _db;
-
+    public DataBase Database { get; }
+    
     public ErrorLog(DataBase db)
     {
-        _db = db;
+        Database = db;
     }
 
     /// <summary>
@@ -26,7 +26,7 @@ public class ErrorLog
             Priority = priority
         };
         
-        _db.Save(e, DataBase.Collections.ErrorLog);
+        Database.Save(e, DataBase.Collections.ErrorLog);
     }
 
     public struct ErrorInfo

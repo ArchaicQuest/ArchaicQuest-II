@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ArchaicQuestII.GameLogic.Combat;
+using ArchaicQuestII.GameLogic.Skill.Skills;
 using ArchaicQuestII.GameLogic.World.Area;
 
 namespace ArchaicQuestII.GameLogic.Core
@@ -26,9 +27,12 @@ namespace ArchaicQuestII.GameLogic.Core
         public IRoomActions RoomActions { get; }
         public IAreaActions AreaActions { get; }
         public IMobScripts MobScripts { get; }
-
-        public ErrorLog ErrorLog { get; }
         
+        public IPassiveSkills PassiveSkills { get; }
+        public IFormulas Formulas { get; }
+
+        public IErrorLog ErrorLog { get; }
+
         public Core(ICache cache, 
             IWriteToClient writeToClient, 
             IDataBase dataBase, 
@@ -39,7 +43,9 @@ namespace ArchaicQuestII.GameLogic.Core
             IPlayerDataBase playerDataBase, 
             IRoomActions roomActions,
             IMobScripts mobScripts,
-            ErrorLog errorLog)
+            IErrorLog errorLog,
+            IPassiveSkills passiveSkills,
+            IFormulas formulas)
         {
             Cache = cache;
             Writer = writeToClient;
@@ -52,6 +58,8 @@ namespace ArchaicQuestII.GameLogic.Core
             RoomActions = roomActions;
             MobScripts = mobScripts;
             ErrorLog = errorLog;
+            PassiveSkills = passiveSkills;
+            Formulas = formulas;
         }
         
         /// <summary>
