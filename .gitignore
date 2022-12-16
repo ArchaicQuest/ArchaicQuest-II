@@ -37,4 +37,4 @@ msbuild.wrn
 
 node_modules/
 ArchaicQuestII.API/log.txt
-deploy/
+**/.idea
