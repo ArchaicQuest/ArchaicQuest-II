@@ -2,15 +2,12 @@
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Gain;
-using ArchaicQuestII.GameLogic.Character.Model;
-using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.World.Room;
 using Markdig;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.World.Area;
 
@@ -41,7 +38,8 @@ namespace ArchaicQuestII.GameLogic.Core
             ICombat combat, 
             IPlayerDataBase playerDataBase, 
             IRoomActions roomActions,
-            IMobScripts mobScripts)
+            IMobScripts mobScripts,
+            ErrorLog errorLog)
         {
             Cache = cache;
             Writer = writeToClient;
@@ -53,101 +51,9 @@ namespace ArchaicQuestII.GameLogic.Core
             PlayerDataBase = playerDataBase;
             RoomActions = roomActions;
             MobScripts = mobScripts;
-        }
-
-        public void Train(Player player, Room room, string stat)
-        {
-            if ((player.Status & CharacterStatus.Status.Sleeping) != 0)
-            {
-                Writer.WriteLine("In your dreams, or what?", player.ConnectionId);
-                return;
-            }
-
-            if (room.Mobs.Find(x => x.Trainer) == null)
-            {
-                Writer.WriteLine("You can't do that here.", player.ConnectionId);
-                return;
-            }
-
-            if (player.Trains <= 0)
-            {
-                Writer.WriteLine("You have no training sessions left.", player.ConnectionId);
-                return;
-            }
-
-            if (string.IsNullOrEmpty(stat) || stat == "train")
-            {
-
-                Writer.WriteLine(
-                    ($"<p>You have {player.Trains} training session{(player.Trains > 1 ? "s" : "")} remaining.<br />You can train: str dex con int wis cha hp mana move.</p>"
-                    ), player.ConnectionId);
-            }
-            else
-            {
-                var statName = Helpers.GetStatName(stat);
-                if (string.IsNullOrEmpty(statName.Item1))
-                {
-                    Writer.WriteLine(
-                        ($"<p>{stat} not found. Please choose from the following. <br /> You can train: str dex con int wis cha hp mana move.</p>"
-                        ), player.ConnectionId);
-                    return;
-                }
-
-                player.Trains -= 1;
-                if (player.Trains < 0)
-                {
-                    player.Trains = 0;
-                }
-
-                if (statName.Item1 == "hit points" || statName.Item1 == "moves" || statName.Item1 == "mana")
-                {
-                    var hitDie = Cache.GetClass(player.ClassName);
-                    var roll = Dice.Roll(1, hitDie.HitDice.DiceMinSize, hitDie.HitDice.DiceMaxSize);
-
-                    player.MaxAttributes.Attribute[statName.Item2] += roll;
-                    player.Attributes.Attribute[statName.Item2] += roll;
-
-                    Writer.WriteLine(
-                        ($"<p class='gain'>Your {statName.Item1} increases by {roll}.</p>"
-                        ), player.ConnectionId);
-
-                    UpdateClient.UpdateHP(player);
-                    UpdateClient.UpdateMana(player);
-                    UpdateClient.UpdateMoves(player);
-                }
-                else
-                {
-                    player.MaxAttributes.Attribute[statName.Item2] += 1;
-                    player.Attributes.Attribute[statName.Item2] += 1;
-
-                    Writer.WriteLine(
-                        ($"<p class='gain'>Your {statName.Item1} increases by 1.</p>"
-                        ), player.ConnectionId);
-                }
-
-
-
-
-                UpdateClient.UpdateScore(player);
-
-
-            }
+            ErrorLog = errorLog;
         }
         
-
-        /// <summary>
-        /// for testing
-        /// </summary>
-        /// <param name="player"></param>
-        public void TrainSkill(Player player)
-        {
-            foreach (var skill in player.Skills)
-            {
-                skill.Proficiency = 85;
-            }
-        }
-
-
         /// <summary>
         /// for testing
         /// </summary>
@@ -195,31 +101,8 @@ namespace ArchaicQuestII.GameLogic.Core
                 player.ConnectionId, 0);
         }
 
-        public void SetEvent(Player player, string eventName, string value)
-        {
-            if (eventName.Equals("/setevent", StringComparison.CurrentCultureIgnoreCase) || string.IsNullOrEmpty(eventName))
-            {
-                foreach (var ev in player.EventState)
-                {
-                    Writer.WriteLine($"{ev.Key} - {ev.Value}", player.ConnectionId);
-                }
-
-                return;
-            }
-
-            if (player.EventState.ContainsKey(eventName))
-            {
-                player.EventState[eventName] = Int32.Parse(value);
-                Writer.WriteLine($"{eventName} state changed to {player.EventState[eventName]}", player.ConnectionId);
-                return;
-            }
-
-            Writer.WriteLine($"Invalid Event state", player.ConnectionId);
-        }
-
         public void Read(Player player, string book, string pageNum, string fullCommand)
         {
-
             var splitCommand = fullCommand.Split(" ");
             pageNum = splitCommand.Length == 4 ? splitCommand[3] : pageNum;
             // Read Book Page 1
