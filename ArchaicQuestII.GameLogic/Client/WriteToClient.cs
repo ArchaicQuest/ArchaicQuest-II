@@ -6,7 +6,7 @@ using ArchaicQuestII.GameLogic.Hubs.Telnet;
 using ArchaicQuestII.GameLogic.World.Room;
 using Microsoft.AspNetCore.SignalR;
 
-namespace ArchaicQuestII.GameLogic.Core
+namespace ArchaicQuestII.GameLogic.Client
 {
     public class WriteToClient : IWriteToClient
     {

@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.World.Room;
 using Newtonsoft.Json;
 
-namespace ArchaicQuestII.GameLogic.Core
+namespace ArchaicQuestII.GameLogic.Client
 {
     public class SigmaMapNode
     {

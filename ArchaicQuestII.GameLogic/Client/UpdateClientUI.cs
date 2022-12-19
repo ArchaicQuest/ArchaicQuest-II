@@ -1,18 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Equipment;
-using ArchaicQuestII.GameLogic.Character.Model;
+using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Hubs;
 using ArchaicQuestII.GameLogic.Item;
-using ArchaicQuestII.GameLogic.World.Room;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
 
-namespace ArchaicQuestII.GameLogic.Core
+namespace ArchaicQuestII.GameLogic.Client
 {
     public class UpdateClientUI : IUpdateClientUI
     {

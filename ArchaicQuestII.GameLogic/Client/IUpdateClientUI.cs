@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Model;
-using ArchaicQuestII.GameLogic.World.Room;
+﻿using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Core;
 
-namespace ArchaicQuestII.GameLogic.Core
+namespace ArchaicQuestII.GameLogic.Client
 {
     public interface IUpdateClientUI
     {

@@ -12,6 +12,7 @@ using ArchaicQuestII.GameLogic.Spell;
 using ArchaicQuestII.GameLogic.World.Room;
 using Newtonsoft.Json;
 using System.Web;
+using ArchaicQuestII.GameLogic.Client;
 
 namespace ArchaicQuestII.GameLogic.Core
 {

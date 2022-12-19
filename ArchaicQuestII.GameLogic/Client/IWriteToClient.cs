@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ArchaicQuestII.GameLogic.Character;
+﻿using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.World.Room;
 
 //copy pasta https://stackoverflow.com/a/20595549/1395510
-namespace ArchaicQuestII.GameLogic.Core
+namespace ArchaicQuestII.GameLogic.Client
 {
     public interface IWriteToClient
     {

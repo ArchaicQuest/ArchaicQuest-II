@@ -4,10 +4,10 @@ using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.World.Room;
-using Markdig;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Skill.Skills;
 using ArchaicQuestII.GameLogic.World.Area;
@@ -107,166 +107,6 @@ namespace ArchaicQuestII.GameLogic.Core
                 $"<p class='improve'>You learn from your mistakes and gain {100 * foundSkill.Level / 4} experience points.</p>" +
                 $"<p class='improve'>Your knowledge of {foundSkill.SkillName} increases by {increase}%.</p>",
                 player.ConnectionId, 0);
-        }
-
-        public void Read(Player player, string book, string pageNum, string fullCommand)
-        {
-            var splitCommand = fullCommand.Split(" ");
-            pageNum = splitCommand.Length == 4 ? splitCommand[3] : pageNum;
-            // Read Book Page 1
-            if (book == "read")
-            {
-                Writer.WriteLine("Read what?", player.ConnectionId);
-                return;
-            }
-
-            var nthTarget = Helpers.findNth(book);
-            var item = Helpers.findObjectInInventory(nthTarget, player);
-
-            if (item == null)
-            {
-                if (book.Contains("sign") || book.Contains("note") || book.Contains("letter") || book.Contains("board"))
-                {
-                    Writer.WriteLine("To read signs or notes just look at them instead.", player.ConnectionId);
-                    return;
-                }
-                Writer.WriteLine("You can't find that.", player.ConnectionId);
-                return;
-            }
-
-            if (item.ItemType != Item.Item.ItemTypes.Book)
-            {
-                Writer.WriteLine($"{item.Name} is not a book.", player.ConnectionId);
-                return;
-            }
-
-            if (String.IsNullOrEmpty(pageNum))
-            {
-                Writer.WriteLine($"{item.Name} <br /> {item.Description.Look}<br /> To read the pages enter: 'Read {book} 1' to view page 1.", player.ConnectionId);
-                return;
-            }
-            int.TryParse(pageNum, out var n);
-            if (n != 0)
-            {
-                n--;
-            }
-
-            if (n < 0)
-            {
-                n = 0;
-            }
-            if (n == item.Book.Pages.Count)
-            {
-                Writer.WriteLine($"That exeeds the page count of {item.Book.Pages.Count}", player.ConnectionId);
-                return;
-            }
-
-            if (n >= item.Book.PageCount)
-            {
-
-                Writer.WriteLine($"{item.Name} does not contain that many pages.", player.ConnectionId);
-
-                return;
-            }
-
-            if (string.IsNullOrEmpty(item.Book.Pages[n]))
-            {
-                Writer.WriteLine($"This page is blank.", player.ConnectionId);
-                return;
-            }
-
-            var result = Markdown.ToHtml(item.Book.Pages[n]);
-            Writer.WriteLine($"{result}", player.ConnectionId);
-        }
-
-        public void Write(Player player, string book, string pageNum, string fullCommand)
-        {
-            var splitCommand = fullCommand.Split(" ");
-
-            pageNum = splitCommand.Length == 4 ? splitCommand[3] : pageNum;
-
-            var isTitle = splitCommand[2] == "title" ? true : false;
-
-            if (book == "write")
-            {
-                Writer.WriteLine("Write in what?", player.ConnectionId);
-                return;
-            }
-
-            var nthTarget = Helpers.findNth(book);
-            var item = Helpers.findObjectInInventory(nthTarget, player);
-
-            if (item == null)
-            {
-                Writer.WriteLine("You can't find that.", player.ConnectionId);
-                return;
-            }
-
-            if (item.ItemType != Item.Item.ItemTypes.Book)
-            {
-                Writer.WriteLine($"{item.Name} is not a book.", player.ConnectionId);
-                return;
-            }
-
-            if (isTitle)
-            {
-                // in this context pageNum would be the title
-                // yes this is dumb, future Liam will curse at
-                // this no doubt -_-
-
-                var title = fullCommand.Remove(0, Helpers.GetNthIndex(fullCommand, ' ', 3));
-
-
-                Writer.WriteLine($"{item.Name} has now been titled {title}.", player.ConnectionId);
-                item.Name = title;
-
-                UpdateClient.UpdateInventory(player);
-
-                return;
-            }
-
-            int.TryParse(pageNum, out var n);
-
-            if (n != 0)
-            {
-                n--;
-
-            }
-
-            if (n < 0)
-            {
-                n = 0;
-            }
-
-            if (n >= item.Book.PageCount)
-            {
-
-                Writer.WriteLine($"{item.Name} does not contain that many pages.", player.ConnectionId);
-
-                return;
-            }
-
-            if (item.Book.PageCount > item.Book.Pages.Count)
-            {
-                var diff = item.Book.PageCount - item.Book.Pages.Count;
-
-                for (int i = 0; i < diff; i++)
-                {
-                    item.Book.Pages.Add(String.Empty);
-                }
-            }
-
-            var bookContent = new WriteBook()
-            {
-                Title = item.Name,
-                Description = item.Book.Pages[n],
-                PageNumber = n
-            };
-
-            UpdateClient.UpdateContentPopUp(player, bookContent);
-
-            Writer.WriteLine($"You begin to writing in your book.", player.ConnectionId);
-
         }
 
         public List<string> Hints()

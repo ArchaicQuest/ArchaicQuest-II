@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Commands;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Item;

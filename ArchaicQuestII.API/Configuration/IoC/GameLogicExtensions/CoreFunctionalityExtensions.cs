@@ -1,4 +1,5 @@
-﻿using ArchaicQuestII.GameLogic.Commands;
+﻿using ArchaicQuestII.GameLogic.Client;
+using ArchaicQuestII.GameLogic.Commands;
 using ArchaicQuestII.GameLogic.Core;
 using Microsoft.Extensions.DependencyInjection;
 

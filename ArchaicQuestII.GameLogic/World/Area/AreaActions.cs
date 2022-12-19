@@ -1,6 +1,7 @@
 using System.Linq;
 using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Core;
 
 namespace ArchaicQuestII.GameLogic.World.Area

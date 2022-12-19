@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Model;
+using ArchaicQuestII.GameLogic.Client;
 
 namespace ArchaicQuestII.GameLogic.Core
 {

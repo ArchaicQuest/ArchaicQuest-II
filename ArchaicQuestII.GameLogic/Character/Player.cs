@@ -22,11 +22,11 @@ namespace ArchaicQuestII.GameLogic.Character
         public string HairTexture { get; set; }
         public string FacialHair { get; set; }
         public string ReplyTo { get; set; }
-        public List<Player> Followers { get; set; } = new List<Player>();
+        public List<Player> Followers { get; set; } = new();
         public string Following { get; set; }
         public bool Grouped { get; set; }
-        public new Money Money { get; set; } = new Money() { Gold = 0 };
-        public Money Bank { get; set; } = new Money() { Gold = 0 };
+        public new Money Money { get; set; } = new() { Gold = 0 };
+        public Money Bank { get; set; } = new() { Gold = 0 };
         public int Trains { get; set; } = 5;
         public int Practices { get; set; } = 5;
         public int MobKills { get; set; } = 0;
@@ -36,9 +36,11 @@ namespace ArchaicQuestII.GameLogic.Character
         public int QuestPoints { get; set; } = 0;
         public bool Idle { get; set; } = false;
         public bool AFK { get; set; } = false;
-        public List<string> CommandLog { get; set; } = new List<string>();
+        public List<string> CommandLog { get; set; } = new();
         public string Pose { get; set; }
         public string Title { get; set; }
+        
+        public Item.Item OpenedBook { get; set; }
 
         public UserRole UserRole { get; set; } = UserRole.Player;
     }

@@ -3,6 +3,7 @@ using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Gain;
+using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Skill.Skills;
 using ArchaicQuestII.GameLogic.World.Area;
@@ -33,8 +34,6 @@ namespace ArchaicQuestII.GameLogic.Core
         /// <param name="player"></param>
         void DBDumpToJSON(Player player);
         List<string> Hints();
-        void Read(Player player, string book, string pageNum, string fullCommand);
-        void Write(Player player, string book, string pageNum, string fullCommand);
         void GainSkillProficiency(SkillList foundSkill, Player player);
         public void RestorePlayer(Player player);
     }
