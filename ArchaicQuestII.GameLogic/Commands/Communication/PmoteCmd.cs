@@ -13,8 +13,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
         public PmoteCmd(ICore core)
         {
             Aliases = new[] {"pmote"};
-            Description = "";
-            Usages = new[] {"Type: pmote"};
+            Description = "Replaces mentioned player name in emote to you.";
+            Usages = new[] {"Type: pmote punches steve. \n Steve will see: Bob punches You. \n Everyone else will see: Bob punches Steve."};
             DeniedStatus = new[]
             {
                 CharacterStatus.Status.Busy,
@@ -49,6 +49,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
 
             foreach (var players in room.Players)
             {
+                // TODO: switch replace with Regex as the replace is replacing mid word which is wrong.
                 emoteMessage = emoteMessage.Replace(players.Name, "you", StringComparison.CurrentCultureIgnoreCase);
 
                 Core.Writer.WriteLine(player.Name + " " + emoteMessage, players.ConnectionId);

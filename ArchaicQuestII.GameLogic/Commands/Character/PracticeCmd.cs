@@ -14,8 +14,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
     {
         public PracticeCmd(ICore core)
         {
-            Aliases = new[] {"practice"};
-            Description = ".";
+            Aliases = new[] {"practice", "prac"};
+            Description = "Practice skills at a trainer.";
             Usages = new[] {"Type: "};
             DeniedStatus = new[]
             {

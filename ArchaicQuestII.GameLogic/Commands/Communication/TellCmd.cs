@@ -13,7 +13,7 @@ public class TellCmd : ICommand
     public TellCmd(ICore core)
     {
         Aliases = new[] {"tell"};
-        Description = "";
+        Description = "Sends a message to player, no matter where they are.";
         Usages = new[] {"Type: tell 'player' 'message'"};
         DeniedStatus = default;
         UserRole = UserRole.Player;

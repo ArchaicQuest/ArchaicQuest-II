@@ -11,8 +11,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
     {
         public AffectsCmd(ICore core)
         {
-            Aliases = new[] {"affects"};
-            Description = "Displays current characters online.";
+            Aliases = new[] {"affects", "aff"};
+            Description = "Displays the affects upon the player.";
             Usages = new[] {"Type: affects"};
             DeniedStatus = default;
             UserRole = UserRole.Player;

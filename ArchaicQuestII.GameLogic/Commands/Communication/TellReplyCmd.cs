@@ -11,7 +11,7 @@ public class TellReplyCmd : ICommand
 {
     public TellReplyCmd(ICore core)
     {
-        Aliases = new[] {"tellreply"};
+        Aliases = new[] {"tellreply", "reply"};
         Description = "Replies to your last incoming tell";
         Usages = new[] {"Type: tellreply 'message'"};
         DeniedStatus = default;
