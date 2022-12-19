@@ -11,9 +11,9 @@ public class SayCmd : ICommand
 {
     public SayCmd(ICore core)
     {
-        Aliases = new[] {"say"};
+        Aliases = new[] {"say", "'"};
         Description = "Say something to the room.";
-        Usages = new[] {"Type: say 'what ever you want'"};
+        Usages = new[] {"Type: say what ever you want"};
         DeniedStatus = default;
         UserRole = UserRole.Player;
         Core = core;

@@ -12,7 +12,7 @@ public class GsayCmd : ICommand
 {
     public GsayCmd(ICore core)
     {
-        Aliases = new[] {"gsay"};
+        Aliases = new[] {"gsay", "`", "gs"};
         Description = "Sends a message to your current group";
         Usages = new[] {"Type: gsay hello group"};
         DeniedStatus = default;

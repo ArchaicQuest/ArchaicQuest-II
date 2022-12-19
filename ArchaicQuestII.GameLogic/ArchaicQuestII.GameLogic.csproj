@@ -13,6 +13,9 @@
         <EmbeddedResource Remove="Spell\Type\**" />
         <None Remove="Character\Equipment\Enum\**" />
         <None Remove="Spell\Type\**" />
+        <Compile Remove="Commands\Utility\**" />
+        <EmbeddedResource Remove="Commands\Utility\**" />
+        <None Remove="Commands\Utility\**" />
     </ItemGroup>
 
     <ItemGroup>
@@ -34,7 +37,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Commands\Utility" />
+      <Folder Include="Skill\Type\" />
     </ItemGroup>
 
 </Project>

@@ -13,7 +13,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
         public HelpCmd(ICore core)
         {
             Aliases = new[] {"help"};
-            Description = "Displays the description and usage.";
+            Description = "Displays the relevant help files.";
             Usages = new[] {"Type: help quaff"};
             DeniedStatus = default;
             UserRole = UserRole.Player;

@@ -13,7 +13,7 @@ public class GetCmd : ICommand
 {
     public GetCmd(ICore core)
     {
-        Aliases = new[] {"get"};
+        Aliases = new[] {"get", "take", "loot"};
         Description = "Your character will get something.";
         Usages = new[] {"Type: get apple"};
         DeniedStatus = new[]
@@ -44,6 +44,12 @@ public class GetCmd : ICommand
     {
         var target = input.ElementAtOrDefault(1);
         var container = input.ElementAtOrDefault(2);
+        
+        if (player.Status == CharacterStatus.Status.Sleeping)
+        {
+            Core.Writer.WriteLine("You can't do that while asleep.", player.ConnectionId);
+            return;
+        }
         
         if (string.IsNullOrEmpty(target))
         {
