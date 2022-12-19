@@ -282,26 +282,29 @@ namespace ArchaicQuestII.GameLogic.World.Room
             var direction = "from nowhere";
             var movement = "appears";
 
-            if (toRoom.Exits.Down.RoomId == fromRoom.Id)
-                direction = "down";
-            if (toRoom.Exits.Up.RoomId == fromRoom.Id)
-                direction = "up";
-            if (toRoom.Exits.North.RoomId == fromRoom.Id)
-                direction = "in from the north";
-            if (toRoom.Exits.South.RoomId == fromRoom.Id)
-                direction = "in form the south";
-            if (toRoom.Exits.East.RoomId == fromRoom.Id)
-                direction = "in from the east";
-            if (toRoom.Exits.West.RoomId == fromRoom.Id)
-                direction = "in from the west";
-            if (toRoom.Exits.NorthEast.RoomId == fromRoom.Id)
-                direction = "in from the northeast";
-            if (toRoom.Exits.NorthWest.RoomId == fromRoom.Id)
-                direction = "in from the northwest";
-            if (toRoom.Exits.SouthEast.RoomId == fromRoom.Id)
-                direction = "in from the southeast";
-            if (toRoom.Exits.SouthWest.RoomId == fromRoom.Id)
-                direction = "in from the southwest";
+            if (toRoom.Exits != null)
+            {
+                if (toRoom.Exits.Down?.RoomId == fromRoom.Id)
+                    direction = "down";
+                if (toRoom.Exits.Up?.RoomId == fromRoom.Id)
+                    direction = "up";
+                if (toRoom.Exits.North?.RoomId == fromRoom.Id)
+                    direction = "in from the north";
+                if (toRoom.Exits.South?.RoomId == fromRoom.Id)
+                    direction = "in form the south";
+                if (toRoom.Exits.East?.RoomId == fromRoom.Id)
+                    direction = "in from the east";
+                if (toRoom.Exits.West?.RoomId == fromRoom.Id)
+                    direction = "in from the west";
+                if (toRoom.Exits.NorthEast?.RoomId == fromRoom.Id)
+                    direction = "in from the northeast";
+                if (toRoom.Exits.NorthWest?.RoomId == fromRoom.Id)
+                    direction = "in from the northwest";
+                if (toRoom.Exits.SouthEast?.RoomId == fromRoom.Id)
+                    direction = "in from the southeast";
+                if (toRoom.Exits.SouthWest?.RoomId == fromRoom.Id)
+                    direction = "in from the southwest";
+            }
 
             switch (character.Status)
             {
@@ -334,26 +337,29 @@ namespace ArchaicQuestII.GameLogic.World.Room
             var direction = "to thin air";
             var movement = "vanishes";
 
-            if (fromRoom.Exits.Down.RoomId == toRoom.Id)
-                direction = "down";
-            if (fromRoom.Exits.Up.RoomId == toRoom.Id)
-                direction = "up";
-            if (fromRoom.Exits.North.RoomId == toRoom.Id)
-                direction = "to the north";
-            if (fromRoom.Exits.South.RoomId == toRoom.Id)
-                direction = "to the south";
-            if (fromRoom.Exits.East.RoomId == toRoom.Id)
-                direction = "to the east";
-            if (fromRoom.Exits.West.RoomId == toRoom.Id)
-                direction = "to the west";
-            if (fromRoom.Exits.NorthEast.RoomId == toRoom.Id)
-                direction = "to the northeast";
-            if (fromRoom.Exits.NorthWest.RoomId == toRoom.Id)
-                direction = "to the northwest";
-            if (fromRoom.Exits.SouthEast.RoomId == toRoom.Id)
-                direction = "to the southeast";
-            if (fromRoom.Exits.SouthWest.RoomId == toRoom.Id)
-                direction = "to the southwest";
+            if (fromRoom.Exits != null)
+            {
+                if (fromRoom.Exits.Down?.RoomId == toRoom.Id)
+                    direction = "down";
+                if (fromRoom.Exits.Up?.RoomId == toRoom.Id)
+                    direction = "up";
+                if (fromRoom.Exits.North?.RoomId == toRoom.Id)
+                    direction = "to the north";
+                if (fromRoom.Exits.South?.RoomId == toRoom.Id)
+                    direction = "to the south";
+                if (fromRoom.Exits.East?.RoomId == toRoom.Id)
+                    direction = "to the east";
+                if (fromRoom.Exits.West?.RoomId == toRoom.Id)
+                    direction = "to the west";
+                if (fromRoom.Exits.NorthEast?.RoomId == toRoom.Id)
+                    direction = "to the northeast";
+                if (fromRoom.Exits.NorthWest?.RoomId == toRoom.Id)
+                    direction = "to the northwest";
+                if (fromRoom.Exits.SouthEast?.RoomId == toRoom.Id)
+                    direction = "to the southeast";
+                if (fromRoom.Exits.SouthWest?.RoomId == toRoom.Id)
+                    direction = "to the southwest";
+            }
 
             switch (characterBase.Status)
             {
