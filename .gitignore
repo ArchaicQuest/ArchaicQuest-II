@@ -38,7 +38,5 @@ msbuild.wrn
 node_modules/
 ArchaicQuestII.API/log.txt
 
-# Ignore user specific IDEA components
-.idea/workspace.xml
-.idea/tasks.xml
-.idea/codeStyleSettings.xml
+# Ignore user IDEA components
+.idea/
