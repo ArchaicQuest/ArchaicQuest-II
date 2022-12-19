@@ -579,58 +579,12 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
         public void TasteObject(string target, Room room, Player player)
         {
-            if (player.Status == CharacterStatus.Status.Sleeping)
-            {
-                _writeToClient.WriteLine("You can't do that while asleep.", player.ConnectionId);
-                return;
-            }
-
-            var nthTarget = Helpers.findNth(target);
-            var item = Helpers.findRoomObject(nthTarget, room) ?? Helpers.findObjectInInventory(nthTarget, player);
-            
-            if (item == null)
-            {
-                _writeToClient.WriteLine("<p>You don't see that here.", player.ConnectionId);
-                return;
-            }
-
-            var isDark = RoomIsDark(room, player);
-
-            _writeToClient.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{item.Description.Taste}",
-                player.ConnectionId);
-            
-            foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
-            {
-                _writeToClient.WriteLine($"<p>{player.Name} tastes {item.Name.ToLower()}.</p>", pc.ConnectionId);
-            }
+          
         }
 
         public void TouchObject(string target, Room room, Player player)
         {
-            if (player.Status == CharacterStatus.Status.Sleeping)
-            {
-                _writeToClient.WriteLine("You can't do that while asleep.", player.ConnectionId);
-                return;
-            }
-            
-            var nthTarget = Helpers.findNth(target);
-            var item = Helpers.findRoomObject(nthTarget, room) ?? Helpers.findObjectInInventory(nthTarget, player);
-
-            if (item == null)
-            {
-                _writeToClient.WriteLine("<p>You don't see that here.", player.ConnectionId);
-                return;
-            }
-
-            var isDark = RoomIsDark(room, player);
-
-            _writeToClient.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{item.Description.Touch}",
-                player.ConnectionId);
-
-            foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
-            {
-                _writeToClient.WriteLine($"<p>{player.Name} feels {item.Name.ToLower()}.</p>", pc.ConnectionId);
-            }
+          
         }
 
         public Item.Item GetItemAttributes(int index, Room room)

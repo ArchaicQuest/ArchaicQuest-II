@@ -14,7 +14,11 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
             Aliases = new[] {"l", "look"};
             Description = "Shows info about room or object.";
             Usages = new[] {"Type: look"};
-            DeniedStatus = default;
+            DeniedStatus = new []
+            {
+                CharacterStatus.Status.Sleeping,
+                CharacterStatus.Status.Dead,
+            };
             UserRole = UserRole.Player;
             Core = core;
         }

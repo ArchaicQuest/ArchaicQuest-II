@@ -15,7 +15,11 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
             Description = "Shows how an object smells.";
             Usages = new[] {"Type: smell cupcake"};
             UserRole = UserRole.Player;
-            DeniedStatus = default;
+            DeniedStatus = new []
+            {
+                CharacterStatus.Status.Sleeping,
+                CharacterStatus.Status.Dead,
+            };
             Core = core;
         }
         

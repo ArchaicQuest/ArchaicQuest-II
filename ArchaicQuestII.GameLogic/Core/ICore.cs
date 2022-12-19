@@ -51,5 +51,7 @@ namespace ArchaicQuestII.GameLogic.Core
         /// <param name="eventName"></param>
         /// <param name="value"></param>
         void SetEvent(Player player, string eventName, string value);
+
+        bool CommandTargetCheck(string target, Player player, string errorMessage = "What?");
     }
 }

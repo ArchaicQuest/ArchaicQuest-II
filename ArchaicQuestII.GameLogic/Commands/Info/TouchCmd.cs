@@ -7,13 +7,13 @@ using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Commands.Info
 {
-    public class TasteCmd : ICommand
+    public class TouchCmd : ICommand
     {
-        public TasteCmd(ICore core)
+        public TouchCmd(ICore core)
         {
-            Aliases = new[] {"taste"};
-            Description = "Shows how an object tastes.";
-            Usages = new[] {"Type: taste cupcake"};
+            Aliases = new[] {"touch"};
+            Description = "Shows how an object feels.";
+            Usages = new[] {"Type: touch cupcake"};
             UserRole = UserRole.Player;
             DeniedStatus = new []
             {
@@ -33,22 +33,17 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 
         public void Execute(Player player, Room room, string[] input)
         {
-            if (player.Status == CharacterStatus.Status.Sleeping)
-            {
-                Core.Writer.WriteLine("You can't do that while asleep.", player.ConnectionId);
-                return;
-            }
             var target = input.ElementAtOrDefault(1);
 
             if (string.IsNullOrEmpty(target))
             {
-                Core.Writer.WriteLine("Taste what?", player.ConnectionId);
+                Core.Writer.WriteLine("Touch what?", player.ConnectionId);
                 return;
             }
             
             var nthTarget = Helpers.findNth(target);
             var item = Helpers.findRoomObject(nthTarget, room) ?? Helpers.findObjectInInventory(nthTarget, player);
-            
+
             if (item == null)
             {
                 Core.Writer.WriteLine("<p>You don't see that here.", player.ConnectionId);
@@ -57,12 +52,12 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 
             var isDark = Core.RoomActions.RoomIsDark(room, player);
 
-            Core.Writer.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{item.Description.Taste}",
+            Core.Writer.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{item.Description.Touch}",
                 player.ConnectionId);
-            
+
             foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
             {
-                Core.Writer.WriteLine($"<p>{player.Name} tastes {item.Name.ToLower()}.</p>", pc.ConnectionId);
+                Core.Writer.WriteLine($"<p>{player.Name} feels {item.Name.ToLower()}.</p>", pc.ConnectionId);
             }
         }
     }

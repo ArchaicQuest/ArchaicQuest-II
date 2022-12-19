@@ -55,6 +55,13 @@ namespace ArchaicQuestII.GameLogic.Core
             MobScripts = mobScripts;
         }
 
+        public bool CommandTargetCheck(string target, Player player, string errorMessage = "What?")
+        {
+            if (!string.IsNullOrEmpty(target)) return true;
+            Writer.WriteLine(errorMessage, player.ConnectionId);
+            return false;
+        }
+
         public void Train(Player player, Room room, string stat)
         {
             if ((player.Status & CharacterStatus.Status.Sleeping) != 0)
