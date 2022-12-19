@@ -14,7 +14,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
     {
         public LookCmd(ICore core)
         {
-            Aliases = new[] {"look"};
+            Aliases = new[] {"look", "l"};
             Description = "Shows info about room or object.";
             Usages = new[] {"Type: look"};
             DeniedStatus = new []
@@ -96,19 +96,24 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                 roomDesc.Append($"<p class=\"room-description  {(isDark ? "room-dark" : "")}\">{room.Description}</p>");
             }
 
-            roomDesc.Append(
-                !showVerboseExits
-                    ? roomDesc.Append(
-                        $"<p class=\"room-exit  {(isDark ? "room-dark" : "")}\"> <span class=\"room-exits\">[</span>Exits: <span class=\"room-exits\">{exits}</span><span class=\"room-exits\">]</span></p>")
-                    : roomDesc.Append(
-                        $"<div class=\" {(isDark ? "room-dark" : "")}\">Obvious exits: <table class=\"room-exits\"><tbody>{exits}</tbody></table></div>"));
+            if (!showVerboseExits)
+            {
+                roomDesc.Append(
+                    $"<p class=\"room-exit  {(isDark ? "room-dark" : "")}\"> <span class=\"room-exits\">[</span>Exits: <span class=\"room-exits\">{exits}</span><span class=\"room-exits\">]</span></p>");
+            }
+            else
+            {
+                roomDesc.Append(
+                    $"<div class=\" {(isDark ? "room-dark" : "")}\">Obvious exits: <table class=\"room-exits\"><tbody>{exits}</tbody></table></div>");
 
+            }
+            
             roomDesc.Append($"<p  class=\" {(isDark ? "room-dark" : "")}\">{items}</p>")
                 .Append($"<p  class=\"{(isDark ? "room-dark" : "")}\">{mobs}</p>")
                 .Append($"<p  class=\"  {(isDark ? "room-dark" : "")}\">{players}</p>");
 
 
-            Core.Writer.WriteLine(roomDesc.ToString(), player.ConnectionId);
+           Core.Writer.WriteLine(roomDesc.ToString(), player.ConnectionId);
         }
 
         private void LookInContainer(Player player, Room room, string target)

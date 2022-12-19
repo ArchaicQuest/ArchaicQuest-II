@@ -19,7 +19,6 @@ public class FleeCmd : ICommand
         {
             CharacterStatus.Status.Busy,
             CharacterStatus.Status.Dead,
-            CharacterStatus.Status.Fighting,
             CharacterStatus.Status.Ghost,
             CharacterStatus.Status.Fleeing,
             CharacterStatus.Status.Incapacitated,

@@ -15,7 +15,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
     {
         public EquipmentCmd(ICore core)
         {
-            Aliases = new[] {"wear", "remove", "eq", "equipment"};
+            Aliases = new[] {"wear", "remove", "wield", "eq", "equipment"};
             Description = "Wear, remove a piece of armour";
             Usages = new[] {"Type: wear vest, remove vest"};
             DeniedStatus = new[]
@@ -81,6 +81,16 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
                 case "equipment":
      
                     ShowEquipment(player); 
+                    break;
+                case "wield":
+
+                    if (!Core.CommandTargetCheck(target, player, "Wield what?"))
+                    {
+                        return;
+                    }
+
+                    
+                    Wear(target, room, player, "wield"); 
                     break;
             }
 
@@ -441,6 +451,15 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
             {
                  Core.Writer.WriteLine("<p>You don't have that item.</p>", player.ConnectionId);
                 return;
+            }
+
+            if (type == "wield")
+            {
+                if (itemToWear.ItemType != Item.Item.ItemTypes.Weapon)
+                {
+                    Core.Writer.WriteLine("<p>You can't wield that.</p>", player.ConnectionId);
+                    return;
+                }
             }
 
             var itemSlot = itemToWear.Slot;
