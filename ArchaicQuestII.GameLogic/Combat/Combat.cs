@@ -77,7 +77,13 @@ namespace ArchaicQuestII.GameLogic.Combat
             {
                 victim.Attributes.Attribute[EffectLocation.Hitpoints] = 0;
             }
-
+            
+            if (victim.Config.Wimpy > 0 && 
+                victim.Attributes.Attribute[EffectLocation.Hitpoints] <= victim.Config.Wimpy)
+            {
+                victim.Buffer.Clear();
+                victim.Buffer.Enqueue("flee");
+            }
         }
 
         public bool IsTargetAlive(Player victim)
