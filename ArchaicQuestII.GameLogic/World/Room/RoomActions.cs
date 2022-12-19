@@ -52,6 +52,11 @@ namespace ArchaicQuestII.GameLogic.World.Room
         /// <returns></returns>
         public bool RoomIsDark(Room room, Player player)
         {
+            if (player.Equipped.Light != null)
+            {
+                return false;
+            }
+            
             if (room.RoomLit)
             {
                 return false;
@@ -61,23 +66,13 @@ namespace ArchaicQuestII.GameLogic.World.Room
             {
                 return false;
             }
-
-            if (room.Terrain == Room.TerrainType.Inside)
-            {
-                return false;
-            }
-
-            if (player.Equipped.Light != null)
-            {
-                return false;
-            }
-
+            
             if (!_time.IsNightTime())
             {
-                return true;
+                return false;
             }
 
-            return false;
+            return true;
         }
 
         /// <summary>
@@ -116,7 +111,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
                     : Helpers.DisplayDoor(room.Exits.North));
             }
             
-            if (room.Exits.East is { Coords: { } })
+            if (room.Exits.East != null)
             {
                 const string clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"e\"}))";
                 exits.Add(verbose

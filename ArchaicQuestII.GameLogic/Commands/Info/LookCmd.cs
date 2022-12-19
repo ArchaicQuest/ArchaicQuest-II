@@ -17,10 +17,11 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
             Aliases = new[] {"look"};
             Description = "Shows info about room or object.";
             Usages = new[] {"Type: look"};
-            DeniedStatus = new []
+            DeniedStatus = new[]
             {
-                CharacterStatus.Status.Sleeping,
                 CharacterStatus.Status.Dead,
+                CharacterStatus.Status.Incapacitated,
+                CharacterStatus.Status.Sleeping
             };
             UserRole = UserRole.Player;
             Core = core;
@@ -32,8 +33,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
         public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
         public ICore Core { get; }
-
-
+        
         public void Execute(Player player, Room room, string[] input)
         {
             if (player.Affects.Blind)
@@ -83,9 +83,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
             var items = DisplayItems(room, player);
             var mobs = DisplayMobs(room, player);
             var players = DisplayPlayers(room, player);
-
-            var roomDesc = new StringBuilder();
             var isDark = Core.RoomActions.RoomIsDark(room, player);
+            var roomDesc = new StringBuilder();
 
             roomDesc.Append(
                 $"<p class=\"room-title {(isDark ? "room-dark" : "")}\">{room.Title} ({room.Coords.X},{room.Coords.Y},{room.Coords.Z})<br /></p>");
