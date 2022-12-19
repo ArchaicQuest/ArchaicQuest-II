@@ -1,5 +1,6 @@
-﻿using ArchaicQuestII.GameLogic.Core;
-using ArchaicQuestII.GameLogic.World.Area;
+﻿using ArchaicQuestII.GameLogic.Client;
+using ArchaicQuestII.GameLogic.Commands;
+using ArchaicQuestII.GameLogic.Core;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ArchaicQuestII.API.Configuration.IoC.GameLogicExtensions
@@ -10,15 +11,16 @@ namespace ArchaicQuestII.API.Configuration.IoC.GameLogicExtensions
         {
             services.AddSingleton<ICache>(new Cache());
             services.AddSingleton<IDamage, Damage>();
-            services.AddSingleton<IDice, ArchaicQuestII.GameLogic.Item.Dice>();
+            services.AddSingleton<IDice, GameLogic.Item.Dice>();
             services.AddSingleton<IGameLoop, GameLoop>();
             services.AddSingleton<IUpdateClientUI, UpdateClientUI>();
             services.AddSingleton<IMobScripts, MobScripts>();
             services.AddSingleton<ITime, Time>();
-            services.AddSingleton<ICore, GameLogic.Core.Core>();
+            services.AddSingleton<ICore, Core>();
             services.AddSingleton<IQuestLog, QuestLog>();
             services.AddSingleton<IWeather, Weather>();
-            services.AddSingleton<IAreaActions, AreaActions>();
+            services.AddSingleton<ICommandHandler, CommandHandler>();
+            services.AddSingleton<IErrorLog, ErrorLog>();
 
             return services;
         }

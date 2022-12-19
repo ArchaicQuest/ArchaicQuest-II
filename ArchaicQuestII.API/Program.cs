@@ -12,33 +12,30 @@ namespace ArchaicQuestII.API
     {
         public static void Main(string[] args)
         {
-
             BuildWebHost(args).Run();
 
-            Serilog.Log.Logger = new LoggerConfiguration()
+            Log.Logger = new LoggerConfiguration()
                 .Enrich.FromLogContext()
                 .WriteTo.File("log.txt")
                 .CreateLogger();
-
-
+            
             try
             {
-                Serilog.Log.Information("Starting up ArchaicQuest");
+                Log.Information("Starting up ArchaicQuest");
                 BuildWebHost(args).Run();
             }
             catch (Exception ex)
             {
-                Serilog.Log.Fatal(ex, "Application start-up failed");
+                Log.Fatal(ex, "Application start-up failed");
             }
             finally
             {
-                Serilog.Log.CloseAndFlush();
+                Log.CloseAndFlush();
             }
         }
 
-        public static IWebHost BuildWebHost(string[] args)
+        private static IWebHost BuildWebHost(string[] args)
         {
-
             var config = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("hosting.json")
@@ -57,9 +54,7 @@ namespace ArchaicQuestII.API
                .UseStartup<Startup>()
                .Build();
             }
-
-
-
+            
             return WebHost.CreateDefaultBuilder(args)
                 .UseKestrel()
                 .UseUrls("http://*:62640")
@@ -67,7 +62,6 @@ namespace ArchaicQuestII.API
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseStartup<Startup>()
                 .Build();
-
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Core

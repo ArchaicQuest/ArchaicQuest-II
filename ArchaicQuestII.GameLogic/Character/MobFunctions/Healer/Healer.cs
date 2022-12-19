@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Commands;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Skill.Skills;

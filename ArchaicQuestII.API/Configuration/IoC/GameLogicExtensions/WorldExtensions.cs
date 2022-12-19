@@ -1,4 +1,5 @@
-﻿using ArchaicQuestII.GameLogic.World.Room;
+﻿using ArchaicQuestII.GameLogic.World.Area;
+using ArchaicQuestII.GameLogic.World.Room;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ArchaicQuestII.API.Configuration.IoC.GameLogicExtensions
@@ -9,6 +10,7 @@ namespace ArchaicQuestII.API.Configuration.IoC.GameLogicExtensions
         {
             services.AddTransient<IRoomActions, RoomActions>();
             services.AddTransient<IAddRoom, AddRoom>();
+            services.AddTransient<IAreaActions, AreaActions>();
 
             return services;
         }

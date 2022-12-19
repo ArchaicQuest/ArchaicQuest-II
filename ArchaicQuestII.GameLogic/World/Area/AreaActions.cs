@@ -1,8 +1,7 @@
-using System;
 using System.Linq;
-using System.Text;
 using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Core;
 
 namespace ArchaicQuestII.GameLogic.World.Area
@@ -22,30 +21,7 @@ namespace ArchaicQuestII.GameLogic.World.Area
             _cache = cache;
             _db = db;
         }
-        
-        /// <summary>
-        /// Display basic information about area
-        /// </summary>
-        /// <param name="player">Player entering command</param>
-        /// <param name="room">Room where command was entered</param>
-        public void AreaInfo(Player player, Room.Room room)
-        {
-            var sb = new StringBuilder();
-            var area = GetAreaFromRoom(room);
-            var roomCount = _cache.GetAllRoomsInArea(room.AreaId).Count;
 
-            sb.Append($"<p>You are currently in <b>{area.Title}</b>.</p><p>{area.Description}</p>");
-
-            sb.Append(roomCount > 1
-                ? $"<p>Area contains <b>{roomCount}</b> rooms.</p>"
-                : "<p>Area contains <b>1</b> room.</p>");
-
-            if (area.CreatedBy != null)
-                sb.Append($"<p>(Created by {area.CreatedBy})</p>");
-
-            _writeToClient.WriteLine(sb.ToString(), player.ConnectionId);
-        }
-        
         /// <summary>
         /// Display notice when player enters a new area
         /// </summary>
@@ -53,7 +29,7 @@ namespace ArchaicQuestII.GameLogic.World.Area
         /// <param name="room">Room that was entered</param>
         public void AreaEntered(Player player, Room.Room room)
         {
-            var area = GetAreaFromRoom(room);
+            var area = _db.GetCollection<Area>(DataBase.Collections.Area).FindById(room.AreaId);
 
             _writeToClient.WriteLine($"<p>You have traversed into <b>{area.Title}</b>.", player.ConnectionId);
         }
@@ -63,7 +39,7 @@ namespace ArchaicQuestII.GameLogic.World.Area
         /// </summary>
         /// <param name="player">Player entering command</param>
         /// <param name="room">Room where command was entered</param>
-        public void AreaConsider(Player player, Room.Room room)
+        public string AreaConsider(Player player, Room.Room room)
         {
             var mobLevels = 0;
             var mobCount = 0;
@@ -76,21 +52,13 @@ namespace ArchaicQuestII.GameLogic.World.Area
 
             var dangerLevel = mobCount == 0 ? 0 : mobLevels/mobCount - player.Level;
 
-            switch (dangerLevel)
+            return dangerLevel switch
             {
-                case > 10: 
-                    _writeToClient.WriteLine("{red}You feel nervous here!{/}", player.ConnectionId);
-                    break;
-                case > 5:
-                    _writeToClient.WriteLine("{yellow}You feel anxious here.{/}", player.ConnectionId);
-                    break;
-                case > 1:
-                    _writeToClient.WriteLine("{blue}You feel comfortable here.{/}", player.ConnectionId);
-                    break;
-                default:
-                    _writeToClient.WriteLine("{green}You feel relaxed here.{/}", player.ConnectionId);
-                    break;
-            }
+                > 10 => "{red}You feel nervous here!{/}",
+                > 5 => "{yellow}You feel anxious here.{/}",
+                > 1 => "{blue}You feel comfortable here.{/}",
+                _ => "{green}You feel relaxed here.{/}"
+            };
         }
         
         /// <summary>
@@ -98,77 +66,25 @@ namespace ArchaicQuestII.GameLogic.World.Area
         /// </summary>
         /// <param name="player">Player entering command</param>
         /// <param name="room">Room where command was entered</param>
-        public void AreaPopulation(Player player, Room.Room room)
+        public string AreaPopulation(Player player, Room.Room room)
         {
             var playerCount = _cache.GetAllRoomsInArea(room.AreaId).SelectMany(r => r.Players).Count();
-            
-            switch (playerCount)
+
+            return playerCount switch
             {
-                case > 30: 
-                    _writeToClient.WriteLine("The area shows signs of being heavily traveled.", player.ConnectionId);
-                    break;
-                case > 20:
-                    _writeToClient.WriteLine("The area shows signs of being well traveled.", player.ConnectionId);
-                    break;
-                case > 10:
-                    _writeToClient.WriteLine("The area shows signs of being traveled.", player.ConnectionId);
-                    break;
-                case > 1:
-                    _writeToClient.WriteLine("The area shows signs of being lightly traveled.", player.ConnectionId);
-                    break;
-                default:
-                    _writeToClient.WriteLine("The area shows no signs of being traveled.", player.ConnectionId);
-                    break;
-            }
-        }
-        
-        /// <summary>
-        /// Display info about all areas
-        /// </summary>
-        /// <param name="player">Player entering command</param>
-        public void AreaList(Player player)
-        {
-            var sb = new StringBuilder();
-            var areas = _db.GetCollection<Area>(DataBase.Collections.Area).FindAll().ToList();
-         
-            foreach (var area in areas)
-            {
-                area.Rooms = _cache.GetAllRoomsInArea(area.Id);
-            }
-       
-
-            sb.Append($"Total Areas: {areas.Count}");
-            sb.Append("<ul>");
-           
-            foreach (var area in areas)
-            {
-                sb.Append($"<li>[{GetAreaLevelScale(area)}] {area.Title}");
-                if (area.CreatedBy != null)
-                    sb.Append($" ({area.CreatedBy})");
-                sb.Append("</li>");
-            }
-
-                sb.Append("</ul>");
-            
-            _writeToClient.WriteLine(sb.ToString(), player.ConnectionId);
-        }
-
-        #region Helpers
-
-        /// <summary>
-        /// Helper to get area from room
-        /// </summary>
-        /// <param name="room">Room to get area from</param>
-        private Area GetAreaFromRoom(Room.Room room)
-        {
-            return _db.GetCollection<Area>(DataBase.Collections.Area).FindById(room.AreaId);
+                > 30 => "The area shows signs of being heavily traveled.",
+                > 20 => "The area shows signs of being well traveled.",
+                > 10 => "The area shows signs of being traveled.",
+                > 1 => "The area shows signs of being lightly traveled.",
+                _ => "The area shows no signs of being traveled."
+            };
         }
         
         /// <summary>
         /// Helper to get area levels
         /// </summary>
         /// <param name="area">Area to get level scale</param>
-        private string GetAreaLevelScale(Area area)
+        public string GetAreaLevelScale(Area area)
         {
             var minLvl = 999;
             var maxLvl = 0;
@@ -186,7 +102,5 @@ namespace ArchaicQuestII.GameLogic.World.Area
 
             return mobCount == 0 ? "0 - 0" : $"{minLvl} - {maxLvl}";
         }
-        
-        #endregion
     }
 }

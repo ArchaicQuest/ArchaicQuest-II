@@ -13,6 +13,7 @@ using ArchaicQuestII.GameLogic.World.Room;
 using Moq;
 using System.Collections.Generic;
 using ArchaicQuestII.GameLogic.Character.Class;
+using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Skill.Core;
 using ArchaicQuestII.GameLogic.Spell.Interface;
 using ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells;

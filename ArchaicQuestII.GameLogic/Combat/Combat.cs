@@ -8,6 +8,7 @@ using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Status;
+using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Item;
@@ -27,9 +28,8 @@ namespace ArchaicQuestII.GameLogic.Combat
         private readonly IDice _dice;
         private readonly IRandomItem _randomItem;
         private readonly IPlayerDataBase _pdb;
-        private readonly ICore _core;
 
-        public Combat(IWriteToClient writer, IUpdateClientUI clientUi, IDamage damage, IFormulas formulas, IGain gain, ICache cache, IQuestLog quest, IDice dice, IRandomItem randomItem, IPlayerDataBase pdb, ICore core)
+        public Combat(IWriteToClient writer, IUpdateClientUI clientUi, IDamage damage, IFormulas formulas, IGain gain, ICache cache, IQuestLog quest, IDice dice, IRandomItem randomItem, IPlayerDataBase pdb)
         {
             _writer = writer;
             _clientUi = clientUi;
@@ -41,8 +41,6 @@ namespace ArchaicQuestII.GameLogic.Combat
             _dice = dice;
             _randomItem = randomItem;
             _pdb = pdb;
-            _core = core;
-
         }
 
         // TODO: explain that player needs to be murdered
@@ -65,9 +63,7 @@ namespace ArchaicQuestII.GameLogic.Combat
             
             return (Player)room.Mobs.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase) && x.IsHiddenScriptMob == false);
         }
-
-
-
+        
         public Item.Item GetWeapon(Player player, bool dualWield = false)
         {
             return dualWield ? player.Equipped.Secondary : player.Equipped.Wielded;
@@ -159,25 +155,16 @@ namespace ArchaicQuestII.GameLogic.Combat
             }
         }
 
-
         public void DeathCry(Room room, Player target)
         {
-
-            foreach (var pc in room.Players)
+            foreach (var pc in room.Players.Where(pc => !pc.Name.Equals(target.Name, StringComparison.CurrentCultureIgnoreCase)))
             {
-                if (pc.Name.Equals(target.Name, StringComparison.CurrentCultureIgnoreCase))
-                {
-                    continue;
-                }
-
                 _writer.WriteLine($"<p class='combat'>Your blood freezes as you hear {target.Name.ToLower()}'s death cry.</p>", pc.ConnectionId);
             }
 
-
             // Exit checks
             var rooms = new List<Room>();
-
-
+            
             if (room.Exits.NorthWest != null)
             {
                 rooms.Add(_cache.GetRoom($"{room.Exits.NorthWest.AreaId}{room.Exits.NorthWest.Coords.X}{room.Exits.NorthWest.Coords.Y}{room.Exits.NorthWest.Coords.Z}"));
@@ -232,8 +219,6 @@ namespace ArchaicQuestII.GameLogic.Combat
             {
                 _writer.WriteLine($"<p>Your blood freezes as you hear someone's death cry.</p>", pc.ConnectionId);
             }
-
-
         }
 
         public void AddCharToCombat(Player character)
@@ -246,7 +231,6 @@ namespace ArchaicQuestII.GameLogic.Combat
 
         public void InitFightStatus(Player player, Player target)
         {
-   
             player.Target = string.IsNullOrEmpty(player.Target) ? target.Name : player.Target;
             player.Status = CharacterStatus.Status.Fighting;
             target.Status = (target.Status & CharacterStatus.Status.Stunned) != 0 ? CharacterStatus.Status.Stunned : CharacterStatus.Status.Fighting;
@@ -275,7 +259,6 @@ namespace ArchaicQuestII.GameLogic.Combat
         // currently can spam kill because of the free init hit
         public void Fight(Player player, string victim, Room room, bool isMurder)
         {
-
             if (victim == "k" || victim == "kill")
             {
                 _writer.WriteLine("<p>Kill whom?<p>", player.ConnectionId);
@@ -740,11 +723,11 @@ namespace ArchaicQuestII.GameLogic.Combat
                     }
                 }
                 
-                if (player.grouped)
+                if (player.Grouped)
                 {
                     foreach (var follower in player.Followers)
                     {
-                        if (follower.grouped && follower.Following == player.Name &&  follower.Status != CharacterStatus.Status.Fighting)
+                        if (follower.Grouped && follower.Following == player.Name &&  follower.Status != CharacterStatus.Status.Fighting)
                         {
                             if (follower.Config.AutoAssist && string.IsNullOrEmpty(follower.Target))
                             {
@@ -768,8 +751,7 @@ namespace ArchaicQuestII.GameLogic.Combat
                 throw;
             }
         }
-
-
+        
         public int DamageReduction(Player defender, int damage)
         {
             var ArRating = defender.ArmorRating.Armour + 1;
@@ -782,7 +764,6 @@ namespace ArchaicQuestII.GameLogic.Combat
 
         public int CalculateSkillDamage(Player player, Player target, int damage)
         {
-
             var strengthMod = Math.Round((decimal)(player.Attributes.Attribute[EffectLocation.Strength] - 20) / 2, MidpointRounding.ToEven);
             var levelDif = target.Level - player.Level <= 0 ? 0 : target.Level - player.Level;
 
@@ -806,44 +787,35 @@ namespace ArchaicQuestII.GameLogic.Combat
 
         public void TargetKilled(Player player, Player target, Room room)
         {
-
-            player.Target = String.Empty;
+            player.Target = string.Empty;
             player.Status = CharacterStatus.Status.Standing;
             target.Status = CharacterStatus.Status.Ghost;
             target.Target = string.Empty;
 
             DeathCry(room, target);
-
-          
-            if (player.grouped)
+            
+            if (player.Grouped)
             {
                 _gain.GroupGainExperiencePoints(player, target);
 
-             // other group members to drop from combat if they're fighting the same target
-             // other group members status set to standing
-             
-             var isGroupLeader = string.IsNullOrEmpty(player.Following);
+                 // other group members to drop from combat if they're fighting the same target
+                 // other group members status set to standing
+                 
+                 var isGroupLeader = string.IsNullOrEmpty(player.Following);
 
-             var groupLeader = player;
+                 var groupLeader = player;
 
-             if (!isGroupLeader)
-             {
-                 groupLeader = _cache.GetPlayerCache().FirstOrDefault(x => x.Value.Name.Equals(player.Following)).Value;
-             }
-         
-        
-         
-             foreach (var follower in groupLeader.Followers)
-             {
-                 if (follower.grouped && follower.Following == groupLeader.Name)
+                 if (!isGroupLeader)
+                 {
+                     groupLeader = _cache.GetPlayerCache().FirstOrDefault(x => x.Value.Name.Equals(player.Following)).Value;
+                 }
+                 
+                 foreach (var follower in groupLeader.Followers.Where(follower => follower.Grouped && follower.Following == groupLeader.Name))
                  {
                      follower.Status = CharacterStatus.Status.Standing;
-                     follower.Target = String.Empty;
+                     follower.Target = string.Empty;
                      _cache.RemoveCharFromCombat(follower.Id.ToString());
                  }
-             }
-             
-             
             }
             else
             {
@@ -868,13 +840,12 @@ namespace ArchaicQuestII.GameLogic.Combat
             }
 
             _writer.WriteLine("<p class='dead'>You are dead. R.I.P.</p>", target.ConnectionId);
-
-
+            
             var targetName = target.Name.ToLower(CultureInfo.CurrentCulture);
-            var corpse = new Item.Item()
+            var corpse = new Item.Item
             {
                 Name = $"The corpse of {targetName}",
-                Description = new Description()
+                Description = new Description
                 {
                     Room = $"The corpse of {targetName} is laying here.",
                     Exam = target.Description,
@@ -884,7 +855,7 @@ namespace ArchaicQuestII.GameLogic.Combat
                 Slot = Equipment.EqSlot.Held,
                 Level = 1,
                 Stuck = true,
-                Container = new Container()
+                Container = new Container
                 {
                     Items = new ItemList(),
                     CanLock = false,
@@ -895,7 +866,6 @@ namespace ArchaicQuestII.GameLogic.Combat
                 ItemType = Item.Item.ItemTypes.Container,
                 Decay = target.ConnectionId.Equals("mob", StringComparison.OrdinalIgnoreCase) ? 10 : 20,
                 DecayTimer = 300 // 5 minutes,
-
             };
 
             foreach (var item in target.Inventory)
@@ -925,7 +895,6 @@ namespace ArchaicQuestII.GameLogic.Combat
             
             if (target.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
             {
-
                 player.MobKills += 1;
 
                 var randomItem = _randomItem.WeaponDrop(player);
@@ -940,11 +909,8 @@ namespace ArchaicQuestII.GameLogic.Combat
                     var corpseIndex = room.Items.IndexOf(corpse) + 1;
                     player.Buffer.Enqueue($"get all {corpseIndex}.corpse");
                 }
-
-          
             }
             
-         
             room.Clean = false;
 
             _cache.RemoveCharFromCombat(target.Id.ToString());
@@ -952,9 +918,11 @@ namespace ArchaicQuestII.GameLogic.Combat
 
             if (target.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
             {
-                if (player.Config.AutoSacrifice)
+                var command = _cache.GetCommand("sacrifice");
+                
+                if (player.Config.AutoSacrifice && command != null)
                 {
-                    _core.SacrificeCorpse(player, corpse, room);
+                    command.Execute(player, room, new []{corpse.Name});
                 }
 
                 room.Mobs.Remove(target);
@@ -973,7 +941,7 @@ namespace ArchaicQuestII.GameLogic.Combat
                         Date = DateTime.Now,
                     };
                 }
-                _pdb.Save<MobStats>(getTodayMobStats, PlayerDataBase.Collections.MobStats);
+                _pdb.Save(getTodayMobStats, PlayerDataBase.Collections.MobStats);
             }
             else
             {
@@ -993,7 +961,7 @@ namespace ArchaicQuestII.GameLogic.Combat
                         Date = DateTime.Now,
                     };
                 }
-                _pdb.Save<MobStats>(getTodayMobStats, PlayerDataBase.Collections.MobStats);
+                _pdb.Save(getTodayMobStats, PlayerDataBase.Collections.MobStats);
             }
             // take player to Temple / recall area
 
@@ -1009,58 +977,6 @@ namespace ArchaicQuestII.GameLogic.Combat
                 newRoom.Players.Add(target);
                 target.Buffer.Enqueue("look");
             }
-
-
-        }
-
-        public void Consider(Player player, string target, Room room)
-        {
-            var victim =
-                room.Mobs.Where(x => x.IsHiddenScriptMob == false).FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ??
-                room.Players.FirstOrDefault(x => x.Name.StartsWith(target, StringComparison.CurrentCultureIgnoreCase));
-
-            if (victim == null)
-            {
-                _writer.WriteLine("Consider killing who?", player.ConnectionId);
-                return;
-            }
-
-            if (victim == player)
-            {
-                _writer.WriteLine("Easy! Very easy indeed!", player.ConnectionId);
-                return;
-            }
-
-            if (!victim.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
-            {
-                _writer.WriteLine("You would need a lot of luck!", player.ConnectionId);
-                return;
-            }
-
-            var diff = victim.Level - player.Level;
-
-            if (diff <= -10)
-                _writer.WriteLine("Now where did that chicken go?", player.ConnectionId);
-            else if (diff <= -5)
-                _writer.WriteLine("You could do it with a needle!", player.ConnectionId);
-            else if (diff <= -2)
-                _writer.WriteLine("Easy.", player.ConnectionId);
-            else if (diff <= -1)
-                _writer.WriteLine("Fairly easy.", player.ConnectionId);
-            else if (diff == 0)
-                _writer.WriteLine("The perfect match!", player.ConnectionId);
-            else if (diff <= 1)
-                _writer.WriteLine("You would need some luck!", player.ConnectionId);
-            else if (diff <= 2)
-                _writer.WriteLine("You would need a lot of luck!", player.ConnectionId);
-            else if (diff <= 3)
-                _writer.WriteLine("You would need a lot of luck and great equipment!", player.ConnectionId);
-            else if (diff <= 5)
-                _writer.WriteLine("Do you feel lucky, punk?", player.ConnectionId);
-            else if (diff <= 10)
-                _writer.WriteLine("Are you mad!?", player.ConnectionId);
-            else if (diff <= 100)
-                _writer.WriteLine("You ARE mad!? Death stands beside you ready to take your soul.", player.ConnectionId);
         }
 
         /// <summary>
@@ -1122,6 +1038,5 @@ namespace ArchaicQuestII.GameLogic.Combat
             return false;
 
         }
-
     }
 }

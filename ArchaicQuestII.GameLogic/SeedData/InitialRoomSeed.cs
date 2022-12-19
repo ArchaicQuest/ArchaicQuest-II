@@ -1,7 +1,6 @@
 ﻿using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Core;
 using System.Collections.Generic;
-using ArchaicQuestII.Core.World;
 using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.World.Area;

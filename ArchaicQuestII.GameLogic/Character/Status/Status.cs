@@ -23,7 +23,8 @@ namespace ArchaicQuestII.GameLogic.Character.Status
             Busy = 1 << 8,
             Floating = 1 << 9,
             Mounted = 1 << 10,
-            Stunned = 1 << 11
+            Stunned = 1 << 11,
+            Fleeing = 1 << 12,
         }
     }
 }

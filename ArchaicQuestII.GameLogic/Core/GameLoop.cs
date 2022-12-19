@@ -8,26 +8,22 @@ using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Effect;
-using ArchaicQuestII.GameLogic.Item;
-using ArchaicQuestII.GameLogic.Skill.Core;
 using ArchaicQuestII.GameLogic.Spell;
-using ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells;
 using ArchaicQuestII.GameLogic.World.Room;
 using Newtonsoft.Json;
 using System.Web;
+using ArchaicQuestII.GameLogic.Client;
 
 namespace ArchaicQuestII.GameLogic.Core
 {
-
     public class GameLoop : IGameLoop
     {
-
-
         private IWriteToClient _writeToClient;
         private ICache _cache;
-        private ICommands _commands;
+        private ICommandHandler _commandHandler;
         private ICombat _combat;
         private IDataBase _db;
+        private IPlayerDataBase _pdb;
         private IDice _dice;
         private IUpdateClientUI _client;
         private ITime _time;
@@ -36,13 +32,14 @@ namespace ArchaicQuestII.GameLogic.Core
         private IWeather _weather;
         private List<string> _hints;
 
-        public GameLoop(IWriteToClient writeToClient, ICache cache, ICommands commands, ICombat combat, IDataBase database, IDice dice, IUpdateClientUI client, ITime time, ICore core, ISpellList spelllist, IWeather weather)
+        public GameLoop(IWriteToClient writeToClient, ICache cache, ICommandHandler commandHandler, ICombat combat, IDataBase database, IPlayerDataBase playerDataBase, IDice dice, IUpdateClientUI client, ITime time, ICore core, ISpellList spelllist, IWeather weather)
         {
             _writeToClient = writeToClient;
             _cache = cache;
-            _commands = commands;
+            _commandHandler = commandHandler;
             _combat = combat;
             _db = database;
+            _pdb = playerDataBase;
             _dice = dice;
             _client = client;
             _time = time;
@@ -50,11 +47,7 @@ namespace ArchaicQuestII.GameLogic.Core
             _spellList = spelllist;
             _weather = weather;
 
-            if (_hints == null)
-            {
-                _hints = _core.Hints();
-            }
-
+            _hints = _core.Hints();
         }
 
         public int GainAmount(int value, Player player)
@@ -272,7 +265,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
                             if (hasFastHealing != null)
                             {
-                                if (_core.SkillCheckSuccesful(hasFastHealing))
+                                if (Helpers.SkillSuccessCheck(hasFastHealing))
                                 {
                                     hP *= 2;
                                 }
@@ -617,7 +610,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
             if (idleTime15Mins)
             {
-                _core.Quit(player, _cache.GetRoom(player.RoomId));
+                player.Buffer.Enqueue("quit");
             }
         }
 
@@ -810,7 +803,7 @@ namespace ArchaicQuestII.GameLogic.Core
                                 {
                                     var mobCommand = mob.Buffer.Dequeue();
 
-                                    _commands.ProcessCommand(mobCommand, mob, room);
+                                    _commandHandler.HandleCommand(mob, room, mobCommand);
                                 }
 
                                 mobIds.Add(mob.Id);
@@ -857,7 +850,7 @@ namespace ArchaicQuestII.GameLogic.Core
                         }
 
                         player.Value.CommandLog.Add($"{string.Format("{0:f}", DateTime.Now)} - {command}");
-                        _commands.ProcessCommand(command, player.Value, room);
+                        _commandHandler.HandleCommand(player.Value, room, command);
 
                     }
 
