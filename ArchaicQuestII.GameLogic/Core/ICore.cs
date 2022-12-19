@@ -36,5 +36,6 @@ namespace ArchaicQuestII.GameLogic.Core
         List<string> Hints();
         void GainSkillProficiency(SkillList foundSkill, Player player);
         public void RestorePlayer(Player player);
+        bool CommandTargetCheck(string target, Player player, string errorMessage = "What?");
     }
 }

@@ -62,6 +62,13 @@ namespace ArchaicQuestII.GameLogic.Core
             Formulas = formulas;
         }
         
+        public bool CommandTargetCheck(string target, Player player, string errorMessage = "What?")
+        {
+            if (!string.IsNullOrEmpty(target)) return true;
+            Writer.WriteLine(errorMessage, player.ConnectionId);
+            return false;
+        }
+        
         /// <summary>
         /// for testing
         /// </summary>
