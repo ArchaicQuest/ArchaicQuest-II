@@ -79,7 +79,7 @@ namespace ArchaicQuestII.GameLogic.Commands
         /// <returns></returns>
         private bool CheckStatus(Player player, IEnumerable<CharacterStatus.Status> deniedlist)
         {
-            if (!deniedlist.Contains(player.Status)) return true;
+            if (deniedlist == null || !deniedlist.Contains(player.Status)) return true;
             
             switch (player.Status)
             {

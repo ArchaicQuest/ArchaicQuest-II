@@ -15,7 +15,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
             Aliases = new[] {"help"};
             Description = "Displays the relevant help files.";
             Usages = new[] {"Type: help quaff"};
-            DeniedStatus = default;
+            DeniedStatus = null;
             UserRole = UserRole.Player;
             Core = core;
         }
@@ -45,18 +45,14 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
             }
 
             var sb = new StringBuilder();
-            
-            sb.Append($"<p>HELP FOR {target}</p>");
-            sb.Append($"<p>{command.Description}</p>");
-            sb.Append("<p>USAGES</p>");
-            foreach (var usage in command.Usages)
-            {
-                sb.Append($"<p>{usage}</p>");
-            }
-            sb.Append("<p>ALIASES</p>");
-            sb.Append("<p>");
 
+            sb.Append("<div class='help-section'><table>");
+            sb.Append($"<tr><td>Help Title</td><td>{target}</td></tr>");
+                
+            sb.Append("<tr><td>Aliases: ");
+                
             var index = command.Aliases.Length;
+                
             foreach (var alias in command.Aliases)
             {
                 sb.Append($"{alias}");
@@ -64,7 +60,18 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                 if (index > 0)
                     sb.Append(", ");
             }
-            sb.Append("</p>");
+
+            sb.Append("</td></tr>");
+
+            foreach (var usage in command.Usages)
+            {
+                sb.Append($"<tr><td>Last Updated</td><td>{usage}</td></tr>");
+            }
+
+            sb.Append("</table>");
+
+            sb.Append($"<pre>{command.Description}</pre>");
+
             Core.Writer.WriteLine(sb.ToString(), player.ConnectionId);
         }
     }
