@@ -53,15 +53,15 @@ namespace ArchaicQuestII.GameLogic.Combat
             // If mob
             if (isMurder && attacker.ConnectionId != "mob")
             {
-                return (Player)room.Players.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+                return room.Players.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
             }
 
             if (attacker.ConnectionId == "mob")
             {
-                return (Player)room.Players.FirstOrDefault(x => x.Name.Equals(target, StringComparison.CurrentCultureIgnoreCase));
+                return room.Players.FirstOrDefault(x => x.Name.Equals(target, StringComparison.CurrentCultureIgnoreCase));
             }
             
-            return (Player)room.Mobs.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase) && x.IsHiddenScriptMob == false);
+            return room.Mobs.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase) && x.IsHiddenScriptMob == false);
         }
         
         public Item.Item GetWeapon(Player player, bool dualWield = false)
