@@ -14,7 +14,11 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
             Aliases = new[] {"dismount","dmount"};
             Description = "Get off your mount.";
             Usages = new[] {"Type: dismount"};
-            DeniedStatus = default;
+            DeniedStatus = new []
+            {
+                CharacterStatus.Status.Sleeping,
+                CharacterStatus.Status.Dead,
+            };
             UserRole = UserRole.Player;
             Core = core;
         }

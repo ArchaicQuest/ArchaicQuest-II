@@ -84,43 +84,43 @@ namespace ArchaicQuestII.GameLogic.Commands
             switch (player.Status)
             {
                 case CharacterStatus.Status.Standing:
-                    Core.Writer.WriteLine("<p>{yellow}You can't do that while standing.{/yellow}</p>", player.ConnectionId);
+                    Core.Writer.WriteLine("<p>{yellow}You can't do that while standing.{/}</p>", player.ConnectionId);
                     break;
                 case CharacterStatus.Status.Sitting:
-                    Core.Writer.WriteLine("<p>{yellow}You can't do that while sitting.{/yellow}</p>", player.ConnectionId);
+                    Core.Writer.WriteLine("<p>{yellow}You can't do that while sitting.{/}</p>", player.ConnectionId);
                     break;
                 case CharacterStatus.Status.Sleeping:
-                    Core.Writer.WriteLine("<p>{yellow}You can't do that while sleeping.{/yellow}</p>", player.ConnectionId);
+                    Core.Writer.WriteLine("<p>{yellow}You can't do that while sleeping.{/}</p>", player.ConnectionId);
                     break;
                 case CharacterStatus.Status.Fighting:
-                    Core.Writer.WriteLine("<p>{yellow}You can't do that while fighting.{/yellow}</p>", player.ConnectionId);
+                    Core.Writer.WriteLine("<p>{yellow}You can't do that while fighting.{/}</p>", player.ConnectionId);
                     break;
                 case CharacterStatus.Status.Resting:
-                    Core.Writer.WriteLine("<p>{yellow}You can't do that while while.{/yellow}</p>", player.ConnectionId);
+                    Core.Writer.WriteLine("<p>{yellow}You can't do that while while.{/}</p>", player.ConnectionId);
                     break;
                 case CharacterStatus.Status.Incapacitated:
-                    Core.Writer.WriteLine("<p>{yellow}You can't do that while incapacitated.{/yellow}</p>", player.ConnectionId);
+                    Core.Writer.WriteLine("<p>{yellow}You can't do that while incapacitated.{/}</p>", player.ConnectionId);
                     break;
                 case CharacterStatus.Status.Dead:
-                    Core.Writer.WriteLine("<p>{yellow}You can't do that while dead.{/yellow}</p>", player.ConnectionId);
+                    Core.Writer.WriteLine("<p>{yellow}You can't do that while dead.{/}</p>", player.ConnectionId);
                     break;
                 case CharacterStatus.Status.Ghost:
-                    Core.Writer.WriteLine("<p>{yellow}You can't do that while a ghost.{/yellow}</p>", player.ConnectionId);
+                    Core.Writer.WriteLine("<p>{yellow}You can't do that while a ghost.{/}</p>", player.ConnectionId);
                     break;
                 case CharacterStatus.Status.Busy:
-                    Core.Writer.WriteLine("<p>{yellow}You can't do that while busy.{/yellow}</p>", player.ConnectionId);
+                    Core.Writer.WriteLine("<p>{yellow}You can't do that while busy.{/}</p>", player.ConnectionId);
                     break;
                 case CharacterStatus.Status.Floating:
-                    Core.Writer.WriteLine("<p>{yellow}You can't do that while floating.{/yellow}</p>", player.ConnectionId);
+                    Core.Writer.WriteLine("<p>{yellow}You can't do that while floating.{/}</p>", player.ConnectionId);
                     break;
                 case CharacterStatus.Status.Mounted:
-                    Core.Writer.WriteLine("<p>{yellow}You can't do that while mounted.{/yellow}</p>", player.ConnectionId);
+                    Core.Writer.WriteLine("<p>{yellow}You can't do that while mounted.{/}</p>", player.ConnectionId);
                     break;
                 case CharacterStatus.Status.Stunned:
-                    Core.Writer.WriteLine("<p>{yellow}You can't do that while stunned.{/yellow}</p>", player.ConnectionId);
+                    Core.Writer.WriteLine("<p>{yellow}You can't do that while stunned.{/}</p>", player.ConnectionId);
                     break;
                 case CharacterStatus.Status.Fleeing:
-                    Core.Writer.WriteLine("<p>{yellow}You can't do that while fleeing.{/yellow}</p>", player.ConnectionId);
+                    Core.Writer.WriteLine("<p>{yellow}You can't do that while fleeing.{/}</p>", player.ConnectionId);
                     break;
             }
 
