@@ -22,6 +22,8 @@ public class StandCmd : ICommand
             CharacterStatus.Status.Fleeing,
             CharacterStatus.Status.Incapacitated,
             CharacterStatus.Status.Stunned,
+            CharacterStatus.Status.Mounted,
+            CharacterStatus.Status.Standing
         };
         UserRole = UserRole.Player;
         Core = core;
@@ -36,18 +38,6 @@ public class StandCmd : ICommand
 
     public void Execute(Player player, Room room, string[] input)
     {
-        if (!string.IsNullOrEmpty(player.Mounted.Name))
-        {
-            Core.Writer.WriteLine("<p>You can't do that while mounted.</p>", player.ConnectionId);
-            return;
-        }
-
-        if (player.Status == CharacterStatus.Status.Standing)
-        {
-            Core.Writer.WriteLine("<p>You are already standing!</p>", player.ConnectionId);
-            return;
-        }
-
         var standMessage = "rises up.";
         
         if (player.Status == CharacterStatus.Status.Resting)

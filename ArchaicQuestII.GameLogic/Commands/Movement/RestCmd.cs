@@ -50,20 +50,9 @@ public class RestCmd : ICommand
             return;
         }
 
+        Core.Writer.WriteLine("<p>You sprawl out haphazardly.</p>", player.ConnectionId);
         SetCharacterStatus(player, "is sprawled out here", CharacterStatus.Status.Resting);
-
-        foreach (var pc in room.Players)
-        {
-
-            if (pc.Id.Equals(player.Id))
-            {
-                Core.Writer.WriteLine("<p>You sprawl out haphazardly.</p>", player.ConnectionId);
-            }
-            else
-            {
-                Core.Writer.WriteLine($"<p>{player.Name} sprawls out haphazardly.</p>", pc.ConnectionId);
-            }
-        }
+        Core.Writer.WriteToOthersInRoom($"<p>{player.Name} sprawls out haphazardly.</p>", room, player);
     }
 
     private void SetCharacterStatus(Player player, string longName, CharacterStatus.Status status)

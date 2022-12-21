@@ -24,7 +24,8 @@ public class WakeCmd : ICommand
             CharacterStatus.Status.Stunned,
             CharacterStatus.Status.Resting,
             CharacterStatus.Status.Sitting,
-            CharacterStatus.Status.Standing
+            CharacterStatus.Status.Standing,
+            CharacterStatus.Status.Mounted
         };
         UserRole = UserRole.Player;
         Core = core;
@@ -39,12 +40,6 @@ public class WakeCmd : ICommand
 
     public void Execute(Player player, Room room, string[] input)
     {
-        if (!string.IsNullOrEmpty(player.Mounted.Name))
-        {
-            Core.Writer.WriteLine("<p>You can't do that while mounted.</p>", player.ConnectionId);
-            return;
-        }
-
         SetCharacterStatus(player, "", CharacterStatus.Status.Standing);
         Core.Writer.WriteLine("<p>You move quickly to your feet.</p>", player.ConnectionId);
         Core.Writer.WriteToOthersInRoom($"<p>{player.Name} arises from {(player.Gender == "Male" ? "his" : "her")} slumber.</p>", room, player);

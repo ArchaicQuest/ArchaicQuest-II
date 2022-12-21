@@ -39,10 +39,10 @@ public class NewbieCmd : ICommand
         
         Core.Writer.WriteLine($"<p class='newbie'>[<span>Newbie</span>]: {text}</p>", player.ConnectionId);
         Core.UpdateClient.UpdateCommunication(player, $"<p class='newbie'>[<span>Newbie</span>]: {text}</p>", "newbie");
+        Core.Writer.WriteToOthersInRoom($"<p class='newbie'>[<span>Newbie</span>] {player.Name}: {text}</p>", room, player);
         
         foreach (var pc in room.Players.Where(pc => !pc.Name.Equals(player.Name, StringComparison.CurrentCultureIgnoreCase) && pc.Config.NewbieChannel))
         {
-            Core.Writer.WriteLine($"<p class='newbie'>[<span>Newbie</span>] {player.Name}: {text}</p>", pc.ConnectionId);
             Core.UpdateClient.UpdateCommunication(pc, $"<p class='newbie'>[<span>Newbie</span>] {player.Name}: {text}</p>", "newbie");
         }
 

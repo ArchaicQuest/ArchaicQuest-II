@@ -40,10 +40,10 @@ public class OOCCmd : ICommand
         
         Core.Writer.WriteLine($"<p class='ooc'>[<span>OOC</span>]: {text}</p>", player.ConnectionId);
         Core.UpdateClient.UpdateCommunication(player, $"<p class='ooc'>[<span>OOC</span>]: {text}</p>", "ooc");
+        Core.Writer.WriteToOthersInRoom($"<p class='ooc'>[<span>OOC</span>] {player.Name}: {text}</p>", room, player);
         
         foreach (var pc in room.Players.Where(pc => !pc.Name.Equals(player.Name, StringComparison.CurrentCultureIgnoreCase) && pc.Config.OocChannel))
         {
-            Core.Writer.WriteLine($"<p class='ooc'>[<span>OOC</span>] {player.Name}: {text}</p>", pc.ConnectionId);
             Core.UpdateClient.UpdateCommunication(pc, $"<p class='ooc'>[<span>OOC</span>] {player.Name}: {text}</p>", "ooc");
         }
 

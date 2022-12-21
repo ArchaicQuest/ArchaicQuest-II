@@ -25,6 +25,7 @@ public class SleepCmd : ICommand
             CharacterStatus.Status.Stunned,
             CharacterStatus.Status.Resting,
             CharacterStatus.Status.Sitting,
+            CharacterStatus.Status.Mounted
         };
         UserRole = UserRole.Player;
         Core = core;
@@ -39,18 +40,6 @@ public class SleepCmd : ICommand
 
     public void Execute(Player player, Room room, string[] input)
     {
-        if (!string.IsNullOrEmpty(player.Mounted.Name))
-        {
-            Core.Writer.WriteLine("<p>You can't do that while mounted.</p>", player.ConnectionId);
-            return;
-        }
-
-        if (player.Status == CharacterStatus.Status.Sleeping)
-        {
-            Core.Writer.WriteLine("<p>You are already sleeping!</p>", player.ConnectionId);
-            return;
-        }
-
         SetCharacterStatus(player, "is sleeping nearby", CharacterStatus.Status.Sleeping);
         Core.Writer.WriteLine("<p>You collapse into a deep sleep.</p>", player.ConnectionId);
         Core.Writer.WriteToOthersInRoom($"<p>{player.Name} collapses into a deep sleep.</p>", room, player);

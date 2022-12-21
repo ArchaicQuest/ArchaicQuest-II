@@ -115,30 +115,16 @@ public class GiveCmd : ICommand
 
         player.Inventory.Remove(item);
         player.Weight -= item.Weight;
-
-        foreach (var pc in room.Players)
-        {
-            if (pc.Name == player.Name)
-            {
-                Core.Writer.WriteLine($"<p>You give {item.Name.ToLower()} to {target.Name.ToLower()}.</p>", pc.ConnectionId);
-                continue;
-            }
-
-            if (pc.Name == target.Name)
-            {
-                continue;
-            }
-
-            Core.Writer.WriteLine($"<p>{player.Name} gives {item.Name.ToLower()} to {target.Name.ToLower()}.</p>",
-                pc.ConnectionId);
-        }
+        
+        Core.Writer.WriteLine($"<p>You give {item.Name.ToLower()} to {target.Name.ToLower()}.</p>", player.ConnectionId);
+        Core.Writer.WriteLine($"<p>{player.Name} gives you {item.Name.ToLower()}.</p>", target.ConnectionId);
+        Core.Writer.WriteToOthersInRoom($"<p>{player.Name} gives {item.Name.ToLower()} to {target.Name.ToLower()}.</p>",
+            room, player);
 
         target.Inventory.Add(item);
-        Core.Writer.WriteLine($"<p>{player.Name} gives you {item.Name.ToLower()}.</p>", target.ConnectionId);
         Core.UpdateClient.UpdateInventory(player);
         Core.UpdateClient.UpdateInventory(target);
         
-
         if (!string.IsNullOrEmpty(target.Events.Give))
         {
             UserData.RegisterType<MobScripts>();
@@ -177,25 +163,16 @@ public class GiveCmd : ICommand
         Core.Writer.WriteLine(
             $"<p>You give {target.Name} {(amount == 1 ? "1 gold coin." : $"{amount} gold coins.")}</p>",
             player.ConnectionId);
+        Core.Writer.WriteLine(
+            $"<p>{player.Name} gives you {(amount == 1 ? "1 gold coin." : $"{amount} gold coins.")}</p>",
+            target.ConnectionId);
+        Core.Writer.WriteToOthersInRoom($"<p>{player.Name} gives {target.Name} some gold.</p>",
+            room, player);
 
         player.Money.Gold -= amount;
         player.Weight -= amount * 0.1;
         target.Money.Gold += amount;
         target.Weight += amount * 0.1;
         Core.UpdateClient.UpdateScore(player);
-
-        foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
-        {
-            if (pc.Name == target.Name)
-            {
-                Core.Writer.WriteLine(
-                    $"<p>{player.Name} gives you {(amount == 1 ? "1 gold coin." : $"{amount} gold coins.")}</p>",
-                    pc.ConnectionId);
-                continue;
-            }
-
-            Core.Writer.WriteLine($"<p>{player.Name} gives {target.Name} some gold.</p>",
-                pc.ConnectionId);
-        }
     }
 }

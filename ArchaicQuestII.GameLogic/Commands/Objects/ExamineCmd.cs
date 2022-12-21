@@ -74,11 +74,8 @@ public class ExamineCmd : ICommand
         var examMessage = item.Description.Exam == "You don't see anything special."
             ? $"On closer inspection you don't see anything special to note to what you already see. {item.Description.Look}"
             : item.Description.Exam;
+        
         Core.Writer.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{examMessage}", player.ConnectionId);
-
-        foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
-        {
-            Core.Writer.WriteLine($"<p>{player.Name} examines {item.Name.ToLower()}.</p>", pc.ConnectionId);
-        }
+        Core.Writer.WriteToOthersInRoom($"<p>{player.Name} examines {item.Name.ToLower()}.</p>", room, player);
     }
 }

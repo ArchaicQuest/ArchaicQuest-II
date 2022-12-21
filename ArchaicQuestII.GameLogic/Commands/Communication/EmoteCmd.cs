@@ -46,11 +46,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
             
             var emoteText = string.Join(" ", input.Skip(1));
             var emoteMessage = $"<p>{player.Name} {emoteText}</p>";
-
-            foreach (var players in room.Players)
-            {
-                Core.Writer.WriteLine(emoteMessage, players.ConnectionId);
-            }
+            
+            Core.Writer.WriteToOthersInRoom(emoteMessage, room, player);
         }
     }
 }

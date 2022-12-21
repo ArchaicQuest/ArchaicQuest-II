@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Hubs;
@@ -12,15 +13,12 @@ namespace ArchaicQuestII.GameLogic.Client
     {
         private readonly IHubContext<GameHub> _hubContext;
         private readonly TelnetHub _telnetHub;
-
-
+        
         public WriteToClient(IHubContext<GameHub> hubContext, TelnetHub telnetHub)
         {
             _hubContext = hubContext;
             _telnetHub = telnetHub;
         }
-
-
 
         public async void WriteLine(string message, string id)
         {
@@ -97,15 +95,9 @@ namespace ArchaicQuestII.GameLogic.Client
 
         public void WriteToOthersInRoom(string message, Room room, Player player)
         {
-            foreach (var pc in room.Players)
+            foreach (var pc in room.Players.Where(pc => pc.Id != player.Id))
             {
-                if (pc.Id == player.Id)
-                {
-                    continue;
-                }
-                
                 WriteLine(message, pc.ConnectionId);
-                
             }
         }
     }

@@ -3,7 +3,6 @@ using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
-using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Commands.Objects;
@@ -56,6 +55,7 @@ public class SacrificeCorpseCmd : ICommand
             room.Items.Remove(itemToRemove);
             var coinCount = new Dice().Roll(1, 1, 12);
             player.Money.Gold += coinCount;
+            
             Core.Writer.WriteLine(
                 coinCount == 1
                     ? "The gods give you a measly gold coin for your sacrifice."

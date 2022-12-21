@@ -81,11 +81,7 @@ public class UnlockCmd : ICommand
 
                     doorToUnlock.Locked = false;
                     Core.Writer.WriteLine("<p>You enter the key and turn it. *CLICK* </p>", player.ConnectionId);
-
-                    foreach (var pc in room.Players.Where(pc => !pc.Name.Equals(player.Name, StringComparison.CurrentCultureIgnoreCase)))
-                    {
-                        Core.Writer.WriteLine($"<p>{pc.Name} enters the key and turns it. *CLICK* </p>", pc.ConnectionId);
-                    }
+                    Core.Writer.WriteToOthersInRoom($"<p>{player.Name} enters the key and turns it. *CLICK* </p>", room, player);
 
                     return;
                 }
@@ -119,12 +115,8 @@ public class UnlockCmd : ICommand
 
             objToUnlock.Container.IsLocked = false;
             Core.Writer.WriteLine("<p>You enter the key and turn it. *CLICK* </p>", player.ConnectionId);
-
-            foreach (var pc in room.Players.Where(pc => !pc.Name.Equals(player.Name, StringComparison.CurrentCultureIgnoreCase)))
-            {
-                Core.Writer.WriteLine($"<p>{pc.Name} enters the key into {objToUnlock.Name} and turns it. *CLICK* </p>",
-                    pc.ConnectionId);
-            }
+            Core.Writer.WriteToOthersInRoom($"<p>{player.Name} enters the key into {objToUnlock.Name} and turns it. *CLICK* </p>",
+                room, player);
         }
     }
 }

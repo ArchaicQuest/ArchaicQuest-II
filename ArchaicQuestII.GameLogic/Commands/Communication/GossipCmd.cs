@@ -39,10 +39,10 @@ public class GossipCmd : ICommand
         
         Core.Writer.WriteLine($"<p class='gossip'>[<span>Gossip</span>]: {text}</p>", player.ConnectionId);
         Core.UpdateClient.UpdateCommunication(player, $"<p class='gossip'>[<span>Gossip</span>]: {text}</p>", "gossip");
+        Core.Writer.WriteToOthersInRoom($"<p class='gossip'>[<span>Gossip</span>] {player.Name}: {text}</p>", room, player);
         
         foreach (var pc in room.Players.Where(pc => !pc.Name.Equals(player.Name, StringComparison.CurrentCultureIgnoreCase) && pc.Config.GossipChannel))
         {
-            Core.Writer.WriteLine($"<p class='gossip'>[<span>Gossip</span>] {player.Name}: {text}</p>", pc.ConnectionId);
             Core.UpdateClient.UpdateCommunication(pc, $"<p class='gossip'>[<span>Gossip</span>] {player.Name}: {text}</p>", "gossip");
         }
 

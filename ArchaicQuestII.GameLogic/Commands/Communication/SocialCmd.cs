@@ -98,17 +98,10 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
             {
                 if (getTarget.Id == player.Id)
                 {
-                    foreach (var pc in room.Players)
-                    {
-                        if (pc.Id == player.Id)
-                        {
-                            Core.Writer.WriteLine($"<p>{Helpers.ReplaceSocialTags(social.TargetSelf, player, getTarget)}</p>", player.ConnectionId);
-                            continue;
-                        }
-                        Core.Writer.WriteLine($"<p>{Helpers.ReplaceSocialTags(social.RoomSelf, player, getTarget)}</p>", pc.ConnectionId);
-                    }
-                    return;
+                    Core.Writer.WriteLine($"<p>{Helpers.ReplaceSocialTags(social.TargetSelf, player, getTarget)}</p>", player.ConnectionId);
+                    Core.Writer.WriteToOthersInRoom($"<p>{Helpers.ReplaceSocialTags(social.RoomSelf, player, getTarget)}</p>", room, player);
                 }
+                
                 Core.Writer.WriteLine($"<p>{Helpers.ReplaceSocialTags(social.TargetFound, player, getTarget)}<p>", player.ConnectionId);
                 Core.Writer.WriteLine($"<p>{Helpers.ReplaceSocialTags(social.ToTarget, player, getTarget)}</p>", getTarget.ConnectionId);
                 
@@ -121,9 +114,9 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
                 {
                     UserData.RegisterType<MobScripts>();
 
-                    Script script = new Script();
+                    var script = new Script();
 
-                    DynValue obj = UserData.Create(Core.MobScripts);
+                    var obj = UserData.Create(Core.MobScripts);
                     script.Globals.Set("obj", obj);
                     UserData.RegisterProxyType<MyProxy, Room>(r => new MyProxy(room));
                     UserData.RegisterProxyType<ProxyPlayer, Player>(r => new ProxyPlayer(player));

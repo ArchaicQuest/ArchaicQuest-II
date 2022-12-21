@@ -45,12 +45,12 @@ public class SayCmd : ICommand
         var text = string.Join(" ", input.Skip(1));
         
         Core.Writer.WriteLine($"<p class='say'>You say {text}</p>", player.ConnectionId);
+        Core.UpdateClient.UpdateCommunication(player, $"<p class='say'>You say {text}</p>", "room");
+        Core.Writer.WriteToOthersInRoom($"<p class='say'>{player.Name} says {text}</p>", room, player);
         
         foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
         {
-            Core.Writer.WriteLine($"<p class='say'>{player.Name} says {text}</p>", pc.ConnectionId);
             Core.UpdateClient.UpdateCommunication(pc, $"<p class='say'>{player.Name} says {text}</p>", "room");
         }
-        Core.UpdateClient.UpdateCommunication(player, $"<p class='say'>You say {text}</p>", "room");
     }
 }

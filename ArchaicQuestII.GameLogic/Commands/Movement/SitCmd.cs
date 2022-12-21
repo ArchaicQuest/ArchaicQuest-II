@@ -27,6 +27,7 @@ public class SitCmd : ICommand
             CharacterStatus.Status.Stunned,
             CharacterStatus.Status.Resting,
             CharacterStatus.Status.Sitting,
+            CharacterStatus.Status.Mounted
         };
         UserRole = UserRole.Player;
         Core = core;
@@ -43,24 +44,11 @@ public class SitCmd : ICommand
     {
         var target = input.ElementAtOrDefault(1);
 
-        if (!string.IsNullOrEmpty(player.Mounted.Name))
-        {
-            Core.Writer.WriteLine("<p>You can't do that while mounted.</p>", player.ConnectionId);
-            return;
-        }
-
-        if (player.Status == CharacterStatus.Status.Sitting)
-        {
-            Core.Writer.WriteLine("<p>You are already sitting!</p>", player.ConnectionId);
-            return;
-        }
-
         if (string.IsNullOrEmpty(target))
         {
             SetCharacterStatus(player, "is sitting here", CharacterStatus.Status.Sitting);
             Core.Writer.WriteLine("<p>You sit down.</p>", player.ConnectionId);
             Core.Writer.WriteToOthersInRoom($"<p>{player.Name} sits down.</p>", room, player);
-            
         }
         else
         {

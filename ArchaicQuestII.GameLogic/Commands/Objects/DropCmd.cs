@@ -101,17 +101,12 @@ public class DropCmd : ICommand
         }
 
         player.Inventory.Remove(item);
-
-        foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
-        {
-            Core.Writer.WriteLine($"<p>{player.Name} drops {item.Name.ToLower()}.</p>",
-                pc.ConnectionId);
-        }
-
         room.Items.Add(item);
         player.Weight -= item.Weight;
 
         Core.Writer.WriteLine($"<p>You drop {item.Name.ToLower()}.</p>", player.ConnectionId);
+        Core.Writer.WriteToOthersInRoom($"<p>{player.Name} drops {item.Name.ToLower()}.</p>", room, player);
+        
         Core.UpdateClient.UpdateInventory(player);
         Core.UpdateClient.UpdateScore(player);
     }
@@ -148,12 +143,7 @@ public class DropCmd : ICommand
                 player.Weight -= player.Inventory[i].Weight;
 
                 Core.Writer.WriteLine($"<p>You drop {player.Inventory[i].Name.ToLower()}.</p>", player.ConnectionId);
-
-                foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
-                {
-                    Core.Writer.WriteLine($"<p>{player.Name} drops {player.Inventory[i].Name.ToLower()}.</p>",
-                        pc.ConnectionId);
-                }
+                Core.Writer.WriteToOthersInRoom($"<p>{player.Name} drops {player.Inventory[i].Name.ToLower()}.</p>", room, player);
                 
                 player.Inventory.RemoveAt(i);
 
@@ -204,11 +194,8 @@ public class DropCmd : ICommand
         Core.Writer.WriteLine($"<p>You drop {(amount == 1 ? "1 gold coin." : $"{amount} gold coins.")}</p>",
             player.ConnectionId);
 
-        foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
-        {
-            Core.Writer.WriteLine($"<p>{player.Name} drops {ItemList.DisplayMoneyAmount(amount).ToLower()}.</p>",
-                pc.ConnectionId);
-        }
+        Core.Writer.WriteToOthersInRoom($"<p>{player.Name} drops {ItemList.DisplayMoneyAmount(amount).ToLower()}.</p>",
+            room, player);
 
         player.Money.Gold -= amount;
         room.Items.Add(goldCoin);
@@ -268,16 +255,14 @@ public class DropCmd : ICommand
         player.Inventory.Remove(item);
         player.Weight -= item.Weight;
 
-        foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
-        {
-            Core.Writer.WriteLine($"<p>{player.Name} puts {item.Name.ToLower()} into {containerObj.Name.ToLower()}.</p>",
-                pc.ConnectionId);
-        }
-
         containerObj.Container.Items.Add(item);
         Core.UpdateClient.PlaySound("drop", player);
+        
         Core.Writer.WriteLine($"<p>You put {item.Name.ToLower()} into {containerObj.Name.ToLower()}.</p>",
             player.ConnectionId);
+        Core.Writer.WriteToOthersInRoom($"<p>{player.Name} puts {item.Name.ToLower()} into {containerObj.Name.ToLower()}.</p>",
+            room, player);
+        
         Core.UpdateClient.UpdateInventory(player);
         Core.UpdateClient.UpdateScore(player);
     }
@@ -300,13 +285,10 @@ public class DropCmd : ICommand
             Core.UpdateClient.PlaySound("drop", player);
             container.Container.Items.Add(player.Inventory[i]);
             player.Weight -= player.Inventory[i].Weight;
+            
             Core.Writer.WriteLine($"<p>You place {player.Inventory[i].Name.ToLower()} into {container.Name.ToLower()}.</p>", player.ConnectionId);
-
-            foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
-            {
-                Core.Writer.WriteLine($"<p>{player.Name} puts {player.Inventory.Name.ToLower()} into {container.Name.ToLower()}.</p>",
-                    pc.ConnectionId);
-            }
+            Core.Writer.WriteToOthersInRoom($"<p>{player.Name} puts {player.Inventory.Name.ToLower()} into {container.Name.ToLower()}.</p>",
+                room, player);
             
             player.Inventory.RemoveAt(i);
         }
