@@ -22,6 +22,8 @@ public class StandCmd : ICommand
             CharacterStatus.Status.Fleeing,
             CharacterStatus.Status.Incapacitated,
             CharacterStatus.Status.Stunned,
+            CharacterStatus.Status.Mounted,
+            CharacterStatus.Status.Standing
         };
         UserRole = UserRole.Player;
         Core = core;
@@ -36,19 +38,8 @@ public class StandCmd : ICommand
 
     public void Execute(Player player, Room room, string[] input)
     {
-        if (!string.IsNullOrEmpty(player.Mounted.Name))
-        {
-            Core.Writer.WriteLine("<p>You can't do that while mounted.</p>", player.ConnectionId);
-            return;
-        }
-
-        if (player.Status == CharacterStatus.Status.Standing)
-        {
-            Core.Writer.WriteLine("<p>You are already standing!</p>", player.ConnectionId);
-            return;
-        }
-
         var standMessage = "rises up.";
+        
         if (player.Status == CharacterStatus.Status.Resting)
         {
             standMessage = $"arises from {(player.Gender == "Male" ? "his" : "her")} rest.";
@@ -59,18 +50,8 @@ public class StandCmd : ICommand
         }
 
         SetCharacterStatus(player, "", CharacterStatus.Status.Standing);
-        
-        foreach (var pc in room.Players)
-        {
-            if (pc.Id.Equals(player.Id))
-            {
-                Core.Writer.WriteLine("<p>You move quickly to your feet.</p>", player.ConnectionId);
-            }
-            else
-            {
-                Core.Writer.WriteLine($"<p>{player.Name} {standMessage}</p>", pc.ConnectionId);
-            }
-        }
+        Core.Writer.WriteLine("<p>You move quickly to your feet.</p>", player.ConnectionId);
+        Core.Writer.WriteToOthersInRoom($"<p>{player.Name} {standMessage}</p>", room, player);
     }
 
     private void SetCharacterStatus(Player player, string longName, CharacterStatus.Status status)

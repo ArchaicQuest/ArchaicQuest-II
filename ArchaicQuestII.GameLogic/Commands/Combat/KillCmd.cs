@@ -1,18 +1,19 @@
+using System.Linq;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.World.Room;
 
-namespace ArchaicQuestII.GameLogic.Commands.Movement;
+namespace ArchaicQuestII.GameLogic.Commands.Combat;
 
-public class WakeCmd : ICommand
+public class KillCmd : ICommand
 {
-    public WakeCmd(ICore core)
+    public KillCmd(ICore core)
     {
-        Aliases = new[] {"wake"};
-        Description = "Your character wakes from sleep.";
-        Usages = new[] {"Type: wake"};
+        Aliases = new[] {"k", "kill", "murder"};
+        Description = "Start combat with a mob or murder a player";
+        Usages = new[] {"Type: kill rat, murder Arthur"};
         DeniedStatus = new[]
         {
             CharacterStatus.Status.Busy,
@@ -21,11 +22,9 @@ public class WakeCmd : ICommand
             CharacterStatus.Status.Ghost,
             CharacterStatus.Status.Fleeing,
             CharacterStatus.Status.Incapacitated,
+            CharacterStatus.Status.Sleeping,
             CharacterStatus.Status.Stunned,
-            CharacterStatus.Status.Resting,
-            CharacterStatus.Status.Sitting,
-            CharacterStatus.Status.Standing,
-            CharacterStatus.Status.Mounted
+            CharacterStatus.Status.Resting
         };
         UserRole = UserRole.Player;
         Core = core;
@@ -40,15 +39,10 @@ public class WakeCmd : ICommand
 
     public void Execute(Player player, Room room, string[] input)
     {
-        SetCharacterStatus(player, "", CharacterStatus.Status.Standing);
-        Core.Writer.WriteLine("<p>You move quickly to your feet.</p>", player.ConnectionId);
-        Core.Writer.WriteToOthersInRoom($"<p>{player.Name} arises from {(player.Gender == "Male" ? "his" : "her")} slumber.</p>", room, player);
-    }
-
-    private void SetCharacterStatus(Player player, string longName, CharacterStatus.Status status)
-    {
-        player.Status = status;
-        player.LongName = longName;
-        player.Pose = "";
+        var command = input.ElementAtOrDefault(0);
+        var target = input.ElementAtOrDefault(1);
+        var isMurder = command == "murder";
+        
+        Core.Combat.Fight(player, target, room, isMurder);
     }
 }

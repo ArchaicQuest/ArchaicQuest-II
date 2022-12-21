@@ -14,7 +14,15 @@ public class SayCmd : ICommand
         Aliases = new[] {"say", "'"};
         Description = "Say something to the room.";
         Usages = new[] {"Type: say what ever you want"};
-        DeniedStatus = default;
+        DeniedStatus = new[]
+        {
+            CharacterStatus.Status.Busy,
+            CharacterStatus.Status.Dead,
+            CharacterStatus.Status.Fleeing,
+            CharacterStatus.Status.Incapacitated,
+            CharacterStatus.Status.Sleeping,
+            CharacterStatus.Status.Stunned
+        };
         UserRole = UserRole.Player;
         Core = core;
     }
@@ -30,19 +38,19 @@ public class SayCmd : ICommand
     {
         if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
         {
-            Core.Writer.WriteLine("Say what?", player.ConnectionId);
+            Core.Writer.WriteLine("<p>Say what?</p>", player.ConnectionId);
             return;
         }
         
         var text = string.Join(" ", input.Skip(1));
         
         Core.Writer.WriteLine($"<p class='say'>You say {text}</p>", player.ConnectionId);
+        Core.UpdateClient.UpdateCommunication(player, $"<p class='say'>You say {text}</p>", "room");
+        Core.Writer.WriteToOthersInRoom($"<p class='say'>{player.Name} says {text}</p>", room, player);
         
         foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
         {
-            Core.Writer.WriteLine($"<p class='say'>{player.Name} says {text}</p>", pc.ConnectionId);
             Core.UpdateClient.UpdateCommunication(pc, $"<p class='say'>{player.Name} says {text}</p>", "room");
         }
-        Core.UpdateClient.UpdateCommunication(player, $"<p class='say'>You say {text}</p>", "room");
     }
 }

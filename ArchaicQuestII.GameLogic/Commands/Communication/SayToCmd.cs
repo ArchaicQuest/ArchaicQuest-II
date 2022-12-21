@@ -15,7 +15,15 @@ public class SayToCmd : ICommand
         Aliases = new[] {"sayto", ">"};
         Description = "Says something to a player.";
         Usages = new[] {"Type: sayto john what ever you want"};
-        DeniedStatus = default;
+        DeniedStatus = new[]
+        {
+            CharacterStatus.Status.Busy,
+            CharacterStatus.Status.Dead,
+            CharacterStatus.Status.Fleeing,
+            CharacterStatus.Status.Incapacitated,
+            CharacterStatus.Status.Sleeping,
+            CharacterStatus.Status.Stunned
+        };
         UserRole = UserRole.Player;
         Core = core;
     }
@@ -32,7 +40,7 @@ public class SayToCmd : ICommand
     {
         if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
         {
-            Core.Writer.WriteLine("Say what?", player.ConnectionId);
+            Core.Writer.WriteLine("<p>Say what?</p>", player.ConnectionId);
             return;
         }
         

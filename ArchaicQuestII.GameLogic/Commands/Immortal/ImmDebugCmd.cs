@@ -5,17 +5,17 @@ using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.World.Room;
 using Newtonsoft.Json;
 
-namespace ArchaicQuestII.GameLogic.Commands.Debug
+namespace ArchaicQuestII.GameLogic.Commands.Immortal
 {
-    public class DebugCmd : ICommand
+    public class ImmDebugCmd : ICommand
     {
-        public DebugCmd(ICore core)
+        public ImmDebugCmd(ICore core)
         {
             Aliases = new[] {"/debug"};
             Description = "Displays debug info for the current room.";
             Usages = new[] {"Type: /debug"};
-            DeniedStatus = default;
-            UserRole = UserRole.Player;
+            DeniedStatus = null;
+            UserRole = UserRole.Staff;
             Core = core;
         }
 

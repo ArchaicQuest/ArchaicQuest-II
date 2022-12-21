@@ -1,5 +1,5 @@
-using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
@@ -39,21 +39,21 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
 
         public void Execute(Player player, Room room, string[] input)
         {
+            var lastInput = input.Length;
+
             if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
             {
-                Core.Writer.WriteLine("Pmote what?", player.ConnectionId);
+                Core.Writer.WriteLine("<p>Pmote what?</p>", player.ConnectionId);
                 return;
             }
             
-            var emoteMessage = string.Join(" ", input.Skip(1));
-
-            foreach (var players in room.Players)
-            {
-                // TODO: switch replace with Regex as the replace is replacing mid word which is wrong.
-                emoteMessage = emoteMessage.Replace(players.Name, "you", StringComparison.CurrentCultureIgnoreCase);
-
-                Core.Writer.WriteLine(player.Name + " " + emoteMessage, players.ConnectionId);
-            }
+            var emoteMessage = string.Join(" ", input.Skip(lastInput));
+            var pmoteTarget = input[lastInput];
+            var pattern = @"\b" + pmoteTarget + "\b";
+            var replace = "you";
+            var result = Regex.Replace(emoteMessage, pattern, replace);
+            
+            Core.Writer.WriteToOthersInRoom("<p>" + player.Name + " " + result + "</p>", room, player);
         }
     }
 }

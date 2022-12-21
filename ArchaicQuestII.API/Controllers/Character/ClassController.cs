@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using ArchaicQuestII.API.Entities;
 using ArchaicQuestII.API.Models;
+using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Item;
 using Microsoft.AspNetCore.Authorization;
 

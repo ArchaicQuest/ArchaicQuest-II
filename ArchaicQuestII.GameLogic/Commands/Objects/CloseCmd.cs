@@ -76,15 +76,9 @@ public class CloseCmd : ICommand
         }
 
         Core.Writer.WriteLine($"<p>You close {item.Name.ToLower()}.</p>", player.ConnectionId);
+        Core.Writer.WriteToOthersInRoom($"<p>{player.Name} closes {item.Name.ToLower()}</p>", room, player);
 
         item.Container.IsOpen = false;
-
-
-        foreach (var obj in room.Players.Where(obj => obj.Name != player.Name))
-        {
-            Core.Writer.WriteLine($"<p>{player.Name} closes {item.Name.ToLower()}</p>", obj.ConnectionId);
-        }
-
         room.Clean = false;
     }
 }

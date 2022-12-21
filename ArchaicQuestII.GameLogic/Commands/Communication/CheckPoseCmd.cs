@@ -1,4 +1,3 @@
-using System.Linq;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
@@ -7,13 +6,13 @@ using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Commands.Communication
 {
-    public class EmoteCmd : ICommand
+    public class CheckPoseCmd : ICommand
     {
-        public EmoteCmd(ICore core)
+        public CheckPoseCmd(ICore core)
         {
-            Aliases = new[] {"emote"};
-            Description = "Sends a message about what your actions are";
-            Usages = new[] {"Type: emote waves at wall"};
+            Aliases = new[] {"checkpose"};
+            Description = "Shows you what your characters current pose is";
+            Usages = new[] {"Type: checkpose"};
             DeniedStatus = new[]
             {
                 CharacterStatus.Status.Busy,
@@ -36,18 +35,28 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
         public UserRole UserRole { get; }
         public ICore Core { get; }
 
+
         public void Execute(Player player, Room room, string[] input)
         {
-            if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
+            var poseText = string.Empty;
+
+            poseText = string.IsNullOrEmpty(player.LongName) ? $"<p>{ player.Name}" : $"{ player.Name} {player.LongName}";
+
+            if (!string.IsNullOrEmpty(player.Mounted.Name))
             {
-                Core.Writer.WriteLine("<p>Emote what?</p>", player.ConnectionId);
-                return;
+                poseText += $", is riding {player.Mounted.Name}";
             }
-            
-            var emoteText = string.Join(" ", input.Skip(1));
-            var emoteMessage = $"<p>{player.Name} {emoteText}</p>";
-            
-            Core.Writer.WriteToOthersInRoom(emoteMessage, room, player);
+            else if (string.IsNullOrEmpty(player.LongName))
+            {
+                poseText += " is here";
+
+            }
+
+            poseText += player.Pose;
+
+            poseText += "</p>";
+
+            Core.Writer.WriteLine(poseText, player.ConnectionId);
         }
     }
 }

@@ -84,7 +84,7 @@ public class HarvestCmd : ICommand
 
         Core.UpdateClient.PlaySound("foraging", player);
 
-        Core.Writer.WriteLine($"You begin harvesting from {thingToHarvest.Name}.", player.ConnectionId);
+        Core.Writer.WriteLine($"<p>You begin harvesting from {thingToHarvest.Name}.</p>", player.ConnectionId);
         
         await Task.Delay(4000);
         
@@ -95,7 +95,7 @@ public class HarvestCmd : ICommand
 
         Core.UpdateClient.PlaySound("foraging", player);
 
-        Core.Writer.WriteLine("You rummage through the foliage looking for something to harvest",
+        Core.Writer.WriteLine("<p>You rummage through the foliage looking for something to harvest.</p>",
             player.ConnectionId);
         
         await Task.Delay(4000);
@@ -107,7 +107,7 @@ public class HarvestCmd : ICommand
 
         Core.UpdateClient.PlaySound("foraging", player);
 
-        Core.Writer.WriteLine("You continue searching.", player.ConnectionId);
+        Core.Writer.WriteLine("<p>You continue searching.</p>", player.ConnectionId);
 
         await Task.Delay(4000);
         
@@ -148,17 +148,16 @@ public class HarvestCmd : ICommand
             }
         };
 
-
         var randomMob = new Player
         {
             Name = randomMobObj.Name,
             ClassName = "Fighter",
-            Target = String.Empty,
+            Target = string.Empty,
             Status = CharacterStatus.Status.Standing,
             Race = "Other",
             Level = roll + 2,
             RoomId = player.RoomId,
-            Attributes = new Attributes()
+            Attributes = new Attributes
             {
                 Attribute = new Dictionary<EffectLocation, int>
                 {
@@ -210,7 +209,7 @@ public class HarvestCmd : ICommand
         if (roll <= 1)
         {
             Core.Writer.WriteLine(
-                $"{{yellow}}{randomMob.Name} jumps out from the {thingToHarvest.Name} and attacks you !{{/}}",
+                $"<p>{{yellow}}{randomMob.Name} jumps out from the {thingToHarvest.Name} and attacks you!{{/}}</p>",
                 player.ConnectionId);
             room.Mobs.Add(randomMob);
             player.Status = CharacterStatus.Status.Standing;
@@ -221,7 +220,7 @@ public class HarvestCmd : ICommand
         if (roll <= 3)
         {
             Core.Writer.WriteLine(
-                $"{{yellow}}You cut yourself foraging, OUCH!{{/}}",
+                $"<p>{{yellow}}You cut yourself foraging, OUCH!{{/}}</p>",
                 player.ConnectionId);
             player.Status = CharacterStatus.Status.Standing;
             return;
@@ -231,7 +230,7 @@ public class HarvestCmd : ICommand
 
         if (!canDoSkill)
         {
-            Core.Writer.WriteLine("You fail to harvest a thing.", player.ConnectionId);
+            Core.Writer.WriteLine("<p>You fail to harvest a thing.</p>", player.ConnectionId);
             Core.Writer.WriteLine(Helpers.SkillLearnMistakes(player, "foraging", Core.Gain), player.ConnectionId);
             player.Status = CharacterStatus.Status.Standing;
             return;
@@ -270,7 +269,7 @@ public class HarvestCmd : ICommand
         }
 
         Core.Writer.WriteLine(
-            $"Ah you have collected {collectedCount} {collected}{(collectedCount > 1 ? "'s" : "")}",
+            $"<p>Ah you have collected {collectedCount} {collected}{(collectedCount > 1 ? "'s" : "")}</p>",
             player.ConnectionId);
         player.Status = CharacterStatus.Status.Standing;
     }

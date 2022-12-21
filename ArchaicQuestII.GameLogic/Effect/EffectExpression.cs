@@ -7,6 +7,6 @@ namespace ArchaicQuestII.GameLogic.Effect
         Divide = 1 << 1,
         Equal = 1 << 2,
         Multiply = 1 << 3,
-        Substract = 1 << 4
+        Subtract = 1 << 4
     }
 }

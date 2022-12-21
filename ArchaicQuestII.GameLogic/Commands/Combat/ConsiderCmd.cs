@@ -44,7 +44,7 @@ public class ConsiderCmd : ICommand
 
         if (string.IsNullOrEmpty(target))
         {
-            Core.Writer.WriteLine("Consider killing who?", player.ConnectionId);
+            Core.Writer.WriteLine("<p>Consider killing who?</p>", player.ConnectionId);
             return;
         }
         
@@ -55,19 +55,19 @@ public class ConsiderCmd : ICommand
 
         if (victim == null)
         {
-            Core.Writer.WriteLine("Consider killing who?", player.ConnectionId);
+            Core.Writer.WriteLine("<p>Consider killing who?</p>", player.ConnectionId);
             return;
         }
 
         if (victim == player)
         {
-            Core.Writer.WriteLine("You could take yourself.", player.ConnectionId);
+            Core.Writer.WriteLine("<p>You could take yourself.</p>", player.ConnectionId);
             return;
         }
 
         if (!victim.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
         {
-            Core.Writer.WriteLine("You would need a lot of luck!", player.ConnectionId);
+            Core.Writer.WriteLine("<p>You would need a lot of luck!</p>", player.ConnectionId);
             return;
         }
 
@@ -76,37 +76,37 @@ public class ConsiderCmd : ICommand
         switch (diff)
         {
             case <= -10:
-                Core.Writer.WriteLine("Now where did that chicken go?", player.ConnectionId);
+                Core.Writer.WriteLine("<p>Now where did that chicken go?</p>", player.ConnectionId);
                 break;
             case <= -5:
-                Core.Writer.WriteLine("You could do it with a needle!", player.ConnectionId);
+                Core.Writer.WriteLine("<p>You could do it with a needle!</p>", player.ConnectionId);
                 break;
             case <= -2:
-                Core.Writer.WriteLine("Easy.", player.ConnectionId);
+                Core.Writer.WriteLine("<p>Easy.</p>", player.ConnectionId);
                 break;
             case <= -1:
-                Core.Writer.WriteLine("Fairly easy.", player.ConnectionId);
+                Core.Writer.WriteLine("<p>Fairly easy.</p>", player.ConnectionId);
                 break;
             case 0:
-                Core.Writer.WriteLine("The perfect match!", player.ConnectionId);
+                Core.Writer.WriteLine("<p>The perfect match!</p>", player.ConnectionId);
                 break;
             case <= 1:
-                Core.Writer.WriteLine("You would need some luck!", player.ConnectionId);
+                Core.Writer.WriteLine("<p>You would need some luck!</p>", player.ConnectionId);
                 break;
             case <= 2:
-                Core.Writer.WriteLine("You would need a lot of luck!", player.ConnectionId);
+                Core.Writer.WriteLine("<p>You would need a lot of luck!</p>", player.ConnectionId);
                 break;
             case <= 3:
-                Core.Writer.WriteLine("You would need a lot of luck and great equipment!", player.ConnectionId);
+                Core.Writer.WriteLine("<p>You would need a lot of luck and great equipment!</p>", player.ConnectionId);
                 break;
             case <= 5:
-                Core.Writer.WriteLine("Do you feel lucky, punk?", player.ConnectionId);
+                Core.Writer.WriteLine("<p>Do you feel lucky, punk?</p>", player.ConnectionId);
                 break;
             case <= 10:
-                Core.Writer.WriteLine("Are you mad!?", player.ConnectionId);
+                Core.Writer.WriteLine("<p>Are you mad!?</p>", player.ConnectionId);
                 break;
             case <= 100:
-                Core.Writer.WriteLine("You ARE mad!? Death stands beside you ready to take your soul.", player.ConnectionId);
+                Core.Writer.WriteLine("<p>You ARE mad!? Death stands beside you ready to take your soul.</p>", player.ConnectionId);
                 break;
         }
     }

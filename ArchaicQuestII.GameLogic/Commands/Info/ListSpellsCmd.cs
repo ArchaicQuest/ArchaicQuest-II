@@ -18,7 +18,7 @@ public class ListSpellsCmd : ICommand
         Aliases = new[] {"spells"};
         Description = "Shows available spells";
         Usages = new[] {"Type: spells", "spells all"};
-        DeniedStatus = default;
+        DeniedStatus = null;
         UserRole = UserRole.Player;
         Core = core;
     }
@@ -46,7 +46,7 @@ public class ListSpellsCmd : ICommand
             }
             else
             {
-                Core.Writer.WriteLine("You have no spells, try skills instead.", player.ConnectionId);
+                Core.Writer.WriteLine("<p>You have no spells, try skills instead.</p>", player.ConnectionId);
                 return;
             }
         }
@@ -62,7 +62,7 @@ public class ListSpellsCmd : ICommand
             }
             else
             {
-                Core.Writer.WriteLine("You have no spells, try skills instead.", player.ConnectionId);
+                Core.Writer.WriteLine("<p>You have no spells, try skills instead.</p>", player.ConnectionId);
                 return;
             }
         }

@@ -42,13 +42,13 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
             if (room.Mobs.Find(x => x.Trainer) == null)
             {
-                Core.Writer.WriteLine("You can't do that here.", player.ConnectionId);
+                Core.Writer.WriteLine("<p>You can't do that here.</p>", player.ConnectionId);
                 return;
             }
 
             if (player.Trains <= 0)
             {
-                Core.Writer.WriteLine("You have no training sessions left.", player.ConnectionId);
+                Core.Writer.WriteLine("<p>You have no training sessions left.</p>", player.ConnectionId);
                 return;
             }
 
@@ -56,8 +56,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
             {
 
                 Core.Writer.WriteLine(
-                    ($"<p>You have {player.Trains} training session{(player.Trains > 1 ? "s" : "")} remaining.<br />You can train: str dex con int wis cha hp mana move.</p>"
-                    ), player.ConnectionId);
+                    $"<p>You have {player.Trains} training session{(player.Trains > 1 ? "s" : "")} remaining.<br />You can train: str dex con int wis cha hp mana move.</p>", player.ConnectionId);
             }
             else
             {
@@ -65,8 +64,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
                 if (string.IsNullOrEmpty(statName.Item1))
                 {
                     Core.Writer.WriteLine(
-                        ($"<p>{stat} not found. Please choose from the following. <br /> You can train: str dex con int wis cha hp mana move.</p>"
-                        ), player.ConnectionId);
+                        $"<p>{stat} not found. Please choose from the following. <br /> You can train: str dex con int wis cha hp mana move.</p>", player.ConnectionId);
                     return;
                 }
 
@@ -76,7 +74,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
                     player.Trains = 0;
                 }
 
-                if (statName.Item1 == "hit points" || statName.Item1 == "moves" || statName.Item1 == "mana")
+                if (statName.Item1 is "hit points" or "moves" or "mana")
                 {
                     var hitDie = Core.Cache.GetClass(player.ClassName);
                     var roll = Core.Dice.Roll(1, hitDie.HitDice.DiceMinSize, hitDie.HitDice.DiceMaxSize);
@@ -85,8 +83,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
                     player.Attributes.Attribute[statName.Item2] += roll;
 
                     Core.Writer.WriteLine(
-                        ($"<p class='gain'>Your {statName.Item1} increases by {roll}.</p>"
-                        ), player.ConnectionId);
+                        $"<p class='gain'>Your {statName.Item1} increases by {roll}.</p>", player.ConnectionId);
 
                     Core.UpdateClient.UpdateHP(player);
                     Core.UpdateClient.UpdateMana(player);
@@ -98,8 +95,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
                     player.Attributes.Attribute[statName.Item2] += 1;
 
                     Core.Writer.WriteLine(
-                        ($"<p class='gain'>Your {statName.Item1} increases by 1.</p>"
-                        ), player.ConnectionId);
+                        $"<p class='gain'>Your {statName.Item1} increases by 1.</p>", player.ConnectionId);
                 }
                 
                 Core.UpdateClient.UpdateScore(player);

@@ -44,7 +44,7 @@ public class FollowCmd : ICommand
 
         if (string.IsNullOrEmpty(target))
         {
-            Core.Writer.WriteLine($"Follow who?", player.ConnectionId);
+            Core.Writer.WriteLine("<p>Follow who?</p>", player.ConnectionId);
             return;
         }
         
@@ -88,7 +88,7 @@ public class FollowCmd : ICommand
         
         if (foundPlayer.Following == player.Name)
         {
-            Core.Writer.WriteLine($"<p>You can't follow someone following you. Lest you be running around in circles indefinitely.</p>", player.ConnectionId);
+            Core.Writer.WriteLine("<p>You can't follow someone following you. Lest you be running around in circles indefinitely.</p>", player.ConnectionId);
             return;
         }
         

@@ -42,7 +42,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
             if (string.IsNullOrEmpty(target))
             {
-                Core.Writer.WriteLine("Drink what?", player.ConnectionId);
+                Core.Writer.WriteLine("<p>Drink what?</p>", player.ConnectionId);
                 return;
             }
             
@@ -52,22 +52,20 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
             if (drink == null)
             {
-                Core.Writer.WriteLine("You can't find that.", player.ConnectionId);
+                Core.Writer.WriteLine("<p>You can't find that.</p>", player.ConnectionId);
                 return;
             }
 
             if (drink.ItemType != Item.Item.ItemTypes.Drink)
             {
-                Core.Writer.WriteLine($"You can't drink from {drink.Name.ToLower()}.", player.ConnectionId);
+                Core.Writer.WriteLine($"<p>You can't drink from {drink.Name.ToLower()}.</p>", player.ConnectionId);
                 return;
             }
-
-            Core.Writer.WriteLine($"You drink from {drink.Name.ToLower()}.", player.ConnectionId);
-
-            foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
-            {
-                Core.Writer.WriteLine($"{player.Name} drink from {drink.Name.ToLower()}.", player.ConnectionId);
-            }
+            
+            //TODO: Add drink affects
+            
+            Core.Writer.WriteLine($"<p>You drink from {drink.Name.ToLower()}.</p>", player.ConnectionId);
+            Core.Writer.WriteToOthersInRoom($"<p>{player.Name} drink from {drink.Name.ToLower()}.</p>", room, player);
         }
     }
 }

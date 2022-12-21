@@ -66,11 +66,8 @@ public class QuaffCmd : ICommand
             Core.Writer.WriteLine("<p>You quaff the potion but nothing happens.</p>", player.ConnectionId);
             return;
         }
-   
-        foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
-        {
-            Core.Writer.WriteLine($"{player.Name} quaffs {foundItem.Name.ToLower()}.", pc.ConnectionId);
-        }
+        
+        Core.Writer.WriteToOthersInRoom($"{player.Name} quaffs {foundItem.Name.ToLower()}.", room, player);
 
         //potion to cast at level of potion and not the player level
         var dummyPlayer = new Player()
@@ -80,6 +77,5 @@ public class QuaffCmd : ICommand
 
         //TODO: Fix this
         //_castSpell.CastSpell(foundItem.SpellName, string.Empty, player, foundItem.SpellName, dummyPlayer, room, false);
-
     }
 }

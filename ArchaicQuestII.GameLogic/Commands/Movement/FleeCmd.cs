@@ -19,7 +19,6 @@ public class FleeCmd : ICommand
         {
             CharacterStatus.Status.Busy,
             CharacterStatus.Status.Dead,
-            CharacterStatus.Status.Fighting,
             CharacterStatus.Status.Ghost,
             CharacterStatus.Status.Fleeing,
             CharacterStatus.Status.Incapacitated,
@@ -116,18 +115,6 @@ public class FleeCmd : ICommand
             Core.Cache.RemoveCharFromCombat(mob.Id.ToString());
         }
 
-        var randomFleeMsg = new List<string>
-        {
-            $"{player.Name} turns and flees",
-            $"{player.Name} screams and runs for their life",
-            $"{player.Name} ducks and rolls before running away",
-            $"{player.Name} retreats from combat."
-        };
-
-        var fleeString = randomFleeMsg[Core.Dice.Roll(1, 0, randomFleeMsg.Count)];
-
-        Core.Writer.WriteLine($"You flee {validExits[getExitIndex].Name}.",  player.ConnectionId);
-        Core.Writer.WriteToOthersInRoom($"{fleeString}.", room, player);
         Core.Cache.GetCommand(validExits[getExitIndex].Name).Execute(player, room, new[]{validExits[getExitIndex].Name});
     }
 }

@@ -14,10 +14,15 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
     {
         public LookCmd(ICore core)
         {
-            Aliases = new[] {"look"};
+            Aliases = new[] {"look", "l"};
             Description = "Shows info about room or object.";
             Usages = new[] {"Type: look"};
-            DeniedStatus = default;
+            DeniedStatus = new[]
+            {
+                CharacterStatus.Status.Dead,
+                CharacterStatus.Status.Incapacitated,
+                CharacterStatus.Status.Sleeping
+            };
             UserRole = UserRole.Player;
             Core = core;
         }
@@ -28,8 +33,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
         public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
         public ICore Core { get; }
-
-
+        
         public void Execute(Player player, Room room, string[] input)
         {
             if (player.Affects.Blind)
@@ -79,9 +83,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
             var items = DisplayItems(room, player);
             var mobs = DisplayMobs(room, player);
             var players = DisplayPlayers(room, player);
-
+            var isDark = Core.RoomActions.RoomIsDark(player, room);
             var roomDesc = new StringBuilder();
-            var isDark = Core.RoomActions.RoomIsDark(room, player);
 
             roomDesc.Append(
                 $"<p class=\"room-title {(isDark ? "room-dark" : "")}\">{room.Title} ({room.Coords.X},{room.Coords.Y},{room.Coords.Z})<br /></p>");
@@ -92,19 +95,24 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                 roomDesc.Append($"<p class=\"room-description  {(isDark ? "room-dark" : "")}\">{room.Description}</p>");
             }
 
-            roomDesc.Append(
-                !showVerboseExits
-                    ? roomDesc.Append(
-                        $"<p class=\"room-exit  {(isDark ? "room-dark" : "")}\"> <span class=\"room-exits\">[</span>Exits: <span class=\"room-exits\">{exits}</span><span class=\"room-exits\">]</span></p>")
-                    : roomDesc.Append(
-                        $"<div class=\" {(isDark ? "room-dark" : "")}\">Obvious exits: <table class=\"room-exits\"><tbody>{exits}</tbody></table></div>"));
+            if (!showVerboseExits)
+            {
+                roomDesc.Append(
+                    $"<p class=\"room-exit  {(isDark ? "room-dark" : "")}\"> <span class=\"room-exits\">[</span>Exits: <span class=\"room-exits\">{exits}</span><span class=\"room-exits\">]</span></p>");
+            }
+            else
+            {
+                roomDesc.Append(
+                    $"<div class=\" {(isDark ? "room-dark" : "")}\">Obvious exits: <table class=\"room-exits\"><tbody>{exits}</tbody></table></div>");
 
+            }
+            
             roomDesc.Append($"<p  class=\" {(isDark ? "room-dark" : "")}\">{items}</p>")
                 .Append($"<p  class=\"{(isDark ? "room-dark" : "")}\">{mobs}</p>")
                 .Append($"<p  class=\"  {(isDark ? "room-dark" : "")}\">{players}</p>");
 
 
-            Core.Writer.WriteLine(roomDesc.ToString(), player.ConnectionId);
+           Core.Writer.WriteLine(roomDesc.ToString(), player.ConnectionId);
         }
 
         private void LookInContainer(Player player, Room room, string target)
@@ -144,7 +152,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                 Core.Writer.WriteLine("<p>Nothing.</p>", player.ConnectionId);
             }
 
-            var isDark = Core.RoomActions.RoomIsDark(room, player);
+            var isDark = Core.RoomActions.RoomIsDark(player, room);
             
             foreach (var obj in container.Container.Items.List(false))
             {
@@ -175,7 +183,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 
         private void LookAtObject(Player player, Room room, string target)
         {
-            var isDark = Core.RoomActions.RoomIsDark(room, player);
+            var isDark = Core.RoomActions.RoomIsDark(player, room);
             var nthTarget = Helpers.findNth(target);
 
             var item = Helpers.findRoomObject(nthTarget, room) ?? Helpers.findObjectInInventory(nthTarget, player);
@@ -478,7 +486,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 
         private string DisplayItems(Room room, Player player)
         {
-            var isDark = Core.RoomActions.RoomIsDark(room, player);
+            var isDark = Core.RoomActions.RoomIsDark(player, room);
             var items = room.Items.List();
             var x = string.Empty;
 
@@ -504,7 +512,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
         {
             var mobs = string.Empty;
             var mobName = string.Empty;
-            var isDark = Core.RoomActions.RoomIsDark(room, player);
+            var isDark = Core.RoomActions.RoomIsDark(player, room);
             var isFightingPC = false;
             
             foreach (var mob in room.Mobs.Where(x => x.IsHiddenScriptMob == false))
@@ -554,7 +562,6 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
         private string DisplayPlayers(Room room, Player player)
         {
             var players = string.Empty;
-            var isNightTime = Core.RoomActions.RoomIsDark(room, player);
             var pcName = string.Empty;
 
             foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
@@ -578,10 +585,11 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                 }
 
                 pcName += pc.Pose;
-                players += $"<p class='player {(isNightTime ? "dark-room" : "")}'>{pcName}.</p>";
+                players += $"<p class='player {(Core.RoomActions.RoomIsDark(player, room) ? "dark-room" : "")}'>{pcName}.</p>";
             }
 
             return players;
         }
+        
     }
 }

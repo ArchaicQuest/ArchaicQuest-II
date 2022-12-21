@@ -70,7 +70,7 @@ public class OpenCmd : ICommand
 
             if (isExit.Locked)
             {
-                Core.Writer.WriteLine($"<p>You try to open it but it's locked.", player.ConnectionId);
+                Core.Writer.WriteLine("<p>You try to open it but it's locked.", player.ConnectionId);
                 return;
             }
         }
@@ -89,18 +89,14 @@ public class OpenCmd : ICommand
 
         if (item.Container.IsOpen)
         {
-            Core.Writer.WriteLine("<p>It's already open.", player.ConnectionId);
+            Core.Writer.WriteLine("<p>It's already open.</p>", player.ConnectionId);
             return;
         }
 
         Core.Writer.WriteLine($"<p>You open {item.Name.ToLower()}.</p>", player.ConnectionId);
+        Core.Writer.WriteToOthersInRoom($"<p>{player.Name} opens {item.Name.ToLower()}.</p>", room, player);
 
         item.Container.IsOpen = true;
-        
-        foreach (var obj in room.Players.Where(obj => obj.Name != player.Name))
-        {
-            Core.Writer.WriteLine($"<p>{player.Name} opens {item.Name.ToLower()}</p>", obj.ConnectionId);
-        }
         room.Clean = false;
     }
 }

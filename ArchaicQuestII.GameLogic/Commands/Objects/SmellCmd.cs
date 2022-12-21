@@ -57,14 +57,10 @@ public class SmellCmd : ICommand
             return;
         }
 
-        var isDark = Core.RoomActions.RoomIsDark(room, player);
+        var isDark = Core.RoomActions.RoomIsDark(player, room);
 
         Core.Writer.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{item.Description.Smell}",
             player.ConnectionId);
-
-        foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
-        {
-            Core.Writer.WriteLine($"<p>{player.Name} smells {item.Name.ToLower()}.</p>", pc.ConnectionId);
-        }
+        Core.Writer.WriteToOthersInRoom($"<p>{player.Name} smells {item.Name.ToLower()}.</p>", room, player);
     }
 }

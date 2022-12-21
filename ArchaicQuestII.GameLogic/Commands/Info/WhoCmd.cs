@@ -14,7 +14,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
             Aliases = new[] {"who"};
             Description = "Displays current characters online.";
             Usages = new[] {"Type: who"};
-            DeniedStatus = default;
+            DeniedStatus = null;
             UserRole = UserRole.Player;
             Core = core;
         }

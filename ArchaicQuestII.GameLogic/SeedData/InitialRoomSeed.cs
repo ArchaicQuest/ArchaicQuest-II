@@ -47,7 +47,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
                    Z = 0
                },
                AreaId = 1,
-               RoomLit = true,
+               IsLit = true,
                Items = new ItemList()
                {
                    new Item.Item()

@@ -27,6 +27,7 @@ namespace ArchaicQuestII.GameLogic.Core
         public IErrorLog ErrorLog { get; }
         public IPassiveSkills PassiveSkills { get; }
         public IFormulas Formulas { get; }
+        public ITime Time { get; }
         
         /// <summary>
         /// Displays lists of players 
@@ -36,5 +37,6 @@ namespace ArchaicQuestII.GameLogic.Core
         List<string> Hints();
         void GainSkillProficiency(SkillList foundSkill, Player player);
         public void RestorePlayer(Player player);
+        bool CommandTargetCheck(string target, Player player, string errorMessage = "What?");
     }
 }

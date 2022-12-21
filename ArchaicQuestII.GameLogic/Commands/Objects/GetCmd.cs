@@ -44,13 +44,7 @@ public class GetCmd : ICommand
     {
         var target = input.ElementAtOrDefault(1);
         var container = input.ElementAtOrDefault(2);
-        
-        if (player.Status == CharacterStatus.Status.Sleeping)
-        {
-            Core.Writer.WriteLine("You can't do that while asleep.", player.ConnectionId);
-            return;
-        }
-        
+
         if (string.IsNullOrEmpty(target))
         {
             Core.Writer.WriteLine("<p>Get what?</p>", player.ConnectionId);
@@ -123,16 +117,10 @@ public class GetCmd : ICommand
 
         room.Items.Remove(item);
 
-        foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
-        {
-            if (item.ItemType == Item.Item.ItemTypes.Money)
-            {
-                Core.Writer.WriteLine($"<p>{player.Name} picks up {ItemList.DisplayMoneyAmount(item.Value).ToLower()}.</p>", pc.ConnectionId);
-                continue;
-            }
-            
-            Core.Writer.WriteLine($"<p>{player.Name} picks up {item.Name.ToLower()}.</p>", pc.ConnectionId);
-        }
+        if (item.ItemType == Item.Item.ItemTypes.Money)
+            Core.Writer.WriteToOthersInRoom($"<p>{player.Name} picks up {ItemList.DisplayMoneyAmount(item.Value).ToLower()}.</p>", room, player);
+        else
+            Core.Writer.WriteToOthersInRoom($"<p>{player.Name} picks up {item.Name.ToLower()}.</p>", room, player);
 
         if (item.ItemType == Item.Item.ItemTypes.Money)
         {
@@ -184,15 +172,11 @@ public class GetCmd : ICommand
                     Core.Writer.WriteLine($"<p>You pick up {room.Items[i].Name.ToLower()}</p>", player.ConnectionId);
                     player.Weight += room.Items[i].Weight;
                 }
-
-                foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
-                {
-                    Core.Writer.WriteLine(
-                        room.Items[i].ItemType == Item.Item.ItemTypes.Money
-                            ? $"<p>{player.Name} picks up  {ItemList.DisplayMoneyAmount(room.Items[i].Value).ToLower()}</p>"
-                            : $"<p>{player.Name} picks up {room.Items[i].Name.ToLower()}.</p>",
-                        pc.ConnectionId);
-                }
+                
+                if (room.Items[i].ItemType == Item.Item.ItemTypes.Money)
+                    Core.Writer.WriteToOthersInRoom($"<p>{player.Name} picks up {ItemList.DisplayMoneyAmount(room.Items[i].Value).ToLower()}.</p>", room, player);
+                else
+                    Core.Writer.WriteToOthersInRoom($"<p>{player.Name} picks up {room.Items[i].Name.ToLower()}.</p>", room, player);
 
                 room.Items.RemoveAt(i);
             }
@@ -232,15 +216,11 @@ public class GetCmd : ICommand
         }
 
         container.Container.Items.Remove(item);
-
-        foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
-        {
-            Core.Writer.WriteLine(
-                item.ItemType == Item.Item.ItemTypes.Money
-                    ? $"<p>{player.Name} gets {ItemList.DisplayMoneyAmount(item.Value).ToLower()} from {container.Name.ToLower()}</p>"
-                    : $"<p>{player.Name} gets {item.Name.ToLower()} from {container.Name.ToLower()}.</p>",
-                pc.ConnectionId);
-        }
+        
+        if (item.ItemType == Item.Item.ItemTypes.Money)
+            Core.Writer.WriteToOthersInRoom($"<p>{player.Name} gets {ItemList.DisplayMoneyAmount(item.Value).ToLower()} from {container.Name.ToLower()}</p>", room, player);
+        else
+            Core.Writer.WriteToOthersInRoom($"<p>{player.Name} gets {item.Name.ToLower()} from {container.Name.ToLower()}.</p>", room, player);
 
         if (item.ItemType == Item.Item.ItemTypes.Money)
         {
@@ -295,14 +275,10 @@ public class GetCmd : ICommand
                     player.ConnectionId);
             }
             
-            foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
-            {
-                Core.Writer.WriteLine(
-                    container.Container.Items[i].ItemType == Item.Item.ItemTypes.Money
-                        ? $"<p>{player.Name} picks up {ItemList.DisplayMoneyAmount(container.Container.Items.Value).ToLower()} from {container.Name.ToLower()}.</p>"
-                        : $"<p>{player.Name} picks up {container.Container.Items[i].Name.ToLower()} from {container.Name.ToLower()}</p>",
-                    pc.ConnectionId);
-            }
+            if (container.Container.Items[i].ItemType == Item.Item.ItemTypes.Money)
+                Core.Writer.WriteToOthersInRoom($"<p>{player.Name} picks up {ItemList.DisplayMoneyAmount(container.Container.Items.Value).ToLower()} from {container.Name.ToLower()}.</p>", room, player);
+            else
+                Core.Writer.WriteToOthersInRoom($"<p>{player.Name} picks up {container.Container.Items[i].Name.ToLower()} from {container.Name.ToLower()}</p>", room, player);
 
             container.Container.Items.RemoveAt(i);
         }

@@ -18,7 +18,7 @@ public class ListSkillsCmd : ICommand
         Aliases = new[] {"skills"};
         Description = "Shows available skills.";
         Usages = new[] {"Type: skills."};
-        DeniedStatus = default;
+        DeniedStatus = null;
         UserRole = UserRole.Player;
         Core = core;
     }
@@ -43,11 +43,9 @@ public class ListSkillsCmd : ICommand
                 ReturnSkillList(player.Skills.Where(x => x.IsSpell == false && x.Level <= player.Level).ToList(), player, "Skills:");
                 return;
             }
-            else
-            {
-                Core.Writer.WriteLine("You have no skills, try spells instead.", player.ConnectionId);
-                return;
-            }
+
+            Core.Writer.WriteLine("<p>You have no skills, try spells instead.</p>", player.ConnectionId);
+            return;
         }
 
         if (target.Equals("all", StringComparison.CurrentCultureIgnoreCase))
@@ -61,7 +59,7 @@ public class ListSkillsCmd : ICommand
             }
             else
             {
-                Core.Writer.WriteLine("You have no skills, try spells instead.", player.ConnectionId);
+                Core.Writer.WriteLine("<p>You have no skills, try spells instead.</p>", player.ConnectionId);
                 return;
             }
         }

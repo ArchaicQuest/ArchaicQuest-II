@@ -45,7 +45,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
             if (string.IsNullOrEmpty(target))
             {
-                Core.Writer.WriteLine("Eat what?", player.ConnectionId);
+                Core.Writer.WriteLine("<p>Eat what?</p>", player.ConnectionId);
                 return;
             }
             
@@ -54,19 +54,19 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
             if (food == null)
             {
-                Core.Writer.WriteLine("You have no food of that name.", player.ConnectionId);
+                Core.Writer.WriteLine("<p>You have no food of that name.</p>", player.ConnectionId);
                 return;
             }
 
             if (food.ItemType != Item.Item.ItemTypes.Food)
             {
-                Core.Writer.WriteLine($"You can't eat {food.Name.ToLower()}.", player.ConnectionId);
+                Core.Writer.WriteLine($"<p>You can't eat {food.Name.ToLower()}.</p>", player.ConnectionId);
                 return;
             }
 
             if (player.Hunger >= 4)
             {
-                Core.Writer.WriteLine("You are too full to eat more.", player.ConnectionId);
+                Core.Writer.WriteLine("<p>You are too full to eat more.</p>", player.ConnectionId);
                 return;
             }
 
@@ -74,12 +74,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
             player.Inventory.Remove(food);
 
-            Core.Writer.WriteLine($"You eat {food.Name.ToLower()}.", player.ConnectionId);
-            
-            foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
-            {
-                Core.Writer.WriteLine($"{player.Name} eats {food.Name.ToLower()}.", pc.ConnectionId);
-            }
+            Core.Writer.WriteLine($"<p>You eat {food.Name.ToLower()}.</p>", player.ConnectionId);
+            Core.Writer.WriteToOthersInRoom($"<p>{player.Name} eats {food.Name.ToLower()}.</p>", room, player);
 
             var benefits = new StringBuilder().Append("<table>");
             var modBenefits = "";
@@ -115,7 +111,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
             if (player.Hunger >= 4)
             {
-                Core.Writer.WriteLine("You are no longer hungry.", player.ConnectionId);
+                Core.Writer.WriteLine("<p>You are no longer hungry.<p>", player.ConnectionId);
             }
 
             Core.UpdateClient.UpdateAffects(player);

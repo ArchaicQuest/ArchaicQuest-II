@@ -74,14 +74,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
 
                 Core.Writer.WriteLine("<h3>Socials</h3> <p>Available socials:</p>" + table, player.ConnectionId);
             }
-            
-            
-            if (player.Status == CharacterStatus.Status.Sleeping)
-            {
-                Core.Writer.WriteLine("You can't do this while asleep.", player.ConnectionId);
-                return;
-            }
-            
+
             if (string.IsNullOrEmpty(target))
             {
                 Core.Writer.WriteLine($"<p>{social.CharNoTarget}</p>", player.ConnectionId);
@@ -95,25 +88,20 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
             }
 
             var getTarget = target.Equals("self", StringComparison.CurrentCultureIgnoreCase) ? player : room.Players.FirstOrDefault(x => x.Name.StartsWith(target, StringComparison.CurrentCultureIgnoreCase));
+            
             if (getTarget == null)
             {
                 getTarget = room.Mobs.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
             }
+            
             if (getTarget != null)
             {
                 if (getTarget.Id == player.Id)
                 {
-                    foreach (var pc in room.Players)
-                    {
-                        if (pc.Id == player.Id)
-                        {
-                            Core.Writer.WriteLine($"<p>{Helpers.ReplaceSocialTags(social.TargetSelf, player, getTarget)}</p>", player.ConnectionId);
-                            continue;
-                        }
-                        Core.Writer.WriteLine($"<p>{Helpers.ReplaceSocialTags(social.RoomSelf, player, getTarget)}</p>", pc.ConnectionId);
-                    }
-                    return;
+                    Core.Writer.WriteLine($"<p>{Helpers.ReplaceSocialTags(social.TargetSelf, player, getTarget)}</p>", player.ConnectionId);
+                    Core.Writer.WriteToOthersInRoom($"<p>{Helpers.ReplaceSocialTags(social.RoomSelf, player, getTarget)}</p>", room, player);
                 }
+                
                 Core.Writer.WriteLine($"<p>{Helpers.ReplaceSocialTags(social.TargetFound, player, getTarget)}<p>", player.ConnectionId);
                 Core.Writer.WriteLine($"<p>{Helpers.ReplaceSocialTags(social.ToTarget, player, getTarget)}</p>", getTarget.ConnectionId);
                 
@@ -126,9 +114,9 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
                 {
                     UserData.RegisterType<MobScripts>();
 
-                    Script script = new Script();
+                    var script = new Script();
 
-                    DynValue obj = UserData.Create(Core.MobScripts);
+                    var obj = UserData.Create(Core.MobScripts);
                     script.Globals.Set("obj", obj);
                     UserData.RegisterProxyType<MyProxy, Room>(r => new MyProxy(room));
                     UserData.RegisterProxyType<ProxyPlayer, Player>(r => new ProxyPlayer(player));

@@ -30,14 +30,14 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
         {
             if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
             {
-                Core.Writer.WriteLine("Change your title to what?", player.ConnectionId);
+                Core.Writer.WriteLine("<p>Change your title to what?</p>", player.ConnectionId);
                 return;
             }
             
             var titleText = string.Join(' ', input.Skip(1));
 
             player.Title = new string(titleText.Take(55).ToArray());
-            Core.Writer.WriteLine($"Title changed to {player.Title}", player.ConnectionId);
+            Core.Writer.WriteLine($"<p>Title changed to {player.Title}.</p>", player.ConnectionId);
         }
     }
 }

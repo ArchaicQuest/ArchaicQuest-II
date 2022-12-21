@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ArchaicQuestII.GameLogic.Core
+﻿namespace ArchaicQuestII.GameLogic.Core
 {
     public class WriteBook
     {

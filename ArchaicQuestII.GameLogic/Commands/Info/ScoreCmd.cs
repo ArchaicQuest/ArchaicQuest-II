@@ -17,7 +17,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
             Aliases = new[] {"score", "sc"};
             Description = "Displays detailed information about your character.";
             Usages = new[] {"Type: score"};
-            DeniedStatus = default;
+            DeniedStatus = null;
             UserRole = UserRole.Player;
             Core = core;
         }

@@ -15,7 +15,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
             Aliases = new[] {"questlog", "qlog"};
             Description = "Displays your current quests.";
             Usages = new[] {"Type: questlog"};
-            DeniedStatus = default;
+            DeniedStatus = null;
             UserRole = UserRole.Player;
             Core = core;
         }

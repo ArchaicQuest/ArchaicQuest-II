@@ -63,23 +63,11 @@ public class EnterCmd : ICommand
             return;
         }
 
-        foreach (var pc in room.Players)
-        {
-            if (player.Name == pc.Name)
-            {
-                Core.Writer.WriteLine($"<p>You {item.Portal.EnterDescription}</p>", player.ConnectionId);
-                continue;
-            }
-            Core.Writer.WriteLine($"<p>{player.Name} {item.Portal.EnterDescription}</p>", pc.ConnectionId);
-        }
+        Core.Writer.WriteLine($"<p>You {item.Portal.EnterDescription}</p>", player.ConnectionId);
+        Core.Writer.WriteToOthersInRoom($"<p>{player.Name} {item.Portal.EnterDescription}</p>", room, player);
 
         var newRoom = Core.Cache.GetRoom(item.Portal.Destination);
         
         Core.RoomActions.RoomChange(player, room, newRoom);
-
-        foreach (var pc in newRoom.Players.Where(pc => player.Name != pc.Name))
-        {
-            Core.Writer.WriteLine($"<p>{player.Name} {item.Portal.EnterDescriptionRoom}</p>", pc.ConnectionId);
-        }
     }
 }
