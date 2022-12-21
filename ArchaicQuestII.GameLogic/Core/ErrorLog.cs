@@ -16,7 +16,7 @@ public class ErrorLog : IErrorLog
     /// </summary>
     /// <param name="file">which file its in</param>
     /// <param name="error">the error message</param>
-    /// <param name="flag">the priority</param>
+    /// <param name="priority"></param>
     public void Write(string file, string error, Priority priority)
     {
         var e = new ErrorInfo

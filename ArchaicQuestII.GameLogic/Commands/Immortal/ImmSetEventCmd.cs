@@ -17,7 +17,7 @@ public class ImmSetEventCmd : ICommand
         {
             "Example: /train bob",
         };
-        DeniedStatus = default;
+        DeniedStatus = null;
         UserRole = UserRole.Staff;
         Core = core;
     }

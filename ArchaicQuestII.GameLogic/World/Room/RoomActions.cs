@@ -13,28 +13,51 @@ namespace ArchaicQuestII.GameLogic.World.Room
     public class RoomActions : IRoomActions
     {
         private readonly IWriteToClient _writeToClient;
-        private readonly ITime _time;
         private readonly ICache _cache;
+        private readonly ITime _time;
         private readonly IUpdateClientUI _updateClient;
         private readonly IMobScripts _mobScripts;
         private readonly IDataBase _database;
 
         public RoomActions(
-            IWriteToClient writeToClient, 
-            ITime time, 
+            IWriteToClient writeToClient,
             ICache cache,
+            ITime time,
             IUpdateClientUI updateClient, 
             IMobScripts mobScripts, 
             IDataBase database)
         {
             _writeToClient = writeToClient;
-            _time = time;
             _cache = cache;
+            _time = time;
             _updateClient = updateClient;
             _mobScripts = mobScripts;
             _database = database;
         }
-        
+
+        public bool RoomIsDark(Player player, Room room)
+        {
+            if (room.IsLit)
+                return false;
+            
+            if (player.Affects.DarkVision)
+                return false;
+            
+            if (player.Equipped.Light != null)
+                return false;
+            
+            foreach (var pc in room.Players)
+            {
+                if (pc.Equipped.Light != null)
+                    return false;
+            }
+
+            if (room.Type is Room.RoomType.Underground or Room.RoomType.Inside)
+                return true;
+
+            return _time.IsNightTime();
+        }
+
         /// <summary>
         /// Helper to get area from room
         /// </summary>
@@ -42,37 +65,6 @@ namespace ArchaicQuestII.GameLogic.World.Room
         public Area.Area GetRoomArea(Room room)
         {
             return _database.GetCollection<Area.Area>(DataBase.Collections.Area).FindById(room.AreaId);
-        }
-
-        /// <summary>
-        /// Checks if the room is dark
-        /// </summary>
-        /// <param name="room"></param>
-        /// <param name="player"></param>
-        /// <returns></returns>
-        public bool RoomIsDark(Room room, Player player)
-        {
-            if (player.Equipped.Light != null)
-            {
-                return false;
-            }
-            
-            if (room.RoomLit)
-            {
-                return false;
-            }
-
-            if (room.Type is Room.RoomType.Inside or Room.RoomType.Town or Room.RoomType.Shop or Room.RoomType.Guild)
-            {
-                return false;
-            }
-            
-            if (!_time.IsNightTime())
-            {
-                return false;
-            }
-
-            return true;
         }
 
         /// <summary>

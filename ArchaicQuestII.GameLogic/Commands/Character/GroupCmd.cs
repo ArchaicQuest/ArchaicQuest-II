@@ -46,7 +46,7 @@ public class GroupCmd : ICommand
         
         if ((string.IsNullOrEmpty(target) || target.Equals("group", StringComparison.CurrentCultureIgnoreCase)) && !player.Grouped)
         {
-            Core.Writer.WriteLine($"<p>But you are not the member of a group!</p>", player.ConnectionId);
+            Core.Writer.WriteLine("<p>But you are not the member of a group!</p>", player.ConnectionId);
             return;
         }
 
@@ -58,7 +58,7 @@ public class GroupCmd : ICommand
 
         if (target.Equals("list", StringComparison.CurrentCultureIgnoreCase) && player.Grouped)
         {
-            Core.Writer.WriteLine($"<p>Grouped with:</p>", player.ConnectionId);
+            Core.Writer.WriteLine("<p>Grouped with:</p>", player.ConnectionId);
 
             var sb = new StringBuilder();
             sb.Append("<ul>");

@@ -46,19 +46,8 @@ public class WakeCmd : ICommand
         }
 
         SetCharacterStatus(player, "", CharacterStatus.Status.Standing);
-
-        foreach (var pc in room.Players)
-        {
-
-            if (pc.Id.Equals(player.Id))
-            {
-                Core.Writer.WriteLine("<p>You move quickly to your feet.</p>", player.ConnectionId);
-            }
-            else
-            {
-                Core.Writer.WriteLine($"<p>{player.Name} arises from {(player.Gender == "Male" ? "his" : "her")} slumber.</p>", pc.ConnectionId);
-            }
-        }
+        Core.Writer.WriteLine("<p>You move quickly to your feet.</p>", player.ConnectionId);
+        Core.Writer.WriteToOthersInRoom($"<p>{player.Name} arises from {(player.Gender == "Male" ? "his" : "her")} slumber.</p>", room, player);
     }
 
     private void SetCharacterStatus(Player player, string longName, CharacterStatus.Status status)

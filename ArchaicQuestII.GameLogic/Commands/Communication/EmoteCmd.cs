@@ -40,12 +40,12 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
         {
             if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
             {
-                Core.Writer.WriteLine("Emote what?", player.ConnectionId);
+                Core.Writer.WriteLine("<p>Emote what?</p>", player.ConnectionId);
                 return;
             }
             
             var emoteText = string.Join(" ", input.Skip(1));
-            var emoteMessage = $"{player.Name} {emoteText}";
+            var emoteMessage = $"<p>{player.Name} {emoteText}</p>";
 
             foreach (var players in room.Players)
             {

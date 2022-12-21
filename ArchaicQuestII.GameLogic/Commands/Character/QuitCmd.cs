@@ -34,12 +34,6 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
         public void Execute(Player player, Room room, string[] input)
         {
-            if (player.Status == CharacterStatus.Status.Fighting)
-            {
-                Core.Writer.WriteLine("You can't quit in a fight!", player.ConnectionId);
-                return;
-            }
-
             player.Buffer = new Queue<string>();
             var lastLoginTime = player.LastLoginTime;
             var playTime = DateTime.Now.Subtract(lastLoginTime).TotalMinutes;
@@ -51,20 +45,12 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
             Core.PlayerDataBase.Save(account, PlayerDataBase.Collections.Account);
             Core.PlayerDataBase.Save(player, PlayerDataBase.Collections.Players);
             
-            Core.Writer.WriteLine("Character saved.", player.ConnectionId);
-
-            foreach (var pc in room.Players)
-            {
-                if (pc.Name.Equals(player.Name))
-                {
-                    Core.Writer.WriteLine("You wave goodbye and vanish.", pc.ConnectionId);
-                    continue;
-                }
-                Core.Writer.WriteLine($"{player.Name} waves goodbye and vanishes.", pc.ConnectionId);
-            }
+            Core.Writer.WriteLine("<p>Character saved.</p>", player.ConnectionId);
+            Core.Writer.WriteLine("<p>You wave goodbye and vanish.</p>", player.ConnectionId);
+            Core.Writer.WriteToOthersInRoom($"<p>{player.Name} waves goodbye and vanishes.</p>", room, player);
 
             room.Players.Remove(player);
-            Core.Writer.WriteLine($"We await your return {player.Name}. If you enjoyed your time here, help spread the word by tweeting, writing a blog posts or posting reviews online.", player.ConnectionId);
+            Core.Writer.WriteLine($"<p>We await your return {player.Name}. If you enjoyed your time here, help spread the word by tweeting, writing a blog posts or posting reviews online.</p>", player.ConnectionId);
             Helpers.PostToDiscord($"{player.Name} quit after playing for {Math.Floor(DateTime.Now.Subtract(player.LastLoginTime).TotalMinutes)} minutes.", "event", Core.Cache.GetConfig());
             Core.Cache.RemovePlayer(player.ConnectionId);
         }

@@ -27,6 +27,7 @@ namespace ArchaicQuestII.GameLogic.Core
         public IErrorLog ErrorLog { get; }
         public IPassiveSkills PassiveSkills { get; }
         public IFormulas Formulas { get; }
+        public ITime Time { get; }
         
         /// <summary>
         /// Displays lists of players 

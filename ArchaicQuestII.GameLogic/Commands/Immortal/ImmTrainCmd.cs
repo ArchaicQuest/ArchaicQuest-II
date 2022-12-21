@@ -18,7 +18,7 @@ public class ImmTrainCmd : ICommand
             "Example: /train bob",
             "Example: /train"
         };
-        DeniedStatus = default;
+        DeniedStatus = null;
         UserRole = UserRole.Staff;
         Core = core;
     }
@@ -41,7 +41,7 @@ public class ImmTrainCmd : ICommand
                 skill.Proficiency = 85;
             }
             
-            Core.Writer.WriteLine("You have max stats now.", player.ConnectionId);
+            Core.Writer.WriteLine("<p>You have max stats now.</p>", player.ConnectionId);
             return;
         }
         
@@ -58,7 +58,7 @@ public class ImmTrainCmd : ICommand
 
         if (foundPlayer == null)
         {
-            Core.Writer.WriteLine("They're not here.", player.ConnectionId);
+            Core.Writer.WriteLine("<p>They're not here.</p>", player.ConnectionId);
             return;
         }
         
@@ -67,6 +67,6 @@ public class ImmTrainCmd : ICommand
             skill.Proficiency = 85;
         }
         
-        Core.Writer.WriteLine($"{foundPlayer} has max stats now.", player.ConnectionId);
+        Core.Writer.WriteLine($"<p>{foundPlayer} has max stats now.</p>", player.ConnectionId);
     }
 }

@@ -14,7 +14,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
             Aliases = new[] {"affects", "aff"};
             Description = "Displays the affects upon the player.";
             Usages = new[] {"Type: affects"};
-            DeniedStatus = default;
+            DeniedStatus = null;
             UserRole = UserRole.Player;
             Core = core;
         }

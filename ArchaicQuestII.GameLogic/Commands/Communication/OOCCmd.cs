@@ -15,7 +15,7 @@ public class OOCCmd : ICommand
         Aliases = new[] {"ooc"};
         Description = "Sends a message to out of character channel";
         Usages = new[] {"Type: ooc Did anyone see the game last night?"};
-        DeniedStatus = default;
+        DeniedStatus = null;
         UserRole = UserRole.Player;
         Core = core;
     }
@@ -32,7 +32,7 @@ public class OOCCmd : ICommand
     {
         if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
         {
-            Core.Writer.WriteLine("ooc what?", player.ConnectionId);
+            Core.Writer.WriteLine("<p>ooc what?</p>", player.ConnectionId);
             return;
         }
         
@@ -47,6 +47,6 @@ public class OOCCmd : ICommand
             Core.UpdateClient.UpdateCommunication(pc, $"<p class='ooc'>[<span>OOC</span>] {player.Name}: {text}</p>", "ooc");
         }
 
-        Helpers.PostToDiscord($"[OOC] {player.Name} {text}", "channels", Core.Cache.GetConfig());
+        Helpers.PostToDiscord($"<p>[OOC] {player.Name} {text}</p>", "channels", Core.Cache.GetConfig());
     }
 }

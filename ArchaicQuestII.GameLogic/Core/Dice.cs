@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ArchaicQuestII.GameLogic.Core;
 
-namespace ArchaicQuestII.GameLogic.Item
+namespace ArchaicQuestII.GameLogic.Core
 {
     public class Dice : IDice
     {
-        public static Random Throws = new Random((int)DateTime.Now.Ticks);
+        private static readonly Random Throws = new((int)DateTime.Now.Ticks);
 
         /// <summary>
         /// How many rolls for the Dice
@@ -18,6 +14,7 @@ namespace ArchaicQuestII.GameLogic.Item
         /// max dam would be 24
         /// </summary>
         public int DiceRoll { get; set; }
+        
         /// <summary>
         /// d4, d6, d8, d10, d20
         /// </summary>
@@ -26,7 +23,7 @@ namespace ArchaicQuestII.GameLogic.Item
 
         public int Roll(int roll, int minSize, int maxSize)
         {
-            int total = 0;
+            var total = 0;
 
             for (var i = 0; i < roll; i++)
             {

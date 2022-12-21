@@ -52,19 +52,8 @@ public class SleepCmd : ICommand
         }
 
         SetCharacterStatus(player, "is sleeping nearby", CharacterStatus.Status.Sleeping);
-
-        foreach (var pc in room.Players)
-        {
-
-            if (pc.Id.Equals(player.Id))
-            {
-                Core.Writer.WriteLine("<p>You collapse into a deep sleep.</p>", player.ConnectionId);
-            }
-            else
-            {
-                Core.Writer.WriteLine($"<p>{player.Name} collapses into a deep sleep.</p>", pc.ConnectionId);
-            }
-        }
+        Core.Writer.WriteLine("<p>You collapse into a deep sleep.</p>", player.ConnectionId);
+        Core.Writer.WriteToOthersInRoom($"<p>{player.Name} collapses into a deep sleep.</p>", room, player);
     }
 
     private void SetCharacterStatus(Player player, string longName, CharacterStatus.Status status)

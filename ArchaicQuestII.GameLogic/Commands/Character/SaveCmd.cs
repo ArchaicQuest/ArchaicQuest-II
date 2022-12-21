@@ -1,4 +1,3 @@
-using System.Linq;
 using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
@@ -34,7 +33,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
         public void Execute(Player player, Room room, string[] input)
         {
             Core.PlayerDataBase.Save(player, PlayerDataBase.Collections.Players);
-            Core.Writer.WriteLine("Character saved.", player.ConnectionId);
+            Core.Writer.WriteLine("<p>Character saved.</p>", player.ConnectionId);
         }
     }
 }

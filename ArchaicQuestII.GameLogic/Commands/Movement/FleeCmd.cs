@@ -125,7 +125,7 @@ public class FleeCmd : ICommand
 
         var fleeString = randomFleeMsg[Core.Dice.Roll(1, 0, randomFleeMsg.Count)];
 
-        Core.Writer.WriteLine($"You flee {validExits[getExitIndex].Name}.",  player.ConnectionId);
+        Core.Writer.WriteLine($"<p>You flee {validExits[getExitIndex].Name}.</p>",  player.ConnectionId);
         Core.Writer.WriteToOthersInRoom($"{fleeString}.", room, player);
         Core.Cache.GetCommand(validExits[getExitIndex].Name).Execute(player, room, new[]{validExits[getExitIndex].Name});
     }

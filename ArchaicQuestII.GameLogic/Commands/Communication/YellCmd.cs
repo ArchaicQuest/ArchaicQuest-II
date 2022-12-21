@@ -14,7 +14,15 @@ public class YellCmd : ICommand
         Aliases = new[] {"yell"};
         Description = "Sends a message to everyone in the area";
         Usages = new[] {"Type: yell 'message'"};
-        DeniedStatus = default;
+        DeniedStatus = new[]
+        {
+            CharacterStatus.Status.Busy,
+            CharacterStatus.Status.Dead,
+            CharacterStatus.Status.Fleeing,
+            CharacterStatus.Status.Incapacitated,
+            CharacterStatus.Status.Sleeping,
+            CharacterStatus.Status.Stunned
+        };
         UserRole = UserRole.Player;
         Core = core;
     }
@@ -30,7 +38,7 @@ public class YellCmd : ICommand
     {
         if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
         {
-            Core.Writer.WriteLine("Yell what?", player.ConnectionId);
+            Core.Writer.WriteLine("<p>Yell what?</p>", player.ConnectionId);
             return;
         }
         

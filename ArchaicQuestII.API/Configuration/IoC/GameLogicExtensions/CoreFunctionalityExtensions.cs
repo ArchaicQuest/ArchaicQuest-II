@@ -11,7 +11,7 @@ namespace ArchaicQuestII.API.Configuration.IoC.GameLogicExtensions
         {
             services.AddSingleton<ICache>(new Cache());
             services.AddSingleton<IDamage, Damage>();
-            services.AddSingleton<IDice, GameLogic.Item.Dice>();
+            services.AddSingleton<IDice, Dice>();
             services.AddSingleton<IGameLoop, GameLoop>();
             services.AddSingleton<IUpdateClientUI, UpdateClientUI>();
             services.AddSingleton<IMobScripts, MobScripts>();

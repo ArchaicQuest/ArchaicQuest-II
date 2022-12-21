@@ -18,6 +18,9 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
             {
                 CharacterStatus.Status.Sleeping,
                 CharacterStatus.Status.Dead,
+                CharacterStatus.Status.Busy,
+                CharacterStatus.Status.Incapacitated,
+                CharacterStatus.Status.Stunned
             };
             UserRole = UserRole.Player;
             Core = core;
@@ -34,7 +37,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
         {
             if (string.IsNullOrEmpty(player.Mounted.Name))
             {
-                Core.Writer.WriteLine("You are not using a mount");
+                Core.Writer.WriteLine("<p>You are not using a mount</p>");
                 return;
             }
 
@@ -46,12 +49,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
                 getMount.Mounted.MountedBy = string.Empty;
                 player.Mounted.Name = string.Empty;
 
-                Core.Writer.WriteLine($"You dismount {getMount.Name}.", player.ConnectionId);
-
-                foreach (var pc in room.Players.Where(pc => pc.Id != player.Id))
-                {
-                    Core.Writer.WriteLine($"{player.Name} dismounts {getMount.Name}.", pc.ConnectionId);
-                }
+                Core.Writer.WriteLine($"<p>You dismount {getMount.Name}.</p>", player.ConnectionId);
+                Core.Writer.WriteToOthersInRoom($"<p>{player.Name} dismounts {getMount.Name}.</p>", room, player);
             }
 
         }

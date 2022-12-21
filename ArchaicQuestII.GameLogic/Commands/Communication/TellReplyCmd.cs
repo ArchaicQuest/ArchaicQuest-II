@@ -14,7 +14,7 @@ public class TellReplyCmd : ICommand
         Aliases = new[] {"tellreply", "reply"};
         Description = "Replies to your last incoming tell";
         Usages = new[] {"Type: tellreply 'message'"};
-        DeniedStatus = default;
+        DeniedStatus = null;
         UserRole = UserRole.Player;
         Core = core;
     }

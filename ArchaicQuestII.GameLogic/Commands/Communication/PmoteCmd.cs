@@ -41,7 +41,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
         {
             if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
             {
-                Core.Writer.WriteLine("Pmote what?", player.ConnectionId);
+                Core.Writer.WriteLine("<p>Pmote what?</p>", player.ConnectionId);
                 return;
             }
             
@@ -52,7 +52,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
                 // TODO: switch replace with Regex as the replace is replacing mid word which is wrong.
                 emoteMessage = emoteMessage.Replace(players.Name, "you", StringComparison.CurrentCultureIgnoreCase);
 
-                Core.Writer.WriteLine(player.Name + " " + emoteMessage, players.ConnectionId);
+                Core.Writer.WriteLine("<p>" + player.Name + " " + emoteMessage + "</p>", players.ConnectionId);
             }
         }
     }

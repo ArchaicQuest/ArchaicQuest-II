@@ -14,7 +14,15 @@ public class SayCmd : ICommand
         Aliases = new[] {"say", "'"};
         Description = "Say something to the room.";
         Usages = new[] {"Type: say what ever you want"};
-        DeniedStatus = default;
+        DeniedStatus = new[]
+        {
+            CharacterStatus.Status.Busy,
+            CharacterStatus.Status.Dead,
+            CharacterStatus.Status.Fleeing,
+            CharacterStatus.Status.Incapacitated,
+            CharacterStatus.Status.Sleeping,
+            CharacterStatus.Status.Stunned
+        };
         UserRole = UserRole.Player;
         Core = core;
     }
@@ -30,7 +38,7 @@ public class SayCmd : ICommand
     {
         if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
         {
-            Core.Writer.WriteLine("Say what?", player.ConnectionId);
+            Core.Writer.WriteLine("<p>Say what?</p>", player.ConnectionId);
             return;
         }
         

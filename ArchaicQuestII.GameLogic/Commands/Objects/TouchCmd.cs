@@ -57,7 +57,7 @@ public class TouchCmd : ICommand
             return;
         }
 
-        var isDark = Core.RoomActions.RoomIsDark(room, player);
+        var isDark = Core.RoomActions.RoomIsDark(player, room);
 
         Core.Writer.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{item.Description.Touch}",
             player.ConnectionId);

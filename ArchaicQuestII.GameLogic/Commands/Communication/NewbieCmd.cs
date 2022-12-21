@@ -15,7 +15,7 @@ public class NewbieCmd : ICommand
         Aliases = new[] {"newbie"};
         Description = "Sends a message to newbie channel";
         Usages = new[] {"Type: newbie i need help"};
-        DeniedStatus = default;
+        DeniedStatus = null;
         UserRole = UserRole.Player;
         Core = core;
     }
@@ -31,7 +31,7 @@ public class NewbieCmd : ICommand
     {
         if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
         {
-            Core.Writer.WriteLine("Newbie what?", player.ConnectionId);
+            Core.Writer.WriteLine("<p>Newbie what?</p>", player.ConnectionId);
             return;
         }
         
@@ -46,6 +46,6 @@ public class NewbieCmd : ICommand
             Core.UpdateClient.UpdateCommunication(pc, $"<p class='newbie'>[<span>Newbie</span>] {player.Name}: {text}</p>", "newbie");
         }
 
-        Helpers.PostToDiscord($"[Newbie] {player.Name} {text}", "channels", Core.Cache.GetConfig());
+        Helpers.PostToDiscord($"<p>[Newbie] {player.Name} {text}</p>", "channels", Core.Cache.GetConfig());
     }
 }

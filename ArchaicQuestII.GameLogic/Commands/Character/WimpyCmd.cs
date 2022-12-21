@@ -34,31 +34,31 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
             if (!result)
             {
-                Core.Writer.WriteLine($"Wimpy is set to {player.Config.Wimpy}", player.ConnectionId);
+                Core.Writer.WriteLine($"<p>Wimpy is set to {player.Config.Wimpy}.</p>", player.ConnectionId);
                 return;
             }
 
             if (wimpy == 0)
             {
                 player.Config.Wimpy = 0;
-                Core.Writer.WriteLine("Wimpy has been disabled.", player.ConnectionId);
+                Core.Writer.WriteLine("<p>Wimpy has been disabled.</p>", player.ConnectionId);
                 return;
             }
         
             if (wimpy > player.Stats.HitPoints / 3)
             {
-                Core.Writer.WriteLine("Wimpy cannot be set to more than 1/3 of your max hitpoints.", player.ConnectionId);
+                Core.Writer.WriteLine("<p>Wimpy cannot be set to more than 1/3 of your max hitpoints.</p>", player.ConnectionId);
                 return;
             }
 
             if (wimpy < 0)
             {
-                Core.Writer.WriteLine("Wimpy cannot be set to a negative.", player.ConnectionId);
+                Core.Writer.WriteLine("<p>Wimpy cannot be set to a negative.</p>", player.ConnectionId);
                 return;
             }
         
             player.Config.Wimpy = wimpy;
-            Core.Writer.WriteLine($"Wimpy set to {wimpy}.", player.ConnectionId);
+            Core.Writer.WriteLine($"<p>Wimpy set to {wimpy}.</p>", player.ConnectionId);
         }
     }
 }

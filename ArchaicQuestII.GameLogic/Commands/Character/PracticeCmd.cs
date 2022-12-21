@@ -45,13 +45,13 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
             if (string.IsNullOrEmpty(target))
             {
-                Core.Writer.WriteLine("Practice what?", player.ConnectionId);
+                Core.Writer.WriteLine("<p>Practice what?</p>", player.ConnectionId);
                 return;
             }
 
             if (room.Mobs.Find(x => x.Trainer) == null)
             {
-                Core.Writer.WriteLine("You can't do that here.", player.ConnectionId);
+                Core.Writer.WriteLine("<p>You can't do that here.</p>", player.ConnectionId);
                 return;
             }
 
@@ -61,7 +61,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
             if (string.IsNullOrEmpty(skillName))
             {
-                Core.Writer.WriteLine($"You have {player.Practices} practice{(player.Practices <= 1 ? "" : "s")} left.", player.ConnectionId);
+                Core.Writer.WriteLine($"<p>You have {player.Practices} practice{(player.Practices <= 1 ? "" : "s")} left.</p>", player.ConnectionId);
 
                 var sb = new StringBuilder();
 
@@ -82,7 +82,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
                     if (i == 2)
                     {
-                        sb.Append($"</tr>");
+                        sb.Append("</tr>");
                         i = 0;
                         continue;
                     }
@@ -141,25 +141,25 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
             if (foundSkill == null)
             {
-                Core.Writer.WriteLineMobSay(trainerName, $"You don't have that skill to practice.", player.ConnectionId);
+                Core.Writer.WriteLineMobSay(trainerName, "<p>You don't have that skill to practice.</p>", player.ConnectionId);
                 return;
             }
 
             if (player.Practices == 0)
             {
-                Core.Writer.WriteLineMobSay(trainerName, $"You have no practices left.", player.ConnectionId);
+                Core.Writer.WriteLineMobSay(trainerName, "<p>You have no practices left.</p>", player.ConnectionId);
                 return;
             }
 
             if (foundSkill.Proficiency == 100)
             {
-                Core.Writer.WriteLineMobSay(trainerName, $"You have already mastered {foundSkill.SkillName}.", player.ConnectionId);
+                Core.Writer.WriteLineMobSay(trainerName, $"<p>You have already mastered {foundSkill.SkillName}.</p>", player.ConnectionId);
                 return;
             }
 
             if (foundSkill.Proficiency >= 75)
             {
-                Core.Writer.WriteLineMobSay(trainerName, $"I've taught you everything I can about {foundSkill.SkillName}.", player.ConnectionId);
+                Core.Writer.WriteLineMobSay(trainerName, $"<p>I've taught you everything I can about {foundSkill.SkillName}.</p>", player.ConnectionId);
                 return;
             }
 
@@ -173,12 +173,12 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
             if (foundSkill.Proficiency >= 75)
             {
                 foundSkill.Proficiency = 75;
-                Core.Writer.WriteLine($"You practice for some time. Your proficiency with {foundSkill.SkillName} is now {foundSkill.Proficiency}%", player.ConnectionId);
-                Core.Writer.WriteLineMobSay(trainerName, $"You'll have to practice it on your own now...", player.ConnectionId);
+                Core.Writer.WriteLine($"<p>You practice for some time. Your proficiency with {foundSkill.SkillName} is now {foundSkill.Proficiency}%.</p>", player.ConnectionId);
+                Core.Writer.WriteLineMobSay(trainerName, "<p>You'll have to practice it on your own now...</p>", player.ConnectionId);
                 return;
             }
 
-            Core.Writer.WriteLine($"You practice for some time. Your proficiency with {foundSkill.SkillName} is now {foundSkill.Proficiency}%", player.ConnectionId);
+            Core.Writer.WriteLine($"<p>You practice for some time. Your proficiency with {foundSkill.SkillName} is now {foundSkill.Proficiency}%.</p>", player.ConnectionId);
         }
     }
 }

@@ -37,6 +37,18 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
         public UserRole UserRole { get; }
         public ICore Core { get; }
 
+        private readonly string[] _castBegin =
+        {
+            "You begin to channel your energy to perform recall.",
+            "You focus your mind on returning to somewhere safe."
+        };
+        
+        private readonly string[] _castEnd =
+        {
+            "You feel the air crackle and the ground shift.",
+            "You feel your body begin to tense."
+        };
+
         public void Execute(Player player, Room room, string[] input)
         {
             var recallRoom = Core.Cache.GetRoom(player.RecallId);
@@ -48,11 +60,15 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
         private async void Recall(Player player, Room currentRoom, Room recallRoom)
         {
-            Core.Writer.WriteLine("<p>You begin to channel your energy to perform recall.</p>", player.ConnectionId);
+
+            var cb = Core.Dice.Roll(1, 0, _castBegin.Length - 1);
+            var ce = Core.Dice.Roll(1, 0, _castEnd.Length - 1);
+            
+            Core.Writer.WriteLine($"<p>{_castBegin[cb]}</p>", player.ConnectionId);
 
             await Task.Delay(2000);
             
-            Core.Writer.WriteLine("<p>You feel the air crackle and the ground shift.</p>", player.ConnectionId);
+            Core.Writer.WriteLine($"<p>{_castEnd[ce]}</p>", player.ConnectionId);
             
             await Task.Delay(2000);
             

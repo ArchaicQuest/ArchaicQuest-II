@@ -74,14 +74,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
 
                 Core.Writer.WriteLine("<h3>Socials</h3> <p>Available socials:</p>" + table, player.ConnectionId);
             }
-            
-            
-            if (player.Status == CharacterStatus.Status.Sleeping)
-            {
-                Core.Writer.WriteLine("You can't do this while asleep.", player.ConnectionId);
-                return;
-            }
-            
+
             if (string.IsNullOrEmpty(target))
             {
                 Core.Writer.WriteLine($"<p>{social.CharNoTarget}</p>", player.ConnectionId);
@@ -95,10 +88,12 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
             }
 
             var getTarget = target.Equals("self", StringComparison.CurrentCultureIgnoreCase) ? player : room.Players.FirstOrDefault(x => x.Name.StartsWith(target, StringComparison.CurrentCultureIgnoreCase));
+            
             if (getTarget == null)
             {
                 getTarget = room.Mobs.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
             }
+            
             if (getTarget != null)
             {
                 if (getTarget.Id == player.Id)

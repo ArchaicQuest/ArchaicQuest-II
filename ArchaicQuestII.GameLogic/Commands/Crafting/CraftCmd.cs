@@ -88,7 +88,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
 
                     if (craftItem == null)
                     {
-                        Core.Writer.WriteLine("You appear to be missing required items", player.ConnectionId);
+                        Core.Writer.WriteLine("<p>You appear to be missing required items.</p>", player.ConnectionId);
                         return;
                     }
 
@@ -117,7 +117,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
                 {
                     player.Inventory.Add(recipe.CreatedItem);
                     player.Weight += recipe.CreatedItem.Weight;
-                    Core.Writer.WriteLine($"<p>You slave over the crafting bench working away.</p>",
+                    Core.Writer.WriteLine("<p>You slave over the crafting bench working away.</p>",
                         player.ConnectionId, 2000);
                     Core.Writer.WriteLine($"<p class='improve'>You have crafted successfully {Helpers.AddArticle(recipe.Title).ToLower()}.</p>",
                         player.ConnectionId, 4000);
@@ -153,12 +153,6 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
         
         private void List(Player player, Room room)
         {
-            if (player.Status != CharacterStatus.Status.Standing)
-            {
-                Core.Writer.WriteLine($"<p>You can't do that while {Enum.GetName(typeof(CharacterStatus.Status), player.Status).ToLower()}.</p>", player.ConnectionId);
-                return;
-            }
-
             var materials = player.Inventory.Where(x => x.ItemType == Item.Item.ItemTypes.Material).ToList();
 
             if (materials.Count == 0)
@@ -187,14 +181,10 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
             var sb = new StringBuilder();
             sb.Append("<p>You can craft the following items:</p>");
             sb.Append("<table class='simple'>");
-            sb.Append($"<tr><td>Name</td><td>Materials</td></tr>");
+            sb.Append("<tr><td>Name</td><td>Materials</td></tr>");
             foreach (var craft in craftingList.Distinct())
             {
-                var materialsRequired = "";
-                foreach (var material in craft.CraftingMaterials)
-                {
-                    materialsRequired += $"{material.Material} x{material.Quantity}, ";
-                }
+                var materialsRequired = craft.CraftingMaterials.Aggregate("", (current, material) => current + $"{material.Material} x{material.Quantity}, ");
 
                 sb.Append($"<tr><td>{craft.Title}</td><td>{materialsRequired}</td></tr>");
             }

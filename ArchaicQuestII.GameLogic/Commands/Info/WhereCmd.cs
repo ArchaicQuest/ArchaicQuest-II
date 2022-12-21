@@ -16,7 +16,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
             Aliases = new[] {"where"};
             Description = "Displays characters whereabouts in the area.";
             Usages = new[] {"Type: where"};
-            DeniedStatus = default;
+            DeniedStatus = null;
             UserRole = UserRole.Player;
             Core = core;
         }

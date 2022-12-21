@@ -15,7 +15,7 @@ public class GsayCmd : ICommand
         Aliases = new[] {"gsay", "`", "gs"};
         Description = "Sends a message to your current group";
         Usages = new[] {"Type: gsay hello group"};
-        DeniedStatus = default;
+        DeniedStatus = null;
         UserRole = UserRole.Player;
         Core = core;
     }
@@ -31,13 +31,13 @@ public class GsayCmd : ICommand
     {
         if (!player.Grouped)
         {
-            Core.Writer.WriteLine("You are not in a group.", player.ConnectionId);
+            Core.Writer.WriteLine("<p>You are not in a group.</p>", player.ConnectionId);
             return;
         }
         
         if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
         {
-            Core.Writer.WriteLine("Gsay what?", player.ConnectionId);
+            Core.Writer.WriteLine("<p>Gsay what?</p>", player.ConnectionId);
             return;
         }
             

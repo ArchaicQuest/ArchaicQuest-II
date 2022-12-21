@@ -1,4 +1,3 @@
-using System.Linq;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
@@ -41,7 +40,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
         {
             var poseText = string.Empty;
 
-            poseText = string.IsNullOrEmpty(player.LongName) ? $"{ player.Name}" : $"{ player.Name} {player.LongName}";
+            poseText = string.IsNullOrEmpty(player.LongName) ? $"<p>{ player.Name}" : $"{ player.Name} {player.LongName}";
 
             if (!string.IsNullOrEmpty(player.Mounted.Name))
             {
@@ -54,6 +53,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
             }
 
             poseText += player.Pose;
+
+            poseText += "</p>";
 
             Core.Writer.WriteLine(poseText, player.ConnectionId);
         }

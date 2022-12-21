@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
@@ -45,6 +44,5 @@ public class KillCmd : ICommand
         var isMurder = command == "murder";
         
         Core.Combat.Fight(player, target, room, isMurder);
-        
     }
 }

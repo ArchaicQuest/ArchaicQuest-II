@@ -58,20 +58,9 @@ public class SitCmd : ICommand
         if (string.IsNullOrEmpty(target))
         {
             SetCharacterStatus(player, "is sitting here", CharacterStatus.Status.Sitting);
+            Core.Writer.WriteLine("<p>You sit down.</p>", player.ConnectionId);
+            Core.Writer.WriteToOthersInRoom($"<p>{player.Name} sits down.</p>", room, player);
             
-            foreach (var pc in room.Players)
-            {
-
-                if (pc.Id.Equals(player.Id))
-                {
-                    Core.Writer.WriteLine("<p>You sit down.</p>", player.ConnectionId);
-                }
-                else
-                {
-                    Core.Writer.WriteLine($"<p>{player.Name} sits down.</p>", pc.ConnectionId);
-                }
-            }
-
         }
         else
         {
@@ -85,19 +74,8 @@ public class SitCmd : ICommand
             }
 
             SetCharacterStatus(player, $"is sitting down on {obj.Name.ToLower()}", CharacterStatus.Status.Sitting);
-            foreach (var pc in room.Players)
-            {
-
-                if (pc.Id.Equals(player.Id))
-                {
-                    Core.Writer.WriteLine($"<p>You sit down on {obj.Name.ToLower()}.</p>", player.ConnectionId);
-                }
-                else
-                {
-                    Core.Writer.WriteLine($"<p>{player.Name} sits down on {obj.Name.ToLower()}.</p>",
-                        pc.ConnectionId);
-                }
-            }
+            Core.Writer.WriteLine($"<p>You sit down on {obj.Name.ToLower()}.</p>", player.ConnectionId);
+            Core.Writer.WriteToOthersInRoom($"<p>{player.Name} sits down on {obj.Name.ToLower()}.</p>", room, player);
         }
     }
 

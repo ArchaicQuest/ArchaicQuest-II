@@ -41,7 +41,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
         {
             if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
             {
-                var poseText = string.IsNullOrEmpty(player.LongName) ? $"{ player.Name}" : $"{ player.Name} {player.LongName}";
+                var poseText = string.IsNullOrEmpty(player.LongName) ? $"<p>{ player.Name}" : $"{ player.Name} {player.LongName}";
 
                 if (!string.IsNullOrEmpty(player.Mounted.Name))
                 {
@@ -53,6 +53,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
                 }
 
                 poseText += player.Pose;
+
+                poseText += "</p>";
 
                 Core.Writer.WriteLine(poseText, player.ConnectionId);
                 return;

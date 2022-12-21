@@ -15,7 +15,7 @@ public class TellCmd : ICommand
         Aliases = new[] {"tell"};
         Description = "Sends a message to player, no matter where they are.";
         Usages = new[] {"Type: tell 'player' 'message'"};
-        DeniedStatus = default;
+        DeniedStatus = null;
         UserRole = UserRole.Player;
         Core = core;
     }
@@ -31,13 +31,13 @@ public class TellCmd : ICommand
     {
         if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
         {
-            Core.Writer.WriteLine("Tell who?", player.ConnectionId);
+            Core.Writer.WriteLine("<p>Tell who?</p>", player.ConnectionId);
             return;
         }
         
         if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
         {
-            Core.Writer.WriteLine("Tell them what?", player.ConnectionId);
+            Core.Writer.WriteLine("<p>Tell them what?</p>", player.ConnectionId);
             return;
         }
         

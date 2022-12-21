@@ -49,7 +49,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
             sb.Append("<div class='help-section'><table>");
             sb.Append($"<tr><td>Help Title</td><td>{target}</td></tr>");
                 
-            sb.Append("<tr><td>Aliases: ");
+            sb.Append("<tr><td>Aliases:</td><td>");
                 
             var index = command.Aliases.Length;
                 
@@ -61,14 +61,14 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     sb.Append(", ");
             }
 
-            sb.Append("</td></tr>");
+            sb.Append("</td></tr><tr><td>Usages:</td>");
 
             foreach (var usage in command.Usages)
             {
-                sb.Append($"<tr><td>Last Updated</td><td>{usage}</td></tr>");
+                sb.Append($"<td>{usage}</td>");
             }
 
-            sb.Append("</table>");
+            sb.Append("</tr></table>");
 
             sb.Append($"<pre>{command.Description}</pre>");
 

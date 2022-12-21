@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Item;
 
@@ -8,8 +7,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
 {
     public class Room
     {
-
-
+        
         public enum TerrainType
         {
             Inside, //no weather
@@ -52,24 +50,24 @@ namespace ArchaicQuestII.GameLogic.World.Room
         /// List of available exits
         /// North, East, West, South, Up, and Down
         /// </summary>
-        public ExitDirections Exits { get; set; } = new ExitDirections();
-        public Coordinates Coords { get; set; } = new Coordinates();
-        public List<Player> Players { get; set; } = new List<Player>();
-        public List<Player> Mobs { get; set; } = new List<Player>();
-        public ItemList Items { get; set; } = new ItemList();
+        public ExitDirections Exits { get; set; } = new();
+        public Coordinates Coords { get; set; } = new();
+        public List<Player> Players { get; set; } = new();
+        public List<Player> Mobs { get; set; } = new();
+        public ItemList Items { get; set; } = new();
         public RoomType? Type { get; set; } = RoomType.Standard;
         public TerrainType? Terrain { get; set; } = TerrainType.City;
         /// <summary>
         /// List of emotes that will be randomly played on tick
         /// </summary>
-        public List<string> Emotes { get; set; } = new List<string>();
+        public List<string> Emotes { get; set; } = new();
         /// <summary>
         /// Room descriptions will contain nouns which should be 
         /// extended with a keyword so a player can examine 'noun' or
         /// look 'noun' for more information about an object mentioned
         /// in the room description
         /// </summary>
-        public List<RoomObject> RoomObjects { get; set; } = new List<RoomObject>();
+        public List<RoomObject> RoomObjects { get; set; } = new();
         /// <summary>
         /// Has the room been touched or not
         /// </summary>
@@ -83,13 +81,8 @@ namespace ArchaicQuestII.GameLogic.World.Room
         /// Does this repop every tick
         /// </summary>
         public bool InstantRePop { get; set; }
-        public bool RoomLit { get; set; }
-        public DateTime DateCreated { get; set; } = new DateTime();
+        public bool IsLit { get; set; }
+        public DateTime DateCreated { get; set; }
         public DateTime DateUpdated { get; set; }
-
-
-
     }
-
-
 }

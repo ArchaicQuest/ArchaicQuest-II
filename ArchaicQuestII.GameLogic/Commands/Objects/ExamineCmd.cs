@@ -51,7 +51,7 @@ public class ExamineCmd : ICommand
         
         var nthTarget = Helpers.findNth(target);
         var item = Helpers.findRoomObject(nthTarget, room) ?? Helpers.findObjectInInventory(nthTarget, player);
-        var isDark = Core.RoomActions.RoomIsDark(room, player);
+        var isDark = Core.RoomActions.RoomIsDark(player, room);
             
         if (item == null && room.RoomObjects.Count >= 1 && room.RoomObjects[0].Name != null)
         {

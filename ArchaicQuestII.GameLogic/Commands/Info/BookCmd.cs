@@ -16,7 +16,18 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
             Aliases = new[] {"book"};
             Description = "Write in or Read from a book.";
             Usages = new[] {"Type: book title read"};
-            DeniedStatus = default;
+            DeniedStatus = new[]
+            {
+                CharacterStatus.Status.Busy,
+                CharacterStatus.Status.Dead,
+                CharacterStatus.Status.Fleeing,
+                CharacterStatus.Status.Incapacitated,
+                CharacterStatus.Status.Sleeping,
+                CharacterStatus.Status.Stunned,
+                CharacterStatus.Status.Fighting,
+                CharacterStatus.Status.Ghost,
+                CharacterStatus.Status.Resting
+            };
             UserRole = UserRole.Player;
             Core = core;
         }
@@ -149,33 +160,33 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
         {
             if (pageNum == player.OpenedBook.Book.Pages.Count)
             {
-                Core.Writer.WriteLine($"That exceeds the page count of {player.OpenedBook.Book.Pages.Count}", player.ConnectionId);
+                Core.Writer.WriteLine($"<p>That exceeds the page count of {player.OpenedBook.Book.Pages.Count}.</p>", player.ConnectionId);
                 return;
             }
 
             if (pageNum >= player.OpenedBook.Book.PageCount)
             {
 
-                Core.Writer.WriteLine($"{player.OpenedBook.Name} does not contain that many pages.", player.ConnectionId);
+                Core.Writer.WriteLine($"<p>{player.OpenedBook.Name} does not contain that many pages.</p>", player.ConnectionId);
 
                 return;
             }
 
             if (string.IsNullOrEmpty(player.OpenedBook.Book.Pages[pageNum]))
             {
-                Core.Writer.WriteLine("This page is blank.", player.ConnectionId);
+                Core.Writer.WriteLine("<p>This page is blank.</p>", player.ConnectionId);
                 return;
             }
 
             var result = Markdown.ToHtml(player.OpenedBook.Book.Pages[pageNum]);
-            Core.Writer.WriteLine($"{result}", player.ConnectionId);
+            Core.Writer.WriteLine($"<p>{result}</p>", player.ConnectionId);
         }
 
         private void WriteBook(Player player, int pageNum, string writing)
         {
             if (pageNum == 0)
             {
-                Core.Writer.WriteLine($"{player.OpenedBook.Name} has now been titled {writing}.", player.ConnectionId);
+                Core.Writer.WriteLine($"<p>{player.OpenedBook.Name} has now been titled {writing}.</p>", player.ConnectionId);
                 player.OpenedBook.Name = writing;
                 Core.UpdateClient.UpdateInventory(player);
                 return;
@@ -183,7 +194,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 
             if (pageNum > player.OpenedBook.Book.PageCount)
             {
-                Core.Writer.WriteLine($"{player.OpenedBook.Name} does not contain that many pages.", player.ConnectionId);
+                Core.Writer.WriteLine($"<p>{player.OpenedBook.Name} does not contain that many pages.</p>", player.ConnectionId);
                 return;
             }
 
@@ -206,12 +217,12 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 
             Core.UpdateClient.UpdateContentPopUp(player, bookContent);
 
-            Core.Writer.WriteLine($"You begin writing in {player.OpenedBook.Name}.", player.ConnectionId);
+            Core.Writer.WriteLine($"<p>You begin writing in {player.OpenedBook.Name}.</p>", player.ConnectionId);
         }
 
         private void RenameBook(Player player, string title)
         {
-            Core.Writer.WriteLine($"{player.OpenedBook.Name} has now been titled {title}.", player.ConnectionId);
+            Core.Writer.WriteLine($"<p>{player.OpenedBook.Name} has now been titled {title}.</p>", player.ConnectionId);
             player.OpenedBook.Name = title;
             Core.UpdateClient.UpdateInventory(player);
         }

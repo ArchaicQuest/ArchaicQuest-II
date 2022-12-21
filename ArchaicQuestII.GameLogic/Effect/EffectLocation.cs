@@ -20,7 +20,7 @@ namespace ArchaicQuestII.GameLogic.Effect
         Gender = 1 << 14,
         Age = 1 << 15,
         Weight = 1 << 16,
-        Height = 1 << 16,
-        Level = 1 << 16,
+        Height = 1 << 17,
+        Level = 1 << 18,
     }
 }

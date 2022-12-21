@@ -94,6 +94,7 @@ namespace ArchaicQuestII.GameLogic.Core
         {
             return room.Players.Contains(player);
         }
+        
         public void Say(string n, int delay, Room room, Player player)
         {
             if (!IsInRoom(room, player))
