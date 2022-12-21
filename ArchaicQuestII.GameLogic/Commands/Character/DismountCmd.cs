@@ -14,6 +14,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
             Aliases = new[] {"dismount","dmount"};
             Description = "Get off your mount.";
             Usages = new[] {"Type: dismount"};
+            Title = "";
             DeniedStatus = new []
             {
                 CharacterStatus.Status.Sleeping,
@@ -29,6 +30,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
+        public string Title { get; }
         public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
         public ICore Core { get; }

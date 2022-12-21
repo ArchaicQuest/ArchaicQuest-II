@@ -17,6 +17,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
             Aliases = new[] {"eat"};
             Description = "Consume something.";
             Usages = new[] {"Type: eat apple"};
+            Title = "";
             DeniedStatus = new[]
             {
                 CharacterStatus.Status.Busy,
@@ -35,6 +36,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
+        public string Title { get; }
         public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
         public ICore Core { get; }

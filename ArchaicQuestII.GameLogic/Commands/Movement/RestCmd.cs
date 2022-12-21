@@ -13,6 +13,7 @@ public class RestCmd : ICommand
         Aliases = new[] {"rest"};
         Description = "Your character will rest.";
         Usages = new[] {"Type: rest"};
+        Title = "";
         DeniedStatus = new[]
         {
             CharacterStatus.Status.Busy,
@@ -32,6 +33,7 @@ public class RestCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }

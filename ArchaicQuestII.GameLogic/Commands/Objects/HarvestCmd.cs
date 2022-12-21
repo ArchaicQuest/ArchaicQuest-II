@@ -20,6 +20,7 @@ public class HarvestCmd : ICommand
         Aliases = new[] {"harvest", "forage"};
         Description = "You try to harvest something";
         Usages = new[] {"Type: harvest ore", "Example: forage bushes"};
+        Title = "";
         DeniedStatus = new[]
         {
             CharacterStatus.Status.Busy,
@@ -40,6 +41,7 @@ public class HarvestCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }

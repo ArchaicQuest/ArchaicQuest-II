@@ -18,7 +18,8 @@ public class ImmTrainCmd : ICommand
             "Example: /train bob",
             "Example: /train"
         };
-        DeniedStatus = null;
+            Title = "";
+    DeniedStatus = null;
         UserRole = UserRole.Staff;
         Core = core;
     }
@@ -26,6 +27,7 @@ public class ImmTrainCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }

@@ -18,7 +18,8 @@ public class ListSpellsCmd : ICommand
         Aliases = new[] {"spells"};
         Description = "Shows available spells";
         Usages = new[] {"Type: spells", "spells all"};
-        DeniedStatus = null;
+            Title = "";
+    DeniedStatus = null;
         UserRole = UserRole.Player;
         Core = core;
     }
@@ -26,6 +27,7 @@ public class ListSpellsCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }

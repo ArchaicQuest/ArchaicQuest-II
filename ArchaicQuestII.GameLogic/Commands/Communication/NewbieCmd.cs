@@ -15,14 +15,15 @@ public class NewbieCmd : ICommand
         Aliases = new[] {"newbie"};
         Description = "Sends a message to newbie channel";
         Usages = new[] {"Type: newbie i need help"};
-        DeniedStatus = null;
+      Title = "";
+    DeniedStatus = null;
         UserRole = UserRole.Player;
         Core = core;
     }
-    
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }

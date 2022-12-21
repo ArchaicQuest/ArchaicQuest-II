@@ -15,6 +15,7 @@ public class FleeCmd : ICommand
         Aliases = new[] {"flee"};
         Description = "Randomly moves your character out of the room during combat.";
         Usages = new[] {"Type: north"};
+        Title = "";
         DeniedStatus = new[]
         {
             CharacterStatus.Status.Busy,
@@ -33,6 +34,7 @@ public class FleeCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }

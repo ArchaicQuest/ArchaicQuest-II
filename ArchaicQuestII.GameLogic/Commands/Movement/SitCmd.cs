@@ -15,6 +15,7 @@ public class SitCmd : ICommand
         Aliases = new[] {"sit"};
         Description = "Sits on something.";
         Usages = new[] {"Type: sit stool"};
+        Title = "";
         DeniedStatus = new[]
         {
             CharacterStatus.Status.Busy,
@@ -36,6 +37,7 @@ public class SitCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }

@@ -18,6 +18,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
             Aliases = new[] {"wear", "remove", "wield", "eq", "equipment"};
             Description = "Wear, remove a piece of armour";
             Usages = new[] {"Type: wear vest, remove vest"};
+            Title = "";
             DeniedStatus = new[]
             {
                 CharacterStatus.Status.Busy,
@@ -35,6 +36,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
+        public string Title { get; }
         public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
         public ICore Core { get; }

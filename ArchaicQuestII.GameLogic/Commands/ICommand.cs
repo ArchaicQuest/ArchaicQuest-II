@@ -1,3 +1,4 @@
+using System;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
@@ -23,6 +24,12 @@ namespace ArchaicQuestII.GameLogic.Commands
         /// How to use command
         /// </summary>
         string[] Usages { get; }
+        
+        /// <summary>
+        /// Optional, set title for help file,
+        /// if not set, uses target as default help title
+        /// </summary>
+        string Title { get;  }
         
         CharacterStatus.Status[] DeniedStatus { get; }
 

@@ -16,7 +16,8 @@ public class ListInventoryCmd : ICommand
         Aliases = new[] {"inventory", "inv", "i"};
         Description = "Lists players inventory";
         Usages = new[] {"Type: inv"};
-        DeniedStatus = null;
+            Title = "";
+    DeniedStatus = null;
         UserRole = UserRole.Player;
         Core = core;
     }
@@ -24,6 +25,7 @@ public class ListInventoryCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }

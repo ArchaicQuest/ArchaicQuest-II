@@ -10,11 +10,14 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects;
 
 public class LockCmd : ICommand
 {
+    private ICommand _commandImplementation;
+
     public LockCmd(ICore core)
     {
         Aliases = new[] {"lock"};
         Description = "Your character locks something.";
         Usages = new[] {"Example: lock chest"};
+        Title = "";
         DeniedStatus = new[]
         {
             CharacterStatus.Status.Busy,
@@ -35,6 +38,7 @@ public class LockCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }

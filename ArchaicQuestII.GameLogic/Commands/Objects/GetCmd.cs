@@ -16,6 +16,7 @@ public class GetCmd : ICommand
         Aliases = new[] {"get", "take", "loot"};
         Description = "Your character will get something.";
         Usages = new[] {"Type: get apple"};
+        Title = "";
         DeniedStatus = new[]
         {
             CharacterStatus.Status.Busy,
@@ -36,6 +37,7 @@ public class GetCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }

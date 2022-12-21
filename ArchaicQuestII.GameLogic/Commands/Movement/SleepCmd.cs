@@ -13,6 +13,7 @@ public class SleepCmd : ICommand
         Aliases = new[] {"sleep"};
         Description = "Your character will go to sleep.";
         Usages = new[] {"Type: sleep"};
+        Title = "";
         DeniedStatus = new[]
         {
             CharacterStatus.Status.Busy,
@@ -34,6 +35,7 @@ public class SleepCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }

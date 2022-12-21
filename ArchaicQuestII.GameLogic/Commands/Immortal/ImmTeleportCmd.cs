@@ -15,7 +15,8 @@ public class ImmTeleportCmd : ICommand
         Aliases = new[] {"immteleport"};
         Description = "Immortal teleport";
         Usages = new[] {"Type: immteleport 1010"};
-        DeniedStatus = null;
+            Title = "";
+    DeniedStatus = null;
         UserRole = UserRole.Player;
         Core = core;
     }
@@ -23,6 +24,7 @@ public class ImmTeleportCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }

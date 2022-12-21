@@ -15,6 +15,7 @@ public class GiveCmd : ICommand
         Aliases = new[] {"give"};
         Description = "You can give items and gold to players or mobs.";
         Usages = new[] {"Type: give 'target' 'object'", "Example: give timmy apple", "Example: give timmy 10 gold"};
+        Title = "";
         DeniedStatus = new[]
         {
             CharacterStatus.Status.Busy,
@@ -35,6 +36,7 @@ public class GiveCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }

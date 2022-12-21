@@ -15,6 +15,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
             Description = "Save your character manually";
             Usages = new[] {"Type: save"};
             UserRole = UserRole.Player;
+            Title = "";
             DeniedStatus = new []
             {
                 CharacterStatus.Status.Sleeping,
@@ -26,6 +27,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
+        public string Title { get; }
         public UserRole UserRole { get; }
         public CharacterStatus.Status[] DeniedStatus { get; }
         public ICore Core { get; }

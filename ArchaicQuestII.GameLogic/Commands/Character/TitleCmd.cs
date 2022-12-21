@@ -16,12 +16,14 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
             Usages = new[] {"Type: title The Cleaver"};
             DeniedStatus = default;
             UserRole = UserRole.Player;
+            Title = "";
             Core = core;
         }
         
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
+        public string Title { get; }
         public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
         public ICore Core { get; }

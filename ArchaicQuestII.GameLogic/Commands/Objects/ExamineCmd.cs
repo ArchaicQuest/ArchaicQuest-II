@@ -15,6 +15,7 @@ public class ExamineCmd : ICommand
         Aliases = new[] {"examine"};
         Description = "You examine an object.";
         Usages = new[] {"Type: examine flag"};
+        Title = "";
         DeniedStatus = new[]
         {
             CharacterStatus.Status.Busy,
@@ -35,6 +36,7 @@ public class ExamineCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }

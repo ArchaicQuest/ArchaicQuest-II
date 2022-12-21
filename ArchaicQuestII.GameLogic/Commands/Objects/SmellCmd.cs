@@ -14,6 +14,7 @@ public class SmellCmd : ICommand
         Aliases = new[] {"smell"};
         Description = "You smell an object.";
         Usages = new[] {"Type: smell flag"};
+        Title = "";
         DeniedStatus = new[]
         {
             CharacterStatus.Status.Busy,
@@ -34,6 +35,7 @@ public class SmellCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }

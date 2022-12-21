@@ -13,6 +13,7 @@ public class CastCmd : ICommand
         Aliases = new[] {"cast", "c"};
         Description = "Cast one of your spells";
         Usages = new[] {"Type: cast fireball"};
+        Title = "";
         DeniedStatus = new[]
         {
             CharacterStatus.Status.Busy,
@@ -34,6 +35,7 @@ public class CastCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }

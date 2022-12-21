@@ -14,6 +14,7 @@ public class EnterCmd : ICommand
         Aliases = new[] {"enter"};
         Description = "Tries to enter portal.";
         Usages = new[] {"Type: enter portal"};
+        Title = "";
         DeniedStatus = new[]
         {
             CharacterStatus.Status.Busy,
@@ -33,6 +34,7 @@ public class EnterCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }

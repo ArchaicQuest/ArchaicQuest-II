@@ -14,6 +14,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
             Aliases = new[] {"emote"};
             Description = "Sends a message about what your actions are";
             Usages = new[] {"Type: emote waves at wall"};
+            Title = "";
             DeniedStatus = new[]
             {
                 CharacterStatus.Status.Busy,
@@ -32,6 +33,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
+        public string Title { get; }
         public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
         public ICore Core { get; }

@@ -14,6 +14,7 @@ public class SayCmd : ICommand
         Aliases = new[] {"say", "'"};
         Description = "Say something to the room.";
         Usages = new[] {"Type: say what ever you want"};
+        Title = "";
         DeniedStatus = new[]
         {
             CharacterStatus.Status.Busy,
@@ -30,6 +31,7 @@ public class SayCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }

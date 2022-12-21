@@ -14,6 +14,7 @@ public class KillCmd : ICommand
         Aliases = new[] {"k", "kill", "murder"};
         Description = "Start combat with a mob or murder a player";
         Usages = new[] {"Type: kill rat, murder Arthur"};
+        Title = "";
         DeniedStatus = new[]
         {
             CharacterStatus.Status.Busy,
@@ -33,6 +34,7 @@ public class KillCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }

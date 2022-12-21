@@ -15,7 +15,8 @@ public class TellCmd : ICommand
         Aliases = new[] {"tell"};
         Description = "Sends a message to player, no matter where they are.";
         Usages = new[] {"Type: tell 'player' 'message'"};
-        DeniedStatus = null;
+            Title = "";
+    DeniedStatus = null;
         UserRole = UserRole.Player;
         Core = core;
     }
@@ -23,6 +24,7 @@ public class TellCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }

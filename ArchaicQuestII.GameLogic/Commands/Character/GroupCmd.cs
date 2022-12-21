@@ -17,6 +17,7 @@ public class GroupCmd : ICommand
         Aliases = new[] {"group"};
         Description = "Forms a group.";
         Usages = new[] {"Type: group bob"};
+        Title = "";
         DeniedStatus = new[]
         {
             CharacterStatus.Status.Busy,
@@ -35,6 +36,7 @@ public class GroupCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }

@@ -15,6 +15,7 @@ public class UnlockCmd : ICommand
         Aliases = new[] {"unlock"};
         Description = "You try to unlock something.";
         Usages = new[] {"Type: unlock north"};
+        Title = "";
         DeniedStatus = new[]
         {
             CharacterStatus.Status.Busy,
@@ -35,6 +36,7 @@ public class UnlockCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }

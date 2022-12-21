@@ -15,6 +15,7 @@ public class FollowCmd : ICommand
         Aliases = new[] {"follow", "fol"};
         Description = "Follows another character.";
         Usages = new[] {"Type: follow liam"};
+        Title = "";
         DeniedStatus = new[]
         {
             CharacterStatus.Status.Busy,
@@ -34,6 +35,7 @@ public class FollowCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }

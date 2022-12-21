@@ -14,7 +14,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
             Aliases = new[] {"config"};
             Description = "Displays current config settings.";
             Usages = new[] {"Type: config"};
-            DeniedStatus = null;
+                Title = "";
+    DeniedStatus = null;
             UserRole = UserRole.Player;
             Core = core;
         }
@@ -22,6 +23,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
+        public string Title { get; }
         public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
         public ICore Core { get; }

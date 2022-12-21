@@ -15,6 +15,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
             Aliases = new[] {"pmote"};
             Description = "Replaces mentioned player name in emote to you.";
             Usages = new[] {"Type: pmote punches steve. \n Steve will see: Bob punches You. \n Everyone else will see: Bob punches Steve."};
+            Title = "";
             DeniedStatus = new[]
             {
                 CharacterStatus.Status.Busy,
@@ -33,6 +34,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
+        public string Title { get; }
         public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
         public ICore Core { get; }

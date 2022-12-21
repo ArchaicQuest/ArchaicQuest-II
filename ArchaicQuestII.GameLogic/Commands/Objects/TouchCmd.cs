@@ -14,6 +14,7 @@ public class TouchCmd : ICommand
         Aliases = new[] {"touch"};
         Description = "You touch an object.";
         Usages = new[] {"Type: touch flag"};
+        Title = "";
         DeniedStatus = new[]
         {
             CharacterStatus.Status.Busy,
@@ -34,6 +35,7 @@ public class TouchCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }
