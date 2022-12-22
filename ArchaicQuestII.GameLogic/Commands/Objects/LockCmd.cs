@@ -15,8 +15,8 @@ public class LockCmd : ICommand
     public LockCmd(ICore core)
     {
         Aliases = new[] {"lock"};
-        Description = "Your character locks something.";
-        Usages = new[] {"Example: lock chest"};
+        Description = "Lock a container or door, You must have the required key to do so.";
+        Usages = new[] {"Example: lock chest, lock north"};
         Title = "";
         DeniedStatus = new[]
         {

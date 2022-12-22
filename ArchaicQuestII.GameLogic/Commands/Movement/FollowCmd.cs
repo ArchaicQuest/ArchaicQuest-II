@@ -13,8 +13,9 @@ public class FollowCmd : ICommand
     public FollowCmd(ICore core)
     {
         Aliases = new[] {"follow", "fol"};
-        Description = "Follows another character.";
-        Usages = new[] {"Type: follow liam"};
+        Description = "'{yellow}follow{/}' starts you following another character. To stop following anyone else, just follow yourself. " +
+                      "If you don't want to be followed you can turn off 'can follow' from the settings modal.";
+        Usages = new[] {"Type: follow liam, follow self"};
         Title = "";
         DeniedStatus = new[]
         {

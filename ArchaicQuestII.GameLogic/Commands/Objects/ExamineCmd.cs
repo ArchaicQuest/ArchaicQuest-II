@@ -13,7 +13,9 @@ public class ExamineCmd : ICommand
     public ExamineCmd(ICore core)
     {
         Aliases = new[] {"examine"};
-        Description = "You examine an object.";
+        Description = "You examine an object, showing you a more detailed description if you want it. " +
+                      "This may provide more information or clues about your surroundings, there are plenty of hidden and secret places" +
+                      "in ArchaicQuest.";
         Usages = new[] {"Type: examine flag"};
         Title = "";
         DeniedStatus = new[]

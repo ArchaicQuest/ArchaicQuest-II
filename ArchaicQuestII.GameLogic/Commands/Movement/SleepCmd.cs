@@ -11,7 +11,8 @@ public class SleepCmd : ICommand
     public SleepCmd(ICore core)
     {
         Aliases = new[] {"sleep"};
-        Description = "Your character will go to sleep.";
+        Description = "Your character will go to sleep and will not see anything that happens the room. Sleeping will increase the speed of health, mana, and moves regeneration." +
+                      " Make sure you are somewhere safe because if attacked it will be a guaranteed critical hit.<br /><br />To wake up enter stand or wake.";
         Usages = new[] {"Type: sleep"};
         Title = "";
         DeniedStatus = new[]

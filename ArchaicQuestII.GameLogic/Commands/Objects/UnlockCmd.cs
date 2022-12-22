@@ -13,7 +13,7 @@ public class UnlockCmd : ICommand
     public UnlockCmd(ICore core)
     {
         Aliases = new[] {"unlock"};
-        Description = "You try to unlock something.";
+        Description = "Unlock a container or door, You must have the required key to do so.";
         Usages = new[] {"Type: unlock north"};
         Title = "";
         DeniedStatus = new[]

@@ -12,7 +12,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
         public RecallCmd(ICore core)
         {
             Aliases = new[] {"recall"};
-            Description = "Transports your character to recall room.";
+            Description = "Transports your character to their recall room.";
             Usages = new[] {"Type: recall"};
             Title = "";
             DeniedStatus = new[]

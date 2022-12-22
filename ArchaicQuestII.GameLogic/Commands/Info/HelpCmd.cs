@@ -23,8 +23,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 <td>Objects</td>
 </tr><tr><td>north south east west up down
 northeast northwest southeast
-southwest exits recall
-sleep wake rest stand</td>
+southwest recall
+sleep wake rest stand enter</td>
 <td>get put drop give sacrifice          
 wear wield hold                     
 recite quaff zap brandish            

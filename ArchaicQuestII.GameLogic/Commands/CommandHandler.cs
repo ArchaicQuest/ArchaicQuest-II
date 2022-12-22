@@ -96,7 +96,7 @@ namespace ArchaicQuestII.GameLogic.Commands
                     Core.Writer.WriteLine("<p>{yellow}You can't do that while fighting.{/}</p>", player.ConnectionId);
                     break;
                 case CharacterStatus.Status.Resting:
-                    Core.Writer.WriteLine("<p>{yellow}You can't do that while while.{/}</p>", player.ConnectionId);
+                    Core.Writer.WriteLine("<p>{yellow}You can't do that while resting.{/}</p>", player.ConnectionId);
                     break;
                 case CharacterStatus.Status.Incapacitated:
                     Core.Writer.WriteLine("<p>{yellow}You can't do that while incapacitated.{/}</p>", player.ConnectionId);

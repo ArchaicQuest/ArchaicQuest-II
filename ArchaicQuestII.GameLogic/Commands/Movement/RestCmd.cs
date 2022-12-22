@@ -11,7 +11,8 @@ public class RestCmd : ICommand
     public RestCmd(ICore core)
     {
         Aliases = new[] {"rest"};
-        Description = "Your character will rest.";
+        Description = "Your character will rest. Resting will increase the speed of health, mana, and moves regeneration." +
+                      " Make sure you are somewhere safe because if attacked it will be a guaranteed critical hit.<br /><br />To stop resting enter stand.";
         Usages = new[] {"Type: rest"};
         Title = "";
         DeniedStatus = new[]

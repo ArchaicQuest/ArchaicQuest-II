@@ -12,8 +12,9 @@ public class CloseCmd : ICommand
     public CloseCmd(ICore core)
     {
         Aliases = new[] {"close"};
-        Description = "You close a door or chest.";
-        Usages = new[] {"Type: close north"};
+        Description = "Close is used to close an object or door. For doors type the full name. " +
+                      "<br /><br />Example:<br />close chest<br />close north";
+        Usages = new[] {"Type: close chest, close south"};
         Title = "";
         DeniedStatus = new[]
         {

@@ -13,7 +13,9 @@ public class SitCmd : ICommand
     public SitCmd(ICore core)
     {
         Aliases = new[] {"sit"};
-        Description = "Sits on something.";
+        Description =  "Your character will sit down or sit upon something. Sitting does not increase the speed of health, mana, or moves regeneration." +
+                       " Only resting or sleeping will do that, if attacked while sitting it will be a critical hit." +
+                       "<br /><br />Examples<br />sit<br />sit stool";
         Usages = new[] {"Type: sit stool"};
         Title = "";
         DeniedStatus = new[]

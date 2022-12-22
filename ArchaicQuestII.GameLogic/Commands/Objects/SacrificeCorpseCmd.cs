@@ -12,7 +12,13 @@ public class SacrificeCorpseCmd : ICommand
     public SacrificeCorpseCmd(ICore core)
     {
         Aliases = new[] {"sacrifice", "sac"};
-        Description = "You sacrifice a corpse.";
+        Description = @"'{yellow}sacrifice{/}' is used to sacrifice a corpse of a dead mob to the gods who will reward the player with gold. 
+
+Examples:
+sacrifice corpse
+sac rat
+
+";
         Usages = new[] {"Type: sacrifice rat"};
         Title = "";
         DeniedStatus = new[]

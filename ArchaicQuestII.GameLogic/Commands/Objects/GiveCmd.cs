@@ -13,8 +13,15 @@ public class GiveCmd : ICommand
     public GiveCmd(ICore core)
     {
         Aliases = new[] {"give"};
-        Description = "You can give items and gold to players or mobs.";
-        Usages = new[] {"Type: give 'target' 'object'", "Example: give timmy apple", "Example: give timmy 10 gold"};
+        Description = @"'{yellow}give{/}' is used to give the specified item or gold to a player or mob.  
+
+Examples:
+give sword charlotte
+give 10 gold larissa
+
+Related help files: get, put, give, drop
+";
+        Usages = new[] {"Type: give 'target' 'object', Example: give apple timmy, Example: give 10 gold timmy"};
         Title = "";
         DeniedStatus = new[]
         {

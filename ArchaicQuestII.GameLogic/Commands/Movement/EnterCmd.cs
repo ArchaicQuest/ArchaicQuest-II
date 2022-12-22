@@ -12,7 +12,8 @@ public class EnterCmd : ICommand
     public EnterCmd(ICore core)
     {
         Aliases = new[] {"enter"};
-        Description = "Tries to enter portal.";
+        Description = "If you happen to find a portal or hole in the wall or some other clear exit that is not of " +
+                      "the usual cardinal directions the command to use to take the exit is enter. <br /><br />Example:<br />enter portal<br />enter hole";
         Usages = new[] {"Type: enter portal"};
         Title = "";
         DeniedStatus = new[]
