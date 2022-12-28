@@ -12,7 +12,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
         public SaveCmd(ICore core)
         {
             Aliases = new[] {"save"};
-            Description = "Save your character manually";
+            Description = "Save your character manually, character is saved when you quit and automatically every 15 minutes.";
             Usages = new[] {"Type: save"};
             UserRole = UserRole.Player;
             Title = "";

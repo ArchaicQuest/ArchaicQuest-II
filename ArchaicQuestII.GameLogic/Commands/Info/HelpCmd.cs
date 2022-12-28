@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -10,6 +11,27 @@ using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Commands.Info
 {
+    public class HelpFileContent
+    {
+        /// <summary>
+        /// Help Title
+        /// </summary>
+        public string Title { get; set; }
+        /// <summary>
+        /// Command Aliases
+        /// </summary>
+        public string[] Aliases { get; set; }
+        /// <summary>
+        /// Help Description
+        /// </summary>
+        public string Description { get; set; }
+        /// <summary>
+        /// How to use command
+        /// </summary>
+        public string[] Usages { get; set; }
+
+    }
+    
     public class HelpCmd : ICommand
     {
         public HelpCmd(ICore core)
@@ -82,16 +104,53 @@ say tell reply who
             {
                 target = "help";
             }
+            
+            // TODO: move to startup to build and cache 
+            // Proof of concept, have help file for anything that's not a command
+            // example help newbie could explain about the game
+            var nonCommandHelpFiles = new Dictionary<string,HelpFileContent>()
+            {
+                {
+                    "test", new HelpFileContent()
+                    {
+                        Title = "test",
+                        Description = "it works",
+                        Aliases = new[] { "" },
+                        Usages = new[] { "" }
+                    }
+                }
+            };
 
             var command = Core.Cache.GetCommand(target) ?? Core.Cache.GetCommands().Values
                 .FirstOrDefault(x => x.Title.StartsWith(target, StringComparison.CurrentCultureIgnoreCase));
 
-            if (command == null)
+            HelpFileContent help = null;
+            if (string.IsNullOrEmpty(command?.Title))
+            {
+                nonCommandHelpFiles.TryGetValue(target, out help);
+            }
+
+            if (command == null && help == null)
             {
                 Core.Writer.WriteLine($"<p>No help found for {target}.", player.ConnectionId);
                 return;
             }
 
+            var helpText = new HelpFileContent()
+            {
+                Aliases = command?.Aliases ?? help?.Aliases,
+                Description = command?.Description ?? help?.Description,
+                Title = command?.Title ?? help?.Title,
+                Usages = command?.Usages ?? help?.Usages
+            };
+
+            var helpString = HelpHtml(helpText, target);
+            Core.Writer.WriteLine(helpString, player.ConnectionId);
+        }
+
+    
+        private static string HelpHtml(HelpFileContent command, string target)
+        {
             var sb = new StringBuilder();
 
             sb.Append("<div class='help-section'><table>");
@@ -113,14 +172,14 @@ say tell reply who
 
             foreach (var usage in command.Usages)
             {
-                sb.Append($"<td>{usage}</td>");
+                sb.Append($"<td>{WebUtility.HtmlEncode(usage)}</td>");
             }
 
             sb.Append("</tr></table>");
 
             sb.Append($"<pre>{command.Description}</pre>");
 
-            Core.Writer.WriteLine(sb.ToString(), player.ConnectionId);
+            return sb.ToString();
         }
     }
 }

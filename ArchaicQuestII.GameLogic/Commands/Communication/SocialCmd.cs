@@ -16,8 +16,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
         public SocialCmd(ICore core)
         {
             Aliases = new[] {"social"};
-            Description = "Sends a message about what your actions are";
-            Usages = new[] {"Type: social wink bob"};
+            Description = "List prebuilt social emotes that you can use";
+            Usages = new[] {"Type: social"};
             Title = "";
             DeniedStatus = new[]
             {

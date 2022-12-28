@@ -12,8 +12,9 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
         public WimpyCmd(ICore core)
         {
             Aliases = new[] {"wimpy"};
-            Description = "Changes your characters auto low health flee.";
-            Usages = new[] {"Type: flee 50"};
+            Description = "Wimpy sets your wimpy value.  When your character takes damage that reduces " +
+                          "your hit points below your wimpy value, you will automatically attempt to flee.";
+            Usages = new[] {"Type: wimpy 50"};
             Title = "";
             DeniedStatus = default;
             UserRole = UserRole.Player;

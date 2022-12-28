@@ -13,7 +13,7 @@ public class SayToCmd : ICommand
     public SayToCmd(ICore core)
     {
         Aliases = new[] {"sayto", ">"};
-        Description = "Says something to a player.";
+        Description = "Says something directed to a player. This is useful in a room full of people.";
         Usages = new[] {"Type: sayto john what ever you want"};
         Title = "";
         DeniedStatus = new[]

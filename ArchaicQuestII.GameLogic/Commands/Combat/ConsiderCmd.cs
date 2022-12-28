@@ -13,7 +13,7 @@ public class ConsiderCmd : ICommand
     public ConsiderCmd(ICore core)
     {
         Aliases = new[] {"con", "consider"};
-        Description = "See your chances of defeating an enemy.";
+        Description = "Consider tells you what your chances are of killing a character. Of course, it's only a rough estimate.";
         Usages = new[] {"Type: consider rat"};
         Title = "";
         DeniedStatus = new[]

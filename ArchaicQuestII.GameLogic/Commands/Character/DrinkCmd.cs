@@ -12,7 +12,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
         public DrinkCmd(ICore core)
         {
             Aliases = new[] {"drink"};
-            Description = "Drink something.";
+            Description = "Drink a liquid from a container. Drinking is for RP purposes, your character does not get hungry or thirsty.";
             Usages = new[] {"Type: drink ale"};
             Title = "";
             DeniedStatus = new[]

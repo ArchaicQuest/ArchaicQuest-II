@@ -12,8 +12,8 @@ public class SmellCmd : ICommand
     public SmellCmd(ICore core)
     {
         Aliases = new[] {"smell"};
-        Description = "You smell an object.";
-        Usages = new[] {"Type: smell flag"};
+        Description = "You can smell an object to find out about it's smell";
+        Usages = new[] {"Type: smell flower"};
         Title = "";
         DeniedStatus = new[]
         {

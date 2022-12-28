@@ -12,7 +12,7 @@ public class TouchCmd : ICommand
     public TouchCmd(ICore core)
     {
         Aliases = new[] {"touch"};
-        Description = "You touch an object.";
+        Description = "You can touch an object to find out how it feels.";
         Usages = new[] {"Type: touch flag"};
         Title = "";
         DeniedStatus = new[]

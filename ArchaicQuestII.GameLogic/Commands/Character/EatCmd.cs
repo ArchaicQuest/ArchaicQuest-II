@@ -15,7 +15,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
         public EatCmd(ICore core)
         {
             Aliases = new[] {"eat"};
-            Description = "Consume something.";
+            Description = "Eat some food, eating is for RP purposes only. Your character does not get hungry or thirsty.";
             Usages = new[] {"Type: eat apple"};
             Title = "";
             DeniedStatus = new[]

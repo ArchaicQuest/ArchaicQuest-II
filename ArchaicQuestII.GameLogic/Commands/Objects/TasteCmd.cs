@@ -12,8 +12,8 @@ public class TasteCmd : ICommand
     public TasteCmd(ICore core)
     {
         Aliases = new[] {"taste"};
-        Description = "You taste an object.";
-        Usages = new[] {"Type: taste flag"};
+        Description = "You can taste an object, and find out how it tastes.";
+        Usages = new[] {"Type: taste cake"};
         Title = "";
         DeniedStatus = new[]
         {

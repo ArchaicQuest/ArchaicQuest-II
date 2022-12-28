@@ -12,7 +12,7 @@ public class QuaffCmd : ICommand
     public QuaffCmd(ICore core)
     {
         Aliases = new[] {"quaff"};
-        Description = "Tries inhale an elixir.";
+        Description = "To drink potions you need to quaff them, 'quaff healing' will quaff a potion of healing. Drink is used for drinking water, beer or other liquids.";
         Usages = new[] {"Type: quaff potion"};
         Title = "";
         DeniedStatus = new[]

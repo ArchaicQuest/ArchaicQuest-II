@@ -12,8 +12,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
         public EmoteCmd(ICore core)
         {
             Aliases = new[] {"emote"};
-            Description = "Sends a message about what your actions are";
-            Usages = new[] {"Type: emote waves at wall"};
+            Description = "Sends a message about what your actions are, using a prebuilt social or a custom emote.";
+            Usages = new[] {"Type: emote waves frantically and happily"};
             Title = "";
             DeniedStatus = new[]
             {

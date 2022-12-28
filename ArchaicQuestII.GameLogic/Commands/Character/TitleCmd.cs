@@ -12,7 +12,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
         public TitleCmd(ICore core)
         {
             Aliases = new[] {"title"};
-            Description = "Changes your characters title.";
+            Description = "Changes your characters title, this is what people see by your name when they enter who.";
             Usages = new[] {"Type: title The Cleaver"};
             DeniedStatus = default;
             UserRole = UserRole.Player;

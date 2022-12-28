@@ -17,7 +17,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
         public CookCmd(ICore core)
         {
             Aliases = new[] {"Cook"};
-            Description = "Cook food at a fire.";
+            Description = "Cook food at a fire. A fire and a cook pot is needed.";
             Usages = new[] {"Type: cook"};
             Title = "";
             DeniedStatus = new[]

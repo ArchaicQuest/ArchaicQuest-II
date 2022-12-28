@@ -15,8 +15,11 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
         public PracticeCmd(ICore core)
         {
             Aliases = new[] {"practice", "prac"};
-            Description = "Practice skills at a trainer.";
-            Usages = new[] {"Type: "};
+            Description = "Practice only works at a guild trainer to practice your skills or spells. Your learning " +
+            "percentage varies from 1% to a maximum of 75%. <br />The higher your intelligence, the more you will learn at each practice " +
+            "session.  <br />The higher your wisdom, the more practice sessions you will " +
+            "have each time you gain a level. <br />To view your skills just enter skills";
+            Usages = new[] {"Type: practice, practice <skill>"};
             Title = "";
             DeniedStatus = new[]
             {
