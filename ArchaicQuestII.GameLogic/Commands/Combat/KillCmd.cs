@@ -12,8 +12,13 @@ public class KillCmd : ICommand
     public KillCmd(ICore core)
     {
         Aliases = new[] {"k", "kill", "murder"};
-        Description = "Start combat with a mob or murder a player";
+        Description = "The kill command is used to begin combat against mobiles.  Once combat has been " +
+                      "initiated, your character will automatically continue to fight using automatic " +
+                      "kills which include offensive use of weapons and defenses such as parry, " +
+                      "shield block and dodge.  Other means of attack may also be used, but will not " +
+                      " happen automatically. <br /><br /> To kill players you must MURDER them";
         Usages = new[] {"Type: kill rat, murder Arthur"};
+        Title = "";
         DeniedStatus = new[]
         {
             CharacterStatus.Status.Busy,
@@ -33,6 +38,7 @@ public class KillCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }

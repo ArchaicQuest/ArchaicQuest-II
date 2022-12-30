@@ -11,8 +11,13 @@ public class CastCmd : ICommand
     public CastCmd(ICore core)
     {
         Aliases = new[] {"cast", "c"};
-        Description = "Cast one of your spells";
-        Usages = new[] {"Type: cast fireball"};
+        Description = "Before you can cast a spell, you have to practice it.  The more you practice, " +
+                      "the higher chance you have of success when casting.  Casting spells costs mana. " +
+                      "The mana cost decreases as your level increases. " +
+                      "The target is optional.  Many spells which need targets will use an " +
+                      " appropriate default target, especially during combat.";
+        Usages = new[] {"Type: cast fireball, cast <spell> <target>"};
+        Title = "";
         DeniedStatus = new[]
         {
             CharacterStatus.Status.Busy,
@@ -34,6 +39,7 @@ public class CastCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }

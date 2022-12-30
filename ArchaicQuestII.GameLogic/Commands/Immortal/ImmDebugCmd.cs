@@ -14,7 +14,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Immortal
             Aliases = new[] {"/debug"};
             Description = "Displays debug info for the current room.";
             Usages = new[] {"Type: /debug"};
-            DeniedStatus = null;
+                Title = "";
+    DeniedStatus = null;
             UserRole = UserRole.Staff;
             Core = core;
         }
@@ -22,6 +23,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Immortal
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
+        public string Title { get; }
         public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
         public ICore Core { get; }

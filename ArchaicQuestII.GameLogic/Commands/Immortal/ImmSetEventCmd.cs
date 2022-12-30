@@ -17,7 +17,8 @@ public class ImmSetEventCmd : ICommand
         {
             "Example: /train bob",
         };
-        DeniedStatus = null;
+            Title = "";
+    DeniedStatus = null;
         UserRole = UserRole.Staff;
         Core = core;
     }
@@ -25,7 +26,8 @@ public class ImmSetEventCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
-    public CharacterStatus.Status[] DeniedStatus { get; }
+  
+    public string Title { get; }  public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }
 

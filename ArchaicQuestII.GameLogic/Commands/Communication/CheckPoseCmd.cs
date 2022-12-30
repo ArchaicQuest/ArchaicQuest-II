@@ -13,6 +13,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
             Aliases = new[] {"checkpose"};
             Description = "Shows you what your characters current pose is";
             Usages = new[] {"Type: checkpose"};
+            Title = "";
             DeniedStatus = new[]
             {
                 CharacterStatus.Status.Busy,
@@ -31,6 +32,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
+        public string Title { get; }
         public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
         public ICore Core { get; }

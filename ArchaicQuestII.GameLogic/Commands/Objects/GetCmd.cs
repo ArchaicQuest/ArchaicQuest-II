@@ -10,12 +10,23 @@ using ArchaicQuestII.GameLogic.World.Room;
 namespace ArchaicQuestII.GameLogic.Commands.Objects;
 
 public class GetCmd : ICommand
-{
+{ 
     public GetCmd(ICore core)
     {
         Aliases = new[] {"get", "take", "loot"};
-        Description = "Your character will get something.";
-        Usages = new[] {"Type: get apple"};
+        Description = @"'{yellow}get{/}' is used to get the specified item or gold from the ground, container, or a corpse.  
+
+Examples:
+get sword 
+get 2.sword (if you have several items the same you can pick the nth one)
+get sword chest
+get all 
+get all corpse
+
+Related help files: drop, put, give
+";
+        Usages = new[] {"Type: get apple, get all, get apple crate"};
+        Title = "";
         DeniedStatus = new[]
         {
             CharacterStatus.Status.Busy,
@@ -36,6 +47,7 @@ public class GetCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }

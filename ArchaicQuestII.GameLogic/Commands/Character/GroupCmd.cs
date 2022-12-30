@@ -15,8 +15,15 @@ public class GroupCmd : ICommand
     public GroupCmd(ICore core)
     {
         Aliases = new[] {"group"};
-        Description = "Forms a group.";
-        Usages = new[] {"Type: group bob"};
+        Description = "Playing with others is more fun, to earn XP together you must be in a group. <br /> <br />To start a group, request" +
+                      " the person you wish to join to follow you. Once followed enter group (player name) you now have a group.<br /> <br /> Follow the same steps to add more players." +
+                      "<br /> <br />To leave or disband a group enter follow self, to view the group enter group list.<br /> <br />To communicate with the group use gsay hello pr groupsay hello to talk privately in the group.<br /> <br />" +
+                      "Syntax:<br />" +
+                      "group (player name) - group liam, for liam to join your group. Liam must be following you <br />" +
+                      "group list - view who's in the group<br />" +
+                      "gsay (text) - gsay let's go on an adventure.";
+        Usages = new[] {"Type: group bob, group list, gsay hello"};
+        Title = "";
         DeniedStatus = new[]
         {
             CharacterStatus.Status.Busy,
@@ -35,6 +42,7 @@ public class GroupCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }

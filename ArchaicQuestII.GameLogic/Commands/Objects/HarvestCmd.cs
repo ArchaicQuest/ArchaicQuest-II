@@ -18,8 +18,10 @@ public class HarvestCmd : ICommand
     public HarvestCmd(ICore core)
     {
         Aliases = new[] {"harvest", "forage"};
-        Description = "You try to harvest something";
-        Usages = new[] {"Type: harvest ore", "Example: forage bushes"};
+        Description = "Some plants or other objects can be harvested. Harvesting takes some time and the amount harvested is random. " +
+                      "You may also fail the task or be attacked while harvesting. Wood-Elfs are the best at harvesting. <br />Forage or harvest can be used for this command";
+        Usages = new[] {"Type: harvest strawberry, forage bush"};
+        Title = "";
         DeniedStatus = new[]
         {
             CharacterStatus.Status.Busy,
@@ -40,6 +42,7 @@ public class HarvestCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }

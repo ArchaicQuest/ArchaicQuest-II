@@ -15,9 +15,38 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
     {
         public EquipmentCmd(ICore core)
         {
-            Aliases = new[] {"wear", "remove", "wield", "eq", "equipment"};
-            Description = "Wear, remove a piece of armour";
-            Usages = new[] {"Type: wear vest, remove vest"};
+            Aliases = new[] {"hold", "wear", "remove", "wield", "eq", "equipment"};
+            Description = @"'{yellow}Wear{/}' is used to wear a piece of armour from your inventory, if you are already wearing a piece of armour 
+in the same slot it will automatically remove it.
+
+Examples:
+wear vest
+wear all - wear everything in your inventory until all EQ slots are filled
+
+'{yellow}remove{/}' is used to remove a piece of armour or stop using a weapon. Removed items return to your inventory.
+
+Examples:
+remove vest
+remove all - remove everything you are wearing
+
+{yellow}wield{/}' is used to equip a weapon
+
+Examples:
+wield staff
+
+'{yellow}eq{/}' or {yellow}equipment{/}' is used to display all your equipment and the equipment slots available
+
+Examples:
+eq
+equipment
+
+{yellow}hold{/}' is used to hold an item, this can be useful such as if blind, and you're holding a potion you will be able to quaff it, other items that can only be held may give benefits 
+
+Examples:
+hold potion
+";
+            Usages = new[] {"Type: wear vest, remove vest, wield dagger, eq, hold doll"};
+            Title = "Equipment";
             DeniedStatus = new[]
             {
                 CharacterStatus.Status.Busy,
@@ -35,6 +64,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
+        public string Title { get; }
         public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
         public ICore Core { get; }
@@ -48,8 +78,10 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
             switch (command)
             {
                 case "wear":
+                case "hold":
 
-                    if (!Core.CommandTargetCheck(target, player, "<p>Wear what?</p>"))
+                    if (command == "wear" && !Core.CommandTargetCheck(target, player, "<p>Wear what?</p>") ||
+                        command == "hold" && !Core.CommandTargetCheck(target, player, "<p>Hold what?</p>"))
                     {
                         return;
                     }
@@ -59,8 +91,9 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
                         WearAll(room, player);
                         return;
                     }
-            
-                    Wear(target, room, player, String.Empty); 
+
+                    Wear(target, room, player, command == "hold" ? "hold" : String.Empty);
+
                     break;
                 case "remove":
                     
@@ -410,6 +443,15 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
                 if (itemToWear.ItemType != Item.Item.ItemTypes.Weapon)
                 {
                     Core.Writer.WriteLine("<p>You can't wield that.</p>", player.ConnectionId);
+                    return;
+                }
+            }
+            
+            if (type == "hold")
+            {
+                if (itemToWear.Slot != Equipment.EqSlot.Held)
+                {
+                    Core.Writer.WriteLine("<p>You can't hold that.</p>", player.ConnectionId);
                     return;
                 }
             }

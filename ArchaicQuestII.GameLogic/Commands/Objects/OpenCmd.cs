@@ -12,8 +12,10 @@ public class OpenCmd : ICommand
     public OpenCmd(ICore core)
     {
         Aliases = new[] {"open"};
-        Description = "Your open a door or chest.";
-        Usages = new[] {"Type: open north"};
+        Description = "Open is used to open an object or door. For doors type the full name. " +
+                      "<br /><br />Example:<br />open chest<br />open north";
+        Usages = new[] {"Type: open chest, open north"};
+        Title = "";
         DeniedStatus = new[]
         {
             CharacterStatus.Status.Busy,
@@ -34,6 +36,7 @@ public class OpenCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }

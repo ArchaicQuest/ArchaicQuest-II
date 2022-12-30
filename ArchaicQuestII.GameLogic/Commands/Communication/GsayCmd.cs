@@ -15,6 +15,7 @@ public class GsayCmd : ICommand
         Aliases = new[] {"gsay", "`", "gs"};
         Description = "Sends a message to your current group";
         Usages = new[] {"Type: gsay hello group"};
+        Title = "";
         DeniedStatus = null;
         UserRole = UserRole.Player;
         Core = core;
@@ -23,6 +24,7 @@ public class GsayCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }

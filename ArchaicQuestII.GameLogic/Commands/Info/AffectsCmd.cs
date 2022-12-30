@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
@@ -15,6 +16,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
             Description = "Displays the affects upon the player.";
             Usages = new[] {"Type: affects"};
             DeniedStatus = null;
+            Title = String.Empty;
             UserRole = UserRole.Player;
             Core = core;
         }
@@ -22,6 +24,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
+        public string Title { get; }
         public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
         public ICore Core { get; }

@@ -17,8 +17,9 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
         public CookCmd(ICore core)
         {
             Aliases = new[] {"Cook"};
-            Description = "Cook food at a fire.";
+            Description = "Cook food at a fire. A fire and a cook pot is needed.";
             Usages = new[] {"Type: cook"};
+            Title = "";
             DeniedStatus = new[]
             {
                 CharacterStatus.Status.Busy,
@@ -38,6 +39,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
+        public string Title { get; }
         public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
         public ICore Core { get; }
