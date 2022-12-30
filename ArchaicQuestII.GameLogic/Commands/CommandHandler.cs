@@ -14,11 +14,9 @@ namespace ArchaicQuestII.GameLogic.Commands
     public class CommandHandler : ICommandHandler
     {
         public ICore Core { get; }
-
         public CommandHandler(ICore core)
         {
-            Core = core;
-            
+            Core = core; 
             var commandTypes = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(s => s.GetTypes())
                 .Where(p => typeof(ICommand).IsAssignableFrom(p) && !p.IsInterface);
@@ -52,6 +50,22 @@ namespace ArchaicQuestII.GameLogic.Commands
             commandInput[0] = commandInput[0].ToLower();
 
             var command = Core.Cache.GetCommand(commandInput[0]);
+            
+            // Handle social emote that are entered by just typing the name such as smile or smile Harvey
+            // here manipulate the command to add social in front of it so the social command is called.
+            var social = Core.Cache.GetSocials().Keys.FirstOrDefault(x => x.Equals(commandInput[0]));
+            if (social != null)
+            {
+                var emoteTarget = ""; 
+                
+                if (commandInput.Length == 2)
+                  { 
+                      emoteTarget = commandInput[1];
+                  }
+                commandInput = new[] { "social", commandInput[0], emoteTarget};
+                command = Core.Cache.GetCommand(commandInput[0]);
+            }
+            
 
             if (command == null)
             {
