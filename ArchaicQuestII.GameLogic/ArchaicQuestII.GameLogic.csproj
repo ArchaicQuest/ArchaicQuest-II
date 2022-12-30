@@ -13,6 +13,9 @@
         <EmbeddedResource Remove="Spell\Type\**" />
         <None Remove="Character\Equipment\Enum\**" />
         <None Remove="Spell\Type\**" />
+        <Compile Remove="Commands\Utility\**" />
+        <EmbeddedResource Remove="Commands\Utility\**" />
+        <None Remove="Commands\Utility\**" />
     </ItemGroup>
 
     <ItemGroup>
@@ -31,17 +34,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\ArchaicQuestII.DataAccess\ArchaicQuestII.DataAccess.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Commands\Character\" />
-      <Folder Include="Skill\Type\" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Resource Include="Core\Keys.json">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Resource>
     </ItemGroup>
 
 </Project>

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using ArchaicQuestII.DataAccess.DataModels;
 using LiteDB;
 
 namespace ArchaicQuestII.DataAccess
@@ -22,7 +21,6 @@ namespace ArchaicQuestII.DataAccess
         /// </summary>
         public enum Collections
         {
-
             Alignment,
             Area,
             AttackType,
@@ -30,7 +28,6 @@ namespace ArchaicQuestII.DataAccess
             Help,
             Items,
             Mobs,
-
             Race,
             Room,
             Skill,
@@ -40,7 +37,8 @@ namespace ArchaicQuestII.DataAccess
             Quests,
             Users,
             Log,
-            CraftingRecipes
+            CraftingRecipes,
+            ErrorLog
         }
 
         public bool Save<T>(T data, Collections collectionName)
@@ -103,6 +101,7 @@ namespace ArchaicQuestII.DataAccess
                 Collections.Quests => "Quests",
                 Collections.Users => "Users",
                 Collections.Log => "Log",
+                Collections.ErrorLog => "ErrorLog",
                 Collections.CraftingRecipes => "CraftingRecipes",
                 _ => "error",
             };
@@ -126,8 +125,7 @@ namespace ArchaicQuestII.DataAccess
         {
             var dateT = DateTime.Now.ToString("yyyy-dd-M-HH-mm"); ;
             Directory.CreateDirectory($"backup/{dateT}");
-
-
+            
             _db.Execute($"select $ into $file('backup/{dateT}/Alignment.json') from Alignment");
             _db.Execute($"select $ into $file('backup/{dateT}/Area.json') from Area");
             _db.Execute($"select $ into $file('backup/{dateT}/AttackType.json') from AttackType");
@@ -144,7 +142,6 @@ namespace ArchaicQuestII.DataAccess
             _db.Execute($"select $ into $file('backup/{dateT}/Quests.json') from Quests");
             _db.Execute($"select $ into $file('backup/{dateT}/Users.json') from Users");
             _db.Execute($"select $ into $file('backup/{dateT}/CraftingRecipes.json') from CraftingRecipes");
-
         }
     }
 }

@@ -8,9 +8,11 @@ using System.Security.Cryptography;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Class;
+using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Effect;
+using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.Skill.Enum;
 using ArchaicQuestII.GameLogic.Spell;
 using ArchaicQuestII.GameLogic.World.Room;
@@ -407,8 +409,7 @@ namespace ArchaicQuestII.GameLogic.Core
             }
             return -1;
         }
-
-
+        
         public static int GetWeaponSkill(Item.Item weapon, Player player)
         {
 
@@ -574,10 +575,238 @@ namespace ArchaicQuestII.GameLogic.Core
             }
         }
         
+        public static bool SkillSuccessCheck(Player player, string skillName)
+        {
+            var skill = player.Skills.FirstOrDefault(x =>
+                x.SkillName.Equals(skillName, StringComparison.CurrentCultureIgnoreCase));
 
+            var chance = new Dice().Roll(1, 1, 100);
+
+            return (skill == null || !(skill.Proficiency <= chance)) && chance != 1 && chance != 101;
+        }
+        
+        public static bool SkillSuccessCheck(SkillList skill)
+        {
+            var proficiency = skill.Proficiency;
+            var success = new Dice().Roll(1, 1, 100);
+
+            if (success == 1 || success == 101)
+            {
+                return false;
+            }
+
+            return proficiency >= success;
+        }
+        
+        public static bool LoreSuccess(int? skillLevel)
+        {
+            var chance = new Dice().Roll(1, 1, 100);
+
+            return skillLevel >= chance;
+        }
+
+        public static string SkillLearnMistakes(Player player, string skillName, IGain gain, int delay = 0)
+        {
+            var skill = player.Skills.FirstOrDefault(x => x.SkillName.Equals(skillName, StringComparison.CurrentCultureIgnoreCase));
+
+            if (skill == null)
+            {
+                return string.Empty;
+            }
+
+            if (skill.Proficiency == 100)
+            {
+                return string.Empty;
+            }
+
+            var increase = new Dice().Roll(1, 1, 5);
+
+            skill.Proficiency += increase;
+
+            gain.GainExperiencePoints(player, 100 * skill.Level / 4, false);
+
+            return
+                $"<p class='improve'>You learn from your mistakes and gain {100 * skill.Level / 4} experience points.</p>" +
+                $"<p class='improve'>Your knowledge of {skill.SkillName} increases by {increase}%.</p>";
+        }
+        
+        public static string UpdateAffect(Player player, Item.Item item, Affect affect)
+        {
+            var modBenefits = string.Empty;
+
+            if (item.Modifier.Strength != 0)
+            {
+
+                affect.Duration = 5;
+                player.Attributes.Attribute[EffectLocation.Strength] += item.Modifier.Strength;
+
+                affect.Modifier.Strength = item.Modifier.Strength;
+                modBenefits = $"modifies STR by {item.Modifier.Strength} for { affect.Duration} minutes<br />";
+            }
+
+            if (item.Modifier.Dexterity != 0)
+            {
+                affect.Duration = 5;
+                player.Attributes.Attribute[EffectLocation.Dexterity] += item.Modifier.Dexterity;
+
+                affect.Modifier.Dexterity = item.Modifier.Dexterity;
+                modBenefits = $"modifies DEX by {item.Modifier.Dexterity} for { affect.Duration} minutes<br />";
+            }
+
+            if (item.Modifier.Constitution != 0)
+            {
+                affect.Duration = 5;
+                player.Attributes.Attribute[EffectLocation.Constitution] += item.Modifier.Constitution;
+
+                affect.Modifier.Constitution = item.Modifier.Constitution;
+                modBenefits = $"modifies CON by {item.Modifier.Constitution} for { affect.Duration} minutes<br />";
+            }
+
+            if (item.Modifier.Intelligence != 0)
+            {
+                affect.Duration = 5;
+                player.Attributes.Attribute[EffectLocation.Intelligence] += item.Modifier.Intelligence;
+                affect.Modifier.Intelligence = item.Modifier.Intelligence;
+                modBenefits = $"modifies INT by {item.Modifier.Intelligence} for { affect.Duration} minutes<br />";
+            }
+
+            if (item.Modifier.Wisdom != 0)
+            {
+                affect.Duration = 5;
+                player.Attributes.Attribute[EffectLocation.Wisdom] += item.Modifier.Wisdom;
+
+                affect.Modifier.Wisdom = item.Modifier.Wisdom;
+                modBenefits = $"modifies WIS by {item.Modifier.Wisdom} for { affect.Duration} minutes<br />";
+            }
+
+            if (item.Modifier.Charisma != 0)
+            {
+                affect.Duration = 5;
+                player.Attributes.Attribute[EffectLocation.Charisma] += item.Modifier.Charisma;
+
+                affect.Modifier.Charisma = item.Modifier.Charisma;
+                modBenefits = $"modifies CHA by {item.Modifier.Charisma} for { affect.Duration} minutes<br />";
+
+            }
+
+            if (item.Modifier.HP != 0)
+            {
+                player.Attributes.Attribute[EffectLocation.Hitpoints] += item.Modifier.HP;
+
+                if (player.Attributes.Attribute[EffectLocation.Hitpoints] >
+                    player.MaxAttributes.Attribute[EffectLocation.Hitpoints])
+                {
+                    player.Attributes.Attribute[EffectLocation.Hitpoints] =
+                        player.MaxAttributes.Attribute[EffectLocation.Hitpoints];
+                }
+            }
+
+            if (item.Modifier.Mana != 0)
+            {
+                player.Attributes.Attribute[EffectLocation.Mana] += item.Modifier.Mana;
+
+                if (player.Attributes.Attribute[EffectLocation.Mana] >
+                    player.MaxAttributes.Attribute[EffectLocation.Mana])
+                {
+                    player.Attributes.Attribute[EffectLocation.Mana] =
+                        player.MaxAttributes.Attribute[EffectLocation.Mana];
+                }
+            }
+
+            if (item.Modifier.Moves != 0)
+            {
+                player.Attributes.Attribute[EffectLocation.Moves] += item.Modifier.Moves;
+
+                if (player.Attributes.Attribute[EffectLocation.Moves] >
+                    player.MaxAttributes.Attribute[EffectLocation.Moves])
+                {
+                    player.Attributes.Attribute[EffectLocation.Moves] =
+                        player.MaxAttributes.Attribute[EffectLocation.Moves];
+                }
+            }
+
+            if (item.Modifier.HitRoll != 0)
+            {
+                affect.Duration = 5;
+                player.Attributes.Attribute[EffectLocation.HitRoll] += item.Modifier.HitRoll;
+                affect.Modifier.HitRoll = item.Modifier.HitRoll;
+
+                modBenefits = $"modifies Hit Roll by {item.Modifier.HitRoll} for { affect.Duration} minutes<br />";
+            }
+
+            if (item.Modifier.DamRoll != 0)
+            {
+                affect.Duration = 5;
+                player.Attributes.Attribute[EffectLocation.DamageRoll] += item.Modifier.DamRoll;
+
+                affect.Modifier.DamRoll = item.Modifier.DamRoll;
+                modBenefits = $"modifies Dam Roll by {item.Modifier.DamRoll} for { affect.Duration} minutes<br />";
+
+            }
+
+            // saves / saving spell
+
+            return modBenefits;
+        }
+        
+        public static Tuple<string, EffectLocation> GetStatName(string name)
+        {
+            return name switch
+            {
+                "str" => new Tuple<string, EffectLocation>("strength", EffectLocation.Strength),
+                "dex" => new Tuple<string, EffectLocation>("dexterity", EffectLocation.Dexterity),
+                "con" => new Tuple<string, EffectLocation>("constitution", EffectLocation.Constitution),
+                "int" => new Tuple<string, EffectLocation>("intelligence", EffectLocation.Intelligence),
+                "wis" => new Tuple<string, EffectLocation>("wisdom", EffectLocation.Wisdom),
+                "cha" => new Tuple<string, EffectLocation>("charisma", EffectLocation.Charisma),
+                "hp" => new Tuple<string, EffectLocation>("hit points", EffectLocation.Hitpoints),
+                "move" => new Tuple<string, EffectLocation>("moves", EffectLocation.Moves),
+                "mana" => new Tuple<string, EffectLocation>("mana", EffectLocation.Mana),
+                _ => new Tuple<string, EffectLocation>("", EffectLocation.None)
+            };
+        }
+        
+        public static string Replace(string source, string oldString,
+            string newString, StringComparison comparison,
+            bool recursive = false)
+        {
+            var index = source.IndexOf(oldString, comparison);
+
+            while (index > -1)
+            {
+                source = source.Remove(index, oldString.Length);
+                source = source.Insert(index, newString);
+
+                if (!recursive)
+                {
+                    return source;
+                }
+                index = source.IndexOf(oldString, index + newString.Length, comparison);
+            }
+
+            return source;
+        }
+        
+        public static string ReplaceSocialTags(string text, Player player, Player target)
+        {
+            if (text == "null")
+            {
+                return "You can't do that.";
+            }
+            var newText = text.Replace("#player#", player.Name).Replace("#pgender#", Helpers.GetPronoun(player.Gender))
+                .Replace("#pgender2#", Helpers.GetSubjectPronoun(player.Gender))
+                .Replace("#pgender3#", Helpers.GetObjectPronoun(player.Gender))
+                .Replace("#pgender#", Helpers.GetPronoun(player.Gender));
+
+            if (target != null)
+            {
+                newText = newText.Replace("#target#", target.Name)
+                    .Replace("#tgender#", Helpers.GetPronoun(target.Gender))
+                    .Replace("#tgender2#", Helpers.GetSubjectPronoun(target.Gender))
+                    .Replace("#tgender3#", Helpers.GetObjectPronoun(target.Gender));
+            }
+
+            return newText;
+        }
     }
-
-
-
-
 }

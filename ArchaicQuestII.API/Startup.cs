@@ -16,6 +16,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.IO;
+using ArchaicQuestII.GameLogic.Client;
 
 namespace ArchaicQuestII.API
 {
@@ -60,7 +61,7 @@ namespace ArchaicQuestII.API
 
             // configure DI for application services
             services.AddScoped<IUserService, UserService>();
-            services.AddSingleton<LiteDatabase>(
+            services.AddSingleton(
                 new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AQ.db")));
 
             services.AddSingleton<IDataBase, DataBase>();

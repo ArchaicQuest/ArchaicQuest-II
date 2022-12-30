@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Model;
+using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Item;
@@ -93,6 +94,7 @@ namespace ArchaicQuestII.GameLogic.Core
         {
             return room.Players.Contains(player);
         }
+        
         public void Say(string n, int delay, Room room, Player player)
         {
             if (!IsInRoom(room, player))

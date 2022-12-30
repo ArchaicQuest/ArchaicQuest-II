@@ -1,7 +1,6 @@
 ﻿using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Core;
 using System.Collections.Generic;
-using ArchaicQuestII.Core.World;
 using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.World.Area;
@@ -48,7 +47,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
                    Z = 0
                },
                AreaId = 1,
-               RoomLit = true,
+               IsLit = true,
                Items = new ItemList()
                {
                    new Item.Item()

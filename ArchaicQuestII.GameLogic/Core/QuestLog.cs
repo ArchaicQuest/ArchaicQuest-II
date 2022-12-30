@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Linq;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Model;
+using ArchaicQuestII.GameLogic.Client;
 
 namespace ArchaicQuestII.GameLogic.Core
 {
@@ -27,15 +26,12 @@ namespace ArchaicQuestII.GameLogic.Core
 
                 var questCompleted = false;
 
-                foreach (var mob in quest.MobsToKill)
+                foreach (var mob in quest.MobsToKill.Where(mob => mob.Name.Equals(mobName)))
                 {
-                    if (!mob.Name.Equals(mobName)) { continue; }
-
                     mob.Current = mob.Current + 1;
                     questCompleted = mob.Count == mob.Current;
                 }
-
-
+                
                 if (questCompleted)
                 {
                     quest.Completed = true;

@@ -6,6 +6,7 @@ using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Emote;
 using ArchaicQuestII.GameLogic.Character.Help;
 using ArchaicQuestII.GameLogic.Character.Model;
+using ArchaicQuestII.GameLogic.Commands;
 using ArchaicQuestII.GameLogic.Crafting;
 using ArchaicQuestII.GameLogic.World.Room;
 
@@ -18,7 +19,6 @@ namespace ArchaicQuestII.GameLogic.Core
         /// </summary>
         /// <returns>returns player Cache</returns>
         bool AddPlayer(string id, Player player);
-
         Player GetPlayer(string id);
         Player RemovePlayer(string id);
         ConcurrentDictionary<string, Player> GetPlayerCache();
@@ -34,15 +34,11 @@ namespace ArchaicQuestII.GameLogic.Core
         Room GetRoom(string id);
         Room GetOriginalRoom(string id);
         bool UpdateRoom(string id, Room room, Player player);
-
-
         bool AddSkill(int id, Skill.Model.Skill skill);
-
         Skill.Model.Skill GetSkill(int id);
         void ClearRoomCache();
         void SetConfig(Config config);
         Config GetConfig();
-
         /// <summary>
         /// areaId + Zindex
         /// </summary>
@@ -55,23 +51,25 @@ namespace ArchaicQuestII.GameLogic.Core
         /// <param name="areaId"></param>
         /// <returns></returns>
         string GetMap(string areaId);
-
         bool IsCharInCombat(string id);
         bool AddCharToCombat(string id, Player character);
         Player GetCharFromCombat(string id);
         Player RemoveCharFromCombat(string id);
         List<Player> GetCombatList();
         List<Skill.Model.Skill> ReturnSkills();
-
         /// <summary>
         /// Experiment, Need to generate the commands list on start up
         /// So things like socials & skills can work dynamically without
         /// needing to change the backend code
         /// </summary>
         /// <returns></returns>
-        Dictionary<string, Action> GetCommands();
+        Dictionary<string, ICommand> GetCommands();
 
-        void AddCommand(string key, Action action);
+        ICommand GetCommand(string key);
+
+        bool IsCommand(string key);
+
+        void AddCommand(string key, ICommand action);
 
         public void AddSocial(string key, Emote emote);
         public Dictionary<string, Emote> GetSocials();

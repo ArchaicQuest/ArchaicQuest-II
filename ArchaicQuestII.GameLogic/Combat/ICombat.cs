@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Status;
-using ArchaicQuestII.GameLogic.Effect;
-using ArchaicQuestII.GameLogic.Item;
+﻿using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Combat
@@ -27,8 +20,6 @@ namespace ArchaicQuestII.GameLogic.Combat
         public void DisplayDamage(Player player, Player target, Room room, Item.Item weapon, int damage);
 
         public void Fight(Player player, string victim, Room room, bool isMurder);
-
-        public void Consider(Player player, string target, Room room);
 
         public void DeathCry(Room room, Player target);
 

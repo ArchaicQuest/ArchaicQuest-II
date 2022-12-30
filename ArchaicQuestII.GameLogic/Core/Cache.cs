@@ -2,40 +2,62 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Emote;
 using ArchaicQuestII.GameLogic.Character.Help;
 using ArchaicQuestII.GameLogic.Character.Model;
+using ArchaicQuestII.GameLogic.Commands;
 using ArchaicQuestII.GameLogic.Crafting;
 using ArchaicQuestII.GameLogic.World.Room;
 
-
 namespace ArchaicQuestII.GameLogic.Core
 {
-
     /// <summary>
     /// Refactor me
     /// TODO: refactor cache
     /// </summary>
     public class Cache : ICache
     {
-        private readonly ConcurrentDictionary<string, Player> _playerCache = new ConcurrentDictionary<string, Player>();
-        private readonly ConcurrentDictionary<string, Room> _originalRoomCache = new ConcurrentDictionary<string, Room>();
-        private readonly ConcurrentDictionary<string, Room> _roomCache = new ConcurrentDictionary<string, Room>();
-        private readonly ConcurrentDictionary<int, Skill.Model.Skill> _skillCache = new ConcurrentDictionary<int, Skill.Model.Skill>();
-        private readonly ConcurrentDictionary<string, string> _mapCache = new ConcurrentDictionary<string, string>();
-        private readonly ConcurrentDictionary<string, Player> _combatCache = new ConcurrentDictionary<string, Player>();
-        private readonly ConcurrentDictionary<int, Quest> _questCache = new ConcurrentDictionary<int, Quest>();
-        private readonly ConcurrentDictionary<int, Help> _helpCache = new ConcurrentDictionary<int, Help>();
-        private readonly ConcurrentDictionary<int, CraftingRecipes> _craftingRecipesCache = new ConcurrentDictionary<int, CraftingRecipes>();
-        private readonly Dictionary<string, Action> _commands = new Dictionary<string, Action>();
-        private readonly Dictionary<string, Emote> _socials = new Dictionary<string, Emote>();
-        private readonly Dictionary<string, Class> _pcClass = new Dictionary<string, Class>();
-        private Config _configCache = new Config();
+        private readonly ConcurrentDictionary<string, Player> _playerCache = new();
+        private readonly ConcurrentDictionary<string, Room> _originalRoomCache = new();
+        private readonly ConcurrentDictionary<string, Room> _roomCache = new();
+        private readonly ConcurrentDictionary<int, Skill.Model.Skill> _skillCache = new();
+        private readonly ConcurrentDictionary<string, string> _mapCache = new();
+        private readonly ConcurrentDictionary<string, Player> _combatCache = new();
+        private readonly ConcurrentDictionary<int, Quest> _questCache = new();
+        private readonly ConcurrentDictionary<int, Help> _helpCache = new();
+        private readonly ConcurrentDictionary<int, CraftingRecipes> _craftingRecipesCache = new();
+        private readonly Dictionary<string, Emote> _socials = new();
+        private readonly Dictionary<string, Class> _pcClass = new();
+        private readonly Dictionary<string, ICommand> _commands = new();
+        private Config _configCache = new();
 
+        #region Commands
+
+        public void AddCommand(string key, ICommand action)
+        {
+            _commands.Add(key, action);
+        }
+
+        public Dictionary<string, ICommand> GetCommands()
+        {
+            return _commands;
+        }
+
+        public bool IsCommand(string key)
+        {
+            return _commands.TryGetValue(key, out var c);
+        }
+        
+        public ICommand GetCommand(string key)
+        {
+            _commands.TryGetValue(key, out var command);
+            return command;
+        }
+
+        #endregion
+        
         #region PlayerCache
 
         public bool AddPlayer(string id, Player player)
@@ -186,8 +208,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
 
         #endregion
-
-
+        
         #region ClassCache
 
         public List<CraftingRecipes> GetCraftingRecipes()
@@ -208,8 +229,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
 
         #endregion
-
-
+        
         #region HelpCache
 
 
@@ -244,8 +264,7 @@ namespace ArchaicQuestII.GameLogic.Core
         }
 
         #endregion
-
-
+        
         public void SetConfig(Config config)
         {
             _configCache = config;
@@ -310,16 +329,6 @@ namespace ArchaicQuestII.GameLogic.Core
         public List<Player> GetCombatList()
         {
             return _combatCache.Values.ToList();
-        }
-
-        public void AddCommand(string key, Action action)
-        {
-            _commands.Add(key, action);
-        }
-
-        public Dictionary<string, Action> GetCommands()
-        {
-            return _commands;
         }
 
         public void AddSocial(string key, Emote emote)
