@@ -38,14 +38,7 @@ namespace ArchaicQuestII.GameLogic.Utilities
             if (advantage < 0)
                 return RollDisadvantage(numDice, dieSize, modifier);
             
-            var sum = modifier;
-
-            for (var i = 0; i < numDice; i++)
-            {
-                sum += Throw(1, dieSize + 1);
-            }
-
-            return sum;
+            return Roll(numDice, 1, dieSize, modifier);
         }
         
         
