@@ -10,6 +10,7 @@ using System.Linq;
 using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Skill.Skills;
+using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Area;
 
 namespace ArchaicQuestII.GameLogic.Core
@@ -21,7 +22,6 @@ namespace ArchaicQuestII.GameLogic.Core
         public IDataBase DataBase { get; }
         public IPlayerDataBase PlayerDataBase { get; }
         public IUpdateClientUI UpdateClient { get; }
-        public IDice Dice { get; }
         public IGain Gain { get; }
         public ICombat Combat { get; }
         public IRoomActions RoomActions { get; }
@@ -38,8 +38,7 @@ namespace ArchaicQuestII.GameLogic.Core
         public Core(ICache cache, 
             IWriteToClient writeToClient, 
             IDataBase dataBase, 
-            IUpdateClientUI updateClient, 
-            IDice dice, 
+            IUpdateClientUI updateClient,
             IGain gain, 
             ICombat combat, 
             IPlayerDataBase playerDataBase, 
@@ -54,7 +53,6 @@ namespace ArchaicQuestII.GameLogic.Core
             Writer = writeToClient;
             DataBase = dataBase;
             UpdateClient = updateClient;
-            Dice = dice;
             Gain = gain;
             Combat = combat;
             PlayerDataBase = playerDataBase;
@@ -106,7 +104,7 @@ namespace ArchaicQuestII.GameLogic.Core
                 return;
             }
 
-            var increase = Dice.Roll(1, 1, 5);
+            var increase = DiceBag.Roll(1, 1, 5);
 
             foundSkill.Proficiency += increase;
 

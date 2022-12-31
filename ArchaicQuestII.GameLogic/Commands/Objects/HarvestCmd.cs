@@ -9,6 +9,7 @@ using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Item;
+using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Commands.Objects;
@@ -119,7 +120,7 @@ public class HarvestCmd : ICommand
             return;
         }
         
-        var roll = Core.Dice.Roll(1, 1, 10);
+        var roll = DiceBag.Roll(1, 1, 10);
 
         var randomMobObj = roll switch
         {
@@ -242,7 +243,7 @@ public class HarvestCmd : ICommand
         var collected = "";
         var collectedCount = 1;
         
-        foreach (var harvestItem in thingToHarvest.Container.Items.Where(harvestItem => Core.Dice.Roll(1, 1, 10) <= 3))
+        foreach (var harvestItem in thingToHarvest.Container.Items.Where(harvestItem => DiceBag.Roll(1, 1, 10) <= 3))
         {
             collected = harvestItem.Name;
             collectedCount++;
@@ -250,16 +251,16 @@ public class HarvestCmd : ICommand
             // if the User has herbalism the conditions will be higher rated
             // on success skill check the roll could be 50, 100
             // if elven the condition can be 10 points higher
-            harvestItem.Condition = Core.Dice.Roll(1, 1, 65);
+            harvestItem.Condition = DiceBag.Roll(1, 1, 65);
 
             switch (player.Race)
             {
                 case "Wood-Elf":
-                    harvestItem.Condition += Core.Dice.Roll(1, 10, 20);
+                    harvestItem.Condition += DiceBag.Roll(1, 10, 20);
                     break;
                 case "Elf":
                 case "Drow":
-                    harvestItem.Condition += Core.Dice.Roll(1, 5, 10);
+                    harvestItem.Condition += DiceBag.Roll(1, 5, 10);
                     break;
             }
 

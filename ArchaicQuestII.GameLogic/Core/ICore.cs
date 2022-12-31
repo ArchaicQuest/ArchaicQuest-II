@@ -18,7 +18,6 @@ namespace ArchaicQuestII.GameLogic.Core
         public IDataBase DataBase { get; }
         public IPlayerDataBase PlayerDataBase { get; }
         public IUpdateClientUI UpdateClient { get; }
-        public IDice Dice { get; }
         public IGain Gain { get; }
         public ICombat Combat { get; }
         public IRoomActions RoomActions { get; }

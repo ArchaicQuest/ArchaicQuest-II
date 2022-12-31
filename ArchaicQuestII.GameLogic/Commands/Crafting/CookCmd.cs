@@ -8,6 +8,7 @@ using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Item;
+using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Commands.Crafting
@@ -217,15 +218,15 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
 
             var foodName = "";
             
-            if (Core.Dice.Roll(1, 1, 2) == 1)
+            if (DiceBag.Roll(1, 1, 2) == 1)
             {
-                var prefix = prefixes[Core.Dice.Roll(1, 0, 6)];
+                var prefix = prefixes[DiceBag.Roll(1, 0, 6)];
 
                 foodName = $"{prefix} {Helpers.RemoveArticle(mainIngredient.Item1.Name).ToLower()} {(ingredientOrder.Count() > 1 ? $"with {Helpers.RemoveArticle(ingredientOrder.ElementAt(1).Item1.Name).ToLower()}" : "")} {(ingredientOrder.Count() > 2 ? $"and {Helpers.RemoveArticle(ingredientOrder.ElementAt(2).Item1.Name).ToLower()}" : "")}";
             }
             else
             {
-                var suffix = suffixes[Core.Dice.Roll(1, 0, 5)];
+                var suffix = suffixes[DiceBag.Roll(1, 0, 5)];
 
                 foodName = $"{Helpers.RemoveArticle(mainIngredient.Item1.Name)} {(ingredientOrder.Count() > 1 ? $"with {Helpers.RemoveArticle(ingredientOrder.ElementAt(1).Item1.Name).ToLower()}" : "")} {(ingredientOrder.Count() > 2 ? $"  {Helpers.RemoveArticle(ingredientOrder.ElementAt(2).Item1.Name).ToLower()} " : "")}{suffix}";
             }
@@ -280,182 +281,182 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
             switch (name)
             {
                 case "strength":
-                    modValue = Core.Dice.Roll(1, ingredients.First().Item1.Modifier.Strength,
+                    modValue = DiceBag.Roll(1, ingredients.First().Item1.Modifier.Strength,
                         mainIngredient.Item1.Modifier.Strength * mainIngredient.Item2);
                     modValue +=
                         (ingredient2 != null
-                            ? Core.Dice.Roll(1, ingredient2.Item1.Modifier.Strength,
+                            ? DiceBag.Roll(1, ingredient2.Item1.Modifier.Strength,
                                 ingredient2.Item1.Modifier.Strength * ingredient2.Item2)
                             : 0);
                     modValue +=
                         (ingredient3 != null
-                            ? Core.Dice.Roll(1, ingredient3.Item1.Modifier.Strength,
+                            ? DiceBag.Roll(1, ingredient3.Item1.Modifier.Strength,
                                 ingredient3.Item1.Modifier.Strength * ingredient3.Item2)
                             : 0);
                     modValue *= 2;
 
                     break;
                 case "dexterity":
-                    modValue = Core.Dice.Roll(1, ingredients.First().Item1.Modifier.Dexterity,
+                    modValue = DiceBag.Roll(1, ingredients.First().Item1.Modifier.Dexterity,
                         mainIngredient.Item1.Modifier.Dexterity * mainIngredient.Item2);
                     modValue +=
                         (ingredient2 != null
-                            ? Core.Dice.Roll(1, ingredient2.Item1.Modifier.Dexterity,
+                            ? DiceBag.Roll(1, ingredient2.Item1.Modifier.Dexterity,
                                 ingredient2.Item1.Modifier.Dexterity * ingredient2.Item2)
                             : 0);
                     modValue +=
                         (ingredient3 != null
-                            ? Core.Dice.Roll(1, ingredient3.Item1.Modifier.Dexterity,
+                            ? DiceBag.Roll(1, ingredient3.Item1.Modifier.Dexterity,
                                 ingredient3.Item1.Modifier.Dexterity * ingredient3.Item2)
                             : 0);
                     modValue *= 2;
                     break;
                 case "constitution":
-                    modValue = Core.Dice.Roll(1, ingredients.First().Item1.Modifier.Constitution,
+                    modValue = DiceBag.Roll(1, ingredients.First().Item1.Modifier.Constitution,
                         mainIngredient.Item1.Modifier.Constitution * mainIngredient.Item2);
                     modValue +=
                         (ingredient2 != null
-                            ? Core.Dice.Roll(1, ingredient2.Item1.Modifier.Constitution,
+                            ? DiceBag.Roll(1, ingredient2.Item1.Modifier.Constitution,
                                 ingredient2.Item1.Modifier.Constitution * ingredient2.Item2)
                             : 0);
                     modValue +=
                         (ingredient3 != null
-                            ? Core.Dice.Roll(1, ingredient3.Item1.Modifier.Constitution,
+                            ? DiceBag.Roll(1, ingredient3.Item1.Modifier.Constitution,
                                 ingredient3.Item1.Modifier.Constitution * ingredient3.Item2)
                             : 0);
                     modValue *= 2;
                     break;
                 case "intelligence":
-                    modValue = Core.Dice.Roll(1, ingredients.First().Item1.Modifier.Intelligence,
+                    modValue = DiceBag.Roll(1, ingredients.First().Item1.Modifier.Intelligence,
                         mainIngredient.Item1.Modifier.Intelligence * mainIngredient.Item2);
                     modValue +=
                         (ingredient2 != null
-                            ? Core.Dice.Roll(1, ingredient2.Item1.Modifier.Intelligence,
+                            ? DiceBag.Roll(1, ingredient2.Item1.Modifier.Intelligence,
                                 ingredient2.Item1.Modifier.Intelligence * ingredient2.Item2)
                             : 0);
                     modValue +=
                         (ingredient3 != null
-                            ? Core.Dice.Roll(1, ingredient3.Item1.Modifier.Intelligence,
+                            ? DiceBag.Roll(1, ingredient3.Item1.Modifier.Intelligence,
                                 ingredient3.Item1.Modifier.Intelligence * ingredient3.Item2)
                             : 0);
                     modValue *= 2;
                     break;
                 case "wisdom":
-                    modValue = Core.Dice.Roll(1, ingredients.First().Item1.Modifier.Wisdom,
+                    modValue = DiceBag.Roll(1, ingredients.First().Item1.Modifier.Wisdom,
                         mainIngredient.Item1.Modifier.Wisdom * mainIngredient.Item2);
                     modValue +=
                         (ingredient2 != null
-                            ? Core.Dice.Roll(1, ingredient2.Item1.Modifier.Wisdom,
+                            ? DiceBag.Roll(1, ingredient2.Item1.Modifier.Wisdom,
                                 ingredient2.Item1.Modifier.Wisdom * ingredient2.Item2)
                             : 0);
                     modValue +=
                         (ingredient3 != null
-                            ? Core.Dice.Roll(1, ingredient3.Item1.Modifier.Wisdom,
+                            ? DiceBag.Roll(1, ingredient3.Item1.Modifier.Wisdom,
                                 ingredient3.Item1.Modifier.Wisdom * ingredient3.Item2)
                             : 0);
                     modValue *= 2;
                     break;
                 case "charisma":
-                    modValue = Core.Dice.Roll(1, ingredients.First().Item1.Modifier.Charisma,
+                    modValue = DiceBag.Roll(1, ingredients.First().Item1.Modifier.Charisma,
                         mainIngredient.Item1.Modifier.Charisma * mainIngredient.Item2);
                     modValue +=
                         (ingredient2 != null
-                            ? Core.Dice.Roll(1, ingredient2.Item1.Modifier.Charisma,
+                            ? DiceBag.Roll(1, ingredient2.Item1.Modifier.Charisma,
                                 ingredient2.Item1.Modifier.Charisma * ingredient2.Item2)
                             : 0);
                     modValue +=
                         (ingredient3 != null
-                            ? Core.Dice.Roll(1, ingredient3.Item1.Modifier.Charisma,
+                            ? DiceBag.Roll(1, ingredient3.Item1.Modifier.Charisma,
                                 ingredient3.Item1.Modifier.Charisma * ingredient3.Item2)
                             : 0);
                     modValue *= 2;
                     break;
                 case "damroll":
-                    modValue = Core.Dice.Roll(1, ingredients.First().Item1.Modifier.DamRoll,
+                    modValue = DiceBag.Roll(1, ingredients.First().Item1.Modifier.DamRoll,
                         mainIngredient.Item1.Modifier.DamRoll * mainIngredient.Item2);
                     modValue +=
                         (ingredient2 != null
-                            ? Core.Dice.Roll(1, ingredient2.Item1.Modifier.DamRoll,
+                            ? DiceBag.Roll(1, ingredient2.Item1.Modifier.DamRoll,
                                 ingredient2.Item1.Modifier.DamRoll * ingredient2.Item2)
                             : 0);
                     modValue +=
                         (ingredient3 != null
-                            ? Core.Dice.Roll(1, ingredient3.Item1.Modifier.DamRoll,
+                            ? DiceBag.Roll(1, ingredient3.Item1.Modifier.DamRoll,
                                 ingredient3.Item1.Modifier.DamRoll * ingredient3.Item2)
                             : 0);
                     modValue *= 2;
                     break;
                 case "hitroll":
-                    modValue = Core.Dice.Roll(1, ingredients.First().Item1.Modifier.HitRoll,
+                    modValue = DiceBag.Roll(1, ingredients.First().Item1.Modifier.HitRoll,
                         mainIngredient.Item1.Modifier.HitRoll * mainIngredient.Item2);
                     modValue +=
                         (ingredient2 != null
-                            ? Core.Dice.Roll(1, ingredient2.Item1.Modifier.HitRoll,
+                            ? DiceBag.Roll(1, ingredient2.Item1.Modifier.HitRoll,
                                 ingredient2.Item1.Modifier.HitRoll * ingredient2.Item2)
                             : 0);
                     modValue +=
                         (ingredient3 != null
-                            ? Core.Dice.Roll(1, ingredient3.Item1.Modifier.HitRoll,
+                            ? DiceBag.Roll(1, ingredient3.Item1.Modifier.HitRoll,
                                 ingredient3.Item1.Modifier.HitRoll * ingredient3.Item2)
                             : 0);
                     modValue *= 2;
                     break;
                 case "mana":
-                    modValue = Core.Dice.Roll(1, ingredients.First().Item1.Modifier.Mana,
+                    modValue = DiceBag.Roll(1, ingredients.First().Item1.Modifier.Mana,
                         mainIngredient.Item1.Modifier.Mana * mainIngredient.Item2);
                     modValue +=
                         (ingredient2 != null
-                            ? Core.Dice.Roll(1, ingredient2.Item1.Modifier.Mana,
+                            ? DiceBag.Roll(1, ingredient2.Item1.Modifier.Mana,
                                 ingredient2.Item1.Modifier.Mana * ingredient2.Item2)
                             : 0);
                     modValue +=
                         (ingredient3 != null
-                            ? Core.Dice.Roll(1, ingredient3.Item1.Modifier.Mana,
+                            ? DiceBag.Roll(1, ingredient3.Item1.Modifier.Mana,
                                 ingredient3.Item1.Modifier.Mana * ingredient3.Item2)
                             : 0);
                     modValue *= 2;
                     break;
                 case "moves":
-                    modValue = Core.Dice.Roll(1, ingredients.First().Item1.Modifier.Moves,
+                    modValue = DiceBag.Roll(1, ingredients.First().Item1.Modifier.Moves,
                         mainIngredient.Item1.Modifier.Moves * mainIngredient.Item2);
                     modValue +=
                         (ingredient2 != null
-                            ? Core.Dice.Roll(1, ingredient2.Item1.Modifier.Moves,
+                            ? DiceBag.Roll(1, ingredient2.Item1.Modifier.Moves,
                                 ingredient2.Item1.Modifier.Moves * ingredient2.Item2)
                             : 0);
                     modValue +=
                         (ingredient3 != null
-                            ? Core.Dice.Roll(1, ingredient3.Item1.Modifier.Moves,
+                            ? DiceBag.Roll(1, ingredient3.Item1.Modifier.Moves,
                                 ingredient3.Item1.Modifier.Moves * ingredient3.Item2)
                             : 0);
                     modValue *= 2;
                     break;
                 case "hp":
-                    modValue = Core.Dice.Roll(1, ingredients.First().Item1.Modifier.HP,
+                    modValue = DiceBag.Roll(1, ingredients.First().Item1.Modifier.HP,
                         mainIngredient.Item1.Modifier.HP * mainIngredient.Item2);
                     modValue +=
                         (ingredient2 != null
-                            ? Core.Dice.Roll(1, ingredient2.Item1.Modifier.HP,
+                            ? DiceBag.Roll(1, ingredient2.Item1.Modifier.HP,
                                 ingredient2.Item1.Modifier.HP * ingredient2.Item2)
                             : 0);
                     modValue +=
                         (ingredient3 != null
-                            ? Core.Dice.Roll(1, ingredient3.Item1.Modifier.HP,
+                            ? DiceBag.Roll(1, ingredient3.Item1.Modifier.HP,
                                 ingredient3.Item1.Modifier.HP * ingredient3.Item2)
                             : 0);
                     modValue *= 2;
                     break;
                 case "saves":
-                    modValue = Core.Dice.Roll(1, ingredients.First().Item1.Modifier.Saves,
+                    modValue = DiceBag.Roll(1, ingredients.First().Item1.Modifier.Saves,
                         mainIngredient.Item1.Modifier.Saves * mainIngredient.Item2);
                     modValue +=
                         (ingredient2 != null
-                            ? Core.Dice.Roll(1, ingredient2.Item1.Modifier.Saves,
+                            ? DiceBag.Roll(1, ingredient2.Item1.Modifier.Saves,
                                 ingredient2.Item1.Modifier.Saves * ingredient2.Item2)
                             : 0);
                     modValue +=
                         (ingredient3 != null
-                            ? Core.Dice.Roll(1, ingredient3.Item1.Modifier.Saves,
+                            ? DiceBag.Roll(1, ingredient3.Item1.Modifier.Saves,
                                 ingredient3.Item1.Modifier.Saves * ingredient3.Item2)
                             : 0);
                     modValue *= 2;

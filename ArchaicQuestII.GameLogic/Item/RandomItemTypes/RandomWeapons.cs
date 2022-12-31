@@ -1,22 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Equipment;
-using ArchaicQuestII.GameLogic.Core;
+using ArchaicQuestII.GameLogic.Utilities;
 
 namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
 {
     public class RandomWeapons : IRandomWeapon
     {
-
-        private IDice _dice;
-
-        public RandomWeapons(IDice dice)
-        {
-            _dice = dice;
-        }
-
         // Fiery Iron Dagger as an example
         public List<PrefixItemMods> Prefix = new List<PrefixItemMods>()
         {
@@ -263,8 +253,8 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
 
         public Item CreateRandomWeapon(Player player, bool legendary)
         {
-            var prefix = Prefix[_dice.Roll(1, 0, Prefix.Count)];
-            var weaponChoice = WeaponNames[_dice.Roll(1, 0, WeaponNames.Count)];
+            var prefix = Prefix[DiceBag.Roll(1, 0, Prefix.Count)];
+            var weaponChoice = WeaponNames[DiceBag.Roll(1, 0, WeaponNames.Count)];
 
 
             var item = new Item()
@@ -273,7 +263,7 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
                 ItemType = Item.ItemTypes.Weapon,
                 Level = player.Level,
                 Value = player.Level * 75,
-                Condition = _dice.Roll(1, 75, 100),
+                Condition = DiceBag.Roll(1, 75, 100),
                 WeaponType = weaponChoice.WeaponType,
                 Weight = 11,
                 Modifier = new Modifier(),
@@ -296,73 +286,73 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
 
            for (int i = 0; i < (legendary ? 5 : 3); i++)
            {
-                  switch (_dice.Roll(1, 1, 16))
-           {
-               case 1:
-                   item.Modifier.Armour = _dice.Roll(1, 1, 10);
-                   break;
-               
-               case 2:
-                   item.Modifier.Charisma = _dice.Roll(1, 1, 10);
-                   break;
-               
-               case 3:
-                   item.Modifier.Constitution = _dice.Roll(1, 1, 10);
-                   break;
-               
-               case 4:
-                   item.Modifier.Dexterity = _dice.Roll(1, 1, 10);
-                   break;
-               
-               case 5:
-                   item.Modifier.Intelligence = _dice.Roll(1, 1, 10);
-                   break;
-               
-               case 6:
-                   item.Modifier.Mana = _dice.Roll(1, 1, 10);
-                   break;
-               
-               case 7:
-                   item.Modifier.Moves = _dice.Roll(1, 1, 10);
-                   break;
-               
-               case 8:
-                   item.Modifier.Saves = _dice.Roll(1, 1, 10);
-                   break;
-               case 9:
-                   item.Modifier.Strength = _dice.Roll(1, 1, 10);
-                   break;
-               case 10:
-                   item.Modifier.Wisdom = _dice.Roll(1, 1, 10);
-                   break;
-               case 11:
-                   item.Modifier.AcMod = _dice.Roll(1, 1, 10);
-                   break;
-               case 12:
-                   item.Modifier.DamRoll = _dice.Roll(1, 1, 10);
-                   break;
-               case 13:
-                   item.Modifier.HitRoll = _dice.Roll(1, 1, 10);
-                   break;
-               case 14:
-                   item.Modifier.HP = _dice.Roll(1, 1, 10);
-                   break;
-               case 15:
-                   item.Modifier.SpellDam = _dice.Roll(1, 1, 10);
-                   break;
-               case 16:
-                   item.Modifier.AcMagicMod = _dice.Roll(1, 1, 10);
-                   
-                   break;
-                
-           }
+               switch (DiceBag.Roll(1, 1, 16))
+               {
+                   case 1:
+                       item.Modifier.Armour = DiceBag.Roll(1, 1, 10);
+                       break;
+
+                   case 2:
+                       item.Modifier.Charisma = DiceBag.Roll(1, 1, 10);
+                       break;
+
+                   case 3:
+                       item.Modifier.Constitution = DiceBag.Roll(1, 1, 10);
+                       break;
+
+                   case 4:
+                       item.Modifier.Dexterity = DiceBag.Roll(1, 1, 10);
+                       break;
+
+                   case 5:
+                       item.Modifier.Intelligence = DiceBag.Roll(1, 1, 10);
+                       break;
+
+                   case 6:
+                       item.Modifier.Mana = DiceBag.Roll(1, 1, 10);
+                       break;
+
+                   case 7:
+                       item.Modifier.Moves = DiceBag.Roll(1, 1, 10);
+                       break;
+
+                   case 8:
+                       item.Modifier.Saves = DiceBag.Roll(1, 1, 10);
+                       break;
+                   case 9:
+                       item.Modifier.Strength = DiceBag.Roll(1, 1, 10);
+                       break;
+                   case 10:
+                       item.Modifier.Wisdom = DiceBag.Roll(1, 1, 10);
+                       break;
+                   case 11:
+                       item.Modifier.AcMod = DiceBag.Roll(1, 1, 10);
+                       break;
+                   case 12:
+                       item.Modifier.DamRoll = DiceBag.Roll(1, 1, 10);
+                       break;
+                   case 13:
+                       item.Modifier.HitRoll = DiceBag.Roll(1, 1, 10);
+                       break;
+                   case 14:
+                       item.Modifier.HP = DiceBag.Roll(1, 1, 10);
+                       break;
+                   case 15:
+                       item.Modifier.SpellDam = DiceBag.Roll(1, 1, 10);
+                       break;
+                   case 16:
+                       item.Modifier.AcMagicMod = DiceBag.Roll(1, 1, 10);
+
+                       break;
+
+               }
            }
 
 
-            if (legendary)
+           if (legendary)
             {
-                item.Damage.Minimum += _dice.Roll(1, prefix.MinDamage, prefix.MinDamage * 2);
-                item.Damage.Maximum += _dice.Roll(1, prefix.MaxDamage, prefix.MaxDamage * 2);
+                item.Damage.Minimum += DiceBag.Roll(1, prefix.MinDamage, prefix.MinDamage * 2);
+                item.Damage.Maximum += DiceBag.Roll(1, prefix.MaxDamage, prefix.MaxDamage * 2);
                 item.Condition = 100;
 
                 item.Name += " (Legendary)";

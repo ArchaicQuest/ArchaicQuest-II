@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Model;
@@ -13,7 +11,7 @@ using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.Skill.Core;
 using ArchaicQuestII.GameLogic.Spell;
-using ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells;
+using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Skill.Skills
@@ -33,7 +31,6 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
     {
         private readonly IWriteToClient _writer;
         private readonly IUpdateClientUI _updateClientUi;
-        private readonly IDice _dice;
         private readonly IGain _gain;
         private readonly IDamage _damage;
         private readonly ICombat _fight;
@@ -42,11 +39,17 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
 
 
-        public UtilSkills(IWriteToClient writer, IUpdateClientUI updateClientUi, IDice dice, IDamage damage, ICombat fight, ISkillManager skillManager, ICache cache, IGain gain)
+        public UtilSkills(
+            IWriteToClient writer,
+            IUpdateClientUI updateClientUi,
+            IDamage damage, 
+            ICombat fight, 
+            ISkillManager skillManager,
+            ICache cache, 
+            IGain gain)
         {
             _writer = writer;
             _updateClientUi = updateClientUi;
-            _dice = dice;
             _damage = damage;
             _fight = fight;
             _skillManager = skillManager;
@@ -105,7 +108,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             var hasGrip = target.Skills.FirstOrDefault(x =>
                 x.SkillName.Equals("grip", StringComparison.CurrentCultureIgnoreCase));
 
-            var gripChance = _dice.Roll(1, 1, 100);
+            var gripChance = DiceBag.Roll(1, 1, 100);
 
             if (hasGrip != null)
             {
@@ -115,11 +118,11 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                 }
                 else
                 {
-                    _gain.GainSkillExperience(target, hasGrip.Level * 100, hasGrip, _dice.Roll(1, 1, 5));
+                    _gain.GainSkillExperience(target, hasGrip.Level * 100, hasGrip, DiceBag.Roll(1, 1, 5));
                 }
             }
 
-            if (_dice.Roll(1, 1, 100) < chance)
+            if (DiceBag.Roll(1, 1, 100) < chance)
             {
 
                 if ((target.Equipped.Wielded.ItemFlag & Item.Item.ItemFlags.Noremove) != 0)
@@ -209,7 +212,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             var chance = foundSkill
                 .Proficiency;
 
-            if (_dice.Roll(1, 1, 100) < chance)
+            if (DiceBag.Roll(1, 1, 100) < chance)
             {
                 player.Target = target.Target;
                 target.Target = string.Empty;
@@ -234,7 +237,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                 _skillManager.updateCombat(player, findTarget, room);
                 return 0;
             }
-            var increase = _dice.Roll(1, 1, 5);
+            var increase = DiceBag.Roll(1, 1, 5);
             _gain.GainExperiencePoints(player, 100 * foundSkill.Level / 4, false);
 
             _updateClientUi.UpdateExp(player);
@@ -278,7 +281,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                 chance += 25 - hpPercent / 2;
 
 
-                if (_dice.Roll(1, 1, 100) < chance)
+                if (DiceBag.Roll(1, 1, 100) < chance)
                 {
 
                     target.Affects.Berserk = true;
@@ -322,7 +325,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
                     player.Attributes.Attribute[EffectLocation.Moves] = player.Attributes.Attribute[EffectLocation.Moves] /= 4;
 
-                    var increase = _dice.Roll(1, 1, 5);
+                    var increase = DiceBag.Roll(1, 1, 5);
 
                     foundSkill.Proficiency += increase;
 

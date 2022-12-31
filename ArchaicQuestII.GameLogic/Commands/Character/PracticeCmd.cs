@@ -6,6 +6,7 @@ using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
+using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Commands.Character
@@ -170,7 +171,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
             var maxGain = player.Attributes.Attribute[EffectLocation.Intelligence];
             var minGain = player.Attributes.Attribute[EffectLocation.Intelligence] / 2;
-            var gain = Core.Dice.Roll(1, minGain, maxGain);
+            var gain = DiceBag.Roll(1, minGain, maxGain);
 
             foundSkill.Proficiency += gain;
             player.Practices -= 1;

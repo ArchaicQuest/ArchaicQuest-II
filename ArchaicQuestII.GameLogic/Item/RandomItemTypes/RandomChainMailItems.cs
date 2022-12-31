@@ -1,22 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Equipment;
-using ArchaicQuestII.GameLogic.Core;
+using ArchaicQuestII.GameLogic.Utilities;
 
 namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
 {
     public class RandomChainMailItems : IRandomChainMailArmour
     {
-
-        private IDice _dice;
-
-        public RandomChainMailItems(IDice dice)
-        {
-            _dice = dice;
-        }
+        
         public List<PrefixItemMods> Prefix = new List<PrefixItemMods>()
         {
             new PrefixItemMods()
@@ -316,14 +309,14 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
         {
             var items = HeadItemName.Concat(LegItemName).Concat(ArmItemName).Concat(HandItemName).Concat(FeetItemName)
                 .Concat(BodyItemName).ToList();
-            var prefix = Prefix[_dice.Roll(1, 0, Prefix.Count)];
-            var choice = items[_dice.Roll(1, 0, items.Count)];
+            var prefix = Prefix[DiceBag.Roll(1, 0, Prefix.Count)];
+            var choice = items[DiceBag.Roll(1, 0, items.Count)];
 
             var name = "a " + prefix.Name + " " + choice.Name;
 
             if (choice.Slot == Equipment.EqSlot.Hands || choice.Slot == Equipment.EqSlot.Legs || choice.Slot == Equipment.EqSlot.Arms)
             {
-                var pairOrSome = _dice.Roll(1, 1, 2);
+                var pairOrSome = DiceBag.Roll(1, 1, 2);
                 name = $"{(pairOrSome == 1 ? "A pair of " : "some ")}" + prefix.Name + " " + choice.Name;
             }
 
@@ -338,12 +331,12 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
                 ItemType = Item.ItemTypes.Armour,
                 Level = player.Level,
                 Value = player.Level * 75,
-                Condition = _dice.Roll(1, 75, 100),
+                Condition = DiceBag.Roll(1, 75, 100),
                 Weight = 2,
                 Modifier = new Modifier(),
                 ArmourRating = new ArmourRating()
                 {
-                    Armour = _dice.Roll(1, prefix.MinArmour, prefix.MaxArmour),
+                    Armour = DiceBag.Roll(1, prefix.MinArmour, prefix.MaxArmour),
                     Magic = prefix.MaxArmour / prefix.MinArmour
                 },
                 Gold = player.Level * 75,
@@ -360,62 +353,62 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
 
            for (int i = 0; i < (legendary ? 5 : 3); i++)
            {
-                  switch (_dice.Roll(1, 1, 16))
+                  switch (DiceBag.Roll(1, 1, 16))
            {
                case 1:
-                   item.Modifier.Armour = _dice.Roll(1, 1, 10);
+                   item.Modifier.Armour = DiceBag.Roll(1, 1, 10);
                    break;
                
                case 2:
-                   item.Modifier.Charisma = _dice.Roll(1, 1, 10);
+                   item.Modifier.Charisma = DiceBag.Roll(1, 1, 10);
                    break;
                
                case 3:
-                   item.Modifier.Constitution = _dice.Roll(1, 1, 10);
+                   item.Modifier.Constitution = DiceBag.Roll(1, 1, 10);
                    break;
                
                case 4:
-                   item.Modifier.Dexterity = _dice.Roll(1, 1, 10);
+                   item.Modifier.Dexterity = DiceBag.Roll(1, 1, 10);
                    break;
                
                case 5:
-                   item.Modifier.Intelligence = _dice.Roll(1, 1, 10);
+                   item.Modifier.Intelligence = DiceBag.Roll(1, 1, 10);
                    break;
                
                case 6:
-                   item.Modifier.Mana = _dice.Roll(1, 1, 10);
+                   item.Modifier.Mana = DiceBag.Roll(1, 1, 10);
                    break;
                
                case 7:
-                   item.Modifier.Moves = _dice.Roll(1, 1, 10);
+                   item.Modifier.Moves = DiceBag.Roll(1, 1, 10);
                    break;
                
                case 8:
-                   item.Modifier.Saves = _dice.Roll(1, 1, 10);
+                   item.Modifier.Saves = DiceBag.Roll(1, 1, 10);
                    break;
                case 9:
-                   item.Modifier.Strength = _dice.Roll(1, 1, 10);
+                   item.Modifier.Strength = DiceBag.Roll(1, 1, 10);
                    break;
                case 10:
-                   item.Modifier.Wisdom = _dice.Roll(1, 1, 10);
+                   item.Modifier.Wisdom = DiceBag.Roll(1, 1, 10);
                    break;
                case 11:
-                   item.Modifier.AcMod = _dice.Roll(1, 1, 10);
+                   item.Modifier.AcMod = DiceBag.Roll(1, 1, 10);
                    break;
                case 12:
-                   item.Modifier.DamRoll = _dice.Roll(1, 1, 10);
+                   item.Modifier.DamRoll = DiceBag.Roll(1, 1, 10);
                    break;
                case 13:
-                   item.Modifier.HitRoll = _dice.Roll(1, 1, 10);
+                   item.Modifier.HitRoll = DiceBag.Roll(1, 1, 10);
                    break;
                case 14:
-                   item.Modifier.HP = _dice.Roll(1, 1, 10);
+                   item.Modifier.HP = DiceBag.Roll(1, 1, 10);
                    break;
                case 15:
-                   item.Modifier.SpellDam = _dice.Roll(1, 1, 10);
+                   item.Modifier.SpellDam = DiceBag.Roll(1, 1, 10);
                    break;
                case 16:
-                   item.Modifier.AcMagicMod = _dice.Roll(1, 1, 10);
+                   item.Modifier.AcMagicMod = DiceBag.Roll(1, 1, 10);
                    
                    break;
                 
@@ -425,7 +418,7 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
 
             if (legendary)
             {
-                item.ArmourRating.Armour += _dice.Roll(1, (int)(prefix.MinArmour * 1.5), prefix.MaxArmour * 2);
+                item.ArmourRating.Armour += DiceBag.Roll(1, (int)(prefix.MinArmour * 1.5), prefix.MaxArmour * 2);
                 item.ArmourRating.Magic += prefix.MaxArmour * 2 / prefix.MinArmour;
                 item.Condition = 100;
 

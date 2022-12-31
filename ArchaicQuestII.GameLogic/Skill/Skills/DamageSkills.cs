@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using ArchaicQuestII.GameLogic.Character;
+﻿using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Client;
@@ -11,7 +8,7 @@ using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.Skill.Core;
 using ArchaicQuestII.GameLogic.Spell;
-using ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells;
+using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Skill.Skills
@@ -40,18 +37,21 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
     {
         private readonly IWriteToClient _writer;
         private readonly IUpdateClientUI _updateClientUi;
-        private readonly IDice _dice;
         private readonly IDamage _damage;
         private readonly ICombat _fight;
         private readonly ISkillManager _skillManager;
 
 
 
-        public DamageSkills(IWriteToClient writer, IUpdateClientUI updateClientUi, IDice dice, IDamage damage, ICombat fight, ISkillManager skillManager)
+        public DamageSkills(
+            IWriteToClient writer, 
+            IUpdateClientUI updateClientUi,
+            IDamage damage,
+            ICombat fight, 
+            ISkillManager skillManager)
         {
             _writer = writer;
             _updateClientUi = updateClientUi;
-            _dice = dice;
             _damage = damage;
             _fight = fight;
             _skillManager = skillManager;
@@ -61,7 +61,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
         public int Kick(Player player, Player target, Room room)
         {
             var str = player.Attributes.Attribute[EffectLocation.Strength];
-            var damage = _dice.Roll(1, 1, 8) + str / 4;
+            var damage = DiceBag.Roll(1, 1, 8) + str / 4;
 
             _skillManager.DamagePlayer("Kick", damage, player, target, room);
 
@@ -76,7 +76,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
         public int Elbow(Player player, Player target, Room room)
         {
             var str = player.Attributes.Attribute[EffectLocation.Strength];
-            var damage = _dice.Roll(1, 1, 6) + str / 5;
+            var damage = DiceBag.Roll(1, 1, 6) + str / 5;
 
             _skillManager.DamagePlayer("elbow", damage, player, target, room);
 
@@ -92,7 +92,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
         public int HeadButt(Player player, Player target, Room room)
         {
             var str = player.Attributes.Attribute[EffectLocation.Strength];
-            var damage = _dice.Roll(1, 1, 12) + str / 5;
+            var damage = DiceBag.Roll(1, 1, 12) + str / 5;
 
             if (player.Equipped.Head == null)
             {
@@ -124,7 +124,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
             var weaponDam = player.Equipped.Wielded != null ? player.Equipped.Wielded.Damage.Maximum : 1 * 2;
             var str = player.Attributes.Attribute[EffectLocation.Strength];
-            var damage = _dice.Roll(1, 1, weaponDam) + str / 5;
+            var damage = DiceBag.Roll(1, 1, weaponDam) + str / 5;
 
 
             _skillManager.DamagePlayer("charge", damage, player, target, room);
@@ -151,7 +151,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
             var weaponDam = (player.Equipped.Wielded.Damage.Maximum + player.Equipped.Wielded.Damage.Minimum) / 2;
             var str = player.Attributes.Attribute[EffectLocation.Strength];
-            var damage = (weaponDam + _dice.Roll(1, 1, 6)) + str / 5;
+            var damage = (weaponDam + DiceBag.Roll(1, 1, 6)) + str / 5;
 
 
             _skillManager.DamagePlayer("stab", damage, player, target, room);
@@ -181,7 +181,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
             var weaponDam = player.Equipped.Wielded?.Damage.Maximum ?? 1 * 2;
             var str = player.Attributes.Attribute[EffectLocation.Strength];
-            var damage = weaponDam + _dice.Roll(1, 3, 10) + str / 5;
+            var damage = weaponDam + DiceBag.Roll(1, 3, 10) + str / 5;
 
 
             _skillManager.DamagePlayer("overhead crush", damage, player, target, room);
@@ -203,7 +203,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
             var weaponDam = player.Equipped.Wielded?.Damage.Maximum ?? 1 * 2;
             var str = player.Attributes.Attribute[EffectLocation.Strength];
-            var damage = weaponDam + _dice.Roll(1, 3, 10) + str / 5;
+            var damage = weaponDam + DiceBag.Roll(1, 3, 10) + str / 5;
 
 
             _skillManager.DamagePlayer("cleave", damage, player, target, room);
@@ -226,7 +226,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
             var weaponDam = player.Equipped.Wielded?.Damage.Maximum ?? 1 * 2;
             var str = player.Attributes.Attribute[EffectLocation.Strength];
-            var damage = weaponDam + _dice.Roll(1, 2, 10) + str / 5;
+            var damage = weaponDam + DiceBag.Roll(1, 2, 10) + str / 5;
 
             /*dexterity check */
             var chance = 50;
@@ -246,7 +246,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             /* level check */
             chance += player.Level - target.Level;
 
-            if (_dice.Roll(1, 1, 100) < chance)
+            if (DiceBag.Roll(1, 1, 100) < chance)
             {
 
                 _skillManager.DamagePlayer("impale", damage, player, target, room);
@@ -284,7 +284,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
             var weaponDam = player.Equipped.Wielded?.Damage.Maximum ?? 1 * 2;
             var str = player.Attributes.Attribute[EffectLocation.Strength];
-            var damage = weaponDam + _dice.Roll(1, 2, 10) + str / 5;
+            var damage = weaponDam + DiceBag.Roll(1, 2, 10) + str / 5;
 
             /*dexterity check */
             var chance = 50;
@@ -307,7 +307,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             /* TODO: terrain check, can't dirt kick underwater *taps head* */
             /* Check if player is flying/floating then fail dirt kick */
 
-            if (_dice.Roll(1, 1, 100) < chance)
+            if (DiceBag.Roll(1, 1, 100) < chance)
             {
 
                 _skillManager.DamagePlayer("slash", damage, player, target, room);
@@ -338,7 +338,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
         public int Trip(Player player, Player target, Room room)
         {
             var str = player.Attributes.Attribute[EffectLocation.Strength];
-            var damage = _dice.Roll(1, 1, 4) + str / 5;
+            var damage = DiceBag.Roll(1, 1, 4) + str / 5;
 
             var skillMessage = new SkillMessage()
             {
@@ -401,13 +401,13 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
 
             var str = player.Attributes.Attribute[EffectLocation.Strength];
-            var damage = _dice.Roll(1, 1, 6) + str / 5;
+            var damage = DiceBag.Roll(1, 1, 6) + str / 5;
 
 
             _skillManager.DamagePlayer("uppercut", damage, player, target, room);
 
             var helmet = target.Equipped.Head;
-            var chance = _dice.Roll(1, 1, 100);
+            var chance = DiceBag.Roll(1, 1, 100);
             if (helmet != null)
             {
 
@@ -487,7 +487,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             /* TODO: terrain check, can't dirt kick underwater *taps head* */
             /* Check if player is flying/floating then fail dirt kick */
 
-            if (_dice.Roll(1, 1, 100) < chance)
+            if (DiceBag.Roll(1, 1, 100) < chance)
             {
                 var skillMessage = new SkillMessage()
                 {
@@ -574,10 +574,10 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
             var weaponDam = player.Equipped.Wielded != null ? player.Equipped.Wielded.Damage.Maximum : 1 * 2;
             var str = player.Attributes.Attribute[EffectLocation.Strength];
-            var damage = _dice.Roll(3, 1, 6) + str / 5 + weaponDam;
+            var damage = DiceBag.Roll(3, 1, 6) + str / 5 + weaponDam;
 
 
-            if (_dice.Roll(1, 1, 100) < chance)
+            if (DiceBag.Roll(1, 1, 100) < chance)
             {
                 var skillMessage = new SkillMessage()
                 {
@@ -660,9 +660,9 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             chance += player.Level - target.Level;
             var weaponDam = player.Equipped.Shield != null ? player.Equipped.Shield.ArmourRating.Armour : 1 * 2;
             var str = player.Attributes.Attribute[EffectLocation.Strength];
-            var damage = _dice.Roll(3, 1, 6) + str / 5 + weaponDam;
+            var damage = DiceBag.Roll(3, 1, 6) + str / 5 + weaponDam;
 
-            if (_dice.Roll(1, 1, 100) < chance)
+            if (DiceBag.Roll(1, 1, 100) < chance)
             {
                 var skillMessage = new SkillMessage()
                 {
@@ -727,10 +727,10 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
             var weaponDam = player.Equipped.Wielded != null ? player.Equipped.Wielded.Damage.Maximum : 1 * 2;
             var str = player.Attributes.Attribute[EffectLocation.Strength];
-            var damage = _dice.Roll(2, 1, 6) + str / 5 + weaponDam;
+            var damage = DiceBag.Roll(2, 1, 6) + str / 5 + weaponDam;
 
 
-            if (_dice.Roll(1, 1, 100) < chance)
+            if (DiceBag.Roll(1, 1, 100) < chance)
             {
                 var skillMessage = new SkillMessage()
                 {

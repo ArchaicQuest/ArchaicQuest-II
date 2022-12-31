@@ -21,12 +21,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
                 They have no need for mana, relying on their sheer strength and endurance alone to overcome opponents.
                 Important attributes for Warriors are Strength, Dexterity and Constitution Every race can train to be an effective warrior.
                 For beginners we recommend you pick a Human Warrior.",
-                HitDice = new Dice()
-                {
-                    DiceMaxSize = 10,
-                    DiceMinSize = 1,
-                    DiceRoll = 1
-                },
+                HitDice = "1d10",
                 AttributeBonus = new Attributes()
                 {
                     Attribute = new Dictionary<EffectLocation, int>()
@@ -47,12 +42,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
                     They are also skilled lock and pocket pickers, can set or disarm traps and know how to apply poison to their blade.
                     Rogues are a versatile class. Important attributes for Mages are Dexterity, Constitution and Strength Every race can train
                     to be an rogue but Mau are one of the best due to their agile nature.",
-                HitDice = new Dice()
-                {
-                    DiceMaxSize = 8,
-                    DiceMinSize = 1,
-                    DiceRoll = 1
-                },
+                HitDice = "1d8",
                 AttributeBonus = new Attributes()
                 {
                     Attribute = new Dictionary<EffectLocation, int>()
@@ -71,12 +61,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
             know powerful offensive spells to rival any mage. They can also wear any armour just like a warrior.
             Important attributes for Clerics are Wisdom, Intelligence and Constitution
             Every race can train to be a cleric but Dwarfs are one of the best.",
-                HitDice = new Dice()
-                {
-                    DiceMaxSize = 8,
-                    DiceMinSize = 1,
-                    DiceRoll = 1
-                },
+                HitDice = "1d8",
                 AttributeBonus = new Attributes()
                 {
                     Attribute = new Dictionary<EffectLocation, int>()
@@ -97,12 +82,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
             of training for physical combat. This makes mages relatively weak at the beginning of their training
             but this changes however when a they have mastered the arts of magic. Important attributes for Mages
                 are Intelligence, Wisdom and Dexterity Every race can train to be a mage but Elves are the best.",
-                HitDice = new Dice()
-                {
-                    DiceMaxSize = 6,
-                    DiceMinSize = 1,
-                    DiceRoll = 1
-                },
+                HitDice = "1d6",
                 AttributeBonus = new Attributes()
                 {
                     Attribute = new Dictionary<EffectLocation, int>()

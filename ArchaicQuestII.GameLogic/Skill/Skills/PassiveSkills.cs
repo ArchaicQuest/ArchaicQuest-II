@@ -1,18 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.Character.Gain;
-using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Core;
-using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Skill.Core;
-using ArchaicQuestII.GameLogic.Spell;
-using ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells;
+using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Skill.Skills
@@ -31,7 +27,6 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
     {
         private readonly IWriteToClient _writer;
         private readonly IUpdateClientUI _updateClientUi;
-        private readonly IDice _dice;
         private readonly IGain _gain;
         private readonly IDamage _damage;
         private readonly ICombat _fight;
@@ -41,11 +36,18 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
 
 
-        public PassiveSkills(IWriteToClient writer, IUpdateClientUI updateClientUi, IDice dice, IDamage damage, ICombat fight, ISkillManager skillManager, ICache cache, IGain gain, IEquip equip)
+        public PassiveSkills(
+            IWriteToClient writer,
+            IUpdateClientUI updateClientUi,
+            IDamage damage,
+            ICombat fight,
+            ISkillManager skillManager, 
+            ICache cache, 
+            IGain gain,
+            IEquip equip)
         {
             _writer = writer;
             _updateClientUi = updateClientUi;
-            _dice = dice;
             _damage = damage;
             _fight = fight;
             _skillManager = skillManager;
@@ -76,7 +78,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             }
 
             var proficiency = foundSkill.Proficiency;
-            var success = _dice.Roll(1, 1, 100);
+            var success = DiceBag.Roll(1, 1, 100);
 
             if (success == 1 || success == 101)
             {
@@ -99,7 +101,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                 return 0;
             }
 
-            var increase = _dice.Roll(1, 1, 5);
+            var increase = DiceBag.Roll(1, 1, 5);
 
             foundSkill.Proficiency += increase;
 

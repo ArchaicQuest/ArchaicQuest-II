@@ -4,6 +4,7 @@ using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
+using ArchaicQuestII.GameLogic.Utilities;
 
 namespace ArchaicQuestII.GameLogic.Character.Gain
 {
@@ -12,13 +13,11 @@ namespace ArchaicQuestII.GameLogic.Character.Gain
         private readonly IWriteToClient _writer;
         private readonly IUpdateClientUI _clientUi;
         private readonly ICache _cache;
-        private readonly IDice _dice;
 
-        public Gain(IWriteToClient writer, IUpdateClientUI clientUI, IDice dice, ICache cache)
+        public Gain(IWriteToClient writer, IUpdateClientUI clientUI, ICache cache)
         {
             _writer = writer;
             _clientUi = clientUI;
-            _dice = dice;
             _cache = cache;
         }
         public void GainExperiencePoints(Player player, Player target)
@@ -101,15 +100,15 @@ namespace ArchaicQuestII.GameLogic.Character.Gain
 
                 var hpGain = (player.MaxAttributes.Attribute[EffectLocation.Constitution] / 100m) * 20;
                 var minHPGain = (hpGain / 100m) * 20;
-                var totalHP = _dice.Roll(1, (int)minHPGain, (int)hpGain);
+                var totalHP = DiceBag.Roll(1, (int)minHPGain, (int)hpGain);
 
                 var manaGain = player.MaxAttributes.Attribute[EffectLocation.Intelligence] / 100m * 20;
                 var minManaGain = manaGain / 100m * 20;
-                var totalMana = _dice.Roll(1, (int)minManaGain, (int)manaGain);
+                var totalMana = DiceBag.Roll(1, (int)minManaGain, (int)manaGain);
 
                 var moveGain = player.MaxAttributes.Attribute[EffectLocation.Dexterity] / 100m * 20;
                 var minMoveGain = manaGain / 100 * 20;
-                var totalMove = _dice.Roll(1, (int)minMoveGain, (int)moveGain);
+                var totalMove = DiceBag.Roll(1, (int)minMoveGain, (int)moveGain);
 
                 //player.Attributes.Attribute[EffectLocation.Hitpoints] += totalHP;
                 //player.Attributes.Attribute[EffectLocation.Mana] += totalMana;
@@ -151,7 +150,7 @@ namespace ArchaicQuestII.GameLogic.Character.Gain
         {
             var maxEXP = 10000;
             var exp = character.Level;
-            exp += _dice.Roll(1, 25, 275);
+            exp += DiceBag.Roll(1, 25, 275);
             exp += character.Equipped.Wielded?.Damage.Maximum ?? 6; // 6 for hand to hand
             exp += character.Attributes.Attribute[EffectLocation.DamageRoll] * 10;
             exp += character.Attributes.Attribute[EffectLocation.HitRoll] + character.Level * 10;

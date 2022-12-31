@@ -19,7 +19,6 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
         private readonly Mock<IWriteToClient> _writer;
         private readonly Mock<ITime> _time;
         private readonly Mock<ICache> _cache;
-        private readonly Mock<IDice> _dice;
         private readonly Mock<IGain> _gain;
         private readonly Mock<IFormulas> _formulas;
         private readonly Mock<IPassiveSkills> _passiveSkills;
@@ -31,7 +30,6 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
             _writer = new Mock<IWriteToClient>();
             _time = new Mock<ITime>();
             _cache = new Mock<ICache>();
-            _dice = new Mock<IDice>();
             _gain = new Mock<IGain>();
             _formulas = new Mock<IFormulas>();
             _passiveSkills = new Mock<IPassiveSkills>();

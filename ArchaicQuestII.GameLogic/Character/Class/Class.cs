@@ -1,8 +1,6 @@
 ﻿using ArchaicQuestII.GameLogic.Core;
 using System.Collections.Generic;
 using ArchaicQuestII.GameLogic.Character.Model;
-using ArchaicQuestII.GameLogic.Effect;
-using ArchaicQuestII.GameLogic.Item;
 
 namespace ArchaicQuestII.GameLogic.Character.Class
 {
@@ -20,7 +18,7 @@ namespace ArchaicQuestII.GameLogic.Character.Class
     public class Class : OptionDescriptive
     {
         public List<SkillList> Skills { get; set; } = new List<SkillList>();
-        public Dice HitDice { get; set; } = new Dice();
+        public string HitDice { get; set; }
         public int ExperiencePointsCost { get; set; } = 0;
         public Attributes AttributeBonus { get; set; } = new Attributes();
         public string PreferredWeapon { get; set; }

@@ -3,6 +3,7 @@ using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
+using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Commands.Character
@@ -63,8 +64,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
         private async void Recall(Player player, Room currentRoom, Room recallRoom)
         {
 
-            var cb = Core.Dice.Roll(1, 0, _castBegin.Length - 1);
-            var ce = Core.Dice.Roll(1, 0, _castEnd.Length - 1);
+            var cb = DiceBag.Roll(1, 0, _castBegin.Length - 1);
+            var ce = DiceBag.Roll(1, 0, _castEnd.Length - 1);
             
             Core.Writer.WriteLine($"<p>{_castBegin[cb]}</p>", player.ConnectionId);
 

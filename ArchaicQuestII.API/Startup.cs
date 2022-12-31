@@ -134,7 +134,7 @@ namespace ArchaicQuestII.API
             var elapsedMs = watch.ElapsedMilliseconds;
 
             Console.WriteLine($"Start up completed in {elapsedMs}");
-            GameLogic.Core.Helpers.PostToDiscord($"Start up completed in {Math.Ceiling((decimal)elapsedMs / 1000)} seconds", "event", _cache.GetConfig());
+            GameLogic.Utilities.Helpers.PostToDiscord($"Start up completed in {Math.Ceiling((decimal)elapsedMs / 1000)} seconds", "event", _cache.GetConfig());
         }
     }
 }

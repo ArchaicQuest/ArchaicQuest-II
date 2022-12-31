@@ -6,6 +6,7 @@ using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
+using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Commands.Info
@@ -229,7 +230,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     }
                     else
                     {
-                        Core.Gain.GainSkillExperience(player, hasLore.Level * 100, hasLore, Core.Dice.Roll(1, 1, 5));
+                        Core.Gain.GainSkillExperience(player, hasLore.Level * 100, hasLore, DiceBag.Roll(1, 1, 5));
                     }
                 }
 

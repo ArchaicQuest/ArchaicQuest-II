@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Text;
+using ArchaicQuestII.GameLogic.Utilities;
 
 namespace ArchaicQuestII.GameLogic.Core
 {
     public class Weather : IWeather
     {
-
-        private IDice _dice;
-        public int LastRoll = 0;
         public string WeatherState = "Sunny";
         public int SunnyToCloudyTransitionState = 0;
         public int CloudyToSunnyTransitionState = 0;
@@ -122,10 +118,9 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public int weatherGoodToBadPos = 0;
         public int weatherBadToGoodPos = 0;
-        public Weather(IDice dice, ITime time)
+        public Weather(ITime time)
         {
             _time = time;
-            _dice = dice;
         }
 
         public void UpdateWeather()
@@ -142,7 +137,7 @@ namespace ArchaicQuestII.GameLogic.Core
         public string SimulateWeatherTransitions()
         {
 
-            var currentRoll = _dice.Roll(1, 1, 100);
+            var currentRoll = DiceBag.Roll(1, 1, 100);
 
             var states = new List<string>()
             {
@@ -196,7 +191,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
             if (WeatherState == "LightRain")
             {
-                weatherText = _time.IsNightTime() ? LightRainState[_dice.Roll(1, 0, 1)].Item1 : LightRainState[_dice.Roll(1, 0, 1)].Item2;
+                weatherText = _time.IsNightTime() ? LightRainState[DiceBag.Roll(1, 0, 1)].Item1 : LightRainState[DiceBag.Roll(1, 0, 1)].Item2;
 
                 if (currentRoll <= 25)
                 {
@@ -214,7 +209,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
             if (WeatherState == "HeavyRain")
             {
-                weatherText = _time.IsNightTime() ? HeavyRainState[_dice.Roll(1, 0, 1)].Item1 : HeavyRainState[_dice.Roll(1, 0, 1)].Item2;
+                weatherText = _time.IsNightTime() ? HeavyRainState[DiceBag.Roll(1, 0, 1)].Item1 : HeavyRainState[DiceBag.Roll(1, 0, 1)].Item2;
 
                 if (currentRoll <= 45)
                 {
@@ -232,7 +227,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
             if (WeatherState == "Thunder")
             {
-                weatherText = _time.IsNightTime() ? ThunderState[_dice.Roll(1, 0, 2)].Item1 : ThunderState[_dice.Roll(1, 0, 2)].Item2;
+                weatherText = _time.IsNightTime() ? ThunderState[DiceBag.Roll(1, 0, 2)].Item1 : ThunderState[DiceBag.Roll(1, 0, 2)].Item2;
 
                 if (currentRoll <= 35)
                 {

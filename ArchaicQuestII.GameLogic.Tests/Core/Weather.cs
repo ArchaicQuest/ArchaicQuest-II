@@ -9,11 +9,9 @@ namespace ArchaicQuestII.GameLogic.Tests.Core
 {
     public class Weather
     {
-        private readonly Mock<IDice> _dice;
         private readonly Mock<ITime> _time;
         public Weather()
         {
-            _dice = new Mock<IDice>();
             _time = new Mock<ITime>();
         }
 

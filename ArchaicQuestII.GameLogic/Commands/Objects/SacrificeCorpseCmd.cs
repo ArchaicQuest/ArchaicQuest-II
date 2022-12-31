@@ -3,6 +3,7 @@ using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
+using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Commands.Objects;
@@ -61,7 +62,7 @@ sac rat
         if (itemToRemove != null)
         {
             room.Items.Remove(itemToRemove);
-            var coinCount = new Dice().Roll(1, 1, 12);
+            var coinCount = DiceBag.Roll(1, 1, 12);
             player.Money.Gold += coinCount;
             
             Core.Writer.WriteLine(

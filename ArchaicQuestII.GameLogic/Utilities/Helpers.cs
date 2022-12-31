@@ -1,24 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Security.Cryptography;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Model;
-using ArchaicQuestII.GameLogic.Character.Status;
+using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
-using ArchaicQuestII.GameLogic.Item;
-using ArchaicQuestII.GameLogic.Skill.Enum;
 using ArchaicQuestII.GameLogic.Spell;
 using ArchaicQuestII.GameLogic.World.Room;
-using Newtonsoft.Json;
 
-namespace ArchaicQuestII.GameLogic.Core
+namespace ArchaicQuestII.GameLogic.Utilities
 {
     /// <summary>
     /// Random functions to go here unless there is
@@ -580,7 +575,7 @@ namespace ArchaicQuestII.GameLogic.Core
             var skill = player.Skills.FirstOrDefault(x =>
                 x.SkillName.Equals(skillName, StringComparison.CurrentCultureIgnoreCase));
 
-            var chance = new Dice().Roll(1, 1, 100);
+            var chance = DiceBag.Roll(1, 1, 100);
 
             return (skill == null || !(skill.Proficiency <= chance)) && chance != 1 && chance != 101;
         }
@@ -588,7 +583,7 @@ namespace ArchaicQuestII.GameLogic.Core
         public static bool SkillSuccessCheck(SkillList skill)
         {
             var proficiency = skill.Proficiency;
-            var success = new Dice().Roll(1, 1, 100);
+            var success = DiceBag.Roll(1, 1, 100);
 
             if (success == 1 || success == 101)
             {
@@ -600,7 +595,7 @@ namespace ArchaicQuestII.GameLogic.Core
         
         public static bool LoreSuccess(int? skillLevel)
         {
-            var chance = new Dice().Roll(1, 1, 100);
+            var chance = DiceBag.Roll(1, 1, 100);
 
             return skillLevel >= chance;
         }
@@ -619,7 +614,7 @@ namespace ArchaicQuestII.GameLogic.Core
                 return string.Empty;
             }
 
-            var increase = new Dice().Roll(1, 1, 5);
+            var increase = DiceBag.Roll(1, 1, 5);
 
             skill.Proficiency += increase;
 

@@ -4,19 +4,15 @@ using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
-using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.Skill.Enum;
 using ArchaicQuestII.GameLogic.Skill.Model;
 using ArchaicQuestII.GameLogic.Spell;
-using ArchaicQuestII.GameLogic.Spell.Model;
 using ArchaicQuestII.GameLogic.World.Room;
 using Moq;
 using System.Collections.Generic;
 using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Client;
-using ArchaicQuestII.GameLogic.Skill.Core;
 using ArchaicQuestII.GameLogic.Spell.Interface;
-using ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells;
 using Xunit;
 
 
@@ -35,7 +31,6 @@ namespace ArchaicQuestII.GameLogic.Tests
         private readonly Mock<ISpellTargetCharacter> _spellTargetCharacter;
         private readonly Mock<IUpdateClientUI> _updateClientUI;
         private readonly Mock<IMobScripts> _mobScript;
-        private readonly Mock<IDice> _dice;
         private readonly Mock<ISpellList> _spellList;
 
         [Obsolete]
@@ -65,12 +60,7 @@ namespace ArchaicQuestII.GameLogic.Tests
                     Accumulate = true,
                     Id = 1
                 },
-                Damage = new Dice()
-                {
-                    DiceRoll = 1,
-                    DiceMinSize = 10,
-                    DiceMaxSize = 10
-                },
+                Damage = "10",
                 Description = "Makes you strong as an ogre",
                 Rounds = 1,
                 SpellGroup = new Sphere()
@@ -125,10 +115,8 @@ namespace ArchaicQuestII.GameLogic.Tests
             _spellTargetCharacter = new Mock<ISpellTargetCharacter>();
             _cache = new Mock<ICache>();
             _updateClientUI = new Mock<IUpdateClientUI>();
-
-            _dice = new Mock<IDice>();
             _spellList = new Mock<ISpellList>();
-            _spell = new CastSpell(_writer.Object, _spellTargetCharacter.Object, _cache.Object, _damage.Object, _updateClientUI.Object, _dice.Object, _spellList.Object);
+            _spell = new CastSpell(_writer.Object, _spellTargetCharacter.Object, _cache.Object, _damage.Object, _updateClientUI.Object, _spellList.Object);
 
             var newSkill = new Skill.Model.Skill
             {

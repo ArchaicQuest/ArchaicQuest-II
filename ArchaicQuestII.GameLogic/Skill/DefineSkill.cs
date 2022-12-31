@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using ArchaicQuestII.GameLogic.Character.Status;
-using ArchaicQuestII.GameLogic.Core;
-using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.Skill.Enum;
 using ArchaicQuestII.GameLogic.Skill.Model;
 using ArchaicQuestII.GameLogic.Spell;
@@ -35,12 +31,7 @@ namespace ArchaicQuestII.GameLogic.Skill
                 Type = SkillType.Damage,
                 StartsCombat = true,
                 ValidTargets = ValidTargets.TargetPlayerRoom | ValidTargets.TargetFightVictim,
-                Damage = new Dice()
-                {
-                    DiceMaxSize = 8,
-                    DiceMinSize = 1,
-                    DiceRoll = 1
-                },
+                Damage = "1d8",
                 UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
             };
 
@@ -72,12 +63,7 @@ namespace ArchaicQuestII.GameLogic.Skill
                 Type = SkillType.Damage,
                 StartsCombat = true,
                 ValidTargets = ValidTargets.TargetPlayerRoom | ValidTargets.TargetFightVictim,
-                Damage = new Dice()
-                {
-                    DiceMaxSize = 4,
-                    DiceMinSize = 1,
-                    DiceRoll = 1
-                },
+                Damage = "1d4",
                 UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
             };
 
@@ -106,12 +92,7 @@ namespace ArchaicQuestII.GameLogic.Skill
                 Type = SkillType.None,
                 StartsCombat = false,
                 ValidTargets = ValidTargets.TargetObjectInventory,
-                Damage = new Dice()
-                {
-                    DiceMaxSize = 4,
-                    DiceMinSize = 1,
-                    DiceRoll = 1
-                },
+                Damage = "1d4",
                 UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
             };
 
@@ -138,12 +119,7 @@ namespace ArchaicQuestII.GameLogic.Skill
                 StartsCombat = false,
                 ValidTargets = ValidTargets.TargetPlayerRoom | ValidTargets.TargetFightVictim |
                                ValidTargets.TargetNotSelf,
-                Damage = new Dice()
-                {
-                    DiceMaxSize = 4,
-                    DiceMinSize = 1,
-                    DiceRoll = 1
-                },
+                Damage = "1d4",
                 UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
             };
 
@@ -172,12 +148,7 @@ namespace ArchaicQuestII.GameLogic.Skill
                 Type = SkillType.Passive,
                 StartsCombat = false,
                 ValidTargets = ValidTargets.TargetPlayerRoom | ValidTargets.TargetFightVictim,
-                Damage = new Dice()
-                {
-                    DiceMaxSize = 4,
-                    DiceMinSize = 1,
-                    DiceRoll = 1
-                },
+                Damage = "1d4",
                 UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Resting
             };
 
@@ -209,12 +180,7 @@ namespace ArchaicQuestII.GameLogic.Skill
                 Type = SkillType.Damage,
                 StartsCombat = true,
                 ValidTargets = ValidTargets.TargetPlayerRoom | ValidTargets.TargetFightVictim,
-                Damage = new Dice()
-                {
-                    DiceMaxSize = 12,
-                    DiceMinSize = 1,
-                    DiceRoll = 1
-                },
+                Damage = "1d12",
                 UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
             };
 
@@ -246,12 +212,7 @@ namespace ArchaicQuestII.GameLogic.Skill
                 Type = SkillType.Damage,
                 StartsCombat = true,
                 ValidTargets = ValidTargets.TargetPlayerRoom | ValidTargets.TargetFightVictim,
-                Damage = new Dice()
-                {
-                    DiceMaxSize = 12,
-                    DiceMinSize = 1,
-                    DiceRoll = 1
-                },
+                Damage = "1d12",
                 UsableFromStatus = CharacterStatus.Status.Standing
             };
 
@@ -280,12 +241,7 @@ namespace ArchaicQuestII.GameLogic.Skill
                 Type = SkillType.Passive,
                 StartsCombat = true,
                 ValidTargets = ValidTargets.TargetIgnore,
-                Damage = new Dice()
-                {
-                    DiceMaxSize = 12,
-                    DiceMinSize = 1,
-                    DiceRoll = 1
-                },
+                Damage = "1d12",
                 UsableFromStatus = CharacterStatus.Status.Standing
             };
 
@@ -318,12 +274,7 @@ namespace ArchaicQuestII.GameLogic.Skill
                 Type = SkillType.Damage,
                 StartsCombat = true,
                 ValidTargets = ValidTargets.TargetPlayerRoom | ValidTargets.TargetFightVictim,
-                Damage = new Dice()
-                {
-                    DiceMaxSize = 6,
-                    DiceMinSize = 1,
-                    DiceRoll = 1
-                },
+                Damage = "1d6",
                 UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
             };
 
@@ -355,12 +306,7 @@ namespace ArchaicQuestII.GameLogic.Skill
                 Type = SkillType.Damage,
                 StartsCombat = true,
                 ValidTargets = ValidTargets.TargetPlayerRoom | ValidTargets.TargetFightVictim,
-                Damage = new Dice()
-                {
-                    DiceMaxSize = 6,
-                    DiceMinSize = 1,
-                    DiceRoll = 1
-                },
+                Damage = "1d6",
                 UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
             };
 
@@ -392,12 +338,7 @@ namespace ArchaicQuestII.GameLogic.Skill
                 Type = SkillType.Damage,
                 StartsCombat = true,
                 ValidTargets = ValidTargets.TargetPlayerRoom | ValidTargets.TargetFightVictim,
-                Damage = new Dice()
-                {
-                    DiceMaxSize = 6,
-                    DiceMinSize = 1,
-                    DiceRoll = 1
-                },
+                Damage = "1d6",
                 UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
             };
 
@@ -429,12 +370,7 @@ namespace ArchaicQuestII.GameLogic.Skill
                 Type = SkillType.Damage,
                 StartsCombat = true,
                 ValidTargets = ValidTargets.TargetPlayerRoom | ValidTargets.TargetFightVictim,
-                Damage = new Dice()
-                {
-                    DiceMaxSize = 6,
-                    DiceMinSize = 1,
-                    DiceRoll = 1
-                },
+                Damage = "1d6",
                 UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
             };
 
@@ -466,12 +402,7 @@ namespace ArchaicQuestII.GameLogic.Skill
                 Type = SkillType.Damage,
                 StartsCombat = true,
                 ValidTargets = ValidTargets.TargetPlayerRoom | ValidTargets.TargetFightVictim,
-                Damage = new Dice()
-                {
-                    DiceMaxSize = 6,
-                    DiceMinSize = 1,
-                    DiceRoll = 1
-                },
+                Damage = "1d6",
                 UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
             };
 
@@ -503,12 +434,7 @@ namespace ArchaicQuestII.GameLogic.Skill
                 Type = SkillType.Damage,
                 StartsCombat = true,
                 ValidTargets = ValidTargets.TargetFightSelf | ValidTargets.TargetSelfOnly,
-                Damage = new Dice()
-                {
-                    DiceMaxSize = 6,
-                    DiceMinSize = 1,
-                    DiceRoll = 1
-                },
+                Damage = "1d6",
                 UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
             };
 
@@ -540,12 +466,7 @@ namespace ArchaicQuestII.GameLogic.Skill
                 Type = SkillType.None,
                 StartsCombat = true,
                 ValidTargets = ValidTargets.TargetPlayerRoom,
-                Damage = new Dice()
-                {
-                    DiceMaxSize = 6,
-                    DiceMinSize = 1,
-                    DiceRoll = 1
-                },
+                Damage = "1d6",
                 UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
             };
 
@@ -577,12 +498,7 @@ namespace ArchaicQuestII.GameLogic.Skill
                 Type = SkillType.None,
                 StartsCombat = true,
                 ValidTargets = ValidTargets.TargetPlayerRoom | ValidTargets.TargetFightVictim,
-                Damage = new Dice()
-                {
-                    DiceMaxSize = 6,
-                    DiceMinSize = 1,
-                    DiceRoll = 1
-                },
+                Damage = "1d6",
                 UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
             };
 
@@ -614,12 +530,7 @@ namespace ArchaicQuestII.GameLogic.Skill
                 Type = SkillType.None,
                 StartsCombat = true,
                 ValidTargets = ValidTargets.TargetPlayerRoom | ValidTargets.TargetFightVictim,
-                Damage = new Dice()
-                {
-                    DiceMaxSize = 6,
-                    DiceMinSize = 1,
-                    DiceRoll = 1
-                },
+                Damage = "1d6",
                 UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
             };
 
@@ -651,12 +562,7 @@ namespace ArchaicQuestII.GameLogic.Skill
                 Type = SkillType.None,
                 StartsCombat = true,
                 ValidTargets = ValidTargets.TargetPlayerRoom | ValidTargets.TargetFightVictim,
-                Damage = new Dice()
-                {
-                    DiceMaxSize = 6,
-                    DiceMinSize = 1,
-                    DiceRoll = 1
-                },
+                Damage = "1d6",
                 UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
             };
 
@@ -688,12 +594,7 @@ namespace ArchaicQuestII.GameLogic.Skill
                 Type = SkillType.None,
                 StartsCombat = true,
                 ValidTargets = ValidTargets.TargetPlayerRoom | ValidTargets.TargetFightVictim,
-                Damage = new Dice()
-                {
-                    DiceMaxSize = 6,
-                    DiceMinSize = 1,
-                    DiceRoll = 1
-                },
+                Damage = "1d6",
                 UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
             };
 
@@ -725,12 +626,7 @@ namespace ArchaicQuestII.GameLogic.Skill
                 Type = SkillType.None,
                 StartsCombat = true,
                 ValidTargets = ValidTargets.TargetPlayerRoom | ValidTargets.TargetFightVictim,
-                Damage = new Dice()
-                {
-                    DiceMaxSize = 6,
-                    DiceMinSize = 1,
-                    DiceRoll = 1
-                },
+                Damage = "1d6",
                 UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
             };
 
@@ -763,12 +659,7 @@ namespace ArchaicQuestII.GameLogic.Skill
                 Type = SkillType.Passive,
                 StartsCombat = true,
                 ValidTargets = ValidTargets.TargetSelfOnly,
-                Damage = new Dice()
-                {
-                    DiceMaxSize = 6,
-                    DiceMinSize = 1,
-                    DiceRoll = 1
-                },
+                Damage = "1d6",
                 UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
             };
 
@@ -798,12 +689,7 @@ namespace ArchaicQuestII.GameLogic.Skill
                 Type = SkillType.Damage,
                 StartsCombat = true,
                 ValidTargets = ValidTargets.TargetFightVictim | ValidTargets.TargetPlayerRoom,
-                Damage = new Dice()
-                {
-                    DiceMaxSize = 6,
-                    DiceMinSize = 1,
-                    DiceRoll = 1
-                },
+                Damage = "1d6",
                 UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
             };
 
@@ -833,12 +719,7 @@ namespace ArchaicQuestII.GameLogic.Skill
                 Type = SkillType.Passive,
                 StartsCombat = true,
                 ValidTargets = ValidTargets.TargetFightVictim | ValidTargets.TargetPlayerRoom,
-                Damage = new Dice()
-                {
-                    DiceMaxSize = 6,
-                    DiceMinSize = 1,
-                    DiceRoll = 1
-                },
+                Damage = "1d6",
                 UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
             };
 
@@ -868,12 +749,7 @@ namespace ArchaicQuestII.GameLogic.Skill
                 Type = SkillType.Passive,
                 StartsCombat = true,
                 ValidTargets = ValidTargets.TargetFightVictim | ValidTargets.TargetPlayerRoom,
-                Damage = new Dice()
-                {
-                    DiceMaxSize = 6,
-                    DiceMinSize = 1,
-                    DiceRoll = 1
-                },
+                Damage = "1d6",
                 UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
             };
 
@@ -903,12 +779,7 @@ namespace ArchaicQuestII.GameLogic.Skill
                 Type = SkillType.None,
                 StartsCombat = true,
                 ValidTargets = ValidTargets.TargetSelfOnly,
-                Damage = new Dice()
-                {
-                    DiceMaxSize = 6,
-                    DiceMinSize = 1,
-                    DiceRoll = 1
-                },
+                Damage = "1d6",
                 UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
             };
 
@@ -938,12 +809,7 @@ namespace ArchaicQuestII.GameLogic.Skill
                 Type = SkillType.Damage,
                 StartsCombat = true,
                 ValidTargets = ValidTargets.TargetFightVictim | ValidTargets.TargetPlayerRoom,
-                Damage = new Dice()
-                {
-                    DiceMaxSize = 6,
-                    DiceMinSize = 1,
-                    DiceRoll = 1
-                },
+                Damage = "1d6",
                 UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
             };
 
@@ -973,12 +839,7 @@ namespace ArchaicQuestII.GameLogic.Skill
                 Type = SkillType.Damage,
                 StartsCombat = true,
                 ValidTargets = ValidTargets.TargetFightVictim | ValidTargets.TargetPlayerRoom,
-                Damage = new Dice()
-                {
-                    DiceMaxSize = 6,
-                    DiceMinSize = 1,
-                    DiceRoll = 1
-                },
+                Damage = "1d6",
                 UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
             };
 
@@ -1007,12 +868,7 @@ namespace ArchaicQuestII.GameLogic.Skill
                 Type = SkillType.Damage,
                 StartsCombat = true,
                 ValidTargets = ValidTargets.TargetFightVictim | ValidTargets.TargetPlayerRoom,
-                Damage = new Dice()
-                {
-                    DiceMaxSize = 6,
-                    DiceMinSize = 1,
-                    DiceRoll = 1
-                },
+                Damage = "1d6",
                 UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
             };
 
@@ -1042,12 +898,7 @@ namespace ArchaicQuestII.GameLogic.Skill
                 Type = SkillType.Damage,
                 StartsCombat = true,
                 ValidTargets = ValidTargets.TargetFightVictim | ValidTargets.TargetPlayerRoom,
-                Damage = new Dice()
-                {
-                    DiceMaxSize = 6,
-                    DiceMinSize = 1,
-                    DiceRoll = 1
-                },
+                Damage = "1d6",
                 UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
             };
 
@@ -1077,12 +928,7 @@ namespace ArchaicQuestII.GameLogic.Skill
                 Type = SkillType.Damage,
                 StartsCombat = true,
                 ValidTargets = ValidTargets.TargetFightVictim | ValidTargets.TargetPlayerRoom,
-                Damage = new Dice()
-                {
-                    DiceMaxSize = 6,
-                    DiceMinSize = 1,
-                    DiceRoll = 1
-                },
+                Damage = "1d6",
                 UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
             };
 
@@ -1111,12 +957,7 @@ namespace ArchaicQuestII.GameLogic.Skill
                 Type = SkillType.Damage,
                 StartsCombat = true,
                 ValidTargets = ValidTargets.TargetFightVictim | ValidTargets.TargetPlayerRoom,
-                Damage = new Dice()
-                {
-                    DiceMaxSize = 6,
-                    DiceMinSize = 1,
-                    DiceRoll = 1
-                },
+                Damage = "1d6",
                 UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
             };
 
@@ -1145,12 +986,7 @@ namespace ArchaicQuestII.GameLogic.Skill
                 Type = SkillType.Damage,
                 StartsCombat = true,
                 ValidTargets = ValidTargets.TargetFightVictim | ValidTargets.TargetPlayerRoom,
-                Damage = new Dice()
-                {
-                    DiceMaxSize = 6,
-                    DiceMinSize = 1,
-                    DiceRoll = 1
-                },
+                Damage = "1d6",
                 UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
             };
 
