@@ -30,22 +30,13 @@ namespace ArchaicQuestII.GameLogic.Utilities
         {
             if (string.IsNullOrEmpty(die)) return 0;
 
-            if (int.TryParse(die, out var num))
-            {
-                return num;
-            }
-            
-            if (die.StartsWith('+'))
-            {
-                RollAdvantage(die[1..]);
-            }
+            if (!TryParse(die, out var numDice, out var dieSize, out var modifier, out var advantage))
+                return 0;
 
-            if (die.StartsWith('-'))
-            {
-                RollDisadvantage(die[1..]);
-            }
-            
-            Parse(die, out var numDice, out var dieSize,out var modifier);
+            if (advantage > 0)
+                return RollAdvantage(numDice, dieSize, modifier);
+            if (advantage < 0)
+                return RollDisadvantage(numDice, dieSize, modifier);
             
             var sum = modifier;
 
@@ -78,10 +69,8 @@ namespace ArchaicQuestII.GameLogic.Utilities
             return sum;
         }
 
-        private static int RollAdvantage(string die)
+        private static int RollAdvantage(int numDice, int dieSize, int modifier = 0)
         {
-            Parse(die, out var numDice, out var dieSize,out var modifier);
-            
             var die1 = modifier;
             
             for (var i = 0; i < numDice; i++)
@@ -100,10 +89,8 @@ namespace ArchaicQuestII.GameLogic.Utilities
 
         }
 
-        private static int RollDisadvantage(string die)
+        private static int RollDisadvantage(int numDice, int dieSize, int modifier = 0)
         {
-            Parse(die, out var numDice, out var dieSize,out var modifier);
-            
             var die1 = modifier;
             
             for (var i = 0; i < numDice; i++)
@@ -131,24 +118,52 @@ namespace ArchaicQuestII.GameLogic.Utilities
             return Throw(0, 2) == 1;
         }
 
-        private static void Parse(string die, out int numDice, out int dieSize, out int modifier)
+        private static bool TryParse(string die, out int numDice, out int dieSize, out int modifier, out int advantage)
         {
+            numDice = 0;
+            dieSize = 0;
+            modifier = 0;
+            advantage = 0;
+            
             die = die.ToLowerInvariant().Trim();
             
+            if (int.TryParse(die, out var num))
+            {
+                modifier = num;
+                return false;
+            }
+            
             var parsedDie = die.Replace(" ", "");
+            
+            if (die.StartsWith('+'))
+            {
+                advantage = 1;
+                parsedDie = die[1..];
+            }
 
-            if(die.Contains('+'))
+            if (die.StartsWith('-'))
+            {
+                advantage = -1;
+                parsedDie = die[1..];
+            }
+            
+            if(parsedDie.Contains('+'))
                 modifier = int.Parse(new Regex(Modifier).ToString());
-            else if (die.Contains('-'))
+            else if (parsedDie.Contains('-'))
                 modifier = int.Parse(new Regex(Modifier).ToString()) * -1;
-            else
-                modifier = 0;
 
             var parts = parsedDie.Split("d");
+
+            if (parts.Length < 2)
+                return false;
+
+            if (!int.TryParse(parts[0], out numDice))
+                return false;
             
-            numDice = int.Parse(parts[0]);
-            
-            dieSize = int.Parse(parts[1]);
+            if (!int.TryParse(parts[1], out dieSize))
+                return false;
+
+            return true;
         }
     }
 }
