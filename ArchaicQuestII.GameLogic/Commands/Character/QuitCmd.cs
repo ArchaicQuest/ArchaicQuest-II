@@ -14,8 +14,9 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
         public QuitCmd(ICore core)
         {
             Aliases = new[] {"quit"};
-            Description = "Leave the game.";
+            Description = "Leave the game, it auto saves and removes your character from the game. If you don't quit you will go link dead and at risk of getting killed and robbed.";
             Usages = new[] {"Type: quit"};
+            Title = "";
             DeniedStatus = new[]
             {
                 CharacterStatus.Status.Busy,
@@ -28,6 +29,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
+        public string Title { get; }
         public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
         public ICore Core { get; }

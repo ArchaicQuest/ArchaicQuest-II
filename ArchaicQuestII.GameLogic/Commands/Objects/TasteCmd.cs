@@ -12,8 +12,9 @@ public class TasteCmd : ICommand
     public TasteCmd(ICore core)
     {
         Aliases = new[] {"taste"};
-        Description = "You taste an object.";
-        Usages = new[] {"Type: taste flag"};
+        Description = "You can taste an object, and find out how it tastes.";
+        Usages = new[] {"Type: taste cake"};
+        Title = "";
         DeniedStatus = new[]
         {
             CharacterStatus.Status.Busy,
@@ -34,6 +35,7 @@ public class TasteCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }

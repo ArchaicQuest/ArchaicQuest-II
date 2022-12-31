@@ -18,6 +18,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
             Aliases = new[] {"craft"};
             Description = "Craft Items";
             Usages = new[] {"Type: craft something"};
+            Title = "";
             DeniedStatus = new[]
             {
                 CharacterStatus.Status.Busy,
@@ -37,6 +38,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
+        public string Title { get; }
         public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
         public ICore Core { get; }

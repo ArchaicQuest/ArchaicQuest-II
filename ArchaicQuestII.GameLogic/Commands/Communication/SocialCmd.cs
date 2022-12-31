@@ -16,8 +16,9 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
         public SocialCmd(ICore core)
         {
             Aliases = new[] {"social"};
-            Description = "Sends a message about what your actions are";
-            Usages = new[] {"Type: social wink bob"};
+            Description = "List prebuilt social emotes that you can use";
+            Usages = new[] {"Type: social"};
+            Title = "";
             DeniedStatus = new[]
             {
                 CharacterStatus.Status.Busy,
@@ -36,6 +37,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
+        public string Title { get; }
         public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
         public ICore Core { get; }
@@ -44,8 +46,14 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
         {
             var target = input.ElementAtOrDefault(2);
             var socialName = input.ElementAtOrDefault(1);
-
-            Emote social = null;
+            
+            var getSocial = Core.Cache.GetSocials().Keys.FirstOrDefault(x => x.Equals(socialName));
+            if (getSocial == null)
+            {
+                return;
+            }
+            target = socialName == target ? "" : target;
+            Emote social = Core.Cache.GetSocials()[getSocial];
 
             if (string.IsNullOrEmpty(socialName) || socialName == "list")
             {
@@ -101,10 +109,15 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
                     Core.Writer.WriteLine($"<p>{Helpers.ReplaceSocialTags(social.TargetSelf, player, getTarget)}</p>", player.ConnectionId);
                     Core.Writer.WriteToOthersInRoom($"<p>{Helpers.ReplaceSocialTags(social.RoomSelf, player, getTarget)}</p>", room, player);
                 }
-                
-                Core.Writer.WriteLine($"<p>{Helpers.ReplaceSocialTags(social.TargetFound, player, getTarget)}<p>", player.ConnectionId);
-                Core.Writer.WriteLine($"<p>{Helpers.ReplaceSocialTags(social.ToTarget, player, getTarget)}</p>", getTarget.ConnectionId);
-                
+
+                if (getTarget.Id != player.Id)
+                {
+                    Core.Writer.WriteLine($"<p>{Helpers.ReplaceSocialTags(social.TargetFound, player, getTarget)}<p>",
+                        player.ConnectionId);
+                    Core.Writer.WriteLine($"<p>{Helpers.ReplaceSocialTags(social.ToTarget, player, getTarget)}</p>",
+                        getTarget.ConnectionId);
+                }
+
                 foreach (var pc in room.Players.Where(pc => pc.Id != player.Id && pc.Id != getTarget.Id))
                 {
                     Core.Writer.WriteLine($"<p>{Helpers.ReplaceSocialTags(social.RoomTarget, player, getTarget)}</p>", pc.ConnectionId);

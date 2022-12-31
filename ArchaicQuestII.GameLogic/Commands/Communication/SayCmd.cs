@@ -12,8 +12,9 @@ public class SayCmd : ICommand
     public SayCmd(ICore core)
     {
         Aliases = new[] {"say", "'"};
-        Description = "Say something to the room.";
+        Description = "Say something to the room. Everyone present will hear what you say if they're awake.";
         Usages = new[] {"Type: say what ever you want"};
+        Title = "";
         DeniedStatus = new[]
         {
             CharacterStatus.Status.Busy,
@@ -30,6 +31,7 @@ public class SayCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }

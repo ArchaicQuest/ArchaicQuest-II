@@ -16,6 +16,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
             Aliases = new[] {"book"};
             Description = "Write in or Read from a book.";
             Usages = new[] {"Type: book title read"};
+            Title = "";
             DeniedStatus = new[]
             {
                 CharacterStatus.Status.Busy,
@@ -35,6 +36,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
+        public string Title { get; }
         public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
         public ICore Core { get; }

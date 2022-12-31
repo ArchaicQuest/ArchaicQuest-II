@@ -15,9 +15,23 @@ public class DropCmd : ICommand
 {
     public DropCmd(ICore core)
     {
-        Aliases = new[] { "drop" };
-        Description = "Tries to drop items or gold.";
-        Usages = new[] { "Example: drop apple", "Example: drop all", "Example: drop apple chest" };
+        Aliases = new[] { "drop", "put" };
+        Description =  @"'{yellow}drop{/}' is used to drop the specified item or gold from your inventory to the ground, container, or a corpse.  
+
+Examples:
+drop sword 
+drop 2.sword (if you have several items the same you can pick the nth one)
+drop sword chest
+drop 100 gold 
+drop all 
+drop all corpse
+
+alternatively put can be used, traditionally in MUDs it's used to put items into containers, put sword chest
+
+Related help files: get, put, give, drop
+";
+        Usages = new[] { "Example: drop apple, Example: drop all, Example: drop apple chest" };
+        Title = "";
         DeniedStatus = new[]
         {
             CharacterStatus.Status.Busy,
@@ -38,6 +52,7 @@ public class DropCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }

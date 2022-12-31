@@ -14,6 +14,7 @@ public class YellCmd : ICommand
         Aliases = new[] {"yell"};
         Description = "Sends a message to everyone in the area";
         Usages = new[] {"Type: yell 'message'"};
+        Title = "";
         DeniedStatus = new[]
         {
             CharacterStatus.Status.Busy,
@@ -30,6 +31,7 @@ public class YellCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }

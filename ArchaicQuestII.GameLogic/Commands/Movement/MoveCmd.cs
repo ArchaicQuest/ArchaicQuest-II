@@ -12,6 +12,7 @@ public class MoveCmd : ICommand
 {
     public MoveCmd(ICore core)
     {
+        Title = "Movement";
         Aliases = new[]
         {
             "north", 
@@ -34,8 +35,8 @@ public class MoveCmd : ICommand
             "down",
             "d"
         };
-        Description = "Tries to move your character to the direction typed.";
-        Usages = new[] { "Type: north", "Type: southwest" };
+        Description = @"<pre><p>To move around you type in one of the following commands: {yellow}north{/}, {yellow}east{/}, {yellow}south{/}, {yellow}west{/}, {yellow}up{/}, {yellow}down{/} {yellow}northeast{/}, {yellow}southeast{/}, {yellow}southwest{/}, and {yellow}northwest{/}. These commands may also be shortened to:  {yellow}n{/}, {yellow}e{/}, {yellow}s{/}, {yellow}w{/}, {yellow}u{/}, {yellow}d{/}, {yellow}ne{/}, {yellow}se{/}, {yellow}sw{/}, and {yellow}nw{/}.</p><p>Moving consumes movement points, shown in the green stat bar. Stats Replenish slowly but can be sped up by using the sit, rest, or sleep commands. When finished recovering you will need to wake or stand before you can move again.</p></pre>";
+        Usages = new[] { "Type: north or n for short to move north. Valid Directions: n,e,s,w,u,d,nw,ne,se,sw" };
         DeniedStatus = new[]
         {
             CharacterStatus.Status.Busy,
@@ -55,6 +56,7 @@ public class MoveCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }

@@ -16,6 +16,7 @@ public class GossipCmd : ICommand
         Description = "Talk on the IC gossip channel.";
         Usages = new[] {"Type: gossip some message"};
         DeniedStatus = null;
+        Title = String.Empty;
         UserRole = UserRole.Player;
         Core = core;
     }
@@ -23,6 +24,7 @@ public class GossipCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }

@@ -17,6 +17,7 @@ namespace ArchaicQuestII.GameLogic.Commands.World
             Aliases = new[] {"area"};
             Description = "Displays info about area.";
             Usages = new[] {"Type: area"};
+            Title = "";
             DeniedStatus = new[]
             {
                 CharacterStatus.Status.Busy,
@@ -35,6 +36,7 @@ namespace ArchaicQuestII.GameLogic.Commands.World
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
+        public string Title { get; }
         public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
         public ICore Core { get; }

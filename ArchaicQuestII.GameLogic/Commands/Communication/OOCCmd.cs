@@ -15,7 +15,8 @@ public class OOCCmd : ICommand
         Aliases = new[] {"ooc"};
         Description = "Sends a message to out of character channel";
         Usages = new[] {"Type: ooc Did anyone see the game last night?"};
-        DeniedStatus = null;
+            Title = "";
+    DeniedStatus = null;
         UserRole = UserRole.Player;
         Core = core;
     }
@@ -23,6 +24,7 @@ public class OOCCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }

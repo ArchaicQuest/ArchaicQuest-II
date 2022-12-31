@@ -13,8 +13,9 @@ public class ConsiderCmd : ICommand
     public ConsiderCmd(ICore core)
     {
         Aliases = new[] {"con", "consider"};
-        Description = "See your chances of defeating an enemy.";
+        Description = "Consider tells you what your chances are of killing a character. Of course, it's only a rough estimate.";
         Usages = new[] {"Type: consider rat"};
+        Title = "";
         DeniedStatus = new[]
         {
             CharacterStatus.Status.Busy,
@@ -34,6 +35,7 @@ public class ConsiderCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }

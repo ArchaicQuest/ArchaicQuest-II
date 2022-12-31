@@ -16,9 +16,15 @@ public class ListSkillsCmd : ICommand
     public ListSkillsCmd(ICore core)
     {
         Aliases = new[] {"skills"};
-        Description = "Shows available skills.";
+        Description = "The skills and spells commands are used to display your character's list " +
+                      "of available skills (or spells, as the case may be).  They are listed in " +
+                      "order of level, with mana cost (for spells) or percentage (for skills) " +
+                      "listed where applicable. Typing skills or spells alone will list only the " +
+                      "skills/spells you have currently achieved usage of. To list all skills and " +
+                      "spells you have, use skills/spells all.";
         Usages = new[] {"Type: skills."};
-        DeniedStatus = null;
+            Title = "";
+    DeniedStatus = null;
         UserRole = UserRole.Player;
         Core = core;
     }
@@ -26,6 +32,7 @@ public class ListSkillsCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }

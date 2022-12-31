@@ -13,8 +13,10 @@ public class FleeCmd : ICommand
     public FleeCmd(ICore core)
     {
         Aliases = new[] {"flee"};
-        Description = "Randomly moves your character out of the room during combat.";
+        Description = "Randomly moves your character out of the room during combat. " +
+                      "If the room has a door, make sure it's open when you flee otherwise you will be unable to flee until it's open";
         Usages = new[] {"Type: north"};
+        Title = "";
         DeniedStatus = new[]
         {
             CharacterStatus.Status.Busy,
@@ -33,6 +35,7 @@ public class FleeCmd : ICommand
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
+    public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
     public ICore Core { get; }
@@ -62,45 +65,51 @@ public class FleeCmd : ICommand
 
         var validExits = new List<Exit>();
 
-        if (room.Exits.North != null)
+        if (room.Exits.North != null && !room.Exits.North.Closed)
         {
             validExits.Add(room.Exits.North);
         }
-        if (room.Exits.NorthEast != null)
+        if (room.Exits.NorthEast != null && !room.Exits.NorthEast.Closed)
         {
             validExits.Add(room.Exits.NorthEast);
         }
-        if (room.Exits.NorthWest != null)
+        if (room.Exits.NorthWest != null && !room.Exits.NorthWest.Closed)
         {
             validExits.Add(room.Exits.NorthWest);
         }
-        if (room.Exits.East != null)
+        if (room.Exits.East != null && !room.Exits.East.Closed)
         {
             validExits.Add(room.Exits.East);
         }
-        if (room.Exits.SouthEast != null)
+        if (room.Exits.SouthEast != null && !room.Exits.SouthEast.Closed)
         {
             validExits.Add(room.Exits.SouthEast);
         }
-        if (room.Exits.South != null)
+        if (room.Exits.South != null && !room.Exits.South.Closed)
         {
             validExits.Add(room.Exits.South);
         }
-        if (room.Exits.SouthWest != null)
+        if (room.Exits.SouthWest != null && !room.Exits.SouthWest.Closed)
         {
             validExits.Add(room.Exits.SouthWest);
         }
-        if (room.Exits.West != null)
+        if (room.Exits.West != null && !room.Exits.West.Closed)
         {
             validExits.Add(room.Exits.West);
         }
-        if (room.Exits.Up != null)
+        if (room.Exits.Up != null && !room.Exits.Up.Closed)
         {
             validExits.Add(room.Exits.Up);
         }
-        if (room.Exits.Down != null)
+        if (room.Exits.Down != null && !room.Exits.Down.Closed)
         {
             validExits.Add(room.Exits.Down);
+        }
+
+        if (validExits.Count == 0)
+        {
+            Core.Writer.WriteLine("<p>You have no where to go!</p>", player.ConnectionId);
+            return;
         }
 
         var getExitIndex = Core.Dice.Roll(1, 0, validExits.Count - 1);
