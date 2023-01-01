@@ -31,7 +31,7 @@ namespace ArchaicQuestII.GameLogic.Utilities
             if (string.IsNullOrEmpty(die)) return 0;
 
             if (!TryParse(die, out var numDice, out var dieSize, out var modifier, out var advantage))
-                return 0;
+                return modifier;
 
             if (advantage > 0)
                 return RollAdvantage(numDice, dieSize, modifier);
