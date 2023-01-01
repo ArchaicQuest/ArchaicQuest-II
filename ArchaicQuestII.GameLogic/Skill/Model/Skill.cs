@@ -1,10 +1,8 @@
 ﻿using System;
-using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.Skill.Enum;
 using System.Collections.Generic;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Character.Status;
-using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Spell;
 
 namespace ArchaicQuestII.GameLogic.Skill.Model
@@ -15,7 +13,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Model
         public string Name { get; set; }
         public string Description { get; set; }
         public string Formula { get; set; }
-        public Dice Damage { get; set; }
+        public string Damage { get; set; }
         [Obsolete]
         public Effect.Effect Effect { get; set; }
         public List<Affect> SpellAffects { get; set; } = new List<Affect>();

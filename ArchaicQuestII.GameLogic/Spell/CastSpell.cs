@@ -1,22 +1,17 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
-using ArchaicQuestII.GameLogic.Item;
-using ArchaicQuestII.GameLogic.Skill.Core;
 using ArchaicQuestII.GameLogic.Skill.Enum;
 using ArchaicQuestII.GameLogic.Skill.Model;
 using ArchaicQuestII.GameLogic.Spell.Interface;
+using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
-using LiteDB;
-using MoonSharp.Interpreter;
 
 namespace ArchaicQuestII.GameLogic.Spell
 {
@@ -27,16 +22,21 @@ namespace ArchaicQuestII.GameLogic.Spell
         private readonly ICache _cache;
         private readonly IDamage _damage;
         private readonly IUpdateClientUI _updateClientUi;
-        private readonly IDice _dice;
         private readonly ISpellList _spellList;
-        public CastSpell(IWriteToClient writer, ISpellTargetCharacter spellTargetCharacter, ICache cache, IDamage damage, IUpdateClientUI updateClientUi, IDice dice, ISpellList spellList)
+        
+        public CastSpell(
+            IWriteToClient writer,
+            ISpellTargetCharacter spellTargetCharacter, 
+            ICache cache, 
+            IDamage damage,
+            IUpdateClientUI updateClientUi,
+            ISpellList spellList)
         {
             _writer = writer;
             _spellTargetCharacter = spellTargetCharacter;
             _cache = cache;
             _damage = damage;
             _updateClientUi = updateClientUi;
-            _dice = dice;
             _spellList = spellList;
         }
 
@@ -248,8 +248,7 @@ namespace ArchaicQuestII.GameLogic.Spell
             }
 
             var spellProficiency = spellSkill.Proficiency;
-            var success = spell.Damage.Roll(1, 1,
-                101);
+            var success = DiceBag.Roll(1, 1, 101);
 
             if (success == 1 || success == 101)
             {
@@ -317,7 +316,7 @@ namespace ArchaicQuestII.GameLogic.Spell
 
                     var savingThrow = target.Attributes.Attribute[EffectLocation.Intelligence] / 2;
 
-                    var rollForSave = _dice.Roll(1, 1, 100);
+                    var rollForSave = DiceBag.Roll(1, 1, 100);
 
                     if (rollForSave <= savingThrow)
                     {
@@ -429,7 +428,7 @@ namespace ArchaicQuestII.GameLogic.Spell
                         return;
                     }
 
-                    var increase = new Dice().Roll(1, 1, 3);
+                    var increase = DiceBag.Roll(1, 1, 3);
 
                     skill.Proficiency += increase;
 
@@ -485,7 +484,7 @@ namespace ArchaicQuestII.GameLogic.Spell
                     }
 
 
-                    var increase = new Dice().Roll(1, 1, 3);
+                    var increase = DiceBag.Roll(1, 1, 3);
 
                     skill.Proficiency += increase;
 

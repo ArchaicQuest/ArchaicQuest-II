@@ -5,8 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using ArchaicQuestII.API.Entities;
 using ArchaicQuestII.API.Models;
-using ArchaicQuestII.GameLogic.Core;
-using ArchaicQuestII.GameLogic.Item;
 using Microsoft.AspNetCore.Authorization;
 
 namespace ArchaicQuestII.API.Character
@@ -41,12 +39,7 @@ namespace ArchaicQuestII.API.Character
                 CreatedBy = "Malleus",
                 Description = charClass.Description,
                 ExperiencePointsCost = charClass.ExperiencePointsCost,
-                HitDice = new Dice()
-                {
-                    DiceMinSize = 1,
-                    DiceMaxSize = charClass.HitDice.DiceMaxSize,
-                    DiceRoll = 1
-                },
+                HitDice = charClass.HitDice,
                 Skills = charClass.Skills
             };
 

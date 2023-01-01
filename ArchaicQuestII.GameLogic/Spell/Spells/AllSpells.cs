@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using ArchaicQuestII.GameLogic.Character.Model;
+﻿using System.Collections.Generic;
 using ArchaicQuestII.GameLogic.Character.Status;
-using ArchaicQuestII.GameLogic.Core;
-using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.Skill.Enum;
 using ArchaicQuestII.GameLogic.Skill.Model;
 
@@ -32,12 +27,7 @@ namespace ArchaicQuestII.GameLogic.Spell
                 Type = SkillType.Damage,
                 StartsCombat = true,
                 ValidTargets = ValidTargets.TargetPlayerRoom | ValidTargets.TargetFightVictim,
-                Damage = new Dice()
-                {
-                    DiceMaxSize = 4,
-                    DiceMinSize = 1,
-                    DiceRoll = 1
-                },
+                Damage = "1d4",
                 UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
             };
 
@@ -66,12 +56,7 @@ namespace ArchaicQuestII.GameLogic.Spell
                 Type = SkillType.Damage,
                 StartsCombat = true,
                 ValidTargets = ValidTargets.TargetPlayerRoom | ValidTargets.TargetFightVictim,
-                Damage = new Dice()
-                {
-                    DiceMaxSize = 8,
-                    DiceMinSize = 1,
-                    DiceRoll = 1
-                },
+                Damage = "1d8",
                 UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
             };
 
@@ -100,12 +85,7 @@ namespace ArchaicQuestII.GameLogic.Spell
                 Type = SkillType.Affect,
                 StartsCombat = false,
                 ValidTargets = ValidTargets.TargetPlayerRoom | ValidTargets.TargetFightSelf,
-                Damage = new Dice()
-                {
-                    DiceMaxSize = 8,
-                    DiceMinSize = 1,
-                    DiceRoll = 1
-                },
+                Damage = "1d8",
                 UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
             };
 
@@ -134,9 +114,7 @@ namespace ArchaicQuestII.GameLogic.Spell
                 Type = SkillType.Affect,
                 StartsCombat = false,
                 ValidTargets = ValidTargets.TargetPlayerRoom | ValidTargets.TargetFightSelf,
-                Damage = new Dice()
-                {
-                },
+                Damage = null,
                 UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
             };
 
@@ -165,9 +143,7 @@ namespace ArchaicQuestII.GameLogic.Spell
                 Type = SkillType.Affect,
                 StartsCombat = false,
                 ValidTargets = ValidTargets.TargetPlayerRoom,
-                Damage = new Dice()
-                {
-                },
+                Damage = null,
                 UsableFromStatus = CharacterStatus.Status.Standing | CharacterStatus.Status.Fighting
             };
 
@@ -196,9 +172,7 @@ namespace ArchaicQuestII.GameLogic.Spell
                 Type = SkillType.Passive,
                 StartsCombat = false,
                 ValidTargets = ValidTargets.TargetObjectInventory | ValidTargets.TargetObjectEquipped,
-                Damage = new Dice()
-                {
-                },
+                Damage = null,
                 UsableFromStatus = CharacterStatus.Status.Standing
             };
 

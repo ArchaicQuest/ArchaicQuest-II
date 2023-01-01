@@ -8,16 +8,12 @@ using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Item;
+using ArchaicQuestII.GameLogic.Utilities;
 
 namespace ArchaicQuestII.GameLogic.Combat
 {
     public class Formulas : IFormulas
     {
-        private readonly IDice _dice;
-        public Formulas(IDice dice)
-        {
-            _dice = dice;
-        }
         public int OffensivePoints(Player player, bool useDualWield = false)
         {
 
@@ -138,12 +134,12 @@ namespace ArchaicQuestII.GameLogic.Combat
                     x.SkillName.Replace(" ", string.Empty)
                         .Equals(Enum.GetName(typeof(Item.Item.WeaponTypes), weapon.WeaponType)));
 
-                damage = _dice.Roll(1, weapon.Damage.Minimum, weapon.Damage.Maximum);
+                damage = DiceBag.Roll(1, weapon.Damage.Minimum, weapon.Damage.Maximum);
 
                 if (skill != null)
                 {
 
-                    damage = (int)(damage * (skill.Proficiency + 1) / 100) + _dice.Roll(1, 1, 3); // 1-3 to stop hand to hand being OP earlier levels if weapon dam is less than 1d6
+                    damage = (int)(damage * (skill.Proficiency + 1) / 100) + DiceBag.Roll(1, 1, 3); // 1-3 to stop hand to hand being OP earlier levels if weapon dam is less than 1d6
                 }
                 else
                 {
@@ -154,7 +150,7 @@ namespace ArchaicQuestII.GameLogic.Combat
             else
             {
                 //Hand to hand
-                damage = _dice.Roll(1, 1, 6);
+                damage = DiceBag.Roll(1, 1, 6);
             }
 
             // Enhanced Damage Skill check
@@ -244,12 +240,12 @@ namespace ArchaicQuestII.GameLogic.Combat
 
         public bool IsCriticalHit()
         {
-            return _dice.Roll(1, 1, 20) == 20;
+            return DiceBag.Roll(1, 1, 20) == 20;
         }
 
         public bool DoesHit(int chance)
         {
-            var roll = _dice.Roll(1, 1, 100);
+            var roll = DiceBag.Roll(1, 1, 100);
 
 
             return roll switch

@@ -4,16 +4,14 @@ using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Model;
-using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.Skill.Core;
-using ArchaicQuestII.GameLogic.Skill.Enum;
 using ArchaicQuestII.GameLogic.Skill.Model;
-using ArchaicQuestII.GameLogic.Spell.Interface;
+using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
@@ -37,18 +35,21 @@ namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
     {
         private readonly IWriteToClient _writer;
         private readonly IUpdateClientUI _updateClientUi;
-        private readonly IDice _dice;
         private readonly IDamage _damage;
         private readonly ICombat _fight;
         private readonly ISkillManager _skillManager;
 
 
 
-        public DamageSpells(IWriteToClient writer, IUpdateClientUI updateClientUi, IDice dice, IDamage damage, ICombat fight, ISkillManager skillManager)
+        public DamageSpells(
+            IWriteToClient writer, 
+            IUpdateClientUI updateClientUi,
+            IDamage damage, 
+            ICombat fight, 
+            ISkillManager skillManager)
         {
             _writer = writer;
             _updateClientUi = updateClientUi;
-            _dice = dice;
             _damage = damage;
             _fight = fight;
             _skillManager = skillManager;
@@ -59,7 +60,7 @@ namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
 
         public int MagicMissile(Player player, Player target, Room room)
         {
-            var damage = _dice.Roll(1, 1, 4) + 1;
+            var damage = DiceBag.Roll(1, 1, 4) + 1;
 
             _skillManager.DamagePlayer("magic missile", damage, player, target, room);
 
@@ -69,7 +70,7 @@ namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
         public int CauseLightWounds(Player player, Player target, Room room)
         {
             var casterLevel = player.Level > 10 ? 5 : player.Level;
-            var damage = _dice.Roll(1, 1, 8) + casterLevel;
+            var damage = DiceBag.Roll(1, 1, 8) + casterLevel;
 
             _skillManager.DamagePlayer("Cause light wounds", damage, player, target, room);
 
@@ -240,7 +241,7 @@ namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
         public void CureLightWounds(Player player, Player target, Room room)
         {
             var casterLevel = player.Level > 10 ? 10 : player.Level;
-            var value = _dice.Roll(1, 1, 4) + 1 + casterLevel;
+            var value = DiceBag.Roll(1, 1, 4) + 1 + casterLevel;
 
             var skillMessage = new SkillMessage()
             {

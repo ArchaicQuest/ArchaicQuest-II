@@ -4,11 +4,7 @@ using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
-using ArchaicQuestII.GameLogic.Item;
-using ArchaicQuestII.GameLogic.Skill.Enum;
-using ArchaicQuestII.GameLogic.Skill.Model;
 using ArchaicQuestII.GameLogic.Spell;
-using ArchaicQuestII.GameLogic.Spell.Model;
 using ArchaicQuestII.GameLogic.World.Room;
 using Moq;
 using System.Collections.Generic;
@@ -17,9 +13,6 @@ using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Skill.Core;
 using ArchaicQuestII.GameLogic.Skill.Skills;
-using ArchaicQuestII.GameLogic.Spell.Interface;
-using ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells;
-using Xunit;
 
 
 namespace ArchaicQuestII.GameLogic.Tests.Skills
@@ -38,7 +31,6 @@ namespace ArchaicQuestII.GameLogic.Tests.Skills
         private readonly Mock<ISkillManager> _skillManager;
         private readonly Mock<IUpdateClientUI> _updateClientUI;
         private readonly Mock<IMobScripts> _mobScript;
-        private readonly Mock<IDice> _dice;
         private readonly DamageSkills _damageSkills;
 
         public DamageSkillsTests()
@@ -100,13 +92,8 @@ namespace ArchaicQuestII.GameLogic.Tests.Skills
             _cache = new Mock<ICache>();
             _combat = new Mock<ICombat>();
             _updateClientUI = new Mock<IUpdateClientUI>();
-            _dice = new Mock<IDice>();
 
-            _damageSkills = new DamageSkills(_writer.Object, _updateClientUI.Object, _dice.Object, _damage.Object, _combat.Object, _skillManager.Object);
-
-
-
-
+            _damageSkills = new DamageSkills(_writer.Object, _updateClientUI.Object, _damage.Object, _combat.Object, _skillManager.Object);
         }
 
 

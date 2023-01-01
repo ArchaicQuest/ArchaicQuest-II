@@ -7,12 +7,10 @@ using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Config;
-using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Client;
-using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
-using ArchaicQuestII.GameLogic.Skill.Skills;
+using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
 using Microsoft.Extensions.Logging;
 using MoonSharp.Interpreter;
@@ -31,7 +29,14 @@ namespace ArchaicQuestII.GameLogic.Hubs
         private readonly IUpdateClientUI _updateClientUi;
         private readonly IMobScripts _mobScripts;
 
-        public GameHub(IDataBase db, IPlayerDataBase pdb, ICache cache, ILogger<GameHub> logger, IWriteToClient writeToClient, IUpdateClientUI updateClientUi, IMobScripts mobScripts, ITime time, IDice dice, IGain gain, IFormulas formulas, IPassiveSkills passiveSkills)
+        public GameHub(
+            IDataBase db, 
+            IPlayerDataBase pdb, 
+            ICache cache, 
+            ILogger<GameHub> logger, 
+            IWriteToClient writeToClient, 
+            IUpdateClientUI updateClientUi, 
+            IMobScripts mobScripts)
         {
             _logger = logger;
             _db = db;

@@ -6,6 +6,7 @@ using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Core;
+using ArchaicQuestII.GameLogic.Utilities;
 using MoonSharp.Interpreter;
 
 namespace ArchaicQuestII.GameLogic.World.Room

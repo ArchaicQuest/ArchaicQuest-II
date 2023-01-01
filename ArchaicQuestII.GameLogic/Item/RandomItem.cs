@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Equipment;
-using ArchaicQuestII.GameLogic.Core;
+﻿using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Item.RandomItemTypes;
+using ArchaicQuestII.GameLogic.Utilities;
 
 namespace ArchaicQuestII.GameLogic.Item
 {
@@ -37,19 +33,20 @@ namespace ArchaicQuestII.GameLogic.Item
 
     public class RandomItem : IRandomItem
     {
-        private IDice _dice;
         private IRandomWeapon _randomWeapon;
         private IRandomClothItems _randomClothItems;
         private IRandomLeatherItems _randomLeatherItems;
         private IRandomStuddedLeatherArmour _randomStuddedItems;
         private IRandomChainMailArmour _randomChainMailItems;
         private IRandomPlateMailArmour _randomPlateMailItems;
-        public RandomItem(IDice dice, IRandomWeapon weapon, IRandomClothItems clothArmor, IRandomLeatherItems leatherItems,
+        public RandomItem(
+            IRandomWeapon weapon, 
+            IRandomClothItems clothArmor, 
+            IRandomLeatherItems leatherItems,
             IRandomStuddedLeatherArmour studdedLeather,
             IRandomChainMailArmour chainMail,
             IRandomPlateMailArmour plateMail)
         {
-            _dice = dice;
             _randomWeapon = weapon;
             _randomClothItems = clothArmor;
             _randomLeatherItems = leatherItems;
@@ -60,7 +57,7 @@ namespace ArchaicQuestII.GameLogic.Item
 
         public Item CreateRandomItem(Player player, bool legendary)
         {
-            var roll = _dice.Roll(1, 0, 5);
+            var roll = DiceBag.Roll(1, 0, 5);
 
             return roll switch
             {
@@ -78,7 +75,7 @@ namespace ArchaicQuestII.GameLogic.Item
         public Item WeaponDrop(Player player)
         {
             var dropChance = 5;
-            var roll = _dice.Roll(1, 1, 100);
+            var roll = DiceBag.Roll(1, 1, 100);
             var legendary = false;
             if (roll <= dropChance)
             {

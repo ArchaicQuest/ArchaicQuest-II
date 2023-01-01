@@ -13,6 +13,7 @@ using ArchaicQuestII.GameLogic.World.Room;
 using Newtonsoft.Json;
 using System.Web;
 using ArchaicQuestII.GameLogic.Client;
+using ArchaicQuestII.GameLogic.Utilities;
 
 namespace ArchaicQuestII.GameLogic.Core
 {
@@ -24,7 +25,6 @@ namespace ArchaicQuestII.GameLogic.Core
         private ICombat _combat;
         private IDataBase _db;
         private IPlayerDataBase _pdb;
-        private IDice _dice;
         private IUpdateClientUI _client;
         private ITime _time;
         private ICore _core;
@@ -32,7 +32,18 @@ namespace ArchaicQuestII.GameLogic.Core
         private IWeather _weather;
         private List<string> _hints;
 
-        public GameLoop(IWriteToClient writeToClient, ICache cache, ICommandHandler commandHandler, ICombat combat, IDataBase database, IPlayerDataBase playerDataBase, IDice dice, IUpdateClientUI client, ITime time, ICore core, ISpellList spelllist, IWeather weather)
+        public GameLoop(
+            IWriteToClient writeToClient, 
+            ICache cache, 
+            ICommandHandler commandHandler, 
+            ICombat combat, 
+            IDataBase database, 
+            IPlayerDataBase playerDataBase,
+            IUpdateClientUI client, 
+            ITime time, 
+            ICore core, 
+            ISpellList spelllist, 
+            IWeather weather)
         {
             _writeToClient = writeToClient;
             _cache = cache;
@@ -40,7 +51,6 @@ namespace ArchaicQuestII.GameLogic.Core
             _combat = combat;
             _db = database;
             _pdb = playerDataBase;
-            _dice = dice;
             _client = client;
             _time = time;
             _core = core;
@@ -140,20 +150,20 @@ namespace ArchaicQuestII.GameLogic.Core
                                 {
 
                                     mobExist.Attributes.Attribute[EffectLocation.Hitpoints] +=
-                                        _dice.Roll(1, 2, 5) + mobExist.Level;
+                                        DiceBag.Roll(1, 2, 5) + mobExist.Level;
                                     mobExist.Attributes.Attribute[EffectLocation.Mana] +=
-                                        _dice.Roll(1, 2, 5) + mobExist.Level;
+                                        DiceBag.Roll(1, 2, 5) + mobExist.Level;
                                     mobExist.Attributes.Attribute[EffectLocation.Moves] +=
-                                        _dice.Roll(1, 2, 5) + mobExist.Level;
+                                        DiceBag.Roll(1, 2, 5) + mobExist.Level;
                                 }
                                 else
                                 {
                                     mobExist.Attributes.Attribute[EffectLocation.Hitpoints] +=
-                                        (_dice.Roll(1, 1, 5) + mobExist.Level) / 2;
+                                        (DiceBag.Roll(1, 1, 5) + mobExist.Level) / 2;
                                     mobExist.Attributes.Attribute[EffectLocation.Mana] +=
-                                        (_dice.Roll(1, 1, 5) + mobExist.Level) / 2;
+                                        (DiceBag.Roll(1, 1, 5) + mobExist.Level) / 2;
                                     mobExist.Attributes.Attribute[EffectLocation.Moves] +=
-                                        (_dice.Roll(1, 1, 5) + mobExist.Level) / 2;
+                                        (DiceBag.Roll(1, 1, 5) + mobExist.Level) / 2;
                                 }
 
                                 if (mobExist.Attributes.Attribute[EffectLocation.Hitpoints] >
@@ -234,9 +244,9 @@ namespace ArchaicQuestII.GameLogic.Core
 
                         //  IdleCheck(player);
 
-                        var hP = (_dice.Roll(1, 2, 5));
-                        var mana = (_dice.Roll(1, 2, 5));
-                        var moves = (_dice.Roll(1, 2, 5));
+                        var hP = (DiceBag.Roll(1, 2, 5));
+                        var mana = (DiceBag.Roll(1, 2, 5));
+                        var moves = (DiceBag.Roll(1, 2, 5));
 
                         // if player has fast healing add the bonus here
                         var hasFastHealing = player.Skills.FirstOrDefault(x =>
@@ -458,10 +468,10 @@ namespace ArchaicQuestII.GameLogic.Core
                         }
 
                         //reduce frequency of hints to only 50% of the time
-                        if (player.Config.Hints && _dice.Roll(1, 0, 1) == 1)
+                        if (player.Config.Hints && DiceBag.Roll(1, 0, 1) == 1)
                         {
                             _writeToClient.WriteLine(
-                                $"<span style='color:lawngreen'>[Hint]</span> {HttpUtility.HtmlEncode(_hints[_dice.Roll(1, 0, _hints.Count)])}",
+                                $"<span style='color:lawngreen'>[Hint]</span> {HttpUtility.HtmlEncode(_hints[DiceBag.Roll(1, 0, _hints.Count)])}",
                                 player.ConnectionId);
                         }
                     }
@@ -632,12 +642,12 @@ namespace ArchaicQuestII.GameLogic.Core
 
                     foreach (var room in rooms)
                     {
-                        if (!room.Emotes.Any() || _dice.Roll(1, 1, 10) < 7)
+                        if (!room.Emotes.Any() || DiceBag.Roll(1, 1, 10) < 7)
                         {
                             continue;
                         }
 
-                        var emote = room.Emotes[_dice.Roll(1, 0, room.Emotes.Count - 1)];
+                        var emote = room.Emotes[DiceBag.Roll(1, 0, room.Emotes.Count - 1)];
 
                         foreach (var player in room.Players)
                         {
@@ -677,10 +687,10 @@ namespace ArchaicQuestII.GameLogic.Core
 
                         foreach (var mob in room.Mobs.Where(x => x.Status == CharacterStatus.Status.Standing).ToList())
                         {
-                            if (mob.Emotes.Any() && mob.Emotes[0] != null && _dice.Roll(1, 0, 1) == 1)
+                            if (mob.Emotes.Any() && mob.Emotes[0] != null && DiceBag.Roll(1, 0, 1) == 1)
                             {
 
-                                var emote = mob.Emotes[_dice.Roll(1, 0, mob.Emotes.Count - 1)];
+                                var emote = mob.Emotes[DiceBag.Roll(1, 0, mob.Emotes.Count - 1)];
                                 foreach (var player in room.Players)
                                 {
                                     //example mob emote: Larissa flicks through her journal.
@@ -700,7 +710,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
 
 
-                            if (mob.Roam && _dice.Roll(1, 1, 100) >= 50)
+                            if (mob.Roam && DiceBag.Roll(1, 1, 100) >= 50)
                             {
 
                                 if (mob.Buffer.Count == 0)
@@ -711,7 +721,7 @@ namespace ArchaicQuestII.GameLogic.Core
                                     var reveseDirection3 = "";
                                     if (exits != null)
                                     {
-                                        var direction = exits[_dice.Roll(1, 0, exits.Count - 1)];
+                                        var direction = exits[DiceBag.Roll(1, 0, exits.Count - 1)];
 
                                         var newExit = Helpers.IsExit(direction, room);
 
@@ -731,7 +741,7 @@ namespace ArchaicQuestII.GameLogic.Core
                                             if (newRoom != null)
                                             {
                                                 exits = Helpers.GetListOfExits(newRoom.Exits);
-                                                direction = exits[_dice.Roll(1, 0, exits.Count - 1)];
+                                                direction = exits[DiceBag.Roll(1, 0, exits.Count - 1)];
 
                                                 newExit = Helpers.IsExit(direction, newRoom);
 
@@ -749,7 +759,7 @@ namespace ArchaicQuestII.GameLogic.Core
                                                     if (newRoom != null)
                                                     {
                                                         exits = Helpers.GetListOfExits(newRoom.Exits);
-                                                        direction = exits[_dice.Roll(1, 0, exits.Count - 1)];
+                                                        direction = exits[DiceBag.Roll(1, 0, exits.Count - 1)];
 
                                                         newExit = Helpers.IsExit(direction, newRoom);
 

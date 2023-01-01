@@ -4,6 +4,7 @@ using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
+using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Commands.Movement;
@@ -112,7 +113,7 @@ public class FleeCmd : ICommand
             return;
         }
 
-        var getExitIndex = Core.Dice.Roll(1, 0, validExits.Count - 1);
+        var getExitIndex = DiceBag.Roll(1, 0, validExits.Count - 1);
 
         player.Status = CharacterStatus.Status.Standing;
         

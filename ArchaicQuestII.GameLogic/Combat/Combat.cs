@@ -12,6 +12,7 @@ using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Item;
+using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Combat
@@ -25,11 +26,19 @@ namespace ArchaicQuestII.GameLogic.Combat
         private readonly IFormulas _formulas;
         private readonly ICache _cache;
         private readonly IQuestLog _quest;
-        private readonly IDice _dice;
         private readonly IRandomItem _randomItem;
         private readonly IPlayerDataBase _pdb;
 
-        public Combat(IWriteToClient writer, IUpdateClientUI clientUi, IDamage damage, IFormulas formulas, IGain gain, ICache cache, IQuestLog quest, IDice dice, IRandomItem randomItem, IPlayerDataBase pdb)
+        public Combat(
+            IWriteToClient writer, 
+            IUpdateClientUI clientUi, 
+            IDamage damage, 
+            IFormulas formulas, 
+            IGain gain, 
+            ICache cache, 
+            IQuestLog quest, 
+            IRandomItem randomItem, 
+            IPlayerDataBase pdb)
         {
             _writer = writer;
             _clientUi = clientUi;
@@ -38,7 +47,6 @@ namespace ArchaicQuestII.GameLogic.Combat
             _gain = gain;
             _cache = cache;
             _quest = quest;
-            _dice = dice;
             _randomItem = randomItem;
             _pdb = pdb;
         }
@@ -377,7 +385,7 @@ namespace ArchaicQuestII.GameLogic.Combat
                     // instead of rolling a D10, roll a D6 for a close to 15% increase in chance
 
                     // Move to formula, needs to use _dice instead of making a new instance
-                    var avoidanceRoll = new Dice().Roll(1, 1, 10);
+                    var avoidanceRoll = DiceBag.Roll(1, 1, 10);
 
 
                     //10% chance to attempt a dodge
@@ -468,7 +476,7 @@ namespace ArchaicQuestII.GameLogic.Combat
 
                     var damage = _formulas.CalculateDamage(player, target, weapon);
 
-                    var enhancedDamageChance = _dice.Roll(1, 1, 100);
+                    var enhancedDamageChance = DiceBag.Roll(1, 1, 100);
                     var hasEnhancedDamage =
                         player.Skills.FirstOrDefault(x => x.SkillName.Equals("Enhanced Damage"));
 
@@ -569,7 +577,7 @@ namespace ArchaicQuestII.GameLogic.Combat
                         // instead of rolling a D10, roll a D6 for a close to 15% increase in chance
 
                         // Move to formula, needs to use _dice instead of making a new instance
-                        var avoidanceRoll = new Dice().Roll(1, 1, 10);
+                        var avoidanceRoll = DiceBag.Roll(1, 1, 10);
 
 
                         //10% chance to attempt a dodge
@@ -666,7 +674,7 @@ namespace ArchaicQuestII.GameLogic.Combat
                             damage *= 2;
                         }
 
-                        var enhancedDamageChance = _dice.Roll(1, 1, 100);
+                        var enhancedDamageChance = DiceBag.Roll(1, 1, 100);
                         var hasEnhancedDamage =
                             player.Skills.FirstOrDefault(x => x.SkillName.Equals("Enhanced Damage"));
 
@@ -1010,7 +1018,7 @@ namespace ArchaicQuestII.GameLogic.Combat
             }
 
             var proficiency = foundSkill.Proficiency;
-            var success = _dice.Roll(1, 1, 100);
+            var success = DiceBag.Roll(1, 1, 100);
 
             if (success == 1 || success == 101)
             {
@@ -1028,7 +1036,7 @@ namespace ArchaicQuestII.GameLogic.Combat
                 return false;
             }
 
-            var increase = _dice.Roll(1, 1, 5);
+            var increase = DiceBag.Roll(1, 1, 5);
 
             foundSkill.Proficiency += increase;
 

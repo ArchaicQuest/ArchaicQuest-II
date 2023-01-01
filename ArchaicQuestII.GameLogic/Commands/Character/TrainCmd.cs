@@ -3,6 +3,7 @@ using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
+using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Commands.Character
@@ -80,7 +81,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
                 if (statName.Item1 is "hit points" or "moves" or "mana")
                 {
                     var hitDie = Core.Cache.GetClass(player.ClassName);
-                    var roll = Core.Dice.Roll(1, hitDie.HitDice.DiceMinSize, hitDie.HitDice.DiceMaxSize);
+                    var roll = DiceBag.Roll(hitDie.HitDice);
 
                     player.MaxAttributes.Attribute[statName.Item2] += roll;
                     player.Attributes.Attribute[statName.Item2] += roll;

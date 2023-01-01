@@ -12,6 +12,7 @@ using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.Spell.Interface;
 using ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells;
+using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
 using MoonSharp.Interpreter;
 
@@ -73,19 +74,22 @@ namespace ArchaicQuestII.GameLogic.Core
         public Room _room;
         public ICombat _combat;
         private readonly ICache _cache;
-        private readonly IDice _dice;
         private readonly IWriteToClient _writeToClient;
         private readonly IUpdateClientUI _updateClientUi;
         private readonly IGain _gain;
         private readonly ISpells _spells;
 
-        public MobScripts(ICache cache, ICombat
-            combat, IWriteToClient writeToClient, IDice dice, IUpdateClientUI updateClientUi, IGain gain, ISpells spells)
+        public MobScripts(
+            ICache cache, 
+            ICombat combat, 
+            IWriteToClient writeToClient, 
+            IUpdateClientUI updateClientUi, 
+            IGain gain, 
+            ISpells spells)
         {
             _cache = cache;
             _combat = combat;
             _writeToClient = writeToClient;
-            _dice = dice;
             _updateClientUi = updateClientUi;
             _gain = gain;
             _spells = spells;
@@ -179,7 +183,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public int Random(int min, int max)
         {
-            return _dice.Roll(1, min, max);
+            return DiceBag.Roll(1, min, max);
         }
 
         public string GetClass(Player player)
@@ -273,7 +277,7 @@ namespace ArchaicQuestII.GameLogic.Core
         
         public void Harm(int maxValue, Player player, Room room)
         {
-            var damage = _dice.Roll(1, 1, maxValue);
+            var damage = DiceBag.Roll(1, 1, maxValue);
 
             var dummyPlayer = new Player()
             {

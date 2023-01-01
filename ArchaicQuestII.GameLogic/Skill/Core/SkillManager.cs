@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Character.Status;
@@ -9,12 +8,8 @@ using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
-using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.Skill.Enum;
-using ArchaicQuestII.GameLogic.Skill.Model;
 using ArchaicQuestII.GameLogic.Spell;
-using ArchaicQuestII.GameLogic.Spell.Interface;
-using ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells;
 using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Skill.Core
@@ -23,17 +18,19 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
     {
         private readonly IWriteToClient _writer;
         private readonly IUpdateClientUI _updateClientUi;
-        private readonly IDice _dice;
         private readonly IDamage _damage;
         private readonly ICombat _fight;
 
 
 
-        public SkillManager(IWriteToClient writer, IUpdateClientUI updateClientUi, IDice dice, IDamage damage, ICombat fight)
+        public SkillManager(
+            IWriteToClient writer, 
+            IUpdateClientUI updateClientUi,
+            IDamage damage, 
+            ICombat fight)
         {
             _writer = writer;
             _updateClientUi = updateClientUi;
-            _dice = dice;
             _damage = damage;
             _fight = fight;
 
