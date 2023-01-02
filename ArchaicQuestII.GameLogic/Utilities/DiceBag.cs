@@ -1,11 +1,11 @@
 using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace ArchaicQuestII.GameLogic.Utilities
 {
     public static class DiceBag
     {
-        private const string Modifier = @"\+(.*)";
         private static readonly Random Random = new(); 
         private static readonly object SyncLock = new();
 
@@ -139,11 +139,8 @@ namespace ArchaicQuestII.GameLogic.Utilities
                 advantage = -1;
                 parsedDie = die[1..];
             }
-            
-            if(parsedDie.Contains('+'))
-                modifier = int.Parse(new Regex(Modifier).ToString());
-            else if (parsedDie.Contains('-'))
-                modifier = int.Parse(new Regex(Modifier).ToString()) * -1;
+
+            parsedDie = ParseModifier(parsedDie, out modifier);
 
             var parts = parsedDie.Split("d");
 
@@ -157,6 +154,29 @@ namespace ArchaicQuestII.GameLogic.Utilities
                 return false;
 
             return true;
+        }
+        
+        private static string ParseModifier(string value, out int modifier)
+        {
+            var num = 0;
+            
+            var pos = value.Split('+');
+            var neg = value.Split('-');
+
+            if (pos.Length > 1)
+            {
+                int.TryParse(pos[1], out num);
+                value = pos[0];
+            }
+            else if (neg.Length > 1)
+            {
+                int.TryParse(neg[1], out num);
+                value = neg[0];
+                num *= -1;
+            }
+
+            modifier = num;
+            return value;
         }
     }
 }
