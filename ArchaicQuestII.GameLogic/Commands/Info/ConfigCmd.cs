@@ -12,7 +12,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
         public ConfigCmd(ICore core)
         {
             Aliases = new[] {"config"};
-            Description = "Displays current config settings.";
+            Description = "Displays current config settings. Use the UI Cog to edit your settings.";
             Usages = new[] {"Type: config"};
                 Title = "";
     DeniedStatus = null;
