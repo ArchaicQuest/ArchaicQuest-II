@@ -1,6 +1,4 @@
 using System;
-using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace ArchaicQuestII.GameLogic.Utilities
 {
@@ -64,42 +62,30 @@ namespace ArchaicQuestII.GameLogic.Utilities
 
         private static int RollAdvantage(int numDice, int dieSize, int modifier = 0)
         {
-            var die1 = modifier;
+            var die1 = Roll(numDice, 1, dieSize, modifier);
+            var die2 = Roll(numDice, 1, dieSize, modifier);
             
-            for (var i = 0; i < numDice; i++)
-            {
-                die1 += Throw(1, dieSize + 1);
-            }
-
-            var die2 = modifier;
-            
-            for (var i = 0; i < numDice; i++)
-            {
-                die2 += Throw(1, dieSize + 1);
-            }
-
             return die1 > die2 ? die1 : die2;
-
         }
 
         private static int RollDisadvantage(int numDice, int dieSize, int modifier = 0)
         {
-            var die1 = modifier;
-            
-            for (var i = 0; i < numDice; i++)
-            {
-                die1 += Throw(1, dieSize + 1);
-            }
-
-            var die2 = modifier;
-            
-            for (var i = 0; i < numDice; i++)
-            {
-                die2 += Throw(1, dieSize + 1);
-            }
+            var die1 = Roll(numDice, 1, dieSize, modifier);
+            var die2 = Roll(numDice, 1, dieSize, modifier);
 
             return die1 < die2 ? die1 : die2;
+        }
 
+        public static int[] RollBag(int numDice, int dieSize)
+        {
+            var diebag = new int[numDice];
+            
+            for (var i = 0; i < numDice; i++)
+            {
+                diebag[i] = Roll(1, 1, dieSize);
+            }
+
+            return diebag;
         }
 
         /// <summary>
@@ -140,7 +126,20 @@ namespace ArchaicQuestII.GameLogic.Utilities
                 parsedDie = die[1..];
             }
 
-            parsedDie = ParseModifier(parsedDie, out modifier);
+            var pos = parsedDie.Split('+');
+            var neg = parsedDie.Split('-');
+
+            if (pos.Length > 1)
+            {
+                int.TryParse(pos[1], out modifier);
+                parsedDie = pos[0];
+            }
+            else if (neg.Length > 1)
+            {
+                int.TryParse(neg[1], out modifier);
+                parsedDie = neg[0];
+                modifier *= -1;
+            }
 
             var parts = parsedDie.Split("d");
 
@@ -154,29 +153,6 @@ namespace ArchaicQuestII.GameLogic.Utilities
                 return false;
 
             return true;
-        }
-        
-        private static string ParseModifier(string value, out int modifier)
-        {
-            var num = 0;
-            
-            var pos = value.Split('+');
-            var neg = value.Split('-');
-
-            if (pos.Length > 1)
-            {
-                int.TryParse(pos[1], out num);
-                value = pos[0];
-            }
-            else if (neg.Length > 1)
-            {
-                int.TryParse(neg[1], out num);
-                value = neg[0];
-                num *= -1;
-            }
-
-            modifier = num;
-            return value;
         }
     }
 }

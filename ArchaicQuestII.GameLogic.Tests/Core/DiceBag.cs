@@ -55,5 +55,13 @@ namespace ArchaicQuestII.GameLogic.Tests.Core
             Assert.InRange(die1, 1, 6);
             Assert.InRange(die2, 1, 6);
         }
+        
+        [Fact]
+        public void Returns_rollbag()
+        {
+            var die = Utilities.DiceBag.RollBag(3, 6);
+
+            Assert.Equal(3, die.Length);
+        }
     }
 }
