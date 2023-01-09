@@ -5,6 +5,7 @@ using ArchaicQuestII.GameLogic.Skill.Core;
 using ArchaicQuestII.GameLogic.Spell;
 using System.Collections.Generic;
 using System.Linq;
+using ArchaicQuestII.GameLogic.Skill.Model;
 
 namespace ArchaicQuestII.GameLogic.SeedData
 {
@@ -12,10 +13,11 @@ namespace ArchaicQuestII.GameLogic.SeedData
     {
         internal static void SeedAndCache(IDataBase db, ICache cache)
         {
-            var skill = new DefineSkill();
+ 
             var seedData = new List<Skill.Model.Skill>()
             {
-                new CraftingSkills().Cooking(),
+                DefineOffensiveSkills.Kick()
+               /* new CraftingSkills().Cooking(),
                 new CraftingSkills().Crafting(),
                 new CraftingSkills().Foraging(),
                 new WeaponTypeSkills().Crossbow(),
@@ -40,7 +42,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
                 new AllSpells().Armour(),
                 new AllSpells().Bless(),
                  new AllSpells().Identify(),
-                skill.Kick(),
+                DefineOffensiveSkills.Kick(),
                 skill.Elbow(),
                 skill.Lore(),
                 skill.Trip(),
@@ -69,7 +71,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
                 skill.Impale(),
                 skill.Slash(),
                 skill.OverheadCrush(),
-                skill.Cleave()
+                skill.Cleave()*/
             };
 
             if (!db.DoesCollectionExist(DataBase.Collections.Skill))

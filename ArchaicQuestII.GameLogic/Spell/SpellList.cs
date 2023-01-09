@@ -9,14 +9,14 @@ namespace ArchaicQuestII.GameLogic.Spell
 {
     public class SpellList : ISpellList
     {
-        private readonly IDamageSpells _damageSpells;
-        public SpellList(IDamageSpells damageSpells)
+     
+        public SpellList()
         {
-            _damageSpells = damageSpells;
+          
         }
         public void CastSpell(string key, string obj, Player target, string fullCommand, Player player, Room room, bool wearOff)
         {
-
+/*
             switch (key.ToLower())
             {
                 case "magic missile":
@@ -39,6 +39,7 @@ namespace ArchaicQuestII.GameLogic.Spell
                     _damageSpells.Identify(player, obj, room);
                     break;
             }
+            */
         }
     }
 }

@@ -31,7 +31,7 @@ namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
         void Identify(Player player, string fullCommand, Room room);
     }
 
-    public class DamageSpells : IDamageSpells
+    public class DamageSpells
     {
         private readonly IWriteToClient _writer;
         private readonly IUpdateClientUI _updateClientUi;
@@ -76,6 +76,8 @@ namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
 
             return damage;
         }
+        
+        /*
 
         public void Armor(Player player, Player target, Room room, bool wearOff)
         {
@@ -237,7 +239,7 @@ namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
 
 
         }
-
+*/
         public void CureLightWounds(Player player, Player target, Room room)
         {
             var casterLevel = player.Level > 10 ? 10 : player.Level;

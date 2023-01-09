@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Schema;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Model;
@@ -77,22 +78,19 @@ namespace ArchaicQuestII.GameLogic.Core
         private readonly IWriteToClient _writeToClient;
         private readonly IUpdateClientUI _updateClientUi;
         private readonly IGain _gain;
-        private readonly ISpells _spells;
 
         public MobScripts(
             ICache cache, 
             ICombat combat, 
             IWriteToClient writeToClient, 
             IUpdateClientUI updateClientUi, 
-            IGain gain, 
-            ISpells spells)
+            IGain gain)
         {
             _cache = cache;
             _combat = combat;
             _writeToClient = writeToClient;
             _updateClientUi = updateClientUi;
             _gain = gain;
-            _spells = spells;
         }
         public bool IsInRoom(Room room, Player player)
         {
@@ -395,8 +393,8 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public void DoSkill(Player player, Player mob, Room room)
         {
-
-            _spells.DoSpell("armour", mob, player.Name, room);
+            // TODO: FIX ME
+            //   _spells.DoSpell("armour", mob, player.Name, room);
 
         }
 

@@ -7,6 +7,8 @@ namespace ArchaicQuestII.GameLogic.Spell
 {
     public class AllSpells
     {
+
+        /*
         public Skill.Model.Skill MagicMissile()
         {
             var magicMissile = new Skill.Model.Skill()
@@ -180,5 +182,7 @@ namespace ArchaicQuestII.GameLogic.Spell
 
 
         }
+        
+        */
     }
 }

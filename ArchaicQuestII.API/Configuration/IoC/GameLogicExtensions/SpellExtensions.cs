@@ -10,10 +10,10 @@ namespace ArchaicQuestII.API.Configuration.IoC.GameLogicExtensions
         public static IServiceCollection AddSpells(this IServiceCollection services)
         {
             services.AddSingleton<ISpellList, SpellList>();
-            services.AddSingleton<IDamageSpells, DamageSpells>();
+           // services.AddSingleton<IDamageSpells, DamageSpells>();
 
             services.AddTransient<ISpellTargetCharacter, SpellTargetCharacter>();
-            services.AddTransient<ISpells, CastSpell>();
+           // services.AddTransient<ISpells, CastSpell>();
 
             return services;
         }

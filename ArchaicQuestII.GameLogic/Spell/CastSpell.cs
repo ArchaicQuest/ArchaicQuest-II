@@ -15,7 +15,7 @@ using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Spell
 {
-    public class CastSpell : ISpells
+    public class CastSpell
     {
         private readonly IWriteToClient _writer;
         private readonly ISpellTargetCharacter _spellTargetCharacter;
@@ -39,6 +39,8 @@ namespace ArchaicQuestII.GameLogic.Spell
             _updateClientUi = updateClientUi;
             _spellList = spellList;
         }
+        
+        /*
 
         public bool ValidStatus(Player player)
         {
@@ -536,6 +538,7 @@ namespace ArchaicQuestII.GameLogic.Spell
             //update UI
             _updateClientUi.UpdateHP(target);
         }
+        */
     }
 
 }
