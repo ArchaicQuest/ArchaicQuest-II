@@ -131,10 +131,14 @@ namespace ArchaicQuestII.GameLogic.Core
 
                     foreach (var room in rooms)
                     {
-                        var originalRoom = JsonConvert.DeserializeObject<Room>(
+                        //max 187MB allocated type: string too much memory used here
+                      /*  var originalRoom = JsonConvert.DeserializeObject<Room>(
                             JsonConvert.SerializeObject(_cache.GetOriginalRoom(Helpers.ReturnRoomId(room))));
+                            */
+                        var originalRoom = new Room();
+                       originalRoom = _cache.GetOriginalRoom(Helpers.ReturnRoomId(room));
 
-                        foreach (var mob in originalRoom.Mobs)
+                       foreach (var mob in originalRoom.Mobs)
                         {
 
                             var mobExist = rooms.Find(x => x.Mobs.Any(y => y.UniqueId.Equals(mob.UniqueId)))

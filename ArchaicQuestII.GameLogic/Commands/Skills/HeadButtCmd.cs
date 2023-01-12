@@ -1,25 +1,25 @@
+
 using System.Linq;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
+using ArchaicQuestII.GameLogic.Skill.Model;
 using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
-using DefineSkill = ArchaicQuestII.GameLogic.Skill.Model.DefineSkill;
 
 namespace ArchaicQuestII.GameLogic.Commands.Skills
 {
-    public class KickCmd :  SkillCore, ICommand
+    public class HeadButtCmd :  SkillCore, ICommand
     {
-        public KickCmd(ICore core): base (core)
+        public HeadButtCmd(ICore core): base (core)
         {
-            Aliases = new[] { "kick", "kic" };
-            Description = "Kicking allows the adventurer to receive an extra attack in combat, a powerful " +
-                          "kick. However, a failed kick may throw an unwary fighter off balance.";
-            Usages = new[] { "Type: kick cow - kick the target, during combat only kick can be entered." };
+            Aliases = new[] { "headbutt", "head" };
+            Description = "A strong blow to the face with your head, deals double damage if the opponent has nothing worn in the head slot.";
+            Usages = new[] { "Type: headbutt gary, head gary" };
             DeniedStatus = new [] { CharacterStatus.Status.Sleeping, CharacterStatus.Status.Resting, CharacterStatus.Status.Dead, CharacterStatus.Status.Mounted, CharacterStatus.Status.Stunned };
-            Title = DefineSkill.Kick().Name;
+            Title = DefineSkill.Headbutt().Name;
             UserRole = UserRole.Player;
             Core = core;
         }
@@ -35,7 +35,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
         public void Execute(Player player, Room room, string[] input)
         {
    
-            var canDoSkill = CanPerformSkill(DefineSkill.Kick(), player);
+            var canDoSkill = CanPerformSkill(DefineSkill.Headbutt(), player);
             if (!canDoSkill)
             { 
                 return;
@@ -44,7 +44,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             var obj = input.ElementAtOrDefault(1)?.ToLower() ?? player.Target;
             if (string.IsNullOrEmpty(obj))
             {
-                Core.Writer.WriteLine("Kick What!?.", player.ConnectionId);
+                Core.Writer.WriteLine("Headbutt What!?.", player.ConnectionId);
                 return;
             }
           
@@ -52,32 +52,40 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             if (target == null)
             {
                 return;
-            }     
+            }
             
             var textToTarget = string.Empty;
             var textToRoom = string.Empty;
 
-            var skillSuccess = SkillSuccess(player, DefineSkill.Kick(), "You miss your kick and stumble.");
+            var skillSuccess = SkillSuccess(player, DefineSkill.Trip(), $"You try to headbutt {target.Name} but miss.");
             if (!skillSuccess)
-            {
-                 textToTarget = $"{player.Name} tries to kick you but stumbles.";
-                 textToRoom = $"{player.Name} tries to kick {target.Name} but stumbles.";
+            { 
+                textToTarget = $"{player.Name} tries to headbutt you."; 
+                textToRoom = $"{player.Name} tries to headbutt {target.Name}.";
+                
                 EmoteAction(textToTarget, textToRoom, target.Name, room, player);
-                updateCombat(player, target, room);
                 player.Lag += 1;
                 return;
             }
             
-             textToTarget = $"{player.Name} lashes out with a hard kick."; 
-             textToRoom = $"{player.Name} lands a strong kick to {target.Name}.";
+            var str = player.Attributes.Attribute[EffectLocation.Strength];
+            var damage = DiceBag.Roll("1d12") + str / 5;
+
+            if (player.Equipped.Head == null)
+            {
+                damage *= 2;
+            }
+            
+            textToTarget = $"{player.Name} smashes their head into your face!"; 
+            textToRoom = $"{player.Name} smashes their head into the face of {target.Name}!";
+                
             EmoteAction(textToTarget, textToRoom, target.Name, room, player);
 
-
-            var damage = DiceBag.Roll(1, 1, 8) + player.Attributes.Attribute[EffectLocation.Strength] / 4;
+            DamagePlayer(DefineSkill.Headbutt().Name, damage, player, target, room);
+        
             player.Lag += 1;
 
-          DamagePlayer("Kick", damage, player, target, room);
-          updateCombat(player, target, room);
+            updateCombat(player, target, room);
         }
     }
 

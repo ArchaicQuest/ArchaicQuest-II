@@ -1,25 +1,30 @@
+using System;
 using System.Linq;
+using System.Text;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
+using ArchaicQuestII.GameLogic.Skill;
+using ArchaicQuestII.GameLogic.Skill.Core;
+using ArchaicQuestII.GameLogic.Skill.Enum;
+using ArchaicQuestII.GameLogic.Skill.Model;
 using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
 using DefineSkill = ArchaicQuestII.GameLogic.Skill.Model.DefineSkill;
 
 namespace ArchaicQuestII.GameLogic.Commands.Skills
 {
-    public class KickCmd :  SkillCore, ICommand
+    public class ElbowCmd :  SkillCore, ICommand
     {
-        public KickCmd(ICore core): base (core)
+        public ElbowCmd(ICore core): base (core)
         {
-            Aliases = new[] { "kick", "kic" };
-            Description = "Kicking allows the adventurer to receive an extra attack in combat, a powerful " +
-                          "kick. However, a failed kick may throw an unwary fighter off balance.";
-            Usages = new[] { "Type: kick cow - kick the target, during combat only kick can be entered." };
+            Aliases = new[] { "elbow", "elb" };
+            Description = "A simple but effective move to elbow the opponent, but a miss makes you vulnerable to attack.";
+            Usages = new[] { "Type: elbow bob - This will start combat with the target if not already in a fight., during a fight only elbow can be used to hit the target." };
             DeniedStatus = new [] { CharacterStatus.Status.Sleeping, CharacterStatus.Status.Resting, CharacterStatus.Status.Dead, CharacterStatus.Status.Mounted, CharacterStatus.Status.Stunned };
-            Title = DefineSkill.Kick().Name;
+            Title = DefineSkill.Elbow().Name;
             UserRole = UserRole.Player;
             Core = core;
         }
@@ -35,7 +40,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
         public void Execute(Player player, Room room, string[] input)
         {
    
-            var canDoSkill = CanPerformSkill(DefineSkill.Kick(), player);
+            var canDoSkill = CanPerformSkill(DefineSkill.Elbow(), player);
             if (!canDoSkill)
             { 
                 return;
@@ -44,7 +49,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             var obj = input.ElementAtOrDefault(1)?.ToLower() ?? player.Target;
             if (string.IsNullOrEmpty(obj))
             {
-                Core.Writer.WriteLine("Kick What!?.", player.ConnectionId);
+                Core.Writer.WriteLine("Elbow What!?.", player.ConnectionId);
                 return;
             }
           
@@ -52,31 +57,24 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             if (target == null)
             {
                 return;
-            }     
-            
-            var textToTarget = string.Empty;
-            var textToRoom = string.Empty;
+            }
 
-            var skillSuccess = SkillSuccess(player, DefineSkill.Kick(), "You miss your kick and stumble.");
+            var skillSuccess = SkillSuccess(player, DefineSkill.Elbow(), "You miss and stumble.");
             if (!skillSuccess)
             {
-                 textToTarget = $"{player.Name} tries to kick you but stumbles.";
-                 textToRoom = $"{player.Name} tries to kick {target.Name} but stumbles.";
+                var textToTarget = $"{player.Name} tries to elbow you but stumbles.";
+                var textToRoom = $"{player.Name} tries to elbow {target.Name} but stumbles.";
                 EmoteAction(textToTarget, textToRoom, target.Name, room, player);
-                updateCombat(player, target, room);
                 player.Lag += 1;
                 return;
             }
             
-             textToTarget = $"{player.Name} lashes out with a hard kick."; 
-             textToRoom = $"{player.Name} lands a strong kick to {target.Name}.";
-            EmoteAction(textToTarget, textToRoom, target.Name, room, player);
+            var str = player.Attributes.Attribute[EffectLocation.Strength];
+            var damage = DiceBag.Roll(1, 1, 6) + str / 5;
 
-
-            var damage = DiceBag.Roll(1, 1, 8) + player.Attributes.Attribute[EffectLocation.Strength] / 4;
             player.Lag += 1;
-
-          DamagePlayer("Kick", damage, player, target, room);
+         
+          DamagePlayer(DefineSkill.Elbow().Name, damage, player, target, room);
           updateCombat(player, target, room);
         }
     }

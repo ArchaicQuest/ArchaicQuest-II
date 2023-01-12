@@ -60,53 +60,23 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
         public int Kick(Player player, Player target, Room room)
         {
-            var str = player.Attributes.Attribute[EffectLocation.Strength];
-            var damage = DiceBag.Roll(1, 1, 8) + str / 4;
+        
 
-            _skillManager.DamagePlayer("Kick", damage, player, target, room);
-
-            player.Lag += 1;
-
-
-            _skillManager.updateCombat(player, target, room);
-
-            return damage;
+            return 0;
         }
 
         public int Elbow(Player player, Player target, Room room)
         {
-            var str = player.Attributes.Attribute[EffectLocation.Strength];
-            var damage = DiceBag.Roll(1, 1, 6) + str / 5;
-
-            _skillManager.DamagePlayer("elbow", damage, player, target, room);
-
-            player.Lag += 1;
-
-
-            _skillManager.updateCombat(player, target, room);
-
-            return damage;
+          
+            return 0;
         }
 
         // TODO skill success check
         public int HeadButt(Player player, Player target, Room room)
         {
-            var str = player.Attributes.Attribute[EffectLocation.Strength];
-            var damage = DiceBag.Roll(1, 1, 12) + str / 5;
+          
 
-            if (player.Equipped.Head == null)
-            {
-                damage /= 2;
-            }
-
-            _skillManager.DamagePlayer("headbutt", damage, player, target, room);
-
-            player.Lag += 1;
-
-
-            _skillManager.updateCombat(player, target, room);
-
-            return damage;
+            return 0;
         }
 
         public int Charge(Player player, Player target, Room room, string obj)
@@ -337,63 +307,8 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
         public int Trip(Player player, Player target, Room room)
         {
-            var str = player.Attributes.Attribute[EffectLocation.Strength];
-            var damage = DiceBag.Roll(1, 1, 4) + str / 5;
 
-            var skillMessage = new SkillMessage()
-            {
-                Hit =
-                {
-                    ToPlayer = $"You trip {target.Name} and {target.Name} goes down!",
-                    ToRoom = $"{player.Name} trips {target.Name} and {target.Name} goes down!",
-                    ToTarget = $"{player.Name} trips you and you go down!"
-                },
-                Miss =
-                {
-                    ToPlayer = $"You trip {target.Name} and {target.Name} goes down!",
-                    ToRoom = $"{player.Name} trips {target.Name} and {target.Name} goes down!",
-                    ToTarget = $"{player.Name} trips you and you go down!"
-                }
-            };
-
-            if (target.Lag == 0)
-            {
-
-                _skillManager.EmoteAction(player, target, room, skillMessage);
-
-                _skillManager.DamagePlayer("trip", damage, player, target, room);
-
-                player.Lag += 1;
-                target.Lag += 2;
-
-                target.Status = CharacterStatus.Status.Stunned;
-
-                _skillManager.updateCombat(player, target, room);
-            }
-            else
-            {
-                player.Lag += 1;
-
-                var skillMessageMiss = new SkillMessage()
-                {
-                    Hit =
-                    {
-                        ToPlayer = $"You try to trip {target.Name} and miss.",
-                        ToRoom = $"{player.Name} tries to trip {target.Name} but {target.Name} easily avoids it.",
-                        ToTarget = $"{player.Name} tries to trip you but fails."
-                    },
-                    Miss =
-                    {
-                        ToPlayer = $"You try to trip {target.Name} and miss.",
-                        ToRoom = $"{player.Name} tries to trip {target.Name} but {target.Name} easily avoids it.",
-                        ToTarget = $"{player.Name} tries to trip you but fails."
-                    }
-                };
-
-                _skillManager.EmoteAction(player, target, room, skillMessageMiss);
-            }
-
-            return damage;
+            return 0;
         }
 
         public int UpperCut(Player player, Player target, Room room, string obj)

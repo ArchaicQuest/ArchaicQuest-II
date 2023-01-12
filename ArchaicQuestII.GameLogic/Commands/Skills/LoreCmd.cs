@@ -6,8 +6,7 @@ using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
-using ArchaicQuestII.GameLogic.Skill;
-using ArchaicQuestII.GameLogic.Skill.Core;
+using ArchaicQuestII.GameLogic.Skill.Model;
 using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
 
@@ -22,7 +21,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 "Lore is a useful skill for those that do not have the identify spell. Lore will give you the information and stats on the specified item";
             Usages = new[] { "Type: lore sword - to see the stats of that item" };
             DeniedStatus = null;
-            Title = "Lore";
+            Title = DefineSkill.Lore().Name;
             UserRole = UserRole.Player;
             Core = core;
         }
@@ -38,21 +37,36 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
         public void Execute(Player player, Room room, string[] input)
         {
             var obj = input.ElementAtOrDefault(1)?.ToLower();
+            
+            var canDoSkill = CanPerformSkill(DefineSkill.Lore(), player);
+            if (!canDoSkill)
+            { 
+                return;
+            }
+            
+            var skillSuccess = SkillSuccess(player, DefineSkill.Lore());
+            if (!skillSuccess)
+            {
+                return;
+            }
    
             if (string.IsNullOrEmpty(obj))
             {
                 Core.Writer.WriteLine("Lore What!?.", player.ConnectionId);
-
                 return;
             }
 
-            var nthTarget = Helpers.findNth(obj);
-            var item = Helpers.findRoomObject(nthTarget, room) ?? Helpers.findObjectInInventory(nthTarget, player);
+            var item = FindItem(obj, room, player);
+            if (item == null)
+            {
+                Core.Writer.WriteLine("You don't see that here.", player.ConnectionId);
+                return;
+            }
+            
             // only lore items that can be picked up
             if (item.Stuck)
             {
                 Core.Writer.WriteLine("There is nothing more to note about that object.", player.ConnectionId);
-
                 return;
             }
 

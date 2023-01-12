@@ -12,6 +12,7 @@ using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Skill.Enum;
 using ArchaicQuestII.GameLogic.Skill.Model;
 using ArchaicQuestII.GameLogic.Spell;
+using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Commands;
@@ -23,14 +24,6 @@ public abstract class SkillCore
     {
         Core = core;
     }
-    
-    public void Toot()
-    {
-        var x = Core.Damage.DamageText(10);
-        Core.Writer.WriteLine("Toot, toot"+ " " + x);
-    }
-
-
     
         public Player GetValidTarget(Player player, Player target, ValidTargets validTargets)
         {
@@ -96,58 +89,7 @@ public abstract class SkillCore
             return newString;
 
         }
-
-        public void DamagePlayer(string spellName, int damage, Player player, Player target, Room room)
-        {
-
-            if (Core.Combat.IsTargetAlive(target))
-            {
-
-                var totalDam = Core.Combat.CalculateSkillDamage(player, target, damage);
-
-                Core.Writer.WriteLine(
-                    $"<p>Your {spellName} {Core.Damage.DamageText(totalDam).Value} {target.Name}  <span class='damage'>[{damage}]</span></p>",
-                    player.ConnectionId);
-                Core.Writer.WriteLine(
-                    $"<p>{player.Name}'s {spellName} {Core.Damage.DamageText(totalDam).Value} you!  <span class='damage'>[{damage}]</span></p>",
-                    target.ConnectionId);
-
-                foreach (var pc in room.Players)
-                {
-                    if (pc.ConnectionId.Equals(player.ConnectionId) ||
-                        pc.ConnectionId.Equals(target.ConnectionId))
-                    {
-                        continue;
-                    }
-
-                    Core.Writer.WriteLine(
-                        $"<p>{player.Name}'s {spellName} {Core.Damage.DamageText(totalDam).Value} {target.Name}  <span class='damage'>[{damage}]</span></p>",
-                        pc.ConnectionId);
-
-                }
-
-                target.Attributes.Attribute[EffectLocation.Hitpoints] -= totalDam;
-
-                if (!Core.Combat.IsTargetAlive(target))
-                {
-                    Core.Combat.TargetKilled(player, target, room);
-
-                    Core.UpdateClient.UpdateHP(target);
-                    return;
-                    //TODO: create corpse, refactor fight method from combat.cs
-                }
-
-                //update UI
-                Core.UpdateClient.UpdateHP(target);
-
-                Core.Combat.AddCharToCombat(target);
-                Core.Combat.AddCharToCombat(player);
-
-         
-            }
-
-        }
-
+        
         /*
          * Message for when attribute is full
          * message for player
@@ -305,40 +247,25 @@ public abstract class SkillCore
             Core.UpdateClient.UpdateScore(player);
         }
 
-        public void EmoteAction(Player player, Player target, Room room, SkillMessage emote)
+        /// <summary>
+        /// Emote action to the target and to the room
+        /// </summary>
+        /// <param name="textToTarget">Text the target should see</param>
+        /// <param name="textToRoom">Text the room should see</param>
+        /// <param name="target">Target of the action</param>
+        /// <param name="room">Current Room</param>
+        /// <param name="player">The Player</param>
+        public void EmoteAction(string textToTarget, string textToRoom, string target, Room room, Player player)
         {
-            if (target.ConnectionId == player.ConnectionId)
+            foreach (var pc in room.Players.Where(x => x.Name != player.Name))
             {
-                Core.Writer.WriteLine(
-                    $"<p>{ReplacePlaceholders(emote.Hit.ToPlayer, target, true)}</p>",
-                    target.ConnectionId);
-            }
-            else
-            {
-                Core.Writer.WriteLine(
-                    $"<p>{ReplacePlaceholders(emote.Hit.ToPlayer, target, false)}</p>",
-                    player.ConnectionId);
-            }
-
-
-            if (!string.IsNullOrEmpty(emote.Hit.ToTarget))
-            {
-                Core.Writer.WriteLine(
-                    $"<p>{emote.Hit.ToTarget}</p>",
-                    target.ConnectionId);
-            }
-
-            foreach (var pc in room.Players)
-            {
-                if (pc.ConnectionId.Equals(player.ConnectionId) ||
-                    pc.ConnectionId.Equals(target.ConnectionId))
+                if (pc.Name.Equals(target))
                 {
+                    Core.Writer.WriteLine(textToTarget, pc.ConnectionId);
                     continue;
                 }
-
-                Core.Writer.WriteLine($"<p>{ReplacePlaceholders(emote.Hit.ToRoom, target, false)}</p>",
-                    pc.ConnectionId);
-
+                    
+                Core.Writer.WriteLine(textToRoom, pc.ConnectionId);
             }
         }
 
@@ -359,11 +286,64 @@ public abstract class SkillCore
 
             }
         }
+        
+        public void DamagePlayer(string skillName, int damage, Player player, Player target, Room room)
+        {
+
+            if (Core.Combat.IsTargetAlive(target))
+            {
+
+                var totalDam = Core.Combat.CalculateSkillDamage(player, target, damage);
+
+                Core.Writer.WriteLine(
+                    $"<p>Your {skillName} {Core.Damage.DamageText(totalDam).Value} {target.Name}  <span class='damage'>[{damage}]</span></p>",
+                    player.ConnectionId);
+                Core.Writer.WriteLine(
+                    $"<p>{player.Name}'s {skillName} {Core.Damage.DamageText(totalDam).Value} you!  <span class='damage'>[{damage}]</span></p>",
+                    target.ConnectionId);
+
+                foreach (var pc in room.Players)
+                {
+                    if (pc.ConnectionId.Equals(player.ConnectionId) ||
+                        pc.ConnectionId.Equals(target.ConnectionId))
+                    {
+                        continue;
+                    }
+
+                    Core.Writer.WriteLine(
+                        $"<p>{player.Name}'s {skillName} {Core.Damage.DamageText(totalDam).Value} {target.Name}  <span class='damage'>[{damage}]</span></p>",
+                        pc.ConnectionId);
+
+                }
+
+                target.Attributes.Attribute[EffectLocation.Hitpoints] -= totalDam;
+
+                if (!Core.Combat.IsTargetAlive(target))
+                {
+                    Core.Combat.TargetKilled(player, target, room);
+
+                    Core.UpdateClient.UpdateHP(target);
+                    return;
+                    //TODO: create corpse, refactor fight method from combat.cs
+                }
+
+                //update UI
+                Core.UpdateClient.UpdateHP(target);
+
+                Core.Combat.AddCharToCombat(target);
+                Core.Combat.AddCharToCombat(player);
+
+         
+            }
+
+        }
 
         public Player FindTargetInRoom(string targetName, Room room, Player player)
         {
             var target =
-                room.Players.FirstOrDefault(x => x.Name.StartsWith(targetName, StringComparison.CurrentCultureIgnoreCase));
+                room.Players.FirstOrDefault(x =>
+                    x.Name.StartsWith(targetName, StringComparison.CurrentCultureIgnoreCase)) ??
+                room.Mobs.FirstOrDefault(x => x.Name.StartsWith(targetName, StringComparison.CurrentCultureIgnoreCase));
 
             if (target != null)
             {
@@ -373,6 +353,19 @@ public abstract class SkillCore
             Core.Writer.WriteLine("They are not here.", player.ConnectionId);
             return null;
 
+        }
+
+        /// <summary>
+        /// Finds the item in the room or inventory
+        /// </summary>
+        /// <param name="obj">name of object to find</param>
+        /// <param name="room">The current room</param>
+        /// <param name="player">The player</param>
+        /// <returns></returns>
+        public Item.Item FindItem(string obj, Room room, Player player)
+        {
+            var nthTarget = Helpers.findNth(obj);
+           return Helpers.findRoomObject(nthTarget, room) ?? Helpers.findObjectInInventory(nthTarget, player);
         }
 
         protected bool CanPerformSkill(Skill.Model.Skill skill, Player player)
@@ -404,6 +397,37 @@ public abstract class SkillCore
             }
 
             return true;
+        }
+        
+        public bool SkillSuccess(Player player, Skill.Model.Skill skill, string customErrorText = "")
+        {
+            var playerSkillProficiency = player.Skills.FirstOrDefault(x => x.SkillName.Equals(skill.Name))?.Proficiency;
+            var success = DiceBag.Roll(1, 1, 100);
+          
+            if (success == 1)
+            {
+                var errorText = skill.ManaCost > 0
+                    ? $"<p>You tried to cast {skill.Name} but failed miserably.</p>"
+                    : $"<p>You tried to {skill.Name} but failed miserably.</p>";
+                
+                Core.Writer.WriteLine(errorText, player.ConnectionId);
+                return false;
+            }
+
+            if (playerSkillProficiency <= success)
+            {
+                var failedSkillMessage = customErrorText ?? $"<p>You try to {skill.Name} but fail.</p>";
+                
+                var errorText = skill.ManaCost > 0
+                    ? $"<p>You lost concentration.</p>"
+                    : failedSkillMessage;
+                
+                Core.Writer.WriteLine(errorText, player.ConnectionId);
+                return false;
+            }
+
+            return true;
+
         }
 
 

@@ -9,6 +9,7 @@ namespace ArchaicQuestII.GameLogic.Skill;
 public class DefineSkill
 {
 
+
 /*
     public Model.Skill Elbow()
     {

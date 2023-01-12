@@ -57,18 +57,10 @@ public class ListSkillsCmd : ICommand
 
         if (target.Equals("all", StringComparison.CurrentCultureIgnoreCase))
         {
-            var spells = player.Skills.Where(x => x.IsSpell).ToList();
-
-            if (spells.Any())
-            {
+          
                 ReturnSkillList(player.Skills.Where(x => x.IsSpell == false).ToList(), player, "Skills:");
                 return;
-            }
-            else
-            {
-                Core.Writer.WriteLine("<p>You have no skills, try spells instead.</p>", player.ConnectionId);
-                return;
-            }
+           
         }
 
         ReturnSkillList(player.Skills.ToList(), player, "Skills:");
