@@ -16,7 +16,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
         public LookCmd(ICore core)
         {
             Aliases = new[] {"look", "l"};
-            Description = "Shows info about room or object.";
+            Description = "Shows you the current room title, description and what items, mobs, and players are there. Look with an argument will show more information on that object.";
             Usages = new[] {"Type: look"};
             Title = "";
             DeniedStatus = new[]
@@ -66,15 +66,16 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                         return;
                 }
             }
-
-            switch (verb)
+            
+            if (!string.IsNullOrEmpty(verb) && string.IsNullOrEmpty(target))
             {
-                case "at":
-                    LookAtObject(player, room, target);
-                    return;
-                case "in":
-                    LookInContainer(player, room, target);
-                    return;
+                LookAtObject(player, room, verb);
+                return;
+            }
+            
+            if (!string.IsNullOrEmpty(verb) && !string.IsNullOrEmpty(target))
+            {
+                LookInContainer(player, room, target);
             }
         }
         

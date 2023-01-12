@@ -117,6 +117,8 @@ namespace ArchaicQuestII.GameLogic.Hubs
                 }
 
                 getBook.Book.Pages[book.PageNumber] = book.Description;
+
+                player.OpenedBook = getBook;
                 _writeToClient.WriteLine("You have successfully written in your book.", player.ConnectionId);
             }
 

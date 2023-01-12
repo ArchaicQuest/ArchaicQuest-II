@@ -13,7 +13,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
         public AffectsCmd(ICore core)
         {
             Aliases = new[] {"affects", "aff"};
-            Description = "Displays the affects upon the player.";
+            Description = "Skills and spells affect the character, Affects displays current affects showing the skill/spell name and the duration of the affect";
             Usages = new[] {"Type: affects"};
             DeniedStatus = null;
             Title = String.Empty;
