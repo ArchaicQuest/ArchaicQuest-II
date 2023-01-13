@@ -54,7 +54,7 @@ namespace ArchaicQuestII.GameLogic.Commands
             // Handle social emote that are entered by just typing the name such as smile or smile Harvey
             // here manipulate the command to add social in front of it so the social command is called.
             var social = Core.Cache.GetSocials().Keys.FirstOrDefault(x => x.Equals(commandInput[0]));
-            if (social != null)
+            if (command == null && social != null)
             {
                 var emoteTarget = ""; 
                 

@@ -81,29 +81,9 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
         public int Charge(Player player, Player target, Room room, string obj)
         {
-            if (player.Status == CharacterStatus.Status.Fighting)
-            {
-                _writer.WriteLine("You are already in combat, Charge can only be used to start a combat.");
-                return 0;
-            }
+           
 
-            var nthTarget = Helpers.findNth(obj);
-
-            var character = Helpers.FindMob(nthTarget, room) ?? Helpers.FindPlayer(nthTarget, room);
-
-
-            var weaponDam = player.Equipped.Wielded != null ? player.Equipped.Wielded.Damage.Maximum : 1 * 2;
-            var str = player.Attributes.Attribute[EffectLocation.Strength];
-            var damage = DiceBag.Roll(1, 1, weaponDam) + str / 5;
-
-
-            _skillManager.DamagePlayer("charge", damage, player, target, room);
-
-            player.Lag += 2;
-
-            _skillManager.updateCombat(player, target, room);
-
-            return damage;
+            return 0;
         }
 
         public int Stab(Player player, Player target, Room room, string obj)
