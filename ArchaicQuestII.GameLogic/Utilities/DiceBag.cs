@@ -1,11 +1,9 @@
 using System;
-using System.Text.RegularExpressions;
 
 namespace ArchaicQuestII.GameLogic.Utilities
 {
     public static class DiceBag
     {
-        private const string Modifier = @"\+(.*)";
         private static readonly Random Random = new(); 
         private static readonly object SyncLock = new();
 
@@ -64,42 +62,30 @@ namespace ArchaicQuestII.GameLogic.Utilities
 
         private static int RollAdvantage(int numDice, int dieSize, int modifier = 0)
         {
-            var die1 = modifier;
+            var die1 = Roll(numDice, 1, dieSize, modifier);
+            var die2 = Roll(numDice, 1, dieSize, modifier);
             
-            for (var i = 0; i < numDice; i++)
-            {
-                die1 += Throw(1, dieSize + 1);
-            }
-
-            var die2 = modifier;
-            
-            for (var i = 0; i < numDice; i++)
-            {
-                die2 += Throw(1, dieSize + 1);
-            }
-
             return die1 > die2 ? die1 : die2;
-
         }
 
         private static int RollDisadvantage(int numDice, int dieSize, int modifier = 0)
         {
-            var die1 = modifier;
-            
-            for (var i = 0; i < numDice; i++)
-            {
-                die1 += Throw(1, dieSize + 1);
-            }
-
-            var die2 = modifier;
-            
-            for (var i = 0; i < numDice; i++)
-            {
-                die2 += Throw(1, dieSize + 1);
-            }
+            var die1 = Roll(numDice, 1, dieSize, modifier);
+            var die2 = Roll(numDice, 1, dieSize, modifier);
 
             return die1 < die2 ? die1 : die2;
+        }
 
+        public static int[] RollBag(int numDice, int dieSize)
+        {
+            var diebag = new int[numDice];
+            
+            for (var i = 0; i < numDice; i++)
+            {
+                diebag[i] = Roll(1, 1, dieSize);
+            }
+
+            return diebag;
         }
 
         /// <summary>
@@ -139,11 +125,21 @@ namespace ArchaicQuestII.GameLogic.Utilities
                 advantage = -1;
                 parsedDie = die[1..];
             }
-            
-            if(parsedDie.Contains('+'))
-                modifier = int.Parse(new Regex(Modifier).ToString());
-            else if (parsedDie.Contains('-'))
-                modifier = int.Parse(new Regex(Modifier).ToString()) * -1;
+
+            var pos = parsedDie.Split('+');
+            var neg = parsedDie.Split('-');
+
+            if (pos.Length > 1)
+            {
+                int.TryParse(pos[1], out modifier);
+                parsedDie = pos[0];
+            }
+            else if (neg.Length > 1)
+            {
+                int.TryParse(neg[1], out modifier);
+                parsedDie = neg[0];
+                modifier *= -1;
+            }
 
             var parts = parsedDie.Split("d");
 
