@@ -286,6 +286,49 @@ public abstract class SkillCore
 
             }
         }
+
+        /// <summary>
+        /// Check if skill is a success comparing the attackers dexterity to the target
+        /// and any level difference. for example:
+        /// Player Level = 5, Target Level = 15
+        /// Player Dexterity = 60, Target Dexterity = 75
+        ///
+        ///  base chance = 65
+        ///  65 + 60 = 125
+        ///  125 - 75 = 50
+        ///  50 + 5 - 15 = 40
+        ///
+        /// Chance for success is 40
+        ///
+        /// roll 1d100 if it's <= 40 then it's a hit
+        ///
+        /// if everyone is equal it's 65% chance for success 
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public bool DexterityAndLevelCheck(Player player, Player target)
+        {
+            /*dexterity check */
+            var chance = 65;
+            chance += player.Attributes.Attribute[EffectLocation.Dexterity];
+            chance -= target.Attributes.Attribute[EffectLocation.Dexterity];
+
+            if (player.Affects.Haste)
+            {
+                chance += 25;
+            }
+
+            if (target.Affects.Haste)
+            {
+                chance -= 25;
+            }
+
+            /* level check */
+            chance += player.Level - target.Level;
+
+            return DiceBag.Roll(1, 1, 100) <= chance;
+        }
         
         public void DamagePlayer(string skillName, int damage, Player player, Player target, Room room)
         {

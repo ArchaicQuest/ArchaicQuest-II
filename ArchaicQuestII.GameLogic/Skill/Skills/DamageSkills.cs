@@ -88,140 +88,26 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
         public int Stab(Player player, Player target, Room room, string obj)
         {
-            if (player.Equipped.Wielded == null)
-            {
-                _writer.WriteLine("Stab with what?", player.ConnectionId);
-                return 0;
-            }
+   
 
-            //var nthTarget = Helpers.findNth(obj);
-
-            //var character = Helpers.FindMob(nthTarget, room) ?? Helpers.FindPlayer(nthTarget, room);
-
-
-            var weaponDam = (player.Equipped.Wielded.Damage.Maximum + player.Equipped.Wielded.Damage.Minimum) / 2;
-            var str = player.Attributes.Attribute[EffectLocation.Strength];
-            var damage = (weaponDam + DiceBag.Roll(1, 1, 6)) + str / 5;
-
-
-            _skillManager.DamagePlayer("stab", damage, player, target, room);
-
-            player.Lag += 1;
-
-            _skillManager.updateCombat(player, target, room);
-
-            return damage;
+            return 0;
         }
 
         public int OverheadCrush(Player player, Player target, Room room, string obj)
         {
-
-            if (player.Equipped.Wielded == null)
-            {
-                _writer.WriteLine("Overhead crush with what?", player.ConnectionId);
-            }
-
-            if (!player.Affects.Stunned || (player.Status & CharacterStatus.Status.Sleeping) == 0 ||
-                (player.Status & CharacterStatus.Status.Resting) == 0)
-            {
-                _writer.WriteLine("You can only use this on stunned or targets that are not prepared.", player.ConnectionId);
-                return 0;
-            }
-
-
-            var weaponDam = player.Equipped.Wielded?.Damage.Maximum ?? 1 * 2;
-            var str = player.Attributes.Attribute[EffectLocation.Strength];
-            var damage = weaponDam + DiceBag.Roll(1, 3, 10) + str / 5;
-
-
-            _skillManager.DamagePlayer("overhead crush", damage, player, target, room);
-
-            player.Lag += 1;
-
-            _skillManager.updateCombat(player, target, room);
-
-            return damage;
+            
+            return 0;
         }
 
         public int Cleave(Player player, Player target, Room room, string obj)
         {
-            if (player.Equipped.Wielded == null)
-            {
-                _writer.WriteLine("Cleave with what?", player.ConnectionId);
-                return 0;
-            }
-
-            var weaponDam = player.Equipped.Wielded?.Damage.Maximum ?? 1 * 2;
-            var str = player.Attributes.Attribute[EffectLocation.Strength];
-            var damage = weaponDam + DiceBag.Roll(1, 3, 10) + str / 5;
-
-
-            _skillManager.DamagePlayer("cleave", damage, player, target, room);
-
-            player.Lag += 1;
-
-            _skillManager.updateCombat(player, target, room);
-
             return 0;
 
         }
 
         public int Impale(Player player, Player target, Room room, string obj)
         {
-            if (player.Equipped.Wielded == null)
-            {
-                _writer.WriteLine("Impale with what?", player.ConnectionId);
-            }
-
-
-            var weaponDam = player.Equipped.Wielded?.Damage.Maximum ?? 1 * 2;
-            var str = player.Attributes.Attribute[EffectLocation.Strength];
-            var damage = weaponDam + DiceBag.Roll(1, 2, 10) + str / 5;
-
-            /*dexterity check */
-            var chance = 50;
-            chance += player.Attributes.Attribute[EffectLocation.Dexterity];
-            chance -= target.Attributes.Attribute[EffectLocation.Dexterity];
-
-            if (player.Affects.Haste)
-            {
-                chance += 10;
-            }
-
-            if (target.Affects.Haste)
-            {
-                chance -= 25;
-            }
-
-            /* level check */
-            chance += player.Level - target.Level;
-
-            if (DiceBag.Roll(1, 1, 100) < chance)
-            {
-
-                _skillManager.DamagePlayer("impale", damage, player, target, room);
-
-                player.Lag += 1;
-
-                _skillManager.updateCombat(player, target, room);
-
-            }
-            else
-            {
-                var skillMessageMiss = new SkillMessage()
-                {
-                    Hit =
-                    {
-                        ToPlayer = $"You try to impale {target.Name} and miss.",
-                        ToRoom = $"{player.Name} tries to impale {target.Name} but {target.Name} easily avoids it.",
-                        ToTarget = $"{player.Name} tries to impale you but misses."
-                    }
-                };
-
-                _skillManager.EmoteAction(player, target, room, skillMessageMiss);
-            }
-
-            return damage;
+            return 0;
         }
 
         public int Slash(Player player, Player target, Room room, string obj)
