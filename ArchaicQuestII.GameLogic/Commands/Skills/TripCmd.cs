@@ -57,7 +57,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             var textToTarget = string.Empty;
             var textToRoom = string.Empty;
 
-            var skillSuccess = SkillSuccess(player, DefineSkill.Trip(), $"You try to trip {target.Name} and miss.");
+            var skillSuccess = SkillSuccessWithMessage(player, DefineSkill.Trip(), $"You try to trip {target.Name} and miss.");
             if (!skillSuccess)
             { 
                 textToTarget = $"{player.Name} tries to trip you."; 

@@ -57,7 +57,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             var textToTarget = string.Empty;
             var textToRoom = string.Empty;
 
-            var skillSuccess = SkillSuccess(player, DefineSkill.Headbutt(), $"You try to headbutt {target.Name} but miss.");
+            var skillSuccess = SkillSuccessWithMessage(player, DefineSkill.Headbutt(), $"You try to headbutt {target.Name} but miss.");
             if (!skillSuccess)
             { 
                 textToTarget = $"{player.Name} tries to headbutt you."; 

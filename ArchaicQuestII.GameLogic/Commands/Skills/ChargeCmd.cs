@@ -71,7 +71,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             var textToTarget = string.Empty;
             var textToRoom = string.Empty;
 
-            var skillSuccess = SkillSuccess(player, DefineSkill.Charge(), $"You attempt to charge at to {target.Name} but miss.");
+            var skillSuccess = SkillSuccessWithMessage(player, DefineSkill.Charge(), $"You attempt to charge at to {target.Name} but miss.");
             if (!skillSuccess)
             { 
                 textToTarget = $"{player.Name} tries to charge at you but misses."; 

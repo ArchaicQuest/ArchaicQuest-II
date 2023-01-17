@@ -57,7 +57,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             var textToTarget = string.Empty;
             var textToRoom = string.Empty;
 
-            var skillSuccess = SkillSuccess(player, DefineSkill.Kick(), "You miss your kick and stumble.");
+            var skillSuccess = SkillSuccessWithMessage(player, DefineSkill.Kick(), "You miss your kick and stumble.");
             if (!skillSuccess)
             {
                  textToTarget = $"{player.Name} tries to kick you but stumbles.";

@@ -64,7 +64,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             var textToTarget = string.Empty;
             var textToRoom = string.Empty;
 
-            var skillSuccess = SkillSuccess(player, DefineSkill.OverheadCrush(), $"You attempt to crush the skull of {target.Name} but miss.");
+            var skillSuccess = SkillSuccessWithMessage(player, DefineSkill.OverheadCrush(), $"You attempt to crush the skull of {target.Name} but miss.");
             if (!skillSuccess)
             { 
                 textToTarget = $"{player.Name} tries to crush your skull but misses."; 

@@ -11,15 +11,15 @@ using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Commands.Skills
 {
-    public class StabCmd :  SkillCore, ICommand
+    public class SlashCmd :  SkillCore, ICommand
     {
-        public StabCmd(ICore core): base (core)
+        public SlashCmd(ICore core): base (core)
         {
-            Aliases = new[] { "stab"};
-            Description = "Delivers a powerful stab, a few of these will drop anyone like a sack of potatoes. Weapon Damage + 1d6";
-            Usages = new[] { "Type: stab bob" };
+            Aliases = new[] { "slash"};
+            Description = "Does what it says, a strong slash of your weapon. Weapon max damage + 1d10";
+            Usages = new[] { "Type: slash bob" };
             DeniedStatus = new [] { CharacterStatus.Status.Sleeping, CharacterStatus.Status.Resting, CharacterStatus.Status.Dead, CharacterStatus.Status.Mounted, CharacterStatus.Status.Stunned };
-            Title = DefineSkill.Stab().Name;
+            Title = DefineSkill.Slash().Name;
             UserRole = UserRole.Player;
             Core = core;
         }
@@ -35,7 +35,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
         public void Execute(Player player, Room room, string[] input)
         {
    
-            var canDoSkill = CanPerformSkill(DefineSkill.Stab(), player);
+            var canDoSkill = CanPerformSkill(DefineSkill.Slash(), player);
             if (!canDoSkill)
             { 
                 return;
@@ -46,12 +46,11 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 Core.Writer.WriteLine("You need to have a weapon equipped to do this.", player.ConnectionId);
                 return;
             }
- 
 
             var obj = input.ElementAtOrDefault(1)?.ToLower() ?? player.Target;
             if (string.IsNullOrEmpty(obj))
             {
-                Core.Writer.WriteLine("Stab What!?.", player.ConnectionId);
+                Core.Writer.WriteLine("Slash What!?.", player.ConnectionId);
                 return;
             }
           
@@ -64,23 +63,22 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             var textToTarget = string.Empty;
             var textToRoom = string.Empty;
 
-            var skillSuccess = SkillSuccessWithMessage(player, DefineSkill.Stab(), $"You attempt to stab {target.Name} but miss.");
+            var skillSuccess = SkillSuccessWithMessage(player, DefineSkill.Lunge(), $"You attempt to slash {target.Name} but miss.");
             if (!skillSuccess)
             { 
-                textToTarget = $"{player.Name} tries to stab you but misses."; 
-                textToRoom = $"{player.Name} tries to stab {target.Name} but misses.";
+                textToTarget = $"{player.Name} tries to slash you but misses."; 
+                textToRoom = $"{player.Name} tries to slash {target.Name} but misses.";
                 
                 EmoteAction(textToTarget, textToRoom, target.Name, room, player);
                 player.Lag += 1;
                 return;
             }
             
-            var weaponDam = (player.Equipped.Wielded.Damage.Maximum + player.Equipped.Wielded.Damage.Minimum) / 2;
+            var weaponDam = player.Equipped.Wielded.Damage.Maximum;
             var str = player.Attributes.Attribute[EffectLocation.Strength];
-            var damage = (weaponDam + DiceBag.Roll(1, 1, 6)) + str / 5;
+            var damage = weaponDam + DiceBag.Roll(1, 2, 10) + str / 5;
 
-
-            DamagePlayer("stab", damage, player, target, room);
+            DamagePlayer(DefineSkill.Slash().Name, damage, player, target, room);
 
             player.Lag += 1;
 

@@ -59,7 +59,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 return;
             }
 
-            var skillSuccess = SkillSuccess(player, DefineSkill.Elbow(), "You miss and stumble.");
+            var skillSuccess = SkillSuccessWithMessage(player, DefineSkill.Elbow(), "You miss and stumble.");
             if (!skillSuccess)
             {
                 var textToTarget = $"{player.Name} tries to elbow you but stumbles.";

@@ -44,7 +44,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 return;
             }
             
-            var skillSuccess = SkillSuccess(player, DefineSkill.Lore());
+            var skillSuccess = SkillSuccessWithMessage(player, DefineSkill.Lore());
             if (!skillSuccess)
             {
                 return;

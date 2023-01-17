@@ -112,63 +112,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
         public int Slash(Player player, Player target, Room room, string obj)
         {
-            if (player.Equipped.Wielded == null)
-            {
-                _writer.WriteLine("Slash with what?", player.ConnectionId);
-            }
-
-
-            var weaponDam = player.Equipped.Wielded?.Damage.Maximum ?? 1 * 2;
-            var str = player.Attributes.Attribute[EffectLocation.Strength];
-            var damage = weaponDam + DiceBag.Roll(1, 2, 10) + str / 5;
-
-            /*dexterity check */
-            var chance = 50;
-            chance += player.Attributes.Attribute[EffectLocation.Dexterity];
-            chance -= target.Attributes.Attribute[EffectLocation.Dexterity];
-
-            if (player.Affects.Haste)
-            {
-                chance += 10;
-            }
-
-            if (target.Affects.Haste)
-            {
-                chance -= 25;
-            }
-
-            /* level check */
-            chance += player.Level - target.Level;
-
-            /* TODO: terrain check, can't dirt kick underwater *taps head* */
-            /* Check if player is flying/floating then fail dirt kick */
-
-            if (DiceBag.Roll(1, 1, 100) < chance)
-            {
-
-                _skillManager.DamagePlayer("slash", damage, player, target, room);
-
-                player.Lag += 1;
-
-                _skillManager.updateCombat(player, target, room);
-
-            }
-            else
-            {
-                var skillMessageMiss = new SkillMessage()
-                {
-                    Hit =
-                    {
-                        ToPlayer = $"You try to slash {target.Name} and miss.",
-                        ToRoom = $"{player.Name} tries to slash {target.Name} but {target.Name} easily avoids it.",
-                        ToTarget = $"{player.Name} tries to slash you but misses."
-                    }
-                };
-
-                _skillManager.EmoteAction(player, target, room, skillMessageMiss);
-            }
-
-            return damage;
+            return 0;
         }
 
         public int Trip(Player player, Player target, Room room)

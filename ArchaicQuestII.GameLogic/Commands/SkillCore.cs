@@ -442,7 +442,14 @@ public abstract class SkillCore
             return true;
         }
         
-        public bool SkillSuccess(Player player, Skill.Model.Skill skill, string customErrorText = "")
+        /// <summary>
+        /// Checks if skill is success or not and displays a generic error or a custom one
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="skill"></param>
+        /// <param name="customErrorText"></param>
+        /// <returns></returns>
+        public bool SkillSuccessWithMessage(Player player, Skill.Model.Skill skill, string customErrorText = "")
         {
             var playerSkillProficiency = player.Skills.FirstOrDefault(x => x.SkillName.Equals(skill.Name))?.Proficiency;
             var success = DiceBag.Roll(1, 1, 100);
@@ -472,6 +479,19 @@ public abstract class SkillCore
             return true;
 
         }
+        
+        public bool SkillSuccess(Player player, Skill.Model.Skill skill)
+        {
+            var playerSkillProficiency = player.Skills.FirstOrDefault(x => x.SkillName.Equals(skill.Name))?.Proficiency;
+            var success = DiceBag.Roll(1, 1, 100);
+          
+            if (success == 1)
+            {
+                return false;
+            }
 
+            return !(playerSkillProficiency <= success);
+        }
 
+    
 }

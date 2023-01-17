@@ -63,7 +63,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             var textToTarget = string.Empty;
             var textToRoom = string.Empty;
             
-            var skillSuccess = SkillSuccess(player, DefineSkill.Impale(), $"You attempt to impale {target.Name} but miss.");
+            var skillSuccess = SkillSuccessWithMessage(player, DefineSkill.Impale(), $"You attempt to impale {target.Name} but miss.");
             if (!skillSuccess)
             { 
                 textToTarget = $"{player.Name} tries to impale you with {player.Equipped.Wielded.Name.ToLower()} but misses."; 

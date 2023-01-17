@@ -64,7 +64,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             var textToTarget = string.Empty;
             var textToRoom = string.Empty;
 
-            var skillSuccess = SkillSuccess(player, DefineSkill.Cleave(), $"You attempt to cleave {target.Name} but miss.");
+            var skillSuccess = SkillSuccessWithMessage(player, DefineSkill.Cleave(), $"You attempt to cleave {target.Name} but miss.");
             if (!skillSuccess)
             { 
                 textToTarget = $"{player.Name} tries to cleave you with {player.Equipped.Wielded.Name.ToLower()} but misses."; 
