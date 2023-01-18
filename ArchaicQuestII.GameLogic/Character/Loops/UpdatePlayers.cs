@@ -1,110 +1,20 @@
 using System;
 using System.Linq;
-using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Spell;
-using ArchaicQuestII.GameLogic.Utilities;
 
-namespace ArchaicQuestII.GameLogic.Character;
+namespace ArchaicQuestII.GameLogic.Character.Loops;
 
-public static class CharacterEvents
+public class UpdatePlayers : IGameLoop
 {
-    public static void LoopPlayers(ICoreHandler coreHandler)
+    public int TickDelay => 6000; //TODO: set tick rate
+    public ICoreHandler Handler { get; set; }
+    public bool Enabled { get; set; }
+
+    public void Loop()
     {
-        var players = coreHandler.Character.GetPlayerCache().Values.ToList();
-        
-        foreach (var player in players)
-        {
-
-            //  IdleCheck(player);
-
-            var hP = DiceBag.Roll(1, 2, 5);
-            var mana = DiceBag.Roll(1, 2, 5);
-            var moves = DiceBag.Roll(1, 2, 5);
-
-            // if player has fast healing add the bonus here
-            var hasFastHealing = player.Skills.FirstOrDefault(x =>
-                x.SkillName.Equals("Fast Healing", StringComparison.CurrentCultureIgnoreCase) &&
-                player.Level >= x.Level);
-
-
-
-            if ((player.Status & CharacterStatus.Status.Sleeping) != 0)
-            {
-                hP *= 2;
-                mana *= 2;
-                moves *= 2;
-            }
-
-            if ((player.Status & CharacterStatus.Status.Resting) != 0)
-            {
-                hP *= (int)1.5;
-                mana *= (int)1.5;
-                moves *= (int)1.5;
-            }
-
-            if (player.Attributes.Attribute[EffectLocation.Hitpoints] <
-                player.MaxAttributes.Attribute[EffectLocation.Hitpoints])
-            {
-
-                if (hasFastHealing != null)
-                {
-                    if (Helpers.SkillSuccessCheck(hasFastHealing))
-                    {
-                        hP *= 2;
-                    }
-                    else
-                    {
-                        coreHandler.Character.GainSkillProficiency(hasFastHealing, player);
-                    }
-                }
-
-                player.Attributes.Attribute[EffectLocation.Hitpoints] += Formulas.GainAmount(hP, player);
-                if (player.Attributes.Attribute[EffectLocation.Hitpoints] >
-                    player.MaxAttributes.Attribute[EffectLocation.Hitpoints])
-                {
-                    player.Attributes.Attribute[EffectLocation.Hitpoints] =
-                        player.MaxAttributes.Attribute[EffectLocation.Hitpoints];
-                }
-            }
-
-            if (player.Attributes.Attribute[EffectLocation.Mana] <
-                player.MaxAttributes.Attribute[EffectLocation.Mana])
-            {
-                player.Attributes.Attribute[EffectLocation.Mana] += Formulas.GainAmount(mana, player);
-
-                if (player.Attributes.Attribute[EffectLocation.Mana] >
-                    player.MaxAttributes.Attribute[EffectLocation.Mana])
-                {
-                    player.Attributes.Attribute[EffectLocation.Mana] =
-                        player.MaxAttributes.Attribute[EffectLocation.Mana];
-                }
-            }
-
-            if (player.Attributes.Attribute[EffectLocation.Moves] <
-                player.MaxAttributes.Attribute[EffectLocation.Moves])
-            {
-                player.Attributes.Attribute[EffectLocation.Moves] += Formulas.GainAmount(moves, player);
-                if (player.Attributes.Attribute[EffectLocation.Moves] >
-                    player.MaxAttributes.Attribute[EffectLocation.Moves])
-                {
-                    player.Attributes.Attribute[EffectLocation.Moves] =
-                        player.MaxAttributes.Attribute[EffectLocation.Moves];
-                }
-            }
-
-            coreHandler.Client.UpdateHP(player);
-            coreHandler.Client.UpdateMana(player);
-            coreHandler.Client.UpdateMoves(player);
-            coreHandler.Client.UpdateScore(player);
-
-        }
-    }
-
-    public static void UpdatePlayers(ICoreHandler coreHandler)
-    {
-        var players = coreHandler.Character.GetPlayerCache().Values;
+        var players = Handler.Character.GetPlayerCache().Values;
 
         foreach (var pc in players)
         {
@@ -164,12 +74,12 @@ public static class CharacterEvents
 
                     pc.Affects.Custom.Remove(aff);
 
-                    coreHandler.Character.CastSpell(aff.Name, "", pc, "", pc, coreHandler.World.GetRoom(pc.RoomId), true);
+                    Handler.Character.CastSpell(aff.Name, "", pc, "", pc, Handler.World.GetRoom(pc.RoomId), true);
 
                     if (aff.Affects == DefineSpell.SpellAffect.Blind)
                     {
                         pc.Affects.Blind = false;
-                        coreHandler.Client.WriteLine("You are no longer blinded.", pc.ConnectionId);
+                        Handler.Client.WriteLine("You are no longer blinded.", pc.ConnectionId);
                     }
 
                     if (aff.Affects == DefineSpell.SpellAffect.Berserk)
@@ -209,14 +119,14 @@ public static class CharacterEvents
                     }
                 }
 
-                coreHandler.Client.UpdateAffects(pc);
+                Handler.Client.UpdateAffects(pc);
             }
 
             var idleTime5Mins = pc.LastCommandTime.AddMinutes(6) <= DateTime.Now;
 
             if (!pc.Idle && idleTime5Mins)
             {
-                coreHandler.Client.WriteLine("You enter the void.", pc.ConnectionId);
+                Handler.Client.WriteLine("You enter the void.", pc.ConnectionId);
                 pc.Idle = true;
                 return;
             }
@@ -226,7 +136,7 @@ public static class CharacterEvents
             
             if (idleTime10Mins && !idleTime15Mins)
             {
-                coreHandler.Client.WriteLine("You go deeper into the void.", pc.ConnectionId);
+                Handler.Client.WriteLine("You go deeper into the void.", pc.ConnectionId);
             }
 
             if (idleTime15Mins)

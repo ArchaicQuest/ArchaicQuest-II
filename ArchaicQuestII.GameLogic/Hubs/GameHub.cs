@@ -283,7 +283,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
             player.ConnectionId = hubId;
             player.LastCommandTime = DateTime.Now;
             player.LastLoginTime = DateTime.Now;
-            player.Following = String.Empty;
+            player.Following = string.Empty;
             player.Followers = new List<Player>();
             player.Grouped = false;
             
@@ -350,15 +350,10 @@ namespace ArchaicQuestII.GameLogic.Hubs
                 room.Players.Add(character);
                 if (character.Pets.Any())
                 {
-                    foreach (var pet in character.Pets)
+                    foreach (var pet in from pet in character.Pets let petAlreadyInRoom = room.Mobs.FirstOrDefault(x => x.Id.Equals(pet.Id)) != null where !petAlreadyInRoom select pet)
                     {
-                        var petAlreadyInRoom = room.Mobs.FirstOrDefault(x => x.Id.Equals(pet.Id)) != null;
-
-                        if (!petAlreadyInRoom)
-                        {
-                            room.Mobs.Add(pet);
-                            _coreHandler.Client.WriteToOthersInRoom($"{pet.Name} suddenly appears.", room, character);
-                        }
+                        room.Mobs.Add(pet);
+                        _coreHandler.Client.WriteToOthersInRoom($"{pet.Name} suddenly appears.", room, character);
                     }
                 }
                 
@@ -395,8 +390,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
                 script.Globals["room"] = room;
                 script.Globals["player"] = character;
                 script.Globals["mob"] = mob;
-                
-                var res = script.DoString(mob.Events.Enter);
+                script.DoString(mob.Events.Enter);
             }
             
             //  return room;

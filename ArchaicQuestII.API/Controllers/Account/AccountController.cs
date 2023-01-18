@@ -43,7 +43,6 @@ namespace ArchaicQuestII.API.Controllers
 {
     public class AccountController : Controller
     {
-       
         private IPlayerDataBase _pdb { get; }
         private IDataBase _db { get; }
         private readonly IUserService _userService;

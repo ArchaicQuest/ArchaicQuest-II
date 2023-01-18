@@ -3,39 +3,33 @@ using System.Threading.Tasks;
 
 namespace ArchaicQuestII.GameLogic.Core;
 
-public abstract class GameLoop
+public interface IGameLoop
 {
-    public string Name = "";
-    private const int TickDelay = 60000;
-    protected readonly ICoreHandler Handler;
-    private bool _enabled;
-
-    protected GameLoop(ICoreHandler handler)
-    {
-        Handler = handler;
-    }
+    int TickDelay { get; }
+    ICoreHandler Handler { get; set; }
+    bool Enabled { get; set; }
 
     public void Start()
     {
-        _enabled = true;
+        Enabled = true;
         Task.Run(Tick);
     }
 
     public void Stop()
     {
-        _enabled = false;
+        Enabled = false;
     }
 
-    protected virtual void Event() {}
+    protected void Loop();
 
     private async Task Tick()
     {
         try
         {
-            while (_enabled)
+            while (Enabled)
             {
                 await Task.Delay(TickDelay);
-                Event();
+                Loop();
             }
         }
         catch (Exception x)

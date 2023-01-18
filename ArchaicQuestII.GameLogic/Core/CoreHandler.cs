@@ -24,7 +24,7 @@ public class CoreHandler : ICoreHandler
     public IDataBase Db { get; }
     public IPlayerDataBase Pdb { get; }
 
-    private ConcurrentDictionary<string, GameLoop> _gameLoops = new();
+    private ConcurrentDictionary<string, IGameLoop> _gameLoops = new();
 
     private bool _loopsStarted = false;
 
@@ -47,14 +47,16 @@ public class CoreHandler : ICoreHandler
     {
         var gameLoops = AppDomain.CurrentDomain.GetAssemblies()
             .SelectMany(s => s.GetTypes())
-            .Where(p => typeof(GameLoop).IsAssignableFrom(p) && !p.IsAbstract);
+            .Where(p => typeof(IGameLoop).IsAssignableFrom(p) && !p.IsInterface);
 
         foreach (var t in gameLoops)
         {
-            var loop = (GameLoop)Activator.CreateInstance(t, this);
+            var loop = (IGameLoop)Activator.CreateInstance(t);
+
+            if (loop == null) continue;
             
-            if(loop != null)
-                _gameLoops.TryAdd(loop.GetType().Name, loop);
+            loop.Handler = this;
+            _gameLoops.TryAdd(loop.GetType().Name, loop);
         }
     }
     

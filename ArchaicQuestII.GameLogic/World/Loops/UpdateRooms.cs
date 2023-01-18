@@ -1,24 +1,25 @@
 using System;
 using System.Linq;
-using System.Web;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Utilities;
 
-namespace ArchaicQuestII.GameLogic.World;
+namespace ArchaicQuestII.GameLogic.World.Loops;
 
-public static class WorldEvents
+public class UpdateRooms : IGameLoop
 {
-    public static void LoopRooms(ICoreHandler coreHandler)
+    public int TickDelay => 0; //TODO: set tick rate
+    public ICoreHandler Handler { get; set; }
+    public bool Enabled { get; set; }
+
+    public void Loop()
     {
-        Console.Write("Room Loop Started");
-        
-        var rooms = coreHandler.World.GetAllRoomsToRepop();
+        var rooms = Handler.World.GetAllRoomsToRepop();
         
         foreach (var room in rooms)
         {
-            var originalRoom = coreHandler.World.GetOriginalRoom(room.StringId);
+            var originalRoom = Handler.World.GetOriginalRoom(room.StringId);
 
             foreach (var mob in originalRoom.Mobs)
             {
@@ -80,7 +81,7 @@ public static class WorldEvents
 
             foreach (var corpse in corpses.Where(DecayCorpse))
             {
-                coreHandler.Client.WriteLineRoom($"<p>A quivering horde of maggots consumes {corpse.Name.ToLower()}.</p>", room);
+                Handler.Client.WriteLineRoom($"<p>A quivering horde of maggots consumes {corpse.Name.ToLower()}.</p>", room);
                 room.Items.Remove(corpse);
             }
             
@@ -113,12 +114,12 @@ public static class WorldEvents
             // if (room.Players.Count == 0)
             //   {
             room.Clean = true;
-            coreHandler.Client.WriteLineRoom("<p>The hairs on your neck stand up.</p>", room);
+            Handler.Client.WriteLineRoom("<p>The hairs on your neck stand up.</p>", room);
             
             //  }
         }
     }
-
+    
     private static bool DecayCorpse(Item.Item corpse)
     {
         corpse.Decay--;

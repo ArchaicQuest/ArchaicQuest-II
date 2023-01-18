@@ -3,13 +3,15 @@ using System.Web;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Utilities;
 
-namespace ArchaicQuestII.GameLogic.World.Events;
+namespace ArchaicQuestII.GameLogic.World.Loops;
 
-public class UpdateTime : GameLoop
+public class UpdateTime : IGameLoop
 {
-    public UpdateTime(ICoreHandler handler) : base(handler) { }
+    public int TickDelay => 0; //TODO: set tick rate
+    public ICoreHandler Handler { get; set; }
+    public bool Enabled { get; set; }
 
-    protected override void Event()
+    public void Loop()
     {
         Handler.World.DisplayTimeOfDayMessage();
         
