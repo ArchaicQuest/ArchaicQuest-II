@@ -1,7 +1,7 @@
 ﻿using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character.Emote;
-using ArchaicQuestII.GameLogic.Core;
 using System.Collections.Generic;
+using ArchaicQuestII.GameLogic.Commands;
 
 namespace ArchaicQuestII.GameLogic.SeedData
 {
@@ -164,7 +164,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
             return socialObject;
         }
 
-        internal static void SeedAndCache(IDataBase db, ICache cache)
+        internal static void SeedAndCache(IDataBase db, ICommandHandler commandHandler)
         {
             var seedData = SeedData();
 
@@ -178,7 +178,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
 
             foreach (var socialSeed in seedData)
             {
-                cache.AddSocial(socialSeed.Key, socialSeed.Value);
+                commandHandler.AddSocial(socialSeed.Key, socialSeed.Value);
             }
         }
     }

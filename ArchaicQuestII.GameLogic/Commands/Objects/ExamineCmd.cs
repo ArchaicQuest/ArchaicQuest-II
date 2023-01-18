@@ -11,7 +11,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects;
 
 public class ExamineCmd : ICommand
 {
-    public ExamineCmd(ICore core)
+    public ExamineCmd(ICoreHandler coreHandler)
     {
         Aliases = new[] {"examine"};
         Description = "You examine an object, showing you a more detailed description if you want it. " +
@@ -33,7 +33,8 @@ public class ExamineCmd : ICommand
             CharacterStatus.Status.Sitting,
         };
         UserRole = UserRole.Player;
-        Core = core;
+
+        Handler = coreHandler;
     }
     
     public string[] Aliases { get; }
@@ -42,7 +43,7 @@ public class ExamineCmd : ICommand
     public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
-    public ICore Core { get; }
+    public ICoreHandler Handler { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
@@ -50,20 +51,20 @@ public class ExamineCmd : ICommand
 
         if (string.IsNullOrEmpty(target))
         {
-            Core.Writer.WriteLine("<p>Examine what?</p>", player.ConnectionId);
+            Handler.Client.WriteLine("<p>Examine what?</p>", player.ConnectionId);
             return;
         }
         
         var nthTarget = Helpers.findNth(target);
         var item = Helpers.findRoomObject(nthTarget, room) ?? Helpers.findObjectInInventory(nthTarget, player);
-        var isDark = Core.RoomActions.RoomIsDark(player, room);
+        var isDark = Handler.World.RoomIsDark(player, room);
             
         if (item == null && room.RoomObjects.Count >= 1 && room.RoomObjects[0].Name != null)
         {
             var roomObjects = room.RoomObjects.FirstOrDefault(x =>
                 x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
 
-            Core.Writer.WriteLine(
+            Handler.Client.WriteLine(
                 $"<p class='{(isDark ? "room-dark" : "")}'>{roomObjects.Examine ?? roomObjects.Look}",
                 player.ConnectionId);
 
@@ -72,7 +73,7 @@ public class ExamineCmd : ICommand
 
         if (item == null)
         {
-            Core.Writer.WriteLine("<p>You don't see that here.", player.ConnectionId);
+            Handler.Client.WriteLine("<p>You don't see that here.", player.ConnectionId);
             return;
         }
 
@@ -80,7 +81,7 @@ public class ExamineCmd : ICommand
             ? $"On closer inspection you don't see anything special to note to what you already see. {item.Description.Look}"
             : item.Description.Exam;
         
-        Core.Writer.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{examMessage}", player.ConnectionId);
-        Core.Writer.WriteToOthersInRoom($"<p>{player.Name} examines {item.Name.ToLower()}.</p>", room, player);
+        Handler.Client.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{examMessage}", player.ConnectionId);
+        Handler.Client.WriteToOthersInRoom($"<p>{player.Name} examines {item.Name.ToLower()}.</p>", room, player);
     }
 }

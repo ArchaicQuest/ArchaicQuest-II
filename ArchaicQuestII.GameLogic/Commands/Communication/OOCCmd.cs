@@ -11,15 +11,16 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication;
 
 public class OOCCmd : ICommand
 {
-    public OOCCmd(ICore core)
+    public OOCCmd(ICoreHandler coreHandler)
     {
         Aliases = new[] {"ooc"};
         Description = "Sends a message to out of character channel";
         Usages = new[] {"Type: ooc Did anyone see the game last night?"};
-            Title = "";
-    DeniedStatus = null;
+        Title = "";
+        DeniedStatus = null;
         UserRole = UserRole.Player;
-        Core = core;
+
+        Handler = coreHandler;
     }
     
     public string[] Aliases { get; }
@@ -28,28 +29,28 @@ public class OOCCmd : ICommand
     public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
-    public ICore Core { get; }
-
+    public ICoreHandler Handler { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
         if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
         {
-            Core.Writer.WriteLine("<p>ooc what?</p>", player.ConnectionId);
+            Handler.Client.WriteLine("<p>ooc what?</p>", player.ConnectionId);
             return;
         }
         
         var text = string.Join(" ", input.Skip(1));
         
-        Core.Writer.WriteLine($"<p class='ooc'>[<span>OOC</span>]: {text}</p>", player.ConnectionId);
-        Core.UpdateClient.UpdateCommunication(player, $"<p class='ooc'>[<span>OOC</span>]: {text}</p>", "ooc");
-        Core.Writer.WriteToOthersInRoom($"<p class='ooc'>[<span>OOC</span>] {player.Name}: {text}</p>", room, player);
+        Handler.Client.WriteLine($"<p class='ooc'>[<span>OOC</span>]: {text}</p>", player.ConnectionId);
+        Handler.Client.UpdateCommunication(player, $"<p class='ooc'>[<span>OOC</span>]: {text}</p>", "ooc");
+        Handler.Client.WriteToOthersInRoom($"<p class='ooc'>[<span>OOC</span>] {player.Name}: {text}</p>", room, player);
         
         foreach (var pc in room.Players.Where(pc => !pc.Name.Equals(player.Name, StringComparison.CurrentCultureIgnoreCase) && pc.Config.OocChannel))
         {
-            Core.UpdateClient.UpdateCommunication(pc, $"<p class='ooc'>[<span>OOC</span>] {player.Name}: {text}</p>", "ooc");
+            Handler.Client.UpdateCommunication(pc, $"<p class='ooc'>[<span>OOC</span>] {player.Name}: {text}</p>", "ooc");
         }
 
-        Helpers.PostToDiscord($"<p>[OOC] {player.Name} {text}</p>", "channels", Core.Cache.GetConfig());
+        if(Handler.Config.PostToDiscord)
+            Helpers.PostToDiscord($"<p>[OOC] {player.Name} {text}</p>", Handler.Config.ChannelDiscordWebHookURL);
     }
 }

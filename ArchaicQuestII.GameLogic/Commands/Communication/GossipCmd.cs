@@ -11,7 +11,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication;
 
 public class GossipCmd : ICommand
 {
-    public GossipCmd(ICore core)
+    public GossipCmd(ICoreHandler coreHandler)
     {
         Aliases = new[] {"gossip", "goss"};
         Description = "Talk on the IC gossip channel.";
@@ -19,7 +19,8 @@ public class GossipCmd : ICommand
         DeniedStatus = null;
         Title = String.Empty;
         UserRole = UserRole.Player;
-        Core = core;
+
+        Handler = coreHandler;
     }
     
     public string[] Aliases { get; }
@@ -28,27 +29,28 @@ public class GossipCmd : ICommand
     public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
-    public ICore Core { get; }
+    public ICoreHandler Handler { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
         if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
         {
-            Core.Writer.WriteLine("Gossip what?", player.ConnectionId);
+            Handler.Client.WriteLine("Gossip what?", player.ConnectionId);
             return;
         }
         
         var text = string.Join(" ", input.Skip(1));
         
-        Core.Writer.WriteLine($"<p class='gossip'>[<span>Gossip</span>]: {text}</p>", player.ConnectionId);
-        Core.UpdateClient.UpdateCommunication(player, $"<p class='gossip'>[<span>Gossip</span>]: {text}</p>", "gossip");
-        Core.Writer.WriteToOthersInRoom($"<p class='gossip'>[<span>Gossip</span>] {player.Name}: {text}</p>", room, player);
+        Handler.Client.WriteLine($"<p class='gossip'>[<span>Gossip</span>]: {text}</p>", player.ConnectionId);
+        Handler.Client.UpdateCommunication(player, $"<p class='gossip'>[<span>Gossip</span>]: {text}</p>", "gossip");
+        Handler.Client.WriteToOthersInRoom($"<p class='gossip'>[<span>Gossip</span>] {player.Name}: {text}</p>", room, player);
         
         foreach (var pc in room.Players.Where(pc => !pc.Name.Equals(player.Name, StringComparison.CurrentCultureIgnoreCase) && pc.Config.GossipChannel))
         {
-            Core.UpdateClient.UpdateCommunication(pc, $"<p class='gossip'>[<span>Gossip</span>] {player.Name}: {text}</p>", "gossip");
+            Handler.Client.UpdateCommunication(pc, $"<p class='gossip'>[<span>Gossip</span>] {player.Name}: {text}</p>", "gossip");
         }
 
-        Helpers.PostToDiscord($"<p>[Gossip] {player.Name} {text}</p>", "channels", Core.Cache.GetConfig());
+        if(Handler.Config.PostToDiscord)
+            Helpers.PostToDiscord($"<p>[Gossip] {player.Name} {text}</p>", Handler.Config.ChannelDiscordWebHookURL);
     }
 }

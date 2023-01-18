@@ -7,10 +7,10 @@ using ArchaicQuestII.GameLogic.Utilities;
 
 namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
 {
-    public class RandomClothItems : IRandomClothItems
+    public class RandomClothItems
     {
         
-        public List<PrefixItemMods> Prefix = new List<PrefixItemMods>()
+        public List<PrefixItemMods> Prefix = new()
         {
             new PrefixItemMods()
             {

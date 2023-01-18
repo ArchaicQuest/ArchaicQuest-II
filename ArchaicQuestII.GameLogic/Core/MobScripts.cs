@@ -1,17 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Item;
-using ArchaicQuestII.GameLogic.Spell.Interface;
-using ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells;
 using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
 using MoonSharp.Interpreter;
@@ -69,30 +64,18 @@ namespace ArchaicQuestII.GameLogic.Core
 
     public class MobScripts : IMobScripts
     {
-        public Player _player;
-        public Player _mob;
-        public Room _room;
-        public ICombat _combat;
-        private readonly ICache _cache;
-        private readonly IWriteToClient _writeToClient;
-        private readonly IUpdateClientUI _updateClientUi;
-        private readonly IGain _gain;
-        private readonly ISpells _spells;
+        private readonly ICombatHandler _combatHandler;
+        private readonly ICharacterHandler _characterHandler;
+        private readonly IClientHandler _clientHandler;
 
         public MobScripts(
-            ICache cache, 
-            ICombat combat, 
-            IWriteToClient writeToClient, 
-            IUpdateClientUI updateClientUi, 
-            IGain gain, 
-            ISpells spells)
+            ICombatHandler combatHandler, 
+            IClientHandler clientHandler,
+            ICharacterHandler characterHandler)
         {
-            _cache = cache;
-            _combat = combat;
-            _writeToClient = writeToClient;
-            _updateClientUi = updateClientUi;
-            _gain = gain;
-            _spells = spells;
+            _combatHandler = combatHandler;
+            _clientHandler = clientHandler;
+            _characterHandler = characterHandler;
         }
         public bool IsInRoom(Room room, Player player)
         {
@@ -106,7 +89,7 @@ namespace ArchaicQuestII.GameLogic.Core
                 return;
 
             }
-            _writeToClient.WriteLine($"<p class='mob-emote'>{n.Replace("#name#", player.Name)}</p>", player.ConnectionId, delay);
+            _clientHandler.WriteLine($"<p class='mob-emote'>{n.Replace("#name#", player.Name)}</p>", player.ConnectionId, delay);
         }
         public void Say(string n, int delay, Room room, Player player, Player mob)
         {
@@ -115,7 +98,7 @@ namespace ArchaicQuestII.GameLogic.Core
                 return;
 
             }
-            _writeToClient.WriteLine($"<p class='mob-emote'>{mob.Name} says, \"{n}\"</p>", player.ConnectionId, delay);
+            _clientHandler.WriteLine($"<p class='mob-emote'>{mob.Name} says, \"{n}\"</p>", player.ConnectionId, delay);
         }
         public string GetName(Player player)
         {
@@ -125,12 +108,12 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public void UpdateInv(Player player)
         {
-            player.Inventory.Add(new Item.Item() { Name = "test", Description = new Description() { Room = "A test LUA item" }, Id = 9999 });
+            player.Inventory.Add(new Item.Item { Name = "test", Description = new Description() { Room = "A test LUA item" }, Id = 9999 });
         }
 
         public void AttackPlayer(Room room, Player player, Player mob)
         {
-            _combat.Fight(mob, GetName(player), room, true);
+            _combatHandler.Fight(mob, GetName(player), room, true);
         }
 
         public void AddEventState(Player player, string key, int value)
@@ -248,22 +231,22 @@ namespace ArchaicQuestII.GameLogic.Core
 
                 player.Inventory.Add(item);
 
-                _updateClientUi.UpdateInventory(player);
+                _clientHandler.UpdateInventory(player);
             }
         }
         
         public void RemoveItem(Player player, string name, int count = 1)
         {
             for (int i = 0; i < count; i++)
+            {
+                var item = player.Inventory.FirstOrDefault(x =>
+                    x.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
+                if (item != null)
                 {
-                    var item = player.Inventory.FirstOrDefault(x =>
-                        x.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
-                    if (item != null)
-                    {
-                        player.Inventory.Remove(item);
-                    }
+                    player.Inventory.Remove(item);
                 }
-                _updateClientUi.UpdateInventory(player);
+            }
+            _clientHandler.UpdateInventory(player);
         }
 
         public void GiveGold(int value, Player player)
@@ -284,12 +267,12 @@ namespace ArchaicQuestII.GameLogic.Core
                 Name = "Script damage"
             };
             
-            _combat.HarmTarget(player, damage);
-            _updateClientUi.UpdateScore(player);
-            _updateClientUi.UpdateHP(player);
-            if (!_combat.IsTargetAlive(player))
+            _combatHandler.HarmTarget(player, damage);
+            _clientHandler.UpdateScore(player);
+            _clientHandler.UpdateHP(player);
+            if (!_combatHandler.IsTargetAlive(player))
             {
-                _combat.TargetKilled(dummyPlayer, player, room);
+                _combatHandler.TargetKilled(dummyPlayer, player, room);
             }
         }
 
@@ -329,13 +312,13 @@ namespace ArchaicQuestII.GameLogic.Core
 
             }
 
-            _writeToClient.WriteLine($"<p class='gain'>Updated Quest: {quest.Title}!</p>", player.ConnectionId);
+            _clientHandler.WriteLine($"<p class='gain'>Updated Quest: {quest.Title}!</p>", player.ConnectionId);
         }
 
         public void AddQuest(Player player, int questId)
         {
 
-            var quest = _cache.GetQuest(questId);
+            var quest = _characterHandler.GetQuest(questId);
 
             if (player.QuestLog.FirstOrDefault(x => x.Id == quest.Id) == null)
             {
@@ -355,8 +338,8 @@ namespace ArchaicQuestII.GameLogic.Core
                 });
             }
 
-            _writeToClient.WriteLine($"<p class='gain'>New Quest: {quest.Title}!</p>", player.ConnectionId);
-            _updateClientUi.UpdateQuest(player);
+            _clientHandler.WriteLine($"<p class='gain'>New Quest: {quest.Title}!</p>", player.ConnectionId);
+            _clientHandler.UpdateQuest(player);
         }
 
         public void CompleteQuest(Player player, int questId)
@@ -366,24 +349,24 @@ namespace ArchaicQuestII.GameLogic.Core
             if (quest != null)
             {
                 quest.Completed = true;
-                _writeToClient.WriteLine($"<p class='improve'>Quest Complete: {quest.Title}!</p>", player.ConnectionId);
-                _writeToClient.WriteLine($"<p class='improve'>You gain {quest.ExpGain} experience points{(quest.GoldGain == 0 ? "." : $" and {quest.GoldGain} gold. ")}</p>", player.ConnectionId);
+                _clientHandler.WriteLine($"<p class='improve'>Quest Complete: {quest.Title}!</p>", player.ConnectionId);
+                _clientHandler.WriteLine($"<p class='improve'>You gain {quest.ExpGain} experience points{(quest.GoldGain == 0 ? "." : $" and {quest.GoldGain} gold. ")}</p>", player.ConnectionId);
 
-                _gain.GainExperiencePoints(player, quest.ExpGain, false);
+                _characterHandler.GainExperiencePoints(player, quest.ExpGain, false);
                 player.Money.Gold = quest.GoldGain;
             }
 
-            _updateClientUi.UpdateQuest(player);
-            _updateClientUi.UpdateExp(player);
-            _updateClientUi.UpdateScore(player);
+            _clientHandler.UpdateQuest(player);
+            _clientHandler.UpdateExp(player);
+            _clientHandler.UpdateScore(player);
         }
 
         public void GainXP(Player player, int xp)
         {
-            _gain.GainExperiencePoints(player, xp, true);
+            _characterHandler.GainExperiencePoints(player, xp, true);
             
-        _updateClientUi.UpdateExp(player);
-        _updateClientUi.UpdateScore(player);
+            _clientHandler.UpdateExp(player);
+            _clientHandler.UpdateScore(player);
         }
 
         public async Task Sleep(int milliseconds)
@@ -396,7 +379,7 @@ namespace ArchaicQuestII.GameLogic.Core
         public void DoSkill(Player player, Player mob, Room room)
         {
 
-            _spells.DoSpell("armour", mob, player.Name, room);
+            _characterHandler.DoSpell("armour", mob, player.Name, room);
 
         }
 
@@ -418,7 +401,7 @@ namespace ArchaicQuestII.GameLogic.Core
                 says = "wonders";
             }
             
-            _writeToClient.WriteLine($"<p class='mob'>{mob.Name} {says}, '{n.Replace("#name#", player.Name)}'</p>", player.ConnectionId, delay);
+            _clientHandler.WriteLine($"<p class='mob'>{mob.Name} {says}, '{n.Replace("#name#", player.Name)}'</p>", player.ConnectionId, delay);
         }
 
         public void MobEmote(string n, Room room, Player player, int delay)
@@ -428,7 +411,7 @@ namespace ArchaicQuestII.GameLogic.Core
                 return;
 
             }
-            _writeToClient.WriteLine($"<p class='mob-emote'>{n.Replace("#name#", player.Name)}</p>", player.ConnectionId, delay);
+            _clientHandler.WriteLine($"<p class='mob-emote'>{n.Replace("#name#", player.Name)}</p>", player.ConnectionId, delay);
         }
         
         public void RemoveMobFromRoom(Player mob, Room room)

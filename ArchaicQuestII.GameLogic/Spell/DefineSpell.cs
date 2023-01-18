@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using ArchaicQuestII.GameLogic.Character.Model;
-using ArchaicQuestII.GameLogic.Item;
-using ArchaicQuestII.GameLogic.Skill.Enum;
-using ArchaicQuestII.GameLogic.Skill.Model;
+﻿using ArchaicQuestII.GameLogic.Skill.Model;
 
 namespace ArchaicQuestII.GameLogic.Spell
 {

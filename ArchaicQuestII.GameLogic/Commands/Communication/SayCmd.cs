@@ -9,7 +9,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication;
 
 public class SayCmd : ICommand
 {
-    public SayCmd(ICore core)
+    public SayCmd(ICoreHandler coreHandler)
     {
         Aliases = new[] {"say", "'"};
         Description = "Say something to the room. Everyone present will hear what you say if they're awake.";
@@ -25,7 +25,8 @@ public class SayCmd : ICommand
             CharacterStatus.Status.Stunned
         };
         UserRole = UserRole.Player;
-        Core = core;
+
+        Handler = coreHandler;
     }
     
     public string[] Aliases { get; }
@@ -34,25 +35,25 @@ public class SayCmd : ICommand
     public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
-    public ICore Core { get; }
+    public ICoreHandler Handler { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
         if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
         {
-            Core.Writer.WriteLine("<p>Say what?</p>", player.ConnectionId);
+            Handler.Client.WriteLine("<p>Say what?</p>", player.ConnectionId);
             return;
         }
         
         var text = string.Join(" ", input.Skip(1));
         
-        Core.Writer.WriteLine($"<p class='say'>You say {text}</p>", player.ConnectionId);
-        Core.UpdateClient.UpdateCommunication(player, $"<p class='say'>You say {text}</p>", "room");
-        Core.Writer.WriteToOthersInRoom($"<p class='say'>{player.Name} says {text}</p>", room, player);
+        Handler.Client.WriteLine($"<p class='say'>You say {text}</p>", player.ConnectionId);
+        Handler.Client.UpdateCommunication(player, $"<p class='say'>You say {text}</p>", "room");
+        Handler.Client.WriteToOthersInRoom($"<p class='say'>{player.Name} says {text}</p>", room, player);
         
         foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
         {
-            Core.UpdateClient.UpdateCommunication(pc, $"<p class='say'>{player.Name} says {text}</p>", "room");
+            Handler.Client.UpdateCommunication(pc, $"<p class='say'>{player.Name} says {text}</p>", "room");
         }
     }
 }

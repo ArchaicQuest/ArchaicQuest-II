@@ -10,7 +10,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects;
 
 public class CloseCmd : ICommand
 {
-    public CloseCmd(ICore core)
+    public CloseCmd(ICoreHandler coreHandler)
     {
         Aliases = new[] {"close"};
         Description = "Close is used to close an object or door. For doors type the full name. " +
@@ -31,7 +31,8 @@ public class CloseCmd : ICommand
             CharacterStatus.Status.Sitting,
         };
         UserRole = UserRole.Player;
-        Core = core;
+
+        Handler = coreHandler;
     }
     
     public string[] Aliases { get; }
@@ -40,7 +41,7 @@ public class CloseCmd : ICommand
     public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
-    public ICore Core { get; }
+    public ICoreHandler Handler { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
@@ -48,13 +49,13 @@ public class CloseCmd : ICommand
         
         if (string.IsNullOrEmpty(target))
         {
-            Core.Writer.WriteLine("<p>Close what?</p>", player.ConnectionId);
+            Handler.Client.WriteLine("<p>Close what?</p>", player.ConnectionId);
             return;
         }
         
         if (player.Affects.Blind)
         {
-            Core.Writer.WriteLine("<p>You are blind and can't see a thing!</p>", player.ConnectionId);
+            Handler.Client.WriteLine("<p>You are blind and can't see a thing!</p>", player.ConnectionId);
             return;
         }
 
@@ -63,24 +64,24 @@ public class CloseCmd : ICommand
 
         if (item != null && item.Container.CanOpen != true)
         {
-            Core.Writer.WriteLine($"<p>{item.Name} cannot be closed", player.ConnectionId);
+            Handler.Client.WriteLine($"<p>{item.Name} cannot be closed", player.ConnectionId);
             return;
         }
 
         if (item == null)
         {
-            Core.Writer.WriteLine("<p>You don't see that here.", player.ConnectionId);
+            Handler.Client.WriteLine("<p>You don't see that here.", player.ConnectionId);
             return;
         }
 
         if (!item.Container.IsOpen)
         {
-            Core.Writer.WriteLine("<p>It's already closed.", player.ConnectionId);
+            Handler.Client.WriteLine("<p>It's already closed.", player.ConnectionId);
             return;
         }
 
-        Core.Writer.WriteLine($"<p>You close {item.Name.ToLower()}.</p>", player.ConnectionId);
-        Core.Writer.WriteToOthersInRoom($"<p>{player.Name} closes {item.Name.ToLower()}</p>", room, player);
+        Handler.Client.WriteLine($"<p>You close {item.Name.ToLower()}.</p>", player.ConnectionId);
+        Handler.Client.WriteToOthersInRoom($"<p>{player.Name} closes {item.Name.ToLower()}</p>", room, player);
 
         item.Container.IsOpen = false;
         room.Clean = false;

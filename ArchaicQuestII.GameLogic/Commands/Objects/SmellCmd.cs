@@ -10,7 +10,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects;
 
 public class SmellCmd : ICommand
 {
-    public SmellCmd(ICore core)
+    public SmellCmd(ICoreHandler coreHandler)
     {
         Aliases = new[] {"smell"};
         Description = "You can smell an object to find out about it's smell";
@@ -30,7 +30,8 @@ public class SmellCmd : ICommand
             CharacterStatus.Status.Sitting,
         };
         UserRole = UserRole.Player;
-        Core = core;
+
+        Handler = coreHandler;
     }
     
     public string[] Aliases { get; }
@@ -39,7 +40,7 @@ public class SmellCmd : ICommand
     public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
-    public ICore Core { get; }
+    public ICoreHandler Handler { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
@@ -47,7 +48,7 @@ public class SmellCmd : ICommand
 
         if (string.IsNullOrEmpty(target))
         {
-            Core.Writer.WriteLine("<p>Smell what?</p>", player.ConnectionId);
+            Handler.Client.WriteLine("<p>Smell what?</p>", player.ConnectionId);
             return;
         }
         
@@ -56,14 +57,14 @@ public class SmellCmd : ICommand
             
         if (item == null)
         {
-            Core.Writer.WriteLine("<p>You don't see that here.", player.ConnectionId);
+            Handler.Client.WriteLine("<p>You don't see that here.", player.ConnectionId);
             return;
         }
 
-        var isDark = Core.RoomActions.RoomIsDark(player, room);
+        var isDark = Handler.World.RoomIsDark(player, room);
 
-        Core.Writer.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{item.Description.Smell}",
+        Handler.Client.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{item.Description.Smell}",
             player.ConnectionId);
-        Core.Writer.WriteToOthersInRoom($"<p>{player.Name} smells {item.Name.ToLower()}.</p>", room, player);
+        Handler.Client.WriteToOthersInRoom($"<p>{player.Name} smells {item.Name.ToLower()}.</p>", room, player);
     }
 }

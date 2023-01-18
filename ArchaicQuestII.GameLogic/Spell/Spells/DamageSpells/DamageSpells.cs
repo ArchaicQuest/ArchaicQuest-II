@@ -5,11 +5,8 @@ using System.Text;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Client;
-using ArchaicQuestII.GameLogic.Combat;
-using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Item;
-using ArchaicQuestII.GameLogic.Skill.Core;
 using ArchaicQuestII.GameLogic.Skill.Model;
 using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
@@ -33,36 +30,22 @@ namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
 
     public class DamageSpells : IDamageSpells
     {
-        private readonly IWriteToClient _writer;
-        private readonly IUpdateClientUI _updateClientUi;
-        private readonly IDamage _damage;
-        private readonly ICombat _fight;
-        private readonly ISkillManager _skillManager;
-
-
-
+        private readonly IClientHandler _clientHandler;
+        private readonly ICharacterHandler _characterHandler;
+        
         public DamageSpells(
-            IWriteToClient writer, 
-            IUpdateClientUI updateClientUi,
-            IDamage damage, 
-            ICombat fight, 
-            ISkillManager skillManager)
+            IClientHandler clientHandler,
+            ICharacterHandler characterHandler)
         {
-            _writer = writer;
-            _updateClientUi = updateClientUi;
-            _damage = damage;
-            _fight = fight;
-            _skillManager = skillManager;
-
+            _clientHandler = clientHandler;
+            _characterHandler = characterHandler;
         }
-
-
 
         public int MagicMissile(Player player, Player target, Room room)
         {
             var damage = DiceBag.Roll(1, 1, 4) + 1;
 
-            _skillManager.DamagePlayer("magic missile", damage, player, target, room);
+            _characterHandler.DamagePlayer("magic missile", damage, player, target, room);
 
             return damage;
         }
@@ -72,7 +55,7 @@ namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
             var casterLevel = player.Level > 10 ? 5 : player.Level;
             var damage = DiceBag.Roll(1, 1, 8) + casterLevel;
 
-            _skillManager.DamagePlayer("Cause light wounds", damage, player, target, room);
+            _characterHandler.DamagePlayer("Cause light wounds", damage, player, target, room);
 
             return damage;
         }
@@ -111,18 +94,18 @@ namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
 
                 target.Affects.Custom.Remove(affect);
 
-                _skillManager.EmoteEffectWearOffAction(player, room, skillMessage);
+                _characterHandler.EmoteEffectWearOffAction(player, room, skillMessage);
 
-                _updateClientUi.UpdateAffects(player);
-                _updateClientUi.UpdateScore(player);
+                _clientHandler.UpdateAffects(player);
+                _clientHandler.UpdateScore(player);
                 return;
             }
 
             var skill = new AllSpells().Armour();
-            target = _skillManager.GetValidTarget(player, target, skill.ValidTargets);
+            target = Helpers.GetValidTarget(player, target, skill.ValidTargets);
 
             //create emote effectWear off message
-            _skillManager.EmoteAction(player, target, room, skillMessage);
+            _characterHandler.EmoteAction(player, target, room, skillMessage);
 
             if (affect == null)
             {
@@ -151,9 +134,9 @@ namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
 
 
 
-            _updateClientUi.UpdateAffects(target);
-            _updateClientUi.UpdateScore(target);
-            _updateClientUi.UpdateScore(player);
+            _clientHandler.UpdateAffects(target);
+            _clientHandler.UpdateScore(target);
+            _clientHandler.UpdateScore(player);
 
 
         }
@@ -190,18 +173,18 @@ namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
 
                 target.Affects.Custom.Remove(affect);
 
-                _skillManager.EmoteEffectWearOffAction(player, room, skillMessage);
+                _characterHandler.EmoteEffectWearOffAction(player, room, skillMessage);
 
-                _updateClientUi.UpdateAffects(player);
-                _updateClientUi.UpdateScore(player);
+                _clientHandler.UpdateAffects(player);
+                _clientHandler.UpdateScore(player);
                 return;
             }
 
             var skill = new AllSpells().Armour();
-            target = _skillManager.GetValidTarget(player, target, skill.ValidTargets);
+            target = Helpers.GetValidTarget(player, target, skill.ValidTargets);
 
             //create emote effectWear off message
-            _skillManager.EmoteAction(player, target, room, skillMessage);
+            _characterHandler.EmoteAction(player, target, room, skillMessage);
 
             if (affect == null)
             {
@@ -231,9 +214,9 @@ namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
 
 
 
-            _updateClientUi.UpdateAffects(target);
-            _updateClientUi.UpdateScore(target);
-            _updateClientUi.UpdateScore(player);
+            _clientHandler.UpdateAffects(target);
+            _clientHandler.UpdateScore(target);
+            _clientHandler.UpdateScore(player);
 
 
         }
@@ -272,20 +255,20 @@ namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
                 Miss = new Messages()
             };
 
-            var hasAffcted = _skillManager.AffectPlayerAttributes("Cure light wounds", EffectLocation.Hitpoints, value, player, target, room, skillMessage.NoEffect.ToPlayer);
+            var hasAffcted = _characterHandler.AffectPlayerAttributes("Cure light wounds", EffectLocation.Hitpoints, value, player, target, room, skillMessage.NoEffect.ToPlayer);
 
             if (hasAffcted)
             {
-                _skillManager.EmoteAction(player, target, room, skillMessage);
-                _skillManager.UpdateClientUI(target);
+                _characterHandler.EmoteAction(player, target, room, skillMessage);
+                _clientHandler.UpdateClientUI(target);
             }
             else
             {
-                _skillManager.EmoteAction(player, target, room, skillMessageNoEffect);
-                _skillManager.UpdateClientUI(target);
+                _characterHandler.EmoteAction(player, target, room, skillMessageNoEffect);
+                _clientHandler.UpdateClientUI(target);
             }
 
-            _skillManager.UpdateClientUI(player);
+            _clientHandler.UpdateClientUI(player);
 
         }
 
@@ -294,14 +277,14 @@ namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
 
             if (string.IsNullOrEmpty(obj))
             {
-                _writer.WriteLine("Identify what!?", player.ConnectionId);
+                _clientHandler.WriteLine("Identify what!?", player.ConnectionId);
                 return;
             }
             var item = player.Inventory.FirstOrDefault(x => x.Name.Contains(obj, StringComparison.CurrentCultureIgnoreCase));
 
             if (item == null)
             {
-                _writer.WriteLine($"You don't have an item starting with '{item}'", player.ConnectionId);
+                _clientHandler.WriteLine($"You don't have an item starting with '{item}'", player.ConnectionId);
                 return;
             }
 
@@ -403,7 +386,7 @@ namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
 
             sb.Append("</p>");
 
-            _writer.WriteLine(sb.ToString(), player.ConnectionId);
+            _clientHandler.WriteLine(sb.ToString(), player.ConnectionId);
 
         }
     }

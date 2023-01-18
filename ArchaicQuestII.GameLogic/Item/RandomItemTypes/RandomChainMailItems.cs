@@ -7,10 +7,10 @@ using ArchaicQuestII.GameLogic.Utilities;
 
 namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
 {
-    public class RandomChainMailItems : IRandomChainMailArmour
+    public class RandomChainMailItems
     {
         
-        public List<PrefixItemMods> Prefix = new List<PrefixItemMods>()
+        public List<PrefixItemMods> Prefix = new()
         {
             new PrefixItemMods()
             {
@@ -415,8 +415,7 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
            }
            }
 
-
-            if (legendary)
+           if (legendary)
             {
                 item.ArmourRating.Armour += DiceBag.Roll(1, (int)(prefix.MinArmour * 1.5), prefix.MaxArmour * 2);
                 item.ArmourRating.Magic += prefix.MaxArmour * 2 / prefix.MinArmour;

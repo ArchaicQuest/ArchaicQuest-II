@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ArchaicQuestII.GameLogic.World.Room;
 using Newtonsoft.Json;
 
 namespace ArchaicQuestII.GameLogic.Client
@@ -25,7 +24,7 @@ namespace ArchaicQuestII.GameLogic.Client
         [JsonProperty("color")]
         public string Color { get; set; } = "#ccc";
         [JsonProperty("type")]
-        public Room.RoomType Type { get; set; } = Room.RoomType.Standard;
+        public World.Room.Room.RoomType Type { get; set; } = World.Room.Room.RoomType.Standard;
     }
 
     public class SigmaMapEdge
@@ -54,7 +53,7 @@ namespace ArchaicQuestII.GameLogic.Client
     public static class Map
     {
 
-        public static string DrawMap(List<Room> rooms)
+        public static string DrawMap(List<World.Room.Room> rooms)
         {
 
             var nodes = new List<SigmaMapNode>();
@@ -92,12 +91,12 @@ namespace ArchaicQuestII.GameLogic.Client
                 };
 
 
-                if (node.Type == Room.RoomType.Water || node.Type == Room.RoomType.River || node.Type == Room.RoomType.Sea)
+                if (node.Type == World.Room.Room.RoomType.Water || node.Type == World.Room.Room.RoomType.River || node.Type == World.Room.Room.RoomType.Sea)
                 {
                     mapNode.Color = "#22A7F0";
                 }
 
-                if (node.Type == Room.RoomType.Field || node.Type == Room.RoomType.Forest)
+                if (node.Type == World.Room.Room.RoomType.Field || node.Type == World.Room.Room.RoomType.Forest)
                 {
                     mapNode.Color = "#20bf6b";
                 }

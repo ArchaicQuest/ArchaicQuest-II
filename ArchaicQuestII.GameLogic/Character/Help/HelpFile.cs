@@ -3,22 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Client;
-using ArchaicQuestII.GameLogic.Core;
+using ArchaicQuestII.GameLogic.Commands;
 
 namespace ArchaicQuestII.GameLogic.Character.Help
 {
     public class HelpFile : IHelp
     {
-        private readonly IWriteToClient _writer;
-        private readonly ICache _cache;
-        public HelpFile(IWriteToClient writer, ICache cache)
+        private readonly IClientHandler _clientHandler;
+        private readonly ICommandHandler _commandHandler;
+        public HelpFile(IClientHandler clientHandler, ICommandHandler commandHandler)
         {
-            _writer = writer;
-            _cache = cache;
+            _clientHandler = clientHandler;
+            _commandHandler = commandHandler;
         }
         public List<Help> FindHelpFile(string keyword)
         {
-            var helpFile = _cache.FindHelp(keyword);
+            var helpFile = _commandHandler.FindHelp(keyword);
 
             return helpFile;
         }
@@ -56,7 +56,7 @@ namespace ArchaicQuestII.GameLogic.Character.Help
 
             sb.Append($"<pre>{help.Description}</pre>");
 
-            _writer.WriteLine(sb.ToString(), player.ConnectionId);
+            _clientHandler.WriteLine(sb.ToString(), player.ConnectionId);
         }
 
         public void DisplayHelpFile(string keyword, Player player)
@@ -74,7 +74,7 @@ namespace ArchaicQuestII.GameLogic.Character.Help
                     if (searchByTitle == null)
                     {
 
-                        _writer.WriteLine(DisplayHelpOptions(helpFile, keyword), player.ConnectionId);
+                        _clientHandler.WriteLine(DisplayHelpOptions(helpFile, keyword), player.ConnectionId);
                         return;
                     }
 
@@ -89,7 +89,7 @@ namespace ArchaicQuestII.GameLogic.Character.Help
                 }
                 else
                 {
-                    _writer.WriteLine("No help found for that keyword", player.ConnectionId);
+                    _clientHandler.WriteLine("No help found for that keyword", player.ConnectionId);
                 }
             }
 

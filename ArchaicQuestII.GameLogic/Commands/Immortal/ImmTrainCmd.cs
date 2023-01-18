@@ -9,7 +9,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Immortal;
 
 public class ImmTrainCmd : ICommand
 {
-    public ImmTrainCmd(ICore core)
+    public ImmTrainCmd(ICoreHandler coreHandler)
     {
         Aliases = new[] {"/train"};
         Description = "Max out a players stats";
@@ -21,7 +21,8 @@ public class ImmTrainCmd : ICommand
             Title = "";
     DeniedStatus = null;
         UserRole = UserRole.Staff;
-        Core = core;
+
+        Handler = coreHandler;
     }
     
     public string[] Aliases { get; }
@@ -30,7 +31,7 @@ public class ImmTrainCmd : ICommand
     public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
-    public ICore Core { get; }
+    public ICoreHandler Handler { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
@@ -43,13 +44,13 @@ public class ImmTrainCmd : ICommand
                 skill.Proficiency = 85;
             }
             
-            Core.Writer.WriteLine("<p>You have max stats now.</p>", player.ConnectionId);
+            Handler.Client.WriteLine("<p>You have max stats now.</p>", player.ConnectionId);
             return;
         }
         
         Player foundPlayer = null;
         
-        foreach (var checkRoom in Core.Cache.GetAllRooms())
+        foreach (var checkRoom in Handler.World.GetAllRooms())
         {
             foreach (var checkRoomPlayer in checkRoom.Players.Where(checkRoomPlayer => checkRoomPlayer.Name == target))
             {
@@ -60,7 +61,7 @@ public class ImmTrainCmd : ICommand
 
         if (foundPlayer == null)
         {
-            Core.Writer.WriteLine("<p>They're not here.</p>", player.ConnectionId);
+            Handler.Client.WriteLine("<p>They're not here.</p>", player.ConnectionId);
             return;
         }
         
@@ -69,6 +70,6 @@ public class ImmTrainCmd : ICommand
             skill.Proficiency = 85;
         }
         
-        Core.Writer.WriteLine($"<p>{foundPlayer} has max stats now.</p>", player.ConnectionId);
+        Handler.Client.WriteLine($"<p>{foundPlayer} has max stats now.</p>", player.ConnectionId);
     }
 }

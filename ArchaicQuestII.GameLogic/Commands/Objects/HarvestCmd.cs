@@ -16,7 +16,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects;
 
 public class HarvestCmd : ICommand
 {
-    public HarvestCmd(ICore core)
+    public HarvestCmd(ICoreHandler coreHandler)
     {
         Aliases = new[] {"harvest", "forage"};
         Description = "Some plants or other objects can be harvested. Harvesting takes some time and the amount harvested is random. " +
@@ -37,7 +37,8 @@ public class HarvestCmd : ICommand
             CharacterStatus.Status.Sitting,
         };
         UserRole = UserRole.Player;
-        Core = core;
+
+        Handler = coreHandler;
     }
     
     public string[] Aliases { get; }
@@ -46,7 +47,7 @@ public class HarvestCmd : ICommand
     public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
-    public ICore Core { get; }
+    public ICoreHandler Handler { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
@@ -54,13 +55,13 @@ public class HarvestCmd : ICommand
 
         if (string.IsNullOrEmpty(target))
         {
-            Core.Writer.WriteLine("Harvest what?", player.ConnectionId);
+            Handler.Client.WriteLine("Harvest what?", player.ConnectionId);
             return;
         }
         
         if (player.Status == CharacterStatus.Status.Busy)
         {
-            Core.Writer.WriteLine("You are already doing it.", player.ConnectionId);
+            Handler.Client.WriteLine("You are already doing it.", player.ConnectionId);
             return;
         }
         
@@ -69,13 +70,13 @@ public class HarvestCmd : ICommand
 
         if (thingToHarvest == null)
         {
-            Core.Writer.WriteLine($"You don't see that here.", player.ConnectionId);
+            Handler.Client.WriteLine($"You don't see that here.", player.ConnectionId);
             return;
         }
 
         if (!thingToHarvest.Container.Items.Any())
         {
-            Core.Writer.WriteLine("There's nothing left to harvest.", player.ConnectionId);
+            Handler.Client.WriteLine("There's nothing left to harvest.", player.ConnectionId);
             return;
         }
 
@@ -86,9 +87,9 @@ public class HarvestCmd : ICommand
     {
         player.Status = CharacterStatus.Status.Busy;
 
-        Core.UpdateClient.PlaySound("foraging", player);
+        Handler.Client.PlaySound("foraging", player);
 
-        Core.Writer.WriteLine($"<p>You begin harvesting from {thingToHarvest.Name}.</p>", player.ConnectionId);
+        Handler.Client.WriteLine($"<p>You begin harvesting from {thingToHarvest.Name}.</p>", player.ConnectionId);
         
         await Task.Delay(4000);
         
@@ -97,9 +98,9 @@ public class HarvestCmd : ICommand
             return;
         }
 
-        Core.UpdateClient.PlaySound("foraging", player);
+        Handler.Client.PlaySound("foraging", player);
 
-        Core.Writer.WriteLine("<p>You rummage through the foliage looking for something to harvest.</p>",
+        Handler.Client.WriteLine("<p>You rummage through the foliage looking for something to harvest.</p>",
             player.ConnectionId);
         
         await Task.Delay(4000);
@@ -109,9 +110,9 @@ public class HarvestCmd : ICommand
             return;
         }
 
-        Core.UpdateClient.PlaySound("foraging", player);
+        Handler.Client.PlaySound("foraging", player);
 
-        Core.Writer.WriteLine("<p>You continue searching.</p>", player.ConnectionId);
+        Handler.Client.WriteLine("<p>You continue searching.</p>", player.ConnectionId);
 
         await Task.Delay(4000);
         
@@ -212,7 +213,7 @@ public class HarvestCmd : ICommand
         
         if (roll <= 1)
         {
-            Core.Writer.WriteLine(
+            Handler.Client.WriteLine(
                 $"<p>{{yellow}}{randomMob.Name} jumps out from the {thingToHarvest.Name} and attacks you!{{/}}</p>",
                 player.ConnectionId);
             room.Mobs.Add(randomMob);
@@ -223,8 +224,8 @@ public class HarvestCmd : ICommand
 
         if (roll <= 3)
         {
-            Core.Writer.WriteLine(
-                $"<p>{{yellow}}You cut yourself foraging, OUCH!{{/}}</p>",
+            Handler.Client.WriteLine(
+                "<p>{yellow}You cut yourself foraging, OUCH!{/}</p>",
                 player.ConnectionId);
             player.Status = CharacterStatus.Status.Standing;
             return;
@@ -234,8 +235,8 @@ public class HarvestCmd : ICommand
 
         if (!canDoSkill)
         {
-            Core.Writer.WriteLine("<p>You fail to harvest a thing.</p>", player.ConnectionId);
-            Core.Writer.WriteLine(Helpers.SkillLearnMistakes(player, "foraging", Core.Gain), player.ConnectionId);
+            Handler.Client.WriteLine("<p>You fail to harvest a thing.</p>", player.ConnectionId);
+            Handler.Client.WriteLine(Handler.Character.SkillLearnMistakes(player, "foraging"), player.ConnectionId);
             player.Status = CharacterStatus.Status.Standing;
             return;
         }
@@ -272,7 +273,7 @@ public class HarvestCmd : ICommand
             thingToHarvest.Container.Items.Remove(thingToHarvest.Container.Items[i]);
         }
 
-        Core.Writer.WriteLine(
+        Handler.Client.WriteLine(
             $"<p>Ah you have collected {collectedCount} {collected}{(collectedCount > 1 ? "'s" : "")}</p>",
             player.ConnectionId);
         player.Status = CharacterStatus.Status.Standing;
@@ -291,14 +292,14 @@ public class HarvestCmd : ICommand
             return;
         }
 
-        if (!Core.Cache.IsCharInCombat(player.Id.ToString()))
+        if (!Handler.Combat.IsCharInCombat(player.Id.ToString()))
         {
-            Core.Cache.AddCharToCombat(player.Id.ToString(), player);
+            Handler.Combat.AddCharToCombat(player.Id.ToString(), player);
         }
 
-        if (!Core.Cache.IsCharInCombat(target.Id.ToString()))
+        if (!Handler.Combat.IsCharInCombat(target.Id.ToString()))
         {
-            Core.Cache.AddCharToCombat(target.Id.ToString(), target);
+            Handler.Combat.AddCharToCombat(target.Id.ToString(), target);
         }
     }
 }

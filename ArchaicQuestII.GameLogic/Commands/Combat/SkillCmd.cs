@@ -8,7 +8,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Combat;
 
 public class SkillCmd : ICommand
 {
-    public SkillCmd(ICore core)
+    public SkillCmd(ICoreHandler coreHandler)
     {
         Aliases = new[] {"skill"};
         Description = "Use one of your skills.";
@@ -29,7 +29,8 @@ public class SkillCmd : ICommand
             CharacterStatus.Status.Resting
         };
         UserRole = UserRole.Player;
-        Core = core;
+
+        Handler = coreHandler;
     }
     
     public string[] Aliases { get; }
@@ -38,8 +39,7 @@ public class SkillCmd : ICommand
     public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
-    public ICore Core { get; }
-
+    public ICoreHandler Handler { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {

@@ -6,9 +6,9 @@ using ArchaicQuestII.GameLogic.Utilities;
 
 namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
 {
-    public class RandomPlateMailItems : IRandomPlateMailArmour
+    public class RandomPlateMailItems
     {
-        public List<PrefixItemMods> Prefix = new List<PrefixItemMods>()
+        public List<PrefixItemMods> Prefix = new()
         {
             new PrefixItemMods()
             {

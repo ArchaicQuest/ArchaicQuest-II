@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using ArchaicQuestII.GameLogic.Core;
+﻿using ArchaicQuestII.GameLogic.World;
 using Moq;
-using Xunit;
 
 namespace ArchaicQuestII.GameLogic.Tests.Core
 {
     public class Weather
     {
-        private readonly Mock<ITime> _time;
+        private readonly Mock<IWorldHandler> _worldHandler;
+        
         public Weather()
         {
-            _time = new Mock<ITime>();
+            _worldHandler = new Mock<IWorldHandler>();
         }
 
         /* see Time tests */

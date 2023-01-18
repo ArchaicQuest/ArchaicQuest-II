@@ -10,7 +10,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects;
 
 public class SacrificeCorpseCmd : ICommand
 {
-    public SacrificeCorpseCmd(ICore core)
+    public SacrificeCorpseCmd(ICoreHandler coreHandler)
     {
         Aliases = new[] {"sacrifice", "sac"};
         Description = @"'{yellow}sacrifice{/}' is used to sacrifice a corpse of a dead mob to the gods who will reward the player with gold. 
@@ -36,7 +36,8 @@ sac rat
             CharacterStatus.Status.Sitting,
         };
         UserRole = UserRole.Player;
-        Core = core;
+
+        Handler = coreHandler;
     }
     
     public string[] Aliases { get; }
@@ -45,7 +46,7 @@ sac rat
     public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
-    public ICore Core { get; }
+    public ICoreHandler Handler { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
@@ -53,7 +54,7 @@ sac rat
 
         if (string.IsNullOrEmpty(target))
         {
-            Core.Writer.WriteLine("<p>Sacrifice whom?</p>", player.ConnectionId);
+            Handler.Client.WriteLine("<p>Sacrifice whom?</p>", player.ConnectionId);
             return;
         }
 
@@ -65,16 +66,16 @@ sac rat
             var coinCount = DiceBag.Roll(1, 1, 12);
             player.Money.Gold += coinCount;
             
-            Core.Writer.WriteLine(
+            Handler.Client.WriteLine(
                 coinCount == 1
                     ? "The gods give you a measly gold coin for your sacrifice."
                     : $"The gods give you {coinCount} gold coins for your sacrifice.",
                 player.ConnectionId);
 
-            Core.Writer.WriteToOthersInRoom($"{player.Name} sacrifices {itemToRemove.Name.ToLower()}.", room,
+            Handler.Client.WriteToOthersInRoom($"{player.Name} sacrifices {itemToRemove.Name.ToLower()}.", room,
                 player);
 
-            Core.UpdateClient.UpdateScore(player);
+            Handler.Client.UpdateScore(player);
         }
     }
 }

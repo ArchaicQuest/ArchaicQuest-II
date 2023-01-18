@@ -1,12 +1,10 @@
-﻿
-using ArchaicQuestII.DataAccess;
+﻿using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Character.Status;
-using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.SeedData;
 using Microsoft.AspNetCore.Authorization;
@@ -15,16 +13,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ArchaicQuestII.GameLogic.Character.Config;
+using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Utilities;
-using Newtonsoft.Json;
+
 public class TransferChar
 {
     public Guid PlayerId { get; set; }
     public Guid NewAccountId { get; set; }
 }
-
-
-
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -34,15 +30,13 @@ namespace ArchaicQuestII.Controllers.character
     [ApiController]
     public class PlayerController : ControllerBase
     {
-        private IDataBase _db { get; }
-        private IPlayerDataBase _pdb { get; }
-        private ICache _cache { get; }
-        public PlayerController(IDataBase db, ICache cache, IPlayerDataBase pdb)
+        private readonly ICoreHandler _coreHandler;
+        
+        public PlayerController(ICoreHandler coreHandler)
         {
-            _db = db;
-            _pdb = pdb;
-            _cache = cache;
+            _coreHandler = coreHandler;
         }
+        
         [HttpPost]
         [AllowAnonymous]
         [Route("api/character/Player")]
@@ -54,16 +48,16 @@ namespace ArchaicQuestII.Controllers.character
                 throw exception;
             }
 
-            var playerClass = _db.GetList<Class>(DataBase.Collections.Class).FirstOrDefault(x => x.Name.Equals(player.ClassName));
+            var playerClass = _coreHandler.Db.GetList<Class>(DataBase.Collections.Class).FirstOrDefault(x => x.Name.Equals(player.ClassName));
 
-            var newPlayer = new Player()
+            var newPlayer = new Player
             {
                 AccountId = player.AccountId,
                 Id = Guid.NewGuid(),
                 Name = player.Name,
                 Status = CharacterStatus.Status.Standing,
                 Level = 1,
-                ArmorRating = new ArmourRating()
+                ArmorRating = new ArmourRating
                 {
                     Armour = 1,
                     Magic = 1
@@ -78,19 +72,19 @@ namespace ArchaicQuestII.Controllers.character
                 Config = null,
                 Description = player.Description,
                 Gender = player.Gender,
-                Stats = new Stats()
+                Stats = new Stats
                 {
                     HitPoints = player.Attributes.Attribute[GameLogic.Effect.EffectLocation.Constitution] * 2, //create formula to handle these stats
                     MovePoints = player.Attributes.Attribute[GameLogic.Effect.EffectLocation.Dexterity] * 2,  // only for testing
                     ManaPoints = player.Attributes.Attribute[GameLogic.Effect.EffectLocation.Intelligence] * 2,
                 },
                 MaxStats = player.Stats,
-                Money = new GameLogic.Character.Model.Money()
+                Money = new GameLogic.Character.Model.Money
                 {
                     Gold = 10,
                     Silver = 0,
                 },
-                Bank = new GameLogic.Character.Model.Money()
+                Bank = new GameLogic.Character.Model.Money
                 {
                     Gold = 10,
                     Silver = 0,
@@ -108,7 +102,7 @@ namespace ArchaicQuestII.Controllers.character
                 HairColour = player.HairColour,
                 HairLength = player.HairLength,
                 HairTexture = player.HairTexture,
-                RoomId = _cache.GetConfig().StartingRoom,
+                RoomId = _coreHandler.Config.StartingRoom,
             };
 
             var ItemSeed = Items.seedData;
@@ -181,13 +175,12 @@ namespace ArchaicQuestII.Controllers.character
 
             newPlayer.Skills = playerClass?.Skills ?? new List<SkillList>();
 
-            ArchaicQuestII.GameLogic.SeedData.Classes.SetGenericTitle(newPlayer);
-
+            Classes.SetGenericTitle(newPlayer);
 
             if (!string.IsNullOrEmpty(player.Id.ToString()) && player.Id != Guid.Empty)
             {
 
-                var foundItem = _pdb.GetById<Character>(player.Id, PlayerDataBase.Collections.Players);
+                var foundItem = _coreHandler.Pdb.GetById<Character>(player.Id, PlayerDataBase.Collections.Players);
 
                 if (foundItem == null)
                 {
@@ -197,12 +190,15 @@ namespace ArchaicQuestII.Controllers.character
                 newPlayer.Id = player.Id;
             }
 
-            var account = _pdb.GetById<Account>(player.AccountId, PlayerDataBase.Collections.Account);
+            var account = _coreHandler.Pdb.GetById<Account>(player.AccountId, PlayerDataBase.Collections.Account);
             account.Characters.Add(newPlayer.Id);
-            Helpers.PostToDiscord($"{player.Name} has joined the realms for the first time.", "event", _cache.GetConfig());
+            
+            if(_coreHandler.Config.PostToDiscord)
+                Helpers.PostToDiscord($"{player.Name} has joined the realms for the first time.",
+                    _coreHandler.Config.EventsDiscordWebHookURL);
 
 
-            var dupeCheck = _pdb.GetCollection<Player>(PlayerDataBase.Collections.Players).FindOne(x => x.Name.Equals(newPlayer.Name));
+            var dupeCheck = _coreHandler.Pdb.GetCollection<Player>(PlayerDataBase.Collections.Players).FindOne(x => x.Name.Equals(newPlayer.Name));
 
             if (dupeCheck != null)
             {
@@ -211,16 +207,12 @@ namespace ArchaicQuestII.Controllers.character
                 {
                     return Ok(newPlayer.Id);
                 }
-
             }
 
-
-
-            _pdb.Save(account, PlayerDataBase.Collections.Account);
-            _pdb.Save(newPlayer, PlayerDataBase.Collections.Players);
+            _coreHandler.Pdb.Save(account, PlayerDataBase.Collections.Account);
+            _coreHandler.Pdb.Save(newPlayer, PlayerDataBase.Collections.Players);
 
             return Ok(newPlayer.Id);
-
         }
 
 
@@ -237,17 +229,10 @@ namespace ArchaicQuestII.Controllers.character
         public bool NameAllowed([FromQuery] string name)
         {
 
-            var nameExists = _pdb.GetCollection<Player>(PlayerDataBase.Collections.Players).FindOne(x => x.Name == name);
+            var nameExists = _coreHandler.Pdb.GetCollection<Player>(PlayerDataBase.Collections.Players).FindOne(x => x.Name == name);
 
-            if (nameExists == null)
-            {
-                return true;
-            }
-
-            return false;
-
+            return nameExists == null;
         }
-
 
         [HttpGet]
         [API.Helpers.Authorize]
@@ -255,24 +240,14 @@ namespace ArchaicQuestII.Controllers.character
         public List<Player> Get(Guid? id)
         {
 
-            var pc = _pdb.GetCollection<Account>(PlayerDataBase.Collections.Account).FindById(id);
+            var pc = _coreHandler.Pdb.GetCollection<Account>(PlayerDataBase.Collections.Account).FindById(id);
 
             if (id == null)
             {
-                return _pdb.GetCollection<Player>(PlayerDataBase.Collections.Players).FindAll().ToList();
+                return _coreHandler.Pdb.GetCollection<Player>(PlayerDataBase.Collections.Players).FindAll().ToList();
             }
 
-            var players = new List<Player>();
-
-            foreach (var character in pc.Characters)
-            {
-                var foundPC = _pdb.GetCollection<Player>(PlayerDataBase.Collections.Players).FindById(character);
-
-                if (foundPC != null)
-                {
-                    players.Add(foundPC);
-                }
-            }
+            var players = pc.Characters.Select(character => _coreHandler.Pdb.GetCollection<Player>(PlayerDataBase.Collections.Players).FindById(character)).Where(foundPC => foundPC != null).ToList();
 
             return players.OrderByDescending(x => x.LastLoginTime).ToList();
 
@@ -284,7 +259,7 @@ namespace ArchaicQuestII.Controllers.character
         public Player GetPlayer(Guid? id)
         {
 
-            var pc = _pdb.GetCollection<Player>(PlayerDataBase.Collections.Players).FindById(id);
+            var pc = _coreHandler.Pdb.GetCollection<Player>(PlayerDataBase.Collections.Players).FindById(id);
 
             return pc;
 
@@ -295,16 +270,7 @@ namespace ArchaicQuestII.Controllers.character
         [Route("api/character/accounts")]
         public List<Account> getAccounts([FromQuery] string query)
         {
-
-            var account = _pdb.GetCollection<Account>(PlayerDataBase.Collections.Account).FindAll().Where(x => x.Id != null).OrderByDescending(x => x.DateLastPlayed);
-
-            if (string.IsNullOrEmpty(query))
-            {
-                return account.ToList();
-            }
-
-            return account.ToList();
-
+            return _coreHandler.Pdb.GetCollection<Account>(PlayerDataBase.Collections.Account).FindAll().Where(x => x.Id != Guid.Empty).OrderByDescending(x => x.DateLastPlayed).ToList();
         }
 
 
@@ -313,8 +279,7 @@ namespace ArchaicQuestII.Controllers.character
         [Route("api/player/config/{id}")]
         public PlayerConfig GetConfig(string id)
         {
-     
-            var player = _cache.GetPlayer(id);
+            var player = _coreHandler.Character.GetPlayer(id);
 
             return player?.Config;
         }
@@ -325,14 +290,14 @@ namespace ArchaicQuestII.Controllers.character
         public IActionResult UpdateConfig(string id, [FromBody] PlayerConfig config)
         {
             // update cache
-            var player = _cache.GetPlayer(id);
+            var player = _coreHandler.Character.GetPlayer(id);
 
             if (player != null)
             {
                 player.Config = config;
             }
 
-            var saved = _pdb.Save(player, PlayerDataBase.Collections.Players);
+            var saved = _coreHandler.Pdb.Save(player, PlayerDataBase.Collections.Players);
 
             return saved ? Ok() : BadRequest("Failed Saving config");
         }
@@ -341,26 +306,24 @@ namespace ArchaicQuestII.Controllers.character
         [HttpPost("api/player/transferCharacter")]
         public IActionResult TransferCharacter([FromBody] TransferChar transferChar)
         {
-            var character = _pdb.GetById<Player>(transferChar.PlayerId, PlayerDataBase.Collections.Players);
+            var character = _coreHandler.Pdb.GetById<Player>(transferChar.PlayerId, PlayerDataBase.Collections.Players);
             if (character == null)
             {
                 return BadRequest(new { message = "character does not exists." });
             }
             
-            var characterAccount = _pdb.GetById<Account>(character.AccountId, PlayerDataBase.Collections.Account);
-            var newCharacterAccount = _pdb.GetById<Account>(transferChar.NewAccountId, PlayerDataBase.Collections.Account);
+            var characterAccount = _coreHandler.Pdb.GetById<Account>(character.AccountId, PlayerDataBase.Collections.Account);
+            var newCharacterAccount = _coreHandler.Pdb.GetById<Account>(transferChar.NewAccountId, PlayerDataBase.Collections.Account);
 
             characterAccount.Characters.Remove(character.Id);
             newCharacterAccount.Characters.Add(character.Id);
 
             character.AccountId = transferChar.NewAccountId;
-            _pdb.Save(character, PlayerDataBase.Collections.Players);
-            _pdb.Save(newCharacterAccount, PlayerDataBase.Collections.Account);
-            _pdb.Save(characterAccount, PlayerDataBase.Collections.Account);
+            _coreHandler.Pdb.Save(character, PlayerDataBase.Collections.Players);
+            _coreHandler.Pdb.Save(newCharacterAccount, PlayerDataBase.Collections.Account);
+            _coreHandler.Pdb.Save(characterAccount, PlayerDataBase.Collections.Account);
 
             return Ok(new { message = "Character transferred successfully" });
         }
-
-
     }
 }

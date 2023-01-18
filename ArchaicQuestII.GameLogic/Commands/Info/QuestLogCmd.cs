@@ -6,59 +6,59 @@ using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.World.Room;
 
-namespace ArchaicQuestII.GameLogic.Commands.Info
+namespace ArchaicQuestII.GameLogic.Commands.Info;
+
+public class QuestLogCmd : ICommand
 {
-    public class QuestLogCmd : ICommand
+    public QuestLogCmd(ICoreHandler coreHandler)
     {
-        public QuestLogCmd(ICore core)
-        {
-            Aliases = new[] {"questlog", "qlog"};
-            Description = "Displays your current quests.";
-            Usages = new[] {"Type: questlog"};
-            Title = "";
-    DeniedStatus = null;
-            UserRole = UserRole.Player;
-            Core = core;
-        }
+        Aliases = new[] {"questlog", "qlog"};
+        Description = "Displays your current quests.";
+        Usages = new[] {"Type: questlog"};
+        Title = "";
+        DeniedStatus = null;
+        UserRole = UserRole.Player;
+
+        Handler = coreHandler;
+    }
         
-        public string[] Aliases { get; }
-        public string Description { get; }
-        public string[] Usages { get; }
-        public string Title { get; }
-        public CharacterStatus.Status[] DeniedStatus { get; }
-        public UserRole UserRole { get; }
-        public ICore Core { get; }
+    public string[] Aliases { get; }
+    public string Description { get; }
+    public string[] Usages { get; }
+    public string Title { get; }
+    public CharacterStatus.Status[] DeniedStatus { get; }
+    public UserRole UserRole { get; }
+    public ICoreHandler Handler { get; }
 
-        public void Execute(Player player, Room room, string[] input)
+    public void Execute(Player player, Room room, string[] input)
+    {
+        var sb = new StringBuilder();
+
+        foreach (var q in player.QuestLog)
         {
-            var sb = new StringBuilder();
+            sb.Append($"<div class='quest-block'><h3>{q.Title}</h3><p>{q.Area}</p>");
 
-            foreach (var q in player.QuestLog)
+            if (q.Type == QuestTypes.Kill)
             {
-                sb.Append($"<div class='quest-block'><h3>{q.Title}</h3><p>{q.Area}</p>");
-
-                if (q.Type == QuestTypes.Kill)
-                {
-                    sb.Append("<p>Kill:</p>");
-                }
-
-                sb.Append("<ol>");
-                foreach (var mob in q.MobsToKill)
-                {
-                    sb.Append($"<li>{mob.Name} {mob.Current}/{mob.Count}</li>");
-                }
-
-                sb.Append($"</ol><p>{q.Description}</p><p>Reward:</p><ul><li>{q.ExpGain} Experience points</li><li>{q.GoldGain} Gold</li>");
-
-                foreach (var i in q.ItemGain)
-                {
-                    sb.Append($"<li>{i.Name}</li>");
-                }
-
-                sb.Append("</ul></div>");
+                sb.Append("<p>Kill:</p>");
             }
 
-            Core.Writer.WriteLine(sb.ToString(), player.ConnectionId);
+            sb.Append("<ol>");
+            foreach (var mob in q.MobsToKill)
+            {
+                sb.Append($"<li>{mob.Name} {mob.Current}/{mob.Count}</li>");
+            }
+
+            sb.Append($"</ol><p>{q.Description}</p><p>Reward:</p><ul><li>{q.ExpGain} Experience points</li><li>{q.GoldGain} Gold</li>");
+
+            foreach (var i in q.ItemGain)
+            {
+                sb.Append($"<li>{i.Name}</li>");
+            }
+
+            sb.Append("</ul></div>");
         }
+
+        Handler.Client.WriteLine(sb.ToString(), player.ConnectionId);
     }
 }

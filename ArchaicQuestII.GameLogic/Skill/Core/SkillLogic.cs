@@ -1,7 +1,4 @@
 ﻿using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Client;
-using ArchaicQuestII.GameLogic.Combat;
-using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
@@ -10,25 +7,12 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
 {
     public class SkillLogic
     {
-        private readonly IWriteToClient _writer;
-        private readonly IUpdateClientUI _updateClientUi;
-        private readonly IDamage _damage;
-        private readonly ICombat _fight;
-        private readonly ISkillManager _skillManager;
+        private readonly ICharacterHandler _characterHandler;
 
         public SkillLogic(
-            IWriteToClient writer, 
-            IUpdateClientUI updateClientUi,
-            IDamage damage, 
-            ICombat fight, 
-            ISkillManager skillManager)
+            ICharacterHandler characterHandler)
         {
-            _writer = writer;
-            _updateClientUi = updateClientUi;
-            _damage = damage;
-            _fight = fight;
-            _skillManager = skillManager;
-
+            _characterHandler = characterHandler;
         }
 
         public int Kick(Player player, Player target, Room room)
@@ -38,10 +22,10 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
 
             if (target == null)
             {
-
+                return 0;
             }
 
-            _skillManager.DamagePlayer("Kick", damage, player, target, room);
+            _characterHandler.DamagePlayer("Kick", damage, player, target, room);
 
             return damage;
         }

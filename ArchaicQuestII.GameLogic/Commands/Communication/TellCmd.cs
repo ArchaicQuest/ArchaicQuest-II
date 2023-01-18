@@ -10,7 +10,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication;
 
 public class TellCmd : ICommand
 {
-    public TellCmd(ICore core)
+    public TellCmd(ICoreHandler coreHandler)
     {
         Aliases = new[] {"tell"};
         Description = "Sends a message to player, no matter where they are.";
@@ -18,7 +18,8 @@ public class TellCmd : ICommand
             Title = "";
     DeniedStatus = null;
         UserRole = UserRole.Player;
-        Core = core;
+
+        Handler = coreHandler;
     }
     
     public string[] Aliases { get; }
@@ -27,52 +28,52 @@ public class TellCmd : ICommand
     public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
-    public ICore Core { get; }
+    public ICoreHandler Handler { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
         if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
         {
-            Core.Writer.WriteLine("<p>Tell who?</p>", player.ConnectionId);
+            Handler.Client.WriteLine("<p>Tell who?</p>", player.ConnectionId);
             return;
         }
         
         if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
         {
-            Core.Writer.WriteLine("<p>Tell them what?</p>", player.ConnectionId);
+            Handler.Client.WriteLine("<p>Tell them what?</p>", player.ConnectionId);
             return;
         }
         
         var text = string.Join(" ", input.Skip(2));
         
-        var foundPlayer = Core.Cache.GetPlayerCache()
+        var foundPlayer = Handler.Character.GetPlayerCache()
             .FirstOrDefault(x => x.Value.Name.StartsWith(input[1], StringComparison.CurrentCultureIgnoreCase)).Value;
 
         if (foundPlayer == null)
         {
-            Core.Writer.WriteLine("<p>They are not in this realm.</p>", player.ConnectionId);
+            Handler.Client.WriteLine("<p>They are not in this realm.</p>", player.ConnectionId);
             return;
         }
 
         if (foundPlayer == player)
         {
-            Core.Writer.WriteLine($"<p>You tell yourself \"{text}\"</p>", player.ConnectionId);
+            Handler.Client.WriteLine($"<p>You tell yourself \"{text}\"</p>", player.ConnectionId);
             return;
         }
 
         if (!foundPlayer.Config.Tells)
         {
-            Core.Writer.WriteLine($"<p>They can't hear you.</p>", player.ConnectionId);
+            Handler.Client.WriteLine($"<p>They can't hear you.</p>", player.ConnectionId);
             return; 
         }
 
         player.ReplyTo = foundPlayer.Name;
         foundPlayer.ReplyTo = player.Name;
 
-        Core.Writer.WriteLine($"<p class='say'>You tell {foundPlayer.Name} \"{text}\"</p>", player.ConnectionId);
-        Core.UpdateClient.UpdateCommunication(player, $"<p class='say'>You tell {foundPlayer.Name} \"{text}\"</p>", "all");
+        Handler.Client.WriteLine($"<p class='say'>You tell {foundPlayer.Name} \"{text}\"</p>", player.ConnectionId);
+        Handler.Client.UpdateCommunication(player, $"<p class='say'>You tell {foundPlayer.Name} \"{text}\"</p>", "all");
 
-        Core.Writer.WriteLine($"<p class='say'>{player.Name} tells you \"{text}\"</p>", foundPlayer.ConnectionId);
-        Core.UpdateClient.UpdateCommunication(foundPlayer, $"<p class='say'>{player.Name} tells you \"{text}\"</p>", "all");
+        Handler.Client.WriteLine($"<p class='say'>{player.Name} tells you \"{text}\"</p>", foundPlayer.ConnectionId);
+        Handler.Client.UpdateCommunication(foundPlayer, $"<p class='say'>{player.Name} tells you \"{text}\"</p>", "all");
     }
 }

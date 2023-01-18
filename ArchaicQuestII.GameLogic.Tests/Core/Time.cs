@@ -3,21 +3,22 @@ using System.Collections.Generic;
 using System.Text;
 using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Core;
+using ArchaicQuestII.GameLogic.World;
 using Moq;
 using Xunit;
 
 namespace ArchaicQuestII.GameLogic.Tests.Core
 {
-    /* tests fail becasue of dateTime now is not mocked in the function that returns the correct string for the hour */
+    /* tests fail because of dateTime now is not mocked in the function that returns the correct string for the hour */
     public class Time
     {
-        private readonly Mock<IWriteToClient> _writeToClient;
-        private readonly Mock<ICache> _cache;
+        private readonly Mock<IClientHandler> _clientHandler;
+        private readonly Mock<IWorldHandler> _worldHandler;
 
         public Time()
         {
-            _writeToClient = new Mock<IWriteToClient>();
-            _cache = new Mock<ICache>();
+            _clientHandler = new Mock<IClientHandler>();
+            _worldHandler = new Mock<IWorldHandler>();
         }
 
         // [Fact]

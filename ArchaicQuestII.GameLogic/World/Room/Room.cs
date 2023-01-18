@@ -84,5 +84,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
         public bool IsLit { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime DateUpdated { get; set; }
+
+        public string StringId => $"{AreaId}{Coords.X}{Coords.Y}{Coords.Z}";
     }
 }

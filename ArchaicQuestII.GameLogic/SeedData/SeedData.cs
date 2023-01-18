@@ -1,27 +1,27 @@
-using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Core;
 
 namespace ArchaicQuestII.GameLogic.SeedData
 {
     public static class SeedData
     {
-        public static void SeedAndCache(IDataBase db, ICache cache)
+        public static void SeedAndCache(
+            ICoreHandler coreHandler)
         {
-            Alignments.Seed(db);
-            AttackTypes.Seed(db);
-            CharacterStatuses.Seed(db);
-            Classes.SeedAndCache(db, cache);
-            CraftingRecipeSeeds.SeedAndCache(db, cache);
-            HelpFiles.SeedAndCache(db, cache);
-            Items.Seed(db);
-            Quests.SeedAndCache(db, cache);
-            Races.Seed(db);
-            Rooms.Cache(db, cache);
-            Skills.SeedAndCache(db, cache);
-            Socials.SeedAndCache(db, cache);
-            InitialRoomSeed.Seed(db);
+            Alignments.Seed(coreHandler.Db);
+            AttackTypes.Seed(coreHandler.Db);
+            CharacterStatuses.Seed(coreHandler.Db);
+            Classes.SeedAndCache(coreHandler.Db, coreHandler.Character);
+            CraftingRecipeSeeds.SeedAndCache(coreHandler.Db, coreHandler.Item);
+            HelpFiles.SeedAndCache(coreHandler.Db, coreHandler.Command);
+            Items.Seed(coreHandler.Db);
+            Quests.SeedAndCache(coreHandler.Db, coreHandler.Character);
+            Races.Seed(coreHandler.Db);
+            Rooms.Cache(coreHandler.Db, coreHandler.World);
+            Skills.SeedAndCache(coreHandler.Db, coreHandler.Command);
+            Socials.SeedAndCache(coreHandler.Db, coreHandler.Command);
+            InitialRoomSeed.Seed(coreHandler.Db);
 
-            ConfigOnInit.SeedAndCache(db, cache);
+            ConfigOnInit.SeedAndCache(coreHandler);
         }
     }
 }

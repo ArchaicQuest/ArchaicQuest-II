@@ -9,7 +9,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Immortal;
 
 public class ImmSetEventCmd : ICommand
 {
-    public ImmSetEventCmd(ICore core)
+    public ImmSetEventCmd(ICoreHandler coreHandler)
     {
         Aliases = new[] {"/setevent"};
         Description = "Set an event, for mob testing";
@@ -20,7 +20,8 @@ public class ImmSetEventCmd : ICommand
             Title = "";
     DeniedStatus = null;
         UserRole = UserRole.Staff;
-        Core = core;
+
+        Handler = coreHandler;
     }
     
     public string[] Aliases { get; }
@@ -29,7 +30,7 @@ public class ImmSetEventCmd : ICommand
   
     public string Title { get; }  public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
-    public ICore Core { get; }
+    public ICoreHandler Handler { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
@@ -40,7 +41,7 @@ public class ImmSetEventCmd : ICommand
         {
             foreach (var ev in player.EventState)
             {
-                Core.Writer.WriteLine($"{ev.Key} - {ev.Value}", player.ConnectionId);
+                Handler.Client.WriteLine($"{ev.Key} - {ev.Value}", player.ConnectionId);
             }
 
             return;
@@ -49,10 +50,10 @@ public class ImmSetEventCmd : ICommand
         if (player.EventState.ContainsKey(eventName))
         {
             player.EventState[eventName] = num;
-            Core.Writer.WriteLine($"{eventName} state changed to {player.EventState[eventName]}", player.ConnectionId);
+            Handler.Client.WriteLine($"{eventName} state changed to {player.EventState[eventName]}", player.ConnectionId);
             return;
         }
 
-        Core.Writer.WriteLine("Invalid Event state", player.ConnectionId);
+        Handler.Client.WriteLine("Invalid Event state", player.ConnectionId);
     }
 }

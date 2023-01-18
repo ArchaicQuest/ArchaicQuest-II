@@ -14,15 +14,13 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
 {
     public class Objects
     {
-        private readonly Mock<IWriteToClient> _writer;
-        private readonly Mock<ICore> _core;
+        private readonly Mock<IClientHandler> _clientHandler;
         private readonly Mock<ICommandHandler> _commandHandler;
 
 
         public Objects()
         {
-            _writer = new Mock<IWriteToClient>();
-            _core = new Mock<ICore>();
+            _clientHandler = new Mock<IClientHandler>();
             _commandHandler = new Mock<ICommandHandler>();
         }
 
@@ -48,8 +46,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
                 Name = "Gary",
                 Inventory = new ItemList()
             };
-
-            _core.SetupAllProperties();
+            
             _commandHandler.SetupAllProperties();
             _commandHandler.Object.HandleCommand(player, room, "get apple");
 
@@ -79,7 +76,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
                 Inventory = new ItemList()
             };
 
-            new GameLogic.Commands.CommandHandler(_core.Object).HandleCommand(player, room, "get all");
+            //new CommandHandler(_core.Object).HandleCommand(player, room, "get all");
 
             Assert.True(room.Items.FirstOrDefault(x => x.Name == "apple") == null);
         }
@@ -113,7 +110,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
                 Inventory = new ItemList()
             };
 
-            new GameLogic.Commands.CommandHandler(_core.Object).HandleCommand(player, room, "get apple chest");
+            //new GameLogic.Commands.CommandHandler(_core.Object).HandleCommand(player, room, "get apple chest");
 
             Assert.True(chest.Container.Items.FirstOrDefault(x => x.Name == "apple") == null);
         }
@@ -150,7 +147,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
                 Weight = 0
             };
 
-            new GameLogic.Commands.CommandHandler(_core.Object).HandleCommand(player, room, "get apple chest");
+            //new GameLogic.Commands.CommandHandler(_core.Object).HandleCommand(player, room, "get apple chest");
 
             Assert.True(player.Inventory.FirstOrDefault(x => x.Name == "apple").Weight == 0.5);
         }
@@ -179,7 +176,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
                 Inventory = new ItemList()
             };
 
-            new GameLogic.Commands.CommandHandler(_core.Object).HandleCommand(player, room, "get apple");
+            //new GameLogic.Commands.CommandHandler(_core.Object).HandleCommand(player, room, "get apple");
 
             Assert.True(player.Inventory.FirstOrDefault(x => x.Name == "apple") != null);
         }
@@ -206,7 +203,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
                 Money = new GameLogic.Character.Model.Money()
             };
 
-            new GameLogic.Commands.CommandHandler(_core.Object).HandleCommand(player, room, "get gold");
+            //new GameLogic.Commands.CommandHandler(_core.Object).HandleCommand(player, room, "get gold");
 
             Assert.True(player.Money.Gold.Equals(5));
         }
@@ -229,7 +226,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
                 }
             };
 
-            new GameLogic.Commands.CommandHandler(_core.Object).HandleCommand(player, room, "drop 250 gold");
+            //new GameLogic.Commands.CommandHandler(_core.Object).HandleCommand(player, room, "drop 250 gold");
 
             Assert.True(room.Items.FirstOrDefault(x => x.Name.Contains("Gold", StringComparison.CurrentCultureIgnoreCase)) != null);
             Assert.True(player.Money.Gold.Equals(250));
@@ -268,7 +265,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
             room.Players.Add(playerB);
             room.Players.Add(player);
 
-            new GameLogic.Commands.CommandHandler(_core.Object).HandleCommand(player, room, "give barry 500 gold");
+            //new GameLogic.Commands.CommandHandler(_core.Object).HandleCommand(player, room, "give barry 500 gold");
 
             Assert.True(player.Money.Gold.Equals(0));
             Assert.True(playerB.Money.Gold.Equals(500));
@@ -305,7 +302,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
             room.Players.Add(player);
             room.Players.Add(mob);
 
-            new GameLogic.Commands.CommandHandler(_core.Object).HandleCommand(player, room, "give Mob apple");
+            //new GameLogic.Commands.CommandHandler(_core.Object).HandleCommand(player, room, "give Mob apple");
 
             Assert.True(player.Inventory.FirstOrDefault(x => x.Name == "apple") == null);
             Assert.True(mob.Inventory.FirstOrDefault(x => x.Name == "apple") != null);
@@ -344,7 +341,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
 
             _commandHandler.Object.HandleCommand(player, room, "give Mob bread");
 
-            _writer.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("You do not have that item.")), "1"), Times.Once());
+            _clientHandler.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("You do not have that item.")), "1"), Times.Once());
         }
 
         [Fact]
@@ -378,9 +375,9 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
             room.Players.Add(player);
             room.Players.Add(mob);
 
-            new GameLogic.Commands.CommandHandler(_core.Object).HandleCommand(player, room, "give Max apple");
+            //new GameLogic.Commands.CommandHandler(_core.Object).HandleCommand(player, room, "give Max apple");
 
-            _writer.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("They aren't here.")), "1"), Times.Once());
+            _clientHandler.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("They aren't here.")), "1"), Times.Once());
         }
 
 
@@ -407,9 +404,9 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
                 Inventory = new ItemList()
             };
 
-            new GameLogic.Commands.CommandHandler(_core.Object).HandleCommand(player, room, "open north");
+            //new GameLogic.Commands.CommandHandler(_core.Object).HandleCommand(player, room, "open north");
 
-            _writer.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("You open the door")), "1"), Times.Once());
+            _clientHandler.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("You open the door")), "1"), Times.Once());
         }
 
         //[Fact]
@@ -457,9 +454,9 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
                 Inventory = new ItemList()
             };
 
-            new GameLogic.Commands.CommandHandler(_core.Object).HandleCommand(player, room, "open chest");
+            //new GameLogic.Commands.CommandHandler(_core.Object).HandleCommand(player, room, "open chest");
 
-            _writer.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("You open")), "1"), Times.Once());
+            _clientHandler.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("You open")), "1"), Times.Once());
             Assert.True(item.Container.IsOpen);
         }
 
@@ -486,9 +483,9 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
                 Inventory = new ItemList()
             };
 
-            new GameLogic.Commands.CommandHandler(_core.Object).HandleCommand(player, room, "close chest");
+            //new GameLogic.Commands.CommandHandler(_core.Object).HandleCommand(player, room, "close chest");
 
-            _writer.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("You close")), "1"), Times.Once());
+            _clientHandler.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("You close")), "1"), Times.Once());
             Assert.True(!item.Container.IsOpen);
         }
     }

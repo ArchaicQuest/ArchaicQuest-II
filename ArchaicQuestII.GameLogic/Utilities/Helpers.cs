@@ -4,12 +4,14 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Class;
-using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Model;
+using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
+using ArchaicQuestII.GameLogic.Skill.Enum;
 using ArchaicQuestII.GameLogic.Spell;
 using ArchaicQuestII.GameLogic.World.Room;
 
@@ -333,12 +335,10 @@ namespace ArchaicQuestII.GameLogic.Utilities
             return exitList;
         }
 
-        public static async void PostToDiscord(string botToSay, string eventName, Config config)
+        public static async void PostToDiscord(string botToSay, string discordWebHookUrl)
         {
-            if (!config.PostToDiscord)
-            {
-                return;
-            }
+            if (!string.IsNullOrEmpty(discordWebHookUrl)) return;
+            
             var client = new HttpClient();
             var content = new FormUrlEncodedContent(new[]
             {
@@ -346,33 +346,8 @@ namespace ArchaicQuestII.GameLogic.Utilities
             });
 
             content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
-
-            switch (eventName)
-            {
-                case "event":
-                    if (!string.IsNullOrEmpty(config.EventsDiscordWebHookURL))
-                    {
-                        await client.PostAsync(config.EventsDiscordWebHookURL, content);
-                    }
-
-                    break;
-                case "channels":
-                    if (!string.IsNullOrEmpty(config.ChannelDiscordWebHookURL))
-                    {
-                        await client.PostAsync(config.ChannelDiscordWebHookURL, content);
-                    }
-
-                    break;
-                case "error":
-                    if (!string.IsNullOrEmpty(config.ErrorDiscordWebHookURL))
-                    {
-                        await client.PostAsync(config.ErrorDiscordWebHookURL, content);
-                    }
-
-                    break;
-                default:
-                    break;
-            }
+            
+            await client.PostAsync(discordWebHookUrl, content);
 
             client.Dispose();
         }
@@ -600,31 +575,6 @@ namespace ArchaicQuestII.GameLogic.Utilities
             return skillLevel >= chance;
         }
 
-        public static string SkillLearnMistakes(Player player, string skillName, IGain gain, int delay = 0)
-        {
-            var skill = player.Skills.FirstOrDefault(x => x.SkillName.Equals(skillName, StringComparison.CurrentCultureIgnoreCase));
-
-            if (skill == null)
-            {
-                return string.Empty;
-            }
-
-            if (skill.Proficiency == 100)
-            {
-                return string.Empty;
-            }
-
-            var increase = DiceBag.Roll(1, 1, 5);
-
-            skill.Proficiency += increase;
-
-            gain.GainExperiencePoints(player, 100 * skill.Level / 4, false);
-
-            return
-                $"<p class='improve'>You learn from your mistakes and gain {100 * skill.Level / 4} experience points.</p>" +
-                $"<p class='improve'>Your knowledge of {skill.SkillName} increases by {increase}%.</p>";
-        }
-        
         public static string UpdateAffect(Player player, Item.Item item, Affect affect)
         {
             var modBenefits = string.Empty;
@@ -802,6 +752,178 @@ namespace ArchaicQuestII.GameLogic.Utilities
             }
 
             return newText;
+        }
+
+        /// <summary>
+        /// Logs and error to the database
+        /// </summary>
+        /// <param name="db"></param>
+        /// <param name="file">which file its in</param>
+        /// <param name="error">the error message</param>
+        /// <param name="priority"></param>
+        public static void LogError(IDataBase db, string file, string error, ErrorPriority priority)
+        {
+            var e = new ErrorInfo
+            {
+                File = file,
+                Error = error,
+                Priority = priority
+            };
+
+            db.Save(e, DataBase.Collections.ErrorLog);
+        }
+        
+        public static void SetCharacterStatus(Player player, string longName, CharacterStatus.Status status)
+        {
+            player.Status = status;
+            player.LongName = longName;
+            player.Pose = "";
+        }
+        
+        public static string ObfuscateSpellName(string spellName)
+        {
+            var magicWords = new List<Tuple<string, string>>
+            {
+                new Tuple<string, string>(" ", " "),
+                new Tuple<string, string>("ar", "abra"),
+                new Tuple<string, string>("au", "kada"),
+                new Tuple<string, string>("bless", "fido"),
+                new Tuple<string, string>("blind", "nose"),
+                new Tuple<string, string>("bur", "mosa"),
+                new Tuple<string, string>("cu", "judi"),
+                new Tuple<string, string>("de", "oculo"),
+                new Tuple<string, string>("en", "unso"),
+                new Tuple<string, string>("light", "dies"),
+                new Tuple<string, string>("lo", "hi"),
+                new Tuple<string, string>("mor", "zak"),
+                new Tuple<string, string>("move", "sido"),
+                new Tuple<string, string>("ness", "lacri"),
+                new Tuple<string, string>("ning", "illa"),
+                new Tuple<string, string>("per", "duda"),
+                new Tuple<string, string>("ra", "gru"),
+                new Tuple<string, string>("fresh", "ima"),
+                new Tuple<string, string>("re", "candus"),
+                new Tuple<string, string>("son", "sabru"),
+                new Tuple<string, string>("tect", "infra"),
+                new Tuple<string, string>("tri", "cula"),
+                new Tuple<string, string>("ven", "nofo"),
+                new Tuple<string, string>("a", "a"), new Tuple<string, string>("b", "b"),
+                new Tuple<string, string>("c", "q"), new Tuple<string, string>("d", "e"),
+                new Tuple<string, string>("e", "z"), new Tuple<string, string>("f", "y"),
+                new Tuple<string, string>("g", "o"), new Tuple<string, string>("h", "p"),
+                new Tuple<string, string>("i", "u"), new Tuple<string, string>("j", "y"),
+                new Tuple<string, string>("k", "t"), new Tuple<string, string>("l", "r"),
+                new Tuple<string, string>("m", "w"), new Tuple<string, string>("n", "i"),
+                new Tuple<string, string>("o", "a"), new Tuple<string, string>("p", "s"),
+                new Tuple<string, string>("q", "d"), new Tuple<string, string>("r", "f"),
+                new Tuple<string, string>("s", "g"), new Tuple<string, string>("t", "h"),
+                new Tuple<string, string>("u", "j"), new Tuple<string, string>("v", "z"),
+                new Tuple<string, string>("w", "x"), new Tuple<string, string>("x", "n"),
+                new Tuple<string, string>("y", "l"), new Tuple<string, string>("z", "k"),
+                new Tuple<string, string>("", "")
+            };
+
+            var buff = new StringBuilder();
+            var pos = 0;
+            var length = 0;
+
+            while (pos < spellName.Length)
+            {
+
+                foreach (var magicWord in magicWords)
+                {
+                    var prefix = magicWord.Item1;
+                    var len = prefix.Length;
+
+                    if (pos + len <= spellName.Length && spellName.IndexOf(prefix, pos, len, StringComparison.OrdinalIgnoreCase) > -1)
+                    {
+                        buff.Append(magicWord.Item2);
+                        length = len;
+                        break;
+                    }
+                }
+
+                if (length > 0)
+                {
+                    pos += length;
+                }
+            }
+
+            return buff.ToString();
+        }
+        
+        public static Item.Item ReturnTargetItem(Skill.Model.Skill spell, string target, Room room, Player player)
+        {
+
+            if ((spell.ValidTargets & ValidTargets.TargetObjectInventory) != 0 || (spell.ValidTargets & ValidTargets.TargetObjectEquipped) != 0)
+            {
+                //find victim from player cache instead
+                var item = player.Inventory.FirstOrDefault(x =>
+                    x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+
+                if (item == null)
+                {
+                    //target not found
+                    return null;
+                }
+
+
+                return item;
+            }
+
+
+            return null;
+        }
+        
+        public static Player GetTarget(string target, Room room)
+        {
+            if (string.IsNullOrEmpty(target))
+            {
+                return null;
+            }
+
+            return room.Mobs.FirstOrDefault(x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)) ??
+                   room.Players.FirstOrDefault(
+                       x => x.Name.StartsWith(target, StringComparison.CurrentCultureIgnoreCase));
+        }
+        
+        public static Player GetValidTarget(Player player, Player target, ValidTargets validTargets)
+        {
+
+            var setTarget = target;
+            if (validTargets.HasFlag(ValidTargets.TargetFightSelf) && player.Status == CharacterStatus.Status.Fighting)
+            {
+                setTarget = player;
+            }
+
+            if (validTargets.HasFlag(ValidTargets.TargetFightVictim) && player.Status == CharacterStatus.Status.Fighting)
+            {
+                setTarget = target;
+            }
+
+            if (validTargets == ValidTargets.TargetIgnore)
+            {
+                setTarget = player;
+            }
+
+            return setTarget;
+        }
+        
+        public static string ReplaceTargetPlaceholders(string str, Player player, bool isTarget)
+        {
+            string newString;
+            
+            if (isTarget)
+            {
+                newString = str.Replace("#target#", "You");
+
+                return newString;
+            }
+
+            newString = str.Replace("#target#", player.Name);
+
+            return newString;
+
         }
     }
 }

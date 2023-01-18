@@ -1,17 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Equipment;
-using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Help;
-using ArchaicQuestII.GameLogic.Character.MobFunctions;
 using ArchaicQuestII.GameLogic.Character.MobFunctions.Healer;
-using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Commands;
 using ArchaicQuestII.GameLogic.Core;
-using ArchaicQuestII.GameLogic.Skill.Skills;
-using ArchaicQuestII.GameLogic.Spell.Interface;
 using ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells;
-using ArchaicQuestII.GameLogic.World.Area;
 using ArchaicQuestII.GameLogic.World.Room;
 using Moq;
 using Xunit;
@@ -23,45 +17,25 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
     {
         private Room _room;
         private Player _player;
-        private ICommandHandler _commandHandler;
-        private readonly Mock<IRoomActions> _roomActions;
-        private readonly Mock<ISpells> _spell;
-        private readonly Mock<IEquip> _equipment;
-        private readonly Mock<ICombat> _combat;
-        private readonly Mock<ICache> _cache;
-        private readonly Mock<ICore> _core;
-        private readonly Mock<IMobFunctions> _mobFunctions;
+        private CommandHandler _commandHandler;
+        
+        private readonly Mock<IServiceProvider> _serviceProvider;
         private readonly Mock<IHelp> _help;
         private readonly Mock<IMobScripts> _mobScripts;
-        private readonly Mock<IUtilSkills> _utilSkills;
-        private readonly Mock<IPassiveSkills> _passiveSkills;
         private readonly Mock<IHealer> _healer;
         private readonly Mock<IDamageSpells> _damageSpells;
-        private readonly Mock<IGain> _gain;
-        private readonly Mock<IAreaActions> _areaActions;
         private readonly Mock<ICommand> _command;
 
         public CommandsTests()
         {
-            _roomActions = new Mock<IRoomActions>();
-            _spell = new Mock<ISpells>();
-            _equipment = new Mock<IEquip>();
-            _combat = new Mock<ICombat>();
-            _cache = new Mock<ICache>();
-            _core = new Mock<ICore>();
-            _mobFunctions = new Mock<IMobFunctions>();
+            _serviceProvider = new Mock<IServiceProvider>();
             _mobScripts = new Mock<IMobScripts>();
             _player = new Player();
             _help = new Mock<IHelp>();
-            _utilSkills = new Mock<IUtilSkills>();
-            _passiveSkills = new Mock<IPassiveSkills>();
             _healer = new Mock<IHealer>();
             _damageSpells = new Mock<IDamageSpells>();
-            _gain = new Mock<IGain>();
-            _areaActions = new Mock<IAreaActions>();
             _command = new Mock<ICommand>();
-            
-            _commandHandler = new CommandHandler(_core.Object);
+            //_commandHandler = new CommandHandler( _serviceProvider);
 
             _player.ConnectionId = "1";
             _player.Name = "Bob";
@@ -71,9 +45,9 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
                 AreaId = 1,
                 Title = "Room 1",
                 Description = "room 1",
-                Exits = new ExitDirections()
+                Exits = new ExitDirections
                 {
-                    North = new Exit()
+                    North = new Exit
                     {
                         AreaId = 2,
                         Name = "North",

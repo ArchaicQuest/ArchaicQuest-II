@@ -1,15 +1,9 @@
-﻿using ArchaicQuestII.GameLogic.Core;
-using Moq;
-using System;
-using System.Collections.Generic;
+﻿using Moq;
 using System.Linq;
-using System.Text;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.MobFunctions.Shop;
-using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Item;
-using ArchaicQuestII.GameLogic.Skill.Skills;
 using ArchaicQuestII.GameLogic.World.Room;
 using Xunit;
 
@@ -18,18 +12,13 @@ namespace ArchaicQuestII.GameLogic.Tests.Character.MobFunctions
 
     public class ShopTests
     {
-
-        private readonly Mock<IWriteToClient> _IWriteToClient;
-        private readonly Mock<IUpdateClientUI> _IUpdateUI;
-        private readonly Mock<IPassiveSkills> _passiveSkills;
-        private readonly Mock<IShop> _IShop;
+        private readonly Mock<IClientHandler> _clientHandler;
+        private readonly Mock<ICharacterHandler> _characterHandler;
 
         public ShopTests()
         {
-            _IWriteToClient = new Mock<IWriteToClient>();
-            _IUpdateUI = new Mock<IUpdateClientUI>();
-            _IShop = new Mock<IShop>();
-            _passiveSkills = new Mock<IPassiveSkills>();
+            _clientHandler = new Mock<IClientHandler>();
+            _characterHandler = new Mock<ICharacterHandler>();
         }
 
         [Fact]
@@ -48,7 +37,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Character.MobFunctions
             room.Mobs.Add(shopkeeper);
 
 
-            var shop = new Shop(_IWriteToClient.Object, _IUpdateUI.Object, _passiveSkills.Object);
+            var shop = new Shop(_clientHandler.Object, _characterHandler.Object);
             var mob = shop.FindShopKeeper(room);
             Assert.True(mob != null);
         }
@@ -84,11 +73,11 @@ namespace ArchaicQuestII.GameLogic.Tests.Character.MobFunctions
             room.Mobs.Add(shopkeeper);
 
 
-            var shop = new Shop(_IWriteToClient.Object, _IUpdateUI.Object, _passiveSkills.Object);
+            var shop = new Shop(_clientHandler.Object, _characterHandler.Object);
             shop.List(room, player);
 
 
-            _IWriteToClient.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("<p>There is no one selling here.</p>")), "1"), Times.Once());
+            _clientHandler.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("<p>There is no one selling here.</p>")), "1"), Times.Once());
 
         }
 
@@ -123,13 +112,13 @@ namespace ArchaicQuestII.GameLogic.Tests.Character.MobFunctions
             room.Mobs.Add(shopkeeper);
 
 
-            var shop = new Shop(_IWriteToClient.Object, _IUpdateUI.Object, _passiveSkills.Object);
+            var shop = new Shop(_clientHandler.Object, _characterHandler.Object);
             shop.DisplayInventory(shopkeeper, player);
 
 
-            _IWriteToClient.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("Gary says 'Here's what I have for sale.'")), "1"), Times.Once());
+            _clientHandler.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("Gary says 'Here's what I have for sale.'")), "1"), Times.Once());
 
-            _IWriteToClient.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("<table class='data'><tr><td style='width: 30px; text-align: center;'>#</td><td style='width: 30px; text-align: center;'>Level</td><td  style='width: 65px;'>Price</td><td>Item</td></tr><tr><td style='width: 30px; text-align: center;'>1</td><td style='width: 30px; text-align: center;'>0</td><td  style='width: 65px;'>0</td><td>Sword</td></tr></table>")), "1"), Times.Once());
+            _clientHandler.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("<table class='data'><tr><td style='width: 30px; text-align: center;'>#</td><td style='width: 30px; text-align: center;'>Level</td><td  style='width: 65px;'>Price</td><td>Item</td></tr><tr><td style='width: 30px; text-align: center;'>1</td><td style='width: 30px; text-align: center;'>0</td><td  style='width: 65px;'>0</td><td>Sword</td></tr></table>")), "1"), Times.Once());
         }
 
         [Fact]
@@ -169,13 +158,13 @@ namespace ArchaicQuestII.GameLogic.Tests.Character.MobFunctions
             room.Players.Add(player);
 
 
-            var shop = new Shop(_IWriteToClient.Object, _IUpdateUI.Object, _passiveSkills.Object);
+            var shop = new Shop(_clientHandler.Object, _characterHandler.Object);
             shop.BuyItem("sword", room, player);
 
             Assert.True(player.Inventory.FirstOrDefault(x => x.Name.Equals("Sword")) != null);
             Assert.True(player.Money.Gold < 20);
 
-            _IWriteToClient.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("You buy sword for 15 gold.")), "1"), Times.Once());
+            _clientHandler.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("You buy sword for 15 gold.")), "1"), Times.Once());
 
         }
 
@@ -227,13 +216,13 @@ namespace ArchaicQuestII.GameLogic.Tests.Character.MobFunctions
             room.Players.Add(player);
 
 
-            var shop = new Shop(_IWriteToClient.Object, _IUpdateUI.Object, _passiveSkills.Object);
+            var shop = new Shop(_clientHandler.Object, _characterHandler.Object);
             shop.SellItem("sword", room, player);
 
             Assert.True(player.Inventory.FirstOrDefault(x => x.Name.Equals("Sword")) == null);
             Assert.True(player.Money.Gold == 15);
 
-            _IWriteToClient.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("You sell sword for 5 gold.")), "1"), Times.Once());
+            _clientHandler.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("You sell sword for 5 gold.")), "1"), Times.Once());
 
         }
 

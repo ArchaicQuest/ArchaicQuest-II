@@ -10,7 +10,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 {
     public class DrinkCmd : ICommand
     {
-        public DrinkCmd(ICore core)
+        public DrinkCmd(ICoreHandler coreHandler)
         {
             Aliases = new[] {"drink"};
             Description = "Drink a liquid from a container. Drinking is for RP purposes, your character does not get hungry or thirsty.";
@@ -28,7 +28,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
                 CharacterStatus.Status.Stunned
             };
             UserRole = UserRole.Player;
-            Core = core;
+
+            Handler = coreHandler;
         }
         
         public string[] Aliases { get; }
@@ -37,7 +38,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
         public string Title { get; }
         public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
-        public ICore Core { get; }
+        
+        public ICoreHandler Handler { get; }
 
         public void Execute(Player player, Room room, string[] input)
         {
@@ -45,7 +47,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
             if (string.IsNullOrEmpty(target))
             {
-                Core.Writer.WriteLine("<p>Drink what?</p>", player.ConnectionId);
+                Handler.Client.WriteLine("<p>Drink what?</p>", player.ConnectionId);
                 return;
             }
             
@@ -55,20 +57,20 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
             if (drink == null)
             {
-                Core.Writer.WriteLine("<p>You can't find that.</p>", player.ConnectionId);
+                Handler.Client.WriteLine("<p>You can't find that.</p>", player.ConnectionId);
                 return;
             }
 
             if (drink.ItemType != Item.Item.ItemTypes.Drink)
             {
-                Core.Writer.WriteLine($"<p>You can't drink from {drink.Name.ToLower()}.</p>", player.ConnectionId);
+                Handler.Client.WriteLine($"<p>You can't drink from {drink.Name.ToLower()}.</p>", player.ConnectionId);
                 return;
             }
             
             //TODO: Add drink affects
             
-            Core.Writer.WriteLine($"<p>You drink from {drink.Name.ToLower()}.</p>", player.ConnectionId);
-            Core.Writer.WriteToOthersInRoom($"<p>{player.Name} drink from {drink.Name.ToLower()}.</p>", room, player);
+            Handler.Client.WriteLine($"<p>You drink from {drink.Name.ToLower()}.</p>", player.ConnectionId);
+            Handler.Client.WriteToOthersInRoom($"<p>{player.Name} drink from {drink.Name.ToLower()}.</p>", room, player);
         }
     }
 }

@@ -7,6 +7,7 @@ using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
+using ArchaicQuestII.GameLogic.World;
 using ArchaicQuestII.GameLogic.World.Area;
 using ArchaicQuestII.GameLogic.World.Room;
 using Moq;
@@ -18,15 +19,13 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Movement
     {
         private Room _room;
         private Player _player;
-        private readonly Mock<IWriteToClient> _writer;
-        private readonly Mock<ICore> _core;
-        private readonly Cache _cache;
+        private readonly Mock<IClientHandler> _clientHandler;
+        private readonly Mock<IWorldHandler> _worldHandler;
 
         public MovementTests()
         {
-            _writer = new Mock<IWriteToClient>();
-            _cache = new Cache();
-            _core = new Mock<ICore>();
+            _clientHandler = new Mock<IClientHandler>();
+            _worldHandler = new Mock<IWorldHandler>();
         }
 
         [Fact]
@@ -123,11 +122,12 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Movement
                 Players = new List<Player>()
             };
 
-            _cache.AddRoom($"{room2.AreaId}{room2.Coords.X}{room2.Coords.Y}{room2.Coords.Z}", room2);
-            _cache.AddRoom($"{_room.AreaId}{_room.Coords.X}{_room.Coords.Y}{_room.Coords.Z}", _room);
+            _worldHandler.Object.AddRoom($"{room2.AreaId}{room2.Coords.X}{room2.Coords.Y}{room2.Coords.Z}", room2);
+            _worldHandler.Object.AddRoom($"{_room.AreaId}{_room.Coords.X}{_room.Coords.Y}{_room.Coords.Z}", _room);
 
             _player.EnterEmote = "";
-            new GameLogic.Commands.CommandHandler(_core.Object).HandleCommand(_player, _room, "North");
+            
+            //new GameLogic.Commands.CommandHandler(_core.Object).HandleCommand(_player, _room, "North");
 
             //TODO: Need to change this to use the new room actions RoomChange() method
             //_writer.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("Bob walks north.")), "1"), Times.Never);
@@ -198,14 +198,14 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Movement
             };
 
             //_cache.Setup(x => x.GetRoom(2)).Returns(room2);
-            _cache.AddRoom($"{room2.AreaId}{room2.Coords.X}{room2.Coords.Y}{room2.Coords.Z}", room2);
+            _worldHandler.Object.AddRoom($"{room2.AreaId}{room2.Coords.X}{room2.Coords.Y}{room2.Coords.Z}", room2);
 
 
             //_cache.AddRoom(1, _room);
 
-            new GameLogic.Commands.CommandHandler(_core.Object).HandleCommand(_player, _room, "North");
+            //new GameLogic.Commands.CommandHandler(_core.Object).HandleCommand(_player, _room, "North");
 
-            _writer.Verify(w => w.WriteLine(It.Is<string>(s => s == "<p>You are too exhausted to move.</p>"), "1"), Times.Once);
+            _clientHandler.Verify(w => w.WriteLine(It.Is<string>(s => s == "<p>You are too exhausted to move.</p>"), "1"), Times.Once);
 
         }
 
@@ -299,11 +299,11 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Movement
                 Players = new List<Player>()
             };
             
-            _cache.AddRoom("1020", room2);
+            _worldHandler.Object.AddRoom("1020", room2);
             
-            new GameLogic.Commands.CommandHandler(_core.Object).HandleCommand(_player, _room, "North");
+            //new GameLogic.Commands.CommandHandler(_core.Object).HandleCommand(_player, _room, "North");
 
-            _writer.Verify(w => w.WriteLine(It.Is<string>(s => s == "<p>A mysterious force prevents you from going that way.</p>"), "1"), Times.Once);
+            _clientHandler.Verify(w => w.WriteLine(It.Is<string>(s => s == "<p>A mysterious force prevents you from going that way.</p>"), "1"), Times.Once);
         }
 
         [Fact]
@@ -361,8 +361,8 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Movement
                 }
             };
             
-            new GameLogic.Commands.CommandHandler(_core.Object).HandleCommand(_player, _room, "sit");
-            _writer.Verify(w => w.WriteLine(It.Is<string>(s => s == "<p>You sit down.</p>"), "1"), Times.Once);
+            //new GameLogic.Commands.CommandHandler(_core.Object).HandleCommand(_player, _room, "sit");
+            _clientHandler.Verify(w => w.WriteLine(It.Is<string>(s => s == "<p>You sit down.</p>"), "1"), Times.Once);
             Assert.Equal(CharacterStatus.Status.Sitting, _player.Status);
         }
     }

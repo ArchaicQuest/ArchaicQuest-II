@@ -5,51 +5,51 @@ using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.World.Room;
 
-namespace ArchaicQuestII.GameLogic.Commands.Communication
-{
-    public class EmoteCmd : ICommand
-    {
-        public EmoteCmd(ICore core)
-        {
-            Aliases = new[] {"emote"};
-            Description = "Sends a message about what your actions are, using a prebuilt social or a custom emote.";
-            Usages = new[] {"Type: emote waves frantically and happily"};
-            Title = "";
-            DeniedStatus = new[]
-            {
-                CharacterStatus.Status.Busy,
-                CharacterStatus.Status.Dead,
-                CharacterStatus.Status.Fighting,
-                CharacterStatus.Status.Ghost,
-                CharacterStatus.Status.Fleeing,
-                CharacterStatus.Status.Incapacitated,
-                CharacterStatus.Status.Sleeping,
-                CharacterStatus.Status.Stunned,
-            };
-            UserRole = UserRole.Player;
-            Core = core;
-        }
-        
-        public string[] Aliases { get; }
-        public string Description { get; }
-        public string[] Usages { get; }
-        public string Title { get; }
-        public CharacterStatus.Status[] DeniedStatus { get; }
-        public UserRole UserRole { get; }
-        public ICore Core { get; }
+namespace ArchaicQuestII.GameLogic.Commands.Communication;
 
-        public void Execute(Player player, Room room, string[] input)
+public class EmoteCmd : ICommand
+{
+    public EmoteCmd(ICoreHandler coreHandler)
+    {
+        Aliases = new[] {"emote"};
+        Description = "Sends a message about what your actions are, using a prebuilt social or a custom emote.";
+        Usages = new[] {"Type: emote waves frantically and happily"};
+        Title = "";
+        DeniedStatus = new[]
         {
-            if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
-            {
-                Core.Writer.WriteLine("<p>Emote what?</p>", player.ConnectionId);
-                return;
-            }
-            
-            var emoteText = string.Join(" ", input.Skip(1));
-            var emoteMessage = $"<p>{player.Name} {emoteText}</p>";
-            
-            Core.Writer.WriteToOthersInRoom(emoteMessage, room, player);
+            CharacterStatus.Status.Busy,
+            CharacterStatus.Status.Dead,
+            CharacterStatus.Status.Fighting,
+            CharacterStatus.Status.Ghost,
+            CharacterStatus.Status.Fleeing,
+            CharacterStatus.Status.Incapacitated,
+            CharacterStatus.Status.Sleeping,
+            CharacterStatus.Status.Stunned,
+        };
+        UserRole = UserRole.Player;
+
+        Handler = coreHandler;
+    }
+        
+    public string[] Aliases { get; }
+    public string Description { get; }
+    public string[] Usages { get; }
+    public string Title { get; }
+    public CharacterStatus.Status[] DeniedStatus { get; }
+    public UserRole UserRole { get; }
+    public ICoreHandler Handler { get; }
+
+    public void Execute(Player player, Room room, string[] input)
+    {
+        if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
+        {
+            Handler.Client.WriteLine("<p>Emote what?</p>", player.ConnectionId);
+            return;
         }
+            
+        var emoteText = string.Join(" ", input.Skip(1));
+        var emoteMessage = $"<p>{player.Name} {emoteText}</p>";
+            
+        Handler.Client.WriteToOthersInRoom(emoteMessage, room, player);
     }
 }

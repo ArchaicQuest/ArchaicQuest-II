@@ -5,10 +5,10 @@ using ArchaicQuestII.GameLogic.Utilities;
 
 namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
 {
-    public class RandomWeapons : IRandomWeapon
+    public class RandomWeapons
     {
         // Fiery Iron Dagger as an example
-        public List<PrefixItemMods> Prefix = new List<PrefixItemMods>()
+        public List<PrefixItemMods> Prefix = new()
         {
             new PrefixItemMods()
             {

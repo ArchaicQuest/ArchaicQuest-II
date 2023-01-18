@@ -21,8 +21,4 @@
         <ProjectReference Include="..\ArchaicQuestII.GameLogic\ArchaicQuestII.GameLogic.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Character\NewFolder\" />
-    </ItemGroup>
-
 </Project>

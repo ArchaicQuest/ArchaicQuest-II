@@ -10,7 +10,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement;
 
 public class EnterCmd : ICommand
 {
-    public EnterCmd(ICore core)
+    public EnterCmd(ICoreHandler coreHandler)
     {
         Aliases = new[] {"enter"};
         Description = "If you happen to find a portal or hole in the wall or some other clear exit that is not of " +
@@ -30,7 +30,8 @@ public class EnterCmd : ICommand
             CharacterStatus.Status.Resting
         };
         UserRole = UserRole.Player;
-        Core = core;
+
+        Handler = coreHandler;
     }
     
     public string[] Aliases { get; }
@@ -39,8 +40,7 @@ public class EnterCmd : ICommand
     public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
-    public ICore Core { get; }
-
+    public ICoreHandler Handler { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
@@ -48,7 +48,7 @@ public class EnterCmd : ICommand
         
         if (string.IsNullOrEmpty(target))
         {
-            Core.Writer.WriteLine("<p>You can't do that here.</p>", player.ConnectionId);
+            Handler.Client.WriteLine("<p>You can't do that here.</p>", player.ConnectionId);
             return;
         }
 
@@ -57,21 +57,21 @@ public class EnterCmd : ICommand
 
         if (item == null)
         {
-            Core.Writer.WriteLine("<p>You don't see that here.</p>", player.ConnectionId);
+            Handler.Client.WriteLine("<p>You don't see that here.</p>", player.ConnectionId);
             return;
         }
 
         if (item.ItemType != Item.Item.ItemTypes.Portal)
         {
-            Core.Writer.WriteLine("<p>You can't enter that.</p>", player.ConnectionId);
+            Handler.Client.WriteLine("<p>You can't enter that.</p>", player.ConnectionId);
             return;
         }
 
-        Core.Writer.WriteLine($"<p>You {item.Portal.EnterDescription}</p>", player.ConnectionId);
-        Core.Writer.WriteToOthersInRoom($"<p>{player.Name} {item.Portal.EnterDescription}</p>", room, player);
+        Handler.Client.WriteLine($"<p>You {item.Portal.EnterDescription}</p>", player.ConnectionId);
+        Handler.Client.WriteToOthersInRoom($"<p>{player.Name} {item.Portal.EnterDescription}</p>", room, player);
 
-        var newRoom = Core.Cache.GetRoom(item.Portal.Destination);
+        var newRoom = Handler.World.GetRoom(item.Portal.Destination);
         
-        Core.RoomActions.RoomChange(player, room, newRoom);
+        Handler.World.RoomChange(player, room, newRoom);
     }
 }

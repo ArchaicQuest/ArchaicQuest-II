@@ -1,6 +1,5 @@
 ﻿using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character.Class;
-using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.World.Area;
 using ArchaicQuestII.GameLogic.World.Room;
@@ -8,14 +7,14 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using ArchaicQuestII.GameLogic.Client;
+using ArchaicQuestII.GameLogic.World;
 
 namespace ArchaicQuestII.GameLogic.SeedData
 {
     internal static class Rooms
     {
-        internal static void Cache(IDataBase db, ICache cache)
+        internal static void Cache(IDataBase db, IWorldHandler worldHandler)
         {
             var rooms = db.GetList<Room>(DataBase.Collections.Room);
             var areas = db.GetList<Area>(DataBase.Collections.Area);
@@ -50,8 +49,8 @@ namespace ArchaicQuestII.GameLogic.SeedData
                 
                 AddSkillsToMobs(db, room);
                 MapMobRoomId(room);
-                cache.AddRoom($"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}", room);
-                cache.AddOriginalRoom($"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}", JsonConvert.DeserializeObject<Room>(JsonConvert.SerializeObject(room)));
+                worldHandler.AddRoom($"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}", room);
+                worldHandler.AddOriginalRoom($"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}", JsonConvert.DeserializeObject<Room>(JsonConvert.SerializeObject(room)));
             }
 
             foreach (var area in areas)
@@ -66,11 +65,11 @@ namespace ArchaicQuestII.GameLogic.SeedData
                         roomsByZ.Add(room);
                     }
 
-                    cache.AddMap($"{area.Id}{zarea.Coords.Z}", Map.DrawMap(roomsByZ));
+                    worldHandler.AddMap($"{area.Id}{zarea.Coords.Z}", Map.DrawMap(roomsByZ));
                 }
 
                 var rooms0index = roomList.FindAll(x => x.Coords.Z == 0 && x.Deleted == false);
-                cache.AddMap($"{area.Id}0", Map.DrawMap(rooms0index));
+                worldHandler.AddMap($"{area.Id}0", Map.DrawMap(rooms0index));
             }
         }
 

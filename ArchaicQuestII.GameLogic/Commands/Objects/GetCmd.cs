@@ -11,8 +11,8 @@ using ArchaicQuestII.GameLogic.World.Room;
 namespace ArchaicQuestII.GameLogic.Commands.Objects;
 
 public class GetCmd : ICommand
-{ 
-    public GetCmd(ICore core)
+{
+    public GetCmd(ICoreHandler coreHandler)
     {
         Aliases = new[] {"get", "take", "loot"};
         Description = @"'{yellow}get{/}' is used to get the specified item or gold from the ground, container, or a corpse.  
@@ -42,7 +42,8 @@ Related help files: drop, put, give
             CharacterStatus.Status.Sitting,
         };
         UserRole = UserRole.Player;
-        Core = core;
+
+        Handler = coreHandler;
     }
     
     public string[] Aliases { get; }
@@ -51,7 +52,7 @@ Related help files: drop, put, give
     public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
-    public ICore Core { get; }
+    public ICoreHandler Handler { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
@@ -60,13 +61,13 @@ Related help files: drop, put, give
 
         if (string.IsNullOrEmpty(target))
         {
-            Core.Writer.WriteLine("<p>Get what?</p>", player.ConnectionId);
+            Handler.Client.WriteLine("<p>Get what?</p>", player.ConnectionId);
             return;
         }
         
         if (player.Affects.Blind)
         {
-            Core.Writer.WriteLine("<p>You are blind and can't see a thing!</p>", player.ConnectionId);
+            Handler.Client.WriteLine("<p>You are blind and can't see a thing!</p>", player.ConnectionId);
             return;
         }
         
@@ -91,7 +92,7 @@ Related help files: drop, put, give
 
             if (containerObj == null)
             {
-                Core.Writer.WriteLine("<p>You don't see that here.</p>", player.ConnectionId);
+                Handler.Client.WriteLine("<p>You don't see that here.</p>", player.ConnectionId);
                 return;
             }
 
@@ -99,11 +100,11 @@ Related help files: drop, put, give
             {
                 if (containerObj.ItemType == Item.Item.ItemTypes.Forage)
                 {
-                    Core.Writer.WriteLine("<p>Try forage instead.</p>", player.ConnectionId);
+                    Handler.Client.WriteLine("<p>Try forage instead.</p>", player.ConnectionId);
                     return;
                 }
 
-                Core.Writer.WriteLine("<p>This is not a container.</p>", player.ConnectionId);
+                Handler.Client.WriteLine("<p>This is not a container.</p>", player.ConnectionId);
                 return;
             }
             
@@ -118,26 +119,26 @@ Related help files: drop, put, give
         
         if (item == null)
         {
-            Core.Writer.WriteLine("<p>You don't see that here.</p>", player.ConnectionId);
+            Handler.Client.WriteLine("<p>You don't see that here.</p>", player.ConnectionId);
             return;
         }
 
         if (item.Stuck)
         {
-            Core.Writer.WriteLine("<p>You can't pick that up.</p>", player.ConnectionId);
+            Handler.Client.WriteLine("<p>You can't pick that up.</p>", player.ConnectionId);
             return;
         }
 
         room.Items.Remove(item);
 
         if (item.ItemType == Item.Item.ItemTypes.Money)
-            Core.Writer.WriteToOthersInRoom($"<p>{player.Name} picks up {ItemList.DisplayMoneyAmount(item.Value).ToLower()}.</p>", room, player);
+            Handler.Client.WriteToOthersInRoom($"<p>{player.Name} picks up {ItemList.DisplayMoneyAmount(item.Value).ToLower()}.</p>", room, player);
         else
-            Core.Writer.WriteToOthersInRoom($"<p>{player.Name} picks up {item.Name.ToLower()}.</p>", room, player);
+            Handler.Client.WriteToOthersInRoom($"<p>{player.Name} picks up {item.Name.ToLower()}.</p>", room, player);
 
         if (item.ItemType == Item.Item.ItemTypes.Money)
         {
-            Core.Writer.WriteLine($"<p>You pick up {ItemList.DisplayMoneyAmount(item.Value).ToLower()}.</p>", player.ConnectionId);
+            Handler.Client.WriteLine($"<p>You pick up {ItemList.DisplayMoneyAmount(item.Value).ToLower()}.</p>", player.ConnectionId);
             player.Money.Gold += item.Value;
             player.Weight += item.Value * 0.1;
         }
@@ -146,11 +147,11 @@ Related help files: drop, put, give
             item.IsHiddenInRoom = false;
             player.Inventory.Add(item);
             player.Weight += item.Weight;
-            Core.Writer.WriteLine($"<p>You pick up {item.Name.ToLower()}.</p>", player.ConnectionId);
+            Handler.Client.WriteLine($"<p>You pick up {item.Name.ToLower()}.</p>", player.ConnectionId);
         }
 
-        Core.UpdateClient.UpdateInventory(player);
-        Core.UpdateClient.UpdateScore(player);
+        Handler.Client.UpdateInventory(player);
+        Handler.Client.UpdateScore(player);
         room.Clean = false;
         
         // TODO: You are over encumbered 
@@ -160,7 +161,7 @@ Related help files: drop, put, give
     {
         if (room.Items.Count == 0)
         {
-            Core.Writer.WriteLine("<p>You don't see anything here.</p>", player.ConnectionId);
+            Handler.Client.WriteLine("<p>You don't see anything here.</p>", player.ConnectionId);
             return;
         }
 
@@ -170,7 +171,7 @@ Related help files: drop, put, give
             {
                 if (room.Items[i].ItemType == Item.Item.ItemTypes.Money)
                 {
-                    Core.Writer.WriteLine(
+                    Handler.Client.WriteLine(
                         $"<p>You pick up {ItemList.DisplayMoneyAmount(room.Items[i].Value).ToLower()}.</p>",
                         player.ConnectionId);
 
@@ -179,29 +180,29 @@ Related help files: drop, put, give
                 }
                 else
                 {
-                    Core.UpdateClient.PlaySound("get", player);
+                    Handler.Client.PlaySound("get", player);
                     room.Items[i].IsHiddenInRoom = false;
                     player.Inventory.Add(room.Items[i]);
-                    Core.Writer.WriteLine($"<p>You pick up {room.Items[i].Name.ToLower()}</p>", player.ConnectionId);
+                    Handler.Client.WriteLine($"<p>You pick up {room.Items[i].Name.ToLower()}</p>", player.ConnectionId);
                     player.Weight += room.Items[i].Weight;
                 }
                 
                 if (room.Items[i].ItemType == Item.Item.ItemTypes.Money)
-                    Core.Writer.WriteToOthersInRoom($"<p>{player.Name} picks up {ItemList.DisplayMoneyAmount(room.Items[i].Value).ToLower()}.</p>", room, player);
+                    Handler.Client.WriteToOthersInRoom($"<p>{player.Name} picks up {ItemList.DisplayMoneyAmount(room.Items[i].Value).ToLower()}.</p>", room, player);
                 else
-                    Core.Writer.WriteToOthersInRoom($"<p>{player.Name} picks up {room.Items[i].Name.ToLower()}.</p>", room, player);
+                    Handler.Client.WriteToOthersInRoom($"<p>{player.Name} picks up {room.Items[i].Name.ToLower()}.</p>", room, player);
 
                 room.Items.RemoveAt(i);
             }
             else
             {
-                Core.Writer.WriteLine("<p>You can't get that.</p>", player.ConnectionId);
+                Handler.Client.WriteLine("<p>You can't get that.</p>", player.ConnectionId);
             }
         }
 
         room.Clean = false;
-        Core.UpdateClient.UpdateInventory(player);
-        Core.UpdateClient.UpdateScore(player);
+        Handler.Client.UpdateInventory(player);
+        Handler.Client.UpdateScore(player);
         // TODO: You are over encumbered 
     }
 
@@ -209,7 +210,7 @@ Related help files: drop, put, give
     {
         if (container.Container.CanOpen && !container.Container.IsOpen)
         {
-            Core.Writer.WriteLine("<p>You need to open it first.</p>", player.ConnectionId);
+            Handler.Client.WriteLine("<p>You need to open it first.</p>", player.ConnectionId);
             return;
         }
 
@@ -224,20 +225,20 @@ Related help files: drop, put, give
 
         if (item == null)
         {
-            Core.Writer.WriteLine("<p>You don't have that item.</p>", player.ConnectionId);
+            Handler.Client.WriteLine("<p>You don't have that item.</p>", player.ConnectionId);
             return;
         }
 
         container.Container.Items.Remove(item);
         
         if (item.ItemType == Item.Item.ItemTypes.Money)
-            Core.Writer.WriteToOthersInRoom($"<p>{player.Name} gets {ItemList.DisplayMoneyAmount(item.Value).ToLower()} from {container.Name.ToLower()}</p>", room, player);
+            Handler.Client.WriteToOthersInRoom($"<p>{player.Name} gets {ItemList.DisplayMoneyAmount(item.Value).ToLower()} from {container.Name.ToLower()}</p>", room, player);
         else
-            Core.Writer.WriteToOthersInRoom($"<p>{player.Name} gets {item.Name.ToLower()} from {container.Name.ToLower()}.</p>", room, player);
+            Handler.Client.WriteToOthersInRoom($"<p>{player.Name} gets {item.Name.ToLower()} from {container.Name.ToLower()}.</p>", room, player);
 
         if (item.ItemType == Item.Item.ItemTypes.Money)
         {
-            Core.Writer.WriteLine(
+            Handler.Client.WriteLine(
                 $"<p>You get {ItemList.DisplayMoneyAmount(item.Value).ToLower()} from {container.Name.ToLower()}.</p>",
                 player.ConnectionId);
             player.Money.Gold += item.Value;
@@ -245,16 +246,16 @@ Related help files: drop, put, give
         }
         else
         {
-            Core.UpdateClient.PlaySound("get", player);
+            Handler.Client.PlaySound("get", player);
             item.IsHiddenInRoom = false;
             player.Inventory.Add(item);
             player.Weight += item.Weight;
-            Core.Writer.WriteLine($"<p>You get {item.Name.ToLower()} from {container.Name.ToLower()}.</p>",
+            Handler.Client.WriteLine($"<p>You get {item.Name.ToLower()} from {container.Name.ToLower()}.</p>",
                 player.ConnectionId);
         }
 
-        Core.UpdateClient.UpdateInventory(player);
-        Core.UpdateClient.UpdateScore(player);
+        Handler.Client.UpdateInventory(player);
+        Handler.Client.UpdateScore(player);
         room.Clean = false;
     }
 
@@ -262,7 +263,7 @@ Related help files: drop, put, give
     {
         if (container.Container.Items.Count == 0)
         {
-            Core.Writer.WriteLine($"<p>You see nothing in {container.Name.ToLower()}.</p>", player.ConnectionId);
+            Handler.Client.WriteLine($"<p>You see nothing in {container.Name.ToLower()}.</p>", player.ConnectionId);
             return;
         }
 
@@ -270,7 +271,7 @@ Related help files: drop, put, give
         {
             if (container.Container.Items[i].ItemType == Item.Item.ItemTypes.Money)
             {
-                Core.Writer.WriteLine(
+                Handler.Client.WriteLine(
                     $"<p>You pick up {ItemList.DisplayMoneyAmount(container.Container.Items[i].Value).ToLower()} from {container.Name.ToLower()}.</p>",
                     player.ConnectionId);
 
@@ -279,25 +280,25 @@ Related help files: drop, put, give
             }
             else
             {
-                Core.UpdateClient.PlaySound("get", player);
+                Handler.Client.PlaySound("get", player);
                 container.Container.Items[i].IsHiddenInRoom = false;
                 player.Inventory.Add(container.Container.Items[i]);
                 player.Weight += container.Container.Items[i].Weight;
-                Core.Writer.WriteLine(
+                Handler.Client.WriteLine(
                     $"<p>You pick up {container.Container.Items[i].Name.ToLower()} from {container.Name.ToLower()}.</p>",
                     player.ConnectionId);
             }
             
             if (container.Container.Items[i].ItemType == Item.Item.ItemTypes.Money)
-                Core.Writer.WriteToOthersInRoom($"<p>{player.Name} picks up {ItemList.DisplayMoneyAmount(container.Container.Items.Value).ToLower()} from {container.Name.ToLower()}.</p>", room, player);
+                Handler.Client.WriteToOthersInRoom($"<p>{player.Name} picks up {ItemList.DisplayMoneyAmount(container.Container.Items.Value).ToLower()} from {container.Name.ToLower()}.</p>", room, player);
             else
-                Core.Writer.WriteToOthersInRoom($"<p>{player.Name} picks up {container.Container.Items[i].Name.ToLower()} from {container.Name.ToLower()}</p>", room, player);
+                Handler.Client.WriteToOthersInRoom($"<p>{player.Name} picks up {container.Container.Items[i].Name.ToLower()} from {container.Name.ToLower()}</p>", room, player);
 
             container.Container.Items.RemoveAt(i);
         }
 
-        Core.UpdateClient.UpdateInventory(player);
-        Core.UpdateClient.UpdateScore(player);
+        Handler.Client.UpdateInventory(player);
+        Handler.Client.UpdateScore(player);
         room.Clean = false;
         // TODO: You are over encumbered 
     }

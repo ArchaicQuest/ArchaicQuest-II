@@ -2,13 +2,14 @@ using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
+using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Commands.Movement;
 
 public class SleepCmd : ICommand
 {
-    public SleepCmd(ICore core)
+    public SleepCmd(ICoreHandler coreHandler)
     {
         Aliases = new[] {"sleep"};
         Description = "Your character will go to sleep and will not see anything that happens the room. Sleeping will increase the speed of health, mana, and moves regeneration." +
@@ -30,7 +31,8 @@ public class SleepCmd : ICommand
             CharacterStatus.Status.Mounted
         };
         UserRole = UserRole.Player;
-        Core = core;
+
+        Handler = coreHandler;
     }
     
     public string[] Aliases { get; }
@@ -39,19 +41,12 @@ public class SleepCmd : ICommand
     public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
-    public ICore Core { get; }
+    public ICoreHandler Handler { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
-        SetCharacterStatus(player, "is sleeping nearby", CharacterStatus.Status.Sleeping);
-        Core.Writer.WriteLine("<p>You collapse into a deep sleep.</p>", player.ConnectionId);
-        Core.Writer.WriteToOthersInRoom($"<p>{player.Name} collapses into a deep sleep.</p>", room, player);
-    }
-
-    private void SetCharacterStatus(Player player, string longName, CharacterStatus.Status status)
-    {
-        player.Status = status;
-        player.LongName = longName;
-        player.Pose = "";
+        Helpers.SetCharacterStatus(player, "is sleeping nearby", CharacterStatus.Status.Sleeping);
+        Handler.Client.WriteLine("<p>You collapse into a deep sleep.</p>", player.ConnectionId);
+        Handler.Client.WriteToOthersInRoom($"<p>{player.Name} collapses into a deep sleep.</p>", room, player);
     }
 }

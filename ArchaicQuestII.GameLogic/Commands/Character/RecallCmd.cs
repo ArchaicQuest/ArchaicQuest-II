@@ -10,7 +10,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 {
     public class RecallCmd : ICommand
     {
-        public RecallCmd(ICore core)
+        public RecallCmd(ICoreHandler coreHandler)
         {
             Aliases = new[] {"recall"};
             Description = "Transports your character to their recall room.";
@@ -29,7 +29,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
                 CharacterStatus.Status.Resting
             };
             UserRole = UserRole.Player;
-            Core = core;
+
+            Handler = coreHandler;
         }
         
         public string[] Aliases { get; }
@@ -38,7 +39,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
         public string Title { get; }
         public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
-        public ICore Core { get; }
+        
+        public ICoreHandler Handler { get; }
 
         private readonly string[] _castBegin =
         {
@@ -54,7 +56,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
         public void Execute(Player player, Room room, string[] input)
         {
-            var recallRoom = Core.Cache.GetRoom(player.RecallId);
+            var recallRoom = Handler.World.GetRoom(player.RecallId);
             
             player.Buffer.Clear();
             
@@ -67,15 +69,15 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
             var cb = DiceBag.Roll(1, 0, _castBegin.Length - 1);
             var ce = DiceBag.Roll(1, 0, _castEnd.Length - 1);
             
-            Core.Writer.WriteLine($"<p>{_castBegin[cb]}</p>", player.ConnectionId);
+            Handler.Client.WriteLine($"<p>{_castBegin[cb]}</p>", player.ConnectionId);
 
             await Task.Delay(2000);
             
-            Core.Writer.WriteLine($"<p>{_castEnd[ce]}</p>", player.ConnectionId);
+            Handler.Client.WriteLine($"<p>{_castEnd[ce]}</p>", player.ConnectionId);
             
             await Task.Delay(2000);
             
-            Core.RoomActions.RoomChange(player, currentRoom, recallRoom);
+            Handler.World.RoomChange(player, currentRoom, recallRoom);
         }
     }
 }

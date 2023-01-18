@@ -4,13 +4,14 @@ using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
+using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Commands.Movement;
 
 public class SitCmd : ICommand
 {
-    public SitCmd(ICore core)
+    public SitCmd(ICoreHandler coreHandler)
     {
         Aliases = new[] {"sit"};
         Description =  "Your character will sit down or sit upon something. Sitting does not increase the speed of health, mana, or moves regeneration." +
@@ -33,7 +34,8 @@ public class SitCmd : ICommand
             CharacterStatus.Status.Mounted
         };
         UserRole = UserRole.Player;
-        Core = core;
+
+        Handler = coreHandler;
     }
     
     public string[] Aliases { get; }
@@ -42,7 +44,7 @@ public class SitCmd : ICommand
     public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
-    public ICore Core { get; }
+    public ICoreHandler Handler { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
@@ -50,9 +52,9 @@ public class SitCmd : ICommand
 
         if (string.IsNullOrEmpty(target))
         {
-            SetCharacterStatus(player, "is sitting here", CharacterStatus.Status.Sitting);
-            Core.Writer.WriteLine("<p>You sit down.</p>", player.ConnectionId);
-            Core.Writer.WriteToOthersInRoom($"<p>{player.Name} sits down.</p>", room, player);
+            Helpers.SetCharacterStatus(player, "is sitting here", CharacterStatus.Status.Sitting);
+            Handler.Client.WriteLine("<p>You sit down.</p>", player.ConnectionId);
+            Handler.Client.WriteToOthersInRoom($"<p>{player.Name} sits down.</p>", room, player);
         }
         else
         {
@@ -61,20 +63,13 @@ public class SitCmd : ICommand
 
             if (obj == null)
             {
-                Core.Writer.WriteLine("<p>You can't sit on that.</p>", player.ConnectionId);
+                Handler.Client.WriteLine("<p>You can't sit on that.</p>", player.ConnectionId);
                 return;
             }
 
-            SetCharacterStatus(player, $"is sitting down on {obj.Name.ToLower()}", CharacterStatus.Status.Sitting);
-            Core.Writer.WriteLine($"<p>You sit down on {obj.Name.ToLower()}.</p>", player.ConnectionId);
-            Core.Writer.WriteToOthersInRoom($"<p>{player.Name} sits down on {obj.Name.ToLower()}.</p>", room, player);
+            Helpers.SetCharacterStatus(player, $"is sitting down on {obj.Name.ToLower()}", CharacterStatus.Status.Sitting);
+            Handler.Client.WriteLine($"<p>You sit down on {obj.Name.ToLower()}.</p>", player.ConnectionId);
+            Handler.Client.WriteToOthersInRoom($"<p>{player.Name} sits down on {obj.Name.ToLower()}.</p>", room, player);
         }
-    }
-
-    private void SetCharacterStatus(Player player, string longName, CharacterStatus.Status status)
-    {
-        player.Status = status;
-        player.LongName = longName;
-        player.Pose = "";
     }
 }

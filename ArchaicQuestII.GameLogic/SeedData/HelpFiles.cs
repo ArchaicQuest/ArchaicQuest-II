@@ -1,17 +1,17 @@
 ﻿using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character.Help;
-using ArchaicQuestII.GameLogic.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ArchaicQuestII.GameLogic.Commands;
 
 namespace ArchaicQuestII.GameLogic.SeedData
 {
     internal static class HelpFiles
     {
-        private static readonly List<Help> seedData = new List<Help>()
+        private static readonly List<Help> seedData = new()
         {
-            new Help()
+            new Help
             {
                 Title = "Movement",
                 Keywords = "Movement, North, East, South, West, Up, Down, Go, Walk",
@@ -21,7 +21,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
                 DateUpdated = DateTime.Now,
                 RelatedHelpFiles = ""
             },
-            new Help()
+            new Help
             {
                 Title = "Look",
                 Keywords = "Look, room, display",
@@ -32,7 +32,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
                 DateUpdated = DateTime.Now,
                 RelatedHelpFiles = "Examine"
             },
-            new Help()
+            new Help
             {
                 Title = "Examine",
                 Keywords = "examine, room, display",
@@ -43,7 +43,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
                 DateUpdated = DateTime.Now,
                 RelatedHelpFiles = "Look"
             },
-            new Help()
+            new Help
             {
                 Title = "Object",
                 Keywords = "Drop, Get, Give, Put, Take",
@@ -55,7 +55,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
                 DateUpdated = DateTime.Now,
                 RelatedHelpFiles = "Equipment"
             },
-            new Help()
+            new Help
             {
                 Title = "Wear",
                 Keywords = "wear, wearable",
@@ -65,7 +65,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
                 DateUpdated = DateTime.Now,
                 RelatedHelpFiles = "Wield, hold"
             },
-            new Help()
+            new Help
             {
                 Title = "Wield",
                 Keywords = "wield, weapons",
@@ -75,7 +75,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
                 DateUpdated = DateTime.Now,
                 RelatedHelpFiles = "Wear"
             },
-            new Help()
+            new Help
             {
                 Title = "Help",
                 Keywords = "help, commands",
@@ -85,7 +85,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
                 DateUpdated = DateTime.Now,
                 RelatedHelpFiles = ""
             },
-            new Help()
+            new Help
             {
                 Title = "Score",
                 Keywords = "score, status",
@@ -95,7 +95,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
                 DateUpdated = DateTime.Now,
                 RelatedHelpFiles = "Affects"
             },
-            new Help()
+            new Help
             {
                 Title = "Affects",
                 Keywords = "affects effects",
@@ -105,7 +105,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
                 DateUpdated = DateTime.Now,
                 RelatedHelpFiles = "Score"
             },
-            new Help()
+            new Help
             {
                 Title = "Recall",
                 Keywords = "recall",
@@ -115,7 +115,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
                 DateUpdated = DateTime.Now,
                 RelatedHelpFiles = ""
             },
-            new Help()
+            new Help
             {
                 Title = "Questlog",
                 Keywords = "questlog, quest",
@@ -125,7 +125,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
                 DateUpdated = DateTime.Now,
                 RelatedHelpFiles = ""
             },
-            new Help()
+            new Help
             {
                 Title = "Train",
                 Keywords = "train, trainer",
@@ -137,7 +137,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
             }
         };
 
-        internal static void SeedAndCache(IDataBase db, ICache cache)
+        internal static void SeedAndCache(IDataBase db, ICommandHandler commandHandler)
         {
             if (!db.DoesCollectionExist(DataBase.Collections.Help))
             {
@@ -150,13 +150,8 @@ namespace ArchaicQuestII.GameLogic.SeedData
             {
                 var helpList = db.GetList<Help>(DataBase.Collections.Help);
 
-                foreach (var helpSeed in seedData)
+                foreach (var helpSeed in seedData.Where(helpSeed => !helpList.Any(x => x.Title.Equals(helpSeed.Title))))
                 {
-                    if (helpList.Any(x => x.Title.Equals(helpSeed.Title)))
-                    {
-                        continue;
-                    }
-
                     db.Save(helpSeed, DataBase.Collections.Help);
                 }
             }
@@ -164,7 +159,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
             var helpFiles = db.GetList<Help>(DataBase.Collections.Help);
             foreach (var helpFile in helpFiles)
             {
-                cache.AddHelp(helpFile.Id, helpFile);
+                commandHandler.AddHelp(helpFile.Id, helpFile);
             }
         }
     }

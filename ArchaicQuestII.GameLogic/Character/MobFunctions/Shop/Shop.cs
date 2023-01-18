@@ -1,27 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Client;
-using ArchaicQuestII.GameLogic.Commands;
-using ArchaicQuestII.GameLogic.Core;
-using ArchaicQuestII.GameLogic.Skill.Skills;
 using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
 {
-    public class Shop : IMobFunctions
+    public class Shop : IShop
     {
-        private readonly IWriteToClient _writer;
-        private readonly IUpdateClientUI _clientUi;
-        private readonly IPassiveSkills _passiveSkills;
+        private readonly IClientHandler _clientHandler;
+        private readonly ICharacterHandler _characterHandler;
 
-        public Shop(IWriteToClient writer, IUpdateClientUI clientUi, IPassiveSkills passiveSkills)
+        public Shop(IClientHandler clientHandler, ICharacterHandler characterHandler)
         {
-            _writer = writer;
-            _clientUi = clientUi;
-            _passiveSkills = passiveSkills;
+            _clientHandler = clientHandler;
+            _characterHandler = characterHandler;
         }
 
         //       The cleric of Siccara says 'I offer the following spells:'
@@ -44,7 +38,7 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
 
             var hagglePriceReduction = Haggle(player, mob);
 
-            _writer.WriteLine(mob.Name + " says 'Here's what I have for sale.'", player.ConnectionId);
+            _clientHandler.WriteLine(mob.Name + " says 'Here's what I have for sale.'", player.ConnectionId);
             var sb = new StringBuilder();
             sb.Append("<table class='data'><tr><td style='width: 30px; text-align: center;'>#</td><td style='width: 30px; text-align: center;'>Level</td><td  style='width: 65px;'>Price</td><td>Item</td></tr>");
 
@@ -56,7 +50,7 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
             }
 
             sb.Append("</table>");
-            _writer.WriteLine(sb.ToString(), player.ConnectionId);
+            _clientHandler.WriteLine(sb.ToString(), player.ConnectionId);
 
         }
 
@@ -78,7 +72,7 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
             var shopKeeper = FindShopKeeper(room);
             if (shopKeeper == null)
             {
-                _writer.WriteLine("<p>There is no one selling here.</p>", player.ConnectionId);
+                _clientHandler.WriteLine("<p>There is no one selling here.</p>", player.ConnectionId);
                 return;
             }
 
@@ -86,11 +80,11 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
             {
                 if (shopKeeper.SpellList.Any())
                 {
-                    _writer.WriteLine("<p>They have nothing for sale but do offer spells. Try 'heal'.</p>", player.ConnectionId);
+                    _clientHandler.WriteLine("<p>They have nothing for sale but do offer spells. Try 'heal'.</p>", player.ConnectionId);
                     return;
                 }
 
-                _writer.WriteLine("<p>They have nothing for sale.</p>", player.ConnectionId);
+                _clientHandler.WriteLine("<p>They have nothing for sale.</p>", player.ConnectionId);
                 return;
             }
 
@@ -99,7 +93,7 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
 
         public int Haggle(Player player, Player target)
         {
-            var priceReduction = _passiveSkills.Haggle(player, target);
+            var priceReduction = _characterHandler.PassiveSkills.Haggle(player, target);
 
             return priceReduction;
 
@@ -142,14 +136,14 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
 
             if (vendor == null)
             {
-                _writer.WriteLine("<p>You can't do that here.</p>", player.ConnectionId);
+                _clientHandler.WriteLine("<p>You can't do that here.</p>", player.ConnectionId);
                 return;
             }
 
             var hasItem = vendor.Inventory.Distinct().OrderBy(x => x.Level).ThenBy(x => x.Value).ToArray()[itemNumber];
             if (hasItem == null)
             {
-                _writer.WriteLine($"<p>{vendor.Name} says 'I don't have anything like that to show you.'</p>", player.ConnectionId);
+                _clientHandler.WriteLine($"<p>{vendor.Name} says 'I don't have anything like that to show you.'</p>", player.ConnectionId);
                 return;
             }
 
@@ -182,7 +176,7 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
 
             sb.Append($"{flags}<br />");
             sb.Append("</p>");
-            _writer.WriteLine(sb.ToString(), player.ConnectionId);
+            _clientHandler.WriteLine(sb.ToString(), player.ConnectionId);
         }
 
         public void InspectItem(string itemName, Room room, Player player)
@@ -197,7 +191,7 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
 
             if (vendor == null)
             {
-                _writer.WriteLine("<p>You can't do that here.</p>", player.ConnectionId);
+                _clientHandler.WriteLine("<p>You can't do that here.</p>", player.ConnectionId);
                 return;
             }
 
@@ -206,7 +200,7 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
 
             if (hasItem == null)
             {
-                _writer.WriteLine($"<p>{vendor.Name} says 'I don't have anything like that to show you.'</p>", player.ConnectionId);
+                _clientHandler.WriteLine($"<p>{vendor.Name} says 'I don't have anything like that to show you.'</p>", player.ConnectionId);
                 return;
             }
 
@@ -239,7 +233,7 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
 
             sb.Append($"{flags}<br />");
             sb.Append("</p>");
-            _writer.WriteLine(sb.ToString(), player.ConnectionId);
+            _clientHandler.WriteLine(sb.ToString(), player.ConnectionId);
         }
 
         public void BuyItem(int itemNumber, Room room, Player player)
@@ -255,7 +249,7 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
 
             if (vendor == null)
             {
-                _writer.WriteLine("<p>You can't do that here.</p>", player.ConnectionId);
+                _clientHandler.WriteLine("<p>You can't do that here.</p>", player.ConnectionId);
                 return;
             }
 
@@ -263,16 +257,16 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
 
             if (hasItem == null)
             {
-                _writer.WriteLine($"<p>{vendor.Name} says 'I don't sell that, please view my \'list\' of items for sale.'</p>", player.ConnectionId);
+                _clientHandler.WriteLine($"<p>{vendor.Name} says 'I don't sell that, please view my \'list\' of items for sale.'</p>", player.ConnectionId);
                 return;
             }
 
-            var haggleReduction = _passiveSkills.Haggle(player, vendor);
+            var haggleReduction = _characterHandler.PassiveSkills.Haggle(player, vendor);
             var goldValue = AddMarkUp(hasItem.Value);
             var trueGoldValue = goldValue - Helpers.GetPercentage(haggleReduction, (int)goldValue);
             if (player.Money.Gold < trueGoldValue)
             {
-                _writer.WriteLine($"<p>{vendor.Name} says 'Sorry you can't afford that.'</p>", player.ConnectionId);
+                _clientHandler.WriteLine($"<p>{vendor.Name} says 'Sorry you can't afford that.'</p>", player.ConnectionId);
                 return;
             }
 
@@ -283,10 +277,10 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
             // TODO: weight
             player.Weight += hasItem.Weight;
 
-            _clientUi.UpdateScore(player);
-            _clientUi.UpdateInventory(player);
+            _clientHandler.UpdateScore(player);
+            _clientHandler.UpdateInventory(player);
 
-            _writer.WriteLine($"<p>You buy {hasItem.Name.ToLower()} for {Math.Floor(trueGoldValue)} gold.</p>", player.ConnectionId);
+            _clientHandler.WriteLine($"<p>You buy {hasItem.Name.ToLower()} for {Math.Floor(trueGoldValue)} gold.</p>", player.ConnectionId);
         }
 
         public void BuyItem(string itemName, Room room, Player player)
@@ -301,7 +295,7 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
 
             if (vendor == null)
             {
-                _writer.WriteLine("<p>You can't do that here.</p>", player.ConnectionId);
+                _clientHandler.WriteLine("<p>You can't do that here.</p>", player.ConnectionId);
                 return;
             }
 
@@ -310,16 +304,16 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
 
             if (hasItem == null)
             {
-                _writer.WriteLine($"<p>{vendor.Name} says 'I don't sell that, please view my \'list\' of items for sale.'</p>", player.ConnectionId);
+                _clientHandler.WriteLine($"<p>{vendor.Name} says 'I don't sell that, please view my \'list\' of items for sale.'</p>", player.ConnectionId);
                 return;
             }
 
-            var haggleReduction = _passiveSkills.Haggle(player, vendor);
+            var haggleReduction = _characterHandler.PassiveSkills.Haggle(player, vendor);
             var goldValue = AddMarkUp(hasItem.Value);
             var trueGoldValue = goldValue - Helpers.GetPercentage(haggleReduction, (int)goldValue);
             if (player.Money.Gold < trueGoldValue)
             {
-                _writer.WriteLine($"<p>{vendor.Name} says 'Sorry you can't afford that.'</p>", player.ConnectionId);
+                _clientHandler.WriteLine($"<p>{vendor.Name} says 'Sorry you can't afford that.'</p>", player.ConnectionId);
                 return;
             }
 
@@ -330,10 +324,10 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
             // TODO: weight
             player.Weight += hasItem.Weight;
 
-            _clientUi.UpdateScore(player);
-            _clientUi.UpdateInventory(player);
+            _clientHandler.UpdateScore(player);
+            _clientHandler.UpdateInventory(player);
 
-            _writer.WriteLine($"<p>You buy {hasItem.Name.ToLower()} for {Math.Floor(trueGoldValue)} gold.</p>", player.ConnectionId);
+            _clientHandler.WriteLine($"<p>You buy {hasItem.Name.ToLower()} for {Math.Floor(trueGoldValue)} gold.</p>", player.ConnectionId);
         }
 
         public void SellItem(string itemName, Room room, Player player)
@@ -342,7 +336,7 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
 
             if (vendor == null)
             {
-                _writer.WriteLine("<p>You can't do that here.</p>", player.ConnectionId);
+                _clientHandler.WriteLine("<p>You can't do that here.</p>", player.ConnectionId);
                 return;
             }
 
@@ -351,7 +345,7 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
 
             if (hasItem == null)
             {
-                _writer.WriteLine($"<p>{vendor.Name} says 'You don't have that item.'</p>", player.ConnectionId);
+                _clientHandler.WriteLine($"<p>{vendor.Name} says 'You don't have that item.'</p>", player.ConnectionId);
                 return;
             }
 
@@ -359,7 +353,7 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
 
             if (vendorInterested == null)
             {
-                _writer.WriteLine($"<p>{vendor.Name} says 'I'm not interested in {hasItem.Name.ToLower()}.'</p>", player.ConnectionId);
+                _clientHandler.WriteLine($"<p>{vendor.Name} says 'I'm not interested in {hasItem.Name.ToLower()}.'</p>", player.ConnectionId);
                 return;
             }
 
@@ -377,10 +371,9 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
             //}
 
             player.Weight -= hasItem.Weight;
-            _clientUi.UpdateScore(player);
-            _clientUi.UpdateInventory(player);
-
-            _writer.WriteLine($"<p>You sell {hasItem.Name.ToLower()} for {(vendorBuyPrice <= 0 ? 1 : vendorBuyPrice)} gold.</p>", player.ConnectionId);
+            _clientHandler.UpdateScore(player);
+            _clientHandler.UpdateInventory(player);
+            _clientHandler.WriteLine($"<p>You sell {hasItem.Name.ToLower()} for {(vendorBuyPrice <= 0 ? 1 : vendorBuyPrice)} gold.</p>", player.ConnectionId);
         }
     }
 }

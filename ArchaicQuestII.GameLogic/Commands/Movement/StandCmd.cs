@@ -2,13 +2,14 @@ using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
+using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Commands.Movement;
 
 public class StandCmd : ICommand
 {
-    public StandCmd(ICore core)
+    public StandCmd(ICoreHandler coreHandler)
     {
         Aliases = new[] {"stand"};
         Description = "You character stands up.";
@@ -27,7 +28,8 @@ public class StandCmd : ICommand
             CharacterStatus.Status.Standing
         };
         UserRole = UserRole.Player;
-        Core = core;
+
+        Handler = coreHandler;
     }
     
     public string[] Aliases { get; }
@@ -36,7 +38,7 @@ public class StandCmd : ICommand
     public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
-    public ICore Core { get; }
+    public ICoreHandler Handler { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
@@ -51,15 +53,8 @@ public class StandCmd : ICommand
             standMessage = $"arises from {(player.Gender == "Male" ? "his" : "her")} slumber.";
         }
 
-        SetCharacterStatus(player, "", CharacterStatus.Status.Standing);
-        Core.Writer.WriteLine("<p>You move quickly to your feet.</p>", player.ConnectionId);
-        Core.Writer.WriteToOthersInRoom($"<p>{player.Name} {standMessage}</p>", room, player);
-    }
-
-    private void SetCharacterStatus(Player player, string longName, CharacterStatus.Status status)
-    {
-        player.Status = status;
-        player.LongName = longName;
-        player.Pose = "";
+        Helpers.SetCharacterStatus(player, "", CharacterStatus.Status.Standing);
+        Handler.Client.WriteLine("<p>You move quickly to your feet.</p>", player.ConnectionId);
+        Handler.Client.WriteToOthersInRoom($"<p>{player.Name} {standMessage}</p>", room, player);
     }
 }

@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
@@ -11,7 +10,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects;
 
 public class UnlockCmd : ICommand
 {
-    public UnlockCmd(ICore core)
+    public UnlockCmd(ICoreHandler coreHandler)
     {
         Aliases = new[] {"unlock"};
         Description = "Unlock a container or door, You must have the required key to do so.";
@@ -31,7 +30,8 @@ public class UnlockCmd : ICommand
             CharacterStatus.Status.Sitting,
         };
         UserRole = UserRole.Player;
-        Core = core;
+
+        Handler = coreHandler;
     }
     
     public string[] Aliases { get; }
@@ -40,7 +40,7 @@ public class UnlockCmd : ICommand
     public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
-    public ICore Core { get; }
+    public ICoreHandler Handler { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
@@ -48,13 +48,13 @@ public class UnlockCmd : ICommand
         
         if (string.IsNullOrEmpty(target))
         {
-            Core.Writer.WriteLine("<p>Unlock what?</p>", player.ConnectionId);
+            Handler.Client.WriteLine("<p>Unlock what?</p>", player.ConnectionId);
             return;
         }
         
         if (player.Affects.Blind)
         {
-            Core.Writer.WriteLine("<p>You are blind and can't see a thing!</p>", player.ConnectionId);
+            Handler.Client.WriteLine("<p>You are blind and can't see a thing!</p>", player.ConnectionId);
             return;
         }
 
@@ -71,33 +71,33 @@ public class UnlockCmd : ICommand
                     x.ItemType == Item.Item.ItemTypes.Key && x.KeyId.Equals(doorToUnlock.LockId));
                 if (playerHasKey == null)
                 {
-                    Core.Writer.WriteLine("<p>You don't have the key to unlock this.</p>", player.ConnectionId);
+                    Handler.Client.WriteLine("<p>You don't have the key to unlock this.</p>", player.ConnectionId);
                 }
                 else
                 {
 
                     if (!doorToUnlock.Locked)
                     {
-                        Core.Writer.WriteLine("<p>It's already unlocked.</p>", player.ConnectionId);
+                        Handler.Client.WriteLine("<p>It's already unlocked.</p>", player.ConnectionId);
                         return;
                     }
 
                     doorToUnlock.Locked = false;
-                    Core.Writer.WriteLine("<p>You enter the key and turn it. *CLICK* </p>", player.ConnectionId);
-                    Core.Writer.WriteToOthersInRoom($"<p>{player.Name} enters the key and turns it. *CLICK* </p>", room, player);
+                    Handler.Client.WriteLine("<p>You enter the key and turn it. *CLICK* </p>", player.ConnectionId);
+                    Handler.Client.WriteToOthersInRoom($"<p>{player.Name} enters the key and turns it. *CLICK* </p>", room, player);
 
                     return;
                 }
                 return;
             }
 
-            Core.Writer.WriteLine("<p>You don't see that here.</p>", player.ConnectionId);
+            Handler.Client.WriteLine("<p>You don't see that here.</p>", player.ConnectionId);
             return;
         }
 
         if (!objToUnlock.Container.CanLock)
         {
-            Core.Writer.WriteLine("<p>You can't unlock that.</p>", player.ConnectionId);
+            Handler.Client.WriteLine("<p>You can't unlock that.</p>", player.ConnectionId);
             return;
         }
 
@@ -106,19 +106,19 @@ public class UnlockCmd : ICommand
 
         if (hasKey == null)
         {
-            Core.Writer.WriteLine("<p>You don't have the key to unlock this.</p>", player.ConnectionId);
+            Handler.Client.WriteLine("<p>You don't have the key to unlock this.</p>", player.ConnectionId);
         }
         else
         {
             if (!objToUnlock.Container.IsLocked)
             {
-                Core.Writer.WriteLine("<p>It's already unlocked.</p>", player.ConnectionId);
+                Handler.Client.WriteLine("<p>It's already unlocked.</p>", player.ConnectionId);
                 return;
             }
 
             objToUnlock.Container.IsLocked = false;
-            Core.Writer.WriteLine("<p>You enter the key and turn it. *CLICK* </p>", player.ConnectionId);
-            Core.Writer.WriteToOthersInRoom($"<p>{player.Name} enters the key into {objToUnlock.Name} and turns it. *CLICK* </p>",
+            Handler.Client.WriteLine("<p>You enter the key and turn it. *CLICK* </p>", player.ConnectionId);
+            Handler.Client.WriteToOthersInRoom($"<p>{player.Name} enters the key into {objToUnlock.Name} and turns it. *CLICK* </p>",
                 room, player);
         }
     }

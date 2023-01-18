@@ -46,14 +46,14 @@ namespace ArchaicQuestII.Controllers.Dashboard
     [Authorize]
     public class DashboardController : Controller
     {
-        private IDataBase _db { get; }
-        private IPlayerDataBase _pdb { get; }
-        private ICache _cache { get; }
-        public DashboardController(IDataBase db, IPlayerDataBase pdb, ICache cache)
+        private readonly IDataBase _db;
+        private readonly IPlayerDataBase _pdb;
+        private readonly ICharacterHandler _characterHandler;
+        public DashboardController(IDataBase db, IPlayerDataBase pdb, ICharacterHandler characterHandler)
         {
             _db = db;
             _pdb = pdb;
-            _cache = cache;
+            _characterHandler = characterHandler;
         }
 
         [HttpGet]
@@ -66,7 +66,7 @@ namespace ArchaicQuestII.Controllers.Dashboard
                 MobCount = _db.GetCollection<Player>(DataBase.Collections.Mobs).Count(),
                 AreaCount = _db.GetCollection<Area>(DataBase.Collections.Area).Count(),
                 RoomCount = _db.GetCollection<Room>(DataBase.Collections.Room).Count(),
-                QuestCount = _db.GetCollection<QuestLog>(DataBase.Collections.Quests).Count()
+                //QuestCount = _db.GetCollection<QuestLog>(DataBase.Collections.Quests).Count()
             };
 
             return Json(stats);
@@ -78,7 +78,7 @@ namespace ArchaicQuestII.Controllers.Dashboard
         [Route("api/dashboard/who")]
         public JsonResult WhoList()
         {
-            var playingPlayers = _cache.GetPlayerCache().ToList();
+            var playingPlayers = _characterHandler.GetPlayerCache().ToList();
             return Json(playingPlayers);
 
         }

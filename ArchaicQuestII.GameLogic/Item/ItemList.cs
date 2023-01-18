@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace ArchaicQuestII.GameLogic.Item
 {
@@ -11,7 +9,7 @@ namespace ArchaicQuestII.GameLogic.Item
         public int Id { get; set; }
     }
 
-    public class ItemList : List<Item>, IItemList
+    public class ItemList : List<Item>
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -47,11 +45,11 @@ namespace ArchaicQuestII.GameLogic.Item
                     return new ItemObj() { Name = DisplayMoneyAmount(x.Value), Id = x.Id };
                 }
 
-              /*  if (x.Type == Item.ItemTypes.Crafting)
-                {
-                    return new ItemObj() { Name = x.CountOfItems > 1 ? $"({x.CountOfItems}) {x.Name} {x.Forage.ItemCount} / {x.Forage.MaxItemCount}" :  $" {x.Name}  {x.Forage.ItemCount} / {x.Forage.ItemCount}", Id = x.Id};
-                }
-*/
+                /*  if (x.Type == Item.ItemTypes.Crafting)
+                  {
+                      return new ItemObj() { Name = x.CountOfItems > 1 ? $"({x.CountOfItems}) {x.Name} {x.Forage.ItemCount} / {x.Forage.MaxItemCount}" :  $" {x.Name}  {x.Forage.ItemCount} / {x.Forage.ItemCount}", Id = x.Id};
+                  }
+                */
                 var itemString = x.CountOfItems > 1 ? $"({x.CountOfItems}) {x.Name}" : x.Name;
 
                 return new ItemObj() { Name = itemString, Id = x.Id };

@@ -2,9 +2,7 @@
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Model;
-using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
-using ArchaicQuestII.GameLogic.Item;
 using System.Collections.Generic;
 
 namespace ArchaicQuestII.GameLogic.SeedData
@@ -740,7 +738,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
         }
 
 
-        public static void SeedAndCache(IDataBase db, ICache cache)
+        public static void SeedAndCache(IDataBase db, ICharacterHandler characterHandler)
         {
             if (!db.DoesCollectionExist(DataBase.Collections.Class))
             {
@@ -754,7 +752,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
 
             foreach (var pcClass in classes)
             {
-                cache.AddClass(pcClass.Name, pcClass);
+                characterHandler.AddClass(pcClass.Name, pcClass);
             }
         }
     }

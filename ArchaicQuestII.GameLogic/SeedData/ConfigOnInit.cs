@@ -5,15 +5,15 @@ namespace ArchaicQuestII.GameLogic.SeedData
 {
     internal static class ConfigOnInit
     {
-        public static void SeedAndCache(IDataBase db, ICache cache)
+        public static void SeedAndCache(ICoreHandler coreHandler)
         {
-            if (!db.DoesCollectionExist(DataBase.Collections.Config))
+            if (!coreHandler.Db.DoesCollectionExist(DataBase.Collections.Config))
             {
-                db.Save(new Config(), DataBase.Collections.Config);
+                coreHandler.Db.Save(new Config(), DataBase.Collections.Config);
             }
 
-            var config = db.GetById<Config>(1, DataBase.Collections.Config);
-            cache.SetConfig(config);
+            var config = coreHandler.Db.GetById<Config>(1, DataBase.Collections.Config);
+            coreHandler.Config = config;
         }
     }
 }

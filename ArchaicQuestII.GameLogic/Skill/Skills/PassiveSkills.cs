@@ -2,59 +2,28 @@
 using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Equipment;
-using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Client;
-using ArchaicQuestII.GameLogic.Combat;
-using ArchaicQuestII.GameLogic.Core;
-using ArchaicQuestII.GameLogic.Skill.Core;
+using ArchaicQuestII.GameLogic.Commands;
 using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Skill.Skills
 {
-
-    public interface IPassiveSkills
+    
+    public class PassiveSkills
     {
-        int Haggle(Player player, Player target);
-        int DualWield(Player player, Player target, Room room, string obj);
-        int Lore(Player player, Room room, string obj);
-
-
-    }
-
-    public class PassiveSkills : IPassiveSkills
-    {
-        private readonly IWriteToClient _writer;
-        private readonly IUpdateClientUI _updateClientUi;
-        private readonly IGain _gain;
-        private readonly IDamage _damage;
-        private readonly ICombat _fight;
-        private readonly ISkillManager _skillManager;
-        private readonly ICache _cache;
-        private readonly IEquip _equip;
-
-
+        private readonly IClientHandler _clientHandler;
+        private readonly ICommandHandler _commandHandler;
+        private readonly ICharacterHandler _characterHandler;
 
         public PassiveSkills(
-            IWriteToClient writer,
-            IUpdateClientUI updateClientUi,
-            IDamage damage,
-            ICombat fight,
-            ISkillManager skillManager, 
-            ICache cache, 
-            IGain gain,
-            IEquip equip)
+            IClientHandler clientHandler,
+            ICommandHandler commandHandler,
+            ICharacterHandler characterHandler)
         {
-            _writer = writer;
-            _updateClientUi = updateClientUi;
-            _damage = damage;
-            _fight = fight;
-            _skillManager = skillManager;
-            _cache = cache;
-            _gain = gain;
-            _equip = equip;
-
+            _clientHandler = clientHandler;
+            _commandHandler = commandHandler;
+            _characterHandler = characterHandler;
         }
 
 
@@ -68,11 +37,11 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                 return 0;
             }
 
-            var getSkill = _cache.GetSkill(foundSkill.SkillId);
+            var getSkill = _commandHandler.GetSkill(foundSkill.SkillId);
 
             if (getSkill == null)
             {
-                var skill = _cache.GetAllSkills().FirstOrDefault(x => x.Name.Equals("haggle", StringComparison.CurrentCultureIgnoreCase));
+                var skill = _commandHandler.GetAllSkills().FirstOrDefault(x => x.Name.Equals("haggle", StringComparison.CurrentCultureIgnoreCase));
                 foundSkill.SkillId = skill.Id;
                 getSkill = skill;
             }
@@ -88,12 +57,12 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             //TODO Charisma Check
             if (proficiency >= success)
             {
-                _writer.WriteLine($"<p>You charm {target.Name} in offering you favourable prices.</p>",
+                _clientHandler.WriteLine($"<p>You charm {target.Name} in offering you favourable prices.</p>",
                     player.ConnectionId);
                 return 25;
             }
 
-            _writer.WriteLine("<p>Your haggle attempts fail.</p>",
+            _clientHandler.WriteLine("<p>Your haggle attempts fail.</p>",
                 player.ConnectionId);
 
             if (foundSkill.Proficiency == 100)
@@ -105,11 +74,11 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
             foundSkill.Proficiency += increase;
 
-            _gain.GainExperiencePoints(player, 100 * foundSkill.Level / 4, false);
+            _characterHandler.GainExperiencePoints(player, 100 * foundSkill.Level / 4, false);
 
-            _updateClientUi.UpdateExp(player);
+            _clientHandler.UpdateExp(player);
 
-            _writer.WriteLine(
+            _clientHandler.WriteLine(
                 $"<p class='improve'>You learn from your mistakes and gain {100 * foundSkill.Level / 4} experience points.</p>" +
                 $"<p class='improve'>Your knowledge of {foundSkill.SkillName} increases by {increase}%.</p>",
                 player.ConnectionId, 0);
@@ -123,7 +92,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
             if (string.IsNullOrEmpty(obj))
             {
-                _writer.WriteLine("Use what for a secondary weapon?", player.ConnectionId);
+                _clientHandler.WriteLine("Use what for a secondary weapon?", player.ConnectionId);
                 return 0;
             }
 
@@ -132,7 +101,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
             if (foundSkill == null)
             {
-                _writer.WriteLine("One weapon is more than enough for you to worry about.", player.ConnectionId);
+                _clientHandler.WriteLine("One weapon is more than enough for you to worry about.", player.ConnectionId);
                 return 0;
             }
 
@@ -140,14 +109,14 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
             if (findWeapon == null)
             {
-                _writer.WriteLine("You can't find that weapon.", player.ConnectionId);
+                _clientHandler.WriteLine("You can't find that weapon.", player.ConnectionId);
                 return 0;
             }
 
 
             if (player.Equipped.Wielded == null)
             {
-                _writer.WriteLine("You need to wield a weapon first.", player.ConnectionId);
+                _clientHandler.WriteLine("You need to wield a weapon first.", player.ConnectionId);
                 return 0;
             }
 
@@ -163,11 +132,11 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             {
                 var shield = player.Equipped.Shield;
 
-                _equip.Remove(shield.Name, room, player);
+                _characterHandler.Equip.Remove(shield.Name, room, player);
             }
 
 
-            _equip.Wear(findWeapon.Name, room, player, "dual");
+            _characterHandler.Equip.Wear(findWeapon.Name, room, player, "dual");
 
 
             // combat on success 2 hits, on success for strength damage if not half damage
@@ -179,7 +148,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
         {
             if (string.IsNullOrEmpty(obj))
             {
-                _writer.WriteLine("Lore What!?.", player.ConnectionId);
+                _clientHandler.WriteLine("Lore What!?.", player.ConnectionId);
 
                 return 0;
             }
@@ -189,7 +158,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
            // only lore items that can be picked up
             if (item.Stuck)
             {
-                _writer.WriteLine("There is nothing more to note about that object.", player.ConnectionId);
+                _clientHandler.WriteLine("There is nothing more to note about that object.", player.ConnectionId);
 
                 return 0;
             }
@@ -285,7 +254,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             }
 
 
-            _writer.WriteLine(sb.ToString(), player.ConnectionId);
+            _clientHandler.WriteLine(sb.ToString(), player.ConnectionId);
         
            return 0;
         }

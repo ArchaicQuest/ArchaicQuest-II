@@ -198,5 +198,7 @@ namespace ArchaicQuestII.GameLogic.Character
         
         [JsonProperty("flags")]
         public List<CharacterFlags> Flags { get; set; } = new ();
+        
+        public bool CanMove => ConnectionId == "mob" || Attributes.Attribute[EffectLocation.Moves] > 0;
     }
 }

@@ -1,16 +1,16 @@
 using ArchaicQuestII.DataAccess;
-using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Skill;
 using ArchaicQuestII.GameLogic.Skill.Core;
 using ArchaicQuestII.GameLogic.Spell;
 using System.Collections.Generic;
 using System.Linq;
+using ArchaicQuestII.GameLogic.Commands;
 
 namespace ArchaicQuestII.GameLogic.SeedData
 {
     internal static class Skills
     {
-        internal static void SeedAndCache(IDataBase db, ICache cache)
+        internal static void SeedAndCache(IDataBase db, ICommandHandler commandHandler)
         {
             var skill = new DefineSkill();
             var seedData = new List<Skill.Model.Skill>()
@@ -94,7 +94,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
             foreach (var skillSeed in seedData)
             {
                 skillSeed.Id = seedData.Count > 0 ? seedData.Max(x => x.Id) + 1 : 1;
-                cache.AddSkill(skillSeed.Id, skillSeed);
+                commandHandler.AddSkill(skillSeed.Id, skillSeed);
             }
         }
     }

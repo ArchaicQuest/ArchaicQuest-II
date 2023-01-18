@@ -12,7 +12,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character;
 
 public class GroupCmd : ICommand
 {
-    public GroupCmd(ICore core)
+    public GroupCmd(ICoreHandler coreHandler)
     {
         Aliases = new[] {"group"};
         Description = "Playing with others is more fun, to earn XP together you must be in a group. <br /> <br />To start a group, request" +
@@ -36,7 +36,8 @@ public class GroupCmd : ICommand
             CharacterStatus.Status.Stunned
         };
         UserRole = UserRole.Player;
-        Core = core;
+
+        Handler = coreHandler;
     }
     
     public string[] Aliases { get; }
@@ -45,7 +46,8 @@ public class GroupCmd : ICommand
     public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
-    public ICore Core { get; }
+    
+    public ICoreHandler Handler { get; }
 
 
     public void Execute(Player player, Room room, params string[] input)
@@ -54,19 +56,19 @@ public class GroupCmd : ICommand
         
         if ((string.IsNullOrEmpty(target) || target.Equals("group", StringComparison.CurrentCultureIgnoreCase)) && !player.Grouped)
         {
-            Core.Writer.WriteLine("<p>But you are not the member of a group!</p>", player.ConnectionId);
+            Handler.Client.WriteLine("<p>But you are not the member of a group!</p>", player.ConnectionId);
             return;
         }
 
         if (target.Equals(player.Name, StringComparison.CurrentCultureIgnoreCase))
         {
-            Core.Writer.WriteLine($"<p>You can't group yourself.</p>", player.ConnectionId);
+            Handler.Client.WriteLine($"<p>You can't group yourself.</p>", player.ConnectionId);
             return;
         }
 
         if (target.Equals("list", StringComparison.CurrentCultureIgnoreCase) && player.Grouped)
         {
-            Core.Writer.WriteLine("<p>Grouped with:</p>", player.ConnectionId);
+            Handler.Client.WriteLine("<p>Grouped with:</p>", player.ConnectionId);
 
             var sb = new StringBuilder();
             sb.Append("<ul>");
@@ -79,7 +81,7 @@ public class GroupCmd : ICommand
             }
             else
             {
-                foundLeader = Core.Cache.GetPlayerCache()
+                foundLeader = Handler.Character.GetPlayerCache()
                     .FirstOrDefault(x => x.Value.Name.StartsWith(player.Following, StringComparison.CurrentCultureIgnoreCase)).Value;
             }
 
@@ -91,7 +93,7 @@ public class GroupCmd : ICommand
             }
 
             sb.Append("</ul>");
-            Core.Writer.WriteLine(sb.ToString(), player.ConnectionId);
+            Handler.Client.WriteLine(sb.ToString(), player.ConnectionId);
 
             return;
         }
@@ -101,13 +103,13 @@ public class GroupCmd : ICommand
 
         if (foundPlayer == null)
         {
-            Core.Writer.WriteLine("<p>They are not following you!</p>", player.ConnectionId);
+            Handler.Client.WriteLine("<p>They are not following you!</p>", player.ConnectionId);
             return;
         }
 
         if (foundPlayer == player)
         {
-            Core.Writer.WriteLine("<p>You can't group with yourself!</p>", player.ConnectionId);
+            Handler.Client.WriteLine("<p>You can't group with yourself!</p>", player.ConnectionId);
             return;
         }
 
@@ -115,20 +117,20 @@ public class GroupCmd : ICommand
         {
             foundPlayer.Grouped = false;
 
-            Core.Writer.WriteLine($"<p>{foundPlayer.Name} is no longer a member of your group.</p>", player.ConnectionId);
-            Core.Writer.WriteLine($"<p>You are no longer a member of {player.Name}'s group.</p>", foundPlayer.ConnectionId);
+            Handler.Client.WriteLine($"<p>{foundPlayer.Name} is no longer a member of your group.</p>", player.ConnectionId);
+            Handler.Client.WriteLine($"<p>You are no longer a member of {player.Name}'s group.</p>", foundPlayer.ConnectionId);
             return;
 
         }
 
         foundPlayer.Grouped = true;
         player.Grouped = true;
-        Core.Writer.WriteLine($"<p>{foundPlayer.Name} is now a member of your group.</p>", player.ConnectionId);
-        Core.Writer.WriteLine($"<p>You are now a member of {player.Name}'s group.</p>", foundPlayer.ConnectionId);
+        Handler.Client.WriteLine($"<p>{foundPlayer.Name} is now a member of your group.</p>", player.ConnectionId);
+        Handler.Client.WriteLine($"<p>You are now a member of {player.Name}'s group.</p>", foundPlayer.ConnectionId);
 
         foreach (var pc in room.Players.Where(pc => pc.Id != player.Id && pc.Id != foundPlayer.Id))
         {
-            Core.Writer.WriteLine($"<p>{foundPlayer.Name} is now a member of {player.Name}'s group.</p>", pc.ConnectionId);
+            Handler.Client.WriteLine($"<p>{foundPlayer.Name} is now a member of {player.Name}'s group.</p>", pc.ConnectionId);
         }
     }
 }

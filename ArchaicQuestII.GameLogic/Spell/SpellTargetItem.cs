@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Client;
-using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Skill.Enum;
 using ArchaicQuestII.GameLogic.World.Room;
 
@@ -14,11 +10,10 @@ namespace ArchaicQuestII.GameLogic.Spell
     public class SpellTargetItem
     {
 
-        private readonly IWriteToClient _writer;
-        public SpellTargetItem(IWriteToClient writer)
+        private readonly IClientHandler _clientHandler;
+        public SpellTargetItem(IClientHandler clientHandler)
         {
-            _writer = writer;
-
+            _clientHandler = clientHandler;
         }
 
         public Item.Item GetTargetItem(string target, Player player)
@@ -33,7 +28,7 @@ namespace ArchaicQuestII.GameLogic.Spell
 
             if (item == null)
             {
-                _writer.WriteLine("You can't find that item on you.", player.ConnectionId);
+                _clientHandler.WriteLine("You can't find that item on you.", player.ConnectionId);
                 return null;
             }
 

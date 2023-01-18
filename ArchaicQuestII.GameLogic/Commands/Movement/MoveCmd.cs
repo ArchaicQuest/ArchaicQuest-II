@@ -10,7 +10,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement;
 
 public class MoveCmd : ICommand
 {
-    public MoveCmd(ICore core)
+    public MoveCmd(ICoreHandler coreHandler)
     {
         Title = "Movement";
         Aliases = new[]
@@ -50,7 +50,8 @@ public class MoveCmd : ICommand
             CharacterStatus.Status.Resting
         };
         UserRole = UserRole.Player;
-        Core = core;
+
+        Handler = coreHandler;
     }
     
     public string[] Aliases { get; }
@@ -59,13 +60,13 @@ public class MoveCmd : ICommand
     public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
-    public ICore Core { get; }
+    public ICoreHandler Handler { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
-        if (CharacterCanMove(player) == false)
+        if (player.CanMove == false)
         {
-            Core.Writer.WriteLine("<p>You are too exhausted to move.</p>", player.ConnectionId);
+            Handler.Client.WriteLine("<p>You are too exhausted to move.</p>", player.ConnectionId);
             return;
         }
 
@@ -117,24 +118,24 @@ public class MoveCmd : ICommand
 
         if (getExitToNextRoom == null)
         {
-            Core.Writer.WriteLine("<p>You can't go that way.</p>", player.ConnectionId);
+            Handler.Client.WriteLine("<p>You can't go that way.</p>", player.ConnectionId);
             return;
         }
 
         var nextRoomKey =
             $"{getExitToNextRoom.AreaId}{getExitToNextRoom.Coords.X}{getExitToNextRoom.Coords.Y}{getExitToNextRoom.Coords.Z}";
-        var getNextRoom = Core.Cache.GetRoom(nextRoomKey);
+        var getNextRoom = Handler.World.GetRoom(nextRoomKey);
 
         if (getNextRoom == null)
         {
-            Core.Writer.WriteLine("<p>A mysterious force prevents you from going that way.</p>", player.ConnectionId);
+            Handler.Client.WriteLine("<p>A mysterious force prevents you from going that way.</p>", player.ConnectionId);
             //TODO: log bug that the new room could not be found
             return;
         }
 
         if (getExitToNextRoom.Closed)
         {
-            Core.Writer.WriteLine("<p>The door is close.</p>", player.ConnectionId);
+            Handler.Client.WriteLine("<p>The door is close.</p>", player.ConnectionId);
             return;
         }
 
@@ -148,13 +149,13 @@ public class MoveCmd : ICommand
             }
         }
 
-        Core.RoomActions.RoomChange(player, room, getNextRoom);
+        Handler.World.RoomChange(player, room, getNextRoom);
 
         if (player.Followers.Count >= 1)
         {
             foreach (var follower in player.Followers.Where(follower => room.Players.Contains(follower) || room.Mobs.Contains(follower)))
             {
-                Core.RoomActions.RoomChange(follower, room, getNextRoom);
+                Handler.World.RoomChange(follower, room, getNextRoom);
             }
         }
 
@@ -165,13 +166,8 @@ public class MoveCmd : ICommand
 
             if (mountedMob != null)
             {
-                Core.RoomActions.RoomChange(mountedMob, room, getNextRoom);
+                Handler.World.RoomChange(mountedMob, room, getNextRoom);
             }
         }
-    }
-    
-    private bool CharacterCanMove(Player character)
-    {
-        return character.ConnectionId == "mob" || character.Attributes.Attribute[EffectLocation.Moves] > 0;
     }
 }

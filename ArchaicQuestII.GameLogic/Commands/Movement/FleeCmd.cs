@@ -11,7 +11,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement;
 
 public class FleeCmd : ICommand
 {
-    public FleeCmd(ICore core)
+    public FleeCmd(ICoreHandler coreHandler)
     {
         Aliases = new[] {"flee"};
         Description = "Randomly moves your character out of the room during combat. " +
@@ -30,7 +30,8 @@ public class FleeCmd : ICommand
             CharacterStatus.Status.Resting
         };
         UserRole = UserRole.Player;
-        Core = core;
+
+        Handler = coreHandler;
     }
     
     public string[] Aliases { get; }
@@ -39,13 +40,13 @@ public class FleeCmd : ICommand
     public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
-    public ICore Core { get; }
+    public ICoreHandler Handler { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
         if (player.Status != CharacterStatus.Status.Fighting)
         {
-            Core.Writer.WriteLine("<p>You're not in a fight.</p>", player.ConnectionId);
+            Handler.Client.WriteLine("<p>You're not in a fight.</p>", player.ConnectionId);
             return;
         }
 
@@ -60,7 +61,7 @@ public class FleeCmd : ICommand
             room.Exits.SouthWest == null &&
             room.Exits.West == null)
         {
-            Core.Writer.WriteLine("<p>You have no where to go!</p>", player.ConnectionId);
+            Handler.Client.WriteLine("<p>You have no where to go!</p>", player.ConnectionId);
             return;
         }
 
@@ -109,7 +110,7 @@ public class FleeCmd : ICommand
 
         if (validExits.Count == 0)
         {
-            Core.Writer.WriteLine("<p>You have no where to go!</p>", player.ConnectionId);
+            Handler.Client.WriteLine("<p>You have no where to go!</p>", player.ConnectionId);
             return;
         }
 
@@ -117,14 +118,14 @@ public class FleeCmd : ICommand
 
         player.Status = CharacterStatus.Status.Standing;
         
-        Core.Cache.RemoveCharFromCombat(player.Id.ToString());
+        Handler.Combat.RemoveCharFromCombat(player.Id.ToString());
 
         foreach (var mob in room.Mobs.Where(mob => mob.Target == player.Name))
         {
             mob.Status = CharacterStatus.Status.Standing;
-            Core.Cache.RemoveCharFromCombat(mob.Id.ToString());
+            Handler.Combat.RemoveCharFromCombat(mob.Id.ToString());
         }
 
-        Core.Cache.GetCommand(validExits[getExitIndex].Name).Execute(player, room, new[]{validExits[getExitIndex].Name});
+        Handler.Command.GetCommand(validExits[getExitIndex].Name).Execute(player, room, new[]{validExits[getExitIndex].Name});
     }
 }

@@ -10,7 +10,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects;
 
 public class QuaffCmd : ICommand
 {
-    public QuaffCmd(ICore core)
+    public QuaffCmd(ICoreHandler coreHandler)
     {
         Aliases = new[] {"quaff"};
         Description = "To drink potions you need to quaff them, 'quaff healing' will quaff a potion of healing. Drink is used for drinking water, beer or other liquids.";
@@ -28,7 +28,8 @@ public class QuaffCmd : ICommand
             CharacterStatus.Status.Stunned,
         };
         UserRole = UserRole.Player;
-        Core = core;
+
+        Handler = coreHandler;
     }
     
     public string[] Aliases { get; }
@@ -37,7 +38,7 @@ public class QuaffCmd : ICommand
     public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
-    public ICore Core { get; }
+    public ICoreHandler Handler { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
@@ -45,7 +46,7 @@ public class QuaffCmd : ICommand
         
         if (string.IsNullOrEmpty(target))
         {
-            Core.Writer.WriteLine("<p>Quaff what?</p>", player.ConnectionId);
+            Handler.Client.WriteLine("<p>Quaff what?</p>", player.ConnectionId);
             return;
         }
         
@@ -55,25 +56,25 @@ public class QuaffCmd : ICommand
             
         if (foundItem == null)
         {
-            Core.Writer.WriteLine("<p>You can't find that potion.</p>", player.ConnectionId);
+            Handler.Client.WriteLine("<p>You can't find that potion.</p>", player.ConnectionId);
             return;
         }
 
         player.Inventory.Remove(foundItem);
-        Core.UpdateClient.UpdateInventory(player);
+        Handler.Client.UpdateInventory(player);
             
-        Core.UpdateClient.PlaySound("quaff", player);
+        Handler.Client.PlaySound("quaff", player);
 
         if (string.IsNullOrEmpty(foundItem.SpellName) && foundItem.ItemType == Item.Item.ItemTypes.Potion)
         {
-            Core.Writer.WriteLine("<p>You quaff the potion but nothing happens.</p>", player.ConnectionId);
+            Handler.Client.WriteLine("<p>You quaff the potion but nothing happens.</p>", player.ConnectionId);
             return;
         }
         
-        Core.Writer.WriteToOthersInRoom($"{player.Name} quaffs {foundItem.Name.ToLower()}.", room, player);
+        Handler.Client.WriteToOthersInRoom($"{player.Name} quaffs {foundItem.Name.ToLower()}.", room, player);
 
         //potion to cast at level of potion and not the player level
-        var dummyPlayer = new Player()
+        var dummyPlayer = new Player
         {
             Level = foundItem.Level
         };

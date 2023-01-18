@@ -10,7 +10,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects;
 
 public class TasteCmd : ICommand
 {
-    public TasteCmd(ICore core)
+    public TasteCmd(ICoreHandler coreHandler)
     {
         Aliases = new[] {"taste"};
         Description = "You can taste an object, and find out how it tastes.";
@@ -30,7 +30,8 @@ public class TasteCmd : ICommand
             CharacterStatus.Status.Sitting,
         };
         UserRole = UserRole.Player;
-        Core = core;
+
+        Handler = coreHandler;
     }
     
     public string[] Aliases { get; }
@@ -39,7 +40,7 @@ public class TasteCmd : ICommand
     public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
-    public ICore Core { get; }
+    public ICoreHandler Handler { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
@@ -47,7 +48,7 @@ public class TasteCmd : ICommand
 
         if (string.IsNullOrEmpty(target))
         {
-            Core.Writer.WriteLine("<p>Taste what?</p>", player.ConnectionId);
+            Handler.Client.WriteLine("<p>Taste what?</p>", player.ConnectionId);
             return;
         }
         
@@ -56,14 +57,14 @@ public class TasteCmd : ICommand
             
         if (item == null)
         {
-            Core.Writer.WriteLine("<p>You don't see that here.</p>", player.ConnectionId);
+            Handler.Client.WriteLine("<p>You don't see that here.</p>", player.ConnectionId);
             return;
         }
 
-        var isDark = Core.RoomActions.RoomIsDark(player, room);
+        var isDark = Handler.World.RoomIsDark(player, room);
 
-        Core.Writer.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{item.Description.Taste}</p>",
+        Handler.Client.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{item.Description.Taste}</p>",
             player.ConnectionId);
-        Core.Writer.WriteToOthersInRoom($"<p>{player.Name} tastes {item.Name.ToLower()}.</p>", room, player);
+        Handler.Client.WriteToOthersInRoom($"<p>{player.Name} tastes {item.Name.ToLower()}.</p>", room, player);
     }
 }

@@ -13,7 +13,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info;
 
 public class ListSkillsCmd : ICommand
 {
-    public ListSkillsCmd(ICore core)
+    public ListSkillsCmd(ICoreHandler coreHandler)
     {
         Aliases = new[] {"skills"};
         Description = "The skills and spells commands are used to display your character's list " +
@@ -26,7 +26,8 @@ public class ListSkillsCmd : ICommand
             Title = "";
     DeniedStatus = null;
         UserRole = UserRole.Player;
-        Core = core;
+
+        Handler = coreHandler;
     }
     
     public string[] Aliases { get; }
@@ -35,7 +36,7 @@ public class ListSkillsCmd : ICommand
     public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
-    public ICore Core { get; }
+    public ICoreHandler Handler { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
@@ -51,7 +52,7 @@ public class ListSkillsCmd : ICommand
                 return;
             }
 
-            Core.Writer.WriteLine("<p>You have no skills, try spells instead.</p>", player.ConnectionId);
+            Handler.Client.WriteLine("<p>You have no skills, try spells instead.</p>", player.ConnectionId);
             return;
         }
 
@@ -64,11 +65,9 @@ public class ListSkillsCmd : ICommand
                 ReturnSkillList(player.Skills.Where(x => x.IsSpell == false).ToList(), player, "Skills:");
                 return;
             }
-            else
-            {
-                Core.Writer.WriteLine("<p>You have no skills, try spells instead.</p>", player.ConnectionId);
-                return;
-            }
+
+            Handler.Client.WriteLine("<p>You have no skills, try spells instead.</p>", player.ConnectionId);
+            return;
         }
 
         ReturnSkillList(player.Skills.ToList(), player, "Skills:");
@@ -77,7 +76,7 @@ public class ListSkillsCmd : ICommand
     private void ReturnSkillList(List<SkillList> skillList, Player player, string skillTitle)
     {
 
-        Core.Writer.WriteLine(skillTitle, player.ConnectionId);
+        Handler.Client.WriteLine(skillTitle, player.ConnectionId);
 
         var sb = new StringBuilder();
         sb.Append("<table>");
@@ -114,6 +113,6 @@ public class ListSkillsCmd : ICommand
 
         sb.Append("</table>");
 
-        Core.Writer.WriteLine(sb.ToString(), player.ConnectionId);
+        Handler.Client.WriteLine(sb.ToString(), player.ConnectionId);
     }
 }

@@ -3,57 +3,38 @@ using System.Linq;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Client;
-using ArchaicQuestII.GameLogic.Core;
+using ArchaicQuestII.GameLogic.Commands;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Skill.Enum;
 using ArchaicQuestII.GameLogic.Skill.Model;
-using ArchaicQuestII.GameLogic.Spell.Interface;
 using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Skill
 {
-
-    public interface ISKill
+    
+    public class DoSkill
     {
-        void PerfromSkill(Model.Skill skill, string command, Player origin, string targetName, Room room = null);
-    }
-    public class DoSkill : ISKill
-    {
-        private readonly IWriteToClient _writer;
-        private readonly ISpellTargetCharacter _spellTargetCharacter;
-        private readonly ICache _cache;
-        private readonly IDamage _damage;
-        private readonly IUpdateClientUI _updateClientUi;
-        private readonly IMobScripts _mobScripts;
-        private readonly ISkillList _skillList;
-
+        private readonly IClientHandler _clientHandler;
+        private readonly ICharacterHandler _characterHandler;
+        private readonly ICommandHandler _commandHandler;
 
         public DoSkill(
-            IWriteToClient writer, 
-            ISpellTargetCharacter spellTargetCharacter, 
-            ICache cache, 
-            IDamage damage, 
-            IUpdateClientUI updateClientUi, 
-            IMobScripts mobScripts,
-            ISkillList skillList)
+            IClientHandler clientHandler,
+            ICommandHandler commandHandler,
+            ICharacterHandler characterHandler)
         {
-            _writer = writer;
-            _spellTargetCharacter = spellTargetCharacter;
-            _cache = cache;
-            _damage = damage;
-            _updateClientUi = updateClientUi;
-            _mobScripts = mobScripts;
-            _skillList = skillList;
-
+            _clientHandler = clientHandler;
+            _commandHandler = commandHandler;
+            _characterHandler = characterHandler;
         }
 
-        public bool ValidStatus(Player player)
+        public  bool ValidStatus(Player player)
         {
             switch (player.Status)
             {
                 case CharacterStatus.Status.Sleeping:
-                    _writer.WriteLine("You can't do this while asleep.");
+                    _clientHandler.WriteLine("You can't do this while asleep.");
                     return false;
                 //case CharacterStatus.Status.Stunned:
                 //    _writer.WriteLine("You are stunned.");
@@ -92,13 +73,13 @@ namespace ArchaicQuestII.GameLogic.Skill
 
             if (success == 1 || success == 101)
             {
-                _writer.WriteLine($"<p>You got distracted.</p>", origin.ConnectionId);
+                _clientHandler.WriteLine($"<p>You got distracted.</p>", origin.ConnectionId);
                 return false;
             }
 
             if (proficiency < success)
             {
-                _writer.WriteLine($"<p>You lost concentration.</p>", origin.ConnectionId);
+                _clientHandler.WriteLine($"<p>You lost concentration.</p>", origin.ConnectionId);
                 return false;
             }
 
@@ -112,7 +93,7 @@ namespace ArchaicQuestII.GameLogic.Skill
 
             if (foundSkill == null)
             {
-                _writer.WriteLine($"You don't know a skill that begins with {skillName}", player.ConnectionId);
+                _clientHandler.WriteLine($"You don't know a skill that begins with {skillName}", player.ConnectionId);
                 return null;
             }
 
@@ -121,7 +102,7 @@ namespace ArchaicQuestII.GameLogic.Skill
                 foundSkill.SkillId = skill.Id;
             }
 
-            var getSkill = _cache.ReturnSkills().FirstOrDefault(x => x.Name.Equals(foundSkill.SkillName));
+            var getSkill = _commandHandler.ReturnSkills().FirstOrDefault(x => x.Name.Equals(foundSkill.SkillName));
             if (getSkill == null)
             {
                 //player skill id mismatch as not using a db no more and these are generated, chance of player not having the correct id
@@ -172,7 +153,7 @@ namespace ArchaicQuestII.GameLogic.Skill
         /// <param name="origin"></param>
         /// <param name="target"></param>
         /// <param name="room"></param>
-        public void PerfromSkill(Model.Skill performSkill, string command, Player origin, string targetName = "", Room room = null)
+        public void PerformSkill(Model.Skill performSkill, string command, Player origin, string targetName = "", Room room = null)
         {
 
 
@@ -206,7 +187,7 @@ namespace ArchaicQuestII.GameLogic.Skill
 
                 if (!AffectsSelf(FoundSkill) && (origin.Status & CharacterStatus.Status.Fighting) == 0 && (!string.IsNullOrEmpty(targetName) && targetName == command))
                 {
-                    _writer.WriteLine(FoundSkill.Name + " whom?");
+                    _clientHandler.WriteLine(FoundSkill.Name + " whom?");
                     return;
                 }
 
@@ -216,7 +197,7 @@ namespace ArchaicQuestII.GameLogic.Skill
                 {
                     targetName = string.Empty;
                 }
-                target = _spellTargetCharacter.ReturnTarget(FoundSkill, targetName, room, origin);
+                target = _characterHandler.ReturnTarget(FoundSkill, targetName, room, origin);
 
                 if (target == null)
                 {
@@ -282,15 +263,14 @@ namespace ArchaicQuestII.GameLogic.Skill
                     if (string.IsNullOrEmpty(FoundSkill.Formula) && FoundSkill.Type == SkillType.Damage)
                     {
                         //do this for cast cure
-                        _skillList.DoSkill(FoundSkill.Name, "", target, "", origin, room, false);
+                        _characterHandler.DoSkill(FoundSkill.Name, "", target, "", origin, room, false);
 
                     }
-                    
 
                     if (FoundSkill.Type != SkillType.Damage)
                     {
 
-                        _skillList.DoSkill(FoundSkill.Name, "", target, "", origin, room, false);
+                        _characterHandler.DoSkill(FoundSkill.Name, "", target, "", origin, room, false);
                     }
                 }
                 else
@@ -314,12 +294,12 @@ namespace ArchaicQuestII.GameLogic.Skill
                     origin.Experience += 100;
                     origin.ExperienceToNextLevel -= 100;
 
-                    _updateClientUi.UpdateExp(origin);
+                    _clientHandler.UpdateExp(origin);
 
-                    _writer.WriteLine(
-                        $"<p class='improve'>You learn from your mistakes and gain 100 experience points.</p>",
+                    _clientHandler.WriteLine(
+                        "<p class='improve'>You learn from your mistakes and gain 100 experience points.</p>",
                         origin.ConnectionId);
-                    _writer.WriteLine(
+                    _clientHandler.WriteLine(
                         $"<p class='improve'>Your {skill.SkillName} skill increases by {increase}%.</p>",
                         origin.ConnectionId);
                 }
@@ -332,7 +312,7 @@ namespace ArchaicQuestII.GameLogic.Skill
                     
                     if (FoundSkill.Type != SkillType.Passive)
                     {
-                        _skillList.DoSkill(FoundSkill.Name, targetName, null, "", origin, room, false);
+                        _characterHandler.DoSkill(FoundSkill.Name, targetName, null, "", origin, room, false);
                     }
                 }
                 else
@@ -344,13 +324,13 @@ namespace ArchaicQuestII.GameLogic.Skill
             {
                 if (FoundSkill.Name.Equals("Axe"))
                 {
-                    _writer.WriteLine(
-                    $"<p>What!? I don't understand.</p>",
+                    _clientHandler.WriteLine(
+                    "<p>What!? I don't understand.</p>",
                     origin.ConnectionId);
                     return;
                 }
-                _writer.WriteLine(
-                    $"<p>You cannot use this upon another.</p>",
+                _clientHandler.WriteLine(
+                    "<p>You cannot use this upon another.</p>",
                     origin.ConnectionId);
             }
 

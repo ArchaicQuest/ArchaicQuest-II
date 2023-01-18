@@ -36,4 +36,8 @@
         <ProjectReference Include="..\ArchaicQuestII.DataAccess\ArchaicQuestII.DataAccess.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Loops" />
+    </ItemGroup>
+
 </Project>

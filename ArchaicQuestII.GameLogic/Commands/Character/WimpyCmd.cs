@@ -9,7 +9,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 {
     public class WimpyCmd : ICommand
     {
-        public WimpyCmd(ICore core)
+        public WimpyCmd(ICoreHandler coreHandler)
         {
             Aliases = new[] {"wimpy"};
             Description = "Wimpy sets your wimpy value.  When your character takes damage that reduces " +
@@ -18,7 +18,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
             Title = "";
             DeniedStatus = default;
             UserRole = UserRole.Player;
-            Core = core;
+
+            Handler = coreHandler;
         }
         
         public string[] Aliases { get; }
@@ -27,7 +28,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
         public string Title { get; }
         public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
-        public ICore Core { get; }
+        
+        public ICoreHandler Handler { get; }
 
         public void Execute(Player player, Room room, string[] input)
         {
@@ -37,31 +39,31 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
             if (!result)
             {
-                Core.Writer.WriteLine($"<p>Wimpy is set to {player.Config.Wimpy}.</p>", player.ConnectionId);
+                Handler.Client.WriteLine($"<p>Wimpy is set to {player.Config.Wimpy}.</p>", player.ConnectionId);
                 return;
             }
 
             if (wimpy == 0)
             {
                 player.Config.Wimpy = 0;
-                Core.Writer.WriteLine("<p>Wimpy has been disabled.</p>", player.ConnectionId);
+                Handler.Client.WriteLine("<p>Wimpy has been disabled.</p>", player.ConnectionId);
                 return;
             }
         
             if (wimpy > player.Stats.HitPoints / 3)
             {
-                Core.Writer.WriteLine("<p>Wimpy cannot be set to more than 1/3 of your max hitpoints.</p>", player.ConnectionId);
+                Handler.Client.WriteLine("<p>Wimpy cannot be set to more than 1/3 of your max hitpoints.</p>", player.ConnectionId);
                 return;
             }
 
             if (wimpy < 0)
             {
-                Core.Writer.WriteLine("<p>Wimpy cannot be set to a negative.</p>", player.ConnectionId);
+                Handler.Client.WriteLine("<p>Wimpy cannot be set to a negative.</p>", player.ConnectionId);
                 return;
             }
         
             player.Config.Wimpy = wimpy;
-            Core.Writer.WriteLine($"<p>Wimpy set to {wimpy}.</p>", player.ConnectionId);
+            Handler.Client.WriteLine($"<p>Wimpy set to {wimpy}.</p>", player.ConnectionId);
         }
     }
 }

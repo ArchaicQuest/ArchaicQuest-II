@@ -7,7 +7,6 @@ using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Config;
-using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Utilities;
@@ -22,29 +21,16 @@ namespace ArchaicQuestII.GameLogic.Hubs
     public class GameHub : Hub
     {
         private readonly ILogger<GameHub> _logger;
-        private IDataBase _db { get; }
-        private IPlayerDataBase _pdb { get; }
-        private ICache _cache { get; }
-        private readonly IWriteToClient _writeToClient;
-        private readonly IUpdateClientUI _updateClientUi;
-        private readonly IMobScripts _mobScripts;
+
+        private readonly ICoreHandler _coreHandler;
 
         public GameHub(
-            IDataBase db, 
-            IPlayerDataBase pdb, 
-            ICache cache, 
             ILogger<GameHub> logger, 
-            IWriteToClient writeToClient, 
-            IUpdateClientUI updateClientUi, 
-            IMobScripts mobScripts)
+            ICoreHandler coreHandler
+            )
         {
             _logger = logger;
-            _db = db;
-            _pdb = pdb;
-            _cache = cache;
-            _writeToClient = writeToClient;
-            _updateClientUi = updateClientUi;
-            _mobScripts = mobScripts;
+            _coreHandler = coreHandler;
         }
         
         /// <summary>
@@ -71,11 +57,11 @@ namespace ArchaicQuestII.GameLogic.Hubs
         /// <returns></returns>
         public void SendToServer(string message, string connectionId)
         {
-            var player = _cache.GetPlayer(connectionId);
+            var player = _coreHandler.Character.GetPlayer(connectionId);
 
             if (player == null)
             {
-                _writeToClient.WriteLine("<p>Refresh the page to reconnect!</p>");
+                _coreHandler.Client.WriteLine("<p>Refresh the page to reconnect!</p>");
                 return;
             }
             player.Buffer.Enqueue(message);
@@ -87,11 +73,11 @@ namespace ArchaicQuestII.GameLogic.Hubs
         /// <returns></returns>
         public void CharContent(string message, string connectionId)
         {
-            var player = _cache.GetPlayer(connectionId);
+            var player = _coreHandler.Character.GetPlayer(connectionId);
 
             if (player == null)
             {
-                _writeToClient.WriteLine("<p>Refresh the page to reconnect!</p>", player.ConnectionId);
+                _coreHandler.Client.WriteLine("<p>Refresh the page to reconnect!</p>", player.ConnectionId);
                 return;
             }
 
@@ -112,21 +98,21 @@ namespace ArchaicQuestII.GameLogic.Hubs
 
                 if (getBook == null)
                 {
-                    _writeToClient.WriteLine("<p>There's a puff of smoke and all your work is undone. Seek an Immortal</p>", player.ConnectionId);
+                    _coreHandler.Client.WriteLine("<p>There's a puff of smoke and all your work is undone. Seek an Immortal</p>", player.ConnectionId);
                     return;
                 }
 
                 getBook.Book.Pages[book.PageNumber] = book.Description;
 
                 player.OpenedBook = getBook;
-                _writeToClient.WriteLine("You have successfully written in your book.", player.ConnectionId);
+                _coreHandler.Client.WriteLine("You have successfully written in your book.", player.ConnectionId);
             }
 
             if (contentType == "description")
             {
                 player.Description = json.GetValue("desc")?.ToString();
-                _writeToClient.WriteLine("You have successfully updated your description.", player.ConnectionId);
-                _updateClientUi.UpdateScore(player);
+                _coreHandler.Client.WriteLine("You have successfully updated your description.", player.ConnectionId);
+                _coreHandler.Client.UpdateScore(player);
             }
         }
 
@@ -173,7 +159,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
                 Name = name
             };
             
-            _pdb.Save(newPlayer, PlayerDataBase.Collections.Players);
+            _coreHandler.Pdb.Save(newPlayer, PlayerDataBase.Collections.Players);
         }
 
         public async void AddCharacter(string hubId, Guid characterId)
@@ -184,7 +170,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
 
             foreach (var quest in player.QuestLog)
             {
-                var updatedQuest = _cache.GetQuest(quest.Id);
+                var updatedQuest = _coreHandler.Character.GetQuest(quest.Id);
                 quest.Type = updatedQuest.Type;
                 quest.ItemsToGet = updatedQuest.ItemsToGet;
                 quest.MobsToKill = updatedQuest.MobsToKill;
@@ -198,30 +184,33 @@ namespace ArchaicQuestII.GameLogic.Hubs
 
             AddCharacterToCache(hubId, player);
 
-            var playerExist = _cache.PlayerAlreadyExists(player.Id);
+            var playerExist = _coreHandler.Character.PlayerAlreadyExists(player.Id);
             player.LastLoginTime = DateTime.Now;
             player.LastCommandTime = DateTime.Now;
 
             player.CommandLog.Add($"{DateTime.Now:f} - Logged in");
-            var pcAccount = _pdb.GetById<Account.Account>(player.AccountId, PlayerDataBase.Collections.Account);
+            var pcAccount = _coreHandler.Pdb.GetById<Account.Account>(player.AccountId, PlayerDataBase.Collections.Account);
             if (pcAccount != null)
             {
                 pcAccount.DateLastPlayed = DateTime.Now;
-                _pdb.Save(pcAccount, PlayerDataBase.Collections.Account);
+                _coreHandler.Pdb.Save(pcAccount, PlayerDataBase.Collections.Account);
                 var loginStats = new Account.AccountLoginStats
                 {
                     AccountId = player.AccountId,
                     loginDate = DateTime.Now
                 };
 
-                _pdb.Save(loginStats, PlayerDataBase.Collections.LoginStats);
+                _coreHandler.Pdb.Save(loginStats, PlayerDataBase.Collections.LoginStats);
             }
 
             await SendToClient($"<p>Welcome {player.Name}. Your adventure awaits you.</p>", hubId);
 
             if (playerExist != null)
             {
-                Helpers.PostToDiscord($"{player.Name} has entered the realms.", "event", _cache.GetConfig());
+                if(_coreHandler.Config.PostToDiscord)
+                    Helpers.PostToDiscord($"{player.Name} has entered the realms.",
+                        _coreHandler.Config.EventsDiscordWebHookURL);
+                
                 GetRoom(hubId, playerExist, playerExist.RoomId);
             }
             else
@@ -232,30 +221,30 @@ namespace ArchaicQuestII.GameLogic.Hubs
 
         public void UpdatePlayerSkills(Player player)
         {
-            var classSkill = _db.GetCollection<Class>(DataBase.Collections.Class).FindOne(x =>
+            var classSkill = _coreHandler.Db.GetCollection<Class>(DataBase.Collections.Class).FindOne(x =>
                 x.Name.Equals(player.ClassName, StringComparison.CurrentCultureIgnoreCase));
 
              foreach (var skill in classSkill.Skills)
             {
-                var theSkill = _cache.GetAllSkills().FirstOrDefault(x => x.Name.Equals(skill.SkillName, StringComparison.CurrentCultureIgnoreCase));
+                var theSkill = _coreHandler.Command.GetAllSkills().FirstOrDefault(x => x.Name.Equals(skill.SkillName, StringComparison.CurrentCultureIgnoreCase));
                 
                 // skill doesn't exist and should be added
                 if (player.Skills.FirstOrDefault(x =>
                     x.SkillName.Equals(skill.SkillName, StringComparison.CurrentCultureIgnoreCase)) == null)
                 {
                     
-                    var addSkill = new SkillList()
+                    var addSkill = new SkillList
                     {
                         Proficiency = 1,
                         Level = skill.Level,
                         SkillName = skill.SkillName,
-                        SkillId = _cache.GetSkill(skill.SkillId) == null ? theSkill.Id : skill.SkillId,
+                        SkillId = _coreHandler.Command.GetSkill(skill.SkillId) == null ? theSkill.Id : skill.SkillId,
                         IsSpell = false
                     };
 
                     if (theSkill.Cost.Table.ContainsKey(Skill.Enum.Cost.Mana))
                     {
-                        skill.IsSpell = _cache.GetSkill(skill.SkillId) == null ? theSkill.Cost.Table[Skill.Enum.Cost.Mana] > 0 ? true : false : _cache.GetSkill(skill.SkillId).Cost.Table[Skill.Enum.Cost.Mana] > 0 ? true : false;
+                        skill.IsSpell = _coreHandler.Command.GetSkill(skill.SkillId) == null ? theSkill.Cost.Table[Skill.Enum.Cost.Mana] > 0 : _coreHandler.Command.GetSkill(skill.SkillId).Cost.Table[Skill.Enum.Cost.Mana] > 0 ? true : false;
                     }
 
                     player.Skills.Add(addSkill);
@@ -290,7 +279,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
         /// <returns>Player Character</returns>
         private Player GetCharacter(string hubId, Guid characterId)
         {
-            var player = _pdb.GetById<Player>(characterId, PlayerDataBase.Collections.Players);
+            var player = _coreHandler.Pdb.GetById<Player>(characterId, PlayerDataBase.Collections.Players);
             player.ConnectionId = hubId;
             player.LastCommandTime = DateTime.Now;
             player.LastLoginTime = DateTime.Now;
@@ -320,7 +309,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
 
         private async void AddCharacterToCache(string hubId, Player character)
         {
-            var playerExist = _cache.PlayerAlreadyExists(character.Id);
+            var playerExist = _coreHandler.Character.PlayerAlreadyExists(character.Id);
             
             if (playerExist != null)
             {
@@ -329,29 +318,29 @@ namespace ArchaicQuestII.GameLogic.Hubs
                 await this.CloseConnection(string.Empty, playerExist.ConnectionId);
 
                 // remove from _cache
-                _cache.RemovePlayer(playerExist.ConnectionId);
+                _coreHandler.Character.RemovePlayer(playerExist.ConnectionId);
 
                 playerExist.ConnectionId = hubId;
-                _cache.AddPlayer(hubId, playerExist);
+                _coreHandler.Character.AddPlayer(hubId, playerExist);
 
                 await SendToClient($"<p style='color:red'>*** You have been reconnected ***</p>", hubId);
             }
             else
             {
-                _cache.AddPlayer(hubId, character);
+                _coreHandler.Character.AddPlayer(hubId, character);
             }
         }
 
         private void GetRoom(string hubId, Player character, string startingRoom = "")
         {
             //add to DB, configure from admin
-            var roomid = !string.IsNullOrEmpty(startingRoom) ? startingRoom : _cache.GetConfig().StartingRoom;
-            var room = _cache.GetRoom(roomid) ?? _cache.GetRoom(_cache.GetConfig().StartingRoom);
+            var roomid = !string.IsNullOrEmpty(startingRoom) ? startingRoom : _coreHandler.Config.StartingRoom;
+            var room = _coreHandler.World.GetRoom(roomid) ?? _coreHandler.World.GetRoom(_coreHandler.Config.StartingRoom);
             character.RoomId = $"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}";
 
             if (string.IsNullOrEmpty(character.RecallId))
             {
-                var defaultRoom = _cache.GetConfig().StartingRoom;
+                var defaultRoom = _coreHandler.Config.StartingRoom;
                 character.RecallId = defaultRoom;
             }
 
@@ -368,28 +357,27 @@ namespace ArchaicQuestII.GameLogic.Hubs
                         if (!petAlreadyInRoom)
                         {
                             room.Mobs.Add(pet);
-                            _writeToClient.WriteToOthersInRoom($"{pet.Name} suddenly appears.", room, character);
+                            _coreHandler.Client.WriteToOthersInRoom($"{pet.Name} suddenly appears.", room, character);
                         }
                     }
                 }
                 
-                _writeToClient.WriteToOthersInRoom($"{character.Name} suddenly appears.", room, character);
+                _coreHandler.Client.WriteToOthersInRoom($"{character.Name} suddenly appears.", room, character);
             }
             
-            var rooms = _cache.GetAllRoomsInArea(1);
+            var rooms = _coreHandler.World.GetAllRoomsInArea(1);
 
-            _updateClientUi.UpdateHP(character);
-            _updateClientUi.UpdateMana(character);
-            _updateClientUi.UpdateMoves(character);
-            _updateClientUi.UpdateExp(character);
-            _updateClientUi.UpdateEquipment(character);
-            _updateClientUi.UpdateInventory(character);
-            _updateClientUi.UpdateScore(character);
-            _updateClientUi.UpdateQuest(character);
-            _updateClientUi.UpdateAffects(character);
-            _updateClientUi.UpdateTime(character);
-
-            _updateClientUi.GetMap(character, _cache.GetMap($"{room.AreaId}{room.Coords.Z}"));
+            _coreHandler.Client.UpdateHP(character);
+            _coreHandler.Client.UpdateMana(character);
+            _coreHandler.Client.UpdateMoves(character);
+            _coreHandler.Client.UpdateExp(character);
+            _coreHandler.Client.UpdateEquipment(character);
+            _coreHandler.Client.UpdateInventory(character);
+            _coreHandler.Client.UpdateScore(character);
+            _coreHandler.Client.UpdateQuest(character);
+            _coreHandler.Client.UpdateAffects(character);
+            _coreHandler.Client.UpdateTime(character, _coreHandler.World.Time);
+            _coreHandler.Client.GetMap(character, _coreHandler.World.GetMap($"{room.AreaId}{room.Coords.Z}"));
             
             character.Buffer.Enqueue("look");
 
@@ -399,7 +387,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
 
                 var script = new Script();
 
-                var obj = UserData.Create(_mobScripts);
+                var obj = UserData.Create(_coreHandler.Character.MobScripts);
                 script.Globals.Set("obj", obj);
                 UserData.RegisterProxyType<MyProxy, Room>(r => new MyProxy(room));
                 UserData.RegisterProxyType<ProxyPlayer, Player>(r => new ProxyPlayer(character));

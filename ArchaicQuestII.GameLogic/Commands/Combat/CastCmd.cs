@@ -8,7 +8,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Combat;
 
 public class CastCmd : ICommand
 {
-    public CastCmd(ICore core)
+    public CastCmd(ICoreHandler coreHandler)
     {
         Aliases = new[] {"cast", "c"};
         Description = "Before you can cast a spell, you have to practice it.  The more you practice, " +
@@ -33,7 +33,8 @@ public class CastCmd : ICommand
             CharacterStatus.Status.Resting
         };
         UserRole = UserRole.Player;
-        Core = core;
+
+        Handler = coreHandler;
     }
     
     public string[] Aliases { get; }
@@ -42,8 +43,7 @@ public class CastCmd : ICommand
     public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
-    public ICore Core { get; }
-
+    public ICoreHandler Handler { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {

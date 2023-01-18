@@ -3,59 +3,28 @@ using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Combat;
-using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Item;
-using ArchaicQuestII.GameLogic.Skill.Core;
 using ArchaicQuestII.GameLogic.Spell;
 using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Skill.Skills
 {
-
-    public interface IDamageSkills
+    public class DamageSkills
     {
-        int Kick(Player player, Player target, Room room);
-        int Elbow(Player player, Player target, Room room);
-        int Trip(Player player, Player target, Room room);
-        int HeadButt(Player player, Player target, Room room);
-        int Charge(Player player, Player target, Room room, string obj);
-        int Stab(Player player, Player target, Room room, string obj);
-        int OverheadCrush(Player player, Player target, Room room, string obj);
-        int Cleave(Player player, Player target, Room room, string obj);
-        int Impale(Player player, Player target, Room room, string obj);
-        int Slash(Player player, Player target, Room room, string obj);
-        int UpperCut(Player player, Player target, Room room, string obj);
-        int DirtKick(Player player, Player target, Room room, string obj);
-        int Lunge(Player player, Player target, Room room, string obj);
-        int ShieldBash(Player player, Player target, Room room, string obj);
-        int HamString(Player player, Player target, Room room, string obj);
-    }
-
-    public class DamageSkills : IDamageSkills
-    {
-        private readonly IWriteToClient _writer;
-        private readonly IUpdateClientUI _updateClientUi;
-        private readonly IDamage _damage;
-        private readonly ICombat _fight;
-        private readonly ISkillManager _skillManager;
-
-
+        private readonly IClientHandler _clientHandler;
+        private readonly ICharacterHandler _characterHandler;
+        private readonly ICombatHandler _combatHandler;
 
         public DamageSkills(
-            IWriteToClient writer, 
-            IUpdateClientUI updateClientUi,
-            IDamage damage,
-            ICombat fight, 
-            ISkillManager skillManager)
+            IClientHandler clientHandler,
+            ICombatHandler combatHandler,
+            ICharacterHandler characterHandler)
         {
-            _writer = writer;
-            _updateClientUi = updateClientUi;
-            _damage = damage;
-            _fight = fight;
-            _skillManager = skillManager;
-
+            _clientHandler = clientHandler;
+            _characterHandler = characterHandler;
+            _combatHandler = combatHandler;
         }
 
         public int Kick(Player player, Player target, Room room)
@@ -63,12 +32,12 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             var str = player.Attributes.Attribute[EffectLocation.Strength];
             var damage = DiceBag.Roll(1, 1, 8) + str / 4;
 
-            _skillManager.DamagePlayer("Kick", damage, player, target, room);
+            _characterHandler.DamagePlayer("Kick", damage, player, target, room);
 
             player.Lag += 1;
 
 
-            _skillManager.updateCombat(player, target, room);
+            _combatHandler.UpdateCombat(player, target);
 
             return damage;
         }
@@ -78,12 +47,12 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             var str = player.Attributes.Attribute[EffectLocation.Strength];
             var damage = DiceBag.Roll(1, 1, 6) + str / 5;
 
-            _skillManager.DamagePlayer("elbow", damage, player, target, room);
+            _characterHandler.DamagePlayer("elbow", damage, player, target, room);
 
             player.Lag += 1;
 
 
-            _skillManager.updateCombat(player, target, room);
+            _combatHandler.UpdateCombat(player, target);
 
             return damage;
         }
@@ -99,12 +68,12 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                 damage /= 2;
             }
 
-            _skillManager.DamagePlayer("headbutt", damage, player, target, room);
+            _characterHandler.DamagePlayer("headbutt", damage, player, target, room);
 
             player.Lag += 1;
 
 
-            _skillManager.updateCombat(player, target, room);
+            _combatHandler.UpdateCombat(player, target);
 
             return damage;
         }
@@ -113,7 +82,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
         {
             if (player.Status == CharacterStatus.Status.Fighting)
             {
-                _writer.WriteLine("You are already in combat, Charge can only be used to start a combat.");
+                _clientHandler.WriteLine("You are already in combat, Charge can only be used to start a combat.");
                 return 0;
             }
 
@@ -127,11 +96,11 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             var damage = DiceBag.Roll(1, 1, weaponDam) + str / 5;
 
 
-            _skillManager.DamagePlayer("charge", damage, player, target, room);
+            _characterHandler.DamagePlayer("charge", damage, player, target, room);
 
             player.Lag += 2;
 
-            _skillManager.updateCombat(player, target, room);
+            _combatHandler.UpdateCombat(player, target);
 
             return damage;
         }
@@ -140,7 +109,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
         {
             if (player.Equipped.Wielded == null)
             {
-                _writer.WriteLine("Stab with what?", player.ConnectionId);
+                _clientHandler.WriteLine("Stab with what?", player.ConnectionId);
                 return 0;
             }
 
@@ -154,11 +123,11 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             var damage = (weaponDam + DiceBag.Roll(1, 1, 6)) + str / 5;
 
 
-            _skillManager.DamagePlayer("stab", damage, player, target, room);
+            _characterHandler.DamagePlayer("stab", damage, player, target, room);
 
             player.Lag += 1;
 
-            _skillManager.updateCombat(player, target, room);
+            _combatHandler.UpdateCombat(player, target);
 
             return damage;
         }
@@ -168,13 +137,13 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
             if (player.Equipped.Wielded == null)
             {
-                _writer.WriteLine("Overhead crush with what?", player.ConnectionId);
+                _clientHandler.WriteLine("Overhead crush with what?", player.ConnectionId);
             }
 
             if (!player.Affects.Stunned || (player.Status & CharacterStatus.Status.Sleeping) == 0 ||
                 (player.Status & CharacterStatus.Status.Resting) == 0)
             {
-                _writer.WriteLine("You can only use this on stunned or targets that are not prepared.", player.ConnectionId);
+                _clientHandler.WriteLine("You can only use this on stunned or targets that are not prepared.", player.ConnectionId);
                 return 0;
             }
 
@@ -184,11 +153,11 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             var damage = weaponDam + DiceBag.Roll(1, 3, 10) + str / 5;
 
 
-            _skillManager.DamagePlayer("overhead crush", damage, player, target, room);
+            _characterHandler.DamagePlayer("overhead crush", damage, player, target, room);
 
             player.Lag += 1;
 
-            _skillManager.updateCombat(player, target, room);
+            _combatHandler.UpdateCombat(player, target);
 
             return damage;
         }
@@ -197,7 +166,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
         {
             if (player.Equipped.Wielded == null)
             {
-                _writer.WriteLine("Cleave with what?", player.ConnectionId);
+                _clientHandler.WriteLine("Cleave with what?", player.ConnectionId);
                 return 0;
             }
 
@@ -206,11 +175,11 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             var damage = weaponDam + DiceBag.Roll(1, 3, 10) + str / 5;
 
 
-            _skillManager.DamagePlayer("cleave", damage, player, target, room);
+            _characterHandler.DamagePlayer("cleave", damage, player, target, room);
 
             player.Lag += 1;
 
-            _skillManager.updateCombat(player, target, room);
+            _combatHandler.UpdateCombat(player, target);
 
             return 0;
 
@@ -220,7 +189,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
         {
             if (player.Equipped.Wielded == null)
             {
-                _writer.WriteLine("Impale with what?", player.ConnectionId);
+                _clientHandler.WriteLine("Impale with what?", player.ConnectionId);
             }
 
 
@@ -249,11 +218,11 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             if (DiceBag.Roll(1, 1, 100) < chance)
             {
 
-                _skillManager.DamagePlayer("impale", damage, player, target, room);
+                _characterHandler.DamagePlayer("impale", damage, player, target, room);
 
                 player.Lag += 1;
 
-                _skillManager.updateCombat(player, target, room);
+                _combatHandler.UpdateCombat(player, target);
 
             }
             else
@@ -268,7 +237,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                     }
                 };
 
-                _skillManager.EmoteAction(player, target, room, skillMessageMiss);
+                _characterHandler.EmoteAction(player, target, room, skillMessageMiss);
             }
 
             return damage;
@@ -278,7 +247,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
         {
             if (player.Equipped.Wielded == null)
             {
-                _writer.WriteLine("Slash with what?", player.ConnectionId);
+                _clientHandler.WriteLine("Slash with what?", player.ConnectionId);
             }
 
 
@@ -310,11 +279,11 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             if (DiceBag.Roll(1, 1, 100) < chance)
             {
 
-                _skillManager.DamagePlayer("slash", damage, player, target, room);
+                _characterHandler.DamagePlayer("slash", damage, player, target, room);
 
                 player.Lag += 1;
 
-                _skillManager.updateCombat(player, target, room);
+                _combatHandler.UpdateCombat(player, target);
 
             }
             else
@@ -329,7 +298,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                     }
                 };
 
-                _skillManager.EmoteAction(player, target, room, skillMessageMiss);
+                _characterHandler.EmoteAction(player, target, room, skillMessageMiss);
             }
 
             return damage;
@@ -359,16 +328,16 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             if (target.Lag == 0)
             {
 
-                _skillManager.EmoteAction(player, target, room, skillMessage);
+                _characterHandler.EmoteAction(player, target, room, skillMessage);
 
-                _skillManager.DamagePlayer("trip", damage, player, target, room);
+                _characterHandler.DamagePlayer("trip", damage, player, target, room);
 
                 player.Lag += 1;
                 target.Lag += 2;
 
                 target.Status = CharacterStatus.Status.Stunned;
 
-                _skillManager.updateCombat(player, target, room);
+                _combatHandler.UpdateCombat(player, target);
             }
             else
             {
@@ -390,7 +359,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                     }
                 };
 
-                _skillManager.EmoteAction(player, target, room, skillMessageMiss);
+                _characterHandler.EmoteAction(player, target, room, skillMessageMiss);
             }
 
             return damage;
@@ -404,7 +373,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             var damage = DiceBag.Roll(1, 1, 6) + str / 5;
 
 
-            _skillManager.DamagePlayer("uppercut", damage, player, target, room);
+            _characterHandler.DamagePlayer("uppercut", damage, player, target, room);
 
             var helmet = target.Equipped.Head;
             var chance = DiceBag.Roll(1, 1, 100);
@@ -427,7 +396,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                         }
                     };
 
-                    _skillManager.EmoteAction(player, target, room, skillMessage);
+                    _characterHandler.EmoteAction(player, target, room, skillMessage);
                 }
             }
             else
@@ -445,7 +414,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                         }
                     };
 
-                    _skillManager.EmoteAction(player, target, room, skillMessage);
+                    _characterHandler.EmoteAction(player, target, room, skillMessage);
 
                     target.Lag += 2;
                 }
@@ -453,7 +422,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
             player.Lag += 1;
 
-            _skillManager.updateCombat(player, target, room);
+            _combatHandler.UpdateCombat(player, target);
 
             return damage;
         }
@@ -463,7 +432,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
             if (target.Affects.Blind)
             {
-                _writer.WriteLine($"{target.Name} has already been blinded.", player.ConnectionId);
+                _clientHandler.WriteLine($"{target.Name} has already been blinded.", player.ConnectionId);
             }
 
             /*dexterity check */
@@ -499,9 +468,9 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                     }
                 };
 
-                _skillManager.EmoteAction(player, target, room, skillMessage);
+                _characterHandler.EmoteAction(player, target, room, skillMessage);
 
-                _writer.WriteLine("You can't see a thing!", target.ConnectionId);
+                _clientHandler.WriteLine("You can't see a thing!", target.ConnectionId);
 
                 target.Affects.Blind = true;
 
@@ -533,19 +502,19 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                     }
                 };
 
-                _skillManager.EmoteAction(player, target, room, skillMessage);
+                _characterHandler.EmoteAction(player, target, room, skillMessage);
 
             }
 
             player.Lag += 1;
 
-            _skillManager.updateCombat(player, target, room);
+            _combatHandler.UpdateCombat(player, target);
 
-            _updateClientUi.UpdateScore(player);
-            _updateClientUi.UpdateMoves(player);
-            _updateClientUi.UpdateHP(player);
-            _updateClientUi.UpdateAffects(target);
-            _updateClientUi.UpdateExp(player);
+            _clientHandler.UpdateScore(player);
+            _clientHandler.UpdateMoves(player);
+            _clientHandler.UpdateHP(player);
+            _clientHandler.UpdateAffects(target);
+            _clientHandler.UpdateExp(player);
 
 
             return 0;
@@ -591,8 +560,8 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                 player.Lag += 1;
 
 
-                _skillManager.EmoteAction(player, target, room, skillMessage);
-                _skillManager.DamagePlayer("lunge", damage, player, target, room);
+                _characterHandler.EmoteAction(player, target, room, skillMessage);
+                _characterHandler.DamagePlayer("lunge", damage, player, target, room);
             }
             else
             {
@@ -606,14 +575,14 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                     }
                 };
 
-                _skillManager.EmoteAction(player, target, room, skillMessage);
+                _characterHandler.EmoteAction(player, target, room, skillMessage);
 
 
                 player.Lag += 2;
             }
 
 
-            _skillManager.updateCombat(player, target, room);
+            _combatHandler.UpdateCombat(player, target);
 
             return 0;
         }
@@ -623,7 +592,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
             if (player.Equipped.Shield == null)
             {
-                _writer.WriteLine("You need a shield before you can bash", player.ConnectionId);
+                _clientHandler.WriteLine("You need a shield before you can bash", player.ConnectionId);
                 return 0;
             }
 
@@ -674,8 +643,8 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                     }
                 };
 
-                _skillManager.EmoteAction(player, target, room, skillMessage);
-                _skillManager.DamagePlayer("shield bash", damage, player, target, room);
+                _characterHandler.EmoteAction(player, target, room, skillMessage);
+                _characterHandler.DamagePlayer("shield bash", damage, player, target, room);
                 target.Lag += 3;
             }
             else
@@ -690,7 +659,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                     }
                 };
 
-                _skillManager.EmoteAction(player, target, room, skillMessage);
+                _characterHandler.EmoteAction(player, target, room, skillMessage);
 
 
                 player.Lag += 2;
@@ -699,7 +668,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             player.Lag += 1;
 
 
-            _skillManager.updateCombat(player, target, room);
+            _combatHandler.UpdateCombat(player, target);
 
             return 0;
         }
@@ -742,8 +711,8 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                     }
                 };
 
-                _skillManager.EmoteAction(player, target, room, skillMessage);
-                _skillManager.DamagePlayer("hamstring slash", damage, player, target, room);
+                _characterHandler.EmoteAction(player, target, room, skillMessage);
+                _characterHandler.DamagePlayer("hamstring slash", damage, player, target, room);
 
                 target.Attributes.Attribute[EffectLocation.Moves] -=
                     target.Attributes.Attribute[EffectLocation.Moves] / 2;
@@ -765,7 +734,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                     }
                 };
 
-                _skillManager.EmoteAction(player, target, room, skillMessage);
+                _characterHandler.EmoteAction(player, target, room, skillMessage);
 
 
                 player.Lag += 3;
@@ -773,7 +742,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
             player.Lag += 2;
 
-            _skillManager.updateCombat(player, target, room);
+            _combatHandler.UpdateCombat(player, target);
 
             return 0;
         }

@@ -1,81 +1,53 @@
 ﻿using System;
 using System.Linq;
 using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Combat;
-using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Item;
-using ArchaicQuestII.GameLogic.Skill.Core;
 using ArchaicQuestII.GameLogic.Spell;
 using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Skill.Skills
 {
-
-    public interface IUtilSkills
+    public class UtilSkills
     {
-        int Disarm(Player player, Player target, Room room, string obj);
-        int Rescue(Player player, Player target, Room room, string obj);
-        int Mount(Player player, Player target, Room room);
-        int Berserk(Player player, Player target, Room room);
-        int WarCry(Player player, Player target, Room room);
-
-    }
-
-    public class UtilSkills : IUtilSkills
-    {
-        private readonly IWriteToClient _writer;
-        private readonly IUpdateClientUI _updateClientUi;
-        private readonly IGain _gain;
-        private readonly IDamage _damage;
-        private readonly ICombat _fight;
-        private readonly ISkillManager _skillManager;
-        private readonly ICache _cache;
-
-
+        private readonly IClientHandler _clientHandler;
+        private readonly ICharacterHandler _characterHandler;
+        private readonly ICombatHandler _combatHandler;
 
         public UtilSkills(
-            IWriteToClient writer,
-            IUpdateClientUI updateClientUi,
-            IDamage damage, 
-            ICombat fight, 
-            ISkillManager skillManager,
-            ICache cache, 
-            IGain gain)
+            IClientHandler clientHandler,
+            ICombatHandler combatHandler,
+            ICharacterHandler characterHandler)
         {
-            _writer = writer;
-            _updateClientUi = updateClientUi;
-            _damage = damage;
-            _fight = fight;
-            _skillManager = skillManager;
-            _cache = cache;
-            _gain = gain;
-
+            _clientHandler = clientHandler;
+            _combatHandler = combatHandler;
+            _characterHandler = characterHandler;
         }
+        
         public int Disarm(Player player, Player target, Room room, string obj)
         {
             if (string.IsNullOrEmpty(player.Target))
             {
-                _writer.WriteLine("You are not fighting anyone.", player.ConnectionId);
+                _clientHandler.WriteLine("You are not fighting anyone.", player.ConnectionId);
 
                 return 0;
             }
 
             if (player.Equipped.Wielded == null)
             {
-                _writer.WriteLine("You must wield a weapon to disarm.", player.ConnectionId);
+                _clientHandler.WriteLine("You must wield a weapon to disarm.", player.ConnectionId);
 
                 return 0;
             }
 
             if (target.Equipped.Wielded == null)
             {
-                _writer.WriteLine("Your opponent is not wielding a weapon.", player.ConnectionId);
+                _clientHandler.WriteLine("Your opponent is not wielding a weapon.", player.ConnectionId);
 
                 return 0;
             }
@@ -118,7 +90,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                 }
                 else
                 {
-                    _gain.GainSkillExperience(target, hasGrip.Level * 100, hasGrip, DiceBag.Roll(1, 1, 5));
+                    _characterHandler.GainSkillExperience(target, hasGrip.Level * 100, hasGrip, DiceBag.Roll(1, 1, 5));
                 }
             }
 
@@ -137,7 +109,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                         }
                     };
 
-                    _skillManager.EmoteAction(player, target, room, skillMessageNoRemove);
+                    _characterHandler.EmoteAction(player, target, room, skillMessageNoRemove);
                     return 0;
                 }
 
@@ -151,7 +123,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                     }
                 };
 
-                _skillManager.EmoteAction(player, target, room, skillMessage);
+                _characterHandler.EmoteAction(player, target, room, skillMessage);
 
                 room.Items.Add(target.Equipped.Wielded);
                 target.Equipped.Wielded = null;
@@ -168,7 +140,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                     }
                 };
 
-                _skillManager.EmoteAction(player, target, room, skillMessage);
+                _characterHandler.EmoteAction(player, target, room, skillMessage);
 
             }
 
@@ -181,27 +153,27 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
         {
             if (target == null)
             {
-                _writer.WriteLine("Rescue whom?", player.ConnectionId);
+                _clientHandler.WriteLine("Rescue whom?", player.ConnectionId);
                 return 0;
             }
 
             if (player.Followers.FirstOrDefault(x => x.Name.Equals(target.Name)) == null)
             {
-                _writer.WriteLine("You can only rescue those in your group.", player.ConnectionId);
+                _clientHandler.WriteLine("You can only rescue those in your group.", player.ConnectionId);
                 return 0;
             }
 
 
             if ((target.Status & CharacterStatus.Status.Fighting) == 0)
             {
-                _writer.WriteLine($"{target.Name} is not fighting right now.", player.ConnectionId);
+                _clientHandler.WriteLine($"{target.Name} is not fighting right now.", player.ConnectionId);
 
                 return 0;
             }
 
             if (target == player)
             {
-                _writer.WriteLine("What about fleeing instead?", player.ConnectionId);
+                _clientHandler.WriteLine("What about fleeing instead?", player.ConnectionId);
 
                 return 0;
             }
@@ -232,17 +204,17 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                    }
                 };
 
-                _skillManager.EmoteAction(player, target, room, skillMessage);
+                _characterHandler.EmoteAction(player, target, room, skillMessage);
 
-                _skillManager.updateCombat(player, findTarget, room);
+                _combatHandler.UpdateCombat(player, findTarget);
                 return 0;
             }
             var increase = DiceBag.Roll(1, 1, 5);
-            _gain.GainExperiencePoints(player, 100 * foundSkill.Level / 4, false);
+            _characterHandler.GainExperiencePoints(player, 100 * foundSkill.Level / 4, false);
 
-            _updateClientUi.UpdateExp(player);
+            _clientHandler.UpdateExp(player);
 
-            _writer.WriteLine(
+            _clientHandler.WriteLine(
                 $"<p class='improve'>You learn from your mistakes and gain {100 * foundSkill.Level / 4} experience points.</p>" +
                 $"<p class='improve'>Your knowledge of {foundSkill.SkillName} increases by {increase}%.</p>",
                 player.ConnectionId, 0);
@@ -255,13 +227,13 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
             if (player.Affects.Berserk)
             {
-                _writer.WriteLine("You get a little madder", player.ConnectionId);
+                _clientHandler.WriteLine("You get a little madder", player.ConnectionId);
                 return 0;
             }
 
             if (player.Attributes.Attribute[EffectLocation.Moves] < 50)
             {
-                _writer.WriteLine("You can't get up enough energy.", player.ConnectionId);
+                _clientHandler.WriteLine("You can't get up enough energy.", player.ConnectionId);
                 return 0;
             }
 
@@ -315,13 +287,13 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                         }
                     };
 
-                    _skillManager.EmoteAction(player, target, room, skillMessage);
+                    _characterHandler.EmoteAction(player, target, room, skillMessage);
 
 
                 }
                 else
                 {
-                    _writer.WriteLine("Your pulse speeds up, but nothing happens", target.ConnectionId);
+                    _clientHandler.WriteLine("Your pulse speeds up, but nothing happens", target.ConnectionId);
 
                     player.Attributes.Attribute[EffectLocation.Moves] = player.Attributes.Attribute[EffectLocation.Moves] /= 4;
 
@@ -329,11 +301,11 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
                     foundSkill.Proficiency += increase;
 
-                    _gain.GainExperiencePoints(player, 100 * foundSkill.Level / 4, false);
+                    _characterHandler.GainExperiencePoints(player, 100 * foundSkill.Level / 4, false);
 
-                    _updateClientUi.UpdateExp(player);
+                    _clientHandler.UpdateExp(player);
 
-                    _writer.WriteLine(
+                    _clientHandler.WriteLine(
                         $"<p class='improve'>You learn from your mistakes and gain {100 * foundSkill.Level / 4} experience points.</p>" +
                         $"<p class='improve'>Your knowledge of {foundSkill.SkillName} increases by {increase}%.</p>",
                         player.ConnectionId, 0);
@@ -343,11 +315,11 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             }
 
             player.Lag += 1;
-            _updateClientUi.UpdateScore(player);
-            _updateClientUi.UpdateMoves(player);
-            _updateClientUi.UpdateHP(player);
-            _updateClientUi.UpdateAffects(player);
-            _updateClientUi.UpdateExp(player);
+            _clientHandler.UpdateScore(player);
+            _clientHandler.UpdateMoves(player);
+            _clientHandler.UpdateHP(player);
+            _clientHandler.UpdateAffects(player);
+            _clientHandler.UpdateExp(player);
 
             return 0;
         }
@@ -357,25 +329,25 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
             if (!string.IsNullOrEmpty(player.Mounted.Name))
             {
-                _writer.WriteLine($"You are already riding a mount called {player.Mounted.Name}", player.ConnectionId);
+                _clientHandler.WriteLine($"You are already riding a mount called {player.Mounted.Name}", player.ConnectionId);
                 return 0;
             }
 
             if (!string.IsNullOrEmpty(target.Mounted.MountedBy) && target.Mounted.MountedBy != player.Name)
             {
-                _writer.WriteLine($"This mount is ridden by {target.Mounted.MountedBy}", player.ConnectionId);
+                _clientHandler.WriteLine($"This mount is ridden by {target.Mounted.MountedBy}", player.ConnectionId);
                 return 0;
             }
 
             if (!string.IsNullOrEmpty(player.Mounted.Name) && target.Name != player.Mounted.Name)
             {
-                _writer.WriteLine($"You must dismount {player.Mounted.Name} first.", player.ConnectionId);
+                _clientHandler.WriteLine($"You must dismount {player.Mounted.Name} first.", player.ConnectionId);
                 return 0;
             }
 
             if (!target.Mounted.IsMount)
             {
-                _writer.WriteLine($"{target.Name} is not a mount.", player.ConnectionId);
+                _clientHandler.WriteLine($"{target.Name} is not a mount.", player.ConnectionId);
                 return 0;
             }
 
@@ -395,10 +367,10 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             player.Mounted.Name = target.Name;
             player.Pets.Add(target);
 
-            _skillManager.EmoteAction(player, target, room, skillMessage);
+            _characterHandler.EmoteAction(player, target, room, skillMessage);
 
 
-            _updateClientUi.UpdateScore(player);
+            _clientHandler.UpdateScore(player);
 
 
 
@@ -410,7 +382,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
             if (player.Affects.Custom.FirstOrDefault(x => x.Name.Equals("War Cry")) != null)
             {
-                _writer.WriteLine("You are already affected by War Cry.", player.ConnectionId);
+                _clientHandler.WriteLine("You are already affected by War Cry.", player.ConnectionId);
                 return 0;
             }
 
@@ -419,14 +391,14 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             {
                 Hit =
                 {
-                    ToPlayer = $"You scream a loud war cry.",
+                    ToPlayer = "You scream a loud war cry.",
                     ToRoom = $"{player.Name} screams a loud war cry.",
-                    ToTarget = $""
+                    ToTarget = ""
                 }
             };
 
 
-            _skillManager.EmoteAction(player, target, room, skillMessage);
+            _characterHandler.EmoteAction(player, target, room, skillMessage);
 
             var affect = new Affect()
             {
@@ -444,11 +416,11 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             player.Affects.Custom.Add(affect);
 
             Helpers.ApplyAffects(affect, player);
-            _updateClientUi.UpdateScore(player);
-            _updateClientUi.UpdateMoves(player);
-            _updateClientUi.UpdateHP(player);
-            _updateClientUi.UpdateAffects(player);
-            _updateClientUi.UpdateExp(player);
+            _clientHandler.UpdateScore(player);
+            _clientHandler.UpdateMoves(player);
+            _clientHandler.UpdateHP(player);
+            _clientHandler.UpdateAffects(player);
+            _clientHandler.UpdateExp(player);
 
 
             return 0;

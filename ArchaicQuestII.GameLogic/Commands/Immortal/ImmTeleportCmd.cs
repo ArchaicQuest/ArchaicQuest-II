@@ -10,7 +10,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Immortal;
 
 public class ImmTeleportCmd : ICommand
 {
-    public ImmTeleportCmd(ICore core)
+    public ImmTeleportCmd(ICoreHandler coreHandler)
     {
         Aliases = new[] {"immteleport"};
         Description = "Immortal teleport";
@@ -18,7 +18,8 @@ public class ImmTeleportCmd : ICommand
             Title = "";
     DeniedStatus = null;
         UserRole = UserRole.Player;
-        Core = core;
+
+        Handler = coreHandler;
     }
     
     public string[] Aliases { get; }
@@ -27,7 +28,7 @@ public class ImmTeleportCmd : ICommand
     public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
-    public ICore Core { get; }
+    public ICoreHandler Handler { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
@@ -35,28 +36,28 @@ public class ImmTeleportCmd : ICommand
 
         if (string.IsNullOrEmpty(target))
         {
-            Core.Writer.WriteLine("<p>Teleport to what room, or to whom?</p>");
+            Handler.Client.WriteLine("<p>Teleport to what room, or to whom?</p>");
             return;
         }
 
         if (int.TryParse(target, out var roomId))
         {
-            var newRoom = Core.Cache.GetRoom(roomId.ToString());
+            var newRoom = Handler.World.GetRoom(roomId.ToString());
 
             if (newRoom != null)
             {
-                Core.RoomActions.RoomChange(player, room, newRoom);
+                Handler.World.RoomChange(player, room, newRoom);
             }
             else
             {
-                Core.Writer.WriteLine("<p>That room does not exist.</p>", player.ConnectionId);
+                Handler.Client.WriteLine("<p>That room does not exist.</p>", player.ConnectionId);
             }
         }
         else
         {
             Player foundPlayer = null;
             
-            foreach (var checkRoom in Core.Cache.GetAllRooms().TakeWhile(checkRoom => foundPlayer == null))
+            foreach (var checkRoom in Handler.World.GetAllRooms().TakeWhile(checkRoom => foundPlayer == null))
             {
                 foreach (var checkRoomPlayer in checkRoom.Players
                              .TakeWhile(checkRoomPlayer => foundPlayer == null)
@@ -69,11 +70,11 @@ public class ImmTeleportCmd : ICommand
 
             if (foundPlayer == null)
             {
-                Core.Writer.WriteLine("<p>They're not here.</p>", player.ConnectionId);
+                Handler.Client.WriteLine("<p>They're not here.</p>", player.ConnectionId);
                 return;
             }
             
-            Core.RoomActions.RoomChange(player, room, Core.Cache.GetRoom(foundPlayer.RoomId));
+            Handler.World.RoomChange(player, room, Handler.World.GetRoom(foundPlayer.RoomId));
         }
     }
 }

@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Utilities;
 
-namespace ArchaicQuestII.GameLogic.Core
+namespace ArchaicQuestII.GameLogic.World
 {
-    public class Weather : IWeather
+    public class Weather
     {
         public string WeatherState = "Sunny";
         public int SunnyToCloudyTransitionState = 0;
@@ -16,7 +17,7 @@ namespace ArchaicQuestII.GameLogic.Core
         public int HeavyRainToThunderTransitionState = 0;
         public int ThunderToLightRainTransitionState = 0;
 
-        private ITime _time;
+        private Time _time;
 
 
         public List<Tuple<string, string>> sunnyToCloudyTransitionStates = new List<Tuple<string, string>>()
@@ -114,14 +115,9 @@ namespace ArchaicQuestII.GameLogic.Core
          * cloudy to hail stones
          * heavy snow to blizard
          */
-
-
+        
         public int weatherGoodToBadPos = 0;
         public int weatherBadToGoodPos = 0;
-        public Weather(ITime time)
-        {
-            _time = time;
-        }
 
         public void UpdateWeather()
         {
@@ -134,12 +130,12 @@ namespace ArchaicQuestII.GameLogic.Core
             }
         }
 
-        public string SimulateWeatherTransitions()
+        public string SimulateWeatherTransitions(bool isNight)
         {
 
             var currentRoll = DiceBag.Roll(1, 1, 100);
 
-            var states = new List<string>()
+            var states = new List<string>
             {
                 "Sunny",
                 "SunnyToCloudy",
@@ -168,7 +164,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
             if (WeatherState == "Cloudy")
             {
-                weatherText = _time.IsNightTime() ? CloudyStates[0].Item1 : CloudyStates[0].Item2;
+                weatherText = isNight ? CloudyStates[0].Item1 : CloudyStates[0].Item2;
 
 
                 if (currentRoll <= 70)
@@ -191,7 +187,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
             if (WeatherState == "LightRain")
             {
-                weatherText = _time.IsNightTime() ? LightRainState[DiceBag.Roll(1, 0, 1)].Item1 : LightRainState[DiceBag.Roll(1, 0, 1)].Item2;
+                weatherText = isNight ? LightRainState[DiceBag.Roll(1, 0, 1)].Item1 : LightRainState[DiceBag.Roll(1, 0, 1)].Item2;
 
                 if (currentRoll <= 25)
                 {
@@ -209,7 +205,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
             if (WeatherState == "HeavyRain")
             {
-                weatherText = _time.IsNightTime() ? HeavyRainState[DiceBag.Roll(1, 0, 1)].Item1 : HeavyRainState[DiceBag.Roll(1, 0, 1)].Item2;
+                weatherText = isNight ? HeavyRainState[DiceBag.Roll(1, 0, 1)].Item1 : HeavyRainState[DiceBag.Roll(1, 0, 1)].Item2;
 
                 if (currentRoll <= 45)
                 {
@@ -227,7 +223,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
             if (WeatherState == "Thunder")
             {
-                weatherText = _time.IsNightTime() ? ThunderState[DiceBag.Roll(1, 0, 2)].Item1 : ThunderState[DiceBag.Roll(1, 0, 2)].Item2;
+                weatherText = isNight ? ThunderState[DiceBag.Roll(1, 0, 2)].Item1 : ThunderState[DiceBag.Roll(1, 0, 2)].Item2;
 
                 if (currentRoll <= 35)
                 {
@@ -245,21 +241,21 @@ namespace ArchaicQuestII.GameLogic.Core
 
             if (WeatherState == "SunnyToCloudy")
             {
-                weatherText = WeatherTransition("Cloudy", sunnyToCloudyTransitionStates, ref SunnyToCloudyTransitionState);
+                weatherText = WeatherTransition("Cloudy", sunnyToCloudyTransitionStates, ref SunnyToCloudyTransitionState, isNight);
 
                 return weatherText;
             }
             if (WeatherState == "CloudyToSunny")
             {
 
-                weatherText = WeatherTransition("Sunny", cloudyToSunnyTransitionStates, ref CloudyToSunnyTransitionState);
+                weatherText = WeatherTransition("Sunny", cloudyToSunnyTransitionStates, ref CloudyToSunnyTransitionState, isNight);
 
                 return weatherText;
             }
 
             if (WeatherState == "CloudyToRain")
             {
-                weatherText = WeatherTransition("LightRain", cloudyToRainyTransitionStates, ref CloudyToLightRainTransitionState);
+                weatherText = WeatherTransition("LightRain", cloudyToRainyTransitionStates, ref CloudyToLightRainTransitionState, isNight);
 
                 return weatherText;
             }
@@ -267,7 +263,7 @@ namespace ArchaicQuestII.GameLogic.Core
             if (WeatherState == "RainToCloudy")
             {
 
-                weatherText = WeatherTransition("Cloudy", LightRainToCloudTransitionStates, ref LightRainToCloudyTransitionState);
+                weatherText = WeatherTransition("Cloudy", LightRainToCloudTransitionStates, ref LightRainToCloudyTransitionState, isNight);
 
                 return weatherText;
             }
@@ -275,7 +271,7 @@ namespace ArchaicQuestII.GameLogic.Core
             if (WeatherState == "RainToHeavyRain")
             {
 
-                weatherText = WeatherTransition("HeavyRain", LightRainToHeavyRainTransitionStates, ref LightRainToHeavyRainTransitionState);
+                weatherText = WeatherTransition("HeavyRain", LightRainToHeavyRainTransitionStates, ref LightRainToHeavyRainTransitionState, isNight);
 
                 return weatherText;
             }
@@ -283,7 +279,7 @@ namespace ArchaicQuestII.GameLogic.Core
             if (WeatherState == "HeavyToLightRain")
             {
 
-                weatherText = WeatherTransition("LightRain", HeavyRainToLightRainTransitionStates, ref HeavyRainToLightRainTransitionState);
+                weatherText = WeatherTransition("LightRain", HeavyRainToLightRainTransitionStates, ref HeavyRainToLightRainTransitionState, isNight);
 
                 return weatherText;
             }
@@ -291,7 +287,7 @@ namespace ArchaicQuestII.GameLogic.Core
             if (WeatherState == "HeavyRainToThunder")
             {
 
-                weatherText = WeatherTransition("Thunder", HeavyRainToThunderTransitionStates, ref HeavyRainToThunderTransitionState);
+                weatherText = WeatherTransition("Thunder", HeavyRainToThunderTransitionStates, ref HeavyRainToThunderTransitionState, isNight);
 
                 return weatherText;
             }
@@ -299,19 +295,19 @@ namespace ArchaicQuestII.GameLogic.Core
             if (WeatherState == "ThunderToLightRain")
             {
 
-                weatherText = WeatherTransition("LightRain", ThunderToLightRainTransitionStates, ref ThunderToLightRainTransitionState);
+                weatherText = WeatherTransition("LightRain", ThunderToLightRainTransitionStates, ref ThunderToLightRainTransitionState, isNight);
 
                 return weatherText;
             }
 
 
-            return _time.IsNightTime() ? "It's a beautiful clear blue sky" : "It's a beautiful clear night sky";
+            return isNight ? "It's a beautiful clear blue sky" : "It's a beautiful clear night sky";
 
         }
 
-        public string WeatherTransition(string NewState, List<Tuple<string, string>> transitions, ref int transitionCount)
+        public string WeatherTransition(string NewState, List<Tuple<string, string>> transitions, ref int transitionCount, bool isNight)
         {
-            var weatherText = _time.IsNightTime() ? transitions[transitionCount].Item1 : transitions[transitionCount].Item2;
+            var weatherText = isNight ? transitions[transitionCount].Item1 : transitions[transitionCount].Item2;
             transitionCount += 1;
 
             if (transitionCount > transitions.Count - 1)

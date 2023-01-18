@@ -1,9 +1,15 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Emote;
+using ArchaicQuestII.GameLogic.Character.Help;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
+using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Commands
@@ -13,29 +19,115 @@ namespace ArchaicQuestII.GameLogic.Commands
     /// </summary>
     public class CommandHandler : ICommandHandler
     {
-        public ICore Core { get; }
-        public CommandHandler(ICore core)
+        private readonly ICoreHandler _coreHandler;
+
+        private readonly Dictionary<string, ICommand> _commands = new();
+        private readonly ConcurrentDictionary<int, Skill.Model.Skill> _skillCache = new();
+        private readonly Dictionary<string, Emote> _socials = new();
+        private readonly ConcurrentDictionary<int, Help> _helpCache = new();
+        
+        public CommandHandler(ICoreHandler coreHandler, IDataBase dataBase)
         {
-            Core = core; 
+            _coreHandler = coreHandler;
+
             var commandTypes = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(s => s.GetTypes())
                 .Where(p => typeof(ICommand).IsAssignableFrom(p) && !p.IsInterface);
 
             foreach (var t in commandTypes)
             {
-                var command = (ICommand)Activator.CreateInstance(t, Core);
+                var command = (ICommand)Activator.CreateInstance(t, _coreHandler);
 
                 if (command == null) continue;
 
                 foreach (var alias in command.Aliases)
                 {
-                    if (Core.Cache.IsCommand(alias))
-                        Core.ErrorLog.Write("CommandHandler.cs", "Duplicate Alias", ErrorLog.Priority.Low);
+                    if (IsCommand(alias))
+                        Helpers.LogError(dataBase,"CommandHandler.cs", "Duplicate Alias", ErrorPriority.Low);
                     else
-                        Core.Cache.AddCommand(alias, command);
+                        AddCommand(alias, command);
                 }
             }
         }
+        
+        public async Task Tick()
+        {
+            
+        }
+
+        #region CACHE
+
+        public void AddCommand(string key, ICommand action)
+        {
+            _commands.Add(key, action);
+        }
+
+        public Dictionary<string, ICommand> GetCommands()
+        {
+            return _commands;
+        }
+
+        public bool IsCommand(string key)
+        {
+            return _commands.TryGetValue(key, out var c);
+        }
+        
+        public ICommand GetCommand(string key)
+        {
+            _commands.TryGetValue(key, out var command);
+            return command;
+        }
+        
+        public void AddSocial(string key, Emote emote)
+        {
+            _socials.Add(key, emote);
+        }
+
+        public Dictionary<string, Emote> GetSocials()
+        {
+            return _socials;
+        }
+        
+        public List<Skill.Model.Skill> GetAllSkills()
+        {
+            return _skillCache.Values.ToList();
+        }
+        
+        public bool AddSkill(int id, Skill.Model.Skill skill)
+        {
+            return _skillCache.TryAdd(id, skill);
+        }
+
+        public Skill.Model.Skill GetSkill(int id)
+        {
+            _skillCache.TryGetValue(id == 0 ? 1 : id, out var skill);
+
+            return skill;
+        }
+
+        public List<Skill.Model.Skill> ReturnSkills()
+        {
+            return _skillCache.Values.ToList();
+        }
+        
+        public bool AddHelp(int id, Help help)
+        {
+            return _helpCache.TryAdd(id, help);
+        }
+
+        public Help GetHelp(int id)
+        {
+            _helpCache.TryGetValue(id, out var help);
+
+            return help;
+        }
+        
+        public List<Help> FindHelp(string id)
+        {
+            return _helpCache.Values.Where(x => x.Keywords.Contains(id, StringComparison.CurrentCultureIgnoreCase) && x.Deleted.Equals(false)).ToList();
+        }
+        
+        #endregion
 
         /// <summary>
         /// Checks and processes commands
@@ -49,33 +141,33 @@ namespace ArchaicQuestII.GameLogic.Commands
             
             commandInput[0] = commandInput[0].ToLower();
 
-            var command = Core.Cache.GetCommand(commandInput[0]);
+            var command = GetCommand(commandInput[0]);
             
             // Handle social emote that are entered by just typing the name such as smile or smile Harvey
             // here manipulate the command to add social in front of it so the social command is called.
-            var social = Core.Cache.GetSocials().Keys.FirstOrDefault(x => x.Equals(commandInput[0]));
+            var social = GetSocials().Keys.FirstOrDefault(x => x.Equals(commandInput[0]));
             if (social != null)
             {
                 var emoteTarget = ""; 
                 
                 if (commandInput.Length == 2)
-                  { 
-                      emoteTarget = commandInput[1];
-                  }
+                { 
+                    emoteTarget = commandInput[1];
+                }
                 commandInput = new[] { "social", commandInput[0], emoteTarget};
-                command = Core.Cache.GetCommand(commandInput[0]);
+                command = GetCommand(commandInput[0]);
             }
             
 
             if (command == null)
             {
-                Core.Writer.WriteLine("<p>{yellow}That is not a command.{yellow}</p>", player.ConnectionId);
+                _coreHandler.Client.WriteLine("<p>{yellow}That is not a command.{yellow}</p>", player.ConnectionId);
                 return;
             }
 
             if (player.UserRole < command.UserRole)
             {
-                Core.Writer.WriteLine("<p>{red}You dont have the required role to use that command.{/red}</p>", player.ConnectionId);
+                _coreHandler.Client.WriteLine("<p>{red}You dont have the required role to use that command.{/red}</p>", player.ConnectionId);
                 return;
             }
             
@@ -98,46 +190,53 @@ namespace ArchaicQuestII.GameLogic.Commands
             switch (player.Status)
             {
                 case CharacterStatus.Status.Standing:
-                    Core.Writer.WriteLine("<p>{yellow}You can't do that while standing.{/}</p>", player.ConnectionId);
+                    _coreHandler.Client.WriteLine("<p>{yellow}You can't do that while standing.{/}</p>", player.ConnectionId);
                     break;
                 case CharacterStatus.Status.Sitting:
-                    Core.Writer.WriteLine("<p>{yellow}You can't do that while sitting.{/}</p>", player.ConnectionId);
+                    _coreHandler.Client.WriteLine("<p>{yellow}You can't do that while sitting.{/}</p>", player.ConnectionId);
                     break;
                 case CharacterStatus.Status.Sleeping:
-                    Core.Writer.WriteLine("<p>{yellow}You can't do that while sleeping.{/}</p>", player.ConnectionId);
+                    _coreHandler.Client.WriteLine("<p>{yellow}You can't do that while sleeping.{/}</p>", player.ConnectionId);
                     break;
                 case CharacterStatus.Status.Fighting:
-                    Core.Writer.WriteLine("<p>{yellow}You can't do that while fighting.{/}</p>", player.ConnectionId);
+                    _coreHandler.Client.WriteLine("<p>{yellow}You can't do that while fighting.{/}</p>", player.ConnectionId);
                     break;
                 case CharacterStatus.Status.Resting:
-                    Core.Writer.WriteLine("<p>{yellow}You can't do that while resting.{/}</p>", player.ConnectionId);
+                    _coreHandler.Client.WriteLine("<p>{yellow}You can't do that while resting.{/}</p>", player.ConnectionId);
                     break;
                 case CharacterStatus.Status.Incapacitated:
-                    Core.Writer.WriteLine("<p>{yellow}You can't do that while incapacitated.{/}</p>", player.ConnectionId);
+                    _coreHandler.Client.WriteLine("<p>{yellow}You can't do that while incapacitated.{/}</p>", player.ConnectionId);
                     break;
                 case CharacterStatus.Status.Dead:
-                    Core.Writer.WriteLine("<p>{yellow}You can't do that while dead.{/}</p>", player.ConnectionId);
+                    _coreHandler.Client.WriteLine("<p>{yellow}You can't do that while dead.{/}</p>", player.ConnectionId);
                     break;
                 case CharacterStatus.Status.Ghost:
-                    Core.Writer.WriteLine("<p>{yellow}You can't do that while a ghost.{/}</p>", player.ConnectionId);
+                    _coreHandler.Client.WriteLine("<p>{yellow}You can't do that while a ghost.{/}</p>", player.ConnectionId);
                     break;
                 case CharacterStatus.Status.Busy:
-                    Core.Writer.WriteLine("<p>{yellow}You can't do that while busy.{/}</p>", player.ConnectionId);
+                    _coreHandler.Client.WriteLine("<p>{yellow}You can't do that while busy.{/}</p>", player.ConnectionId);
                     break;
                 case CharacterStatus.Status.Floating:
-                    Core.Writer.WriteLine("<p>{yellow}You can't do that while floating.{/}</p>", player.ConnectionId);
+                    _coreHandler.Client.WriteLine("<p>{yellow}You can't do that while floating.{/}</p>", player.ConnectionId);
                     break;
                 case CharacterStatus.Status.Mounted:
-                    Core.Writer.WriteLine("<p>{yellow}You can't do that while mounted.{/}</p>", player.ConnectionId);
+                    _coreHandler.Client.WriteLine("<p>{yellow}You can't do that while mounted.{/}</p>", player.ConnectionId);
                     break;
                 case CharacterStatus.Status.Stunned:
-                    Core.Writer.WriteLine("<p>{yellow}You can't do that while stunned.{/}</p>", player.ConnectionId);
+                    _coreHandler.Client.WriteLine("<p>{yellow}You can't do that while stunned.{/}</p>", player.ConnectionId);
                     break;
                 case CharacterStatus.Status.Fleeing:
-                    Core.Writer.WriteLine("<p>{yellow}You can't do that while fleeing.{/}</p>", player.ConnectionId);
+                    _coreHandler.Client.WriteLine("<p>{yellow}You can't do that while fleeing.{/}</p>", player.ConnectionId);
                     break;
             }
 
+            return false;
+        }
+        
+        public bool TargetCheck(string target, Player player, string errorMessage = "What?")
+        {
+            if (!string.IsNullOrEmpty(target)) return true;
+            _coreHandler.Client.WriteLine(errorMessage, player.ConnectionId);
             return false;
         }
     }

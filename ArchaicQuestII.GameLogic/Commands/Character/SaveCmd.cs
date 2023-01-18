@@ -9,7 +9,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 {
     public class SaveCmd : ICommand
     {
-        public SaveCmd(ICore core)
+        public SaveCmd(ICoreHandler coreHandler)
         {
             Aliases = new[] {"save"};
             Description = "Save your character manually, character is saved when you quit and automatically every 15 minutes.";
@@ -21,7 +21,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
                 CharacterStatus.Status.Sleeping,
                 CharacterStatus.Status.Dead,
             };
-            Core = core;
+
+            Handler = coreHandler;
         }
         
         public string[] Aliases { get; }
@@ -30,12 +31,13 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
         public string Title { get; }
         public UserRole UserRole { get; }
         public CharacterStatus.Status[] DeniedStatus { get; }
-        public ICore Core { get; }
+        
+        public ICoreHandler Handler { get; }
 
         public void Execute(Player player, Room room, string[] input)
         {
-            Core.PlayerDataBase.Save(player, PlayerDataBase.Collections.Players);
-            Core.Writer.WriteLine("<p>Character saved.</p>", player.ConnectionId);
+            Handler.Pdb.Save(player, PlayerDataBase.Collections.Players);
+            Handler.Client.WriteLine("<p>Character saved.</p>", player.ConnectionId);
         }
     }
 }
