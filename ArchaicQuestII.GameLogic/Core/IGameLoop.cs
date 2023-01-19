@@ -34,7 +34,7 @@ public interface IGameLoop
         }
         catch (Exception x)
         {
-            Console.Write(x);
+            Console.Write(x.Message);
         }
     }
 }

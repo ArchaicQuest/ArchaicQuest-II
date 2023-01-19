@@ -8,7 +8,7 @@ namespace ArchaicQuestII.GameLogic.Character.Loops;
 
 public class UpdatePlayers : IGameLoop
 {
-    public int TickDelay => 6000; //TODO: set tick rate
+    public int TickDelay => 60000;
     public ICoreHandler Handler { get; set; }
     public bool Enabled { get; set; }
 
