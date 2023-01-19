@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.World;
@@ -8,7 +7,6 @@ namespace ArchaicQuestII.GameLogic.Client;
 
 public interface IClientHandler
 {
-    Task Tick();
     void WriteLineMobSay(string mobName, string message, string id);
     void WriteLine(string message, string id);
     void WriteLine(string message, string id, int delay);

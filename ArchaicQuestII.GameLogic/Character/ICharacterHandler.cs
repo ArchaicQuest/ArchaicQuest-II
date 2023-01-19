@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.Character.Model;
@@ -15,7 +14,6 @@ namespace ArchaicQuestII.GameLogic.Character;
 
 public interface ICharacterHandler
 {
-    Task Tick();
     bool AddPlayer(string id, Player player);
     Player GetPlayer(string id);
     Player RemovePlayer(string id);

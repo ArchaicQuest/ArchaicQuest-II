@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.World.Room;
 
@@ -7,7 +6,6 @@ namespace ArchaicQuestII.GameLogic.Combat;
 
 public interface ICombatHandler
 {
-    Task Tick();
     bool IsCharInCombat(string id);
     bool AddCharToCombat(string id, Player character);
     Player GetCharFromCombat(string id);

@@ -17,8 +17,6 @@ namespace ArchaicQuestII.GameLogic.World
         public int HeavyRainToThunderTransitionState = 0;
         public int ThunderToLightRainTransitionState = 0;
 
-        private Time _time;
-
 
         public List<Tuple<string, string>> sunnyToCloudyTransitionStates = new List<Tuple<string, string>>()
        {
@@ -118,17 +116,7 @@ namespace ArchaicQuestII.GameLogic.World
         
         public int weatherGoodToBadPos = 0;
         public int weatherBadToGoodPos = 0;
-
-        public void UpdateWeather()
-        {
-            var season = "Autumn";
-
-            switch (season)
-            {
-
-
-            }
-        }
+        
 
         public string SimulateWeatherTransitions(bool isNight)
         {

@@ -197,7 +197,6 @@ namespace ArchaicQuestII.GameLogic.SeedData
 
                         default: return "the Warrior";
                     }
-                    break;
                 case "Mage":
                     switch (level)
                     {
@@ -272,7 +271,6 @@ namespace ArchaicQuestII.GameLogic.SeedData
 
                         default: return "the Wizard";
                     }
-                    break;
                 case "Thief":
                     switch (level)
                     {
@@ -347,7 +345,6 @@ namespace ArchaicQuestII.GameLogic.SeedData
 
                         default: return "the Assasin";
                     }
-                    break;
                 case "Cleric":
                     switch (level)
                     {
@@ -422,7 +419,6 @@ namespace ArchaicQuestII.GameLogic.SeedData
 
                         default: return "the Assasin";
                     }
-                    break;
             }
 
             return string.Empty;
@@ -506,7 +502,6 @@ namespace ArchaicQuestII.GameLogic.SeedData
 
                         default: return "the Warrior";
                     }
-                    break;
                 case "Mage":
                     switch (level)
                     {
@@ -581,7 +576,6 @@ namespace ArchaicQuestII.GameLogic.SeedData
 
                         default: return "the Wizard";
                     }
-                    break;
                 case "Thief":
                     switch (level)
                     {
@@ -656,7 +650,6 @@ namespace ArchaicQuestII.GameLogic.SeedData
 
                         default: return "the Assasin";
                     }
-                    break;
                 case "Cleric":
                     switch (level)
                     {
@@ -731,7 +724,6 @@ namespace ArchaicQuestII.GameLogic.SeedData
 
                         default: return "the Assasin";
                     }
-                    break;
             }
 
             return string.Empty;

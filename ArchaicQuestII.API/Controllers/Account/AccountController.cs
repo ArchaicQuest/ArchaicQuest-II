@@ -317,7 +317,7 @@ namespace ArchaicQuestII.API.Controllers
 
         [HttpPost]
         [Route("api/Account/reset-password")]
-        public async Task<IActionResult> PasswordReset([FromBody] ResetPassword resetPassword)
+        public Task<IActionResult> PasswordReset([FromBody] ResetPassword resetPassword)
         {
 
             if (!ModelState.IsValid)
@@ -332,9 +332,9 @@ namespace ArchaicQuestII.API.Controllers
             {
                  decodedId = FromBase64<ResetPasswordId>(resetPassword.Id);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return BadRequest("Invalid reset password id" );
+                return Task.FromResult<IActionResult>(BadRequest("Invalid reset password id" ));
             }
 
             var expiry = decodedId.DateTime;
@@ -342,7 +342,7 @@ namespace ArchaicQuestII.API.Controllers
             var difference = now - expiry;
             if (difference.Days > 0)
             {
-                return BadRequest("Change password request has expired.");
+                return Task.FromResult<IActionResult>(BadRequest("Change password request has expired."));
 
             }
 
@@ -352,7 +352,7 @@ namespace ArchaicQuestII.API.Controllers
 
             _pdb.Save(user, PlayerDataBase.Collections.Account);
 
-            return Ok(JsonConvert.SerializeObject(new { toast = "Password successfully updated." }));
+            return Task.FromResult<IActionResult>(Ok(JsonConvert.SerializeObject(new { toast = "Password successfully updated." })));
 
         }
 

@@ -25,12 +25,7 @@ public class ClientHandler : IClientHandler
         _hubContext = hubContext;
         _telnetHub = telnetHub;
     }
-    
-    public async Task Tick()
-    {
-        
-    }
-    
+
     #region WRITE
 
     public async void WriteLine(string message, string id)

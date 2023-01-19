@@ -1,16 +1,13 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Emote;
 using ArchaicQuestII.GameLogic.Character.Help;
-using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Commands
 {
     public interface ICommandHandler
     {
-        Task Tick();
         public void HandleCommand(Player player, Room room, string input);
         void AddCommand(string key, ICommand action);
         Dictionary<string, ICommand> GetCommands();

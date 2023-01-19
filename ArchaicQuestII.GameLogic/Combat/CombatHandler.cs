@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Threading.Tasks;
 using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Class;
@@ -26,11 +25,6 @@ public class CombatHandler : ICombatHandler
     public CombatHandler(ICoreHandler coreHandler)
     {
         _coreHandler = coreHandler;
-    }
-
-    public async Task Tick()
-    {
-        
     }
 
     public bool IsCharInCombat(string id)

@@ -24,9 +24,9 @@ public class CoreHandler : ICoreHandler
     public IDataBase Db { get; }
     public IPlayerDataBase Pdb { get; }
 
-    private ConcurrentDictionary<string, IGameLoop> _gameLoops = new();
+    private readonly ConcurrentDictionary<string, IGameLoop> _gameLoops = new();
 
-    private bool _loopsStarted = false;
+    private bool _loopsStarted;
 
     public CoreHandler(IServiceProvider serviceProvider)
     {
@@ -67,6 +67,7 @@ public class CoreHandler : ICoreHandler
         foreach (var loop in _gameLoops.Values)
         {
             loop.Start();
+            Console.WriteLine($"{loop.GetType().Name} loop started.");
         }
 
         _loopsStarted = true;

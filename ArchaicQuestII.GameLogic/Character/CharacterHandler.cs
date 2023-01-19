@@ -2,7 +2,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.Character.Model;
@@ -57,11 +56,6 @@ public class CharacterHandler : ICharacterHandler
         DamageSpells = new DamageSpells(clientHandler, null);
         
         MobScripts = new MobScripts(combatHandler, clientHandler,this);
-    }
-
-    public async Task Tick()
-    {
-        
     }
 
     public bool AddPlayer(string id, Player player)

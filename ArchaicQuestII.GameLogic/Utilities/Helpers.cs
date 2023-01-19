@@ -72,12 +72,9 @@ namespace ArchaicQuestII.GameLogic.Utilities
                 ? room.Players.FirstOrDefault(x =>
                     x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase))
                 : room.Players.FindAll(x => x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase))
-                    .Skip(keyword.Item1 - 1).FirstOrDefault() ?? (keyword.Item1 == null
-                    ? room.Mobs.FirstOrDefault(x =>
-                        x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase))
-                    : room.Mobs
-                        .FindAll(x => x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase))
-                        .Skip(keyword.Item1 - 1).FirstOrDefault());
+                    .Skip(keyword.Item1 - 1).FirstOrDefault() ?? room.Mobs
+                    .FindAll(x => x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase))
+                    .Skip(keyword.Item1 - 1).FirstOrDefault();
         }
 
         public static Player FindPlayer(Tuple<int, string> keyword, Room room)

@@ -49,11 +49,6 @@ namespace ArchaicQuestII.GameLogic.Commands
                 }
             }
         }
-        
-        public async Task Tick()
-        {
-            
-        }
 
         #region CACHE
 

@@ -182,7 +182,7 @@ hold potion
             }
             catch (Exception ex)
             {
-                
+                Console.WriteLine(ex.Message);
             }
 
             return displayEquipment.ToString();

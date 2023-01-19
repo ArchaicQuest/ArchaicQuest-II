@@ -74,7 +74,7 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
             }
             catch (Exception ex)
             {
-                
+                Console.WriteLine(ex.Message);
             }
 
             return displayEquipment.ToString();
