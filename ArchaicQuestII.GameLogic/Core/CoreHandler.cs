@@ -30,6 +30,8 @@ public class CoreHandler : ICoreHandler
     public void Init(IApplicationBuilder app)
     {
         Config = new Config();
+        
+        //Handlers
         Character = app.ApplicationServices.GetService<ICharacterHandler>();
         Client = app.ApplicationServices.GetService<IClientHandler>();
         Combat = app.ApplicationServices.GetService<ICombatHandler>();
@@ -44,6 +46,8 @@ public class CoreHandler : ICoreHandler
 
     private void SetupLoops()
     {
+        _gameLoops.Clear();
+        
         var gameLoops = AppDomain.CurrentDomain.GetAssemblies()
             .SelectMany(s => s.GetTypes())
             .Where(p => typeof(IGameLoop).IsAssignableFrom(p) && !p.IsInterface);

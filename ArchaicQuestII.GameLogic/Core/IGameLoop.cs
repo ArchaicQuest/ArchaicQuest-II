@@ -7,7 +7,7 @@ public interface IGameLoop
 {
     int TickDelay { get; }
     ICoreHandler Handler { get; set; }
-    bool Enabled { get; set; }
+    bool Enabled { get; protected set; }
 
     public void Start()
     {

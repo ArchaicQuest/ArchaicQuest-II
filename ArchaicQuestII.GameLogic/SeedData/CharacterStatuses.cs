@@ -6,64 +6,64 @@ namespace ArchaicQuestII.GameLogic.SeedData
 {
     internal static class CharacterStatuses
     {
-        private static readonly List<Option> seedData = new List<Option>()
+        private static readonly List<Option> seedData = new()
         {
-            new Option()
+            new Option
             {
                 Name = "Sitting",
                 CreatedBy = "Malleus"
             },
-            new Option()
+            new Option
             {
                 Name = "Standing",
                 CreatedBy = "Malleus"
             },
-            new Option()
+            new Option
             {
                 Name = "Sleeping",
                 CreatedBy = "Malleus"
             },
-            new Option()
+            new Option
             {
                 Name = "Fighting",
                 CreatedBy = "Malleus"
             },
-            new Option()
+            new Option
             {
                 Name = "Resting",
                 CreatedBy = "Malleus"
             },
-            new Option()
+            new Option
             {
                 Name = "Incapitated",
                 CreatedBy = "Malleus"
             },
-            new Option()
+            new Option
             {
                 Name = "Dead",
                 CreatedBy = "Malleus"
             },
-            new Option()
+            new Option
             {
                 Name = "Ghost",
                 CreatedBy = "Malleus"
             },
-            new Option()
+            new Option
             {
                 Name = "Busy",
                 CreatedBy = "Malleus"
             },
-            new Option()
+            new Option
             {
                 Name = "Floating",
                 CreatedBy = "Malleus"
             },
-            new Option()
+            new Option
             {
                 Name = "Mounted",
                 CreatedBy = "Malleus"
             },
-            new Option()
+            new Option
             {
                 Name = "Stunned",
                 CreatedBy = "Malleus"
