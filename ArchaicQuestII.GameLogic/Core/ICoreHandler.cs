@@ -22,5 +22,7 @@ public interface ICoreHandler
     public IPlayerDataBase Pdb { get; }
     public void Init(IApplicationBuilder app);
     void StartAllLoops();
+    void StartLoop(string loop);
     void StopAllLoops();
+    void StopLoop(string loop);
 }

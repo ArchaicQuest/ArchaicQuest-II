@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using ArchaicQuestII.GameLogic.Core;
+﻿using ArchaicQuestII.GameLogic.Core;
 
 namespace ArchaicQuestII.GameLogic.Character.Alignment
 {

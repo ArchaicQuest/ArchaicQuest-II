@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Concurrent;
-using System.ComponentModel;
 using System.Linq;
 using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
@@ -27,8 +26,6 @@ public class CoreHandler : ICoreHandler
     public IPlayerDataBase Pdb { get; private set; }
 
     private readonly ConcurrentDictionary<string, IGameLoop> _gameLoops = new();
-
-    private bool _loopsStarted;
 
     public void Init(IApplicationBuilder app)
     {
@@ -64,26 +61,39 @@ public class CoreHandler : ICoreHandler
     
     public void StartAllLoops()
     {
-        if (_loopsStarted) return;
-
         foreach (var loop in _gameLoops.Values)
         {
+            if (loop.Enabled) continue;
             loop.Start();
             Console.WriteLine($"{loop.GetType().Name} loop started.");
         }
+    }
 
-        _loopsStarted = true;
+    public void StartLoop(string loop)
+    {
+        if (!_gameLoops.TryGetValue(loop, out var gl)) return;
+        if (gl.Enabled) return;
+        
+        gl.Start();
+        Console.WriteLine($"{loop} loop started.");
     }
     
     public void StopAllLoops()
     {
-        if (!_loopsStarted) return;
-
         foreach (var loop in _gameLoops.Values)
         {
+            if (!loop.Enabled) continue;
             loop.Stop();
+            Console.WriteLine($"{loop.GetType().Name} loop stopped.");
         }
-
-        _loopsStarted = false;
+    }
+    
+    public void StopLoop(string loop)
+    {
+        if (!_gameLoops.TryGetValue(loop, out var gl)) return;
+        if (!gl.Enabled) return;
+        
+        gl.Stop();
+        Console.WriteLine($"{loop} loop stopped.");
     }
 }
