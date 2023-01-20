@@ -5,7 +5,6 @@ using System.Linq;
 using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
-using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
@@ -15,14 +14,9 @@ namespace ArchaicQuestII.GameLogic.World;
 
 public class WorldHandler : IWorldHandler
 {
-    private readonly IClientHandler _clientHandler;
-    private readonly ICharacterHandler _characterHandler;
-
-    private readonly IDataBase _dataBase;
-    
-    private readonly Weather _weather;
-
-    public Time Time { get; }
+    private readonly ICoreHandler _coreHandler;
+    private readonly Weather _weather = new();
+    public Time Time { get; } = new();
 
     private readonly ConcurrentDictionary<string, Room.Room> _originalRoomCache = new();
     private readonly ConcurrentDictionary<string, Room.Room> _roomCache = new();
@@ -30,13 +24,10 @@ public class WorldHandler : IWorldHandler
 
     public WorldHandler(ICoreHandler coreHandler)
     {
-        _clientHandler = coreHandler.Client;
-        _characterHandler = coreHandler.Character;
-        _dataBase = coreHandler.Db;
-        
-        Time = new Time();
-        _weather = new Weather();
+        _coreHandler = coreHandler;
     }
+
+    public void Init() { }
 
     #region CACHE
 
@@ -131,15 +122,15 @@ public class WorldHandler : IWorldHandler
     /// <param name="room">Room that was entered</param>
     public void AreaEntered(Player player, Room.Room room)
     {
-        var area = _dataBase.GetCollection<Area.Area>(DataBase.Collections.Area).FindById(room.AreaId);
+        var area = _coreHandler.Db.GetCollection<Area.Area>(DataBase.Collections.Area).FindById(room.AreaId);
 
-        _clientHandler.WriteLine($"<p>You have traversed into <b>{area.Title}</b>.", player.ConnectionId);
+        _coreHandler.Client.WriteLine($"<p>You have traversed into <b>{area.Title}</b>.", player.ConnectionId);
     }
 
 
     public List<Area.Area> GetAllAreas()
     {
-        return _dataBase.GetCollection<Area.Area>(DataBase.Collections.Area).FindAll().ToList();
+        return _coreHandler.Db.GetCollection<Area.Area>(DataBase.Collections.Area).FindAll().ToList();
     }
     
     
@@ -249,7 +240,7 @@ public class WorldHandler : IWorldHandler
 
         public Room.Room GetRoomFromCoords(Coordinates coords, int areaId)
         {
-            return _dataBase.GetCollection<Room.Room>(DataBase.Collections.Room).FindOne(x => x.AreaId.Equals(areaId) && x.Coords.X.Equals(coords.X) && x.Coords.Y.Equals(coords.Y) && x.Coords.Z.Equals(coords.Z));
+            return _coreHandler.Db.GetCollection<Room.Room>(DataBase.Collections.Room).FindOne(x => x.AreaId.Equals(areaId) && x.Coords.X.Equals(coords.X) && x.Coords.Y.Equals(coords.Y) && x.Coords.Z.Equals(coords.Z));
         }
     
     public bool RoomIsDark(Player player, Room.Room room)
@@ -277,7 +268,7 @@ public class WorldHandler : IWorldHandler
     /// <param name="room">Room to get area from</param>
     public Area.Area GetRoomArea(Room.Room room)
     {
-        return _dataBase.GetCollection<Area.Area>(DataBase.Collections.Area).FindById(room.AreaId);
+        return _coreHandler.Db.GetCollection<Area.Area>(DataBase.Collections.Area).FindById(room.AreaId);
     }
 
     /// <summary>
@@ -439,8 +430,8 @@ public class WorldHandler : IWorldHandler
             OnPlayerEnterEvent(newRoom, player);
         }
 
-        _clientHandler.GetMap(player, GetMap($"{newRoom.AreaId}{newRoom.Coords.Z}"));
-        _clientHandler.UpdateMoves(player);
+        _coreHandler.Client.GetMap(player, GetMap($"{newRoom.AreaId}{newRoom.Coords.Z}"));
+        _coreHandler.Client.UpdateMoves(player);
         
         player.Buffer.Enqueue("look");
     }
@@ -519,14 +510,14 @@ public class WorldHandler : IWorldHandler
                 character.Status = CharacterStatus.Status.Standing;
                 break;
             case CharacterStatus.Status.Standing:
-                _clientHandler.PlaySound("walk", character);
+                _coreHandler.Client.PlaySound("walk", character);
                 movement = "walks";
                 break;
         }
 
         foreach (var p in fromRoom.Players.Where(p => character.Name != p.Name))
         {
-            _clientHandler.WriteLine(
+            _coreHandler.Client.WriteLine(
                 $"<span class='{(character.ConnectionId != "mob" ? "player" : "mob")}'>{character.Name} {movement} {direction}.</span>",
                 p.ConnectionId);
         }
@@ -580,7 +571,7 @@ public class WorldHandler : IWorldHandler
 
         foreach (var p in fromRoom.Players.Where(p => characterBase.Name != p.Name))
         {
-            _clientHandler.WriteLine(
+            _coreHandler.Client.WriteLine(
                 $"<span class='{(characterBase.ConnectionId != "mob" ? "player" : "mob")}'>{characterBase.Name} {movement} {direction}.</span>",
                 p.ConnectionId);
         }
@@ -594,7 +585,7 @@ public class WorldHandler : IWorldHandler
 
             var script = new Script();
 
-            var obj = UserData.Create(_characterHandler.MobScripts);
+            var obj = UserData.Create(_coreHandler.Character.MobScripts);
             script.Globals.Set("obj", obj);
             UserData.RegisterProxyType<MyProxy, Room.Room>(r => new MyProxy(room));
             UserData.RegisterProxyType<ProxyPlayer, Player>(r => new ProxyPlayer(character));
@@ -619,7 +610,7 @@ public class WorldHandler : IWorldHandler
 
                     var script = new Script();
 
-                    var obj = UserData.Create(_characterHandler.MobScripts);
+                    var obj = UserData.Create(_coreHandler.Character.MobScripts);
                     script.Globals.Set("obj", obj);
                     UserData.RegisterProxyType<MyProxy, Room.Room>(r => new MyProxy(room));
                     UserData.RegisterProxyType<ProxyPlayer, Player>(r => new ProxyPlayer(character));
@@ -638,8 +629,8 @@ public class WorldHandler : IWorldHandler
 
             if (mob.Agro && mob.Status != CharacterStatus.Status.Fighting && character.ConnectionId != "mob")
             {
-                _clientHandler.WriteLine($"{mob.Name} attacks you!", character.ConnectionId);
-                _characterHandler.MobScripts.AttackPlayer(room, character, mob);
+                _coreHandler.Client.WriteLine($"{mob.Name} attacks you!", character.ConnectionId);
+                _coreHandler.Character.MobScripts.AttackPlayer(room, character, mob);
             }
         }
     }
@@ -659,7 +650,7 @@ public class WorldHandler : IWorldHandler
 
     public void DisplayTimeOfDayMessage()
     {
-        var players = _characterHandler.GetPlayerCache();
+        var players = _coreHandler.Character.GetPlayerCache();
         var tickMessage = Time.UpdateTime();
 
         foreach (var pc in players.Values)
@@ -673,7 +664,7 @@ public class WorldHandler : IWorldHandler
 
             if (room.Terrain != Room.Room.TerrainType.Inside && room.Terrain != Room.Room.TerrainType.Underground && !string.IsNullOrEmpty(tickMessage))
             {
-                _clientHandler.WriteLine($"<span class='time-of-day'>{tickMessage}</span>", pc.ConnectionId);
+                _coreHandler.Client.WriteLine($"<span class='time-of-day'>{tickMessage}</span>", pc.ConnectionId);
             }
         }
     }

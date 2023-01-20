@@ -26,6 +26,8 @@ public class CombatHandler : ICombatHandler
     {
         _coreHandler = coreHandler;
     }
+    
+    public void Init(){}
 
     public bool IsCharInCombat(string id)
     {

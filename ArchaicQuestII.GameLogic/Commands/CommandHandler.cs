@@ -2,8 +2,6 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Emote;
 using ArchaicQuestII.GameLogic.Character.Help;
@@ -26,10 +24,13 @@ namespace ArchaicQuestII.GameLogic.Commands
         private readonly Dictionary<string, Emote> _socials = new();
         private readonly ConcurrentDictionary<int, Help> _helpCache = new();
         
-        public CommandHandler(ICoreHandler coreHandler, IDataBase dataBase)
+        public CommandHandler(ICoreHandler coreHandler)
         {
             _coreHandler = coreHandler;
+        }
 
+        public void Init()
+        {
             var commandTypes = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(s => s.GetTypes())
                 .Where(p => typeof(ICommand).IsAssignableFrom(p) && !p.IsInterface);
@@ -43,7 +44,7 @@ namespace ArchaicQuestII.GameLogic.Commands
                 foreach (var alias in command.Aliases)
                 {
                     if (IsCommand(alias))
-                        Helpers.LogError(dataBase,"CommandHandler.cs", "Duplicate Alias", ErrorPriority.Low);
+                        Helpers.LogError(_coreHandler.Db,"CommandHandler.cs", "Duplicate Alias", ErrorPriority.Low);
                     else
                         AddCommand(alias, command);
                 }

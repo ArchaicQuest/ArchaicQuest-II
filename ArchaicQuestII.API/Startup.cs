@@ -19,6 +19,7 @@ using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Commands;
 using ArchaicQuestII.GameLogic.Core;
+using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.World;
 
 namespace ArchaicQuestII.API
@@ -62,6 +63,7 @@ namespace ArchaicQuestII.API
             // configure DI for application services
             services.AddScoped<IUserService, UserService>();
             services.AddSingleton<ICoreHandler, CoreHandler>();
+            
             services.AddSingleton(
                 new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AQ.db")));
 
@@ -75,6 +77,7 @@ namespace ArchaicQuestII.API
             services.AddSingleton<ICombatHandler, CombatHandler>();
             services.AddSingleton<ICommandHandler, CommandHandler>();
             services.AddSingleton<IWorldHandler, WorldHandler>();
+            services.AddSingleton<IItemHandler, ItemHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

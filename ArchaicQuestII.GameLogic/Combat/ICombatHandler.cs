@@ -6,6 +6,7 @@ namespace ArchaicQuestII.GameLogic.Combat;
 
 public interface ICombatHandler
 {
+    void Init();
     bool IsCharInCombat(string id);
     bool AddCharToCombat(string id, Player character);
     Player GetCharFromCombat(string id);

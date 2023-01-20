@@ -26,6 +26,8 @@ public class ClientHandler : IClientHandler
         _telnetHub = telnetHub;
     }
 
+    public void Init(){}
+
     #region WRITE
 
     public async void WriteLine(string message, string id)

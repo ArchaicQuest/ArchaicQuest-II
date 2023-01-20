@@ -14,6 +14,7 @@ namespace ArchaicQuestII.GameLogic.Character;
 
 public interface ICharacterHandler
 {
+    void Init();
     bool AddPlayer(string id, Player player);
     Player GetPlayer(string id);
     Player RemovePlayer(string id);

@@ -2,6 +2,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Crafting;
 using ArchaicQuestII.GameLogic.Item.RandomItemTypes;
 using ArchaicQuestII.GameLogic.Utilities;
@@ -18,7 +19,15 @@ public class ItemHandler : IItemHandler
     private readonly RandomPlateMailItems _randomPlateMail = new();
     private readonly RandomStuddedLeatherItems _randomStudded = new();
     private readonly RandomWeapons _randomWeapon = new();
-    
+
+    private readonly ICoreHandler _coreHandler;
+
+    public ItemHandler(ICoreHandler coreHandler)
+    {
+        _coreHandler = coreHandler;
+    }
+
+    public void Init(){}
 
     public bool AddCraftingRecipes(int id, CraftingRecipes craftingRecipes)
     {

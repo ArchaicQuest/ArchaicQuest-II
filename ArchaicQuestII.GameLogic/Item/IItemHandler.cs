@@ -6,6 +6,7 @@ namespace ArchaicQuestII.GameLogic.Item;
 
 public interface IItemHandler
 {
+    void Init();
     bool AddCraftingRecipes(int id, CraftingRecipes CraftingRecipes);
     CraftingRecipes GetCraftingRecipes(int id, CraftingRecipes recipe);
     List<CraftingRecipes> GetCraftingRecipes();

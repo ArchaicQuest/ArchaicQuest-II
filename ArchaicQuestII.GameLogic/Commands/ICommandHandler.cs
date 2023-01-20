@@ -8,6 +8,7 @@ namespace ArchaicQuestII.GameLogic.Commands
 {
     public interface ICommandHandler
     {
+        void Init();
         public void HandleCommand(Player player, Room room, string input);
         void AddCommand(string key, ICommand action);
         Dictionary<string, ICommand> GetCommands();

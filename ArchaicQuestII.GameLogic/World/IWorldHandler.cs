@@ -6,6 +6,7 @@ namespace ArchaicQuestII.GameLogic.World;
 
 public interface IWorldHandler
 {
+    void Init();
     Time Time { get; }
     void ClearCache();
     bool AddRoom(string id, Room.Room room);

@@ -41,6 +41,14 @@ public class CoreHandler : ICoreHandler
         Db = app.ApplicationServices.GetService<IDataBase>();
         Pdb = app.ApplicationServices.GetService<IPlayerDataBase>();
         
+        //Init Handlers (Dont Include Databases in init)
+        Character.Init();
+        Client.Init();
+        Combat.Init();
+        Command.Init();
+        Item.Init();
+        World.Init();
+        
         SetupLoops();
     }
 

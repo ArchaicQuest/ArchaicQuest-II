@@ -6,9 +6,6 @@ using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Character.Status;
-using ArchaicQuestII.GameLogic.Client;
-using ArchaicQuestII.GameLogic.Combat;
-using ArchaicQuestII.GameLogic.Commands;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Skill.Enum;
@@ -27,35 +24,31 @@ public class CharacterHandler : ICharacterHandler
     private readonly ConcurrentDictionary<int, Quest> _questCache = new();
     private readonly Dictionary<string, Class.Class> _pcClass = new();
 
-    private readonly IClientHandler _clientHandler;
-    private readonly ICommandHandler _commandHandler;
-    private readonly ICombatHandler _combatHandler;
+    private readonly ICoreHandler _coreHandler;
 
-    public Equip Equip { get; }
-    public IMobScripts MobScripts { get; } 
-    public PassiveSkills PassiveSkills { get; }
-    public DamageSkills DamageSkills { get; }
-    public UtilSkills UtilSkills { get; }
-    public DamageSpells DamageSpells { get; }
+    public Equip Equip { get; private set; }
+    public IMobScripts MobScripts { get; private set; } 
+    public PassiveSkills PassiveSkills { get; private set; }
+    public DamageSkills DamageSkills { get; private set; }
+    public UtilSkills UtilSkills { get; private set; }
+    public DamageSpells DamageSpells { get; private set; }
 
-    public CharacterHandler(
-        IClientHandler clientHandler,
-        ICommandHandler commandHandler,
-        ICombatHandler combatHandler)
+    public CharacterHandler(ICoreHandler coreHandler)
     {
-        _clientHandler = clientHandler;
-        _commandHandler = commandHandler;
-        _combatHandler = combatHandler;
-        
-        Equip = new Equip(_clientHandler);
+        _coreHandler = coreHandler;
+    }
 
-        PassiveSkills = new PassiveSkills(clientHandler, commandHandler, this);
-        DamageSkills = new DamageSkills(clientHandler, combatHandler, this);
-        UtilSkills = new UtilSkills(clientHandler, combatHandler, this);
+    public void Init()
+    {
+        Equip = new Equip(_coreHandler.Client);
 
-        DamageSpells = new DamageSpells(clientHandler, null);
+        PassiveSkills = new PassiveSkills(_coreHandler.Client, _coreHandler.Command, this);
+        DamageSkills = new DamageSkills(_coreHandler.Client, _coreHandler.Combat, this);
+        UtilSkills = new UtilSkills(_coreHandler.Client, _coreHandler.Combat, this);
+
+        DamageSpells = new DamageSpells(_coreHandler.Client, null);
         
-        MobScripts = new MobScripts(combatHandler, clientHandler,this);
+        MobScripts = new MobScripts(_coreHandler.Combat, _coreHandler.Client,this);
     }
 
     public bool AddPlayer(string id, Player player)
@@ -127,21 +120,21 @@ public class CharacterHandler : ICharacterHandler
             player.Experience += expWorth;
             player.ExperienceToNextLevel -= expWorth;
 
-            _clientHandler.UpdateExp(player);
+            _coreHandler.Client.UpdateExp(player);
 
             if (expWorth == 1)
             {
-                _clientHandler.WriteLine(
+                _coreHandler.Client.WriteLine(
                     $"<p class='improve'>You gain 1 measly experience point.</p>",
                     player.ConnectionId);
             }
 
-            _clientHandler.WriteLine(
+            _coreHandler.Client.WriteLine(
                 $"<p class='improve'>You receive {expWorth} experience points.</p>",
                 player.ConnectionId);
 
             GainLevel(player);
-            _clientHandler.UpdateExp(player);
+            _coreHandler.Client.UpdateExp(player);
         }
 
         public void GroupGainExperiencePoints(Player player, Player target)
@@ -177,14 +170,14 @@ public class CharacterHandler : ICharacterHandler
 
             if (showMessage)
             {
-                _clientHandler.WriteLine(
+                _coreHandler.Client.WriteLine(
                     $"<p class='improve'>You receive {value} experience points.</p>",
                     player.ConnectionId);
             }
 
             GainLevel(player);
 
-            _clientHandler.UpdateExp(player);
+            _coreHandler.Client.UpdateExp(player);
 
         }
 
@@ -214,15 +207,15 @@ public class CharacterHandler : ICharacterHandler
                 player.MaxAttributes.Attribute[EffectLocation.Mana] += totalMana;
                 player.MaxAttributes.Attribute[EffectLocation.Moves] += totalMove;
 
-                _clientHandler.WriteLine($"<p class='improve'>You have advanced to level {player.Level}, you gain: {totalHP} HP, {totalMana} Mana, {totalMove} Moves.</p>", player.ConnectionId);
+                _coreHandler.Client.WriteLine($"<p class='improve'>You have advanced to level {player.Level}, you gain: {totalHP} HP, {totalMana} Mana, {totalMove} Moves.</p>", player.ConnectionId);
 
                 SeedData.Classes.SetGenericTitle(player);
 
-                _clientHandler.UpdateMana(player);
-                _clientHandler.UpdateMoves(player);
-                _clientHandler.UpdateHP(player);
-                _clientHandler.UpdateExp(player);
-                _clientHandler.UpdateScore(player);
+                _coreHandler.Client.UpdateMana(player);
+                _coreHandler.Client.UpdateMoves(player);
+                _coreHandler.Client.UpdateHP(player);
+                _coreHandler.Client.UpdateExp(player);
+                _coreHandler.Client.UpdateScore(player);
 
             }
         }
@@ -234,12 +227,12 @@ public class CharacterHandler : ICharacterHandler
 
             if (foundTarget.Value == null)
             {
-                _clientHandler.WriteLine($"Cannot find {target}.");
+                _coreHandler.Client.WriteLine($"Cannot find {target}.");
                 return;
             }
 
             foundTarget.Value.ExperienceToNextLevel = 0;
-            _clientHandler.WriteLine($"{player.Name} has rewarded you with a level.", foundTarget.Value.ConnectionId);
+            _coreHandler.Client.WriteLine($"{player.Name} has rewarded you with a level.", foundTarget.Value.ConnectionId);
             GainLevel(foundTarget.Value);
         }
 
@@ -275,12 +268,12 @@ public class CharacterHandler : ICharacterHandler
             skill.Proficiency += increase;
 
             GainLevel(character);
-            _clientHandler.UpdateExp(character);
+            _coreHandler.Client.UpdateExp(character);
 
-            _clientHandler.WriteLine(
+            _coreHandler.Client.WriteLine(
                 $"<p class='improve'>You learn from your mistakes and gain {expGain} experience points.</p>",
                 character.ConnectionId);
-            _clientHandler.WriteLine(
+            _coreHandler.Client.WriteLine(
                 $"<p class='improve'>Your {skill.SkillName} skill increases by {increase}%.</p>",
                 character.ConnectionId);
         }
@@ -288,11 +281,11 @@ public class CharacterHandler : ICharacterHandler
         public void GainSkillProficiency(SkillList foundSkill, Player player)
         {
 
-            var getSkill = _commandHandler.GetSkill(foundSkill.SkillId);
+            var getSkill = _coreHandler.Command.GetSkill(foundSkill.SkillId);
 
             if (getSkill == null)
             {
-                var skill = _commandHandler.GetAllSkills().FirstOrDefault(x => x.Name.Equals(foundSkill.SkillName, StringComparison.CurrentCultureIgnoreCase));
+                var skill = _coreHandler.Command.GetAllSkills().FirstOrDefault(x => x.Name.Equals(foundSkill.SkillName, StringComparison.CurrentCultureIgnoreCase));
                 foundSkill.SkillId = skill.Id;
             }
 
@@ -307,9 +300,9 @@ public class CharacterHandler : ICharacterHandler
 
             GainExperiencePoints(player, 100 * foundSkill.Level / 4, false);
 
-            _clientHandler.UpdateExp(player);
+            _coreHandler.Client.UpdateExp(player);
 
-            _clientHandler.WriteLine(
+            _coreHandler.Client.WriteLine(
                 $"<p class='improve'>You learn from your mistakes and gain {100 * foundSkill.Level / 4} experience points.</p>" +
                 $"<p class='improve'>Your knowledge of {foundSkill.SkillName} increases by {increase}%.</p>",
                 player.ConnectionId, 0);
@@ -361,10 +354,10 @@ public class CharacterHandler : ICharacterHandler
                 {
                     quest.Completed = true;
 
-                    _clientHandler.WriteLine($"<h3 class='gain'>{quest.Title} Completed!</h3><p>Return to the quest giver for your reward.</p>", player.ConnectionId);
+                    _coreHandler.Client.WriteLine($"<h3 class='gain'>{quest.Title} Completed!</h3><p>Return to the quest giver for your reward.</p>", player.ConnectionId);
                 }
             }
-            _clientHandler.UpdateQuest(player);
+            _coreHandler.Client.UpdateQuest(player);
         }
 
         public void DoSkill(string key, string obj, Player target, string fullCommand, Player player, Room room,
@@ -482,7 +475,7 @@ public class CharacterHandler : ICharacterHandler
             
             if (!Formulas.CheckStatusToCast(origin, out var message))
             {
-                _clientHandler.WriteLine(message, origin.ConnectionId);
+                _coreHandler.Client.WriteLine(message, origin.ConnectionId);
                 return;
             }
 
@@ -495,7 +488,7 @@ public class CharacterHandler : ICharacterHandler
 
             if (origin.ConnectionId != "mob" &&  origin.Attributes.Attribute[EffectLocation.Mana] > spell.Cost.Table[Cost.Mana])
             {
-                _clientHandler.WriteLine("You don't have enough mana.", origin.ConnectionId);
+                _coreHandler.Client.WriteLine("You don't have enough mana.", origin.ConnectionId);
                 return;
             }
 
@@ -545,7 +538,7 @@ public class CharacterHandler : ICharacterHandler
                 
                 //deduct mana
                 origin.Attributes.Attribute[EffectLocation.Mana] -= spell.Cost.Table[Cost.Mana] == 0 ? 5 : spell.Cost.Table[Cost.Mana];
-                _clientHandler.UpdateMana(origin);
+                _coreHandler.Client.UpdateMana(origin);
                 
                 if (Formulas.SpellSuccess(origin, target, spell))
                 {
@@ -607,7 +600,7 @@ public class CharacterHandler : ICharacterHandler
                 }
                 else
                 {
-                    _clientHandler.WriteLine("<p>You lost concentration.</p>", origin.ConnectionId);
+                    _coreHandler.Client.WriteLine("<p>You lost concentration.</p>", origin.ConnectionId);
                     
                     var skill = origin.Skills.FirstOrDefault(x => x.SkillId.Equals(spell.Id));
 
@@ -628,12 +621,12 @@ public class CharacterHandler : ICharacterHandler
                     origin.Experience += 100;
                     origin.ExperienceToNextLevel -= 100;
 
-                    _clientHandler.UpdateExp(origin);
+                    _coreHandler.Client.UpdateExp(origin);
 
-                    _clientHandler.WriteLine(
+                    _coreHandler.Client.WriteLine(
                         $"<p class='improve'>You learn from your mistakes and gain 100 experience points.</p>",
                         origin.ConnectionId);
-                    _clientHandler.WriteLine(
+                    _coreHandler.Client.WriteLine(
                         $"<p class='improve'>Your {skill.SkillName} skill increases by {increase}%.</p>",
                         origin.ConnectionId);
                 }
@@ -655,7 +648,7 @@ public class CharacterHandler : ICharacterHandler
 
                 //deduct mana
                 origin.Attributes.Attribute[EffectLocation.Mana] -= spell.Cost.Table[Cost.Mana] == 0 ? 5 : spell.Cost.Table[Cost.Mana];
-                _clientHandler.UpdateMana(origin);
+                _coreHandler.Client.UpdateMana(origin);
 
 
                 if (Formulas.SpellSuccess(origin, null, spell))
@@ -664,7 +657,7 @@ public class CharacterHandler : ICharacterHandler
                 }
                 else
                 {
-                    _clientHandler.WriteLine("<p>You lost concentration.</p>", origin.ConnectionId);
+                    _coreHandler.Client.WriteLine("<p>You lost concentration.</p>", origin.ConnectionId);
                     
                     var skill = origin.Skills.FirstOrDefault(x => x.SkillId.Equals(spell.Id));
 
@@ -685,12 +678,12 @@ public class CharacterHandler : ICharacterHandler
                     origin.Experience += 100;
                     origin.ExperienceToNextLevel -= 100;
 
-                    _clientHandler.UpdateExp(origin);
+                    _coreHandler.Client.UpdateExp(origin);
 
-                    _clientHandler.WriteLine(
+                    _coreHandler.Client.WriteLine(
                         "<p class='improve'>You learn from your mistakes and gain 100 experience points.</p>",
                         origin.ConnectionId);
-                    _clientHandler.WriteLine(
+                    _coreHandler.Client.WriteLine(
                         $"<p class='improve'>Your {skill.SkillName} skill increases by {increase}%.</p>",
                         origin.ConnectionId);
                 }
@@ -707,12 +700,12 @@ public class CharacterHandler : ICharacterHandler
             // not correct need to send to room 
             if (origin.Id == target.Id)
             {
-                _clientHandler.WriteLine(
+                _coreHandler.Client.WriteLine(
                     $"You close your eyes and utter the words, '{spell.Name}'.", origin.ConnectionId);
 
                 foreach (var pc in room.Players.Where(pc => !pc.ConnectionId.Equals(origin.ConnectionId)))
                 {
-                    _clientHandler.WriteLine($"{origin.Name} closes {Helpers.GetPronoun(origin.Gender)} eyes and utters the words, '{Helpers.ObfuscateSpellName(spell.Name)}'.", pc.ConnectionId);
+                    _coreHandler.Client.WriteLine($"{origin.Name} closes {Helpers.GetPronoun(origin.Gender)} eyes and utters the words, '{Helpers.ObfuscateSpellName(spell.Name)}'.", pc.ConnectionId);
                 }
             }
             else if (origin != target)
@@ -721,13 +714,13 @@ public class CharacterHandler : ICharacterHandler
                 var obfuscatedSpellName = Helpers.ObfuscateSpellName(spell.Name);
 
 
-                _clientHandler.WriteLine($"You look at {target.Name} and utter the words, '{spell.Name}'.", origin.ConnectionId);
-                _clientHandler.WriteLine($"{origin.Name} looks at you and utters the words, '{(!Helpers.isCaster(target.ClassName) ? obfuscatedSpellName : spell.Name)}'.", target.ConnectionId);
+                _coreHandler.Client.WriteLine($"You look at {target.Name} and utter the words, '{spell.Name}'.", origin.ConnectionId);
+                _coreHandler.Client.WriteLine($"{origin.Name} looks at you and utters the words, '{(!Helpers.isCaster(target.ClassName) ? obfuscatedSpellName : spell.Name)}'.", target.ConnectionId);
                 
                 foreach (var pc in room.Players.Where(pc => !pc.ConnectionId.Equals(origin.ConnectionId) &&
                                                             !pc.ConnectionId.Equals(target.ConnectionId)))
                 {
-                    _clientHandler.WriteLine($"{origin.Name} looks at {target.Name} and utters the words, '{(!Helpers.isCaster(pc.ClassName) ? obfuscatedSpellName : spell.Name)}'.", pc.ConnectionId);
+                    _coreHandler.Client.WriteLine($"{origin.Name} looks at {target.Name} and utters the words, '{(!Helpers.isCaster(pc.ClassName) ? obfuscatedSpellName : spell.Name)}'.", pc.ConnectionId);
                 }
 
             }
@@ -745,7 +738,7 @@ public class CharacterHandler : ICharacterHandler
 
             if (victim == null)
             {
-                _clientHandler.WriteLine(
+                _coreHandler.Client.WriteLine(
                     (spell.ValidTargets & ValidTargets.TargetPlayerWorld) != 0
                         ? "You can't find them in the realm."
                         : "You don't see them here.", player.ConnectionId);
@@ -773,7 +766,7 @@ public class CharacterHandler : ICharacterHandler
                     return player;
                 }
 
-                _clientHandler.WriteLine("You can only cast this spell on yourself", player.ConnectionId);
+                _coreHandler.Client.WriteLine("You can only cast this spell on yourself", player.ConnectionId);
                 return null;
             }
 
@@ -819,16 +812,16 @@ public class CharacterHandler : ICharacterHandler
         public void DamagePlayer(string spellName, int damage, Player player, Player target, Room room)
         {
 
-            if (_combatHandler.IsTargetAlive(target))
+            if (_coreHandler.Combat.IsTargetAlive(target))
             {
 
-                var totalDam = _combatHandler.CalculateSkillDamage(player, target, damage);
+                var totalDam = _coreHandler.Combat.CalculateSkillDamage(player, target, damage);
 
-                _clientHandler.WriteLine(
-                    $"<p>Your {spellName} {_combatHandler.DamageText(totalDam).Value} {target.Name}  <span class='damage'>[{damage}]</span></p>",
+                _coreHandler.Client.WriteLine(
+                    $"<p>Your {spellName} {_coreHandler.Combat.DamageText(totalDam).Value} {target.Name}  <span class='damage'>[{damage}]</span></p>",
                     player.ConnectionId);
-                _clientHandler.WriteLine(
-                    $"<p>{player.Name}'s {spellName} {_combatHandler.DamageText(totalDam).Value} you!  <span class='damage'>[{damage}]</span></p>",
+                _coreHandler.Client.WriteLine(
+                    $"<p>{player.Name}'s {spellName} {_coreHandler.Combat.DamageText(totalDam).Value} you!  <span class='damage'>[{damage}]</span></p>",
                     target.ConnectionId);
 
                 foreach (var pc in room.Players)
@@ -839,28 +832,28 @@ public class CharacterHandler : ICharacterHandler
                         continue;
                     }
 
-                    _clientHandler.WriteLine(
-                        $"<p>{player.Name}'s {spellName} {_combatHandler.DamageText(totalDam).Value} {target.Name}  <span class='damage'>[{damage}]</span></p>",
+                    _coreHandler.Client.WriteLine(
+                        $"<p>{player.Name}'s {spellName} {_coreHandler.Combat.DamageText(totalDam).Value} {target.Name}  <span class='damage'>[{damage}]</span></p>",
                         pc.ConnectionId);
 
                 }
 
                 target.Attributes.Attribute[EffectLocation.Hitpoints] -= totalDam;
 
-                if (!_combatHandler.IsTargetAlive(target))
+                if (!_coreHandler.Combat.IsTargetAlive(target))
                 {
-                    _combatHandler.TargetKilled(player, target, room);
+                    _coreHandler.Combat.TargetKilled(player, target, room);
 
-                    _clientHandler.UpdateHP(target);
+                    _coreHandler.Client.UpdateHP(target);
                     return;
                     //TODO: create corpse, refactor fight method from combat.cs
                 }
 
                 //update UI
-                _clientHandler.UpdateHP(target);
+                _coreHandler.Client.UpdateHP(target);
 
-                _combatHandler.AddCharToCombat(target);
-                _combatHandler.AddCharToCombat(player);
+                _coreHandler.Combat.AddCharToCombat(target);
+                _coreHandler.Combat.AddCharToCombat(player);
             }
 
         }
@@ -870,7 +863,7 @@ public class CharacterHandler : ICharacterHandler
 
             if (attribute is EffectLocation.Hitpoints or EffectLocation.Mana or EffectLocation.Moves && target.Attributes.Attribute[attribute] == target.MaxAttributes.Attribute[attribute])
             {
-                _clientHandler.WriteLine(Helpers.ReplaceTargetPlaceholders(noAffect, target, false), player.ConnectionId);
+                _coreHandler.Client.WriteLine(Helpers.ReplaceTargetPlaceholders(noAffect, target, false), player.ConnectionId);
                 return false;
             }
 
@@ -1001,21 +994,21 @@ public class CharacterHandler : ICharacterHandler
                 }
             }
 
-            _clientHandler.UpdateAffects(target);
-            _clientHandler.UpdateScore(target);
+            _coreHandler.Client.UpdateAffects(target);
+            _coreHandler.Client.UpdateScore(target);
         }
         
         public void EmoteAction(Player player, Player target, Room room, SkillMessage emote)
         {
             if (target.ConnectionId == player.ConnectionId)
             {
-                _clientHandler.WriteLine(
+                _coreHandler.Client.WriteLine(
                     $"<p>{Helpers.ReplaceTargetPlaceholders(emote.Hit.ToPlayer, target, true)}</p>",
                     target.ConnectionId);
             }
             else
             {
-                _clientHandler.WriteLine(
+                _coreHandler.Client.WriteLine(
                     $"<p>{Helpers.ReplaceTargetPlaceholders(emote.Hit.ToPlayer, target, false)}</p>",
                     player.ConnectionId);
             }
@@ -1023,7 +1016,7 @@ public class CharacterHandler : ICharacterHandler
 
             if (!string.IsNullOrEmpty(emote.Hit.ToTarget))
             {
-                _clientHandler.WriteLine(
+                _coreHandler.Client.WriteLine(
                     $"<p>{emote.Hit.ToTarget}</p>",
                     target.ConnectionId);
             }
@@ -1036,7 +1029,7 @@ public class CharacterHandler : ICharacterHandler
                     continue;
                 }
 
-                _clientHandler.WriteLine($"<p>{Helpers.ReplaceTargetPlaceholders(emote.Hit.ToRoom, target, false)}</p>",
+                _coreHandler.Client.WriteLine($"<p>{Helpers.ReplaceTargetPlaceholders(emote.Hit.ToRoom, target, false)}</p>",
                     pc.ConnectionId);
 
             }
@@ -1049,12 +1042,12 @@ public class CharacterHandler : ICharacterHandler
             {
                 if (pc.ConnectionId.Equals(player.ConnectionId))
                 {
-                    _clientHandler.WriteLine($"<p>{emote.EffectWearOff.ToPlayer}</p>",
+                    _coreHandler.Client.WriteLine($"<p>{emote.EffectWearOff.ToPlayer}</p>",
                         pc.ConnectionId);
                     continue;
                 }
 
-                _clientHandler.WriteLine($"<p>{Helpers.ReplaceTargetPlaceholders(emote.EffectWearOff.ToRoom, player, false)}</p>",
+                _coreHandler.Client.WriteLine($"<p>{Helpers.ReplaceTargetPlaceholders(emote.EffectWearOff.ToRoom, player, false)}</p>",
                     pc.ConnectionId);
 
             }
@@ -1073,15 +1066,15 @@ public class CharacterHandler : ICharacterHandler
 
             if (foundSpell == null)
             {
-                _clientHandler.WriteLine($"You don't know a spell that begins with {skill}", player.ConnectionId);
+                _coreHandler.Client.WriteLine($"You don't know a spell that begins with {skill}", player.ConnectionId);
                 return null;
             }
 
-            var spell = _commandHandler.GetSkill(foundSpell.SkillId);
+            var spell = _coreHandler.Command.GetSkill(foundSpell.SkillId);
 
             if (spell == null || spell.Name != foundSpell.SkillName)
             {
-                var getSpell = _commandHandler.GetAllSkills();
+                var getSpell = _coreHandler.Command.GetAllSkills();
                 spell = getSpell.FirstOrDefault(x => x.Name.Equals(foundSpell.SkillName, StringComparison.CurrentCultureIgnoreCase));
 
                 foundSpell.SkillId = spell.Id;
