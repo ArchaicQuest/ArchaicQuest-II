@@ -61,6 +61,7 @@ namespace ArchaicQuestII.API
 
             // configure DI for application services
             services.AddScoped<IUserService, UserService>();
+            services.AddSingleton<ICoreHandler, CoreHandler>();
             services.AddSingleton(
                 new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AQ.db")));
 
@@ -74,14 +75,12 @@ namespace ArchaicQuestII.API
             services.AddSingleton<ICombatHandler, CombatHandler>();
             services.AddSingleton<ICommandHandler, CommandHandler>();
             services.AddSingleton<IWorldHandler, WorldHandler>();
-            services.AddSingleton<ICoreHandler, CoreHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(
             IApplicationBuilder app, 
-            IWebHostEnvironment env, 
-            ICoreHandler coreHandler)
+            IWebHostEnvironment env)
         {
             if (env.EnvironmentName == "dev")
             {
@@ -115,6 +114,8 @@ namespace ArchaicQuestII.API
             });
 
             _hubContext = app.ApplicationServices.GetService<IHubContext<GameHub>>();
+            var coreHandler = app.ApplicationServices.GetService<ICoreHandler>();
+            coreHandler.Init(app);
             
             app.StartLoops();
 

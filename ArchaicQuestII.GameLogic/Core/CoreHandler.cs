@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Concurrent;
+using System.ComponentModel;
 using System.Linq;
 using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
@@ -8,6 +9,7 @@ using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Commands;
 using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.World;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ArchaicQuestII.GameLogic.Core;
@@ -15,30 +17,30 @@ namespace ArchaicQuestII.GameLogic.Core;
 public class CoreHandler : ICoreHandler
 {
     public Config Config { get; set; }
-    public ICharacterHandler Character { get; }
-    public IClientHandler Client { get; }
-    public ICombatHandler Combat { get; }
-    public ICommandHandler Command { get; }
-    public IItemHandler Item { get; }
-    public IWorldHandler World { get; }
-    public IDataBase Db { get; }
-    public IPlayerDataBase Pdb { get; }
+    public ICharacterHandler Character { get; private set; }
+    public IClientHandler Client { get; private set; }
+    public ICombatHandler Combat { get; private set; }
+    public ICommandHandler Command { get; private set; }
+    public IItemHandler Item { get; private set; }
+    public IWorldHandler World { get; private set; }
+    public IDataBase Db { get; private set; }
+    public IPlayerDataBase Pdb { get; private set; }
 
     private readonly ConcurrentDictionary<string, IGameLoop> _gameLoops = new();
 
     private bool _loopsStarted;
 
-    public CoreHandler(IServiceProvider serviceProvider)
+    public void Init(IApplicationBuilder app)
     {
         Config = new Config();
-        Character = serviceProvider.GetService<ICharacterHandler>();
-        Client = serviceProvider.GetService<IClientHandler>();
-        Combat = serviceProvider.GetService<ICombatHandler>();
-        Command = serviceProvider.GetService<ICommandHandler>();
-        Item = serviceProvider.GetService<IItemHandler>();
-        World = serviceProvider.GetService<IWorldHandler>();
-        Db = serviceProvider.GetService<IDataBase>();
-        Pdb = serviceProvider.GetService<IPlayerDataBase>();
+        Character = app.ApplicationServices.GetService<ICharacterHandler>();
+        Client = app.ApplicationServices.GetService<IClientHandler>();
+        Combat = app.ApplicationServices.GetService<ICombatHandler>();
+        Command = app.ApplicationServices.GetService<ICommandHandler>();
+        Item = app.ApplicationServices.GetService<IItemHandler>();
+        World = app.ApplicationServices.GetService<IWorldHandler>();
+        Db = app.ApplicationServices.GetService<IDataBase>();
+        Pdb = app.ApplicationServices.GetService<IPlayerDataBase>();
         
         SetupLoops();
     }
