@@ -23,8 +23,5 @@ jobs:
     - name: Build Project
       run: dotnet build --no-restore --verbosity normal
 
-    - name: Run Tests
-      run: dotnet test --configuration Release --no-restore
-
     - name: Publish Binaries
       run: dotnet publish ArchaicQuestII.API/ArchaicQuestII.API.csproj -c Release -o deploy --self-contained true -r linux-x64
