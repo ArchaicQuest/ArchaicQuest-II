@@ -34,6 +34,7 @@ namespace ArchaicQuestII.GameLogic.Core
         public IErrorLog ErrorLog { get; }
         
         public ITime Time { get; }
+        public IDamage Damage { get; }
 
         public Core(ICache cache, 
             IWriteToClient writeToClient, 
@@ -47,7 +48,8 @@ namespace ArchaicQuestII.GameLogic.Core
             IErrorLog errorLog,
             IPassiveSkills passiveSkills,
             IFormulas formulas,
-            ITime time)
+            ITime time,
+            IDamage damage)
         {
             Cache = cache;
             Writer = writeToClient;
@@ -62,6 +64,7 @@ namespace ArchaicQuestII.GameLogic.Core
             PassiveSkills = passiveSkills;
             Formulas = formulas;
             Time = time;
+            Damage = damage;
         }
         
         public bool CommandTargetCheck(string target, Player player, string errorMessage = "What?")

@@ -44,7 +44,7 @@ namespace ArchaicQuestII.GameLogic.Spell
 
             var victim = string.IsNullOrEmpty(target) ? player : GetTarget(target, room);
 
-            if (victim == null)
+          /*if (victim == null)
             {
                 _writer.WriteLine(
                     (spell.ValidTargets & ValidTargets.TargetPlayerWorld) != 0
@@ -52,7 +52,7 @@ namespace ArchaicQuestII.GameLogic.Spell
                         : "You don't see them here.", player.ConnectionId);
 
                 return null;
-            }
+            }*/
 
             //if (spell.StartsCombat && victim.Id == player.Id)
             //{
@@ -67,7 +67,7 @@ namespace ArchaicQuestII.GameLogic.Spell
         public Player ReturnTarget(Skill.Model.Skill spell, string target, Room room, Player player)
         {
 
-
+/*
             if ((spell.ValidTargets & ValidTargets.TargetSelfOnly) != 0)
             {
                 if (string.IsNullOrEmpty(target) || target == "self")
@@ -86,7 +86,7 @@ namespace ArchaicQuestII.GameLogic.Spell
                 {
                     return CheckTarget(spell, target, room, player);
                 }
-            }
+            } 
 
             //If no argument, target is the PC/NPC the player is fighting
             if (player.Status == CharacterStatus.Status.Fighting && (spell.ValidTargets & ValidTargets.TargetFightVictim) != 0)
@@ -109,13 +109,14 @@ namespace ArchaicQuestII.GameLogic.Spell
             {
                 return CheckTarget(spell, target, room, player);
             }
+            */
 
             return player;
         }
 
         public Item.Item ReturnTargetItem(Skill.Model.Skill spell, string target, Room room, Player player)
         {
-
+/*
             if ((spell.ValidTargets & ValidTargets.TargetObjectInventory) != 0 || (spell.ValidTargets & ValidTargets.TargetObjectEquipped) != 0)
             {
                 //find victim from player cache instead
@@ -131,6 +132,8 @@ namespace ArchaicQuestII.GameLogic.Spell
 
                 return item;
             }
+            
+            */
 
 
             return null;

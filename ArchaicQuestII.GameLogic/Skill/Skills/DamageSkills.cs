@@ -60,340 +60,65 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
         public int Kick(Player player, Player target, Room room)
         {
-            var str = player.Attributes.Attribute[EffectLocation.Strength];
-            var damage = DiceBag.Roll(1, 1, 8) + str / 4;
+        
 
-            _skillManager.DamagePlayer("Kick", damage, player, target, room);
-
-            player.Lag += 1;
-
-
-            _skillManager.updateCombat(player, target, room);
-
-            return damage;
+            return 0;
         }
 
         public int Elbow(Player player, Player target, Room room)
         {
-            var str = player.Attributes.Attribute[EffectLocation.Strength];
-            var damage = DiceBag.Roll(1, 1, 6) + str / 5;
-
-            _skillManager.DamagePlayer("elbow", damage, player, target, room);
-
-            player.Lag += 1;
-
-
-            _skillManager.updateCombat(player, target, room);
-
-            return damage;
+          
+            return 0;
         }
 
         // TODO skill success check
         public int HeadButt(Player player, Player target, Room room)
         {
-            var str = player.Attributes.Attribute[EffectLocation.Strength];
-            var damage = DiceBag.Roll(1, 1, 12) + str / 5;
+          
 
-            if (player.Equipped.Head == null)
-            {
-                damage /= 2;
-            }
-
-            _skillManager.DamagePlayer("headbutt", damage, player, target, room);
-
-            player.Lag += 1;
-
-
-            _skillManager.updateCombat(player, target, room);
-
-            return damage;
+            return 0;
         }
 
         public int Charge(Player player, Player target, Room room, string obj)
         {
-            if (player.Status == CharacterStatus.Status.Fighting)
-            {
-                _writer.WriteLine("You are already in combat, Charge can only be used to start a combat.");
-                return 0;
-            }
+           
 
-            var nthTarget = Helpers.findNth(obj);
-
-            var character = Helpers.FindMob(nthTarget, room) ?? Helpers.FindPlayer(nthTarget, room);
-
-
-            var weaponDam = player.Equipped.Wielded != null ? player.Equipped.Wielded.Damage.Maximum : 1 * 2;
-            var str = player.Attributes.Attribute[EffectLocation.Strength];
-            var damage = DiceBag.Roll(1, 1, weaponDam) + str / 5;
-
-
-            _skillManager.DamagePlayer("charge", damage, player, target, room);
-
-            player.Lag += 2;
-
-            _skillManager.updateCombat(player, target, room);
-
-            return damage;
+            return 0;
         }
 
         public int Stab(Player player, Player target, Room room, string obj)
         {
-            if (player.Equipped.Wielded == null)
-            {
-                _writer.WriteLine("Stab with what?", player.ConnectionId);
-                return 0;
-            }
+   
 
-            //var nthTarget = Helpers.findNth(obj);
-
-            //var character = Helpers.FindMob(nthTarget, room) ?? Helpers.FindPlayer(nthTarget, room);
-
-
-            var weaponDam = (player.Equipped.Wielded.Damage.Maximum + player.Equipped.Wielded.Damage.Minimum) / 2;
-            var str = player.Attributes.Attribute[EffectLocation.Strength];
-            var damage = (weaponDam + DiceBag.Roll(1, 1, 6)) + str / 5;
-
-
-            _skillManager.DamagePlayer("stab", damage, player, target, room);
-
-            player.Lag += 1;
-
-            _skillManager.updateCombat(player, target, room);
-
-            return damage;
+            return 0;
         }
 
         public int OverheadCrush(Player player, Player target, Room room, string obj)
         {
-
-            if (player.Equipped.Wielded == null)
-            {
-                _writer.WriteLine("Overhead crush with what?", player.ConnectionId);
-            }
-
-            if (!player.Affects.Stunned || (player.Status & CharacterStatus.Status.Sleeping) == 0 ||
-                (player.Status & CharacterStatus.Status.Resting) == 0)
-            {
-                _writer.WriteLine("You can only use this on stunned or targets that are not prepared.", player.ConnectionId);
-                return 0;
-            }
-
-
-            var weaponDam = player.Equipped.Wielded?.Damage.Maximum ?? 1 * 2;
-            var str = player.Attributes.Attribute[EffectLocation.Strength];
-            var damage = weaponDam + DiceBag.Roll(1, 3, 10) + str / 5;
-
-
-            _skillManager.DamagePlayer("overhead crush", damage, player, target, room);
-
-            player.Lag += 1;
-
-            _skillManager.updateCombat(player, target, room);
-
-            return damage;
+            
+            return 0;
         }
 
         public int Cleave(Player player, Player target, Room room, string obj)
         {
-            if (player.Equipped.Wielded == null)
-            {
-                _writer.WriteLine("Cleave with what?", player.ConnectionId);
-                return 0;
-            }
-
-            var weaponDam = player.Equipped.Wielded?.Damage.Maximum ?? 1 * 2;
-            var str = player.Attributes.Attribute[EffectLocation.Strength];
-            var damage = weaponDam + DiceBag.Roll(1, 3, 10) + str / 5;
-
-
-            _skillManager.DamagePlayer("cleave", damage, player, target, room);
-
-            player.Lag += 1;
-
-            _skillManager.updateCombat(player, target, room);
-
             return 0;
 
         }
 
         public int Impale(Player player, Player target, Room room, string obj)
         {
-            if (player.Equipped.Wielded == null)
-            {
-                _writer.WriteLine("Impale with what?", player.ConnectionId);
-            }
-
-
-            var weaponDam = player.Equipped.Wielded?.Damage.Maximum ?? 1 * 2;
-            var str = player.Attributes.Attribute[EffectLocation.Strength];
-            var damage = weaponDam + DiceBag.Roll(1, 2, 10) + str / 5;
-
-            /*dexterity check */
-            var chance = 50;
-            chance += player.Attributes.Attribute[EffectLocation.Dexterity];
-            chance -= target.Attributes.Attribute[EffectLocation.Dexterity];
-
-            if (player.Affects.Haste)
-            {
-                chance += 10;
-            }
-
-            if (target.Affects.Haste)
-            {
-                chance -= 25;
-            }
-
-            /* level check */
-            chance += player.Level - target.Level;
-
-            if (DiceBag.Roll(1, 1, 100) < chance)
-            {
-
-                _skillManager.DamagePlayer("impale", damage, player, target, room);
-
-                player.Lag += 1;
-
-                _skillManager.updateCombat(player, target, room);
-
-            }
-            else
-            {
-                var skillMessageMiss = new SkillMessage()
-                {
-                    Hit =
-                    {
-                        ToPlayer = $"You try to impale {target.Name} and miss.",
-                        ToRoom = $"{player.Name} tries to impale {target.Name} but {target.Name} easily avoids it.",
-                        ToTarget = $"{player.Name} tries to impale you but misses."
-                    }
-                };
-
-                _skillManager.EmoteAction(player, target, room, skillMessageMiss);
-            }
-
-            return damage;
+            return 0;
         }
 
         public int Slash(Player player, Player target, Room room, string obj)
         {
-            if (player.Equipped.Wielded == null)
-            {
-                _writer.WriteLine("Slash with what?", player.ConnectionId);
-            }
-
-
-            var weaponDam = player.Equipped.Wielded?.Damage.Maximum ?? 1 * 2;
-            var str = player.Attributes.Attribute[EffectLocation.Strength];
-            var damage = weaponDam + DiceBag.Roll(1, 2, 10) + str / 5;
-
-            /*dexterity check */
-            var chance = 50;
-            chance += player.Attributes.Attribute[EffectLocation.Dexterity];
-            chance -= target.Attributes.Attribute[EffectLocation.Dexterity];
-
-            if (player.Affects.Haste)
-            {
-                chance += 10;
-            }
-
-            if (target.Affects.Haste)
-            {
-                chance -= 25;
-            }
-
-            /* level check */
-            chance += player.Level - target.Level;
-
-            /* TODO: terrain check, can't dirt kick underwater *taps head* */
-            /* Check if player is flying/floating then fail dirt kick */
-
-            if (DiceBag.Roll(1, 1, 100) < chance)
-            {
-
-                _skillManager.DamagePlayer("slash", damage, player, target, room);
-
-                player.Lag += 1;
-
-                _skillManager.updateCombat(player, target, room);
-
-            }
-            else
-            {
-                var skillMessageMiss = new SkillMessage()
-                {
-                    Hit =
-                    {
-                        ToPlayer = $"You try to slash {target.Name} and miss.",
-                        ToRoom = $"{player.Name} tries to slash {target.Name} but {target.Name} easily avoids it.",
-                        ToTarget = $"{player.Name} tries to slash you but misses."
-                    }
-                };
-
-                _skillManager.EmoteAction(player, target, room, skillMessageMiss);
-            }
-
-            return damage;
+            return 0;
         }
 
         public int Trip(Player player, Player target, Room room)
         {
-            var str = player.Attributes.Attribute[EffectLocation.Strength];
-            var damage = DiceBag.Roll(1, 1, 4) + str / 5;
 
-            var skillMessage = new SkillMessage()
-            {
-                Hit =
-                {
-                    ToPlayer = $"You trip {target.Name} and {target.Name} goes down!",
-                    ToRoom = $"{player.Name} trips {target.Name} and {target.Name} goes down!",
-                    ToTarget = $"{player.Name} trips you and you go down!"
-                },
-                Miss =
-                {
-                    ToPlayer = $"You trip {target.Name} and {target.Name} goes down!",
-                    ToRoom = $"{player.Name} trips {target.Name} and {target.Name} goes down!",
-                    ToTarget = $"{player.Name} trips you and you go down!"
-                }
-            };
-
-            if (target.Lag == 0)
-            {
-
-                _skillManager.EmoteAction(player, target, room, skillMessage);
-
-                _skillManager.DamagePlayer("trip", damage, player, target, room);
-
-                player.Lag += 1;
-                target.Lag += 2;
-
-                target.Status = CharacterStatus.Status.Stunned;
-
-                _skillManager.updateCombat(player, target, room);
-            }
-            else
-            {
-                player.Lag += 1;
-
-                var skillMessageMiss = new SkillMessage()
-                {
-                    Hit =
-                    {
-                        ToPlayer = $"You try to trip {target.Name} and miss.",
-                        ToRoom = $"{player.Name} tries to trip {target.Name} but {target.Name} easily avoids it.",
-                        ToTarget = $"{player.Name} tries to trip you but fails."
-                    },
-                    Miss =
-                    {
-                        ToPlayer = $"You try to trip {target.Name} and miss.",
-                        ToRoom = $"{player.Name} tries to trip {target.Name} but {target.Name} easily avoids it.",
-                        ToTarget = $"{player.Name} tries to trip you but fails."
-                    }
-                };
-
-                _skillManager.EmoteAction(player, target, room, skillMessageMiss);
-            }
-
-            return damage;
+            return 0;
         }
 
         public int UpperCut(Player player, Player target, Room room, string obj)

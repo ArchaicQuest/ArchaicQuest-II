@@ -5,6 +5,8 @@ using ArchaicQuestII.GameLogic.Skill.Core;
 using ArchaicQuestII.GameLogic.Spell;
 using System.Collections.Generic;
 using System.Linq;
+using ArchaicQuestII.GameLogic.Skill.Model;
+using DefineSkill = ArchaicQuestII.GameLogic.Skill.Model.DefineSkill;
 
 namespace ArchaicQuestII.GameLogic.SeedData
 {
@@ -12,10 +14,40 @@ namespace ArchaicQuestII.GameLogic.SeedData
     {
         internal static void SeedAndCache(IDataBase db, ICache cache)
         {
-            var skill = new DefineSkill();
+ 
             var seedData = new List<Skill.Model.Skill>()
             {
-                new CraftingSkills().Cooking(),
+                DefineSkill.Axe(),
+                DefineSkill.Blunt(),
+                DefineSkill.Bows(),
+                DefineSkill.Charge(),
+                DefineSkill.Cleave(),
+                DefineSkill.Crossbow(),
+                DefineSkill.Elbow(),
+                DefineSkill.Exotic(),
+                DefineSkill.Flail(),
+                DefineSkill.Headbutt(),
+                DefineSkill.Impale(),
+                DefineSkill.Kick(),
+                DefineSkill.Lore(),
+                DefineSkill.Lunge(),
+                DefineSkill.Polearm(),
+                DefineSkill.Slash(),
+                DefineSkill.Spear(),
+                DefineSkill.Stab(),
+                DefineSkill.Staff(),
+                DefineSkill.Trip(),
+                DefineSkill.Whip(),
+                DefineSkill.DirtKick(),
+                DefineSkill.HamString(),
+                DefineSkill.LongBlade(),
+                DefineSkill.OverheadCrush(),
+                DefineSkill.ShieldBash(),
+                DefineSkill.ShortBlades(),
+                DefineSkill.UpperCut(),
+                DefineSkill.HandToHand()
+                
+               /* new CraftingSkills().Cooking(),
                 new CraftingSkills().Crafting(),
                 new CraftingSkills().Foraging(),
                 new WeaponTypeSkills().Crossbow(),
@@ -40,7 +72,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
                 new AllSpells().Armour(),
                 new AllSpells().Bless(),
                  new AllSpells().Identify(),
-                skill.Kick(),
+                DefineOffensiveSkills.Kick(),
                 skill.Elbow(),
                 skill.Lore(),
                 skill.Trip(),
@@ -69,7 +101,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
                 skill.Impale(),
                 skill.Slash(),
                 skill.OverheadCrush(),
-                skill.Cleave()
+                skill.Cleave()*/
             };
 
             if (!db.DoesCollectionExist(DataBase.Collections.Skill))

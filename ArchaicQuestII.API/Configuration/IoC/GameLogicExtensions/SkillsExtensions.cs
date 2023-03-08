@@ -14,7 +14,7 @@ namespace ArchaicQuestII.API.Configuration.IoC.GameLogicExtensions
             services.AddSingleton<IPassiveSkills, PassiveSkills>();
             services.AddSingleton<IUtilSkills, UtilSkills>();
             services.AddSingleton<ISkillList, SkillList>();
-            services.AddSingleton<ISKill, DoSkill>();
+           // services.AddSingleton<ISKill, DoSkill>();
             
             return services;
         }

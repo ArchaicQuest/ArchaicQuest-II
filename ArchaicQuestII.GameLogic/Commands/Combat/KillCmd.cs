@@ -48,7 +48,7 @@ public class KillCmd : ICommand
         var command = input.ElementAtOrDefault(0);
         var target = input.ElementAtOrDefault(1);
         var isMurder = command == "murder";
-        
+
         Core.Combat.Fight(player, target, room, isMurder);
     }
 }

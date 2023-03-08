@@ -4,6 +4,7 @@ using System.Linq;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
+using ArchaicQuestII.GameLogic.Skill.Core;
 using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Commands
@@ -16,7 +17,7 @@ namespace ArchaicQuestII.GameLogic.Commands
         public ICore Core { get; }
         public CommandHandler(ICore core)
         {
-            Core = core; 
+            Core = core;
             var commandTypes = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(s => s.GetTypes())
                 .Where(p => typeof(ICommand).IsAssignableFrom(p) && !p.IsInterface);
@@ -24,7 +25,6 @@ namespace ArchaicQuestII.GameLogic.Commands
             foreach (var t in commandTypes)
             {
                 var command = (ICommand)Activator.CreateInstance(t, Core);
-
                 if (command == null) continue;
 
                 foreach (var alias in command.Aliases)
@@ -54,7 +54,7 @@ namespace ArchaicQuestII.GameLogic.Commands
             // Handle social emote that are entered by just typing the name such as smile or smile Harvey
             // here manipulate the command to add social in front of it so the social command is called.
             var social = Core.Cache.GetSocials().Keys.FirstOrDefault(x => x.Equals(commandInput[0]));
-            if (social != null)
+            if (command == null && social != null)
             {
                 var emoteTarget = ""; 
                 
@@ -79,7 +79,7 @@ namespace ArchaicQuestII.GameLogic.Commands
                 return;
             }
             
-            if (CheckStatus(player, command.DeniedStatus))
+            if (CheckSkillRequirements(player, command) && CheckStatus(player, command.DeniedStatus) )
             {
                 command.Execute(player, room, commandInput);
             }
@@ -139,6 +139,38 @@ namespace ArchaicQuestII.GameLogic.Commands
             }
 
             return false;
+        }
+        
+        /// <summary>
+        /// Checks if the player has the skill to use this command
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        private bool CheckSkillRequirements(Player player, ICommand command)
+          {
+              // Check if command uses ISkillCommand interface
+              var isSkill = command.GetType().GetInterface("ISkillCommand");
+              if (isSkill == null)
+              {
+                  return true;
+              }
+              
+              // Check if player has skill
+              if (player.Skills.FirstOrDefault(x => x.SkillName.Equals(command.Title)) == null)
+              {
+                  Core.Writer.WriteLine("You do not know that skill.");
+                  return false;
+              }
+              
+              // Check level requirements met
+              if (player.Level < Core.Cache.GetClass(player.ClassName).Skills.FirstOrDefault(x => x.SkillName == command.Title)?.Level)
+              {
+                  Core.Writer.WriteLine("You are not skilled enough to use this skill");
+                  return false;
+              }
+
+            return true;
         }
     }
 }

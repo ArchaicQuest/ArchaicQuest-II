@@ -15,12 +15,6 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
             var coreSkill = new Model.Skill()
             {
                 Name = "Cooking",
-                Description =
-                    "The art of cooking is an important skill to have, cooking certain foods allow you to boost your attributes beyond their maximum value or to replenish lost hit points or mana.",
-                Type = SkillType.None,
-                DateCreated = DateTime.Now,
-
-
             };
 
 
@@ -34,12 +28,6 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
             {
 
                 Name = "Crafting",
-                Description =
-                    "General crafting skill covers basic crafting items such as a camp fire or simple clothing that an adventurer can do that doesn't require an expertise in a particular field such as Armour or Weapon crafting.",
-                Type = SkillType.None,
-                DateCreated = DateTime.Now,
-
-
 
             };
 
@@ -53,12 +41,6 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
             var coreSkill = new Model.Skill()
             {
                 Name = "Foraging",
-                Description =
-                    "Foraging allows the the player to pick fruits, herbs, flowers and other flora. The command to use is harvest <item>",
-                Type = SkillType.None,
-                DateCreated = DateTime.Now,
-
-
             };
 
 

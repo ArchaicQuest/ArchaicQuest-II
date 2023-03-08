@@ -253,9 +253,9 @@ namespace ArchaicQuestII.GameLogic.Hubs
                         IsSpell = false
                     };
 
-                    if (theSkill.Cost.Table.ContainsKey(Skill.Enum.Cost.Mana))
+                    if (theSkill?.ManaCost > 0)
                     {
-                        skill.IsSpell = _cache.GetSkill(skill.SkillId) == null ? theSkill.Cost.Table[Skill.Enum.Cost.Mana] > 0 ? true : false : _cache.GetSkill(skill.SkillId).Cost.Table[Skill.Enum.Cost.Mana] > 0 ? true : false;
+                        skill.IsSpell = _cache.GetSkill(skill.SkillId) == null ? theSkill.ManaCost > 0 ? true : false : _cache.GetSkill(skill.SkillId).ManaCost > 0 ? true : false;
                     }
 
                     player.Skills.Add(addSkill);

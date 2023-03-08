@@ -53,10 +53,10 @@ namespace ArchaicQuestII.GameLogic.Spell
 
             // casting spell on item in inventory or worn
             // example spells, cast enchant sword, cast light sword
-            if ((spell.ValidTargets & ValidTargets.TargetObjectInventory) != 0 || (spell.ValidTargets & ValidTargets.TargetObjectEquipped) != 0)
+         /*   if ((spell.ValidTargets & ValidTargets.TargetObjectInventory) != 0 || (spell.ValidTargets & ValidTargets.TargetObjectEquipped) != 0)
             {
                 return CheckTargetItem(spell, target, room, player);
-            }
+            }*/
 
             // TODO: unsure on these:
 
