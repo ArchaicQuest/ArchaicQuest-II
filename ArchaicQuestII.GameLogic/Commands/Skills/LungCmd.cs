@@ -50,7 +50,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             var obj = input.ElementAtOrDefault(1)?.ToLower() ?? player.Target;
             if (string.IsNullOrEmpty(obj))
             {
-                Core.Writer.WriteLine("Slash What!?.", player.ConnectionId);
+                Core.Writer.WriteLine("Lunge What!?.", player.ConnectionId);
                 return;
             }
           
@@ -63,11 +63,11 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             var textToTarget = string.Empty;
             var textToRoom = string.Empty;
 
-            var skillSuccess = SkillSuccessWithMessage(player, DefineSkill.Lunge(), $"You attempt to slash {target.Name} but miss.");
+            var skillSuccess = SkillSuccessWithMessage(player, DefineSkill.Lunge(), $"You attempt to lunge at {target.Name} but miss.");
             if (!skillSuccess)
             { 
-                textToTarget = $"{player.Name} tries to slash you but misses."; 
-                textToRoom = $"{player.Name} tries to slash {target.Name} but misses.";
+                textToTarget = $"{player.Name} tries to lunge at you but misses."; 
+                textToRoom = $"{player.Name} tries to lunge at {target.Name} but misses.";
                 
                 EmoteAction(textToTarget, textToRoom, target.Name, room, player);
                 player.Lag += 1;
@@ -76,7 +76,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             
             var weaponDam = player.Equipped.Wielded.Damage.Maximum;
             var str = player.Attributes.Attribute[EffectLocation.Strength];
-            var damage = weaponDam + DiceBag.Roll(1, 2, 10) + str / 5;
+            var damage = DiceBag.Roll(3, 1, 6) + str / 5 + weaponDam;
 
             DamagePlayer(DefineSkill.Lunge().Name, damage, player, target, room);
 

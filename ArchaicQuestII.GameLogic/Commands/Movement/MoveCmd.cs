@@ -26,6 +26,7 @@ public class MoveCmd : ICommand
             "southeast", 
             "se",
             "southwest",
+            "sw",
             "northeast",
             "ne",
             "northwest",
