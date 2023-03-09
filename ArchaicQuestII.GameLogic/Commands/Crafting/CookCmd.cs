@@ -89,7 +89,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
                     return;
                 }
 
-                if (items.Count > 3)
+                if (items.Count >= 3)
                 {
                     Core.Writer.WriteLine("<p>You can only cook with 3 raw food ingredients. The following ingredients are not raw food and can't be cooked.</p>",
                         player.ConnectionId);
@@ -107,26 +107,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
 
                     return;
                 }
-
-                if (items.Count == 3 && pot.Container.Items.FirstOrDefault(x => x.ItemType != Item.Item.ItemTypes.Food) != null)
-                {
-                    Core.Writer.WriteLine($"<p>You can only cook with 3 raw ingredients. The following ingredients cannot be cooked with.</p>",
-                        player.ConnectionId);
-
-                    var sb = new StringBuilder();
-                    sb.Append("<p>");
-                    foreach (var invalidItem in pot.Container.Items.Where(x => x.ItemType != Item.Item.ItemTypes.Food))
-                    {
-                        sb.Append($"{invalidItem.Name}, ");
-                    }
-                    sb.Append("</p>");
-
-                    Core.Writer.WriteLine(sb.ToString(),
-                        player.ConnectionId);
-
-                    return;
-                }
-            
+                
                 var ingredients = new List<Tuple<Item.Item, int>>();
 
                 foreach (var item in items)

@@ -274,10 +274,19 @@ Related help files: get, put, give, drop
         containerObj.Container.Items.Add(item);
         Core.UpdateClient.PlaySound("drop", player);
         
+      
+        
         Core.Writer.WriteLine($"<p>You put {item.Name.ToLower()} into {containerObj.Name.ToLower()}.</p>",
             player.ConnectionId);
         Core.Writer.WriteToOthersInRoom($"<p>{player.Name} puts {item.Name.ToLower()} into {containerObj.Name.ToLower()}.</p>",
             room, player);
+        
+        // cook pot can only have 3 items
+        if (containerObj.ItemType == Item.Item.ItemTypes.Cooking && containerObj.Container.Items.Count > 3)
+        {
+            Core.Writer.WriteLine($"<p>Too many items in the cook pot, Only 3 ingredients allowed.</p>",
+                player.ConnectionId);
+        }
         
         Core.UpdateClient.UpdateInventory(player);
         Core.UpdateClient.UpdateScore(player);
@@ -307,6 +316,13 @@ Related help files: get, put, give, drop
                 room, player);
             
             player.Inventory.RemoveAt(i);
+        }
+        
+        // cook pot can only have 3 items
+        if (container.ItemType == Item.Item.ItemTypes.Cooking && container.Container.Items.Count > 3)
+        {
+            Core.Writer.WriteLine($"<p>Too many items in the cook pot, Only 3 ingredients allowed.</p>",
+                player.ConnectionId);
         }
         Core.UpdateClient.UpdateInventory(player);
         Core.UpdateClient.UpdateScore(player);

@@ -95,7 +95,7 @@ Related help files: drop, put, give
                 return;
             }
 
-            if (containerObj.ItemType != Item.Item.ItemTypes.Container)
+            if (containerObj.ItemType != Item.Item.ItemTypes.Container && containerObj.ItemType != Item.Item.ItemTypes.Cooking)
             {
                 if (containerObj.ItemType == Item.Item.ItemTypes.Forage)
                 {
