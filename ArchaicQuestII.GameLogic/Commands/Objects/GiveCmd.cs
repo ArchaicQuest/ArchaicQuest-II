@@ -22,7 +22,7 @@ give 10 gold larissa
 
 Related help files: get, put, give, drop
 ";
-        Usages = new[] {"Type: give 'target' 'object', Example: give apple timmy, Example: give 10 gold timmy"};
+        Usages = new[] {"Type: give 'object' 'target', Example: give apple timmy, Example: give 10 gold timmy"};
         Title = "";
         DeniedStatus = new[]
         {
@@ -51,7 +51,7 @@ Related help files: get, put, give, drop
 
     public void Execute(Player player, Room room, string[] input)
     {
-        var targetName = input.ElementAtOrDefault(1);
+        var targetName = input.ElementAtOrDefault(2);
         
         if (string.IsNullOrEmpty(targetName))
         {
@@ -69,7 +69,7 @@ Related help files: get, put, give, drop
         }
         else
         {
-            itemName = input.ElementAtOrDefault(2);
+            itemName = input.ElementAtOrDefault(1);
             itemAmount = "1";
         }
 
