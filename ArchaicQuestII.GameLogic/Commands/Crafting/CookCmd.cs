@@ -17,7 +17,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
     {
         public CookCmd(ICore core)
         {
-            Aliases = new[] {"Cook"};
+            Aliases = new[] {"cook"};
             Description = "Cook food at a fire. A fire and a cook pot is needed.";
             Usages = new[] {"Type: cook"};
             Title = "";
@@ -58,16 +58,40 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
             var pot = room.Items.FirstOrDefault(x => x.ItemType == Item.Item.ItemTypes.Cooking);
 
             // What happens if player throws in random shit which is not a food item
-            var items = pot.Container.Items.Where(x => x.ItemType == Item.Item.ItemTypes.Food).ToList();
-
-            if (items.Count < 3)
+            if (pot != null)
             {
-                Core.Writer.WriteLine("<p>You need 3 raw ingredients before you can cook.</p>",
-                    player.ConnectionId);
-                
-                if (pot.Container.Items.FirstOrDefault(x => x.ItemType != Item.Item.ItemTypes.Food) != null)
+                var items = pot.Container.Items.Where(x => x.ItemType == Item.Item.ItemTypes.Food).ToList();
+
+                if (items.Count < 3)
                 {
-                    Core.Writer.WriteLine($"<p>The following ingredients cannot be cooked with.</p>",
+                    Core.Writer.WriteLine("<p>You need 3 raw ingredients before you can cook.</p>",
+                        player.ConnectionId);
+                
+                    if (pot.Container.Items.FirstOrDefault(x => x.ItemType != Item.Item.ItemTypes.Food) != null)
+                    {
+                        Core.Writer.WriteLine($"<p>The following ingredients cannot be cooked with.</p>",
+                            player.ConnectionId);
+
+                        var sb = new StringBuilder();
+                        sb.Append("<p>");
+                        foreach (var invalidItem in pot.Container.Items.Where(x => x.ItemType != Item.Item.ItemTypes.Food))
+                        {
+                            sb.Append($"{invalidItem.Name}, ");
+                        }
+                        sb.Append("</p>");
+
+                        Core.Writer.WriteLine(sb.ToString(),
+                            player.ConnectionId);
+
+                        return;
+                    }
+
+                    return;
+                }
+
+                if (items.Count > 3)
+                {
+                    Core.Writer.WriteLine("<p>You can only cook with 3 raw food ingredients. The following ingredients are not raw food and can't be cooked.</p>",
                         player.ConnectionId);
 
                     var sb = new StringBuilder();
@@ -84,109 +108,89 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
                     return;
                 }
 
-                return;
-            }
-
-            if (items.Count > 3)
-            {
-                Core.Writer.WriteLine("<p>You can only cook with 3 raw food ingredients. The following ingredients are not raw food and can't be cooked.</p>",
-                    player.ConnectionId);
-
-                var sb = new StringBuilder();
-                sb.Append("<p>");
-                foreach (var invalidItem in pot.Container.Items.Where(x => x.ItemType != Item.Item.ItemTypes.Food))
+                if (items.Count == 3 && pot.Container.Items.FirstOrDefault(x => x.ItemType != Item.Item.ItemTypes.Food) != null)
                 {
-                    sb.Append($"{invalidItem.Name}, ");
+                    Core.Writer.WriteLine($"<p>You can only cook with 3 raw ingredients. The following ingredients cannot be cooked with.</p>",
+                        player.ConnectionId);
+
+                    var sb = new StringBuilder();
+                    sb.Append("<p>");
+                    foreach (var invalidItem in pot.Container.Items.Where(x => x.ItemType != Item.Item.ItemTypes.Food))
+                    {
+                        sb.Append($"{invalidItem.Name}, ");
+                    }
+                    sb.Append("</p>");
+
+                    Core.Writer.WriteLine(sb.ToString(),
+                        player.ConnectionId);
+
+                    return;
                 }
-                sb.Append("</p>");
-
-                Core.Writer.WriteLine(sb.ToString(),
-                    player.ConnectionId);
-
-                return;
-            }
-
-            if (items.Count == 3 && pot.Container.Items.FirstOrDefault(x => x.ItemType != Item.Item.ItemTypes.Food) != null)
-            {
-                Core.Writer.WriteLine($"<p>You can only cook with 3 raw ingredients. The following ingredients cannot be cooked with.</p>",
-                    player.ConnectionId);
-
-                var sb = new StringBuilder();
-                sb.Append("<p>");
-                foreach (var invalidItem in pot.Container.Items.Where(x => x.ItemType != Item.Item.ItemTypes.Food))
-                {
-                    sb.Append($"{invalidItem.Name}, ");
-                }
-                sb.Append("</p>");
-
-                Core.Writer.WriteLine(sb.ToString(),
-                    player.ConnectionId);
-
-                return;
-            }
             
-            var ingredients = new List<Tuple<Item.Item, int>>();
+                var ingredients = new List<Tuple<Item.Item, int>>();
 
-            foreach (var item in items)
-            {
-                var ingredient = ingredients.FirstOrDefault(x => x.Item1.Name.Equals(item.Name));
-                if (ingredient != null)
+                foreach (var item in items)
                 {
-                    var index = ingredients.FindIndex(x => x.Item1.Name.Equals(ingredient.Item1.Name));
+                    var ingredient = ingredients.FirstOrDefault(x => x.Item1.Name.Equals(item.Name));
+                    if (ingredient != null)
+                    {
+                        var index = ingredients.FindIndex(x => x.Item1.Name.Equals(ingredient.Item1.Name));
 
-                    var count = ingredient.Item2 + 1;
-                    ingredients[index] = Tuple.Create(item, count);
+                        var count = ingredient.Item2 + 1;
+                        ingredients[index] = Tuple.Create(item, count);
+                    }
+                    else
+                    {
+                        ingredients.Add(new Tuple<Item.Item, int>(item, 1));
+                    }
+                }
+
+                pot.Container.Items = new ItemList();
+                var cookedItem = GenerateCookedItem(ingredients);
+                Core.Writer.WriteLine("<p>You begin cooking.</p>",
+                    player.ConnectionId);
+                Core.Writer.WriteLine("<p>You stir the ingredients.</p>",
+                    player.ConnectionId, 1000);
+
+                Core.Writer.WriteLine("<p>You taste and season the dish.</p>",
+                    player.ConnectionId, 2500);
+
+                Core.Writer.WriteLine("<p>You stir the ingredients.</p>",
+                    player.ConnectionId, 5000);
+
+                var success = Helpers.SkillSuccessCheck(player, "cooking");
+
+                if (success)
+                {
+                    Core.Writer.WriteLine(
+                        $"<p class='improve'>You have successfully created {Helpers.AddArticle(cookedItem.Name).ToLower()}.</p>",
+                        player.ConnectionId, 6000);
+
+                    foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
+                    {
+                        Core.Writer.WriteLine($"<p>{player.Name} has cooked {cookedItem.Name}</p>",
+                            pc.ConnectionId, 6000);
+                    }
+
+                    player.Inventory.Add(cookedItem);
+                    player.Weight += cookedItem.Weight;
                 }
                 else
                 {
-                    ingredients.Add(new Tuple<Item.Item, int>(item, 1));
+                    Core.Writer.WriteLine(
+                        $"<p class='improve'>You have fail to create {Helpers.AddArticle(cookedItem.Name).ToLower()}.</p>",
+                        player.ConnectionId, 6000);
+
+                    foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
+                    {
+                        Core.Writer.WriteLine($"<p>{player.Name} fails to cook {cookedItem.Name}</p>",
+                            pc.ConnectionId, 6000);
+                    }
+
+                    Helpers.SkillLearnMistakes(player, "Cooking", Core.Gain, 6000);
                 }
             }
 
-            pot.Container.Items = new ItemList();
-            var cookedItem = GenerateCookedItem(ingredients);
-            Core.Writer.WriteLine("<p>You begin cooking.</p>",
-                player.ConnectionId);
-            Core.Writer.WriteLine("<p>You stir the ingredients.</p>",
-                 player.ConnectionId, 1000);
-
-            Core.Writer.WriteLine("<p>You taste and season the dish.</p>",
-                player.ConnectionId, 2500);
-
-            Core.Writer.WriteLine("<p>You stir the ingredients.</p>",
-                player.ConnectionId, 5000);
-
-            var success = Helpers.SkillSuccessCheck(player, "cooking");
-
-            if (success)
-            {
-                Core.Writer.WriteLine(
-                    $"<p class='improve'>You have successfully created {Helpers.AddArticle(cookedItem.Name).ToLower()}.</p>",
-                    player.ConnectionId, 6000);
-
-                foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
-                {
-                    Core.Writer.WriteLine($"<p>{player.Name} has cooked {cookedItem.Name}</p>",
-                        pc.ConnectionId, 6000);
-                }
-
-                player.Inventory.Add(cookedItem);
-                player.Weight += cookedItem.Weight;
-            }
-            else
-            {
-                Core.Writer.WriteLine(
-                    $"<p class='improve'>You have fail to create {Helpers.AddArticle(cookedItem.Name).ToLower()}.</p>",
-                    player.ConnectionId, 6000);
-
-                foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
-                {
-                    Core.Writer.WriteLine($"<p>{player.Name} fails to cook {cookedItem.Name}</p>",
-                        pc.ConnectionId, 6000);
-                }
-
-                Helpers.SkillLearnMistakes(player, "Cooking", Core.Gain, 6000);
-            }
             Core.UpdateClient.UpdateInventory(player);
             Core.UpdateClient.UpdateScore(player);
         }

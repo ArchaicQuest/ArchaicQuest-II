@@ -76,7 +76,7 @@ namespace ArchaicQuestII.GameLogic.Commands
 
             if (player.UserRole < command.UserRole)
             {
-                Core.Writer.WriteLine("<p>{red}You dont have the required role to use that command.{/red}</p>", player.ConnectionId);
+                Core.Writer.WriteLine("<p>{red}You dont have the required role to use that command.{/}</p>", player.ConnectionId);
                 return;
             }
             
