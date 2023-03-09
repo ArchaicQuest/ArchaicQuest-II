@@ -35,6 +35,7 @@ namespace ArchaicQuestII.GameLogic.Core
         
         public ITime Time { get; }
         public IDamage Damage { get; }
+        private IMobScripts _mobScripts { get; }
 
         public Core(ICache cache, 
             IWriteToClient writeToClient, 

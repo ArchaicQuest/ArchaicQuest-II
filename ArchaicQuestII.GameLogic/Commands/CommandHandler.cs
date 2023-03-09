@@ -6,6 +6,7 @@ using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Skill.Core;
 using ArchaicQuestII.GameLogic.World.Room;
+using MoonSharp.Interpreter;
 
 namespace ArchaicQuestII.GameLogic.Commands
 {
@@ -82,6 +83,41 @@ namespace ArchaicQuestII.GameLogic.Commands
             if (CheckSkillRequirements(player, command) && CheckStatus(player, command.DeniedStatus) )
             {
                 command.Execute(player, room, commandInput);
+
+                try
+                {
+
+                    foreach (var mob in room.Mobs)
+                    {
+
+                        if (!string.IsNullOrEmpty(mob.Events.Act) && room.Players.Any())
+                        {
+                            var commandText = string.Join(" ", commandInput);
+                            UserData.RegisterType<MobScripts>();
+
+                            Script script = new Script();
+
+                            DynValue obj = UserData.Create(Core.MobScripts);
+                            script.Globals.Set("obj", obj);
+                            UserData.RegisterProxyType<MyProxy, Room>(r => new MyProxy(room));
+                            UserData.RegisterProxyType<ProxyPlayer, Player>(r => new ProxyPlayer(player));
+                            UserData.RegisterProxyType<ProxyCommand, string>(r => new ProxyCommand(commandText));
+
+
+                            script.Globals["room"] = room;
+                            script.Globals["command"] = commandText.ToLower();
+                            script.Globals["player"] = player;
+                            script.Globals["mob"] = mob;
+
+
+                            DynValue res = script.DoString(mob.Events.Act);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
             }
         }
 

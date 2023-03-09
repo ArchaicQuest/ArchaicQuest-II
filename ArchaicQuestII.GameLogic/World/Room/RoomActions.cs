@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
@@ -207,7 +208,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
         /// <param name="player"></param>
         /// <param name="oldRoom"></param>
         /// <param name="newRoom"></param>
-        public void RoomChange(Player player, Room oldRoom, Room newRoom)
+        public async void RoomChange(Player player, Room oldRoom, Room newRoom)
         {
             player.Pose = string.Empty;
             
@@ -222,15 +223,19 @@ namespace ArchaicQuestII.GameLogic.World.Room
             
             EnterRoom(player, newRoom, oldRoom);
             
-            if (newRoom.Mobs.Any())
-            {
-                OnPlayerEnterEvent(newRoom, player);
-            }
-
             _updateClient.GetMap(player, _cache.GetMap($"{newRoom.AreaId}{newRoom.Coords.Z}"));
             _updateClient.UpdateMoves(player);
-            
             player.Buffer.Enqueue("look");
+            
+      
+            if (newRoom.Mobs.Any())
+            {
+                // force the on enter event to fire after Look
+                await Task.Delay(125);
+                OnPlayerEnterEvent(newRoom, player);
+            }
+            
+            
         }
 
         /// <summary>
