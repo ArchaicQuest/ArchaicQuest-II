@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Equipment;
@@ -45,7 +46,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
         public UserRole UserRole { get; }
         public ICore Core { get; }
 
-        public void Execute(Player player, Room room, string[] input)
+        public async void Execute(Player player, Room room, string[] input)
         {
             if (room.Items.FirstOrDefault(x => x.ItemType == Item.Item.ItemTypes.Cooking) == null)
             {
@@ -89,7 +90,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
                     return;
                 }
 
-                if (items.Count >= 3)
+                if (items.Count > 3)
                 {
                     Core.Writer.WriteLine("<p>You can only cook with 3 raw food ingredients. The following ingredients are not raw food and can't be cooked.</p>",
                         player.ConnectionId);
@@ -130,6 +131,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
                 var cookedItem = GenerateCookedItem(ingredients);
                 Core.Writer.WriteLine("<p>You begin cooking.</p>",
                     player.ConnectionId);
+                Core.UpdateClient.PlaySound("cooking", player);
                 Core.Writer.WriteLine("<p>You stir the ingredients.</p>",
                     player.ConnectionId, 1000);
 
@@ -153,6 +155,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
                             pc.ConnectionId, 6000);
                     }
 
+                   await Task.Delay(6000);
+       
                     player.Inventory.Add(cookedItem);
                     player.Weight += cookedItem.Weight;
                 }
@@ -211,7 +215,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
             }
             else
             {
-                var suffix = suffixes[DiceBag.Roll(1, 0, 5)];
+                var suffix = suffixes[DiceBag.Roll(1, 0, 4)];
 
                 foodName = $"{Helpers.RemoveArticle(mainIngredient.Item1.Name)} {(ingredientOrder.Count() > 1 ? $"with {Helpers.RemoveArticle(ingredientOrder.ElementAt(1).Item1.Name).ToLower()}" : "")} {(ingredientOrder.Count() > 2 ? $"  {Helpers.RemoveArticle(ingredientOrder.ElementAt(2).Item1.Name).ToLower()} " : "")}{suffix}";
             }

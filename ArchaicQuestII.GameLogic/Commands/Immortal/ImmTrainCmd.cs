@@ -20,7 +20,7 @@ public class ImmTrainCmd : ICommand
         };
             Title = "";
     DeniedStatus = null;
-        UserRole = UserRole.Staff;
+        UserRole = UserRole.Player;
         Core = core;
     }
     

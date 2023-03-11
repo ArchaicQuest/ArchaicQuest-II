@@ -4,11 +4,14 @@ using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Crafting;
+using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
+using Newtonsoft.Json;
 
 namespace ArchaicQuestII.GameLogic.Commands.Crafting
 {
@@ -17,9 +20,9 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
         public CraftCmd(ICore core)
         {
             Aliases = new[] {"craft"};
-            Description = "Craft Items";
-            Usages = new[] {"Type: craft something"};
-            Title = "";
+            Description = "Craft items, type craft list to see which items you can craft.";
+            Usages = new[] {"Type: craft list - to view craft-able items. \n\r craft <item> - to craft the item e.g. craft sword"};
+            Title = "Crafting";
             DeniedStatus = new[]
             {
                 CharacterStatus.Status.Busy,
@@ -46,16 +49,22 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
 
         public void Execute(Player player, Room room, string[] input)
         {
-            var target = input.ElementAtOrDefault(1);
+            var target = string.Join(" ", input.Skip(1));
 
-            if (string.IsNullOrEmpty(target) || target == "list")
+            if (!string.IsNullOrEmpty(target) && target.Equals("list"))
             {
-                List(player, room);
+                ListCrafts(player, true);
                 return;
             }
-
+            
+            if(string.IsNullOrEmpty(target))
+            {
+                ListCrafts(player, false);
+                return;
+            }
+            
             CraftItem(player, room, target);
-
+            
         }
         
         private void CraftItem(Player player, Room room, string item)
@@ -80,36 +89,37 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
             Core.Writer.WriteLine($"<p>You begin crafting {Helpers.AddArticle(recipe.Title).ToLower()}.</p>", player.ConnectionId);
 
             var success = Helpers.SkillSuccessCheck(player, "crafting");
+            
+            // use up materials
+            foreach (var material in recipe.CraftingMaterials)
+            {
+                var craftItem = player.Inventory.FirstOrDefault(x => x.Name.Equals(material.Material, StringComparison.CurrentCultureIgnoreCase));
+
+                if (craftItem == null)
+                {
+                    Core.Writer.WriteLine("<p>You appear to be missing required items.</p>", player.ConnectionId);
+                    return;
+                }
+
+                var limit = 1;
+                for (var i = player.Inventory.Count - 1; i >= 0; i--)
+                {
+                    if (player.Inventory[i].Name == craftItem.Name && limit <= material.Quantity)
+                    {
+                        limit++;
+                        player.Weight -= craftItem.Weight;
+                        player.Inventory.RemoveAt(i);
+                    }
+                }
+            }
 
             if (success)
             {
 
-                // use up materials
-                foreach (var material in recipe.CraftingMaterials)
-                {
-                    var craftItem = player.Inventory.FirstOrDefault(x => x.Name.Equals(material.Material, StringComparison.CurrentCultureIgnoreCase));
-
-                    if (craftItem == null)
-                    {
-                        Core.Writer.WriteLine("<p>You appear to be missing required items.</p>", player.ConnectionId);
-                        return;
-                    }
-
-                    var limit = 1;
-                    for (var i = player.Inventory.Count - 1; i >= 0; i--)
-                    {
-                        if (player.Inventory[i].Name == craftItem.Name && limit <= material.Quantity)
-                        {
-                            limit++;
-                            player.Weight -= craftItem.Weight;
-                            player.Inventory.RemoveAt(i);
-                        }
-                    }
-                }
-
                 if (recipe.CreatedItemDropsInRoom)
                 {
-                    room.Items.Add(recipe.CreatedItem);
+                    room.Items.Add(JsonConvert.DeserializeObject<Item.Item>(
+                        JsonConvert.SerializeObject(recipe.CreatedItem)));
                     Core.Writer.WriteLine($"<p>You continue working on {Helpers.AddArticle(recipe.Title).ToLower()}.</p>",
                         player.ConnectionId, 2000);
 
@@ -118,7 +128,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
                 }
                 else
                 {
-                    player.Inventory.Add(recipe.CreatedItem);
+                    player.Inventory.Add(JsonConvert.DeserializeObject<Item.Item>(
+                        JsonConvert.SerializeObject(recipe.CreatedItem)));
                     player.Weight += recipe.CreatedItem.Weight;
                     Core.Writer.WriteLine("<p>You slave over the crafting bench working away.</p>",
                         player.ConnectionId, 2000);
@@ -150,20 +161,22 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
                         player.ConnectionId, 2000);
                 }
 
-                Helpers.SkillLearnMistakes(player, "Crafting", Core.Gain, 2000);
+                Core.Writer.WriteLine(Helpers.SkillLearnMistakes(player, "Crafting", Core.Gain, 2000), player.ConnectionId, 2120);
             }
         }
-        
-        private void List(Player player, Room room)
+
+         private void ListCrafts(Player player, bool showAllCrafts)
         {
+
+            
             var materials = player.Inventory.Where(x => x.ItemType == Item.Item.ItemTypes.Material).ToList();
 
-            if (materials.Count == 0)
+          /*  if (materials.Count == 0)
             {
                 Core.Writer.WriteLine("<p>You don't have any materials to craft a thing.</p>", player.ConnectionId);
                 return;
             }
-
+*/
             // Lets find what you can craft
             var craftingRecipes = Core.Cache.GetCraftingRecipes();
 
@@ -173,7 +186,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
                 return;
             }
 
-            var craftingList = ReturnValidRecipes(player);
+            var craftingList = showAllCrafts ? craftingRecipes : ReturnValidRecipes(player);
 
             if (craftingList.Count == 0)
             {
@@ -181,39 +194,45 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
                 return;
             }
 
+
             var sb = new StringBuilder();
             sb.Append("<p>You can craft the following items:</p>");
             sb.Append("<table class='simple'>");
-            sb.Append("<tr><td>Name</td><td>Materials</td></tr>");
+            sb.Append($"<tr><td>Name</td><td>Materials</td></tr>");
             foreach (var craft in craftingList.Distinct())
             {
-                var materialsRequired = craft.CraftingMaterials.Aggregate("", (current, material) => current + $"{material.Material} x{material.Quantity}, ");
+                var materialsRequired = "";
+                foreach (var material in craft.CraftingMaterials)
+                {
+                    materialsRequired += $"{material.Material} x{material.Quantity}, ";
+                }
 
                 sb.Append($"<tr><td>{craft.Title}</td><td>{materialsRequired}</td></tr>");
             }
 
-            sb.Append("</table>");
+            sb.Append($"</table>");
 
             Core.Writer.WriteLine(sb.ToString(), player.ConnectionId);
 
         }
 
-        private List<CraftingRecipes> ReturnValidRecipes(Player player)
-        {
-            var craftingRecipes = Core.Cache.GetCraftingRecipes();
-            var materials = player.Inventory.Where(x => x.ItemType == Item.Item.ItemTypes.Material).GroupBy(y => y.Name)
-                .Select(z => z.First());
-            var craftingList = new List<CraftingRecipes>();
-            foreach (var material in materials)
-            {
-                var quantity = player.Inventory.Where(x => x.ItemType == Item.Item.ItemTypes.Material && x.Name.Equals(material.Name, StringComparison.CurrentCultureIgnoreCase)).ToList();
-                var canCraft = craftingRecipes.Where(x =>
-                    x.CraftingMaterials.Any(y => y.Material.Equals(material.Name, StringComparison.CurrentCultureIgnoreCase) && y.Quantity <= quantity.Count));
+         private List<CraftingRecipes> ReturnValidRecipes(Player player)
+         {
+             var craftingRecipes = Core.Cache.GetCraftingRecipes();
+             var materials = player.Inventory.Where(x => x.ItemType == Item.Item.ItemTypes.Material).GroupBy(y => y.Name)
+                 .Select(z => z.First());
+             var craftingList = new List<CraftingRecipes>();
+             foreach (var material in materials)
+             {
+                 var quantity = player.Inventory.Where(x => x.ItemType == Item.Item.ItemTypes.Material && x.Name.Equals(material.Name, StringComparison.CurrentCultureIgnoreCase)).ToList();
+                 var canCraft = craftingRecipes.Where(x =>
+                     x.CraftingMaterials.Any(y => y.Material.Equals(material.Name, StringComparison.CurrentCultureIgnoreCase) && y.Quantity <= quantity.Count));
 
-                craftingList.AddRange(canCraft);
-            }
+                 craftingList.AddRange(canCraft);
+             }
 
-            return craftingList;
-        }
+             return craftingList;
+         }
+       
     }
 }

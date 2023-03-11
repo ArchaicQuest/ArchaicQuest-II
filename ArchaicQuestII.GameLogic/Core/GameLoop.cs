@@ -132,12 +132,10 @@ namespace ArchaicQuestII.GameLogic.Core
                     foreach (var room in rooms)
                     {
                         //max 187MB allocated type: string too much memory used here
-                      /*  var originalRoom = JsonConvert.DeserializeObject<Room>(
+                    var originalRoom = JsonConvert.DeserializeObject<Room>(
                             JsonConvert.SerializeObject(_cache.GetOriginalRoom(Helpers.ReturnRoomId(room))));
-                            */
-                        var originalRoom = new Room();
-                       originalRoom = _cache.GetOriginalRoom(Helpers.ReturnRoomId(room));
-
+                        
+                  
                        foreach (var mob in originalRoom.Mobs)
                         {
 
@@ -208,20 +206,29 @@ namespace ArchaicQuestII.GameLogic.Core
                         {
                             // need to check if item exists before adding
                             var itemExist = room.Items.FirstOrDefault(x => x.Id.Equals(item.Id));
+                            var itemCount = room.Items.FindAll(x => x.Id.Equals(item.Id));
+                            var originalItemCount = originalRoom.Items.FindAll(x => x.Id.Equals(item.Id));
+                           
+                                if (itemCount.Count < originalItemCount.Count)
+                                {
+                                    room.Items.Add(item);
+                                }
 
-                            if (itemExist == null)
-                            {
-                                room.Items.Add(item);
-                            }
-
-                            itemExist = room.Items.FirstOrDefault(x => x.Id.Equals(item.Id));
-
-                            if (itemExist.Container.Items.Count < item.Container.Items.Count)
-                            {
-                                itemExist.Container.Items = item.Container.Items;
-                                itemExist.Container.IsOpen = item.Container.IsOpen;
-                                itemExist.Container.IsLocked = item.Container.IsLocked;
-                            }
+                                if (itemExist != null && itemExist.ItemType == Item.Item.ItemTypes.Container)
+                                {
+                                    itemExist.Container.IsOpen = item.Container.IsOpen;
+                                    itemExist.Container.IsLocked = item.Container.IsLocked;
+                                    itemExist.Container.GoldPieces = item.Container.GoldPieces;
+                                    foreach (var items in item.Container.Items)
+                                    {
+                                        if (itemExist.Container.Items.Count < item.Container.Items.Count)
+                                        {
+                                            itemExist.Container.Items.Add(items);
+                                        }
+                                    }
+                                   
+                                }
+                                
 
                         }
 
