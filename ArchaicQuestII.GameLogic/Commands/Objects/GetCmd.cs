@@ -4,6 +4,7 @@ using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
+using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
@@ -153,7 +154,10 @@ Related help files: drop, put, give
         Core.UpdateClient.UpdateScore(player);
         room.Clean = false;
         
-        // TODO: You are over encumbered 
+        if(player.Weight > player.Attributes.Attribute[EffectLocation.Strength] * 3)
+        {
+            Core.Writer.WriteLine($"<p>You are now over encumbered by carrying too much weight.</p>", player.ConnectionId);
+        }
     }
 
     private void GetAll(Player player, Room room)
@@ -202,7 +206,11 @@ Related help files: drop, put, give
         room.Clean = false;
         Core.UpdateClient.UpdateInventory(player);
         Core.UpdateClient.UpdateScore(player);
-        // TODO: You are over encumbered 
+        
+        if(player.Weight > player.Attributes.Attribute[EffectLocation.Strength] * 3)
+        {
+            Core.Writer.WriteLine($"<p>You are now over encumbered by carrying too much weight.</p>", player.ConnectionId);
+        }
     }
 
     private void GetFromContainer(Player player, Room room, string target, Item.Item container)
@@ -256,6 +264,11 @@ Related help files: drop, put, give
         Core.UpdateClient.UpdateInventory(player);
         Core.UpdateClient.UpdateScore(player);
         room.Clean = false;
+        
+        if(player.Weight > player.Attributes.Attribute[EffectLocation.Strength] * 3)
+        {
+            Core.Writer.WriteLine($"<p>You are now over encumbered by carrying too much weight.</p>", player.ConnectionId);
+        }
     }
 
     private void GetAllFromContainer(Player player, Room room, Item.Item container)
@@ -299,6 +312,9 @@ Related help files: drop, put, give
         Core.UpdateClient.UpdateInventory(player);
         Core.UpdateClient.UpdateScore(player);
         room.Clean = false;
-        // TODO: You are over encumbered 
+        if(player.Weight > player.Attributes.Attribute[EffectLocation.Strength] * 3)
+        {
+            Core.Writer.WriteLine($"<p>You are now over encumbered by carrying too much weight.</p>", player.ConnectionId);
+        }
     }
 }

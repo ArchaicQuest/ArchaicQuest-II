@@ -3,6 +3,7 @@ using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
+using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
 using MoonSharp.Interpreter;
@@ -151,8 +152,11 @@ Related help files: get, put, give, drop
 
             var res = script.DoString(target.Events.Give);
         }
-
-        // TODO: You are over encumbered 
+        
+        if(target.Weight > target.Attributes.Attribute[EffectLocation.Strength] * 3)
+        {
+            Core.Writer.WriteLine($"<p>You are now over encumbered by carrying too much weight.</p>", target.ConnectionId);
+        }
     }
 
     private void GiveGold(Player player, Room room, Player target, int amount)

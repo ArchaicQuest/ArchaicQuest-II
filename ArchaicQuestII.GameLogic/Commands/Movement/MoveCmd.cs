@@ -70,7 +70,13 @@ public class MoveCmd : ICommand
             return;
         }
 
-     // TODO: Don't allow movement if over weight limit
+     // Don't allow movement if over weight limit
+     // ignore NPC that are over weight they can always move        
+     if(player.ConnectionId != "mob" && player.Weight > player.Attributes.Attribute[EffectLocation.Strength] * 3)
+     {
+         Core.Writer.WriteLine($"<p>You are over encumbered and cannot move.</p>", player.ConnectionId);
+         return;
+     }
 
         Exit getExitToNextRoom = null;
 
