@@ -217,7 +217,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 OnPlayerLeaveEvent(oldRoom, player);
             }
 
-            ExitRoom(player, oldRoom, newRoom);
+            ExitRoom(player, newRoom, oldRoom);
             
             UpdateCharactersLocation(player, oldRoom, newRoom);
             
@@ -278,13 +278,13 @@ namespace ArchaicQuestII.GameLogic.World.Room
             if (toRoom.Exits != null)
             {
                 if (toRoom.Exits.Down?.RoomId == fromRoom.Id)
-                    direction = "down";
+                    direction = "in from below";
                 if (toRoom.Exits.Up?.RoomId == fromRoom.Id)
-                    direction = "up";
+                    direction = "in from above";
                 if (toRoom.Exits.North?.RoomId == fromRoom.Id)
                     direction = "in from the north";
                 if (toRoom.Exits.South?.RoomId == fromRoom.Id)
-                    direction = "in form the south";
+                    direction = "in from the south";
                 if (toRoom.Exits.East?.RoomId == fromRoom.Id)
                     direction = "in from the east";
                 if (toRoom.Exits.West?.RoomId == fromRoom.Id)
@@ -317,7 +317,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
                     break;
             }
 
-            foreach (var p in fromRoom.Players.Where(p => character.Name != p.Name))
+            foreach (var p in toRoom.Players.Where(p => character.Name != p.Name))
             {
                 _writeToClient.WriteLine(
                     $"<span class='{(character.ConnectionId != "mob" ? "player" : "mob")}'>{character.Name} {movement} {direction}.</span>",

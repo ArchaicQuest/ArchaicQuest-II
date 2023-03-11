@@ -70,6 +70,8 @@ public class MoveCmd : ICommand
             return;
         }
 
+     // TODO: Don't allow movement if over weight limit
+
         Exit getExitToNextRoom = null;
 
         switch (input[0])
