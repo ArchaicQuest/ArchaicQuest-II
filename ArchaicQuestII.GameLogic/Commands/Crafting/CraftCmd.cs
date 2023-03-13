@@ -101,6 +101,11 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
                     return;
                 }
 
+                if (!success && material.RestoreOnFailedCraft)
+                {
+                    continue;
+                }
+
                 var limit = 1;
                 for (var i = player.Inventory.Count - 1; i >= 0; i--)
                 {

@@ -240,6 +240,12 @@ Related help files: get, put, give, drop
             Core.Writer.WriteLine($"<p>You don't see that here.</p>", player.ConnectionId);
             return;
         }
+        
+        if ((containerObj.ItemType != Item.Item.ItemTypes.Container && containerObj.ItemType != Item.Item.ItemTypes.Cooking))
+        {
+            Core.Writer.WriteLine($"<p>{containerObj.Name} is not a container.</p>", player.ConnectionId);
+            return;
+        }
 
         if (!containerObj.Container.IsOpen)
         {

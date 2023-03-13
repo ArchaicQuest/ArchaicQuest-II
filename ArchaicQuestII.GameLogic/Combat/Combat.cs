@@ -918,10 +918,11 @@ namespace ArchaicQuestII.GameLogic.Combat
                     corpse.Container.Items.Add(randomItem);
                 }
 
-                if (player.Config.AutoLoot)
+                var command = _cache.GetCommand("get");
+                if (player.Config.AutoLoot && command != null)
                 {
                     var corpseIndex = room.Items.IndexOf(corpse) + 1;
-                    player.Buffer.Enqueue($"get all {corpseIndex}.corpse");
+                    command.Execute(player, room, new []{"get", "all", $"{corpseIndex}.corpse"});
                 }
             }
             
@@ -936,7 +937,7 @@ namespace ArchaicQuestII.GameLogic.Combat
                 
                 if (player.Config.AutoSacrifice && command != null)
                 {
-                    command.Execute(player, room, new []{corpse.Name});
+                    command.Execute(player, room, new []{"sacrifice", corpse.Name});
                 }
 
                 room.Mobs.Remove(target);

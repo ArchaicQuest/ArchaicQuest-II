@@ -5,6 +5,7 @@ namespace ArchaicQuestII.GameLogic.Crafting
         public string Material { get; set; }
         public int Quantity { get; set; }
         public bool PresentInRoom { get; set; }
+        public bool RestoreOnFailedCraft { get; set; }
     }
 }
 
