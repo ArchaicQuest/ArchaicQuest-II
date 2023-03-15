@@ -61,7 +61,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
                 return;
             }
 
-            if (food.ItemType != Item.Item.ItemTypes.Food)
+            if (food.ItemType != Item.Item.ItemTypes.Food && food.ItemType != Item.Item.ItemTypes.Cooked)
             {
                 Core.Writer.WriteLine($"<p>You can't eat {food.Name.ToLower()}.</p>", player.ConnectionId);
                 return;

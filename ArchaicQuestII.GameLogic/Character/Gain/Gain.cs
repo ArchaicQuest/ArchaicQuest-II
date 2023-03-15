@@ -23,10 +23,27 @@ namespace ArchaicQuestII.GameLogic.Character.Gain
         public void GainExperiencePoints(Player player, Player target)
         {
             var expWorth = GetExpWorth(target);
-            if (Math.Floor((double)(player.Level / 2)) > target.Level)
+            var halfPlayerLevel = Math.Ceiling((double)(player.Level / 2m));
+            /*
+     
+            The following only happens If (player level / 2) is Greater than or equal to mob level  
+           If (player level / 2) + 2 is Greater than or equal to mob level then Exp Worth is divided by 4
+           Else Exp Worth is divided by 2
+            
+            */
+            if (halfPlayerLevel >= target.Level)
             {
-                expWorth /= 2;
+                if (halfPlayerLevel + 2 >= target.Level)
+                {
+                    expWorth /= 4;  
+                }
+                else
+                {
+                    expWorth /= 2;
+                }
+              
             }
+  
             player.Experience += expWorth;
             player.ExperienceToNextLevel -= expWorth;
 
@@ -96,7 +113,7 @@ namespace ArchaicQuestII.GameLogic.Character.Gain
             if (player.ExperienceToNextLevel <= 0)
             {
                 player.Level++;
-                player.ExperienceToNextLevel = player.Level * 2000; //TODO: have class and race mod
+                player.ExperienceToNextLevel = player.Level * 4000; //TODO: have class and race mod
 
                 var hpGain = (player.MaxAttributes.Attribute[EffectLocation.Constitution] / 100m) * 20;
                 var minHPGain = (hpGain / 100m) * 20;
