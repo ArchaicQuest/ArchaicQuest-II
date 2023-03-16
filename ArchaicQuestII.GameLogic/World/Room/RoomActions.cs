@@ -429,7 +429,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
                     }
                 }
 
-                if (mob.Agro && mob.Status != CharacterStatus.Status.Fighting && character.ConnectionId != "mob")
+                if (mob.Aggro && mob.Status != CharacterStatus.Status.Fighting && character.ConnectionId != "mob")
                 {
                     _writeToClient.WriteLine($"{mob.Name} attacks you!", character.ConnectionId);
                     _mobScripts.AttackPlayer(room, character, mob);

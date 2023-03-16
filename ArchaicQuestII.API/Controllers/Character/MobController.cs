@@ -77,6 +77,7 @@ namespace ArchaicQuestII.Controllers
                 Emotes = mob.Mob.Emotes,
                 Commands = mob.Mob.Commands,
                 Events = mob.Mob.Events,
+                Aggro = mob.Mob.Aggro,
                 Roam = mob.Mob.Roam,
                 Shopkeeper = mob.Mob.Shopkeeper,
                 Trainer = mob.Mob.Trainer,
