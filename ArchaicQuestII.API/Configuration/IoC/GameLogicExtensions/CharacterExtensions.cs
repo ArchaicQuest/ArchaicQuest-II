@@ -13,7 +13,6 @@ namespace ArchaicQuestII.API.Configuration.IoC.GameLogicExtensions
         public static IServiceCollection AddCharacterLogic(this IServiceCollection services)
         {
             services.AddSingleton<IGain, Gain>();
-            services.AddSingleton<IMobFunctions, Shop>();
             services.AddSingleton<IHealer, Healer>();
             services.AddSingleton<IHelp, HelpFile>();
 

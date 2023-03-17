@@ -98,9 +98,9 @@ public class ListShopInventoryCmd : ICommand
 
         }
 
-        private double AddMarkUp(int price)
+        private int AddMarkUp(int price)
         {
-            return price * 1.5;
+            return (int)Math.Floor(price * 1.5);
         }
 
 

@@ -385,7 +385,7 @@ namespace ArchaicQuestII.GameLogic.Utilities
                 return percentage;
             }
 
-            return (int)percentage * value / 100;
+            return (int)Math.Floor((double)(percentage * value / 100m));
         }
 
         public static int GetNthIndex(string s, char t, int n)
