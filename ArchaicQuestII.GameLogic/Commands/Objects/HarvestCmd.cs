@@ -241,7 +241,7 @@ public class HarvestCmd : ICommand
         }
 
         var collected = "";
-        var collectedCount = 1;
+        var collectedCount = 0;
         
         foreach (var harvestItem in thingToHarvest.Container.Items.Where(harvestItem => DiceBag.Roll(1, 1, 10) <= 3))
         {

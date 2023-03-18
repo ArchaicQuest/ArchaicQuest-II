@@ -60,7 +60,7 @@ public class SellCmd : ICommand
         }
 
         var hasItem = player.Inventory.FirstOrDefault(x =>
-            x.Name.Contains(itemName, StringComparison.InvariantCultureIgnoreCase));
+            x.Name.Contains(itemName, StringComparison.InvariantCultureIgnoreCase) && x.Equipped == false);
 
         if (hasItem == null)
         {

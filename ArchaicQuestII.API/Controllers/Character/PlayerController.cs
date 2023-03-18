@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ArchaicQuestII.GameLogic.Character.Config;
+using ArchaicQuestII.GameLogic.Commands.Character;
 using ArchaicQuestII.GameLogic.Utilities;
 using Newtonsoft.Json;
 public class TransferChar
@@ -360,6 +361,145 @@ namespace ArchaicQuestII.Controllers.character
 
             return Ok(new { message = "Character transferred successfully" });
         }
+        
+        [HttpPost]
+        [API.Helpers.Authorize]
+        [Route("api/character/update")]
+        public ObjectResult Update([FromBody] Player player)
+        {
+            if (!ModelState.IsValid)
+            {
+                var exception = new Exception("Invalid player");
+                throw exception;
+            }
+
+            var foundItem = _pdb.GetById<Player>(player.Id, PlayerDataBase.Collections.Players);
+
+            if (foundItem == null)
+            {
+                throw new Exception("player Id does not exist");
+                
+            }
+
+            var activePlayer = _cache.GetRoom(player.RoomId).Players.FirstOrDefault(x => x.Name.Equals(foundItem.Name));
+           
+            _cache.GetCommand("quit").Execute(activePlayer,   _cache.GetRoom(foundItem.RoomId), new[]{"quit"});
+            
+            
+
+            foundItem.ConnectionId = player.ConnectionId;
+
+            _cache.GetRoom(foundItem.RoomId).Players.Remove(foundItem);
+            _cache.RemovePlayer(foundItem.ConnectionId);
+
+          
+            foundItem = player;
+/*
+            var newPlayer = new Player
+            {
+                ConnectionId = player.ConnectionId,
+                UniqueId = player.UniqueId,
+                AccountId = player.AccountId,
+                Id = player.Id,
+                Name = player.Name,
+                LongName = null,
+                Status = player.Status,
+                Level = player.Level,
+                ArmorRating = new ArmourRating()
+                {
+                    Armour = player.ArmorRating.Armour,
+                    Magic = player.ArmorRating.Magic
+                },
+                Affects = new Affects(),
+                AlignmentScore = player.AlignmentScore,
+                TotalExperience = player.TotalExperience,
+                Experience = player.Experience,
+                ExperienceToNextLevel = player.ExperienceToNextLevel,
+                Attributes = player.Attributes,
+                MaxAttributes = player.Attributes,
+                Target = player.Target,
+                Inventory = player.Inventory,
+                Equipped = player.Equipped,
+                ClassName = player.ClassName,
+                Config = player.Config,
+                Description = player.Description,
+                Gender = player.Gender,
+                Stats = player.Stats,
+                MaxStats = player.MaxStats,
+                Money = player.Money,
+                Bank = player.Bank,
+                Trains = player.Trains,
+                Practices = player.Practices,
+                MobKills = player.MobKills,
+                MobDeaths = player.MobDeaths,
+                PlayerKills = player.PlayerKills,
+                PlayerDeaths = player.PlayerDeaths,
+                QuestPoints = player.QuestPoints,
+                Idle = false,
+                AFK = false,
+                CommandLog = player.CommandLog,
+                Pose = player.Pose,
+                Race = player.Race,
+                JoinedDate = player.JoinedDate,
+                LastLoginTime = DateTime.Now,
+                LastCommandTime = player.LastCommandTime,
+                PlayTime = player.PlayTime,
+                IsTelnet = false,
+                Skills = player.Skills,
+                Deleted = false,
+                DateCreated = player.DateCreated,
+                DateUpdated = player.DateUpdated,
+                Emotes = player.Emotes,
+                Commands = player.Commands,
+                EnterEmote = player.EnterEmote,
+                LeaveEmote = player.LeaveEmote,
+                Roam = false,
+                Shopkeeper = false,
+                Trainer = false,
+                IsHiddenScriptMob = false,
+                Events = player.Events,
+                EventState = player.EventState,
+                QuestLog = player.QuestLog,
+                Weight = player.Weight,
+                Hunger = player.Hunger,
+                Lag = player.Lag,
+                Mounted = player.Mounted,
+                Pets = player.Pets,
+                SpellList = player.SpellList,
+                Aggro = false,
+                Flags = player.Flags,
+                Build = player.Build,
+                Face = player.Face,
+                Skin = player.Skin,
+                Eyes = player.Eyes,
+                FacialHair = player.FacialHair,
+                ReplyTo = player.ReplyTo,
+                Followers = player.Followers,
+                Following = player.Following,
+                Grouped = player.Grouped,
+                HairColour = player.HairColour,
+                HairLength = player.HairLength,
+                HairTexture = player.HairTexture,
+                RoomId = player.RoomId,
+                RoomType = player.RoomType,
+                RecallId = player.RecallId,
+                DefaultAttack = player.DefaultAttack,
+                Buffer = player.Buffer,
+                Spells = player.Spells,
+                UserRole = player.UserRole,
+                Title = player.Title,
+                OpenedBook = player.OpenedBook,
+
+
+            };
+*/
+         
+            _pdb.Save(foundItem, PlayerDataBase.Collections.Players);
+ 
+            return Ok(foundItem.Id);
+
+        }
+
 
 
     }
