@@ -64,6 +64,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                  textToRoom = $"{player.Name} tries to kick {target.Name} but stumbles.";
                 EmoteAction(textToTarget, textToRoom, target.Name, room, player);
                 updateCombat(player, target, room);
+                Core.Writer.WriteLine(Helpers.SkillLearnMistakes(player, DefineSkill.Kick().Name, Core.Gain), player.ConnectionId);
                 player.Lag += 1;
                 return;
             }

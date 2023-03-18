@@ -98,6 +98,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 textToRoom = $"{player.Name} tries to kicks dirt into {target.Name}'s eyes!";
 
                 EmoteAction(textToTarget, textToRoom, target.Name, room, player);
+                Core.Writer.WriteLine(Helpers.SkillLearnMistakes(player, DefineSkill.DirtKick().Name, Core.Gain), player.ConnectionId);
             }
             
             player.Lag += 1;

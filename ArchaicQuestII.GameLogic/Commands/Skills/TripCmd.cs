@@ -92,6 +92,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 textToTarget = $"{player.Name} tries to trip you but fails.";
 
                 EmoteAction(textToTarget, textToRoom, target.Name, room, player);
+                Core.Writer.WriteLine(Helpers.SkillLearnMistakes(player, DefineSkill.Trip().Name, Core.Gain), player.ConnectionId);
             }
             updateCombat(player, target, room);
         }

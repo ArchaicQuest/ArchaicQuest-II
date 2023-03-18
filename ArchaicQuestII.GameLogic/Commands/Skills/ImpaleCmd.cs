@@ -70,6 +70,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 textToRoom = $"{player.Name} tries to impale {target.Name} with {player.Equipped.Wielded.Name.ToLower()} but misses.";
                 
                 EmoteAction(textToTarget, textToRoom, target.Name, room, player);
+                Core.Writer.WriteLine(Helpers.SkillLearnMistakes(player, DefineSkill.Impale().Name, Core.Gain), player.ConnectionId);
                 player.Lag += 1;
                 return;
             }
