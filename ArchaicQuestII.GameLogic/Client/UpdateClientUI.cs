@@ -119,7 +119,7 @@ namespace ArchaicQuestII.GameLogic.Client
 
             try
             {
-                await _hubContext.Clients.Client(player.ConnectionId).SendAsync("UpdatePlayerExp", player.ExperienceToNextLevel, player.ExperienceToNextLevel);
+                await _hubContext.Clients.Client(player.ConnectionId).SendAsync("UpdatePlayerExp", player.ExperienceToNextLevel, player.Experience);
                 // UpdateScore(player);
             }
             catch (Exception ex)
