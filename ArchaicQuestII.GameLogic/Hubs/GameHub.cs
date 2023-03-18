@@ -311,6 +311,8 @@ namespace ArchaicQuestII.GameLogic.Hubs
 
         private void SetArmorRating(Player player)
         {
+            player.ArmorRating.Armour = 0;
+            player.ArmorRating.Magic = 0;
             foreach (var eq in player.Inventory.FindAll(x => x.Equipped.Equals(true)))
             {
                 player.ArmorRating.Armour += eq.ArmourRating.Armour;
