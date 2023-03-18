@@ -208,7 +208,8 @@ namespace ArchaicQuestII.GameLogic.World.Room
         /// <param name="player"></param>
         /// <param name="oldRoom"></param>
         /// <param name="newRoom"></param>
-        public async void RoomChange(Player player, Room oldRoom, Room newRoom)
+        /// <param name="isFlee"></param>
+        public async void RoomChange(Player player, Room oldRoom, Room newRoom, bool isFlee)
         {
             player.Pose = string.Empty;
             
@@ -217,11 +218,11 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 OnPlayerLeaveEvent(oldRoom, player);
             }
 
-            ExitRoom(player, newRoom, oldRoom);
+            ExitRoom(player, newRoom, oldRoom, isFlee);
             
             UpdateCharactersLocation(player, oldRoom, newRoom);
             
-            EnterRoom(player, newRoom, oldRoom);
+            EnterRoom(player, newRoom, oldRoom, isFlee);
             
             _updateClient.GetMap(player, _cache.GetMap($"{newRoom.AreaId}{newRoom.Coords.Z}"));
             _updateClient.UpdateMoves(player);
@@ -270,7 +271,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
             }
         }
 
-        private void EnterRoom(Player character, Room toRoom, Room fromRoom)
+        private void EnterRoom(Player character, Room toRoom, Room fromRoom, bool isFlee)
         {
             var direction = "from nowhere";
             var movement = "appears";
@@ -307,14 +308,17 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 case CharacterStatus.Status.Mounted:
                     movement = "rides";
                     break;
-                case CharacterStatus.Status.Fleeing:
-                    movement = "flees";
-                    character.Status = CharacterStatus.Status.Standing;
-                    break;
                 case CharacterStatus.Status.Standing:
                     _updateClient.PlaySound("walk", character);
                     movement = "walks";
                     break;
+            }
+
+            if (isFlee)
+            {
+                _updateClient.PlaySound("walk", character);
+                movement = "rushes";
+          
             }
 
             foreach (var p in toRoom.Players.Where(p => character.Name != p.Name))
@@ -325,7 +329,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
             }
         }
 
-        private void ExitRoom(Player characterBase, Room toRoom, Room fromRoom)
+        private void ExitRoom(Player characterBase, Room toRoom, Room fromRoom, bool isFlee)
         {
             var direction = "to thin air";
             var movement = "vanishes";
@@ -362,13 +366,14 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 case CharacterStatus.Status.Mounted:
                     movement = "rides";
                     break;
-                case CharacterStatus.Status.Fleeing:
-                    movement = "flees";
-                    characterBase.Status = CharacterStatus.Status.Standing;
-                    break;
                 case CharacterStatus.Status.Standing:
                     movement = "walks";
                     break;
+            }
+            
+            if (isFlee)
+            {
+                movement = "flee";
             }
 
             foreach (var p in fromRoom.Players.Where(p => characterBase.Name != p.Name))

@@ -72,6 +72,6 @@ public class EnterCmd : ICommand
 
         var newRoom = Core.Cache.GetRoom(item.Portal.Destination);
         
-        Core.RoomActions.RoomChange(player, room, newRoom);
+        Core.RoomActions.RoomChange(player, room, newRoom, false);
     }
 }

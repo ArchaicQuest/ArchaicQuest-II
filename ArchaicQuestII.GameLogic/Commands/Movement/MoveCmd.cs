@@ -64,6 +64,8 @@ public class MoveCmd : ICommand
 
     public void Execute(Player player, Room room, string[] input)
     {
+
+        var isFlee = !string.IsNullOrEmpty(input.ElementAtOrDefault(1));
         if (CharacterCanMove(player) == false)
         {
             Core.Writer.WriteLine("<p>You are too exhausted to move.</p>", player.ConnectionId);
@@ -157,13 +159,13 @@ public class MoveCmd : ICommand
             }
         }
 
-        Core.RoomActions.RoomChange(player, room, getNextRoom);
+        Core.RoomActions.RoomChange(player, room, getNextRoom, isFlee);
 
         if (player.Followers.Count >= 1)
         {
             foreach (var follower in player.Followers.Where(follower => room.Players.Contains(follower) || room.Mobs.Contains(follower)))
             {
-                Core.RoomActions.RoomChange(follower, room, getNextRoom);
+                Core.RoomActions.RoomChange(follower, room, getNextRoom, isFlee);
             }
         }
 
@@ -174,7 +176,7 @@ public class MoveCmd : ICommand
 
             if (mountedMob != null)
             {
-                Core.RoomActions.RoomChange(mountedMob, room, getNextRoom);
+                Core.RoomActions.RoomChange(mountedMob, room, getNextRoom, isFlee);
             }
         }
     }

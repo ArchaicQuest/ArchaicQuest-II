@@ -4,6 +4,7 @@ using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
+using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
 
@@ -125,6 +126,12 @@ public class FleeCmd : ICommand
             Core.Cache.RemoveCharFromCombat(mob.Id.ToString());
         }
 
-        Core.Cache.GetCommand(validExits[getExitIndex].Name).Execute(player, room, new[]{validExits[getExitIndex].Name});
+        Core.Cache.GetCommand(validExits[getExitIndex].Name.ToLower()).Execute(player, room, new[]{validExits[getExitIndex].Name.ToLower(), "flee"});
+
+        // costs 15% of your moves to flee
+        player.Attributes.Attribute[EffectLocation.Moves] -=
+            (100 * 15) / player.MaxAttributes.Attribute[EffectLocation.Moves];
+        
+        Core.UpdateClient.UpdateMoves(player);
     }
 }
