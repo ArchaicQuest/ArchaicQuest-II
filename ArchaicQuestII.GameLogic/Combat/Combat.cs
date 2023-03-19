@@ -12,6 +12,7 @@ using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Item;
+using ArchaicQuestII.GameLogic.Skill.Model;
 using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
 
@@ -138,7 +139,12 @@ namespace ArchaicQuestII.GameLogic.Combat
             //this is breaking
 
             var skill = player.Skills.FirstOrDefault(x =>
-               x.SkillName.Replace(" ", "").Equals(skillName.Replace(" ", ""), StringComparison.CurrentCultureIgnoreCase) && player.Level >= x.Level);
+               x.SkillName.Equals(skillName, StringComparison.CurrentCultureIgnoreCase) && player.Level >= x.Level);
+
+            if (skill != null)
+            {
+                
+            }
             return skill;
         }
 
@@ -386,18 +392,23 @@ namespace ArchaicQuestII.GameLogic.Combat
 
                     // Move to formula, needs to use _dice instead of making a new instance
                     var avoidanceRoll = DiceBag.Roll(1, 1, 10);
-
-
+                    
+                    var avoidanceChance = DiceBag.Roll(1, 1, 100);
                     //10% chance to attempt a dodge
                     if (avoidanceRoll == 1)
                     {
                         var dodge = GetSkill("dodge", target);
 
-                        if (dodge != null)
+                        if (dodge != null && avoidanceChance <= dodge.Proficiency)
                         {
                             _writer.WriteLine($"<p>You dodge {player.Name}'s attack.</p>", target.ConnectionId);
                             _writer.WriteLine($"<p>{target.Name} dodges your attack.</p>", player.ConnectionId);
-                            return;
+                            
+                        }
+                        else
+                        {
+                            _writer.WriteLine($"<p>You fail to dodge {player.Name}'s attack.</p>", target.ConnectionId);
+                            _writer.WriteLine(Helpers.SkillLearnMistakes(player, DefineSkill.Dodge().Name, _gain), player.ConnectionId);
                         }
 
 
@@ -408,7 +419,7 @@ namespace ArchaicQuestII.GameLogic.Combat
                     {
                         var skill = GetSkill("parry", target);
 
-                        if (skill != null)
+                        if (skill != null && avoidanceChance <= skill.Proficiency)
                         {
                             _writer.WriteLine($"<p>You parry {player.Name}'s attack.</p>", target.ConnectionId);
                             _writer.WriteLine($"<p>{target.Name} parries your attack.</p>", player.ConnectionId);
@@ -417,7 +428,7 @@ namespace ArchaicQuestII.GameLogic.Combat
 
                             var riposte = GetSkill("Riposte", target);
 
-                            if (riposte != null)
+                            if (riposte != null && avoidanceChance <= riposte.Proficiency)
                             {
 
                                 _writer.WriteLine($"<p>You riposte {player.Name}'s attack.</p>", target.ConnectionId);
@@ -439,8 +450,16 @@ namespace ArchaicQuestII.GameLogic.Combat
                                 }
 
                             }
-
-                            return;
+                            else
+                            {
+                                _writer.WriteLine($"<p>You fail to riposte {player.Name}'s attack.</p>", target.ConnectionId);
+                                _writer.WriteLine(Helpers.SkillLearnMistakes(player, DefineSkill.Riposte().Name, _gain), player.ConnectionId);
+                            }
+                        }
+                        else
+                        {
+                            _writer.WriteLine($"<p>You fail to parry {player.Name}'s attack.</p>", target.ConnectionId);
+                            _writer.WriteLine(Helpers.SkillLearnMistakes(player, DefineSkill.Parry().Name, _gain), player.ConnectionId);
                         }
                     }
 
@@ -468,6 +487,8 @@ namespace ArchaicQuestII.GameLogic.Combat
                         else
                         {
                             // block fail
+                            _writer.WriteLine($"<p>You fail to block {player.Name}'s attack.</p>", target.ConnectionId);
+                            _writer.WriteLine(Helpers.SkillLearnMistakes(player, DefineSkill.ShieldBlock().Name, _gain), player.ConnectionId);
                         }
 
 

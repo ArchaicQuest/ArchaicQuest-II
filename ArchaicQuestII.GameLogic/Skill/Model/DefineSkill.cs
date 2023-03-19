@@ -241,13 +241,78 @@ public static class DefineSkill
             Name = "Upper Cut",
         };
     }
+    
+    
 
 
+    #endregion
+    
+    #region avoidance skills
+     
+    public static Skill Dodge()
+    {
+        return new Skill
+        {
+            Name = "Dodge",
+        };
+    }
+    
+    public static Skill ShieldBlock()
+    {
+        return new Skill
+        {
+            Name = "Shield Block",
+        };
+    }
+
+    public static Skill Parry()
+    {
+        return new Skill
+        {
+            Name = "Parry",
+        };
+    }
+    
+    public static Skill Riposte()
+    {
+        return new Skill
+        {
+            Name = "Riposte",
+        };
+    }
     #endregion
 
     #region Spells
 
 
+
+    #endregion
+    
+    #region Crafting
+
+    public static Skill Crafting()
+    {
+        return new Skill
+        {
+            Name = "Crafting",
+        };
+    }
+    
+    public static Skill Cooking()
+    {
+        return new Skill
+        {
+            Name = "Cooking",
+        };
+    }
+    
+    public static Skill Fishing()
+    {
+        return new Skill
+        {
+            Name = "Fishing",
+        };
+    }
 
     #endregion
 }

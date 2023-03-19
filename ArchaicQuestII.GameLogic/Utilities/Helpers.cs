@@ -618,6 +618,11 @@ namespace ArchaicQuestII.GameLogic.Utilities
 
             skill.Proficiency += increase;
 
+            if (skill.Proficiency > 100)
+            {
+                skill.Proficiency = 100;
+            }
+
             gain.GainExperiencePoints(player, 100 * skill.Level / 4, false);
 
             return
