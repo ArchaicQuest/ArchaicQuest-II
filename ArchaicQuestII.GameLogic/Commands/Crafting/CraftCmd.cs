@@ -70,6 +70,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
         private void CraftItem(Player player, Room room, string item)
         {
             var craftingRecipes = ReturnValidRecipes(player);
+         
 
             if (room.Items.FirstOrDefault(x => x.ItemType == Item.Item.ItemTypes.Crafting) == null && player.Inventory.FirstOrDefault(x => x.ItemType == Item.Item.ItemTypes.Crafting) == null)
             {
@@ -80,46 +81,55 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
             var recipe =
                 craftingRecipes.FirstOrDefault(x =>
                     x.Title.StartsWith(item, StringComparison.CurrentCultureIgnoreCase));
-
+            
             if (recipe == null)
             {
                 Core.Writer.WriteLine("<p>You can't craft that.</p>", player.ConnectionId);
                 return;
             }
-            Core.Writer.WriteLine($"<p>You begin crafting {Helpers.AddArticle(recipe.Title).ToLower()}.</p>", player.ConnectionId);
-
-            var success = Helpers.SkillSuccessCheck(player, "crafting");
             
-            // use up materials
             foreach (var material in recipe.CraftingMaterials)
             {
                 var craftItem = player.Inventory.FirstOrDefault(x => x.Name.Equals(material.Material, StringComparison.CurrentCultureIgnoreCase));
+                var materialCount = player.Inventory.Count(x => x.Name.Equals(material.Material, StringComparison.CurrentCultureIgnoreCase));
 
-                if (craftItem == null)
+                if (craftItem == null || material.Quantity > materialCount)
                 {
                     Core.Writer.WriteLine("<p>You appear to be missing required items.</p>", player.ConnectionId);
                     return;
                 }
-
-                if (!success && material.RestoreOnFailedCraft)
-                {
-                    continue;
-                }
-
-                var limit = 1;
-                for (var i = player.Inventory.Count - 1; i >= 0; i--)
-                {
-                    if (player.Inventory[i].Name == craftItem.Name && limit <= material.Quantity)
-                    {
-                        limit++;
-                        player.Weight -= craftItem.Weight;
-                        player.Inventory.RemoveAt(i);
-                    }
-                }
             }
+            
+            Core.Writer.WriteLine($"<p>You begin crafting {Helpers.AddArticle(recipe.Title).ToLower()}.</p>", player.ConnectionId);
 
+            var success = Helpers.SkillSuccessCheck(player, "crafting");
+            
             if (success)
             {
+                
+                // use up materials
+                foreach (var material in recipe.CraftingMaterials)
+                {
+                    var craftItem = player.Inventory.FirstOrDefault(x => x.Name.Equals(material.Material, StringComparison.CurrentCultureIgnoreCase));
+
+                    if (craftItem == null)
+                    {
+                        Core.Writer.WriteLine("<p>You appear to be missing required items.</p>", player.ConnectionId);
+                        return;
+                    }
+                    
+                    var limit = 1;
+                    for (var i = player.Inventory.Count - 1; i >= 0; i--)
+                    {
+                        if (player.Inventory[i].Name == craftItem.Name && limit <= material.Quantity)
+                        {
+                            limit++;
+                            player.Weight -= craftItem.Weight;
+                            player.Inventory.RemoveAt(i);
+                        }
+                    }
+                }
+
 
                 if (recipe.CreatedItemDropsInRoom)
                 {
@@ -148,6 +158,34 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
             }
             else
             {
+                // use up materials
+                foreach (var material in recipe.CraftingMaterials)
+                {
+                    var craftItem = player.Inventory.FirstOrDefault(x => x.Name.Equals(material.Material, StringComparison.CurrentCultureIgnoreCase));
+
+                    if (craftItem == null)
+                    {
+                        Core.Writer.WriteLine("<p>You appear to be missing required items.</p>", player.ConnectionId);
+                        return;
+                    }
+
+                    if (material.RestoreOnFailedCraft)
+                    {
+                        continue;
+                    }
+
+                    var limit = 1;
+                    for (var i = player.Inventory.Count - 1; i >= 0; i--)
+                    {
+                        if (player.Inventory[i].Name == craftItem.Name && limit <= material.Quantity)
+                        {
+                            limit++;
+                            player.Weight -= craftItem.Weight;
+                            player.Inventory.RemoveAt(i);
+                        }
+                    }
+                }
+
                 Core.UpdateClient.UpdateScore(player);
                 Core.UpdateClient.UpdateInventory(player);
 
