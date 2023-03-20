@@ -65,11 +65,17 @@ public class HarvestCmd : ICommand
         }
         
         var thingToHarvest =
-            room.Items.FirstOrDefault(x => x.Name.StartsWith(target, StringComparison.OrdinalIgnoreCase));
+            room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.OrdinalIgnoreCase));
 
         if (thingToHarvest == null)
         {
             Core.Writer.WriteLine($"You don't see that here.", player.ConnectionId);
+            return;
+        }
+
+        if (thingToHarvest.ItemType != Item.Item.ItemTypes.Forage)
+        {
+            Core.Writer.WriteLine("You can't harvest this.", player.ConnectionId);
             return;
         }
 
@@ -78,6 +84,8 @@ public class HarvestCmd : ICommand
             Core.Writer.WriteLine("There's nothing left to harvest.", player.ConnectionId);
             return;
         }
+        
+        
 
         Harvest(player, room, thingToHarvest);
     }
@@ -243,11 +251,25 @@ public class HarvestCmd : ICommand
         var collected = "";
         var collectedCount = 0;
         
-        foreach (var harvestItem in thingToHarvest.Container.Items.Where(harvestItem => DiceBag.Roll(1, 1, 10) <= 3))
+        foreach (var harvestItem in thingToHarvest.Container.Items.Where(harvestItem => DiceBag.Roll(1, 1, 10) <= 3).ToList())
         {
-            collected = harvestItem.Name;
-            collectedCount++;
 
+            if (!collected.Contains(harvestItem.Name))
+            {
+                if (collected.Length > 0)
+                {
+                    collected += " and " + harvestItem.Name;
+                }
+                else
+                {
+                    collected += harvestItem.Name + " ";
+                }
+               
+            }
+
+            collectedCount++;
+            thingToHarvest.Container.Items.Remove(harvestItem);
+            
             // if the User has herbalism the conditions will be higher rated
             // on success skill check the roll could be 50, 100
             // if elven the condition can be 10 points higher
@@ -266,16 +288,12 @@ public class HarvestCmd : ICommand
 
             player.Inventory.Add(harvestItem);
         }
-
-        for (var i = 0; i < thingToHarvest.Container.Items.Count; i++)
-        {
-            thingToHarvest.Container.Items.Remove(thingToHarvest.Container.Items[i]);
-        }
-
+        
         Core.Writer.WriteLine(
-            $"<p>Ah you have collected {collectedCount} {collected}{(collectedCount > 1 ? "'s" : "")}</p>",
+            $"<p>Ah you have collected some {collected}</p>",
             player.ConnectionId);
         player.Status = CharacterStatus.Status.Standing;
+        Core.UpdateClient.UpdateInventory(player);
     }
 
     private void InitFightStatus(Player player, Player target)

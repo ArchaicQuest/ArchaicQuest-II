@@ -214,7 +214,7 @@ namespace ArchaicQuestII.GameLogic.Core
                                     room.Items.Add(item);
                                 }
 
-                                if (itemExist != null && itemExist.ItemType == Item.Item.ItemTypes.Container)
+                                if (itemExist != null && itemExist.ItemType == Item.Item.ItemTypes.Container || itemExist.ItemType == Item.Item.ItemTypes.Forage)
                                 {
                                     itemExist.Container.IsOpen = item.Container.IsOpen;
                                     itemExist.Container.IsLocked = item.Container.IsLocked;
@@ -400,7 +400,7 @@ namespace ArchaicQuestII.GameLogic.Core
                             hasFouthAttack = player.Level >= hasFouthAttack.Level ? hasFouthAttack : null;
                         }
                         var hasFithAttack = player.Skills.FirstOrDefault(x =>
-                            x.SkillName.Equals("Fith Attack", StringComparison.CurrentCultureIgnoreCase));
+                            x.SkillName.Equals("Fifth Attack", StringComparison.CurrentCultureIgnoreCase));
 
                         if (hasFithAttack != null)
                         {

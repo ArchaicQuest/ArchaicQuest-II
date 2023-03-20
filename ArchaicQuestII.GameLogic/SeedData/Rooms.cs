@@ -27,10 +27,10 @@ namespace ArchaicQuestII.GameLogic.SeedData
             {
                 foreach (var item in room.Items.Where(x => x.ItemType == Item.Item.ItemTypes.Forage))
                 {
-                
+                    updatedItems.Clear();
                     foreach (var containerForageItem in item.Container.Items.Where(x => x.ItemType == Item.Item.ItemTypes.Crafting || x.ItemType == Item.Item.ItemTypes.Forage))
                     {
-                        updatedItems.Clear();
+                       
                         var rnd = random.Next(1, 11);
                         if (lastRandom == rnd)
                         {
