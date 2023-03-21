@@ -43,7 +43,13 @@ namespace ArchaicQuestII.GameLogic.Item
             MortarAndPestle,
             Cooked,
             Ink,
-            Pen
+            Pen,
+            FishingRod,
+            FishingSpot,
+            Chopable,
+            Minable,
+            PickAxe,
+            WoodCutter
 
         }
 
