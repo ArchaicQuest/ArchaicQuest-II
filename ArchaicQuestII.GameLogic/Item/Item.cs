@@ -47,7 +47,7 @@ namespace ArchaicQuestII.GameLogic.Item
             FishingRod,
             FishingSpot,
             Chopable,
-            Minable,
+            Mineable,
             PickAxe,
             WoodCutter
 

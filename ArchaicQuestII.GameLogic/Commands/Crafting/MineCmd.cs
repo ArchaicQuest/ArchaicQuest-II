@@ -72,7 +72,7 @@ public class MineCmd : ICommand
             return;
         }
 
-        if (thingToHarvest.ItemType != Item.Item.ItemTypes.Minable)
+        if (thingToHarvest.ItemType != Item.Item.ItemTypes.Mineable)
         {
             Core.Writer.WriteLine("You can't mine this.", player.ConnectionId);
             return;

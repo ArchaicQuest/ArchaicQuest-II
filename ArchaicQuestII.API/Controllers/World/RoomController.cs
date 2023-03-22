@@ -186,6 +186,8 @@ namespace ArchaicQuestII.API.World
 
             Stopwatch s = Stopwatch.StartNew();
 
+            var roomsWithPlayers = _cache.GetAllRooms().Where(x => x.Players.Any());
+
             _cache.ClearRoomCache();
 
             try
@@ -196,6 +198,17 @@ namespace ArchaicQuestII.API.World
                 {
                     AddSkillsToMobs(room);
                     MapMobRoomId(room);
+
+                    var roomHasPlayers = roomsWithPlayers.FirstOrDefault(x => x.Id.Equals(room.Id));
+
+                    if (roomHasPlayers != null)
+                    {
+                        foreach (var player in roomHasPlayers.Players)
+                        {
+                            room.Players.Add(player);
+                        }
+                    }
+                    
                     _cache.AddRoom($"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}", room);
                     _cache.AddOriginalRoom($"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}", JsonConvert.DeserializeObject<Room>(JsonConvert.SerializeObject(room)));
                 }
