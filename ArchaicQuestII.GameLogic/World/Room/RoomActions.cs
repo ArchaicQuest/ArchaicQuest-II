@@ -407,7 +407,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
         private void OnPlayerEnterEvent(Room room, Player character)
         {
-            foreach (var mob in room.Mobs)
+            foreach (var mob in room.Mobs.ToList())
             {
                 if (!string.IsNullOrEmpty(mob.Events.Enter))
                 {
@@ -428,7 +428,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
                         var res = script.DoString(mob.Events.Enter);
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         // ignored
                     }

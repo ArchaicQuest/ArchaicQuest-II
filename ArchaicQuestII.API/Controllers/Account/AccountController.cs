@@ -135,22 +135,31 @@ namespace ArchaicQuestII.API.Controllers
                 return BadRequest("Sorry that account does not exist.");
             }
 
-            var characters = _pdb.GetCollection<Player>(PlayerDataBase.Collections.Players)
-                .Find(x => x.AccountId.Equals(user.Id));
-
-            var profile = new AccountViewModel()
+            try
             {
-                Characters = characters.ToList(),
-                Credits = 0,
-                DateJoined = user.DateJoined,
-                Stats = new AccountStats()
+                var characters = _pdb.GetCollection<Player>(PlayerDataBase.Collections.Players)
+                    .Find(x => x.AccountId.Equals(user.Id));
+
+                var profile = new AccountViewModel()
                 {
+                    Characters = characters.ToList(),
+                    Credits = 0,
+                    DateJoined = user.DateJoined,
+                    Stats = new AccountStats()
+                    {
 
-                }
-            };
+                    }
+                };
 
 
-            return Ok(JsonConvert.SerializeObject(new { toast = "logged in successfully", profile }));
+                return Ok(JsonConvert.SerializeObject(new { toast = "logged in successfully", profile }));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(JsonConvert.SerializeObject(new { toast = ex.Message }));
+            }
+            
+            
 
         }
 

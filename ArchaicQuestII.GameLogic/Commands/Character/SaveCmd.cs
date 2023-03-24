@@ -1,9 +1,11 @@
+using System.Collections.Generic;
 using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.World.Room;
+using Newtonsoft.Json;
 
 namespace ArchaicQuestII.GameLogic.Commands.Character
 {
@@ -34,7 +36,15 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
         public void Execute(Player player, Room room, string[] input)
         {
-            Core.PlayerDataBase.Save(player, PlayerDataBase.Collections.Players);
+
+            var newPlayer = JsonConvert.DeserializeObject<Player>(
+                JsonConvert.SerializeObject(player));
+            
+            newPlayer.Followers = new List<Player>();
+            newPlayer.Following = string.Empty;
+            newPlayer.Grouped = false;
+    
+            Core.PlayerDataBase.Save(newPlayer, PlayerDataBase.Collections.Players);
             Core.Writer.WriteLine("<p>Character saved.</p>", player.ConnectionId);
         }
     }

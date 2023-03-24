@@ -25,8 +25,6 @@ public class SleepCmd : ICommand
             CharacterStatus.Status.Incapacitated,
             CharacterStatus.Status.Sleeping,
             CharacterStatus.Status.Stunned,
-            CharacterStatus.Status.Resting,
-            CharacterStatus.Status.Sitting,
             CharacterStatus.Status.Mounted
         };
         UserRole = UserRole.Player;

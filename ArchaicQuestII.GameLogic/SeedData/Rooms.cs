@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Client;
+using ArchaicQuestII.GameLogic.Utilities;
 
 namespace ArchaicQuestII.GameLogic.SeedData
 {
@@ -20,7 +21,6 @@ namespace ArchaicQuestII.GameLogic.SeedData
             var rooms = db.GetList<Room>(DataBase.Collections.Room);
             var areas = db.GetList<Area>(DataBase.Collections.Area);
             var updatedItems = new ItemList();
-            Random random = new Random();
             var lastRandom = 0;
             
             foreach (var room in rooms.Where(x => x.Deleted == false))
@@ -30,11 +30,11 @@ namespace ArchaicQuestII.GameLogic.SeedData
                     updatedItems.Clear();
                     foreach (var containerForageItem in item.Container.Items.Where(x => x.ItemType == Item.Item.ItemTypes.Crafting || x.ItemType == Item.Item.ItemTypes.Forage))
                     {
-                       
-                        var rnd = random.Next(1, 11);
+
+                        var rnd = DiceBag.Roll(1, 1, 11);
                         if (lastRandom == rnd)
                         {
-                            rnd = random.Next(1, 11);
+                            rnd = DiceBag.Roll(1, 1, 11);
                         }
 
                         lastRandom = rnd;

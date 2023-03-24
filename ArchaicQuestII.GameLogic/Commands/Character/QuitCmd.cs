@@ -37,6 +37,9 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
         public void Execute(Player player, Room room, string[] input)
         {
+            player.Followers = new List<Player>();
+            player.Following = string.Empty;
+            player.Grouped = false;
             player.Buffer = new Queue<string>();
             var lastLoginTime = player.LastLoginTime;
             var playTime = DateTime.Now.Subtract(lastLoginTime).TotalMinutes;

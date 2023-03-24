@@ -51,5 +51,8 @@ namespace ArchaicQuestII.GameLogic.Core
         public void UnFollow(Player player, Player mob);
         public bool CanFollow(Player player);
         public void Harm(int maxValue, Player player, Room room);
+        public void UnFollow(Player player, Room room, string mobname);
+        public void KillMob(Player mob, Room room);
+        public void KillMob(Room room, string mobname);
     }
 }

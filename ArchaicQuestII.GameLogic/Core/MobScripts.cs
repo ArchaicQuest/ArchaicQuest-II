@@ -448,5 +448,24 @@ namespace ArchaicQuestII.GameLogic.Core
         {
             return player.Config.CanFollow;
         }
+        
+        public void UnFollow(Player player,  Room room, string mobname)
+        {
+
+           var mob = room.Mobs.FirstOrDefault(x => x.Name.Equals(mobname));
+            player.Following = string.Empty;
+            player.Followers.Remove(mob);
+        }
+        
+        public void KillMob(Player mob, Room room)
+        {
+            room.Mobs.Remove(mob);
+        }
+        
+        public void KillMob(Room room, string mobname)
+        {
+            var mob = room.Mobs.FirstOrDefault(x => x.Name.Equals(mobname));
+            room.Mobs.Remove(mob);
+        }
     }
 }

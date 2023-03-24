@@ -24,7 +24,6 @@ public class StandCmd : ICommand
             CharacterStatus.Status.Incapacitated,
             CharacterStatus.Status.Stunned,
             CharacterStatus.Status.Mounted,
-            CharacterStatus.Status.Standing
         };
         UserRole = UserRole.Player;
         Core = core;

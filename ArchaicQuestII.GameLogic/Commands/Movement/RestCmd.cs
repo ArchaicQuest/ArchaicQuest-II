@@ -25,7 +25,6 @@ public class RestCmd : ICommand
             CharacterStatus.Status.Incapacitated,
             CharacterStatus.Status.Sleeping,
             CharacterStatus.Status.Stunned,
-            CharacterStatus.Status.Resting
         };
         UserRole = UserRole.Player;
         Core = core;
