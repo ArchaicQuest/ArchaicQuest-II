@@ -82,6 +82,10 @@ namespace ArchaicQuestII.GameLogic.World.Room
         /// </summary>
         public bool InstantRePop { get; set; }
         public bool IsLit { get; set; }
+        /// <summary>
+        /// Is this room added to donation room list
+        /// </summary>
+        public bool DonationRoom {get; set;}
         public DateTime DateCreated { get; set; }
         public DateTime DateUpdated { get; set; }
     }

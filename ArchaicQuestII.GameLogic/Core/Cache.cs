@@ -72,6 +72,11 @@ namespace ArchaicQuestII.GameLogic.Core
             return player;
         }
 
+        public List<Player> GetAllPlayers()
+        {
+            return _playerCache.Values.ToList();
+        }
+
         public Player RemovePlayer(string id)
         {
             _playerCache.TryRemove(id, out Player player);
