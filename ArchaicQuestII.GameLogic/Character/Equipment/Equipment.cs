@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Threading.Tasks;
-using ArchaicQuestII.GameLogic.Core;
-using ArchaicQuestII.GameLogic.World.Room;
+﻿using System.ComponentModel;
 
 namespace ArchaicQuestII.GameLogic.Character.Equipment
 {
     public class Equipment
     {
-
         public Item.Item Light { get; set; }
         public Item.Item Finger { get; set; }
         public Item.Item Finger2 { get; set; }
@@ -75,9 +68,6 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
             Wrist = 16,
             [Description("Secondary")]
             Secondary = 17,
-
         }
-
-
     }
 }
