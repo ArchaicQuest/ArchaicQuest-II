@@ -181,52 +181,52 @@ hold potion
             }
             catch (Exception ex)
             {
-                
+
             }
 
             return displayEquipment.ToString();
         }
 
-        private bool EqSlotSet(Equipment.EqSlot slot, Player player)
+        private bool EqSlotOpen(Equipment.EqSlot slot, Player player)
         {
             switch (slot)
             {
                 case Equipment.EqSlot.Arms:
-                    return player.Equipped.Arms != null;
+                    return player.Equipped.Arms == null;
                 case Equipment.EqSlot.Body:
-                    return player.Equipped.AboutBody != null;
+                    return player.Equipped.AboutBody == null;
                 case Equipment.EqSlot.Face:
-                    return player.Equipped.Face != null;
+                    return player.Equipped.Face == null;
                 case Equipment.EqSlot.Feet:
-                    return player.Equipped.Feet != null;
+                    return player.Equipped.Feet == null;
                 case Equipment.EqSlot.Finger:
-                    return player.Equipped.Finger != null;
+                    return player.Equipped.Finger == null || player.Equipped.Finger2 == null;
                 case Equipment.EqSlot.Floating:
-                    return player.Equipped.Floating != null;
+                    return player.Equipped.Floating == null;
                 case Equipment.EqSlot.Hands:
-                    return player.Equipped.Hands != null;
+                    return player.Equipped.Hands == null;
                 case Equipment.EqSlot.Head:
-                    return player.Equipped.Head != null;
+                    return player.Equipped.Head == null;
                 case Equipment.EqSlot.Held:
-                    return player.Equipped.Held != null;
+                    return player.Equipped.Held == null;
                 case Equipment.EqSlot.Legs:
-                    return player.Equipped.Legs != null;
+                    return player.Equipped.Legs == null;
                 case Equipment.EqSlot.Light:
-                    return player.Equipped.Light != null;
+                    return player.Equipped.Light == null;
                 case Equipment.EqSlot.Neck:
-                    return player.Equipped.Neck != null;
+                    return player.Equipped.Neck == null || player.Equipped.Neck2 == null;
                 case Equipment.EqSlot.Shield:
-                    return player.Equipped.Shield != null;
+                    return player.Equipped.Shield == null;
                 case Equipment.EqSlot.Torso:
-                    return player.Equipped.Torso != null;
+                    return player.Equipped.Torso == null;
                 case Equipment.EqSlot.Waist:
-                    return player.Equipped.Waist != null;
+                    return player.Equipped.Waist == null;
                 case Equipment.EqSlot.Wielded:
-                    return player.Equipped.Wielded != null;
+                    return player.Equipped.Wielded == null;
                 case Equipment.EqSlot.Wrist:
-                    return player.Equipped.Wrist != null;
+                    return player.Equipped.Wrist == null || player.Equipped.Wrist2 == null;
                 case Equipment.EqSlot.Secondary:
-                    return player.Equipped.Secondary != null;
+                    return player.Equipped.Secondary == null;
                 default:
                     return false;
             }
@@ -238,10 +238,9 @@ hold potion
 
             foreach (var itemToWear in itemsToWear)
             {
-                if (!EqSlotSet(itemToWear.Slot, player))
+                if (EqSlotOpen(itemToWear.Slot, player))
                 {
                     Wear(itemToWear.Name, room, player);
-
                 }
             }
         }
@@ -287,6 +286,7 @@ hold potion
             
             player.Attributes.Attribute[EffectLocation.DamageRoll] -= itemToRemove.Modifier.DamRoll;
             player.Attributes.Attribute[EffectLocation.HitRoll] -= itemToRemove.Modifier.HitRoll;
+
             switch (itemToRemove.Slot)
             {
                 case Equipment.EqSlot.Arms:
@@ -310,7 +310,8 @@ hold potion
                     Core.Writer.WriteToOthersInRoom($"<p>{player.Name} stops using {itemToRemove.Name}", room, player);
                     break;
                 case Equipment.EqSlot.Finger:
-                    player.Equipped.Finger = null; // TODO: slot 2
+                    if (player.Equipped.Finger.Id == itemToRemove.Id) player.Equipped.Finger = null;
+                    else if (player.Equipped.Finger2.Id == itemToRemove.Id) player.Equipped.Finger2 = null;
                     Core.Writer.WriteLine($"<p>You stop using {itemToRemove.Name.ToLower()}.</p>", player.ConnectionId);
                     Core.Writer.WriteToOthersInRoom($"<p>{player.Name} stops using {itemToRemove.Name}", room, player);
                     break;
@@ -345,7 +346,8 @@ hold potion
                     Core.Writer.WriteToOthersInRoom($"<p>{player.Name} stops using {itemToRemove.Name}", room, player);
                     break;
                 case Equipment.EqSlot.Neck:
-                    player.Equipped.Neck = null; // TODO: slot 2
+                    if (player.Equipped.Neck.Id == itemToRemove.Id) player.Equipped.Neck = null;
+                    else if (player.Equipped.Neck2.Id == itemToRemove.Id) player.Equipped.Neck2 = null;
                     Core.Writer.WriteLine($"<p>You stop using {itemToRemove.Name.ToLower()}.</p>", player.ConnectionId);
                     Core.Writer.WriteToOthersInRoom($"<p>{player.Name} stops using {itemToRemove.Name}", room, player);
                     break;
@@ -365,7 +367,6 @@ hold potion
                     Core.Writer.WriteToOthersInRoom($"<p>{player.Name} stops using {itemToRemove.Name}", room, player);
                     break;
                 case Equipment.EqSlot.Wielded:
-
                     if (player.Equipped.Secondary != null && itemToRemove.Name.Equals(player.Equipped.Secondary.Name))
                     {
                         player.Equipped.Secondary = null;
@@ -378,10 +379,10 @@ hold potion
                         Core.Writer.WriteLine($"<p>You stop using {itemToRemove.Name.ToLower()}.</p>", player.ConnectionId);
                         Core.Writer.WriteToOthersInRoom($"<p>{player.Name} stops using {itemToRemove.Name}", room, player);
                     }
-
                     break;
                 case Equipment.EqSlot.Wrist:
-                    player.Equipped.Wrist = null; // TODO: slot 2
+                    if (player.Equipped.Wrist.Id == itemToRemove.Id) player.Equipped.Wrist = null;
+                    else if (player.Equipped.Wrist2.Id == itemToRemove.Id) player.Equipped.Wrist2 = null;
                     Core.Writer.WriteLine($"<p>You stop using {itemToRemove.Name.ToLower()}.</p>", player.ConnectionId);
                     Core.Writer.WriteToOthersInRoom($"<p>{player.Name} stops using {itemToRemove.Name}", room, player);
                     break;
@@ -416,9 +417,8 @@ hold potion
 
         private void ShowEquipment(Player player)
         {
-
             var displayEquipment = ShowEquipmentUI(player);
-             Core.Writer.WriteLine(displayEquipment, player.ConnectionId);
+            Core.Writer.WriteLine(displayEquipment, player.ConnectionId);
         }
 
         // handle secondary equip
@@ -535,12 +535,20 @@ hold potion
                     break;
                 case Equipment.EqSlot.Finger:
 
-                    if (player.Equipped.Finger != null)
+                    if (player.Equipped.Finger == null)
+                    {
+                        player.Equipped.Finger = itemToWear;
+                    }
+                    else if (player.Equipped.Finger2 == null)
+                    {
+                        player.Equipped.Finger2 = itemToWear;
+                    }
+                    else
                     {
                         Remove(player.Equipped.Finger.Name, room, player);
+                        player.Equipped.Finger = itemToWear;
                     }
 
-                    player.Equipped.Finger = itemToWear; // TODO: slot 2
                     Core.Writer.WriteLine($"<p>You wear {itemToWear.Name.ToLower()} on your finger.</p>", player.ConnectionId);
                     Core.Writer.WriteToOthersInRoom($"<p>{player.Name} equips {itemToWear.Name.ToLower()} on {Helpers.GetPronoun(player.Gender)} finger.", room, player);
                     break;
@@ -610,12 +618,20 @@ hold potion
                     break;
                 case Equipment.EqSlot.Neck:
 
-                    if (player.Equipped.Neck != null)
+                    if (player.Equipped.Neck == null)
+                    {
+                        player.Equipped.Neck = itemToWear;
+                    }
+                    else if (player.Equipped.Neck2 == null)
+                    {
+                        player.Equipped.Neck2 = itemToWear;
+                    }
+                    else
                     {
                         Remove(player.Equipped.Neck.Name, room, player);
+                        player.Equipped.Neck = itemToWear;
                     }
-
-                    player.Equipped.Neck = itemToWear; // TODO: slot 2
+                    
                     Core.Writer.WriteLine($"<p>You wear {itemToWear.Name.ToLower()} around your neck.</p>", player.ConnectionId);
                     Core.Writer.WriteToOthersInRoom($"<p>{player.Name} equips {itemToWear.Name.ToLower()} around {Helpers.GetPronoun(player.Gender)} neck.", room, player);
                     break;
@@ -683,12 +699,20 @@ hold potion
                     break;
                 case Equipment.EqSlot.Wrist:
 
-                    if (player.Equipped.Wrist != null)
+                    if (player.Equipped.Wrist == null)
+                    {
+                        player.Equipped.Wrist = itemToWear;
+                    }
+                    else if (player.Equipped.Wrist2 == null)
+                    {
+                        player.Equipped.Wrist2 = itemToWear;
+                    }
+                    else
                     {
                         Remove(player.Equipped.Wrist.Name, room, player);
+                        player.Equipped.Wrist = itemToWear;
                     }
 
-                    player.Equipped.Wrist = itemToWear; // TODO: slot 2
                     Core.Writer.WriteLine($"<p>You wear {itemToWear.Name.ToLower()} on your wrist.</p>", player.ConnectionId);
                     Core.Writer.WriteToOthersInRoom($"<p>{player.Name} equips {itemToWear.Name.ToLower()} on {Helpers.GetPronoun(player.Gender)} wrist.", room, player);
                     break;
