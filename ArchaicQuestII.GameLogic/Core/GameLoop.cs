@@ -119,7 +119,6 @@ namespace ArchaicQuestII.GameLogic.Core
             Console.WriteLine("started loop");
             while (true)
             {
-
                 try
                 {
                     //2 mins
@@ -496,7 +495,6 @@ namespace ArchaicQuestII.GameLogic.Core
         public async Task Tick()
         {
 
-
             while (true)
             {
                 try
@@ -602,6 +600,33 @@ namespace ArchaicQuestII.GameLogic.Core
                         }
 
                         this.IdleCheck(pc);
+
+                        if(_cache.GetRoom(pc.RoomId).RoomFlags.Contains(Room.RoomFlag.Healing))
+                        {
+                            pc.Attributes.Attribute[EffectLocation.Hitpoints] += 5;
+                            if (pc.Attributes.Attribute[EffectLocation.Hitpoints] >
+                                pc.MaxAttributes.Attribute[EffectLocation.Hitpoints])
+                            {
+                                pc.Attributes.Attribute[EffectLocation.Hitpoints] =
+                                    pc.MaxAttributes.Attribute[EffectLocation.Hitpoints];
+                            }
+
+                            pc.Attributes.Attribute[EffectLocation.Moves] += 5;
+                            if (pc.Attributes.Attribute[EffectLocation.Moves] >
+                                pc.MaxAttributes.Attribute[EffectLocation.Moves])
+                            {
+                                pc.Attributes.Attribute[EffectLocation.Moves] =
+                                    pc.MaxAttributes.Attribute[EffectLocation.Moves];
+                            }
+
+                            pc.Attributes.Attribute[EffectLocation.Mana] += 5;
+                            if (pc.Attributes.Attribute[EffectLocation.Mana] >
+                                pc.MaxAttributes.Attribute[EffectLocation.Mana])
+                            {
+                                pc.Attributes.Attribute[EffectLocation.Mana] =
+                                    pc.MaxAttributes.Attribute[EffectLocation.Mana];
+                            }
+                        }
                     }
                 }
                 catch (Exception)

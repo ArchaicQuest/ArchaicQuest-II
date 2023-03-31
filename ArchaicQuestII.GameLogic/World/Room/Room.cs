@@ -21,7 +21,6 @@ namespace ArchaicQuestII.GameLogic.World.Room
             Air,
             Desert,
             Underground //no weather
-
         }
 
         public enum RoomType
@@ -39,6 +38,12 @@ namespace ArchaicQuestII.GameLogic.World.Room
             Desert = 1 << 10,
             Inside = 1 << 11,
             Underground = 1 << 12
+        }
+
+        public enum RoomFlag
+        {
+            Donation = 0,
+            Healing,
         }
 
         public int Id { get; set; }
@@ -83,9 +88,9 @@ namespace ArchaicQuestII.GameLogic.World.Room
         public bool InstantRePop { get; set; }
         public bool IsLit { get; set; }
         /// <summary>
-        /// Is this room added to donation room list
+        /// Set flags for rooms
         /// </summary>
-        public bool DonationRoom {get; set;}
+        public List<RoomFlag> RoomFlags {get; set;} = new List<RoomFlag>();
         public DateTime DateCreated { get; set; }
         public DateTime DateUpdated { get; set; }
     }
