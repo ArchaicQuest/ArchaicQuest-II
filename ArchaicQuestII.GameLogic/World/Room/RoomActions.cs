@@ -316,7 +316,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
             if (isFlee)
             {
-                _updateClient.PlaySound("walk", character);
+                _updateClient.PlaySound("flee", character);
                 movement = "rushes";
           
             }

@@ -69,6 +69,12 @@ public class OpenCmd : ICommand
             {
                 isExit.Closed = false;
                 Core.Writer.WriteLine($"<p>You open the door {isExit.Name}.", player.ConnectionId);
+                Core.UpdateClient.PlaySound("door", player);
+                // play sound for others in the room
+                foreach (var pc in room.Players.Where(pc => pc.Id != player.Id))
+                {
+                    Core.UpdateClient.PlaySound("door", pc);
+                }
                 return;
             }
 
@@ -98,6 +104,7 @@ public class OpenCmd : ICommand
         }
 
         Core.Writer.WriteLine($"<p>You open {item.Name.ToLower()}.</p>", player.ConnectionId);
+        
         Core.Writer.WriteToOthersInRoom($"<p>{player.Name} opens {item.Name.ToLower()}.</p>", room, player);
 
         item.Container.IsOpen = true;

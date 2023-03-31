@@ -83,6 +83,12 @@ public class UnlockCmd : ICommand
                     }
                     
                     doorToUnlock.Locked = false;
+                    Core.UpdateClient.PlaySound("unlock", player);
+                    // play sound for others in the room
+                    foreach (var pc in room.Players.Where(pc => pc.Id != player.Id))
+                    {
+                        Core.UpdateClient.PlaySound("unlock", pc);
+                    }
                     Core.Writer.WriteLine("<p>You enter the key and turn it. *CLICK* </p>", player.ConnectionId);
                     Core.Writer.WriteToOthersInRoom($"<p>{player.Name} enters the key and turns it. *CLICK* </p>", room, player);
 
