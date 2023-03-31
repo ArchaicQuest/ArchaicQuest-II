@@ -26,17 +26,10 @@ namespace ArchaicQuestII.API.Helpers
 
         public static void StartLoops(this IApplicationBuilder app)
         {
-            var loop = app.ApplicationServices.GetRequiredService<IGameLoop>();
+            var gameloop = app.ApplicationServices.GetRequiredService<IGameLoop>();
 
             Task.Run(TelnetHub.Instance.ProcessConnections);
-            Task.Run(loop.UpdateTime);
-            Task.Run(loop.UpdateCombat);
-            Task.Run(loop.UpdatePlayers);
-            Task.Run(loop.UpdatePlayerLag);
-            Task.Run(loop.UpdateRoomEmote).ConfigureAwait(false);
-            Task.Run(loop.UpdateMobEmote).ConfigureAwait(false);
-            Task.Run(loop.UpdateWorldTime).ConfigureAwait(false);
-            Task.Run(loop.Tick);
+            gameloop.StartLoops();
         }
     }
 }

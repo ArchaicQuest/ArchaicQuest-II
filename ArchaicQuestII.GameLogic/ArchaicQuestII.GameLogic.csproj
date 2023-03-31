@@ -16,6 +16,7 @@
         <Compile Remove="Commands\Utility\**" />
         <EmbeddedResource Remove="Commands\Utility\**" />
         <None Remove="Commands\Utility\**" />
+        <None Remove="Loops\" />
     </ItemGroup>
 
     <ItemGroup>
@@ -36,4 +37,7 @@
         <ProjectReference Include="..\ArchaicQuestII.DataAccess\ArchaicQuestII.DataAccess.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Loops\" />
+    </ItemGroup>
 </Project>
