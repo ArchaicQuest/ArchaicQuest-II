@@ -46,9 +46,11 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
         public UserRole UserRole { get; }
         public ICore Core { get; }
 
-        public async void Execute(Player player, Room room, string[] input)
+        public void Execute(Player player, Room room, string[] input)
         {
-            if (room.Items.FirstOrDefault(x => x.ItemType == Item.Item.ItemTypes.Cooking) == null)
+            var pot = room.Items.FirstOrDefault(x => x.ItemType == Item.Item.ItemTypes.Cooking);
+
+            if (pot == null)
             {
                 Core.Writer.WriteLine("<p>You require a fire and a cooking pot before you can cook.</p>",
                     player.ConnectionId);
@@ -56,123 +58,93 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
                 return;
             }
 
-            var pot = room.Items.FirstOrDefault(x => x.ItemType == Item.Item.ItemTypes.Cooking);
+            var modifiers = new Item.Modifier();
+            var edibleItems = new List<Item.Item>();
+            var inedibleItems = new List<Item.Item>();
+            var cookTime = 0;
 
-            // What happens if player throws in random shit which is not a food item
-            if (pot != null)
+            foreach(var ingredient in pot.Container.Items)
             {
-                var items = pot.Container.Items.Where(x => x.ItemType == Item.Item.ItemTypes.Food).ToList();
-
-                if (items.Count < 3)
+                switch(ingredient.ItemType)
                 {
-                    Core.Writer.WriteLine("<p>You need 3 raw ingredients before you can cook.</p>",
-                        player.ConnectionId);
-                
-                    if (pot.Container.Items.FirstOrDefault(x => x.ItemType != Item.Item.ItemTypes.Food) != null)
-                    {
-                        Core.Writer.WriteLine($"<p>The following ingredients cannot be cooked with.</p>",
-                            player.ConnectionId);
-
-                        var sb = new StringBuilder();
-                        sb.Append("<p>");
-                        foreach (var invalidItem in pot.Container.Items.Where(x => x.ItemType != Item.Item.ItemTypes.Food))
-                        {
-                            sb.Append($"{invalidItem.Name}, ");
-                        }
-                        sb.Append("</p>");
-
-                        Core.Writer.WriteLine(sb.ToString(),
-                            player.ConnectionId);
-
-                        return;
-                    }
-
-                    return;
+                    case Item.Item.ItemTypes.Food:
+                    case Item.Item.ItemTypes.Cooked:
+                    case Item.Item.ItemTypes.Drink:
+                    case Item.Item.ItemTypes.Forage:
+                    case Item.Item.ItemTypes.Potion:
+                        edibleItems.Add(ingredient);
+                        break;
+                    default:
+                        inedibleItems.Add(ingredient);
+                        break;
                 }
 
-                if (items.Count > 3)
-                {
-                    Core.Writer.WriteLine("<p>You can only cook with 3 raw food ingredients. The following ingredients are not raw food and can't be cooked.</p>",
-                        player.ConnectionId);
+                cookTime += 500;
+            }
 
-                    var sb = new StringBuilder();
-                    sb.Append("<p>");
-                    foreach (var invalidItem in pot.Container.Items.Where(x => x.ItemType != Item.Item.ItemTypes.Food))
-                    {
-                        sb.Append($"{invalidItem.Name}, ");
-                    }
-                    sb.Append("</p>");
+            Cook(player, room, pot, edibleItems, inedibleItems, cookTime).Start();
+        }
 
-                    Core.Writer.WriteLine(sb.ToString(),
-                        player.ConnectionId);
-
-                    return;
-                }
-                
-                var ingredients = new List<Tuple<Item.Item, int>>();
-
-                foreach (var item in items)
-                {
-                    var ingredient = ingredients.FirstOrDefault(x => x.Item1.Name.Equals(item.Name));
-                    if (ingredient != null)
-                    {
-                        var index = ingredients.FindIndex(x => x.Item1.Name.Equals(ingredient.Item1.Name));
-
-                        var count = ingredient.Item2 + 1;
-                        ingredients[index] = Tuple.Create(item, count);
-                    }
-                    else
-                    {
-                        ingredients.Add(new Tuple<Item.Item, int>(item, 1));
-                    }
-                }
-
-                pot.Container.Items = new ItemList();
-                var cookedItem = GenerateCookedItem(ingredients);
-                Core.Writer.WriteLine("<p>You begin cooking.</p>",
+        private async Task Cook(Player player, Room room, Item.Item pot, List<Item.Item> edibleItems, List<Item.Item> inedibleItems, int cookTime)
+        {
+            Core.Writer.WriteLine("<p>You begin cooking.</p>",
                     player.ConnectionId);
-                Core.UpdateClient.PlaySound("cooking", player);
-                Core.Writer.WriteLine("<p>You stir the ingredients.</p>",
-                    player.ConnectionId, 1000);
 
-                Core.Writer.WriteLine("<p>You taste and season the dish.</p>",
-                    player.ConnectionId, 2500);
+            Core.UpdateClient.PlaySound("cooking", player);
 
-                Core.Writer.WriteLine("<p>You stir the ingredients.</p>",
-                    player.ConnectionId, 5000);
+            Core.Writer.WriteLine("<p>You stir the ingredients.</p>",
+                player.ConnectionId, cookTime/3);
 
-                var success = Helpers.SkillSuccessCheck(player, "cooking");
+            Core.Writer.WriteLine("<p>You taste and season the dish.</p>",
+                player.ConnectionId, cookTime/3);
 
-                if (success)
+            Core.Writer.WriteLine("<p>You stir the ingredients.</p>",
+                player.ConnectionId, cookTime/3);
+
+            var success = !inedibleItems.Any() && Helpers.SkillSuccessCheck(player, "Cooking");
+
+            if(!success)
+            {
+                foreach(var item in edibleItems)
                 {
-                    Core.Writer.WriteLine(
-                        $"<p class='improve'>You have successfully created {Helpers.AddArticle(cookedItem.Name).ToLower()}.</p>",
-                        player.ConnectionId, 6000);
-
-                    foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
-                    {
-                        Core.Writer.WriteLine($"<p>{player.Name} has cooked {cookedItem.Name}</p>",
-                            pc.ConnectionId, 6000);
-                    }
-
-                   await Task.Delay(6000);
-       
-                    player.Inventory.Add(cookedItem);
-                    player.Weight += cookedItem.Weight;
+                    pot.Container.Items.Remove(item);
                 }
-                else
+
+                foreach(var item in inedibleItems)
                 {
-                    Core.Writer.WriteLine(
-                        $"<p class='improve'>You have fail to create {Helpers.AddArticle(cookedItem.Name).ToLower()}.</p>",
-                        player.ConnectionId, 6000);
+                    if(DiceBag.FlipCoin())
+                        pot.Container.Items.Remove(item);
+                }
 
-                    foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
-                    {
-                        Core.Writer.WriteLine($"<p>{player.Name} fails to cook {cookedItem.Name}</p>",
-                            pc.ConnectionId, 6000);
-                    }
+                Core.Writer.WriteLine(
+                        "<p class='improve'>You failed to create something edible.</p>",
+                        player.ConnectionId, cookTime + 500);
 
-                    Helpers.SkillLearnMistakes(player, "Cooking", Core.Gain, 6000);
+                foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
+                {
+                    Core.Writer.WriteLine($"<p>{player.Name} fails to cook something edible</p>",
+                        pc.ConnectionId, cookTime + 500);
+                }
+
+                Helpers.SkillLearnMistakes(player, "Cooking", Core.Gain, cookTime + 500);
+            }
+            else
+            {
+                await Task.Delay(cookTime + 500);
+
+                var cookedItem = GenerateCookedItem(edibleItems);
+
+                pot.Container.Items.Clear();
+                pot.Container.Items.Add(cookedItem);
+
+                Core.Writer.WriteLine(
+                        $"<p class='improve'>You cooked {cookedItem.Name}.</p>",
+                        player.ConnectionId, cookTime + 500);
+
+                foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
+                {
+                    Core.Writer.WriteLine($"<p>{player.Name} cooked {cookedItem.Name}.</p>",
+                        pc.ConnectionId, cookTime + 500);
                 }
             }
 
@@ -180,7 +152,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
             Core.UpdateClient.UpdateScore(player);
         }
 
-        private Item.Item GenerateCookedItem(IEnumerable<Tuple<Item.Item, int>> ingredients)
+        private Item.Item GenerateCookedItem(List<Item.Item> ingredients)
         {
             var prefixes = new List<string>
             {
@@ -189,7 +161,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
                 "Fried",
                 "Toasted",
                 "Smoked",
-                "Roast",
+                "Roasted",
                 "Poached"
             };
 
@@ -258,201 +230,6 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
             };
             
             return food;
-        }
-
-        private int CalculateModifer(IOrderedEnumerable<Tuple<Item.Item, int>> ingredients, string name)
-        {
-
-            var modValue = 0;
-            var mainIngredient = ingredients.First();
-            var ingredient2 = ingredients.ElementAtOrDefault(1);
-            var ingredient3 = ingredients.ElementAtOrDefault(2);
-            switch (name)
-            {
-                case "strength":
-                    modValue = DiceBag.Roll(1, ingredients.First().Item1.Modifier.Strength,
-                        mainIngredient.Item1.Modifier.Strength * mainIngredient.Item2);
-                    modValue +=
-                        (ingredient2 != null
-                            ? DiceBag.Roll(1, ingredient2.Item1.Modifier.Strength,
-                                ingredient2.Item1.Modifier.Strength * ingredient2.Item2)
-                            : 0);
-                    modValue +=
-                        (ingredient3 != null
-                            ? DiceBag.Roll(1, ingredient3.Item1.Modifier.Strength,
-                                ingredient3.Item1.Modifier.Strength * ingredient3.Item2)
-                            : 0);
-                    modValue *= 2;
-
-                    break;
-                case "dexterity":
-                    modValue = DiceBag.Roll(1, ingredients.First().Item1.Modifier.Dexterity,
-                        mainIngredient.Item1.Modifier.Dexterity * mainIngredient.Item2);
-                    modValue +=
-                        (ingredient2 != null
-                            ? DiceBag.Roll(1, ingredient2.Item1.Modifier.Dexterity,
-                                ingredient2.Item1.Modifier.Dexterity * ingredient2.Item2)
-                            : 0);
-                    modValue +=
-                        (ingredient3 != null
-                            ? DiceBag.Roll(1, ingredient3.Item1.Modifier.Dexterity,
-                                ingredient3.Item1.Modifier.Dexterity * ingredient3.Item2)
-                            : 0);
-                    modValue *= 2;
-                    break;
-                case "constitution":
-                    modValue = DiceBag.Roll(1, ingredients.First().Item1.Modifier.Constitution,
-                        mainIngredient.Item1.Modifier.Constitution * mainIngredient.Item2);
-                    modValue +=
-                        (ingredient2 != null
-                            ? DiceBag.Roll(1, ingredient2.Item1.Modifier.Constitution,
-                                ingredient2.Item1.Modifier.Constitution * ingredient2.Item2)
-                            : 0);
-                    modValue +=
-                        (ingredient3 != null
-                            ? DiceBag.Roll(1, ingredient3.Item1.Modifier.Constitution,
-                                ingredient3.Item1.Modifier.Constitution * ingredient3.Item2)
-                            : 0);
-                    modValue *= 2;
-                    break;
-                case "intelligence":
-                    modValue = DiceBag.Roll(1, ingredients.First().Item1.Modifier.Intelligence,
-                        mainIngredient.Item1.Modifier.Intelligence * mainIngredient.Item2);
-                    modValue +=
-                        (ingredient2 != null
-                            ? DiceBag.Roll(1, ingredient2.Item1.Modifier.Intelligence,
-                                ingredient2.Item1.Modifier.Intelligence * ingredient2.Item2)
-                            : 0);
-                    modValue +=
-                        (ingredient3 != null
-                            ? DiceBag.Roll(1, ingredient3.Item1.Modifier.Intelligence,
-                                ingredient3.Item1.Modifier.Intelligence * ingredient3.Item2)
-                            : 0);
-                    modValue *= 2;
-                    break;
-                case "wisdom":
-                    modValue = DiceBag.Roll(1, ingredients.First().Item1.Modifier.Wisdom,
-                        mainIngredient.Item1.Modifier.Wisdom * mainIngredient.Item2);
-                    modValue +=
-                        (ingredient2 != null
-                            ? DiceBag.Roll(1, ingredient2.Item1.Modifier.Wisdom,
-                                ingredient2.Item1.Modifier.Wisdom * ingredient2.Item2)
-                            : 0);
-                    modValue +=
-                        (ingredient3 != null
-                            ? DiceBag.Roll(1, ingredient3.Item1.Modifier.Wisdom,
-                                ingredient3.Item1.Modifier.Wisdom * ingredient3.Item2)
-                            : 0);
-                    modValue *= 2;
-                    break;
-                case "charisma":
-                    modValue = DiceBag.Roll(1, ingredients.First().Item1.Modifier.Charisma,
-                        mainIngredient.Item1.Modifier.Charisma * mainIngredient.Item2);
-                    modValue +=
-                        (ingredient2 != null
-                            ? DiceBag.Roll(1, ingredient2.Item1.Modifier.Charisma,
-                                ingredient2.Item1.Modifier.Charisma * ingredient2.Item2)
-                            : 0);
-                    modValue +=
-                        (ingredient3 != null
-                            ? DiceBag.Roll(1, ingredient3.Item1.Modifier.Charisma,
-                                ingredient3.Item1.Modifier.Charisma * ingredient3.Item2)
-                            : 0);
-                    modValue *= 2;
-                    break;
-                case "damroll":
-                    modValue = DiceBag.Roll(1, ingredients.First().Item1.Modifier.DamRoll,
-                        mainIngredient.Item1.Modifier.DamRoll * mainIngredient.Item2);
-                    modValue +=
-                        (ingredient2 != null
-                            ? DiceBag.Roll(1, ingredient2.Item1.Modifier.DamRoll,
-                                ingredient2.Item1.Modifier.DamRoll * ingredient2.Item2)
-                            : 0);
-                    modValue +=
-                        (ingredient3 != null
-                            ? DiceBag.Roll(1, ingredient3.Item1.Modifier.DamRoll,
-                                ingredient3.Item1.Modifier.DamRoll * ingredient3.Item2)
-                            : 0);
-                    modValue *= 2;
-                    break;
-                case "hitroll":
-                    modValue = DiceBag.Roll(1, ingredients.First().Item1.Modifier.HitRoll,
-                        mainIngredient.Item1.Modifier.HitRoll * mainIngredient.Item2);
-                    modValue +=
-                        (ingredient2 != null
-                            ? DiceBag.Roll(1, ingredient2.Item1.Modifier.HitRoll,
-                                ingredient2.Item1.Modifier.HitRoll * ingredient2.Item2)
-                            : 0);
-                    modValue +=
-                        (ingredient3 != null
-                            ? DiceBag.Roll(1, ingredient3.Item1.Modifier.HitRoll,
-                                ingredient3.Item1.Modifier.HitRoll * ingredient3.Item2)
-                            : 0);
-                    modValue *= 2;
-                    break;
-                case "mana":
-                    modValue = DiceBag.Roll(1, ingredients.First().Item1.Modifier.Mana,
-                        mainIngredient.Item1.Modifier.Mana * mainIngredient.Item2);
-                    modValue +=
-                        (ingredient2 != null
-                            ? DiceBag.Roll(1, ingredient2.Item1.Modifier.Mana,
-                                ingredient2.Item1.Modifier.Mana * ingredient2.Item2)
-                            : 0);
-                    modValue +=
-                        (ingredient3 != null
-                            ? DiceBag.Roll(1, ingredient3.Item1.Modifier.Mana,
-                                ingredient3.Item1.Modifier.Mana * ingredient3.Item2)
-                            : 0);
-                    modValue *= 2;
-                    break;
-                case "moves":
-                    modValue = DiceBag.Roll(1, ingredients.First().Item1.Modifier.Moves,
-                        mainIngredient.Item1.Modifier.Moves * mainIngredient.Item2);
-                    modValue +=
-                        (ingredient2 != null
-                            ? DiceBag.Roll(1, ingredient2.Item1.Modifier.Moves,
-                                ingredient2.Item1.Modifier.Moves * ingredient2.Item2)
-                            : 0);
-                    modValue +=
-                        (ingredient3 != null
-                            ? DiceBag.Roll(1, ingredient3.Item1.Modifier.Moves,
-                                ingredient3.Item1.Modifier.Moves * ingredient3.Item2)
-                            : 0);
-                    modValue *= 2;
-                    break;
-                case "hp":
-                    modValue = DiceBag.Roll(1, ingredients.First().Item1.Modifier.HP,
-                        mainIngredient.Item1.Modifier.HP * mainIngredient.Item2);
-                    modValue +=
-                        (ingredient2 != null
-                            ? DiceBag.Roll(1, ingredient2.Item1.Modifier.HP,
-                                ingredient2.Item1.Modifier.HP * ingredient2.Item2)
-                            : 0);
-                    modValue +=
-                        (ingredient3 != null
-                            ? DiceBag.Roll(1, ingredient3.Item1.Modifier.HP,
-                                ingredient3.Item1.Modifier.HP * ingredient3.Item2)
-                            : 0);
-                    modValue *= 2;
-                    break;
-                case "saves":
-                    modValue = DiceBag.Roll(1, ingredients.First().Item1.Modifier.Saves,
-                        mainIngredient.Item1.Modifier.Saves * mainIngredient.Item2);
-                    modValue +=
-                        (ingredient2 != null
-                            ? DiceBag.Roll(1, ingredient2.Item1.Modifier.Saves,
-                                ingredient2.Item1.Modifier.Saves * ingredient2.Item2)
-                            : 0);
-                    modValue +=
-                        (ingredient3 != null
-                            ? DiceBag.Roll(1, ingredient3.Item1.Modifier.Saves,
-                                ingredient3.Item1.Modifier.Saves * ingredient3.Item2)
-                            : 0);
-                    modValue *= 2;
-                    break;
-            }
-
-            return modValue;
         }
     }
 }
