@@ -216,11 +216,6 @@ namespace ArchaicQuestII.GameLogic.Core
         
         #region ClassCache
 
-        public List<CraftingRecipes> GetCraftingRecipes()
-        {
-            return _craftingRecipesCache.Values.ToList();
-        }
-
         public bool AddClass(string id, Class pcClass)
         {
             return _pcClass.TryAdd(id, pcClass);
@@ -256,6 +251,15 @@ namespace ArchaicQuestII.GameLogic.Core
             return _helpCache.Values.Where(x => x.Keywords.Contains(id, StringComparison.CurrentCultureIgnoreCase) && x.Deleted.Equals(false)).ToList();
         }
 
+        #endregion
+
+        #region Recipes
+
+        public List<CraftingRecipes> GetCraftingRecipes()
+        {
+            return _craftingRecipesCache.Values.ToList();
+        }
+
         public bool AddCraftingRecipes(int id, CraftingRecipes CraftingRecipes)
         {
             return _craftingRecipesCache.TryAdd(id, CraftingRecipes);
@@ -267,9 +271,8 @@ namespace ArchaicQuestII.GameLogic.Core
 
             return data;
         }
-
         #endregion
-        
+
         public void SetConfig(Config config)
         {
             _configCache = config;

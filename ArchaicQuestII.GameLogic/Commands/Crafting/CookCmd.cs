@@ -8,7 +8,9 @@ using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
+using ArchaicQuestII.GameLogic.Crafting;
 using ArchaicQuestII.GameLogic.Item;
+using ArchaicQuestII.GameLogic.SeedData;
 using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
 
@@ -19,8 +21,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
         public CookCmd(ICore core)
         {
             Aliases = new[] {"cook"};
-            Description = "Cook food at a fire. A fire and a cook pot is needed.";
-            Usages = new[] {"Type: cook"};
+            Description = "Cook food, type cook list to see which items you can cook. Then place items in a pot and cook 'item'";
+            Usages = new[] { "Type: cook list - to view all cook-able items. \n\r cook <item> - to cook the item e.g. cook fishstew" };
             Title = "";
             DeniedStatus = new[]
             {
@@ -48,188 +50,181 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
 
         public void Execute(Player player, Room room, string[] input)
         {
+            var target = string.Join(" ", input.Skip(1));
+
+            // Lets find what you can cook
+            var recipes = Core.Cache.GetCraftingRecipes().Where(x => x.CreatedItem.ItemType == Item.Item.ItemTypes.Food).ToList();
+
+            if (recipes == null)
+            {
+                Core.Writer.WriteLine("<p>No recipes are known.</p>", player.ConnectionId);
+                return;
+            }
+
+            if (!string.IsNullOrEmpty(target) && target.Equals("list"))
+            {
+                ListRecipes(player, true, recipes);
+                return;
+            }
+
+            if (string.IsNullOrEmpty(target))
+            {
+                ListRecipes(player, false, recipes);
+                return;
+            }
+
+            CookItem(player, room, target, recipes);
+        }
+
+        private void ListRecipes(Player player, bool showAllRecipes, List<CraftingRecipes> recipes)
+        {
+            var recipeList = showAllRecipes ? recipes : ReturnValidRecipes(player, recipes);
+
+            if (recipeList.Count == 0)
+            {
+                Core.Writer.WriteLine("<p>No recipes found with the current items you have.</p>", player.ConnectionId);
+                return;
+            }
+
+            var sb = new StringBuilder();
+            sb.Append("<p>You can cook the following items:</p>");
+            sb.Append("<table class='simple'>");
+            sb.Append($"<tr><td>Name</td><td>Ingredients</td></tr>");
+            foreach (var recipe in recipeList.Distinct())
+            {
+                var inredientsRequired = "";
+                foreach (var ingredient in recipe.CraftingMaterials)
+                {
+                    inredientsRequired += $"{ingredient.Material} x{ingredient.Quantity}, ";
+                }
+
+                sb.Append($"<tr><td>{recipe.Title}</td><td>{inredientsRequired}</td></tr>");
+            }
+
+            sb.Append($"</table>");
+
+            Core.Writer.WriteLine(sb.ToString(), player.ConnectionId);
+
+        }
+
+        private List<CraftingRecipes> ReturnValidRecipes(Player player, List<CraftingRecipes> recipes)
+        {
+            var ingedients = player.Inventory.Where(x => x.ItemType == Item.Item.ItemTypes.Food).GroupBy(y => y.Name)
+                .Select(z => z.First());
+            var recipeList = new List<CraftingRecipes>();
+            foreach (var material in ingedients)
+            {
+                var quantity = player.Inventory.Where(x => x.ItemType == Item.Item.ItemTypes.Material && x.Name.Equals(material.Name, StringComparison.CurrentCultureIgnoreCase)).ToList();
+                var canCook = recipes.Where(x =>
+                    x.CraftingMaterials.Any(y => y.Material.Equals(material.Name, StringComparison.CurrentCultureIgnoreCase) && y.Quantity <= quantity.Count));
+
+                recipeList.AddRange(canCook);
+            }
+
+            return recipeList;
+        }
+
+        public void CookItem(Player player, Room room, string item, List<CraftingRecipes> recipes)
+        {
+            var craftingRecipes = ReturnValidRecipes(player, recipes);
+
             var pot = room.Items.FirstOrDefault(x => x.ItemType == Item.Item.ItemTypes.Cooking);
 
             if (pot == null)
             {
-                Core.Writer.WriteLine("<p>You require a fire and a cooking pot before you can cook.</p>",
+                Core.Writer.WriteLine("<p>To being cooking you require a fire and a cooking pot.</p>",
                     player.ConnectionId);
 
                 return;
             }
 
-            var modifiers = new Item.Modifier();
-            var edibleItems = new List<Item.Item>();
-            var inedibleItems = new List<Item.Item>();
-            var cookTime = 0;
+            var recipe =
+            craftingRecipes.FirstOrDefault(x =>
+                    x.Title.StartsWith(item, StringComparison.CurrentCultureIgnoreCase));
 
-            foreach(var ingredient in pot.Container.Items)
+            if (recipe == null)
             {
-                switch(ingredient.ItemType)
-                {
-                    case Item.Item.ItemTypes.Food:
-                    case Item.Item.ItemTypes.Cooked:
-                    case Item.Item.ItemTypes.Drink:
-                    case Item.Item.ItemTypes.Forage:
-                    case Item.Item.ItemTypes.Potion:
-                        edibleItems.Add(ingredient);
-                        break;
-                    default:
-                        inedibleItems.Add(ingredient);
-                        break;
-                }
-
-                cookTime += 500;
+                Core.Writer.WriteLine("<p>You can't cook that.</p>", player.ConnectionId);
+                return;
             }
 
-            Cook(player, room, pot, edibleItems, inedibleItems, cookTime).Start();
+            foreach (var material in recipe.CraftingMaterials)
+            {
+                var craftItem = pot.Container.Items.FirstOrDefault(x => x.Name.Equals(material.Material, StringComparison.CurrentCultureIgnoreCase));
+                var materialCount = pot.Container.Items.Count(x => x.Name.Equals(material.Material, StringComparison.CurrentCultureIgnoreCase));
+
+                if (craftItem == null || material.Quantity > materialCount)
+                {
+                    Core.Writer.WriteLine("<p>You appear to be missing required items.</p>", player.ConnectionId);
+                    return;
+                }
+            }
+
+            Cook(player, room, pot, recipe, 4000).Start();
         }
 
-        private async Task Cook(Player player, Room room, Item.Item pot, List<Item.Item> edibleItems, List<Item.Item> inedibleItems, int cookTime)
+        private async Task Cook(Player player, Room room, Item.Item pot, CraftingRecipes recipe, int cookTime)
         {
+            player.Status = CharacterStatus.Status.Busy;
+
             Core.Writer.WriteLine("<p>You begin cooking.</p>",
                     player.ConnectionId);
 
             Core.UpdateClient.PlaySound("cooking", player);
 
+            await Task.Delay(cookTime/4);
+
             Core.Writer.WriteLine("<p>You stir the ingredients.</p>",
-                player.ConnectionId, cookTime/3);
+                player.ConnectionId);
+
+            await Task.Delay(cookTime/4);
 
             Core.Writer.WriteLine("<p>You taste and season the dish.</p>",
-                player.ConnectionId, cookTime/3);
+                player.ConnectionId);
 
+            await Task.Delay(cookTime/4);
             Core.Writer.WriteLine("<p>You stir the ingredients.</p>",
-                player.ConnectionId, cookTime/3);
+                player.ConnectionId);
 
-            var success = !inedibleItems.Any() && Helpers.SkillSuccessCheck(player, "Cooking");
+            await Task.Delay(cookTime/4);
 
-            if(!success)
+            var success = Helpers.SkillSuccessCheck(player, "Cooking");
+
+            pot.Container.Items.Clear();
+
+            if (!success)
             {
-                foreach(var item in edibleItems)
-                {
-                    pot.Container.Items.Remove(item);
-                }
-
-                foreach(var item in inedibleItems)
-                {
-                    if(DiceBag.FlipCoin())
-                        pot.Container.Items.Remove(item);
-                }
-
                 Core.Writer.WriteLine(
-                        "<p class='improve'>You failed to create something edible.</p>",
-                        player.ConnectionId, cookTime + 500);
+                        "<p class='improve'>You failed to cook something edible.</p>",
+                        player.ConnectionId);
 
                 foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
                 {
                     Core.Writer.WriteLine($"<p>{player.Name} fails to cook something edible</p>",
-                        pc.ConnectionId, cookTime + 500);
+                        pc.ConnectionId);
                 }
 
-                Helpers.SkillLearnMistakes(player, "Cooking", Core.Gain, cookTime + 500);
+                Helpers.SkillLearnMistakes(player, "Cooking", Core.Gain);
             }
             else
             {
-                await Task.Delay(cookTime + 500);
-
-                var cookedItem = GenerateCookedItem(edibleItems);
-
-                pot.Container.Items.Clear();
-                pot.Container.Items.Add(cookedItem);
+                pot.Container.Items.Add(recipe.CreatedItem);
 
                 Core.Writer.WriteLine(
-                        $"<p class='improve'>You cooked {cookedItem.Name}.</p>",
-                        player.ConnectionId, cookTime + 500);
+                        $"<p class='improve'>You cooked {recipe.Title}.</p>",
+                        player.ConnectionId);
 
                 foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
                 {
-                    Core.Writer.WriteLine($"<p>{player.Name} cooked {cookedItem.Name}.</p>",
-                        pc.ConnectionId, cookTime + 500);
+                    Core.Writer.WriteLine($"<p>{player.Name} cooked {recipe.Title}.</p>",
+                        pc.ConnectionId);
                 }
             }
 
+            player.Status = CharacterStatus.Status.Standing;
+
             Core.UpdateClient.UpdateInventory(player);
             Core.UpdateClient.UpdateScore(player);
-        }
-
-        private Item.Item GenerateCookedItem(List<Item.Item> ingredients)
-        {
-            var prefixes = new List<string>
-            {
-                "Boiled",
-                "Baked",
-                "Fried",
-                "Toasted",
-                "Smoked",
-                "Roasted",
-                "Poached"
-            };
-
-            var suffixes = new List<string>
-            {
-                "soup",
-                "stew",
-                "pie",
-                "curry",
-                "skewer"
-            };
-
-            var ingredientOrder = ingredients.OrderByDescending(item => item.Item2);
-            var mainIngredient = ingredientOrder.First();
-
-            var foodName = "";
-            
-            if (DiceBag.Roll(1, 1, 2) == 1)
-            {
-                var prefix = prefixes[DiceBag.Roll(1, 0, 6)];
-
-                foodName = $"{prefix} {Helpers.RemoveArticle(mainIngredient.Item1.Name).ToLower()} {(ingredientOrder.Count() > 1 ? $"with {Helpers.RemoveArticle(ingredientOrder.ElementAt(1).Item1.Name).ToLower()}" : "")} {(ingredientOrder.Count() > 2 ? $"and {Helpers.RemoveArticle(ingredientOrder.ElementAt(2).Item1.Name).ToLower()}" : "")}";
-            }
-            else
-            {
-                var suffix = suffixes[DiceBag.Roll(1, 0, 4)];
-
-                foodName = $"{Helpers.RemoveArticle(mainIngredient.Item1.Name)} {(ingredientOrder.Count() > 1 ? $"with {Helpers.RemoveArticle(ingredientOrder.ElementAt(1).Item1.Name).ToLower()}" : "")} {(ingredientOrder.Count() > 2 ? $"  {Helpers.RemoveArticle(ingredientOrder.ElementAt(2).Item1.Name).ToLower()} " : "")}{suffix}";
-            }
-
-            var food = new Item.Item()
-            {
-                Name = foodName,
-                ArmourRating = new ArmourRating(),
-                Value = 75,
-                Portal = new Portal(),
-                ItemType = Item.Item.ItemTypes.Cooked,
-                Container = new Container(),
-                Description = new Description()
-                {
-                    Look =
-                        $"A tasty looking {foodName.ToLower()} made with {Helpers.RemoveArticle(mainIngredient.Item1.Name).ToLower()}s{(ingredientOrder.Count() > 1 ? $" and {Helpers.RemoveArticle(ingredientOrder.ElementAt(1).Item1.Name).ToLower()}." : ".")}",
-                    Exam =
-                        $"A tasty looking {foodName.ToLower()} made with {Helpers.RemoveArticle(mainIngredient.Item1.Name).ToLower()}s{(ingredientOrder.Count() > 1 ? $" and {Helpers.RemoveArticle(ingredientOrder.ElementAt(1).Item1.Name).ToLower()}." : ".")}"
-                },
-                Modifier = new Modifier()
-                {
-                    HP = CalculateModifer(ingredientOrder, "hp"),
-                    Strength = CalculateModifer(ingredientOrder, "strength"),
-                    Dexterity = CalculateModifer(ingredientOrder, "dexterity"),
-                    Constitution = CalculateModifer(ingredientOrder, "constitution"),
-                    Intelligence = CalculateModifer(ingredientOrder, "intelligence"),
-                    Wisdom = CalculateModifer(ingredientOrder, "wisdom"),
-                    Charisma = CalculateModifer(ingredientOrder, "charisma"),
-                    Moves = CalculateModifer(ingredientOrder, "moves"),
-                    Mana = CalculateModifer(ingredientOrder, "mana"),
-                    DamRoll = CalculateModifer(ingredientOrder, "damroll"),
-                    HitRoll = CalculateModifer(ingredientOrder, "hitroll"),
-                    Saves = CalculateModifer(ingredientOrder, "saves"),
-                },
-                Level = 1,
-                Slot = Equipment.EqSlot.Held,
-                Uses = 1,
-                Weight = 0.3F,
-
-            };
-            
-            return food;
         }
     }
 }
