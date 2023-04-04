@@ -140,14 +140,14 @@ namespace ArchaicQuestII.API
             Console.WriteLine($"Start up completed in {elapsedMs}");
             GameLogic.Utilities.Helpers.PostToDiscord($"Start up completed in {Math.Ceiling((decimal)elapsedMs / 1000)} seconds", "event", _cache.GetConfig());
 
-            try
+           /* try
             {
                 new Bot(_cache, _hubContext, new DiscordSocketClient()).MainAsync();
             }
             catch (Exception ex)
             {
                 
-            }
+            }*/
         }
     }
 }
