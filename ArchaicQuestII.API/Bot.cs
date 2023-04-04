@@ -39,6 +39,11 @@ public class Bot
        //TODO: Rename to Discord TOKEN here and in the admin project
         var token = _cache.GetConfig().ChannelDiscordWebHookURL;
 
+        if (string.IsNullOrEmpty(token))
+        {
+            return;
+        }
+
         await _client.LoginAsync(TokenType.Bot, token);
         await _client.StartAsync();
 
