@@ -37,7 +37,7 @@ public class Bot
         _client.Log += Log;
 
        //TODO: Rename to Discord TOKEN here and in the admin project
-        var token = _cache.GetConfig().ChannelDiscordWebHookURL;
+       var token = _cache.GetConfig().ChannelDiscordWebHookURL;
 
         if (string.IsNullOrEmpty(token))
         {

@@ -69,12 +69,9 @@ namespace ArchaicQuestII.API
 
             services.AddSingleton<IDataBase, DataBase>();
             services.AddSingleton<IPlayerDataBase>(new PlayerDataBase(new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AQ-PLAYERS.db"))));
-           /* services.AddSingleton<IWriteToClient, WriteToClient>((factory) =>
+        services.AddSingleton<IWriteToClient, WriteToClient>((factory) =>
                 new WriteToClient(_hubContext, TelnetHub.Instance, _cache));
-*/
-           services.AddSingleton<IWriteToClient, WriteToClient>((factory) =>
-               new WriteToClient(_hubContext, TelnetHub.Instance));
-            services.AddGameLogic();
+        services.AddGameLogic();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -141,14 +138,14 @@ namespace ArchaicQuestII.API
             Console.WriteLine($"Start up completed in {elapsedMs}");
             GameLogic.Utilities.Helpers.PostToDiscord($"Start up completed in {Math.Ceiling((decimal)elapsedMs / 1000)} seconds", "event", _cache.GetConfig());
 
-           /* try
+           try
             {
                 new Bot(_cache, _hubContext, new DiscordSocketClient()).MainAsync();
             }
             catch (Exception ex)
             {
                 
-            }*/
+            }
         }
     }
 }

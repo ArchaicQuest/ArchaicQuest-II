@@ -42,7 +42,7 @@ public class OOCCmd : ICommand
         var text = string.Join(" ", input.Skip(1));
         
         Core.Writer.WriteLine($"<p class='ooc'>[<span>OOC</span>] You: {text}</p>", player.ConnectionId);
-       // Core.Writer.WriteToOthersInGame($"<p class='ooc'>[<span>OOC</span>] {player.Name}: {text}</p>", player);
+        Core.Writer.WriteToOthersInGame($"<p class='ooc'>[<span>OOC</span>] {player.Name}: {text}</p>", player);
         
         foreach (var pc in Core.Cache.GetAllPlayers().Where(pc => pc.Config.OocChannel))
         {

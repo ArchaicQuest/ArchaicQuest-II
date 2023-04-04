@@ -40,7 +40,7 @@ public class NewbieCmd : ICommand
         var text = string.Join(" ", input.Skip(1));
         
         Core.Writer.WriteLine($"<p class='newbie'>[<span>Newbie</span>] You: {text}</p>", player.ConnectionId);
-      //  Core.Writer.WriteToOthersInGame($"<p class='newbie'>[<span>Newbie</span>] {player.Name}: {text}</p>", player);
+        Core.Writer.WriteToOthersInGame($"<p class='newbie'>[<span>Newbie</span>] {player.Name}: {text}</p>", player);
         
         foreach (var pc in Core.Cache.GetAllPlayers().Where(pc => pc.Config.NewbieChannel))
         {

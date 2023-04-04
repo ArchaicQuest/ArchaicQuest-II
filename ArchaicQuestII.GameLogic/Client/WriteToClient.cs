@@ -13,12 +13,13 @@ namespace ArchaicQuestII.GameLogic.Client
     public class WriteToClient : IWriteToClient
     {
         private readonly IHubContext<GameHub> _hubContext;
-       // private readonly ICache _cache;
+       private readonly ICache _cache;
         private readonly TelnetHub _telnetHub;
         
-        public WriteToClient(IHubContext<GameHub> hubContext, TelnetHub telnetHub)
+        public WriteToClient(IHubContext<GameHub> hubContext, TelnetHub telnetHub, ICache cache)
         {
             _hubContext = hubContext;
+            _cache = cache;
             _telnetHub = telnetHub;
         }
 
@@ -102,7 +103,7 @@ namespace ArchaicQuestII.GameLogic.Client
                 WriteLine(message, pc.ConnectionId);
             }
         }
-        /*
+     
         public void WriteToOthersInGame(string message, Player player)
         {
             var players = _cache.GetAllPlayers();
@@ -121,7 +122,7 @@ namespace ArchaicQuestII.GameLogic.Client
             {
                 WriteLine(message, pc.ConnectionId);
             }
-        }*/
+        }
     }
 }
 
