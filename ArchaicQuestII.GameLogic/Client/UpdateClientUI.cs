@@ -42,14 +42,10 @@ namespace ArchaicQuestII.GameLogic.Client
 
         public async void UpdateCommunication(Player player, string message, string type)
         {
-            if (string.IsNullOrEmpty(player.ConnectionId) && !player.IsTelnet)
-            {
-                return;
-            }
-
             try
             {
                 await _hubContext.Clients.Client(player.ConnectionId).SendAsync("CommUpdate", message, type);
+         
             }
             catch (Exception ex)
             {

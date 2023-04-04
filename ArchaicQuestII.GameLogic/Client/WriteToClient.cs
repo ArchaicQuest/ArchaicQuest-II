@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Hubs;
 using ArchaicQuestII.GameLogic.Hubs.Telnet;
 using ArchaicQuestII.GameLogic.World.Room;
@@ -12,12 +13,14 @@ namespace ArchaicQuestII.GameLogic.Client
     public class WriteToClient : IWriteToClient
     {
         private readonly IHubContext<GameHub> _hubContext;
+        private readonly ICache _cache;
         private readonly TelnetHub _telnetHub;
         
-        public WriteToClient(IHubContext<GameHub> hubContext, TelnetHub telnetHub)
+        public WriteToClient(IHubContext<GameHub> hubContext, TelnetHub telnetHub, ICache cache)
         {
             _hubContext = hubContext;
             _telnetHub = telnetHub;
+            _cache = cache;
         }
 
         public async void WriteLine(string message, string id)
@@ -96,6 +99,26 @@ namespace ArchaicQuestII.GameLogic.Client
         public void WriteToOthersInRoom(string message, Room room, Player player)
         {
             foreach (var pc in room.Players.Where(pc => pc.Id != player.Id))
+            {
+                WriteLine(message, pc.ConnectionId);
+            }
+        }
+        
+        public void WriteToOthersInGame(string message, Player player)
+        {
+            var players = _cache.GetAllPlayers();
+            
+            foreach (var pc in players.Where(pc => pc.Id != player.Id))
+            {
+                WriteLine(message, pc.ConnectionId);
+            }
+        }
+        
+        public void WriteToOthersInGame(string message, string type)
+        {
+            var players = _cache.GetAllPlayers();
+            
+            foreach (var pc in players)
             {
                 WriteLine(message, pc.ConnectionId);
             }

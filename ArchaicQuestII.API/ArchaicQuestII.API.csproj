@@ -34,6 +34,8 @@
 
     <ItemGroup>
         <PackageReference Include="BCrypt.Net-Core" Version="1.6.0" />
+        <PackageReference Include="Discord.Net.WebSocket" Version="3.10.0" />
+        <PackageReference Include="Microsoft.AspNet.SignalR.Core" Version="2.4.3" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.4" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.4" />
         <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.8" />

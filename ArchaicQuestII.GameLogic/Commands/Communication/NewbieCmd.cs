@@ -39,15 +39,15 @@ public class NewbieCmd : ICommand
         
         var text = string.Join(" ", input.Skip(1));
         
-        Core.Writer.WriteLine($"<p class='newbie'>[<span>Newbie</span>]: {text}</p>", player.ConnectionId);
-        Core.UpdateClient.UpdateCommunication(player, $"<p class='newbie'>[<span>Newbie</span>]: {text}</p>", "newbie");
-        Core.Writer.WriteToOthersInRoom($"<p class='newbie'>[<span>Newbie</span>] {player.Name}: {text}</p>", room, player);
+        Core.Writer.WriteLine($"<p class='newbie'>[<span>Newbie</span>] You: {text}</p>", player.ConnectionId);
+        Core.Writer.WriteToOthersInGame($"<p class='newbie'>[<span>Newbie</span>] {player.Name}: {text}</p>", player);
         
-        foreach (var pc in room.Players.Where(pc => !pc.Name.Equals(player.Name, StringComparison.CurrentCultureIgnoreCase) && pc.Config.NewbieChannel))
+        foreach (var pc in Core.Cache.GetAllPlayers().Where(pc => pc.Config.NewbieChannel))
         {
-            Core.UpdateClient.UpdateCommunication(pc, $"<p class='newbie'>[<span>Newbie</span>] {player.Name}: {text}</p>", "newbie");
+            Core.UpdateClient.UpdateCommunication(pc, $"<p class='newbie'>[<span>Newbie</span>] {(player.Name == pc.Name ? "You" : player.Name)}: {text}</p>", "newbie");
         }
 
-        Helpers.PostToDiscord($"<p>[Newbie] {player.Name} {text}</p>", "channels", Core.Cache.GetConfig());
+        Helpers.PostToDiscordBot($"{player.Name}: {text}",1091818289249923162,  Core.Cache.GetConfig().ChannelDiscordWebHookURL);
+     
     }
 }

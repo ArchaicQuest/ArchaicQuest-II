@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="ArchaicQuest-All" type="CompoundRunConfigurationType">
+    <toRun name="ArchaicQuestII.API" type="LaunchSettings" />
+    <toRun name="ArchaicQuestII.DiscordBot" type="DotNetProject" />
+    <method v="2" />
+  </configuration>
+</component>

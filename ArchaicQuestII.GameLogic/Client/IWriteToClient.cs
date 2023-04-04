@@ -12,5 +12,7 @@ namespace ArchaicQuestII.GameLogic.Client
         void WriteLine(string message);
         void WriteLineRoom(string message, string id, int delay);
         void WriteToOthersInRoom(string message, Room room, Player player);
+        void WriteToOthersInGame(string message, Player player);
+         void WriteToOthersInGame(string message, string type);
     }
 }

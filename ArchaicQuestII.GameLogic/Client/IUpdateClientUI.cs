@@ -33,7 +33,6 @@ namespace ArchaicQuestII.GameLogic.Client
 
         void UpdateScore(Player player);
         void UpdateCommunication(Player player, string message, string type);
-
         void GetMap(Player player, string rooms);
         void UpdateQuest(Player player);
 
