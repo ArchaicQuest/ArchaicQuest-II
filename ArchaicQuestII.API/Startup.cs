@@ -44,11 +44,13 @@ namespace ArchaicQuestII.API
                             .WithOrigins(
                                 "http://localhost:4200",
                                 "http://localhost:1337",
+                                "https://api.archaicquest.com",
                                 "https://admin.archaicquest.com",
                                 "https://play.archaicquest.com")
                             .AllowAnyMethod()
                             .AllowAnyHeader()
                             .AllowCredentials());
+                
             });
 
             services.AddControllers().AddNewtonsoftJson();
