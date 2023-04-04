@@ -42,7 +42,7 @@ public class GossipCmd : ICommand
         
         
         Core.Writer.WriteLine($"<p class='gossip'>[<span>Gossip</span>] You: {text}</p>", player.ConnectionId);
-        Core.Writer.WriteToOthersInGame($"<p class='gossip'>[<span>Gossip</span>] {player.Name}: {text}</p>", player);
+      //  Core.Writer.WriteToOthersInGame($"<p class='gossip'>[<span>Gossip</span>] {player.Name}: {text}</p>", player);
         
         foreach (var pc in Core.Cache.GetAllPlayers().Where(pc => pc.Config.OocChannel))
         {
