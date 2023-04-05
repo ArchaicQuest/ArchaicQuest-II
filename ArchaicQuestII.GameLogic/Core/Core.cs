@@ -12,6 +12,7 @@ using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Skill.Skills;
 using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Area;
+using ArchaicQuestII.GameLogic.Spell;
 
 namespace ArchaicQuestII.GameLogic.Core
 {
@@ -35,6 +36,9 @@ namespace ArchaicQuestII.GameLogic.Core
         
         public ITime Time { get; }
         public IDamage Damage { get; }
+        public ISpellList SpellList { get; }
+        public IWeather Weather { get; }
+
         private IMobScripts _mobScripts { get; }
 
         public Core(ICache cache, 
@@ -50,7 +54,9 @@ namespace ArchaicQuestII.GameLogic.Core
             IPassiveSkills passiveSkills,
             IFormulas formulas,
             ITime time,
-            IDamage damage)
+            IDamage damage,
+            ISpellList spellList,
+            IWeather weather)
         {
             Cache = cache;
             Writer = writeToClient;
@@ -66,6 +72,8 @@ namespace ArchaicQuestII.GameLogic.Core
             Formulas = formulas;
             Time = time;
             Damage = damage;
+            SpellList = spellList;
+            Weather = weather;
         }
         
         public bool CommandTargetCheck(string target, Player player, string errorMessage = "What?")

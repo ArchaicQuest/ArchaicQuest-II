@@ -6,6 +6,7 @@ using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Skill.Skills;
+using ArchaicQuestII.GameLogic.Spell;
 using ArchaicQuestII.GameLogic.World.Area;
 using ArchaicQuestII.GameLogic.World.Room;
 
@@ -28,6 +29,8 @@ namespace ArchaicQuestII.GameLogic.Core
         public IFormulas Formulas { get; }
         public ITime Time { get; }
         public IDamage Damage { get; }
+        public ISpellList SpellList { get; }
+        public IWeather Weather { get; }
         /// <summary>
         /// Displays lists of players 
         /// </summary>
