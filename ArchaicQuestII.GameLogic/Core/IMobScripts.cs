@@ -45,7 +45,7 @@ namespace ArchaicQuestII.GameLogic.Core
         public void AddQuest(Player player, int id);
         void CompleteQuest(Player player, int questId);
         void DoSkill(Player player, Player mob, Room room);
-        Task Sleep(int milliseconds);
+        void Sleep(int milliseconds);
         void RemoveMobFromRoom(Player mob, Room room);
         public void Follow(Player player, Player mob);
         public void UnFollow(Player player, Player mob);

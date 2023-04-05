@@ -248,6 +248,10 @@ namespace ArchaicQuestII.GameLogic.Core
 
                 _updateClientUi.UpdateInventory(player);
             }
+            else
+            {
+               // get item from cache
+            }
         }
         
         public void RemoveItem(Player player, string name, int count = 1)
@@ -383,13 +387,11 @@ namespace ArchaicQuestII.GameLogic.Core
         _updateClientUi.UpdateExp(player);
         _updateClientUi.UpdateScore(player);
         }
-
-        public async Task Sleep(int milliseconds)
+        
+        public void Sleep(int milliseconds)
         {
-
-            await Task.Delay(milliseconds);
+            Task.Delay(milliseconds).Wait();
         }
-
 
         public void DoSkill(Player player, Player mob, Room room)
         {
