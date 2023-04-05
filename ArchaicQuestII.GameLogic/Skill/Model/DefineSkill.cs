@@ -242,7 +242,14 @@ public static class DefineSkill
         };
     }
     
-    
+    public static Skill LockPick()
+    {
+        return new Skill
+        {
+            Name = "Lock Picking",
+        };
+    }
+
 
 
     #endregion
