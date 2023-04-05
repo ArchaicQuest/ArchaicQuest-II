@@ -3,17 +3,6 @@ using System.Collections.Generic;
 using ArchaicQuestII.GameLogic.Commands;
 using System.Linq;
 using System.Threading.Tasks;
-using ArchaicQuestII.DataAccess;
-using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Status;
-using ArchaicQuestII.GameLogic.Combat;
-using ArchaicQuestII.GameLogic.Effect;
-using ArchaicQuestII.GameLogic.Spell;
-using ArchaicQuestII.GameLogic.World.Room;
-using Newtonsoft.Json;
-using System.Web;
-using ArchaicQuestII.GameLogic.Client;
-using ArchaicQuestII.GameLogic.Utilities;
 
 namespace ArchaicQuestII.GameLogic.Core
 {
@@ -28,6 +17,7 @@ namespace ArchaicQuestII.GameLogic.Core
         {
             _core = core;
             _commandHandler = commandHandler;
+            _loops = new List<ILoop>();
 
             var loopTypes = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(s => s.GetTypes())
