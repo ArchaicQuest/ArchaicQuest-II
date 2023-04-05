@@ -67,9 +67,9 @@ public class UnlockCmd : ICommand
 
             if (doorToUnlock != null)
             {
-                var playerHasKey = player.Inventory.FirstOrDefault(x =>
+                var playerDoorKey = player.Inventory.FirstOrDefault(x =>
                     x.ItemType == Item.Item.ItemTypes.Key && x.KeyId.Equals(doorToUnlock.LockId));
-                if (playerHasKey == null)
+                if (playerDoorKey == null)
                 {
                     Core.Writer.WriteLine("<p>You don't have the key to unlock this.</p>", player.ConnectionId);
                 }
@@ -81,10 +81,25 @@ public class UnlockCmd : ICommand
                         Core.Writer.WriteLine("<p>It's already unlocked.</p>", player.ConnectionId);
                         return;
                     }
-
+                    
                     doorToUnlock.Locked = false;
+                    Core.UpdateClient.PlaySound("unlock", player);
+                    // play sound for others in the room
+                    foreach (var pc in room.Players.Where(pc => pc.Id != player.Id))
+                    {
+                        Core.UpdateClient.PlaySound("unlock", pc);
+                    }
                     Core.Writer.WriteLine("<p>You enter the key and turn it. *CLICK* </p>", player.ConnectionId);
                     Core.Writer.WriteToOthersInRoom($"<p>{player.Name} enters the key and turns it. *CLICK* </p>", room, player);
+
+                    if(playerDoorKey.Uses == -1) return;
+
+                    playerDoorKey.Uses--;
+                    if(playerDoorKey.Uses == 0)
+                    {
+                        player.Inventory.Remove(playerDoorKey);
+                        Core.Writer.WriteLine("<p>As you go to put the key away it crumbles to dust in your hand.</p>", player.ConnectionId);
+                    }
 
                     return;
                 }
@@ -101,10 +116,10 @@ public class UnlockCmd : ICommand
             return;
         }
 
-        var hasKey = player.Inventory.FirstOrDefault(x =>
+        var playerContainerKey = player.Inventory.FirstOrDefault(x =>
             x.ItemType == Item.Item.ItemTypes.Key && x.KeyId.Equals(objToUnlock.Container.AssociatedKeyId));
 
-        if (hasKey == null)
+        if (playerContainerKey == null)
         {
             Core.Writer.WriteLine("<p>You don't have the key to unlock this.</p>", player.ConnectionId);
         }
@@ -120,6 +135,16 @@ public class UnlockCmd : ICommand
             Core.Writer.WriteLine("<p>You enter the key and turn it. *CLICK* </p>", player.ConnectionId);
             Core.Writer.WriteToOthersInRoom($"<p>{player.Name} enters the key into {objToUnlock.Name} and turns it. *CLICK* </p>",
                 room, player);
+
+            if(playerContainerKey.Uses == -1) return;
+
+            playerContainerKey.Uses--;
+
+            if(playerContainerKey.Uses == 0)
+            {
+                player.Inventory.Remove(playerContainerKey);
+                Core.Writer.WriteLine("<p>As you go to put the key away it crumbles to dust in your hand.</p>", player.ConnectionId);
+            }
         }
     }
 }

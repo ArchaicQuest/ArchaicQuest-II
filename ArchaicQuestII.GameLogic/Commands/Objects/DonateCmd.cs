@@ -191,7 +191,7 @@ Related help files: get, put, give, drop
 
         foreach(Room room in Core.Cache.GetAllRooms())
         {
-            if(room.DonationRoom)
+            if(room.RoomFlags.Contains(Room.RoomFlag.Donation))
                 rooms.Add(room);
         }
 

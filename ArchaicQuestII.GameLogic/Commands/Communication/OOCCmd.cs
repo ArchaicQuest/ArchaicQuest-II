@@ -41,15 +41,15 @@ public class OOCCmd : ICommand
         
         var text = string.Join(" ", input.Skip(1));
         
-        Core.Writer.WriteLine($"<p class='ooc'>[<span>OOC</span>]: {text}</p>", player.ConnectionId);
-        Core.UpdateClient.UpdateCommunication(player, $"<p class='ooc'>[<span>OOC</span>]: {text}</p>", "ooc");
-        Core.Writer.WriteToOthersInRoom($"<p class='ooc'>[<span>OOC</span>] {player.Name}: {text}</p>", room, player);
+        Core.Writer.WriteLine($"<p class='ooc'>[<span>OOC</span>] You: {text}</p>", player.ConnectionId);
+        Core.Writer.WriteToOthersInGame($"<p class='ooc'>[<span>OOC</span>] {player.Name}: {text}</p>", player);
         
-        foreach (var pc in room.Players.Where(pc => !pc.Name.Equals(player.Name, StringComparison.CurrentCultureIgnoreCase) && pc.Config.OocChannel))
+        foreach (var pc in Core.Cache.GetAllPlayers().Where(pc => pc.Config.OocChannel))
         {
-            Core.UpdateClient.UpdateCommunication(pc, $"<p class='ooc'>[<span>OOC</span>] {player.Name}: {text}</p>", "ooc");
+            Core.UpdateClient.UpdateCommunication(pc, $"<p class='ooc'>[<span>OOC</span>] {(player.Name == pc.Name ? "You" : player.Name)}: {text}</p>", "ooc");
         }
 
-        Helpers.PostToDiscord($"<p>[OOC] {player.Name} {text}</p>", "channels", Core.Cache.GetConfig());
+        Helpers.PostToDiscordBot($"{player.Name}: {text}",1092857287758057593,  Core.Cache.GetConfig().ChannelDiscordWebHookURL);
+
     }
 }

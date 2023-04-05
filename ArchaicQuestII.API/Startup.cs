@@ -16,7 +16,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.IO;
+using ArchaicQuestII.DiscordBot;
 using ArchaicQuestII.GameLogic.Client;
+using Discord.WebSocket;
 
 namespace ArchaicQuestII.API
 {
@@ -24,7 +26,6 @@ namespace ArchaicQuestII.API
     {
         private IDataBase _db;
         private ICache _cache;
-
         private IHubContext<GameHub> _hubContext;
         public Startup(IConfiguration configuration)
         {
@@ -43,11 +44,13 @@ namespace ArchaicQuestII.API
                             .WithOrigins(
                                 "http://localhost:4200",
                                 "http://localhost:1337",
+                                "https://api.archaicquest.com",
                                 "https://admin.archaicquest.com",
                                 "https://play.archaicquest.com")
                             .AllowAnyMethod()
                             .AllowAnyHeader()
                             .AllowCredentials());
+                
             });
 
             services.AddControllers().AddNewtonsoftJson();
@@ -66,11 +69,9 @@ namespace ArchaicQuestII.API
 
             services.AddSingleton<IDataBase, DataBase>();
             services.AddSingleton<IPlayerDataBase>(new PlayerDataBase(new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AQ-PLAYERS.db"))));
-
-            services.AddSingleton<IWriteToClient, WriteToClient>((factory) =>
-                new WriteToClient(_hubContext, TelnetHub.Instance));
-
-            services.AddGameLogic();
+        services.AddSingleton<IWriteToClient, WriteToClient>((factory) =>
+                new WriteToClient(_hubContext, TelnetHub.Instance, _cache));
+        services.AddGameLogic();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -110,6 +111,7 @@ namespace ArchaicQuestII.API
             });
 
             _hubContext = app.ApplicationServices.GetService<IHubContext<GameHub>>();
+
             app.StartLoops();
 
             var watch = System.Diagnostics.Stopwatch.StartNew();
@@ -135,6 +137,15 @@ namespace ArchaicQuestII.API
 
             Console.WriteLine($"Start up completed in {elapsedMs}");
             GameLogic.Utilities.Helpers.PostToDiscord($"Start up completed in {Math.Ceiling((decimal)elapsedMs / 1000)} seconds", "event", _cache.GetConfig());
+
+           try
+            {
+                new Bot(_cache, _hubContext, new DiscordSocketClient()).MainAsync();
+            }
+            catch (Exception ex)
+            {
+                
+            }
         }
     }
 }

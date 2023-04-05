@@ -82,10 +82,11 @@ namespace ArchaicQuestII.GameLogic.Commands
             
             if (CheckSkillRequirements(player, command) && CheckStatus(player, command.DeniedStatus) )
             {
-                command.Execute(player, room, commandInput);
+               
 
                 try
                 {
+                    command.Execute(player, room, commandInput);
 
                     foreach (var mob in room.Mobs)
                     {

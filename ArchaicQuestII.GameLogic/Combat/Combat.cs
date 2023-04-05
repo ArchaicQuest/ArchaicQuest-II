@@ -477,6 +477,8 @@ namespace ArchaicQuestII.GameLogic.Combat
 
                             if (skill != null)
                             {
+                                _clientUi.PlaySound("block", player);
+                                _clientUi.PlaySound("block", target);
                                 _writer.WriteLine($"You block {player.Name}'s attack with your shield.",
                                     target.ConnectionId);
                                 _writer.WriteLine($"{target.Name} blocks your attack with their shield.",
@@ -623,6 +625,8 @@ namespace ArchaicQuestII.GameLogic.Combat
 
                             if (skill != null)
                             {
+                                _clientUi.PlaySound("parry", player);
+                                _clientUi.PlaySound("parry", target);
                                 _writer.WriteLine($"<p>You parry {player.Name}'s attack.</p>", target.ConnectionId);
                                 _writer.WriteLine($"<p>{target.Name} parries your attack.</p>", player.ConnectionId);
 

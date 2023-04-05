@@ -12,6 +12,8 @@ using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Spell;
 using ArchaicQuestII.GameLogic.World.Room;
+using Discord;
+using Discord.Rest;
 
 namespace ArchaicQuestII.GameLogic.Utilities
 {
@@ -333,6 +335,22 @@ namespace ArchaicQuestII.GameLogic.Utilities
             return exitList;
         }
 
+        public static async void PostToDiscordBot(string message, ulong channelId, string token)
+        {
+            // Create a new instance of the DiscordRestClient
+            var client = new DiscordRestClient();
+
+// Login to Discord using your bot token
+            await client.LoginAsync(TokenType.Bot,  token);
+
+// Get the channel you want to post the message to
+            var channel = await client.GetChannelAsync(channelId); // replace with the channel ID
+
+// Send the message to the channel
+            await (channel as IMessageChannel).SendMessageAsync(message);
+
+        }
+
         public static async void PostToDiscord(string botToSay, string eventName, Config config)
         {
             if (!config.PostToDiscord)
@@ -356,13 +374,7 @@ namespace ArchaicQuestII.GameLogic.Utilities
                     }
 
                     break;
-                case "channels":
-                    if (!string.IsNullOrEmpty(config.ChannelDiscordWebHookURL))
-                    {
-                        await client.PostAsync(config.ChannelDiscordWebHookURL, content);
-                    }
-
-                    break;
+               
                 case "error":
                     if (!string.IsNullOrEmpty(config.ErrorDiscordWebHookURL))
                     {
@@ -808,5 +820,6 @@ namespace ArchaicQuestII.GameLogic.Utilities
 
             return newText;
         }
+
     }
 }
