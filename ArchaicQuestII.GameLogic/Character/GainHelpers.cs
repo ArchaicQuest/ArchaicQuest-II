@@ -43,6 +43,13 @@ namespace ArchaicQuestII.GameLogic.Character.Gain
             player.Experience += amount;
             player.ExperienceToNextLevel -= amount;
 
+            if(player.ExperienceToNextLevel <= 0)
+            {
+                player.GainLevel(out var levelUpMessage);
+                message = levelUpMessage;
+                return;
+            }
+
             message = amount == 1 ? "<p class='improve'>You gain 1 measly experience point.</p>" :
             $"<p class='improve'>You receive {amount} experience points.</p>";
         }
