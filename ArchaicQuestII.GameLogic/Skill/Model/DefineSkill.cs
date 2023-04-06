@@ -5,7 +5,7 @@ public static class DefineSkill
 
     #region WeaponSkills
 
-    public static Skill LongBlade()
+    public static Skill LongBlades()
     {
         return new Skill
         {

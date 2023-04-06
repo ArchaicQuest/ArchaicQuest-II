@@ -46,11 +46,11 @@ namespace ArchaicQuestII.GameLogic.Character.Class
                               "of offensive and defensive skills, they are a versatile class suitable for " +
                               "any race. For beginners, we highly recommend choosing a Human Warrior, as " +
                               "their high hit points and straightforward playstyle make them an easy class to learn.",
-                PreferredWeapon = DefineSkill.LongBlade().Name,
+                PreferredWeapon = DefineSkill.LongBlades().Name,
                 Skills = new List<SkillList>()
                 {
                   
-                    AddSkill(DefineSkill.LongBlade().Name, 1, 75, false),
+                    AddSkill(DefineSkill.LongBlades().Name, 1, 75, false),
                     AddSkill(DefineSkill.ShortBlades().Name, 1, 0, false),
                     AddSkill(DefineSkill.Axe().Name, 1, 0, false),
                     AddSkill(DefineSkill.Flail().Name, 1, 0, false),
@@ -83,7 +83,7 @@ namespace ArchaicQuestII.GameLogic.Character.Class
                     AddSkill(DefineSkill.SecondAttack().Name, 18, 0, false),
                     AddSkill(DefineSkill.Disarm().Name, 20, 0, false),
                     AddSkill(DefineSkill.EnhancedDamage().Name, 22, 0, false),
-                    AddSkill(DefineSkill.LongBlade().Name, 1, 75, false),
+                    AddSkill(DefineSkill.LongBlades().Name, 1, 75, false),
                     AddSkill(DefineSkill.WarCry().Name, 25, 0, false),
                     AddSkill(DefineSkill.ShieldBash().Name, 26, 0, false),
                     AddSkill(DefineSkill.Lunge().Name, 28, 0, false),
@@ -128,7 +128,7 @@ namespace ArchaicQuestII.GameLogic.Character.Class
                 Skills = new List<SkillList>()
                 {
                   
-                    AddSkill(DefineSkill.LongBlade().Name, 1, 75, false),
+                    AddSkill(DefineSkill.LongBlades().Name, 1, 75, false),
                     AddSkill(DefineSkill.ShortBlades().Name, 1, 0, false),
                     AddSkill(DefineSkill.Axe().Name, 1, 0, false),
                     AddSkill(DefineSkill.Flail().Name, 1, 0, false),
@@ -161,7 +161,7 @@ namespace ArchaicQuestII.GameLogic.Character.Class
                     AddSkill(DefineSkill.SecondAttack().Name, 18, 0, false),
                     AddSkill(DefineSkill.Disarm().Name, 20, 0, false),
                     AddSkill(DefineSkill.EnhancedDamage().Name, 22, 0, false),
-                    AddSkill(DefineSkill.LongBlade().Name, 1, 75, false),
+                    AddSkill(DefineSkill.LongBlades().Name, 1, 75, false),
                     AddSkill(DefineSkill.WarCry().Name, 25, 0, false),
                     AddSkill(DefineSkill.ShieldBash().Name, 26, 0, false),
                     AddSkill(DefineSkill.Lunge().Name, 28, 0, false),
@@ -192,17 +192,104 @@ namespace ArchaicQuestII.GameLogic.Character.Class
             };
         }
            
-          public static Class Alchemist()
+        /*
+         *  Transmutor (Changes physical material properties)
+         *  Mutator (Changes the composition of their self through potions)
+         *  Herbalist (Creates healing & buffing potions)
+         *  Toxicologist (Creates toxins and powders)
+         */
+         #region Alchemist
+        public static Class Alchemist()
         {
             return new Class()
             {
                 Name = "Alchemist",
                 Description = "",
-                PreferredWeapon = "Long Sword",
+                PreferredWeapon = DefineSkill.ShortBlades().Name,
+                Skills = new List<SkillList>()
+                {
+                    AddSkill(DefineSkill.ShortBlades().Name, 1, 75, false),
+                    AddSkill(DefineSkill.LongBlades().Name, 1, 0, false),
+                    AddSkill(DefineSkill.Axe().Name, 1, 0, false),
+                    AddSkill(DefineSkill.Flail().Name, 1, 0, false),
+                    AddSkill(DefineSkill.Polearm().Name, 1, 0, false),
+                    AddSkill(DefineSkill.Blunt().Name, 1, 0, false),
+                    AddSkill(DefineSkill.Spear().Name, 1, 0, false),
+                    AddSkill(DefineSkill.Staff().Name, 1, 0, false),
+                    AddSkill(DefineSkill.Whip().Name, 1, 0, false),
+                    AddSkill(DefineSkill.HandToHand().Name, 1, 0, false), 
+                   
+                    AddSkill(DefineSkill.Crafting().Name, 1, 0, false),
+                    AddSkill(DefineSkill.Cooking().Name, 1, 0, false),
+                    AddSkill(DefineSkill.Foraging().Name, 1, 0, false),
+                     
+                    AddSkill(DefineSkill.Lore().Name, 9, 0, false),
+                    AddSkill(DefineSkill.Elbow().Name, 2, 0, false),
+                    AddSkill(DefineSkill.DirtKick().Name, 3, 0, false),
+                    AddSkill(DefineSkill.Kick().Name, 4, 0, false),
+                    AddSkill(DefineSkill.Crossbow().Name, 5, 0, false),
+                    AddSkill(DefineSkill.Bows().Name, 5, 0, false),
+                    AddSkill(DefineSkill.Parry().Name, 6, 0, false),
+                    AddSkill(DefineSkill.FastHealing().Name, 7, 0, false),
+                    AddSkill(DefineSkill.ShieldBlock().Name, 8, 0, false),
+                    AddSkill(DefineSkill.Charge().Name, 11, 0, false),
+                    AddSkill(DefineSkill.Rescue().Name, 12, 0, false),
+                    AddSkill(DefineSkill.UpperCut().Name, 14, 0, false),
+                    AddSkill(DefineSkill.Trip().Name, 15, 0, false),
+                    AddSkill(DefineSkill.Stab().Name, 17, 0, false),
+                    AddSkill(DefineSkill.Mount().Name, 18, 0, false),
+                    AddSkill(DefineSkill.SecondAttack().Name, 18, 0, false),
+                    AddSkill(DefineSkill.Disarm().Name, 20, 0, false),
+                    AddSkill(DefineSkill.EnhancedDamage().Name, 22, 0, false),
+                    AddSkill(DefineSkill.LongBlades().Name, 1, 75, false),
+                    AddSkill(DefineSkill.WarCry().Name, 25, 0, false),
+                    AddSkill(DefineSkill.ShieldBash().Name, 26, 0, false),
+                    AddSkill(DefineSkill.Lunge().Name, 28, 0, false),
+                    AddSkill(DefineSkill.BlindFighting().Name, 29, 0, false),
+                    AddSkill(DefineSkill.DualWield().Name, 31, 0, false),
+                    AddSkill(DefineSkill.ThirdAttack().Name, 32, 0, false),
+                    AddSkill(DefineSkill.HamString().Name, 35, 0, false),
+                    AddSkill(DefineSkill.Slash().Name, 36, 0, false),
+                    AddSkill(DefineSkill.Impale().Name, 37, 0, false),
+                    AddSkill(DefineSkill.Cleave().Name, 40, 0, false),
+                    AddSkill(DefineSkill.FourthAttack().Name, 42, 0, false),
+                    AddSkill(DefineSkill.OverheadCrush().Name, 46, 0, false),
+                    AddSkill(DefineSkill.FifthAttack().Name, 50, 0, false),
+                },
+                Reclasses = new List<Class>()
+                {
+                    Transmutor(),
+                    Herbalist(),
+                    Toxicologist()
+                },
+                AttributeBonus = new Attributes()
+                {
+                    Attribute = new Dictionary<EffectLocation, int>()
+                    {
+                        { EffectLocation.Strength, 2 },
+                    }
+                },
+                HitDice = "1D10",
+                ExperiencePointsCost = 1000,
+                CreatedBy = "Ithdrak",
+                Id = 1,
+                DateCreated = DateTime.Now,
+                DateUpdated = DateTime.Now,
+            
+            };
+        }
+
+        public static Class Transmutor()
+        {
+            return new Class()
+            {
+                Name = "Transmutor",
+                Description = "",
+                PreferredWeapon = DefineSkill.LongBlades().Name,
                 Skills = new List<SkillList>()
                 {
                   
-                    AddSkill(DefineSkill.LongBlade().Name, 1, 75, false),
+                    AddSkill(DefineSkill.LongBlades().Name, 1, 75, false),
                     AddSkill(DefineSkill.ShortBlades().Name, 1, 0, false),
                     AddSkill(DefineSkill.Axe().Name, 1, 0, false),
                     AddSkill(DefineSkill.Flail().Name, 1, 0, false),
@@ -235,7 +322,7 @@ namespace ArchaicQuestII.GameLogic.Character.Class
                     AddSkill(DefineSkill.SecondAttack().Name, 18, 0, false),
                     AddSkill(DefineSkill.Disarm().Name, 20, 0, false),
                     AddSkill(DefineSkill.EnhancedDamage().Name, 22, 0, false),
-                    AddSkill(DefineSkill.LongBlade().Name, 1, 75, false),
+                    AddSkill(DefineSkill.LongBlades().Name, 1, 75, false),
                     AddSkill(DefineSkill.WarCry().Name, 25, 0, false),
                     AddSkill(DefineSkill.ShieldBash().Name, 26, 0, false),
                     AddSkill(DefineSkill.Lunge().Name, 28, 0, false),
@@ -259,19 +346,242 @@ namespace ArchaicQuestII.GameLogic.Character.Class
                 },
                 HitDice = "1D10",
                 ExperiencePointsCost = 1000,
-                CreatedBy = "Malleus",
+                CreatedBy = "Ithdrak",
                 Id = 1,
                 DateCreated = DateTime.Now,
                 DateUpdated = DateTime.Now,
             
             };
         }
+
+        public static Class Herbalist()
+        {
+            return new Class()
+            {
+                Name = "Herbalist",
+                Description = "",
+                PreferredWeapon = DefineSkill.Staff().Name,
+                Skills = new List<SkillList>()
+                {
+                    AddSkill(DefineSkill.Staff().Name, 1, 75, false),
+                    AddSkill(DefineSkill.LongBlades().Name, 1, 0, false),
+                    AddSkill(DefineSkill.ShortBlades().Name, 1, 0, false),
+                    AddSkill(DefineSkill.Axe().Name, 1, 0, false),
+                    AddSkill(DefineSkill.Flail().Name, 1, 0, false),
+                    AddSkill(DefineSkill.Polearm().Name, 1, 0, false),
+                    AddSkill(DefineSkill.Blunt().Name, 1, 0, false),
+                    AddSkill(DefineSkill.Spear().Name, 1, 0, false),
+                    AddSkill(DefineSkill.Whip().Name, 1, 0, false),
+                    AddSkill(DefineSkill.HandToHand().Name, 1, 0, false), 
+                   
+                    AddSkill(DefineSkill.Crafting().Name, 1, 0, false),
+                    AddSkill(DefineSkill.Cooking().Name, 1, 0, false),
+                    AddSkill(DefineSkill.Foraging().Name, 1, 0, false),
+                     
+                    AddSkill(DefineSkill.Lore().Name, 9, 0, false),
+                    AddSkill(DefineSkill.Elbow().Name, 2, 0, false),
+                    AddSkill(DefineSkill.DirtKick().Name, 3, 0, false),
+                    AddSkill(DefineSkill.Kick().Name, 4, 0, false),
+                    AddSkill(DefineSkill.Crossbow().Name, 5, 0, false),
+                    AddSkill(DefineSkill.Bows().Name, 5, 0, false),
+                    AddSkill(DefineSkill.Parry().Name, 6, 0, false),
+                    AddSkill(DefineSkill.FastHealing().Name, 7, 0, false),
+                    AddSkill(DefineSkill.ShieldBlock().Name, 8, 0, false),
+                    AddSkill(DefineSkill.Charge().Name, 11, 0, false),
+                    AddSkill(DefineSkill.Rescue().Name, 12, 0, false),
+                    AddSkill(DefineSkill.UpperCut().Name, 14, 0, false),
+                    AddSkill(DefineSkill.Trip().Name, 15, 0, false),
+                    AddSkill(DefineSkill.Stab().Name, 17, 0, false),
+                    AddSkill(DefineSkill.Mount().Name, 18, 0, false),
+                    AddSkill(DefineSkill.SecondAttack().Name, 18, 0, false),
+                    AddSkill(DefineSkill.Disarm().Name, 20, 0, false),
+                    AddSkill(DefineSkill.EnhancedDamage().Name, 22, 0, false),
+                    AddSkill(DefineSkill.LongBlades().Name, 1, 75, false),
+                    AddSkill(DefineSkill.WarCry().Name, 25, 0, false),
+                    AddSkill(DefineSkill.ShieldBash().Name, 26, 0, false),
+                    AddSkill(DefineSkill.Lunge().Name, 28, 0, false),
+                    AddSkill(DefineSkill.BlindFighting().Name, 29, 0, false),
+                    AddSkill(DefineSkill.DualWield().Name, 31, 0, false),
+                    AddSkill(DefineSkill.ThirdAttack().Name, 32, 0, false),
+                    AddSkill(DefineSkill.HamString().Name, 35, 0, false),
+                    AddSkill(DefineSkill.Slash().Name, 36, 0, false),
+                    AddSkill(DefineSkill.Impale().Name, 37, 0, false),
+                    AddSkill(DefineSkill.Cleave().Name, 40, 0, false),
+                    AddSkill(DefineSkill.FourthAttack().Name, 42, 0, false),
+                    AddSkill(DefineSkill.OverheadCrush().Name, 46, 0, false),
+                    AddSkill(DefineSkill.FifthAttack().Name, 50, 0, false),
+                },
+                AttributeBonus = new Attributes()
+                {
+                    Attribute = new Dictionary<EffectLocation, int>()
+                    {
+                        { EffectLocation.Strength, 2 },
+                    }
+                },
+                HitDice = "1D10",
+                ExperiencePointsCost = 1000,
+                CreatedBy = "Ithdrak",
+                Id = 1,
+                DateCreated = DateTime.Now,
+                DateUpdated = DateTime.Now,
+            
+            };
+        }
+
+        public static Class Toxicologist()
+        {
+            return new Class()
+            {
+                Name = "Toxicologist",
+                Description = "",
+                PreferredWeapon = DefineSkill.Crossbow().Name,
+                Skills = new List<SkillList>()
+                {
+                    AddSkill(DefineSkill.Crossbow().Name, 5, 75, false),
+                    AddSkill(DefineSkill.Staff().Name, 1, 0, false),
+                    AddSkill(DefineSkill.LongBlades().Name, 1, 0, false),
+                    AddSkill(DefineSkill.ShortBlades().Name, 1, 0, false),
+                    AddSkill(DefineSkill.Axe().Name, 1, 0, false),
+                    AddSkill(DefineSkill.Flail().Name, 1, 0, false),
+                    AddSkill(DefineSkill.Polearm().Name, 1, 0, false),
+                    AddSkill(DefineSkill.Blunt().Name, 1, 0, false),
+                    AddSkill(DefineSkill.Spear().Name, 1, 0, false),
+                    AddSkill(DefineSkill.Whip().Name, 1, 0, false),
+                    AddSkill(DefineSkill.HandToHand().Name, 1, 0, false), 
+                   
+                    AddSkill(DefineSkill.Crafting().Name, 1, 0, false),
+                    AddSkill(DefineSkill.Cooking().Name, 1, 0, false),
+                    AddSkill(DefineSkill.Foraging().Name, 1, 0, false),
+                     
+                    AddSkill(DefineSkill.Lore().Name, 9, 0, false),
+                    AddSkill(DefineSkill.Elbow().Name, 2, 0, false),
+                    AddSkill(DefineSkill.DirtKick().Name, 3, 0, false),
+                    AddSkill(DefineSkill.Kick().Name, 4, 0, false),
+                    AddSkill(DefineSkill.Bows().Name, 5, 0, false),
+                    AddSkill(DefineSkill.Parry().Name, 6, 0, false),
+                    AddSkill(DefineSkill.FastHealing().Name, 7, 0, false),
+                    AddSkill(DefineSkill.ShieldBlock().Name, 8, 0, false),
+                    AddSkill(DefineSkill.Charge().Name, 11, 0, false),
+                    AddSkill(DefineSkill.Rescue().Name, 12, 0, false),
+                    AddSkill(DefineSkill.UpperCut().Name, 14, 0, false),
+                    AddSkill(DefineSkill.Trip().Name, 15, 0, false),
+                    AddSkill(DefineSkill.Stab().Name, 17, 0, false),
+                    AddSkill(DefineSkill.Mount().Name, 18, 0, false),
+                    AddSkill(DefineSkill.SecondAttack().Name, 18, 0, false),
+                    AddSkill(DefineSkill.Disarm().Name, 20, 0, false),
+                    AddSkill(DefineSkill.EnhancedDamage().Name, 22, 0, false),
+                    AddSkill(DefineSkill.LongBlades().Name, 1, 75, false),
+                    AddSkill(DefineSkill.WarCry().Name, 25, 0, false),
+                    AddSkill(DefineSkill.ShieldBash().Name, 26, 0, false),
+                    AddSkill(DefineSkill.Lunge().Name, 28, 0, false),
+                    AddSkill(DefineSkill.BlindFighting().Name, 29, 0, false),
+                    AddSkill(DefineSkill.DualWield().Name, 31, 0, false),
+                    AddSkill(DefineSkill.ThirdAttack().Name, 32, 0, false),
+                    AddSkill(DefineSkill.HamString().Name, 35, 0, false),
+                    AddSkill(DefineSkill.Slash().Name, 36, 0, false),
+                    AddSkill(DefineSkill.Impale().Name, 37, 0, false),
+                    AddSkill(DefineSkill.Cleave().Name, 40, 0, false),
+                    AddSkill(DefineSkill.FourthAttack().Name, 42, 0, false),
+                    AddSkill(DefineSkill.OverheadCrush().Name, 46, 0, false),
+                    AddSkill(DefineSkill.FifthAttack().Name, 50, 0, false),
+                },
+                AttributeBonus = new Attributes()
+                {
+                    Attribute = new Dictionary<EffectLocation, int>()
+                    {
+                        { EffectLocation.Strength, 2 },
+                    }
+                },
+                HitDice = "1D10",
+                ExperiencePointsCost = 1000,
+                CreatedBy = "Ithdrak",
+                Id = 1,
+                DateCreated = DateTime.Now,
+                DateUpdated = DateTime.Now,
+            
+            };
+        }
+
+        public static Class Mutator()
+        {
+            return new Class()
+            {
+                Name = "Mutator",
+                Description = "",
+                PreferredWeapon = DefineSkill.HandToHand().Name,
+                Skills = new List<SkillList>()
+                {
+                    AddSkill(DefineSkill.HandToHand().Name, 1, 75, false), 
+                    AddSkill(DefineSkill.Crossbow().Name, 5, 0, false),
+                    AddSkill(DefineSkill.Staff().Name, 1, 0, false),
+                    AddSkill(DefineSkill.LongBlades().Name, 1, 0, false),
+                    AddSkill(DefineSkill.ShortBlades().Name, 1, 0, false),
+                    AddSkill(DefineSkill.Axe().Name, 1, 0, false),
+                    AddSkill(DefineSkill.Flail().Name, 1, 0, false),
+                    AddSkill(DefineSkill.Polearm().Name, 1, 0, false),
+                    AddSkill(DefineSkill.Blunt().Name, 1, 0, false),
+                    AddSkill(DefineSkill.Spear().Name, 1, 0, false),
+                    AddSkill(DefineSkill.Whip().Name, 1, 0, false),
+                   
+                    AddSkill(DefineSkill.Crafting().Name, 1, 0, false),
+                    AddSkill(DefineSkill.Cooking().Name, 1, 0, false),
+                    AddSkill(DefineSkill.Foraging().Name, 1, 0, false),
+                     
+                    AddSkill(DefineSkill.Lore().Name, 9, 0, false),
+                    AddSkill(DefineSkill.Elbow().Name, 2, 0, false),
+                    AddSkill(DefineSkill.DirtKick().Name, 3, 0, false),
+                    AddSkill(DefineSkill.Kick().Name, 4, 0, false),
+                    AddSkill(DefineSkill.Bows().Name, 5, 0, false),
+                    AddSkill(DefineSkill.Parry().Name, 6, 0, false),
+                    AddSkill(DefineSkill.FastHealing().Name, 7, 0, false),
+                    AddSkill(DefineSkill.ShieldBlock().Name, 8, 0, false),
+                    AddSkill(DefineSkill.Charge().Name, 11, 0, false),
+                    AddSkill(DefineSkill.Rescue().Name, 12, 0, false),
+                    AddSkill(DefineSkill.UpperCut().Name, 14, 0, false),
+                    AddSkill(DefineSkill.Trip().Name, 15, 0, false),
+                    AddSkill(DefineSkill.Stab().Name, 17, 0, false),
+                    AddSkill(DefineSkill.Mount().Name, 18, 0, false),
+                    AddSkill(DefineSkill.SecondAttack().Name, 18, 0, false),
+                    AddSkill(DefineSkill.Disarm().Name, 20, 0, false),
+                    AddSkill(DefineSkill.EnhancedDamage().Name, 22, 0, false),
+                    AddSkill(DefineSkill.LongBlades().Name, 1, 75, false),
+                    AddSkill(DefineSkill.WarCry().Name, 25, 0, false),
+                    AddSkill(DefineSkill.ShieldBash().Name, 26, 0, false),
+                    AddSkill(DefineSkill.Lunge().Name, 28, 0, false),
+                    AddSkill(DefineSkill.BlindFighting().Name, 29, 0, false),
+                    AddSkill(DefineSkill.DualWield().Name, 31, 0, false),
+                    AddSkill(DefineSkill.ThirdAttack().Name, 32, 0, false),
+                    AddSkill(DefineSkill.HamString().Name, 35, 0, false),
+                    AddSkill(DefineSkill.Slash().Name, 36, 0, false),
+                    AddSkill(DefineSkill.Impale().Name, 37, 0, false),
+                    AddSkill(DefineSkill.Cleave().Name, 40, 0, false),
+                    AddSkill(DefineSkill.FourthAttack().Name, 42, 0, false),
+                    AddSkill(DefineSkill.OverheadCrush().Name, 46, 0, false),
+                    AddSkill(DefineSkill.FifthAttack().Name, 50, 0, false),
+                },
+                AttributeBonus = new Attributes()
+                {
+                    Attribute = new Dictionary<EffectLocation, int>()
+                    {
+                        { EffectLocation.Strength, 2 },
+                    }
+                },
+                HitDice = "1D10",
+                ExperiencePointsCost = 1000,
+                CreatedBy = "Ithdrak",
+                Id = 1,
+                DateCreated = DateTime.Now,
+                DateUpdated = DateTime.Now,
+            
+            };
+        }
+        #endregion
         
         
         /*
-  *  TODO: reclass options
-  *  Assassin,  Bandit, Nightshade, Pirate, Ninja
-  */
+        *  TODO: reclass options
+        *  Assassin,  Bandit, Nightshade, Pirate, Ninja
+        */
         public static Class Rogue()
         {
             return new Class()
@@ -284,11 +594,10 @@ namespace ArchaicQuestII.GameLogic.Character.Class
                               "blades. They are a versatile class that can handle both combat and non-combat situations " +
                               "with ease. Important attributes for rogues are Dexterity, Constitution, and Intelligence. " +
                               "While any race can train to be a rogue, the quick and nimble Mau excel in this class.",
-                PreferredWeapon = "Short Sword",
+                PreferredWeapon = DefineSkill.ShortBlades().Name,
                 Skills = new List<SkillList>()
                 {
-                  
-                    AddSkill(DefineSkill.LongBlade().Name, 1, 0, false),
+                    AddSkill(DefineSkill.LongBlades().Name, 1, 0, false),
                     AddSkill(DefineSkill.ShortBlades().Name, 1, 75, false),
                     AddSkill(DefineSkill.Axe().Name, 1, 0, false),
                     AddSkill(DefineSkill.Flail().Name, 1, 0, false),
@@ -319,7 +628,7 @@ namespace ArchaicQuestII.GameLogic.Character.Class
                     AddSkill(DefineSkill.SecondAttack().Name, 18, 0, false),
                     AddSkill(DefineSkill.Disarm().Name, 20, 0, false),
                     AddSkill(DefineSkill.EnhancedDamage().Name, 22, 0, false),
-                    AddSkill(DefineSkill.LongBlade().Name, 1, 75, false),
+                    AddSkill(DefineSkill.LongBlades().Name, 1, 75, false),
                     AddSkill(DefineSkill.WarCry().Name, 25, 0, false),
                     AddSkill(DefineSkill.ShieldBash().Name, 26, 0, false),
                     AddSkill(DefineSkill.Lunge().Name, 28, 0, false),
@@ -364,11 +673,11 @@ namespace ArchaicQuestII.GameLogic.Character.Class
                               "magic, but their abilities become increasingly powerful as they progress. Intelligence, " +
                               "Wisdom, and Dexterity are key attributes for Mages, and all races can train in magic, " +
                               "though Elves are often considered the most adept.",
-                PreferredWeapon = "Short Sword",
+                PreferredWeapon = DefineSkill.Staff().Name,
                 Skills = new List<SkillList>()
                 {
              
-                    AddSkill(DefineSkill.LongBlade().Name, 1, 0, false),
+                    AddSkill(DefineSkill.LongBlades().Name, 1, 0, false),
                     AddSkill(DefineSkill.ShortBlades().Name, 1, 75, false),
                     AddSkill(DefineSkill.Axe().Name, 1, 0, false),
                     AddSkill(DefineSkill.Flail().Name, 1, 0, false),
@@ -399,7 +708,7 @@ namespace ArchaicQuestII.GameLogic.Character.Class
                     AddSkill(DefineSkill.SecondAttack().Name, 18, 0, false),
                     AddSkill(DefineSkill.Disarm().Name, 20, 0, false),
                     AddSkill(DefineSkill.EnhancedDamage().Name, 22, 0, false),
-                    AddSkill(DefineSkill.LongBlade().Name, 1, 75, false),
+                    AddSkill(DefineSkill.LongBlades().Name, 1, 75, false),
                     AddSkill(DefineSkill.WarCry().Name, 25, 0, false),
                     AddSkill(DefineSkill.ShieldBash().Name, 26, 0, false),
                     AddSkill(DefineSkill.Lunge().Name, 28, 0, false),
@@ -451,7 +760,7 @@ namespace ArchaicQuestII.GameLogic.Character.Class
                 Skills = new List<SkillList>()
                 {
              
-                     AddSkill(DefineSkill.LongBlade().Name, 1, 0, false),
+                    AddSkill(DefineSkill.LongBlades().Name, 1, 0, false),
                     AddSkill(DefineSkill.ShortBlades().Name, 1, 75, false),
                     AddSkill(DefineSkill.Axe().Name, 1, 0, false),
                     AddSkill(DefineSkill.Flail().Name, 1, 0, false),
@@ -482,7 +791,7 @@ namespace ArchaicQuestII.GameLogic.Character.Class
                     AddSkill(DefineSkill.SecondAttack().Name, 18, 0, false),
                     AddSkill(DefineSkill.Disarm().Name, 20, 0, false),
                     AddSkill(DefineSkill.EnhancedDamage().Name, 22, 0, false),
-                    AddSkill(DefineSkill.LongBlade().Name, 1, 75, false),
+                    AddSkill(DefineSkill.LongBlades().Name, 1, 75, false),
                     AddSkill(DefineSkill.WarCry().Name, 25, 0, false),
                     AddSkill(DefineSkill.ShieldBash().Name, 26, 0, false),
                     AddSkill(DefineSkill.Lunge().Name, 28, 0, false),
@@ -517,10 +826,11 @@ namespace ArchaicQuestII.GameLogic.Character.Class
          {
              return new List<Class>()
              {
-                 Fighter(),
-                 Rogue(),
-                 Cleric(),
-                 Mage()
+                Fighter(),
+                Rogue(),
+                Cleric(),
+                Mage(),
+                Alchemist()
              };
          }
         
