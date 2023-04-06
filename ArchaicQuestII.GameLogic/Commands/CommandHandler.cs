@@ -4,7 +4,6 @@ using System.Linq;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
-using ArchaicQuestII.GameLogic.Skill.Core;
 using ArchaicQuestII.GameLogic.World.Room;
 using MoonSharp.Interpreter;
 

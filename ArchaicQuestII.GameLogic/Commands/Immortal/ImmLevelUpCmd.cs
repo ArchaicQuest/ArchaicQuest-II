@@ -1,6 +1,7 @@
 using System.Linq;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.World.Room;
@@ -38,10 +39,18 @@ public class ImmLevelUpCmd : ICommand
 
         if (string.IsNullOrEmpty(target))
         {
-            Core.Gain.GainLevel(player, player.Name);
+            player.GainLevel(out _);
+            return;
+        }
+
+        var otherPlayer = Core.Cache.GetAllPlayers().FirstOrDefault(x => x.Name == target);
+
+        if(otherPlayer == null)
+        {
+            Core.Writer.WriteLine($"No player '{target}' found.", player.ConnectionId);
             return;
         }
         
-      Core.Gain.GainLevel(player, target);
+        otherPlayer.GainLevel(out _);
     }
 }
