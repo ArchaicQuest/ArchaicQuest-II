@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
@@ -257,8 +258,9 @@ public class ChopCmd : ICommand
 
         if (!canDoSkill)
         {
+            player.FailedSkill("foraging", out var message);
             Core.Writer.WriteLine("<p>You fail to chop a thing.</p>", player.ConnectionId);
-            Core.Writer.WriteLine(Helpers.SkillLearnMistakes(player, "foraging", Core.Gain), player.ConnectionId);
+            Core.Writer.WriteLine(message, player.ConnectionId);
             player.Status = CharacterStatus.Status.Standing;
             return;
         }

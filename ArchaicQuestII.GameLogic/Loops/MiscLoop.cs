@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using ArchaicQuestII.GameLogic.Character;
 using System.Linq;
+using ArchaicQuestII.GameLogic.Character.Gain;
 
 namespace ArchaicQuestII.GameLogic.Loops
 {
@@ -186,7 +187,7 @@ namespace ArchaicQuestII.GameLogic.Loops
                         }
                         else
                         {
-                            _core.GainSkillProficiency(hasFastHealing, player);
+                            player.FailedSkill("Fast Healing", out _);
                         }
                     }
 

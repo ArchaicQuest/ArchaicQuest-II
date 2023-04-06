@@ -2,7 +2,6 @@
 using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Class;
-using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Skill.Skills;
@@ -19,7 +18,6 @@ namespace ArchaicQuestII.GameLogic.Core
         public IDataBase DataBase { get; }
         public IPlayerDataBase PlayerDataBase { get; }
         public IUpdateClientUI UpdateClient { get; }
-        public IGain Gain { get; }
         public ICombat Combat { get; }
         public IRoomActions RoomActions { get; }
         public IAreaActions AreaActions { get; }
@@ -37,7 +35,6 @@ namespace ArchaicQuestII.GameLogic.Core
         /// <param name="player"></param>
         void DBDumpToJSON(Player player);
         List<string> Hints();
-        void GainSkillProficiency(SkillList foundSkill, Player player);
         public void RestorePlayer(Player player);
         bool CommandTargetCheck(string target, Player player, string errorMessage = "What?");
     }

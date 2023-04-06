@@ -19,15 +19,12 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
         int Haggle(Player player, Player target);
         int DualWield(Player player, Player target, Room room, string obj);
         int Lore(Player player, Room room, string obj);
-
-
     }
 
     public class PassiveSkills : IPassiveSkills
     {
         private readonly IWriteToClient _writer;
         private readonly IUpdateClientUI _updateClientUi;
-        private readonly IGain _gain;
         private readonly IDamage _damage;
         private readonly ICombat _fight;
         private readonly ISkillManager _skillManager;
@@ -43,7 +40,6 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             ICombat fight,
             ISkillManager skillManager, 
             ICache cache, 
-            IGain gain,
             IEquip equip)
         {
             _writer = writer;
@@ -52,9 +48,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             _fight = fight;
             _skillManager = skillManager;
             _cache = cache;
-            _gain = gain;
             _equip = equip;
-
         }
 
 
@@ -105,14 +99,11 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
             foundSkill.Proficiency += increase;
 
-            _gain.GainExperiencePoints(player, 100 * foundSkill.Level / 4, false);
+            player.FailedSkill("haggle", out var message);
 
             _updateClientUi.UpdateExp(player);
 
-            _writer.WriteLine(
-                $"<p class='improve'>You learn from your mistakes and gain {100 * foundSkill.Level / 4} experience points.</p>" +
-                $"<p class='improve'>Your knowledge of {foundSkill.SkillName} increases by {increase}%.</p>",
-                player.ConnectionId, 0);
+            _writer.WriteLine(message, player.ConnectionId);
 
             return 0;
         }
