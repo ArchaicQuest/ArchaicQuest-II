@@ -31,7 +31,6 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
     {
         private readonly IWriteToClient _writer;
         private readonly IUpdateClientUI _updateClientUi;
-        private readonly IGain _gain;
         private readonly IDamage _damage;
         private readonly ICombat _fight;
         private readonly ISkillManager _skillManager;
@@ -45,8 +44,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             IDamage damage, 
             ICombat fight, 
             ISkillManager skillManager,
-            ICache cache, 
-            IGain gain)
+            ICache cache)
         {
             _writer = writer;
             _updateClientUi = updateClientUi;
@@ -54,9 +52,8 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             _fight = fight;
             _skillManager = skillManager;
             _cache = cache;
-            _gain = gain;
-
         }
+
         public int Disarm(Player player, Player target, Room room, string obj)
         {
             if (string.IsNullOrEmpty(player.Target))
@@ -118,7 +115,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                 }
                 else
                 {
-                    _gain.GainSkillExperience(target, hasGrip.Level * 100, hasGrip, DiceBag.Roll(1, 1, 5));
+                    target.FailedSkill("grip", out _);
                 }
             }
 
@@ -237,15 +234,12 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                 _skillManager.updateCombat(player, findTarget, room);
                 return 0;
             }
-            var increase = DiceBag.Roll(1, 1, 5);
-            _gain.GainExperiencePoints(player, 100 * foundSkill.Level / 4, false);
+
+            player.FailedSkill("Rescue", out var message);
 
             _updateClientUi.UpdateExp(player);
 
-            _writer.WriteLine(
-                $"<p class='improve'>You learn from your mistakes and gain {100 * foundSkill.Level / 4} experience points.</p>" +
-                $"<p class='improve'>Your knowledge of {foundSkill.SkillName} increases by {increase}%.</p>",
-                player.ConnectionId, 0);
+            _writer.WriteLine(message, player.ConnectionId);
 
             return 0;
         }
@@ -325,20 +319,11 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
                     player.Attributes.Attribute[EffectLocation.Moves] = player.Attributes.Attribute[EffectLocation.Moves] /= 4;
 
-                    var increase = DiceBag.Roll(1, 1, 5);
-
-                    foundSkill.Proficiency += increase;
-
-                    _gain.GainExperiencePoints(player, 100 * foundSkill.Level / 4, false);
+                    player.FailedSkill("Berserk", out var message);
 
                     _updateClientUi.UpdateExp(player);
 
-                    _writer.WriteLine(
-                        $"<p class='improve'>You learn from your mistakes and gain {100 * foundSkill.Level / 4} experience points.</p>" +
-                        $"<p class='improve'>Your knowledge of {foundSkill.SkillName} increases by {increase}%.</p>",
-                        player.ConnectionId, 0);
-
-
+                    _writer.WriteLine(message, player.ConnectionId);
                 }
             }
 

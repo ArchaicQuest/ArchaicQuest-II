@@ -5,12 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Equipment;
+using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Crafting;
-using ArchaicQuestII.GameLogic.Item;
-using ArchaicQuestII.GameLogic.SeedData;
 using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
 
@@ -204,7 +202,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
                         pc.ConnectionId);
                 }
 
-                Helpers.SkillLearnMistakes(player, "Cooking", Core.Gain);
+                player.FailedSkill("Cooking", out var message);
+                Core.Writer.WriteLine(message, player.ConnectionId);
             }
             else
             {

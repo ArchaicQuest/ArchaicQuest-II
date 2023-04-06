@@ -1,16 +1,11 @@
 ﻿using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Class;
-using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.World.Room;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Skill.Skills;
-using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Area;
 using ArchaicQuestII.GameLogic.Spell;
 
@@ -23,7 +18,6 @@ namespace ArchaicQuestII.GameLogic.Core
         public IDataBase DataBase { get; }
         public IPlayerDataBase PlayerDataBase { get; }
         public IUpdateClientUI UpdateClient { get; }
-        public IGain Gain { get; }
         public ICombat Combat { get; }
         public IRoomActions RoomActions { get; }
         public IAreaActions AreaActions { get; }
@@ -45,7 +39,6 @@ namespace ArchaicQuestII.GameLogic.Core
             IWriteToClient writeToClient, 
             IDataBase dataBase, 
             IUpdateClientUI updateClient,
-            IGain gain, 
             ICombat combat, 
             IPlayerDataBase playerDataBase, 
             IRoomActions roomActions,
@@ -62,7 +55,6 @@ namespace ArchaicQuestII.GameLogic.Core
             Writer = writeToClient;
             DataBase = dataBase;
             UpdateClient = updateClient;
-            Gain = gain;
             Combat = combat;
             PlayerDataBase = playerDataBase;
             RoomActions = roomActions;
@@ -97,37 +89,6 @@ namespace ArchaicQuestII.GameLogic.Core
             UpdateClient.UpdateMana(player);
 
             Writer.WriteLine("You are restored.", player.ConnectionId);
-        }
-
-        public void GainSkillProficiency(SkillList foundSkill, Player player)
-        {
-
-            var getSkill = Cache.GetSkill(foundSkill.SkillId);
-
-            if (getSkill == null)
-            {
-                var skill = Cache.GetAllSkills().FirstOrDefault(x => x.Name.Equals(foundSkill.SkillName, StringComparison.CurrentCultureIgnoreCase));
-                foundSkill.SkillId = skill.Id;
-            }
-
-
-            if (foundSkill.Proficiency == 100)
-            {
-                return;
-            }
-
-            var increase = DiceBag.Roll(1, 1, 5);
-
-            foundSkill.Proficiency += increase;
-
-            Gain.GainExperiencePoints(player, 100 * foundSkill.Level / 4, false);
-
-            UpdateClient.UpdateExp(player);
-
-            Writer.WriteLine(
-                $"<p class='improve'>You learn from your mistakes and gain {100 * foundSkill.Level / 4} experience points.</p>" +
-                $"<p class='improve'>Your knowledge of {foundSkill.SkillName} increases by {increase}%.</p>",
-                player.ConnectionId, 0);
         }
 
         public List<string> Hints()

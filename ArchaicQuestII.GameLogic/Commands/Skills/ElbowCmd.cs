@@ -1,15 +1,10 @@
-using System;
 using System.Linq;
-using System.Text;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
-using ArchaicQuestII.GameLogic.Skill;
-using ArchaicQuestII.GameLogic.Skill.Core;
-using ArchaicQuestII.GameLogic.Skill.Enum;
-using ArchaicQuestII.GameLogic.Skill.Model;
 using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
 using DefineSkill = ArchaicQuestII.GameLogic.Skill.Model.DefineSkill;
@@ -65,7 +60,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 var textToTarget = $"{player.Name} tries to elbow you but stumbles.";
                 var textToRoom = $"{player.Name} tries to elbow {target.Name} but stumbles.";
                 EmoteAction(textToTarget, textToRoom, target.Name, room, player);
-                Core.Writer.WriteLine(Helpers.SkillLearnMistakes(player, DefineSkill.Elbow().Name, Core.Gain), player.ConnectionId);
+                player.FailedSkill(DefineSkill.Elbow().Name, out var message);
+                Core.Writer.WriteLine(message, player.ConnectionId);
                 player.Lag += 1;
                 return;
             }

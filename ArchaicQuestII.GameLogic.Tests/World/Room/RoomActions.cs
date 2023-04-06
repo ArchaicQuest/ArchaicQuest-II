@@ -2,7 +2,6 @@
 using Moq;
 using System.Collections.Generic;
 using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Item;
@@ -19,7 +18,6 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
         private readonly Mock<IWriteToClient> _writer;
         private readonly Mock<ITime> _time;
         private readonly Mock<ICache> _cache;
-        private readonly Mock<IGain> _gain;
         private readonly Mock<IFormulas> _formulas;
         private readonly Mock<IPassiveSkills> _passiveSkills;
         private readonly Mock<IMobScripts> _mobScripts;
@@ -30,7 +28,6 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
             _writer = new Mock<IWriteToClient>();
             _time = new Mock<ITime>();
             _cache = new Mock<ICache>();
-            _gain = new Mock<IGain>();
             _formulas = new Mock<IFormulas>();
             _passiveSkills = new Mock<IPassiveSkills>();
             _mobScripts = new Mock<IMobScripts>();

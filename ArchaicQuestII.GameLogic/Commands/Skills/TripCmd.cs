@@ -2,6 +2,7 @@
 using System.Linq;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
@@ -92,7 +93,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 textToTarget = $"{player.Name} tries to trip you but fails.";
 
                 EmoteAction(textToTarget, textToRoom, target.Name, room, player);
-                Core.Writer.WriteLine(Helpers.SkillLearnMistakes(player, DefineSkill.Trip().Name, Core.Gain), player.ConnectionId);
+                player.FailedSkill(DefineSkill.Trip().Name, out var message);
+                Core.Writer.WriteLine(message, player.ConnectionId);
             }
             updateCombat(player, target, room);
         }

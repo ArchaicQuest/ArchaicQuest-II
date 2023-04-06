@@ -2,6 +2,7 @@
 using System.Linq;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
@@ -78,7 +79,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 textToRoom = $"{player.Name} tries to charge at {target.Name} but misses.";
                 
                 EmoteAction(textToTarget, textToRoom, target.Name, room, player);
-                Core.Writer.WriteLine(Helpers.SkillLearnMistakes(player, DefineSkill.Charge().Name, Core.Gain), player.ConnectionId);
+                player.FailedSkill(DefineSkill.Charge().Name, out var message);
+                Core.Writer.WriteLine(message, player.ConnectionId);
                 player.Lag += 1;
                 return;
             }

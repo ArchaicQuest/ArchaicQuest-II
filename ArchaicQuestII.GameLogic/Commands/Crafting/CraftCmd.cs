@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Equipment;
+using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Crafting;
-using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
 using Newtonsoft.Json;
@@ -211,7 +210,9 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
                         player.ConnectionId, 2000);
                 }
 
-                Core.Writer.WriteLine(Helpers.SkillLearnMistakes(player, "Crafting", Core.Gain, 2000), player.ConnectionId, 2120);
+                player.FailedSkill("Crafting", out var message);
+
+                Core.Writer.WriteLine(message, player.ConnectionId, 2120);
             }
         }
 
