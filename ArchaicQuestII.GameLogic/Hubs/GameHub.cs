@@ -232,14 +232,11 @@ namespace ArchaicQuestII.GameLogic.Hubs
 
         public void UpdatePlayerSkills(Player player)
         {
-            var classSkill = _db.GetCollection<Class>(DataBase.Collections.Class).FindOne(x =>
-                x.Name.Equals(player.ClassName, StringComparison.CurrentCultureIgnoreCase));
+            var classSkill = Class.GetClassByName(player.ClassName);
 
              foreach (var skill in classSkill.Skills)
-            {
-                var theSkill = _cache.GetAllSkills().FirstOrDefault(x => x.Name.Equals(skill.SkillName, StringComparison.CurrentCultureIgnoreCase));
-                
-                // skill doesn't exist and should be added
+             {
+                 // skill doesn't exist and should be added
                 if (player.Skills.FirstOrDefault(x =>
                     x.SkillName.Equals(skill.SkillName, StringComparison.CurrentCultureIgnoreCase)) == null)
                 {
@@ -249,15 +246,11 @@ namespace ArchaicQuestII.GameLogic.Hubs
                         Proficiency = 1,
                         Level = skill.Level,
                         SkillName = skill.SkillName,
-                        SkillId = _cache.GetSkill(skill.SkillId) == null ? theSkill.Id : skill.SkillId,
-                        IsSpell = false
+                        SkillId = -1,
+                        IsSpell = skill.IsSpell
                     };
 
-                    if (theSkill?.ManaCost > 0)
-                    {
-                        skill.IsSpell = _cache.GetSkill(skill.SkillId) == null ? theSkill.ManaCost > 0 ? true : false : _cache.GetSkill(skill.SkillId).ManaCost > 0 ? true : false;
-                    }
-
+                    
                     player.Skills.Add(addSkill);
                 }
             }

@@ -57,8 +57,7 @@ public class ListSkillsCmd : ICommand
 
         if (target.Equals("all", StringComparison.CurrentCultureIgnoreCase))
         {
-          
-                ReturnSkillList(player.Skills.Where(x => x.IsSpell == false).ToList(), player, "Skills:");
+            ReturnSkillList(player.Skills.Where(x => x.IsSpell == false).ToList(), player, "Skills:");
                 return;
            
         }
