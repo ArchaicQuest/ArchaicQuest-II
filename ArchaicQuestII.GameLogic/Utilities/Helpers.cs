@@ -611,36 +611,6 @@ namespace ArchaicQuestII.GameLogic.Utilities
 
             return skillLevel >= chance;
         }
-
-        public static string SkillLearnMistakes(Player player, string skillName, IGain gain, int delay = 0)
-        {
-            var skill = player.Skills.FirstOrDefault(x => x.SkillName.Equals(skillName, StringComparison.CurrentCultureIgnoreCase));
-
-            if (skill == null)
-            {
-                return string.Empty;
-            }
-
-            if (skill.Proficiency == 100)
-            {
-                return string.Empty;
-            }
-
-            var increase = DiceBag.Roll(1, 1, 5);
-
-            skill.Proficiency += increase;
-
-            if (skill.Proficiency > 100)
-            {
-                skill.Proficiency = 100;
-            }
-
-            gain.GainExperiencePoints(player, 100 * skill.Level / 4, false);
-
-            return
-                $"<p class='improve'>You learn from your mistakes and gain {100 * skill.Level / 4} experience points.</p>" +
-                $"<p class='improve'>Your knowledge of {skill.SkillName} increases by {increase}%.</p>";
-        }
         
         public static string UpdateAffect(Player player, Item.Item item, Affect affect)
         {
