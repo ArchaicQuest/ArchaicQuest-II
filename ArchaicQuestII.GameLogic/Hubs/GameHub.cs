@@ -267,8 +267,8 @@ namespace ArchaicQuestII.GameLogic.Hubs
                     }
 
                     var skill = classSkill.Skills.FirstOrDefault(x => x.SkillName.Equals(player.Skills[i].SkillName));
-                    
-                    player.Skills[i].Level = skill.Level;
+
+                    if (skill != null) player.Skills[i].Level = skill.Level;
                 }
             }
         }
