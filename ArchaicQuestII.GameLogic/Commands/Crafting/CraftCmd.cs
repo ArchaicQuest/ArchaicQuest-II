@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Equipment;
+using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Crafting;
-using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
 using Newtonsoft.Json;
@@ -51,27 +50,34 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
         {
             var target = string.Join(" ", input.Skip(1));
 
+            var recipes = Core.Cache.GetCraftingRecipes().Where(x => x.CreatedItem.ItemType != Item.Item.ItemTypes.Food).ToList();
+
+            if (recipes == null)
+            {
+                Core.Writer.WriteLine("<p>No crafting recipes have been set up.</p>", player.ConnectionId);
+                return;
+            }
+
             if (!string.IsNullOrEmpty(target) && target.Equals("list"))
             {
-                ListCrafts(player, true);
+                ListCrafts(player, true, recipes);
                 return;
             }
             
             if(string.IsNullOrEmpty(target))
             {
-                ListCrafts(player, false);
+                ListCrafts(player, false, recipes);
                 return;
             }
             
-            CraftItem(player, room, target);
+            CraftItem(player, room, target, recipes);
             
         }
         
-        private void CraftItem(Player player, Room room, string item)
+        private void CraftItem(Player player, Room room, string item, List<CraftingRecipes> recipes)
         {
-            var craftingRecipes = ReturnValidRecipes(player);
+            var craftingRecipes = ReturnValidRecipes(player, recipes);
          
-
             if (room.Items.FirstOrDefault(x => x.ItemType == Item.Item.ItemTypes.Crafting) == null && player.Inventory.FirstOrDefault(x => x.ItemType == Item.Item.ItemTypes.Crafting) == null)
             {
                 Core.Writer.WriteLine("<p>To begin crafting you require the correct tools such as a crafting bench.</p>", player.ConnectionId);
@@ -204,39 +210,21 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
                         player.ConnectionId, 2000);
                 }
 
-                Core.Writer.WriteLine(Helpers.SkillLearnMistakes(player, "Crafting", Core.Gain, 2000), player.ConnectionId, 2120);
+                player.FailedSkill("Crafting", out var message);
+
+                Core.Writer.WriteLine(message, player.ConnectionId, 2120);
             }
         }
 
-         private void ListCrafts(Player player, bool showAllCrafts)
+        private void ListCrafts(Player player, bool showAllCrafts, List<CraftingRecipes> craftingRecipes)
         {
-
-            
-            var materials = player.Inventory.Where(x => x.ItemType == Item.Item.ItemTypes.Material).ToList();
-
-          /*  if (materials.Count == 0)
-            {
-                Core.Writer.WriteLine("<p>You don't have any materials to craft a thing.</p>", player.ConnectionId);
-                return;
-            }
-*/
-            // Lets find what you can craft
-            var craftingRecipes = Core.Cache.GetCraftingRecipes();
-
-            if (craftingRecipes == null)
-            {
-                Core.Writer.WriteLine("<p>No crafting recipes have been set up.</p>", player.ConnectionId);
-                return;
-            }
-
-            var craftingList = showAllCrafts ? craftingRecipes : ReturnValidRecipes(player);
+            var craftingList = showAllCrafts ? craftingRecipes : ReturnValidRecipes(player, craftingRecipes);
 
             if (craftingList.Count == 0)
             {
                 Core.Writer.WriteLine("<p>No crafting recipes found with the current materials you have.</p>", player.ConnectionId);
                 return;
             }
-
 
             var sb = new StringBuilder();
             sb.Append("<p>You can craft the following items:</p>");
@@ -259,9 +247,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
 
         }
 
-         private List<CraftingRecipes> ReturnValidRecipes(Player player)
+         private List<CraftingRecipes> ReturnValidRecipes(Player player, List<CraftingRecipes> craftingRecipes)
          {
-             var craftingRecipes = Core.Cache.GetCraftingRecipes();
              var materials = player.Inventory.Where(x => x.ItemType == Item.Item.ItemTypes.Material).GroupBy(y => y.Name)
                  .Select(z => z.First());
              var craftingList = new List<CraftingRecipes>();

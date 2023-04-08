@@ -1,10 +1,11 @@
 ﻿using System;
 using ArchaicQuestII.DataAccess;
-using ArchaicQuestII.GameLogic.Character.Class;
+
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using ArchaicQuestII.API.Entities;
 using ArchaicQuestII.API.Models;
+using ArchaicQuestII.GameLogic.Character.Class;
 using Microsoft.AspNetCore.Authorization;
 
 namespace ArchaicQuestII.API.Character
@@ -74,10 +75,10 @@ namespace ArchaicQuestII.API.Character
 
         [HttpGet]
         [Helpers.Authorize]
-        [Route("api/Character/Class/{id:int}")]
-        public Class Get(int id)
+        [Route("api/Character/Class/{id}")]
+        public Class Get(string id)
         {
-            return _db.GetById<Class>(id, DataBase.Collections.Class);
+            return Class.GetClassByName(id);
         }
 
         [HttpGet]
@@ -85,7 +86,7 @@ namespace ArchaicQuestII.API.Character
         [Route("api/Character/Class")]
         public List<Class> Get()
         {
-            return _db.GetList<Class>(DataBase.Collections.Class);
+            return Class.GetListOfClasses();
         }
 
     }

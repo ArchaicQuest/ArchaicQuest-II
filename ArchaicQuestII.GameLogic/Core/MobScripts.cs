@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Schema;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Model;
@@ -11,8 +8,6 @@ using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Item;
-using ArchaicQuestII.GameLogic.Spell.Interface;
-using ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells;
 using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
 using MoonSharp.Interpreter;
@@ -77,20 +72,17 @@ namespace ArchaicQuestII.GameLogic.Core
         private readonly ICache _cache;
         private readonly IWriteToClient _writeToClient;
         private readonly IUpdateClientUI _updateClientUi;
-        private readonly IGain _gain;
 
         public MobScripts(
             ICache cache, 
             ICombat combat, 
             IWriteToClient writeToClient, 
-            IUpdateClientUI updateClientUi, 
-            IGain gain)
+            IUpdateClientUI updateClientUi)
         {
             _cache = cache;
             _combat = combat;
             _writeToClient = writeToClient;
             _updateClientUi = updateClientUi;
-            _gain = gain;
         }
         public bool IsInRoom(Room room, Player player)
         {
@@ -248,6 +240,10 @@ namespace ArchaicQuestII.GameLogic.Core
 
                 _updateClientUi.UpdateInventory(player);
             }
+            else
+            {
+               // get item from cache
+            }
         }
         
         public void RemoveItem(Player player, string name, int count = 1)
@@ -367,7 +363,7 @@ namespace ArchaicQuestII.GameLogic.Core
                 _writeToClient.WriteLine($"<p class='improve'>Quest Complete: {quest.Title}!</p>", player.ConnectionId);
                 _writeToClient.WriteLine($"<p class='improve'>You gain {quest.ExpGain} experience points{(quest.GoldGain == 0 ? "." : $" and {quest.GoldGain} gold. ")}</p>", player.ConnectionId);
 
-                _gain.GainExperiencePoints(player, quest.ExpGain, false);
+                player.GainExperiencePoints(quest.ExpGain, out _);
                 player.Money.Gold = quest.GoldGain;
             }
 
@@ -378,18 +374,16 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public void GainXP(Player player, int xp)
         {
-            _gain.GainExperiencePoints(player, xp, true);
-            
-        _updateClientUi.UpdateExp(player);
-        _updateClientUi.UpdateScore(player);
+            player.GainExperiencePoints(xp, out var message);
+            _writeToClient.WriteLine($"message", player.ConnectionId);
+            _updateClientUi.UpdateExp(player);
+            _updateClientUi.UpdateScore(player);
         }
-
-        public async Task Sleep(int milliseconds)
+        
+        public void Sleep(int milliseconds)
         {
-
-            await Task.Delay(milliseconds);
+            Task.Delay(milliseconds).Wait();
         }
-
 
         public void DoSkill(Player player, Player mob, Room room)
         {

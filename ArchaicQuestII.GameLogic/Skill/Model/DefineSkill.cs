@@ -5,7 +5,7 @@ public static class DefineSkill
 
     #region WeaponSkills
 
-    public static Skill LongBlade()
+    public static Skill LongBlades()
     {
         return new Skill
         {
@@ -111,6 +111,39 @@ public static class DefineSkill
     }
 
     #endregion
+    
+    #region Passive Skills
+    public static Skill FastHealing()
+    {
+        return new Skill
+        {
+            Name = "Fast Healing",
+        };
+    }
+    
+    public static Skill EnhancedDamage()
+    {
+        return new Skill
+        {
+            Name = "Enhanced Damage",
+        };
+    }
+
+    public static Skill BlindFighting()
+    {
+        return new Skill
+        {
+            Name = "Blind Fighting",
+        };
+    }
+    public static Skill DualWield()
+    {
+        return new Skill
+        {
+            Name = "Duel Wield",
+        };
+    }
+    #endregion
 
     #region Skills 
     
@@ -122,6 +155,69 @@ public static class DefineSkill
         };
     }
     
+    public static Skill WarCry()
+    {
+        return new Skill
+        {
+            Name = "War Cry",
+        };
+    }
+    
+    public static Skill Rescue()
+    {
+        return new Skill
+        {
+            Name = "Rescue",
+        };
+    }
+    
+    public static Skill Mount()
+    {
+        return new Skill
+        {
+            Name = "Mount",
+        };
+    }
+    
+    public static Skill SecondAttack()
+    {
+        return new Skill
+        {
+            Name = "Second Attack",
+        };
+    }
+    
+    public static Skill ThirdAttack()
+    {
+        return new Skill
+        {
+            Name = "Third Attack",
+        };
+    }
+    
+    public static Skill FourthAttack()
+    {
+        return new Skill
+        {
+            Name = "Fourth Attack",
+        };
+    }
+    
+    public static Skill FifthAttack()
+    {
+        return new Skill
+        {
+            Name = "Fifth Attack",
+        };
+    }
+    
+    public static Skill Disarm()
+    {
+        return new Skill
+        {
+            Name = "Disarm",
+        };
+    }
     public static Skill Cleave()
     {
         return new Skill
@@ -310,6 +406,14 @@ public static class DefineSkill
         return new Skill
         {
             Name = "Cooking",
+        };
+    }
+    
+    public static Skill Foraging()
+    {
+        return new Skill
+        {
+            Name = "Foraging",
         };
     }
     

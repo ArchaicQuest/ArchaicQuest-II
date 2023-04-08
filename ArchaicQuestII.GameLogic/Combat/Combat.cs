@@ -22,7 +22,6 @@ namespace ArchaicQuestII.GameLogic.Combat
     {
         private readonly IWriteToClient _writer;
         private readonly IUpdateClientUI _clientUi;
-        private readonly IGain _gain;
         private readonly IDamage _damage;
         private readonly IFormulas _formulas;
         private readonly ICache _cache;
@@ -35,7 +34,6 @@ namespace ArchaicQuestII.GameLogic.Combat
             IUpdateClientUI clientUi, 
             IDamage damage, 
             IFormulas formulas, 
-            IGain gain, 
             ICache cache, 
             IQuestLog quest, 
             IRandomItem randomItem, 
@@ -45,7 +43,6 @@ namespace ArchaicQuestII.GameLogic.Combat
             _clientUi = clientUi;
             _damage = damage;
             _formulas = formulas;
-            _gain = gain;
             _cache = cache;
             _quest = quest;
             _randomItem = randomItem;
@@ -403,15 +400,13 @@ namespace ArchaicQuestII.GameLogic.Combat
                         {
                             _writer.WriteLine($"<p>You dodge {player.Name}'s attack.</p>", target.ConnectionId);
                             _writer.WriteLine($"<p>{target.Name} dodges your attack.</p>", player.ConnectionId);
-                            
                         }
                         else
                         {
+                            player.FailedSkill(DefineSkill.Dodge().Name, out var message);
                             _writer.WriteLine($"<p>You fail to dodge {player.Name}'s attack.</p>", target.ConnectionId);
-                            _writer.WriteLine(Helpers.SkillLearnMistakes(player, DefineSkill.Dodge().Name, _gain), player.ConnectionId);
+                            _writer.WriteLine(message, player.ConnectionId);
                         }
-
-
                     }
 
                     //10% chance to parry
@@ -452,14 +447,16 @@ namespace ArchaicQuestII.GameLogic.Combat
                             }
                             else
                             {
+                                player.FailedSkill(DefineSkill.Riposte().Name, out var message);
                                 _writer.WriteLine($"<p>You fail to riposte {player.Name}'s attack.</p>", target.ConnectionId);
-                                _writer.WriteLine(Helpers.SkillLearnMistakes(player, DefineSkill.Riposte().Name, _gain), player.ConnectionId);
+                                _writer.WriteLine(message, player.ConnectionId);
                             }
                         }
                         else
                         {
+                            player.FailedSkill(DefineSkill.Parry().Name, out var message);
                             _writer.WriteLine($"<p>You fail to parry {player.Name}'s attack.</p>", target.ConnectionId);
-                            _writer.WriteLine(Helpers.SkillLearnMistakes(player, DefineSkill.Parry().Name, _gain), player.ConnectionId);
+                            _writer.WriteLine(message, player.ConnectionId);
                         }
                     }
 
@@ -488,9 +485,9 @@ namespace ArchaicQuestII.GameLogic.Combat
                         }
                         else
                         {
-                            // block fail
+                            player.FailedSkill(DefineSkill.ShieldBlock().Name, out var message);
                             _writer.WriteLine($"<p>You fail to block {player.Name}'s attack.</p>", target.ConnectionId);
-                            _writer.WriteLine(Helpers.SkillLearnMistakes(player, DefineSkill.ShieldBlock().Name, _gain), player.ConnectionId);
+                            _writer.WriteLine(message, player.ConnectionId);
                         }
 
 
@@ -566,10 +563,9 @@ namespace ArchaicQuestII.GameLogic.Combat
                         _writer.WriteLine(
                             $"<p class='improve'>Your proficiency in {getWeaponSkill.SkillName} has increased.</p>", player.ConnectionId);
 
-                        _gain.GainExperiencePoints(player, getWeaponSkill.Level * 50, true);
+                        player.GainExperiencePoints(getWeaponSkill.Level * 50, out var message);
+                        _writer.WriteLine(message, player.ConnectionId);
                     }
-
-
                 }
 
                 if (player.Equipped.Secondary != null)
@@ -755,7 +751,8 @@ namespace ArchaicQuestII.GameLogic.Combat
                             _writer.WriteLine(
                                 $"<p class='improve'>Your proficiency in {getWeaponSkill.SkillName} has increased.</p>", player.ConnectionId);
 
-                            _gain.GainExperiencePoints(player, getWeaponSkill.Level * 50, true);
+                            player.GainExperiencePoints(getWeaponSkill.Level * 50, out var message);
+                            _writer.WriteLine(message, player.ConnectionId);
                         }
 
 
@@ -835,30 +832,35 @@ namespace ArchaicQuestII.GameLogic.Combat
             
             if (player.Grouped)
             {
-                _gain.GroupGainExperiencePoints(player, target);
-
-                 // other group members to drop from combat if they're fighting the same target
-                 // other group members status set to standing
+                // other group members to drop from combat if they're fighting the same target
+                // other group members status set to standing
                  
-                 var isGroupLeader = string.IsNullOrEmpty(player.Following);
+                var isGroupLeader = string.IsNullOrEmpty(player.Following);
 
-                 var groupLeader = player;
+                var groupLeader = player;
 
-                 if (!isGroupLeader)
-                 {
-                     groupLeader = _cache.GetPlayerCache().FirstOrDefault(x => x.Value.Name.Equals(player.Following)).Value;
-                 }
+                if (!isGroupLeader)
+                {
+                    groupLeader = _cache.GetPlayerCache().FirstOrDefault(x => x.Value.Name.Equals(player.Following)).Value;
+                }
+
+                var exp = target.GetExpWorth()/(groupLeader.Followers.Count + 1);
+                groupLeader.GainExperiencePoints(exp, out var glmessage);
+                _writer.WriteLine(glmessage, player.ConnectionId); 
                  
-                 foreach (var follower in groupLeader.Followers.Where(follower => follower.Grouped && follower.Following == groupLeader.Name))
-                 {
-                     follower.Status = CharacterStatus.Status.Standing;
-                     follower.Target = string.Empty;
-                     _cache.RemoveCharFromCombat(follower.Id.ToString());
-                 }
+                foreach (var follower in groupLeader.Followers.Where(follower => follower.Grouped && follower.Following == groupLeader.Name))
+                {
+                    follower.GainExperiencePoints(exp, out var message);
+                    _writer.WriteLine(message, follower.ConnectionId); 
+                    follower.Status = CharacterStatus.Status.Standing;
+                    follower.Target = string.Empty;
+                    _cache.RemoveCharFromCombat(follower.Id.ToString());
+                }
             }
             else
             {
-                _gain.GainExperiencePoints(player, target);   
+                player.GainExperiencePoints(target, out var message);
+                _writer.WriteLine(message, player.ConnectionId); 
             }
 
             _quest.IsQuestMob(player, target.Name);
@@ -1066,7 +1068,7 @@ namespace ArchaicQuestII.GameLogic.Combat
 
             foundSkill.Proficiency += increase;
 
-            _gain.GainExperiencePoints(player, 100 * foundSkill.Level / 4, false);
+            player.GainExperiencePoints(100 * foundSkill.Level / 4, out _);
 
             _clientUi.UpdateExp(player);
 

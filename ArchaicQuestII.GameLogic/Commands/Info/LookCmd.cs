@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Utilities;
@@ -231,7 +232,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     }
                     else
                     {
-                        Core.Gain.GainSkillExperience(player, hasLore.Level * 100, hasLore, DiceBag.Roll(1, 1, 5));
+                        player.FailedSkill("lore", out _);
                     }
                 }
 
