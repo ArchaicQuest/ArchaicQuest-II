@@ -599,6 +599,7 @@ namespace ArchaicQuestII.GameLogic.Character.Class
                 {
                     AddSkill(DefineSkill.LongBlades().Name, 1, 0, false),
                     AddSkill(DefineSkill.ShortBlades().Name, 1, 75, false),
+                    AddSkill(DefineSkill.LockPick().Name, 1, 0, false),
                     AddSkill(DefineSkill.Axe().Name, 1, 0, false),
                     AddSkill(DefineSkill.Flail().Name, 1, 0, false),
                     AddSkill(DefineSkill.Polearm().Name, 1, 0, false),

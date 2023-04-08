@@ -2,6 +2,7 @@ using System.Linq;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Class;
+using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Skill.Model;
@@ -14,7 +15,7 @@ public class PickLockCmd : ICommand
 {
     public PickLockCmd(ICore core)
     {
-        Aliases = new[] {"picklock", "pick", "pl"};
+        Aliases = new[] {"picklock", "pick", "pl", "lockpick"};
         Description = "Picks the lock of a locked door or container";
         Usages = new[] {"Type: picklock chest, picklock north"};
         Title = "";
@@ -87,29 +88,26 @@ public class PickLockCmd : ICommand
             Core.Writer.WriteLine($"<p>{item.Name} is already unlocked.", player.ConnectionId);
             return;
         }
-
-        var canDoSkill = Helpers.SkillSuccessCheck(player, DefineSkill.LockPick().Name);
+        
         var difficulty = LockStrength(item.Container.LockDifficulty);
         var chance = DiceBag.Roll(1, 1, 100);
         var successRate = (skill.Proficiency / difficulty) * 10;
-        if (!canDoSkill)
-        {
-            Core.Writer.WriteLine("<p>You fail to pick the lock.</p>", player.ConnectionId);
-            Core.Writer.WriteLine(Helpers.SkillLearnMistakes(player, DefineSkill.LockPick().Name, Core.Gain), player.ConnectionId);
-            player.Status = CharacterStatus.Status.Standing;
-            return;
-        }
 
         if (chance <= successRate)
         {
             item.Container.IsLocked = false;
-            Core.Writer.WriteLine($"You deftly pick the lock of {item.Name} and it clicks open.", player.ConnectionId);
+            Core.Writer.WriteLine($"You deftly pick the lock of {item.Name.FirstCharacterToLower()} and it clicks open.", player.ConnectionId);
+            Core.UpdateClient.PlaySound("unlock", player);
+            Core.Writer.WriteLine($"*Click*", player.ConnectionId);
             Core.Writer.WriteToOthersInRoom($"{player.Name} deftly picks the lock of {item.Name} and it clicks open.", room, player);
         }
         else
         {
-            Core.Writer.WriteLine($"You try to pick the lock of {item.Name}, but it resists your attempts.", player.ConnectionId);
+            Core.Writer.WriteLine($"You try to pick the lock of {item.Name.FirstCharacterToLower()}, but it resists your attempts.", player.ConnectionId);
             Core.Writer.WriteToOthersInRoom($"{player.Name} tries to pick the lock of {item.Name}.", room, player);
+            player.FailedSkill(DefineSkill.LockPick().Name, out var message);
+            Core.Writer.WriteLine(message, player.ConnectionId);
+            player.Status = CharacterStatus.Status.Standing;
         }
 
         
@@ -124,28 +122,27 @@ public class PickLockCmd : ICommand
             return;
         }
 
-        var canDoSkill = Helpers.SkillSuccessCheck(player, DefineSkill.LockPick().Name);
+      
         var difficulty = 8; 
         var chance = DiceBag.Roll(1, 1, 100);
         var successRate = (skill.Proficiency / difficulty) * 10;
-        if (!canDoSkill)
-        {
-            Core.Writer.WriteLine("<p>You fail to pick the lock.</p>", player.ConnectionId);
-            Core.Writer.WriteLine(Helpers.SkillLearnMistakes(player, DefineSkill.LockPick().Name, Core.Gain), player.ConnectionId);
-            player.Status = CharacterStatus.Status.Standing;
-            return;
-        }
-
+        
         if (chance <= successRate)
         {
             exitDoor.Locked = false;
             Core.Writer.WriteLine($"You deftly pick the lock of the door and it clicks open.", player.ConnectionId);
+            Core.UpdateClient.PlaySound("unlock", player);
+            Core.Writer.WriteLine($"*Click*", player.ConnectionId);
             Core.Writer.WriteToOthersInRoom($"{player.Name} deftly picks the lock of the door and it clicks open.", room, player);
+
         }
         else
         {
             Core.Writer.WriteLine($"You try to pick the lock of the door, but it resists your attempts.", player.ConnectionId);
             Core.Writer.WriteToOthersInRoom($"{player.Name} tries to pick the lock of the door.", room, player);
+            player.FailedSkill(DefineSkill.LockPick().Name, out var message);
+            Core.Writer.WriteLine(message, player.ConnectionId);
+            player.Status = CharacterStatus.Status.Standing;
         }
 
     }
