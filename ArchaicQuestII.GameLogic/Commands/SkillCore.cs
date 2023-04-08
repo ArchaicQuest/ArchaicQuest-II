@@ -1,16 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Linq;
-using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Character.Status;
-using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Core;
-using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Skill.Enum;
-using ArchaicQuestII.GameLogic.Skill.Model;
+using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Spell;
 using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
@@ -47,10 +43,9 @@ public abstract class SkillCore
             return setTarget;
         }
 
-        public bool HasSkill(Player player, string skill)
+        public bool HasSkill(Player player, SkillName skill)
         {
-            return player.Skills.FirstOrDefault(x => x.SkillName.Equals(skill, StringComparison.CurrentCultureIgnoreCase) && x.Level <= player.Level) != null;
-
+            return player.Skills.FirstOrDefault(x => x.Name == skill && x.Level <= player.Level) != null;
         }
 
         public Player findTarget(Player player, string target, Room room, bool murder)
@@ -413,7 +408,7 @@ public abstract class SkillCore
 
         protected bool CanPerformSkill(Skill.Model.Skill skill, Player player)
         {
-            var playerHasSkill = player.Skills.FirstOrDefault(x => x.SkillName.Equals(skill.Name));
+            var playerHasSkill = player.Skills.FirstOrDefault(x => x.Name.Equals(skill.Name));
 
             if (playerHasSkill == null)
             {
@@ -451,7 +446,7 @@ public abstract class SkillCore
         /// <returns></returns>
         public bool SkillSuccessWithMessage(Player player, Skill.Model.Skill skill, string customErrorText = "")
         {
-            var playerSkillProficiency = player.Skills.FirstOrDefault(x => x.SkillName.Equals(skill.Name))?.Proficiency;
+            var playerSkillProficiency = player.Skills.FirstOrDefault(x => x.Name.Equals(skill.Name))?.Proficiency;
             var success = DiceBag.Roll(1, 1, 100);
           
             if (success == 1)
@@ -482,7 +477,7 @@ public abstract class SkillCore
         
         public bool SkillSuccess(Player player, Skill.Model.Skill skill)
         {
-            var playerSkillProficiency = player.Skills.FirstOrDefault(x => x.SkillName.Equals(skill.Name))?.Proficiency;
+            var playerSkillProficiency = player.Skills.FirstOrDefault(x => x.Name.Equals(skill.Name))?.Proficiency;
             var success = DiceBag.Roll(1, 1, 100);
           
             if (success == 1)
@@ -492,6 +487,13 @@ public abstract class SkillCore
 
             return !(playerSkillProficiency <= success);
         }
+}
 
-    
+public class SkillList
+{
+    public int Id { get; set; }
+    public SkillName Name { get; set; }
+    public int Level { get; set; }
+    public int Proficiency { get; set; } = 1;
+    public bool IsSpell { get; set; }
 }

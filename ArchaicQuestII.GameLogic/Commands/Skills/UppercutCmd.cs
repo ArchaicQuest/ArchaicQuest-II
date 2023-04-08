@@ -65,7 +65,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 textToRoom = $"{player.Name} tries to uppercut {target.Name} but misses.";
                 
                 EmoteAction(textToTarget, textToRoom, target.Name, room, player);
-                player.FailedSkill(DefineSkill.UpperCut().Name, out var message);
+                player.FailedSkill(SkillName.UpperCut, out var message);
                 Core.Writer.WriteLine(message, player.ConnectionId);
                 player.Lag += 1;
                 return;

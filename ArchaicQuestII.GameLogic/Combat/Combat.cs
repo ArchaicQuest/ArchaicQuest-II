@@ -9,6 +9,7 @@ using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Client;
+using ArchaicQuestII.GameLogic.Commands;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Item;
@@ -129,20 +130,6 @@ namespace ArchaicQuestII.GameLogic.Combat
 
                 _writer.WriteLine($"<p>{player.Name}'s {attackType} {damText.Value} {target.Name.ToLower(cc)}.</p>", pc.ConnectionId);
             }
-        }
-
-        public SkillList GetSkill(string skillName, Player player)
-        {
-            //this is breaking
-
-            var skill = player.Skills.FirstOrDefault(x =>
-               x.SkillName.Equals(skillName, StringComparison.CurrentCultureIgnoreCase) && player.Level >= x.Level);
-
-            if (skill != null)
-            {
-                
-            }
-            return skill;
         }
 
         public void DisplayMiss(Player player, Player target, Room room, Item.Item weapon)
@@ -394,7 +381,7 @@ namespace ArchaicQuestII.GameLogic.Combat
                     //10% chance to attempt a dodge
                     if (avoidanceRoll == 1)
                     {
-                        var dodge = GetSkill("dodge", target);
+                        var dodge = target.GetSkill(SkillName.Dodge);
 
                         if (dodge != null && avoidanceChance <= dodge.Proficiency)
                         {
@@ -403,7 +390,7 @@ namespace ArchaicQuestII.GameLogic.Combat
                         }
                         else
                         {
-                            player.FailedSkill(DefineSkill.Dodge().Name, out var message);
+                            player.FailedSkill(SkillName.Dodge, out var message);
                             _writer.WriteLine($"<p>You fail to dodge {player.Name}'s attack.</p>", target.ConnectionId);
                             _writer.WriteLine(message, player.ConnectionId);
                         }
@@ -412,16 +399,14 @@ namespace ArchaicQuestII.GameLogic.Combat
                     //10% chance to parry
                     if (avoidanceRoll == 2)
                     {
-                        var skill = GetSkill("parry", target);
+                        var skill = target.GetSkill(SkillName.Parry);
 
                         if (skill != null && avoidanceChance <= skill.Proficiency)
                         {
                             _writer.WriteLine($"<p>You parry {player.Name}'s attack.</p>", target.ConnectionId);
                             _writer.WriteLine($"<p>{target.Name} parries your attack.</p>", player.ConnectionId);
 
-
-
-                            var riposte = GetSkill("Riposte", target);
+                            var riposte = target.GetSkill(SkillName.Riposte);
 
                             if (riposte != null && avoidanceChance <= riposte.Proficiency)
                             {
@@ -447,14 +432,14 @@ namespace ArchaicQuestII.GameLogic.Combat
                             }
                             else
                             {
-                                player.FailedSkill(DefineSkill.Riposte().Name, out var message);
+                                player.FailedSkill(SkillName.Riposte, out var message);
                                 _writer.WriteLine($"<p>You fail to riposte {player.Name}'s attack.</p>", target.ConnectionId);
                                 _writer.WriteLine(message, player.ConnectionId);
                             }
                         }
                         else
                         {
-                            player.FailedSkill(DefineSkill.Parry().Name, out var message);
+                            player.FailedSkill(SkillName.Parry, out var message);
                             _writer.WriteLine($"<p>You fail to parry {player.Name}'s attack.</p>", target.ConnectionId);
                             _writer.WriteLine(message, player.ConnectionId);
                         }
@@ -470,7 +455,7 @@ namespace ArchaicQuestII.GameLogic.Combat
 
                         if (doesBlock)
                         {
-                            var skill = GetSkill("shieldblock", target);
+                            var skill = target.GetSkill(SkillName.ShieldBlock);;
 
                             if (skill != null)
                             {
@@ -485,7 +470,7 @@ namespace ArchaicQuestII.GameLogic.Combat
                         }
                         else
                         {
-                            player.FailedSkill(DefineSkill.ShieldBlock().Name, out var message);
+                            player.FailedSkill(SkillName.ShieldBlock, out var message);
                             _writer.WriteLine($"<p>You fail to block {player.Name}'s attack.</p>", target.ConnectionId);
                             _writer.WriteLine(message, player.ConnectionId);
                         }
@@ -498,7 +483,7 @@ namespace ArchaicQuestII.GameLogic.Combat
 
                     var enhancedDamageChance = DiceBag.Roll(1, 1, 100);
                     var hasEnhancedDamage =
-                        player.Skills.FirstOrDefault(x => x.SkillName.Equals("Enhanced Damage"));
+                        player.Skills.FirstOrDefault(x => x.Name.Equals("Enhanced Damage"));
 
 
 
@@ -546,22 +531,21 @@ namespace ArchaicQuestII.GameLogic.Combat
                     {
                         // urgh this is ugly
                         getWeaponSkill = player.Skills.FirstOrDefault(x =>
-                            x.SkillName.Replace(" ", string.Empty)
-                                .Equals(Enum.GetName(typeof(Item.Item.WeaponTypes), weapon.WeaponType)));
+                            x.Name == weapon.WeaponType);
                     }
 
                     if (weapon == null &&
                         !player.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
                     {
                         getWeaponSkill = player.Skills.FirstOrDefault(x =>
-                            x.SkillName.Equals("Hand To Hand", StringComparison.CurrentCultureIgnoreCase));
+                            x.Name == SkillName.Unarmed);
                     }
 
                     if (getWeaponSkill != null && getWeaponSkill.Proficiency < 100)
                     {
                         getWeaponSkill.Proficiency += 1;
                         _writer.WriteLine(
-                            $"<p class='improve'>Your proficiency in {getWeaponSkill.SkillName} has increased.</p>", player.ConnectionId);
+                            $"<p class='improve'>Your proficiency in {getWeaponSkill.Name.ToString()} has increased.</p>", player.ConnectionId);
 
                         player.GainExperiencePoints(getWeaponSkill.Level * 50, out var message);
                         _writer.WriteLine(message, player.ConnectionId);
@@ -602,7 +586,7 @@ namespace ArchaicQuestII.GameLogic.Combat
                         //10% chance to attempt a dodge
                         if (avoidanceRoll == 1)
                         {
-                            var dodge = GetSkill("dodge", target);
+                            var dodge = target.GetSkill(SkillName.Dodge);
 
                             if (dodge != null)
                             {
@@ -617,7 +601,7 @@ namespace ArchaicQuestII.GameLogic.Combat
                         //10% chance to parry
                         if (avoidanceRoll == 2)
                         {
-                            var skill = GetSkill("parry", target);
+                            var skill = target.GetSkill(SkillName.Parry);
 
                             if (skill != null)
                             {
@@ -628,7 +612,7 @@ namespace ArchaicQuestII.GameLogic.Combat
 
 
 
-                                var riposte = GetSkill("Riposte", target);
+                                var riposte = target.GetSkill(SkillName.Riposte);
 
                                 if (riposte != null)
                                 {
@@ -667,7 +651,7 @@ namespace ArchaicQuestII.GameLogic.Combat
 
                             if (doesBlock)
                             {
-                                var skill = GetSkill("shieldblock", target);
+                                var skill = target.GetSkill(SkillName.ShieldBlock);
 
                                 if (skill != null)
                                 {
@@ -697,7 +681,7 @@ namespace ArchaicQuestII.GameLogic.Combat
 
                         var enhancedDamageChance = DiceBag.Roll(1, 1, 100);
                         var hasEnhancedDamage =
-                            player.Skills.FirstOrDefault(x => x.SkillName.Equals("Enhanced Damage"));
+                            player.Skills.FirstOrDefault(x => x.Name.Equals("Enhanced Damage"));
 
                         if (hasEnhancedDamage != null)
                         {
@@ -732,24 +716,22 @@ namespace ArchaicQuestII.GameLogic.Combat
                         if (weapon != null &&
                             !player.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
                         {
-                            // urgh this is ugly
                             getWeaponSkill = player.Skills.FirstOrDefault(x =>
-                                x.SkillName.Replace(" ", string.Empty)
-                                    .Equals(Enum.GetName(typeof(Item.Item.WeaponTypes), weapon.WeaponType)));
+                                x.Name == weapon.WeaponType);
                         }
 
                         if (weapon == null &&
                             !player.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
                         {
                             getWeaponSkill = player.Skills.FirstOrDefault(x =>
-                                x.SkillName.Equals("Hand To Hand", StringComparison.CurrentCultureIgnoreCase));
+                                x.Name == SkillName.Unarmed);
                         }
 
                         if (getWeaponSkill != null)
                         {
                             getWeaponSkill.Proficiency += 1;
                             _writer.WriteLine(
-                                $"<p class='improve'>Your proficiency in {getWeaponSkill.SkillName} has increased.</p>", player.ConnectionId);
+                                $"<p class='improve'>Your proficiency in {getWeaponSkill.Name.ToString()} has increased.</p>", player.ConnectionId);
 
                             player.GainExperiencePoints(getWeaponSkill.Level * 50, out var message);
                             _writer.WriteLine(message, player.ConnectionId);
@@ -1029,19 +1011,19 @@ namespace ArchaicQuestII.GameLogic.Combat
         public bool BlindFighting(Player player)
         {
             var foundSkill = player.Skills.FirstOrDefault(x =>
-                x.SkillName.StartsWith("blind fighting", StringComparison.CurrentCultureIgnoreCase));
+                x.Name == SkillName.BlindFighting);
 
             if (foundSkill == null)
             {
                 return false;
             }
 
-            var getSkill = _cache.GetSkill(foundSkill.SkillId);
+            var getSkill = _cache.GetSkill(foundSkill.Id);
 
             if (getSkill == null)
             {
                 var skill = _cache.GetAllSkills().FirstOrDefault(x => x.Name.Equals("blind fighting", StringComparison.CurrentCultureIgnoreCase));
-                foundSkill.SkillId = skill.Id;
+                foundSkill.Id = skill.Id;
                 getSkill = skill;
             }
 
@@ -1074,7 +1056,7 @@ namespace ArchaicQuestII.GameLogic.Combat
 
             _writer.WriteLine(
                 $"<p class='improve'>You learn from your mistakes and gain {100 * foundSkill.Level / 4} experience points.</p>" +
-                $"<p class='improve'>Your knowledge of {foundSkill.SkillName} increases by {increase}%.</p>",
+                $"<p class='improve'>Your knowledge of {foundSkill.Name} increases by {increase}%.</p>",
                 player.ConnectionId, 0);
 
             return false;

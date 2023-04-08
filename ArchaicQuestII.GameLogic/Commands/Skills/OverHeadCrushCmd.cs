@@ -72,7 +72,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 textToRoom = $"{player.Name} tries to crush the skull of {target.Name} but misses.";
                 
                 EmoteAction(textToTarget, textToRoom, target.Name, room, player);
-                player.FailedSkill(DefineSkill.OverheadCrush().Name, out var message);
+                player.FailedSkill(SkillName.OverheadCrush, out var message);
                 Core.Writer.WriteLine(message, player.ConnectionId);
                 player.Lag += 1;
                 return;
@@ -80,7 +80,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
 
 
             var weaponDam = player.Equipped.Wielded.Damage.Maximum + 
-                            player.Equipped.Wielded.WeaponType == Item.Item.WeaponTypes.Blunt
+                            player.Equipped.Wielded.WeaponType == SkillName.Hammer
                 ? 10
                 : 0;
             var str = player.Attributes.Attribute[EffectLocation.Strength];

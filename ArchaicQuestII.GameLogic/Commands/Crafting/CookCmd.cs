@@ -202,7 +202,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
                         pc.ConnectionId);
                 }
 
-                player.FailedSkill("Cooking", out var message);
+                player.FailedSkill(SkillName.Cooking, out var message);
                 Core.Writer.WriteLine(message, player.ConnectionId);
             }
             else

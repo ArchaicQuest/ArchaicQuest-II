@@ -98,9 +98,9 @@ namespace ArchaicQuestII.GameLogic.Character.Gain
             return exp > maxEXP ? maxEXP : exp;
         }
 
-        public static void FailedSkill(this Player player, string name, out string message)
+        public static void FailedSkill(this Player player, SkillName name, out string message)
         {
-            var skill = player.Skills.FirstOrDefault(x => x.SkillName.Equals(name, StringComparison.CurrentCultureIgnoreCase));
+            var skill = player.Skills.FirstOrDefault(x => x.Name == name);
 
             var increase = DiceBag.Roll(1, 1, 5);
 
@@ -126,7 +126,7 @@ namespace ArchaicQuestII.GameLogic.Character.Gain
             player.GainExperiencePoints(100 * skill.Level / 4, out _);  
             
             message = $"<p class='improve'>You learn from your mistakes and gain {100 * skill.Level / 4} experience points.</p>" +
-            $"<p class='improve'>Your knowledge of {skill.SkillName} increases by {increase}%.</p>";
+            $"<p class='improve'>Your knowledge of {skill.Name} increases by {increase}%.</p>";
         }
 
         public static void FailedSpell(this Player player, string name, out string message)

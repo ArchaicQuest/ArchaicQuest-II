@@ -79,7 +79,7 @@ namespace ArchaicQuestII.GameLogic.Skill
 
         public bool SkillSuccess(Player origin, Player target, Skill.Model.Skill spell)
         {
-            var skill = origin.Skills.FirstOrDefault(x => x.SkillId.Equals(spell.Id));
+            var skill = origin.Skills.FirstOrDefault(x => x.Id.Equals(spell.Id));
 
             if (skill == null)
             {

@@ -232,7 +232,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     }
                     else
                     {
-                        player.FailedSkill("lore", out _);
+                        player.FailedSkill(SkillName.Lore, out _);
                     }
                 }
 

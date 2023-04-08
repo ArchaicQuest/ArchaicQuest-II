@@ -10,7 +10,6 @@ namespace ArchaicQuestII.GameLogic.SeedData
             Alignments.Seed(db);
             AttackTypes.Seed(db);
             CharacterStatuses.Seed(db);
-            Classes.SeedAndCache(db, cache);
             CraftingRecipeSeeds.SeedAndCache(db, cache);
             HelpFiles.SeedAndCache(db, cache);
             Items.Seed(db);

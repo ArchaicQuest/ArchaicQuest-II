@@ -55,19 +55,19 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
         public int Haggle(Player player, Player target)
         {
             var foundSkill = player.Skills.FirstOrDefault(x =>
-                x.SkillName.StartsWith("haggle", StringComparison.CurrentCultureIgnoreCase));
+                x.Name.StartsWith("haggle", StringComparison.CurrentCultureIgnoreCase));
 
             if (foundSkill == null)
             {
                 return 0;
             }
 
-            var getSkill = _cache.GetSkill(foundSkill.SkillId);
+            var getSkill = _cache.GetSkill(foundSkill.Id);
 
             if (getSkill == null)
             {
                 var skill = _cache.GetAllSkills().FirstOrDefault(x => x.Name.Equals("haggle", StringComparison.CurrentCultureIgnoreCase));
-                foundSkill.SkillId = skill.Id;
+                foundSkill.Id = skill.Id;
                 getSkill = skill;
             }
 
@@ -119,7 +119,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             }
 
             var foundSkill = player.Skills.FirstOrDefault(x =>
-                x.SkillName.StartsWith("dual wield", StringComparison.CurrentCultureIgnoreCase));
+                x.Name.StartsWith("dual wield", StringComparison.CurrentCultureIgnoreCase));
 
             if (foundSkill == null)
             {

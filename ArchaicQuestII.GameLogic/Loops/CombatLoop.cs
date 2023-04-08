@@ -42,27 +42,27 @@ namespace ArchaicQuestII.GameLogic.Loops
                 var attackCount = 1;
 
                 var hasSecondAttack = player.Skills.FirstOrDefault(x =>
-                    x.SkillName.Equals("Second Attack", StringComparison.CurrentCultureIgnoreCase));
+                    x.Name == SkillName.SecondAttack);
                 if (hasSecondAttack != null)
                 {
                     hasSecondAttack = player.Level >= hasSecondAttack.Level ? hasSecondAttack : null;
                 }
 
                 var hasThirdAttack = player.Skills.FirstOrDefault(x =>
-                    x.SkillName.Equals("Third Attack", StringComparison.CurrentCultureIgnoreCase));
+                    x.Name == SkillName.ThirdAttack);
                 if (hasThirdAttack != null)
                 {
                     hasThirdAttack = player.Level >= hasThirdAttack.Level ? hasThirdAttack : null;
                 }
 
                 var hasFouthAttack = player.Skills.FirstOrDefault(x =>
-                    x.SkillName.Equals("Fourth Attack", StringComparison.CurrentCultureIgnoreCase));
+                    x.Name == SkillName.FourthAttack);
                 if (hasFouthAttack != null)
                 {
                     hasFouthAttack = player.Level >= hasFouthAttack.Level ? hasFouthAttack : null;
                 }
                 var hasFithAttack = player.Skills.FirstOrDefault(x =>
-                    x.SkillName.Equals("Fifth Attack", StringComparison.CurrentCultureIgnoreCase));
+                    x.Name == SkillName.FifthAttack);
 
                 if (hasFithAttack != null)
                 {

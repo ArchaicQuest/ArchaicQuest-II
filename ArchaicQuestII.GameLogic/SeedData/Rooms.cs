@@ -1,5 +1,4 @@
 ﻿using ArchaicQuestII.DataAccess;
-using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.World.Area;
@@ -8,9 +7,10 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Utilities;
+using ArchaicQuestII.GameLogic.Commands;
+using ArchaicQuestII.GameLogic.Character;
 
 namespace ArchaicQuestII.GameLogic.SeedData
 {
@@ -100,30 +100,11 @@ namespace ArchaicQuestII.GameLogic.SeedData
 
                     mob.Skills = new List<SkillList>();
 
-                    var classSkill = db.GetCollection<Class>(DataBase.Collections.Class).FindOne(x =>
-                        x.Name.Equals(mob.ClassName, StringComparison.CurrentCultureIgnoreCase));
+                    mob.AddSkills(mob.ClassName);
 
-                    foreach (var skill in classSkill.Skills)
+                    foreach (var skill in mob.Skills)
                     {
-                        // skill doesn't exist and should be added
-                        if (mob.Skills.FirstOrDefault(x =>
-                                x.SkillName.Equals(skill.SkillName, StringComparison.CurrentCultureIgnoreCase)) == null)
-                        {
-                            mob.Skills.Add(
-                                new SkillList()
-                                {
-                                    Proficiency = 100,
-                                    Level = skill.Level,
-                                    SkillName = skill.SkillName,
-                                    SkillId = skill.SkillId
-                                }
-                            );
-                        }
-
-                        mob.Skills.FirstOrDefault(x =>
-                                    x.SkillName.Equals(skill.SkillName, StringComparison.CurrentCultureIgnoreCase))
-                                .SkillId =
-                            skill.SkillId;
+                        skill.Proficiency = 100;
                     }
 
                     //set mob armor

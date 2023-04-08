@@ -72,7 +72,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 textToRoom = $"{player.Name} tries to stab {target.Name} but misses.";
                 
                 EmoteAction(textToTarget, textToRoom, target.Name, room, player);
-                player.FailedSkill(DefineSkill.Stab().Name, out var message);
+                player.FailedSkill(SkillName.Stab, out var message);
                 Core.Writer.WriteLine(message, player.ConnectionId);
                 player.Lag += 1;
                 return;

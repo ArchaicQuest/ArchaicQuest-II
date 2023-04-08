@@ -72,7 +72,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 textToRoom = $"{player.Name} tries to cleave {target.Name} with {player.Equipped.Wielded.Name.ToLower()} but misses.";
                 
                 EmoteAction(textToTarget, textToRoom, target.Name, room, player);
-                player.FailedSkill(DefineSkill.Cleave().Name, out var message);
+                player.FailedSkill(SkillName.Cleave, out var message);
                 Core.Writer.WriteLine(message, player.ConnectionId);
                 player.Lag += 1;
                 return;

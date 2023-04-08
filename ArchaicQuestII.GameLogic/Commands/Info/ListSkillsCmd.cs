@@ -87,12 +87,12 @@ public class ListSkillsCmd : ICommand
 
             if (i == 1)
             {
-                sb.Append($"<tr><td>{ (currentLevelInteration == 0 ? $"Level   {currentLevel}:" : "&nbsp;")}</td><td>{skill.SkillName}</td><td>{skill.Proficiency}%</td>");
+                sb.Append($"<tr><td>{ (currentLevelInteration == 0 ? $"Level   {currentLevel}:" : "&nbsp;")}</td><td>{skill.Name}</td><td>{skill.Proficiency}%</td>");
                 i++;
             }
             else
             {
-                sb.Append($"<td>&nbsp;</td><td>{skill.SkillName}</td><td>{skill.Proficiency}%</td>");
+                sb.Append($"<td>&nbsp;</td><td>{skill.Name}</td><td>{skill.Proficiency}%</td>");
                 if (i == 2)
                 {
                     i = 1;

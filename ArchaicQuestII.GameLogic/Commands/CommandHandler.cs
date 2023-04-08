@@ -193,7 +193,7 @@ namespace ArchaicQuestII.GameLogic.Commands
               }
               
               // Check if player has skill
-              if (player.Skills.FirstOrDefault(x => x.SkillName.Equals(command.Title)) == null)
+              if (player.Skills.FirstOrDefault(x => x.Name.Equals(command.Title)) == null)
               {
                   Core.Writer.WriteLine("You do not know that skill.");
                   return false;

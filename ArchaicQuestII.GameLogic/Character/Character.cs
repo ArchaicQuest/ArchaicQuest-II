@@ -1,12 +1,11 @@
 using System;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Character.Status;
+using ArchaicQuestII.GameLogic.Commands;
 using ArchaicQuestII.GameLogic.Item;
 using LiteDB;
 using System.Collections.Generic;
-using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Config;
-using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.World.Room;
 using Newtonsoft.Json;
 using Money = ArchaicQuestII.GameLogic.Item.Money;
@@ -106,7 +105,9 @@ namespace ArchaicQuestII.GameLogic.Character
         [JsonProperty("race")]
         public string Race { get; set; }
         [JsonProperty("className")]
-        public string ClassName { get; set; }
+        public ClassName ClassName { get; set; }
+        [JsonProperty("subClassName")]
+        public SubClassName SubClassName { get; set; }
         [JsonProperty("level")]
         public int Level { get; set; }
         [JsonProperty("description")]

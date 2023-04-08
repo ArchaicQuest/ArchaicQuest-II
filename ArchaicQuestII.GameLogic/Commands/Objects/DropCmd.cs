@@ -183,7 +183,7 @@ Related help files: get, put, give, drop
             ItemType = Item.Item.ItemTypes.Money,
             ArmourType = Item.Item.ArmourTypes.Cloth,
             AttackType = Item.Item.AttackTypes.Charge,
-            WeaponType = Item.Item.WeaponTypes.Arrows,
+            WeaponType = SkillName.None,
             Gold = 1,
             Slot = Equipment.EqSlot.Hands,
             Level = 1,

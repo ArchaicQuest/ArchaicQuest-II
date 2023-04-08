@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
-using ArchaicQuestII.GameLogic.Character.Equipment;
 using static ArchaicQuestII.GameLogic.Character.Equipment.Equipment;
+using ArchaicQuestII.GameLogic.Character;
 
 namespace ArchaicQuestII.GameLogic.Item
 {
@@ -124,28 +123,6 @@ namespace ArchaicQuestII.GameLogic.Item
             Wrath
         }
 
-        public enum WeaponTypes
-        {
-            Arrows,
-            Axe,
-            Blunt,
-            Bolt,
-            Bows,
-            Crossbow,
-            Exotic,
-            Flail,
-            [Display(Name = "Hand to hand")]
-            HandToHand,
-            [Display(Name = "Long blades")]
-            LongBlades,
-            Polearm,
-            [Display(Name = "Short blades")]
-            ShortBlades,
-            Spear,
-            Staff,
-            Whip,
-        }
-
         public enum ArmourTypes
         {
             Cloth,
@@ -177,7 +154,7 @@ namespace ArchaicQuestII.GameLogic.Item
         public AttackTypes AttackType { get; set; }
         public EqSlot Slot { get; set; }
         public Forage Forage { get; set; } = new Forage();
-        public WeaponTypes WeaponType { get; set; }
+        public SkillName WeaponType { get; set; }
         public int WeaponSpeed { get; set; }
         public Damage Damage { get; set; }
         public Guid KeyId { get; set; }

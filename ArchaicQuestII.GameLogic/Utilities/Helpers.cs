@@ -106,14 +106,6 @@ namespace ArchaicQuestII.GameLogic.Utilities
             return $"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}";
         }
 
-        public static SkillList FindSkill(string skillName, Player player)
-        {
-
-            return player.Skills.FirstOrDefault(x =>
-                x.SkillName.Equals(skillName, StringComparison.CurrentCultureIgnoreCase) && player.Level >= x.Level);
-        }
-
-
         /// <summary>
         /// Use to remove A / An from word
         /// </summary>
@@ -416,17 +408,6 @@ namespace ArchaicQuestII.GameLogic.Utilities
             }
             return -1;
         }
-        
-        public static int GetWeaponSkill(Item.Item weapon, Player player)
-        {
-
-            var weaponTypeString = Enum.GetName(typeof(Item.Item.WeaponTypes), weapon.WeaponType);
-
-            var weaponSkill = player.Skills.FirstOrDefault(x =>
-                x.SkillName.Equals(weaponTypeString, StringComparison.CurrentCultureIgnoreCase));
-
-            return (int)(weaponSkill == null ? 0 : weaponSkill.Proficiency);
-        }
 
         public static string ReturnOpositeExitName(string direction)
         {
@@ -580,36 +561,6 @@ namespace ArchaicQuestII.GameLogic.Utilities
                 }
 
             }
-        }
-        
-        public static bool SkillSuccessCheck(Player player, string skillName)
-        {
-            var skill = player.Skills.FirstOrDefault(x =>
-                x.SkillName.Equals(skillName, StringComparison.CurrentCultureIgnoreCase));
-
-            var chance = DiceBag.Roll(1, 1, 100);
-
-            return (skill == null || !(skill.Proficiency <= chance)) && chance != 1 && chance != 101;
-        }
-        
-        public static bool SkillSuccessCheck(SkillList skill)
-        {
-            var proficiency = skill.Proficiency;
-            var success = DiceBag.Roll(1, 1, 100);
-
-            if (success == 1 || success == 101)
-            {
-                return false;
-            }
-
-            return proficiency >= success;
-        }
-        
-        public static bool LoreSuccess(int? skillLevel)
-        {
-            var chance = DiceBag.Roll(1, 1, 100);
-
-            return skillLevel >= chance;
         }
         
         public static string UpdateAffect(Player player, Item.Item item, Affect affect)

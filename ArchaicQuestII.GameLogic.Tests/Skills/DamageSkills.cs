@@ -8,12 +8,11 @@ using ArchaicQuestII.GameLogic.Spell;
 using ArchaicQuestII.GameLogic.World.Room;
 using Moq;
 using System.Collections.Generic;
-using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Skill.Core;
 using ArchaicQuestII.GameLogic.Skill.Skills;
-
+using ArchaicQuestII.GameLogic.Commands;
 
 namespace ArchaicQuestII.GameLogic.Tests.Skills
 {
@@ -41,7 +40,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Skills
             {
                 Id = Guid.NewGuid(),
                 Name = "Malleus",
-                ClassName = "Paladin",
+                ClassName = ClassName.Fighter,
                 Status = CharacterStatus.Status.Standing,
                 Attributes = new Attributes()
                 {

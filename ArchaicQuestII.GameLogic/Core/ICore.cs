@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Skill.Skills;

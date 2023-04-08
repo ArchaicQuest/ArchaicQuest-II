@@ -176,11 +176,6 @@ namespace ArchaicQuestII.GameLogic.Core
             return DiceBag.Roll(1, min, max);
         }
 
-        public string GetClass(Player player)
-        {
-            return player.ClassName;
-        }
-
         public bool IsPC(Player player)
         {
             return !player.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase);

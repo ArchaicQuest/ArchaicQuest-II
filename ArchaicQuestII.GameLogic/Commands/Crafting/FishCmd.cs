@@ -321,7 +321,7 @@ public class FishCmd : ICommand
             AttackType = Item.Item.AttackTypes.Charge,
             Slot = Equipment.EqSlot.Arms,
             Forage = null,
-            WeaponType = Item.Item.WeaponTypes.Arrows,
+            WeaponType = Item.Item.WeaponTypes.Arrow,
             WeaponSpeed = 0,
             Damage = null,
             KeyId = default,

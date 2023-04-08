@@ -103,7 +103,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             }
 
             var hasGrip = target.Skills.FirstOrDefault(x =>
-                x.SkillName.Equals("grip", StringComparison.CurrentCultureIgnoreCase));
+                x.Name.Equals("grip", StringComparison.CurrentCultureIgnoreCase));
 
             var gripChance = DiceBag.Roll(1, 1, 100);
 
@@ -204,7 +204,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             }
 
             var foundSkill = player.Skills
-                .FirstOrDefault(x => x.SkillName.Equals("Rescue", StringComparison.CurrentCultureIgnoreCase));
+                .FirstOrDefault(x => x.Name.Equals("Rescue", StringComparison.CurrentCultureIgnoreCase));
 
             var chance = foundSkill
                 .Proficiency;
@@ -262,7 +262,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             /* below 50% of hp helps, above hurts */
 
             var foundSkill = player.Skills
-                .FirstOrDefault(x => x.SkillName.Equals("Berserk", StringComparison.CurrentCultureIgnoreCase));
+                .FirstOrDefault(x => x.Name.Equals("Berserk", StringComparison.CurrentCultureIgnoreCase));
 
             if (foundSkill != null)
             {

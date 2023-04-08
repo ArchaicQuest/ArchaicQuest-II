@@ -164,7 +164,7 @@ public class HarvestCmd : ICommand
         var randomMob = new Player
         {
             Name = randomMobObj.Name,
-            ClassName = "Fighter",
+            ClassName = ClassName.Fighter,
             Target = string.Empty,
             Status = CharacterStatus.Status.Standing,
             Race = "Other",
@@ -239,11 +239,11 @@ public class HarvestCmd : ICommand
             return;
         }
 
-        var canDoSkill = Helpers.SkillSuccessCheck(player, "foraging");
+        var canDoSkill = Helpers.SkillSuccessCheck(player, SkillName.Foraging);
 
         if (!canDoSkill)
         {
-            player.FailedSkill("foraging", out var message);
+            player.FailedSkill(SkillName.Foraging, out var message);
             Core.Writer.WriteLine("<p>You fail to harvest a thing.</p>", player.ConnectionId);
             Core.Writer.WriteLine(message, player.ConnectionId);
             player.Status = CharacterStatus.Status.Standing;

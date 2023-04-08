@@ -258,7 +258,7 @@ public class ChopCmd : ICommand
 
         if (!canDoSkill)
         {
-            player.FailedSkill("foraging", out var message);
+            player.FailedSkill(SkillName.Foraging, out var message);
             Core.Writer.WriteLine("<p>You fail to chop a thing.</p>", player.ConnectionId);
             Core.Writer.WriteLine(message, player.ConnectionId);
             player.Status = CharacterStatus.Status.Standing;

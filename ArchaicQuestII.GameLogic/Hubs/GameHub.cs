@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Config;
 using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Core;
@@ -179,7 +178,11 @@ namespace ArchaicQuestII.GameLogic.Hubs
         public async void AddCharacter(string hubId, Guid characterId)
         {
             var player = GetCharacter(hubId, characterId);
-            UpdatePlayerSkills(player);
+            player.AddSkills(player.ClassName);
+
+            if(player.SubClassName != SubClassName.None)
+                player.AddSkills(player.SubClassName);
+                
             player.Config ??= new PlayerConfig();
 
             foreach (var quest in player.QuestLog)
@@ -227,49 +230,6 @@ namespace ArchaicQuestII.GameLogic.Hubs
             else
             {
                 GetRoom(hubId, player);
-            }
-        }
-
-        public void UpdatePlayerSkills(Player player)
-        {
-            var classSkill = Class.GetClassByName(player.ClassName);
-
-             foreach (var skill in classSkill.Skills)
-             {
-                 // skill doesn't exist and should be added
-                if (player.Skills.FirstOrDefault(x =>
-                    x.SkillName.Equals(skill.SkillName, StringComparison.CurrentCultureIgnoreCase)) == null)
-                {
-                    
-                    var addSkill = new SkillList()
-                    {
-                        Proficiency = 1,
-                        Level = skill.Level,
-                        SkillName = skill.SkillName,
-                        SkillId = -1,
-                        IsSpell = skill.IsSpell
-                    };
-
-                    
-                    player.Skills.Add(addSkill);
-                }
-            }
-
-            if (player.Skills.Count > 0)
-            {
-                for (var i = player.Skills.Count - 1; i >= 0; i--)
-                {
-                    if (classSkill.Skills.FirstOrDefault(x =>
-                            x.SkillName.Equals(player.Skills[i].SkillName,
-                                StringComparison.CurrentCultureIgnoreCase)) == null)
-                    {
-                        player.Skills.Remove(player.Skills[i]);
-                    }
-
-                    var skill = classSkill.Skills.FirstOrDefault(x => x.SkillName.Equals(player.Skills[i].SkillName));
-
-                    if (skill != null) player.Skills[i].Level = skill.Level;
-                }
             }
         }
         

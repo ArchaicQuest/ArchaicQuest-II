@@ -80,7 +80,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
                 if (statName.Item1 is "hit points" or "moves" or "mana")
                 {
-                    var hitDie = Core.Cache.GetClass(player.ClassName);
+                    var hitDie = player.GetClass();
                     var roll = DiceBag.Roll(hitDie.HitDice);
 
                     player.MaxAttributes.Attribute[statName.Item2] += roll;

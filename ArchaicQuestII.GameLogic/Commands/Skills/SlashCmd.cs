@@ -71,7 +71,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 textToRoom = $"{player.Name} tries to slash {target.Name} but misses.";
                 
                 EmoteAction(textToTarget, textToRoom, target.Name, room, player);
-                player.FailedSkill(DefineSkill.Slash().Name, out var message);
+                player.FailedSkill(SkillName.Slash, out var message);
                 Core.Writer.WriteLine(message, player.ConnectionId);
                 player.Lag += 1;
                 return;

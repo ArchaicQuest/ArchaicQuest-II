@@ -150,7 +150,7 @@ namespace ArchaicQuestII.API.World
                 {
                     // skill doesn't exist and should be added
                     if (mob.Skills.FirstOrDefault(x =>
-                            x.SkillName.Equals(skill.SkillName, StringComparison.CurrentCultureIgnoreCase)) == null)
+                            x.Name.Equals(skill.SkillName, StringComparison.CurrentCultureIgnoreCase)) == null)
                     {
                         mob.Skills.Add(
                             new SkillList()
@@ -163,7 +163,7 @@ namespace ArchaicQuestII.API.World
                         );
                     }
 
-                    mob.Skills.FirstOrDefault(x => x.SkillName.Equals(skill.SkillName, StringComparison.CurrentCultureIgnoreCase)).SkillId = skill.SkillId;
+                    mob.Skills.FirstOrDefault(x => x.Name.Equals(skill.SkillName, StringComparison.CurrentCultureIgnoreCase)).Id = skill.SkillId;
                 }
 
                 //set mob armor

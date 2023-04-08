@@ -99,7 +99,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 textToRoom = $"{player.Name} tries to kicks dirt into {target.Name}'s eyes!";
 
                 EmoteAction(textToTarget, textToRoom, target.Name, room, player);
-                player.FailedSkill(DefineSkill.DirtKick().Name, out var message);
+                player.FailedSkill(SkillName.DirtKick, out var message);
                 Core.Writer.WriteLine(message, player.ConnectionId);
             }
             

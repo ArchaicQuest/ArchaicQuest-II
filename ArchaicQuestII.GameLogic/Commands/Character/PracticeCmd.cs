@@ -74,7 +74,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
                 sb.Append("<table class='simple'><thead><tr><th></th><th></th><th colspan='2'>Skills</th><th></th><th></th></tr></thead><tbody>");
 
                 var i = 0;
-                foreach (var skill in player.Skills.OrderBy(x => x.SkillName))
+                foreach (var skill in player.Skills.OrderBy(x => x.Name))
                 {
                     if (i == 0)
                     {
@@ -83,7 +83,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
                     if (i <= 2)
                     {
-                        sb.Append($"<td>{skill.SkillName}</td><td>{skill.Proficiency}%</td>");
+                        sb.Append($"<td>{skill.Name}</td><td>{skill.Proficiency}%</td>");
                     }
 
                     if (i == 2)
@@ -143,7 +143,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
                 return;
             }
 
-            var foundSkill = player.Skills.Find(x => x.SkillName.StartsWith(skillName, StringComparison.OrdinalIgnoreCase));
+            var foundSkill = player.GetSkill(skillName);
 
             if (foundSkill == null)
             {
@@ -159,13 +159,13 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
             if (foundSkill.Proficiency == 100)
             {
-                Core.Writer.WriteLineMobSay(trainerName, $"<p>You have already mastered {foundSkill.SkillName}.</p>", player.ConnectionId);
+                Core.Writer.WriteLineMobSay(trainerName, $"<p>You have already mastered {foundSkill.Name}.</p>", player.ConnectionId);
                 return;
             }
 
             if (foundSkill.Proficiency >= 75)
             {
-                Core.Writer.WriteLineMobSay(trainerName, $"<p>I've taught you everything I can about {foundSkill.SkillName}.</p>", player.ConnectionId);
+                Core.Writer.WriteLineMobSay(trainerName, $"<p>I've taught you everything I can about {foundSkill.Name}.</p>", player.ConnectionId);
                 return;
             }
 
@@ -179,12 +179,12 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
             if (foundSkill.Proficiency >= 75)
             {
                 foundSkill.Proficiency = 75;
-                Core.Writer.WriteLine($"<p>You practice for some time. Your proficiency with {foundSkill.SkillName} is now {foundSkill.Proficiency}%.</p>", player.ConnectionId);
+                Core.Writer.WriteLine($"<p>You practice for some time. Your proficiency with {foundSkill.Name} is now {foundSkill.Proficiency}%.</p>", player.ConnectionId);
                 Core.Writer.WriteLineMobSay(trainerName, "<p>You'll have to practice it on your own now...</p>", player.ConnectionId);
                 return;
             }
 
-            Core.Writer.WriteLine($"<p>You practice for some time. Your proficiency with {foundSkill.SkillName} is now {foundSkill.Proficiency}%.</p>", player.ConnectionId);
+            Core.Writer.WriteLine($"<p>You practice for some time. Your proficiency with {foundSkill.Name} is now {foundSkill.Proficiency}%.</p>", player.ConnectionId);
         }
     }
 }

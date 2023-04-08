@@ -60,7 +60,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
 
         public bool HasSkill(Player player, string skill)
         {
-            return player.Skills.FirstOrDefault(x => x.SkillName.Equals(skill, StringComparison.CurrentCultureIgnoreCase) && x.Level <= player.Level) != null;
+            return player.Skills.FirstOrDefault(x => x.Name.Equals(skill, StringComparison.CurrentCultureIgnoreCase) && x.Level <= player.Level) != null;
 
         }
 

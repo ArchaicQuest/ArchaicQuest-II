@@ -171,7 +171,7 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
             new Weapon()
             {
                 Name = "Dagger",
-                WeaponType = Item.WeaponTypes.ShortBlades,
+                WeaponType = SkillName.ShortBlade,
                 AttackTypes = Item.AttackTypes.Slash,
                 Description = "A good sized #prefix# dagger with an ornate hilt, the blade is #prefixDescription"
 
@@ -179,7 +179,7 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
             new Weapon()
             {
                 Name = "Long Sword",
-                WeaponType = Item.WeaponTypes.LongBlades,
+                WeaponType = SkillName.LongBlade,
                 AttackTypes = Item.AttackTypes.Slash,
                 Description = "A good sized #prefix# long sword with an ornate hilt, the blade is #prefixDescription"
 
@@ -187,7 +187,7 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
             new Weapon()
             {
                 Name = "Short Sword",
-                WeaponType = Item.WeaponTypes.ShortBlades,
+                WeaponType = SkillName.ShortBlade,
                 AttackTypes = Item.AttackTypes.Slash,
                 Description = "A good sized #prefix# short sword with an ornate hilt, the blade is #prefixDescription"
 
@@ -195,35 +195,35 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
             new Weapon()
             {
                 Name = "Scimitar",
-                WeaponType = Item.WeaponTypes.LongBlades,
+                WeaponType = SkillName.LongBlade,
                 AttackTypes = Item.AttackTypes.Slash,
                 Description = "A good sized #prefix# scimitar with an ornate hilt, the blade is #prefixDescription"
             },
             new Weapon()
             {
                 Name = "Polearm",
-                WeaponType = Item.WeaponTypes.Polearm,
+                WeaponType = SkillName.Polearm,
                 AttackTypes = Item.AttackTypes.Smash,
                 Description = "A good sized #prefix# polearm with an ornate shaft, the spiked topped axe head is #prefixDescription"
             },
             new Weapon()
             {
                 Name = "Trident",
-                WeaponType = Item.WeaponTypes.Polearm,
+                WeaponType = SkillName.Polearm,
                 AttackTypes = Item.AttackTypes.Pierce,
                 Description = "A good sized #prefix# trident with an ornate shaft, the three sharp prongs are #prefixDescription"
             },
             new Weapon()
             {
                 Name = "Mace",
-                WeaponType = Item.WeaponTypes.Blunt,
+                WeaponType = SkillName.Hammer,
                 AttackTypes = Item.AttackTypes.Crush,
                 Description = "A good sized #prefix# mace with an ornate shaft and head that protrudes in multiple directions and is #prefixDescription"
             },
             new Weapon()
             {
                 Name = "Morning Star",
-                WeaponType = Item.WeaponTypes.Blunt,
+                WeaponType = SkillName.Hammer,
                 AttackTypes = Item.AttackTypes.Smash,
                 Description = "A good sized #prefix# morning star with an ornate shaft, the spiked ball is #prefixDescription"
 
@@ -231,21 +231,21 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
             new Weapon()
             {
                 Name = "Quarterstaff",
-                WeaponType = Item.WeaponTypes.Blunt,
+                WeaponType = SkillName.Staff,
                 AttackTypes = Item.AttackTypes.Crush,
                 Description = "A good sized #prefix# quarterstaff with an ornate shaft, the quarterstaff is #prefixDescription"
             },
             new Weapon()
             {
                 Name = "Axe",
-                WeaponType = Item.WeaponTypes.Axe,
+                WeaponType = SkillName.Axe,
                 AttackTypes = Item.AttackTypes.Cleave,
                 Description = "A good sized #prefix# axe with an ornate shaft, the axe head is #prefixDescription"
             },
             new Weapon()
             {
                 Name = "Double-edge Axe",
-                WeaponType = Item.WeaponTypes.Axe,
+                WeaponType = SkillName.Axe,
                 AttackTypes = Item.AttackTypes.Cleave,
                 Description = "A good sized #prefix# double-edge axe with an ornate shaft, the double sided blade is #prefixDescription"
             }

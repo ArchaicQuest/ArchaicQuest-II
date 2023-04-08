@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Emote;
 using ArchaicQuestII.GameLogic.Character.Help;
 using ArchaicQuestII.GameLogic.Character.Model;
@@ -29,7 +28,6 @@ namespace ArchaicQuestII.GameLogic.Core
         private readonly ConcurrentDictionary<int, Help> _helpCache = new();
         private readonly ConcurrentDictionary<int, CraftingRecipes> _craftingRecipesCache = new();
         private readonly Dictionary<string, Emote> _socials = new();
-        private readonly Dictionary<string, Class> _pcClass = new();
         private readonly Dictionary<string, ICommand> _commands = new();
         private Config _configCache = new();
 
@@ -210,22 +208,6 @@ namespace ArchaicQuestII.GameLogic.Core
         }
 
 
-
-
-        #endregion
-        
-        #region ClassCache
-
-        public bool AddClass(string id, Class pcClass)
-        {
-            return _pcClass.TryAdd(id, pcClass);
-        }
-
-
-        public Class GetClass(string id)
-        {
-            return _pcClass[id];
-        }
 
 
         #endregion

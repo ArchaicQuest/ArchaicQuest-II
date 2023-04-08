@@ -1,6 +1,4 @@
-﻿using System;
-using ArchaicQuestII.GameLogic.Character.Status;
-using System.Threading.Tasks;
+﻿using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Commands;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
@@ -157,7 +155,7 @@ namespace ArchaicQuestII.GameLogic.Loops
 
                 // if player has fast healing add the bonus here
                 var hasFastHealing = player.Skills.FirstOrDefault(x =>
-                    x.SkillName.Equals("Fast Healing", StringComparison.CurrentCultureIgnoreCase) &&
+                    x.Name == SkillName.FastHealing &&
                     player.Level >= x.Level);
 
 
@@ -187,7 +185,7 @@ namespace ArchaicQuestII.GameLogic.Loops
                         }
                         else
                         {
-                            player.FailedSkill("Fast Healing", out _);
+                            player.FailedSkill(SkillName.FastHealing, out _);
                         }
                     }
 
