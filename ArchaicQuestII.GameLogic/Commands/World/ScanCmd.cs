@@ -13,11 +13,11 @@ namespace ArchaicQuestII.GameLogic.Commands.World
 {
     public class ScanCmd : ICommand
     {
-        public ScanCmd(ICore core)
+        public ScanCmd()
         {
-            Aliases = new[] {"scan"};
+            Aliases = new[] { "scan" };
             Description = "Scan the current area or a certain direction.";
-            Usages = new[] {"Example: scan", "Example: scan north"};
+            Usages = new[] { "Example: scan", "Example: scan north" };
             Title = "";
             DeniedStatus = new[]
             {
@@ -31,22 +31,19 @@ namespace ArchaicQuestII.GameLogic.Commands.World
                 CharacterStatus.Status.Stunned,
             };
             UserRole = UserRole.Player;
-            Core = core;
         }
-        
+
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
         public string Title { get; }
         public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
-        public ICore Core { get; }
-
 
         public void Execute(Player player, Room room, string[] input)
         {
             var target = input.ElementAtOrDefault(1);
-            
+
             if (!string.IsNullOrEmpty(target))
             {
                 ScanDirection(player, room, target);
@@ -76,9 +73,9 @@ namespace ArchaicQuestII.GameLogic.Commands.World
             {
                 var getRoomCoords = Helpers.IsExit(exit, room);
 
-                var getRoomObj =
-                    Core.Cache.GetRoom(
-                        $"{getRoomCoords.AreaId}{getRoomCoords.Coords.X}{getRoomCoords.Coords.Y}{getRoomCoords.Coords.Z}");
+                var getRoomObj = CoreHandler.Instance.Cache.GetRoom(
+                    $"{getRoomCoords.AreaId}{getRoomCoords.Coords.X}{getRoomCoords.Coords.Y}{getRoomCoords.Coords.Z}"
+                );
 
                 sb.Append($"<span>{exit}:</span>");
 
@@ -114,42 +111,52 @@ namespace ArchaicQuestII.GameLogic.Commands.World
                     }
                 }
 
-                if (getRoomObj.Mobs.All(x => x.IsHiddenScriptMob == false) && !getRoomObj.Players.Any())
+                if (
+                    getRoomObj.Mobs.All(x => x.IsHiddenScriptMob == false)
+                    && !getRoomObj.Players.Any()
+                )
                 {
                     sb.Append("<p>There is nobody there.</p>");
                 }
             }
 
-            Core.Writer.WriteLine(sb.ToString(), player.ConnectionId);
+            CoreHandler.Instance.Writer.WriteLine(sb.ToString(), player.ConnectionId);
         }
 
         private void ScanDirection(Player player, Room room, string direction)
         {
             var directions = new List<string>
             {
-               "North",
-               "East",
-               "South",
-               "West",
-               "North West",
-               "North East",
-               "South East",
-               "South West",
-               "Up",
-               "Down"
-           };
+                "North",
+                "East",
+                "South",
+                "West",
+                "North West",
+                "North East",
+                "South East",
+                "South West",
+                "Up",
+                "Down"
+            };
 
-            var getDirection = directions.FirstOrDefault(x => x.StartsWith(direction, StringComparison.CurrentCultureIgnoreCase));
+            var getDirection = directions.FirstOrDefault(
+                x => x.StartsWith(direction, StringComparison.CurrentCultureIgnoreCase)
+            );
 
             if (getDirection == null)
             {
-                Core.Writer.WriteLine("You can't look in that direction.", player.ConnectionId);
+                CoreHandler.Instance.Writer.WriteLine(
+                    "You can't look in that direction.",
+                    player.ConnectionId
+                );
                 return;
             }
 
             var getRoomCoords = Helpers.IsExit(getDirection, room);
 
-            var getRoomObj = Core.Cache.GetRoom($"{getRoomCoords.AreaId}{getRoomCoords.Coords.X}{getRoomCoords.Coords.Y}{getRoomCoords.Coords.Z}");
+            var getRoomObj = CoreHandler.Instance.Cache.GetRoom(
+                $"{getRoomCoords.AreaId}{getRoomCoords.Coords.X}{getRoomCoords.Coords.Y}{getRoomCoords.Coords.Z}"
+            );
             var sb = new StringBuilder();
 
             sb.Append($"<span>You peer intently {getDirection}</span>");
@@ -191,7 +198,7 @@ namespace ArchaicQuestII.GameLogic.Commands.World
                 sb.Append("<p>There is nobody there.</p>");
             }
 
-            Core.Writer.WriteLine(sb.ToString(), player.ConnectionId);
+            CoreHandler.Instance.Writer.WriteLine(sb.ToString(), player.ConnectionId);
         }
     }
 }

@@ -29,13 +29,14 @@ namespace ArchaicQuestII.GameLogic.Hubs
         private readonly IMobScripts _mobScripts;
 
         public GameHub(
-            IDataBase db, 
-            IPlayerDataBase pdb, 
-            ICache cache, 
-            ILogger<GameHub> logger, 
-            IWriteToClient writeToClient, 
-            IUpdateClientUI updateClientUi, 
-            IMobScripts mobScripts)
+            IDataBase db,
+            IPlayerDataBase pdb,
+            ICache cache,
+            ILogger<GameHub> logger,
+            IWriteToClient writeToClient,
+            IUpdateClientUI updateClientUi,
+            IMobScripts mobScripts
+        )
         {
             _logger = logger;
             _db = db;
@@ -45,9 +46,9 @@ namespace ArchaicQuestII.GameLogic.Hubs
             _updateClientUi = updateClientUi;
             _mobScripts = mobScripts;
         }
-        
+
         /// <summary>
-        /// Do action when user connects 
+        /// Do action when user connects
         /// </summary>
         /// <returns></returns>
         public override async Task OnConnectedAsync()
@@ -56,7 +57,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
         }
 
         /// <summary>
-        /// Do action when user disconnects 
+        /// Do action when user disconnects
         /// </summary>
         /// <returns></returns>
         public override async Task OnDisconnectedAsync(Exception ex)
@@ -90,7 +91,10 @@ namespace ArchaicQuestII.GameLogic.Hubs
 
             if (player == null)
             {
-                _writeToClient.WriteLine("<p>Refresh the page to reconnect!</p>", player.ConnectionId);
+                _writeToClient.WriteLine(
+                    "<p>Refresh the page to reconnect!</p>",
+                    player.ConnectionId
+                );
                 return;
             }
 
@@ -111,20 +115,29 @@ namespace ArchaicQuestII.GameLogic.Hubs
 
                 if (getBook == null)
                 {
-                    _writeToClient.WriteLine("<p>There's a puff of smoke and all your work is undone. Seek an Immortal</p>", player.ConnectionId);
+                    _writeToClient.WriteLine(
+                        "<p>There's a puff of smoke and all your work is undone. Seek an Immortal</p>",
+                        player.ConnectionId
+                    );
                     return;
                 }
 
                 getBook.Book.Pages[book.PageNumber] = book.Description;
 
                 player.OpenedBook = getBook;
-                _writeToClient.WriteLine("You have successfully written in your book.", player.ConnectionId);
+                _writeToClient.WriteLine(
+                    "You have successfully written in your book.",
+                    player.ConnectionId
+                );
             }
 
             if (contentType == "description")
             {
                 player.Description = json.GetValue("desc")?.ToString();
-                _writeToClient.WriteLine("You have successfully updated your description.", player.ConnectionId);
+                _writeToClient.WriteLine(
+                    "You have successfully updated your description.",
+                    player.ConnectionId
+                );
                 _updateClientUi.UpdateScore(player);
             }
         }
@@ -153,36 +166,34 @@ namespace ArchaicQuestII.GameLogic.Hubs
         {
             await Clients.Client(hubId).SendAsync("Close", message);
         }
-        
+
         public async void Welcome(string id)
         {
-            // no longer used for ArchaicQuest but if you want to load an ascii MOTD uncomment 
+            // no longer used for ArchaicQuest but if you want to load an ascii MOTD uncomment
             //var location = System.Reflection.Assembly.GetEntryAssembly().Location;
             //var directory = System.IO.Path.GetDirectoryName(location);
             //var motd = File.ReadAllText(directory + "/motd");
 
-            var motd = "<img src='/assets/images/aqdragon.png' alt='ArchaicQuest Logo' class='motd' />";
+            var motd =
+                "<img src='/assets/images/aqdragon.png' alt='ArchaicQuest Logo' class='motd' />";
             await SendToClient(motd, id);
         }
-        
+
         public void CreateCharacter(string name = "Liam")
         {
-            var newPlayer = new Player
-            {
-                Name = name
-            };
-            
+            var newPlayer = new Player { Name = name };
+
             _pdb.Save(newPlayer, PlayerDataBase.Collections.Players);
         }
 
         public async void AddCharacter(string hubId, Guid characterId)
         {
             var player = GetCharacter(hubId, characterId);
-            player.AddSkills(player.ClassName);
+            player.AddSkills(Enum.Parse<ClassName>(player.ClassName));
 
-            if(player.SubClassName != SubClassName.None)
-                player.AddSkills(player.SubClassName);
-                
+            if (player.SubClassName != null && player.SubClassName != SubClassName.None.ToString())
+                player.AddSkills(Enum.Parse<ClassName>(player.SubClassName));
+
             player.Config ??= new PlayerConfig();
 
             foreach (var quest in player.QuestLog)
@@ -206,7 +217,10 @@ namespace ArchaicQuestII.GameLogic.Hubs
             player.LastCommandTime = DateTime.Now;
 
             player.CommandLog.Add($"{DateTime.Now:f} - Logged in");
-            var pcAccount = _pdb.GetById<Account.Account>(player.AccountId, PlayerDataBase.Collections.Account);
+            var pcAccount = _pdb.GetById<Account.Account>(
+                player.AccountId,
+                PlayerDataBase.Collections.Account
+            );
             if (pcAccount != null)
             {
                 pcAccount.DateLastPlayed = DateTime.Now;
@@ -224,7 +238,11 @@ namespace ArchaicQuestII.GameLogic.Hubs
 
             if (playerExist != null)
             {
-                Helpers.PostToDiscord($"{player.Name} has entered the realms.", "event", _cache.GetConfig());
+                Helpers.PostToDiscord(
+                    $"{player.Name} has entered the realms.",
+                    "event",
+                    _cache.GetConfig()
+                );
                 GetRoom(hubId, playerExist, playerExist.RoomId);
             }
             else
@@ -232,10 +250,10 @@ namespace ArchaicQuestII.GameLogic.Hubs
                 GetRoom(hubId, player);
             }
         }
-        
+
         /// <summary>
         /// Find Character in DB and add to cache
-        /// Check if player is already in cache 
+        /// Check if player is already in cache
         /// if so kick em off
         /// </summary>
         /// <param name="hubId">string</param>
@@ -250,7 +268,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
             player.Following = String.Empty;
             player.Followers = new List<Player>();
             player.Grouped = false;
-            
+
             SetArmorRating(player);
 
             if (player.Attributes.Attribute[EffectLocation.Hitpoints] <= 0)
@@ -276,11 +294,14 @@ namespace ArchaicQuestII.GameLogic.Hubs
         private async void AddCharacterToCache(string hubId, Player character)
         {
             var playerExist = _cache.PlayerAlreadyExists(character.Id);
-            
+
             if (playerExist != null)
             {
                 // log char off
-                await SendToClient($"<p style='color:red'>*** You have logged in elsewhere. ***</p>", playerExist.ConnectionId);
+                await SendToClient(
+                    $"<p style='color:red'>*** You have logged in elsewhere. ***</p>",
+                    playerExist.ConnectionId
+                );
                 await this.CloseConnection(string.Empty, playerExist.ConnectionId);
 
                 // remove from _cache
@@ -289,7 +310,10 @@ namespace ArchaicQuestII.GameLogic.Hubs
                 playerExist.ConnectionId = hubId;
                 _cache.AddPlayer(hubId, playerExist);
 
-                await SendToClient($"<p style='color:red'>*** You have been reconnected ***</p>", hubId);
+                await SendToClient(
+                    $"<p style='color:red'>*** You have been reconnected ***</p>",
+                    hubId
+                );
             }
             else
             {
@@ -300,7 +324,9 @@ namespace ArchaicQuestII.GameLogic.Hubs
         private void GetRoom(string hubId, Player character, string startingRoom = "")
         {
             //add to DB, configure from admin
-            var roomid = !string.IsNullOrEmpty(startingRoom) ? startingRoom : _cache.GetConfig().StartingRoom;
+            var roomid = !string.IsNullOrEmpty(startingRoom)
+                ? startingRoom
+                : _cache.GetConfig().StartingRoom;
             var room = _cache.GetRoom(roomid) ?? _cache.GetRoom(_cache.GetConfig().StartingRoom);
             character.RoomId = $"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}";
 
@@ -310,7 +336,8 @@ namespace ArchaicQuestII.GameLogic.Hubs
                 character.RecallId = defaultRoom;
             }
 
-            var playerAlreadyInRoom = room.Players.ToList().FirstOrDefault(x => x.Id.Equals(character.Id)) != null;
+            var playerAlreadyInRoom =
+                room.Players.ToList().FirstOrDefault(x => x.Id.Equals(character.Id)) != null;
             if (!playerAlreadyInRoom)
             {
                 room.Players.Add(character);
@@ -318,19 +345,28 @@ namespace ArchaicQuestII.GameLogic.Hubs
                 {
                     foreach (var pet in character.Pets)
                     {
-                        var petAlreadyInRoom = room.Mobs.FirstOrDefault(x => x.Id.Equals(pet.Id)) != null;
+                        var petAlreadyInRoom =
+                            room.Mobs.FirstOrDefault(x => x.Id.Equals(pet.Id)) != null;
 
                         if (!petAlreadyInRoom)
                         {
                             room.Mobs.Add(pet);
-                            _writeToClient.WriteToOthersInRoom($"{pet.Name} suddenly appears.", room, character);
+                            _writeToClient.WriteToOthersInRoom(
+                                $"{pet.Name} suddenly appears.",
+                                room,
+                                character
+                            );
                         }
                     }
                 }
-                
-                _writeToClient.WriteToOthersInRoom($"{character.Name} suddenly appears.", room, character);
+
+                _writeToClient.WriteToOthersInRoom(
+                    $"{character.Name} suddenly appears.",
+                    room,
+                    character
+                );
             }
-            
+
             var rooms = _cache.GetAllRoomsInArea(1);
 
             _updateClientUi.UpdateHP(character);
@@ -345,10 +381,12 @@ namespace ArchaicQuestII.GameLogic.Hubs
             _updateClientUi.UpdateTime(character);
 
             _updateClientUi.GetMap(character, _cache.GetMap($"{room.AreaId}{room.Coords.Z}"));
-            
+
             character.Buffer.Enqueue("look");
 
-            foreach (var mob in room.Mobs.ToList().Where(mob => !string.IsNullOrEmpty(mob.Events.Enter)))
+            foreach (
+                var mob in room.Mobs.ToList().Where(mob => !string.IsNullOrEmpty(mob.Events.Enter))
+            )
             {
                 UserData.RegisterType<MobScripts>();
 
@@ -358,14 +396,14 @@ namespace ArchaicQuestII.GameLogic.Hubs
                 script.Globals.Set("obj", obj);
                 UserData.RegisterProxyType<MyProxy, Room>(r => new MyProxy(room));
                 UserData.RegisterProxyType<ProxyPlayer, Player>(r => new ProxyPlayer(character));
-                
+
                 script.Globals["room"] = room;
                 script.Globals["player"] = character;
                 script.Globals["mob"] = mob;
-                
+
                 var res = script.DoString(mob.Events.Enter);
             }
-            
+
             //  return room;
         }
 

@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
-using ArchaicQuestII.GameLogic.Commands;
 
 namespace ArchaicQuestII.GameLogic.Core
 {
-	public interface ILoop
+    public interface ILoop
 	{
 		int TickDelay { get; }
         bool ConfigureAwait { get; }
-        void Init(ICore core, ICommandHandler commandHandler);
+        void Init();
 		void PreTick();
 		void Tick();
 		void PostTick();

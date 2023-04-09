@@ -13,7 +13,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 {
     public class EatCmd : ICommand
     {
-        public EatCmd(ICore core)
+        public EatCmd()
         {
             Aliases = new[] {"eat"};
             Description = "Eat some food, eating is for RP purposes only. Your character does not get hungry or thirsty.";
@@ -31,7 +31,6 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
                 CharacterStatus.Status.Stunned
             };
             UserRole = UserRole.Player;
-            Core = core;
         }
         
         public string[] Aliases { get; }
@@ -40,7 +39,6 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
         public string Title { get; }
         public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
-        public ICore Core { get; }
 
         public void Execute(Player player, Room room, string[] input)
         {
@@ -48,7 +46,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
             if (string.IsNullOrEmpty(target))
             {
-                Core.Writer.WriteLine("<p>Eat what?</p>", player.ConnectionId);
+                CoreHandler.Instance.Writer.WriteLine("<p>Eat what?</p>", player.ConnectionId);
                 return;
             }
             
@@ -57,19 +55,19 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
             if (food == null)
             {
-                Core.Writer.WriteLine("<p>You have no food of that name.</p>", player.ConnectionId);
+                CoreHandler.Instance.Writer.WriteLine("<p>You have no food of that name.</p>", player.ConnectionId);
                 return;
             }
 
             if (food.ItemType != Item.Item.ItemTypes.Food && food.ItemType != Item.Item.ItemTypes.Cooked)
             {
-                Core.Writer.WriteLine($"<p>You can't eat {food.Name.ToLower()}.</p>", player.ConnectionId);
+                CoreHandler.Instance.Writer.WriteLine($"<p>You can't eat {food.Name.ToLower()}.</p>", player.ConnectionId);
                 return;
             }
 
             if (player.Hunger >= 4)
             {
-                Core.Writer.WriteLine("<p>You are too full to eat more.</p>", player.ConnectionId);
+                CoreHandler.Instance.Writer.WriteLine("<p>You are too full to eat more.</p>", player.ConnectionId);
                 return;
             }
 
@@ -77,8 +75,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
             player.Inventory.Remove(food);
 
-            Core.Writer.WriteLine($"<p>You eat {food.Name.ToLower()}.</p>", player.ConnectionId);
-            Core.Writer.WriteToOthersInRoom($"<p>{player.Name} eats {food.Name.ToLower()}.</p>", room, player);
+            CoreHandler.Instance.Writer.WriteLine($"<p>You eat {food.Name.ToLower()}.</p>", player.ConnectionId);
+            CoreHandler.Instance.Writer.WriteToOthersInRoom($"<p>{player.Name} eats {food.Name.ToLower()}.</p>", room, player);
 
             var benefits = new StringBuilder().Append("<table>");
             var modBenefits = "";
@@ -114,15 +112,15 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
             if (player.Hunger >= 4)
             {
-                Core.Writer.WriteLine("<p>You are no longer hungry.<p>", player.ConnectionId);
+                CoreHandler.Instance.Writer.WriteLine("<p>You are no longer hungry.<p>", player.ConnectionId);
             }
 
-            Core.UpdateClient.UpdateAffects(player);
-            Core.UpdateClient.UpdateScore(player);
-            Core.UpdateClient.UpdateMoves(player);
-            Core.UpdateClient.UpdateHP(player);
-            Core.UpdateClient.UpdateMana(player);
-            Core.UpdateClient.UpdateInventory(player);
+            CoreHandler.Instance.UpdateClient.UpdateAffects(player);
+            CoreHandler.Instance.UpdateClient.UpdateScore(player);
+            CoreHandler.Instance.UpdateClient.UpdateMoves(player);
+            CoreHandler.Instance.UpdateClient.UpdateHP(player);
+            CoreHandler.Instance.UpdateClient.UpdateMana(player);
+            CoreHandler.Instance.UpdateClient.UpdateInventory(player);
         }
     }
 }

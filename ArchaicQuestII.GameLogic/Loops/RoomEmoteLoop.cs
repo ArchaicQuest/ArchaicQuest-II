@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using ArchaicQuestII.GameLogic.Commands;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
@@ -13,17 +10,16 @@ namespace ArchaicQuestII.GameLogic.Loops
     {
         public int TickDelay => 45000;
         public bool ConfigureAwait => false;
-        private ICore _core;
         private List<Room> _rooms;
 
-        public void Init(ICore core, ICommandHandler commandHandler)
+        public void Init()
         {
-            _core = core;
+
         }
 
         public void PreTick()
         {
-            _rooms = _core.Cache.GetAllRooms().Where(x => x.Players.Any() && x.Emotes.Any()).ToList();
+            _rooms = CoreHandler.Instance.Cache.GetAllRooms().Where(x => x.Players.Any() && x.Emotes.Any()).ToList();
         }
 
         public void Tick()
@@ -39,7 +35,7 @@ namespace ArchaicQuestII.GameLogic.Loops
 
                 foreach (var player in room.Players)
                 {
-                    _core.Writer.WriteLine($"<p class='room-emote'>{emote}</p>",
+                    CoreHandler.Instance.Writer.WriteLine($"<p class='room-emote'>{emote}</p>",
                         player.ConnectionId);
                 }
             }

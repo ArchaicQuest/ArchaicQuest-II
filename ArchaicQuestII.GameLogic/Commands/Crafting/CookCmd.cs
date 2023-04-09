@@ -14,11 +14,15 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
 {
     public class CookCmd : ICommand
     {
-        public CookCmd(ICore core)
+        public CookCmd()
         {
-            Aliases = new[] {"cook"};
-            Description = "Cook food, type cook list to see which items you can cook. Then place items in a pot and cook 'item'";
-            Usages = new[] { "Type: cook list - to view all cook-able items. \n\r cook <item> - to cook the item e.g. cook fishstew" };
+            Aliases = new[] { "cook" };
+            Description =
+                "Cook food, type cook list to see which items you can cook. Then place items in a pot and cook 'item'";
+            Usages = new[]
+            {
+                "Type: cook list - to view all cook-able items. \n\r cook <item> - to cook the item e.g. cook fishstew"
+            };
             Title = "";
             DeniedStatus = new[]
             {
@@ -33,27 +37,31 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
                 CharacterStatus.Status.Resting
             };
             UserRole = UserRole.Player;
-            Core = core;
         }
-        
+
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
         public string Title { get; }
         public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
-        public ICore Core { get; }
 
         public void Execute(Player player, Room room, string[] input)
         {
             var target = string.Join(" ", input.Skip(1));
 
             // Lets find what you can cook
-            var recipes = Core.Cache.GetCraftingRecipes().Where(x => x.CreatedItem.ItemType == Item.Item.ItemTypes.Food).ToList();
+            var recipes = CoreHandler.Instance.Cache
+                .GetCraftingRecipes()
+                .Where(x => x.CreatedItem.ItemType == Item.Item.ItemTypes.Food)
+                .ToList();
 
             if (recipes == null)
             {
-                Core.Writer.WriteLine("<p>No recipes are known.</p>", player.ConnectionId);
+                CoreHandler.Instance.Writer.WriteLine(
+                    "<p>No recipes are known.</p>",
+                    player.ConnectionId
+                );
                 return;
             }
 
@@ -78,7 +86,10 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
 
             if (recipeList.Count == 0)
             {
-                Core.Writer.WriteLine("<p>No recipes found with the current items you have.</p>", player.ConnectionId);
+                CoreHandler.Instance.Writer.WriteLine(
+                    "<p>No recipes found with the current items you have.</p>",
+                    player.ConnectionId
+                );
                 return;
             }
 
@@ -99,20 +110,42 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
 
             sb.Append($"</table>");
 
-            Core.Writer.WriteLine(sb.ToString(), player.ConnectionId);
-
+            CoreHandler.Instance.Writer.WriteLine(sb.ToString(), player.ConnectionId);
         }
 
-        private List<CraftingRecipes> ReturnValidRecipes(Player player, List<CraftingRecipes> recipes)
+        private List<CraftingRecipes> ReturnValidRecipes(
+            Player player,
+            List<CraftingRecipes> recipes
+        )
         {
-            var ingedients = player.Inventory.Where(x => x.ItemType == Item.Item.ItemTypes.Food).GroupBy(y => y.Name)
+            var ingedients = player.Inventory
+                .Where(x => x.ItemType == Item.Item.ItemTypes.Food)
+                .GroupBy(y => y.Name)
                 .Select(z => z.First());
             var recipeList = new List<CraftingRecipes>();
             foreach (var material in ingedients)
             {
-                var quantity = player.Inventory.Where(x => x.ItemType == Item.Item.ItemTypes.Material && x.Name.Equals(material.Name, StringComparison.CurrentCultureIgnoreCase)).ToList();
-                var canCook = recipes.Where(x =>
-                    x.CraftingMaterials.Any(y => y.Material.Equals(material.Name, StringComparison.CurrentCultureIgnoreCase) && y.Quantity <= quantity.Count));
+                var quantity = player.Inventory
+                    .Where(
+                        x =>
+                            x.ItemType == Item.Item.ItemTypes.Material
+                            && x.Name.Equals(
+                                material.Name,
+                                StringComparison.CurrentCultureIgnoreCase
+                            )
+                    )
+                    .ToList();
+                var canCook = recipes.Where(
+                    x =>
+                        x.CraftingMaterials.Any(
+                            y =>
+                                y.Material.Equals(
+                                    material.Name,
+                                    StringComparison.CurrentCultureIgnoreCase
+                                )
+                                && y.Quantity <= quantity.Count
+                        )
+                );
 
                 recipeList.AddRange(canCook);
             }
@@ -128,30 +161,42 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
 
             if (pot == null)
             {
-                Core.Writer.WriteLine("<p>To being cooking you require a fire and a cooking pot.</p>",
-                    player.ConnectionId);
+                CoreHandler.Instance.Writer.WriteLine(
+                    "<p>To being cooking you require a fire and a cooking pot.</p>",
+                    player.ConnectionId
+                );
 
                 return;
             }
 
-            var recipe =
-            craftingRecipes.FirstOrDefault(x =>
-                    x.Title.StartsWith(item, StringComparison.CurrentCultureIgnoreCase));
+            var recipe = craftingRecipes.FirstOrDefault(
+                x => x.Title.StartsWith(item, StringComparison.CurrentCultureIgnoreCase)
+            );
 
             if (recipe == null)
             {
-                Core.Writer.WriteLine("<p>You can't cook that.</p>", player.ConnectionId);
+                CoreHandler.Instance.Writer.WriteLine(
+                    "<p>You can't cook that.</p>",
+                    player.ConnectionId
+                );
                 return;
             }
 
             foreach (var material in recipe.CraftingMaterials)
             {
-                var craftItem = pot.Container.Items.FirstOrDefault(x => x.Name.Equals(material.Material, StringComparison.CurrentCultureIgnoreCase));
-                var materialCount = pot.Container.Items.Count(x => x.Name.Equals(material.Material, StringComparison.CurrentCultureIgnoreCase));
+                var craftItem = pot.Container.Items.FirstOrDefault(
+                    x => x.Name.Equals(material.Material, StringComparison.CurrentCultureIgnoreCase)
+                );
+                var materialCount = pot.Container.Items.Count(
+                    x => x.Name.Equals(material.Material, StringComparison.CurrentCultureIgnoreCase)
+                );
 
                 if (craftItem == null || material.Quantity > materialCount)
                 {
-                    Core.Writer.WriteLine("<p>You appear to be missing required items.</p>", player.ConnectionId);
+                    CoreHandler.Instance.Writer.WriteLine(
+                        "<p>You appear to be missing required items.</p>",
+                        player.ConnectionId
+                    );
                     return;
                 }
             }
@@ -159,67 +204,84 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
             Cook(player, room, pot, recipe, 4000).Start();
         }
 
-        private async Task Cook(Player player, Room room, Item.Item pot, CraftingRecipes recipe, int cookTime)
+        private async Task Cook(
+            Player player,
+            Room room,
+            Item.Item pot,
+            CraftingRecipes recipe,
+            int cookTime
+        )
         {
             player.Status = CharacterStatus.Status.Busy;
 
-            Core.Writer.WriteLine("<p>You begin cooking.</p>",
-                    player.ConnectionId);
+            CoreHandler.Instance.Writer.WriteLine("<p>You begin cooking.</p>", player.ConnectionId);
 
-            Core.UpdateClient.PlaySound("cooking", player);
+            CoreHandler.Instance.UpdateClient.PlaySound("cooking", player);
 
-            await Task.Delay(cookTime/4);
+            await Task.Delay(cookTime / 4);
 
-            Core.Writer.WriteLine("<p>You stir the ingredients.</p>",
-                player.ConnectionId);
+            CoreHandler.Instance.Writer.WriteLine(
+                "<p>You stir the ingredients.</p>",
+                player.ConnectionId
+            );
 
-            await Task.Delay(cookTime/4);
+            await Task.Delay(cookTime / 4);
 
-            Core.Writer.WriteLine("<p>You taste and season the dish.</p>",
-                player.ConnectionId);
+            CoreHandler.Instance.Writer.WriteLine(
+                "<p>You taste and season the dish.</p>",
+                player.ConnectionId
+            );
 
-            await Task.Delay(cookTime/4);
-            Core.Writer.WriteLine("<p>You stir the ingredients.</p>",
-                player.ConnectionId);
+            await Task.Delay(cookTime / 4);
+            CoreHandler.Instance.Writer.WriteLine(
+                "<p>You stir the ingredients.</p>",
+                player.ConnectionId
+            );
 
-            await Task.Delay(cookTime/4);
+            await Task.Delay(cookTime / 4);
 
             pot.Container.Items.Clear();
 
             if (!player.RollSkill(SkillName.Cooking))
             {
-                Core.Writer.WriteLine(
-                        "<p class='improve'>You failed to cook something edible.</p>",
-                        player.ConnectionId);
+                CoreHandler.Instance.Writer.WriteLine(
+                    "<p class='improve'>You failed to cook something edible.</p>",
+                    player.ConnectionId
+                );
 
                 foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
                 {
-                    Core.Writer.WriteLine($"<p>{player.Name} fails to cook something edible</p>",
-                        pc.ConnectionId);
+                    CoreHandler.Instance.Writer.WriteLine(
+                        $"<p>{player.Name} fails to cook something edible</p>",
+                        pc.ConnectionId
+                    );
                 }
 
                 player.FailedSkill(SkillName.Cooking, out var message);
-                Core.Writer.WriteLine(message, player.ConnectionId);
+                CoreHandler.Instance.Writer.WriteLine(message, player.ConnectionId);
             }
             else
             {
                 pot.Container.Items.Add(recipe.CreatedItem);
 
-                Core.Writer.WriteLine(
-                        $"<p class='improve'>You cooked {recipe.Title}.</p>",
-                        player.ConnectionId);
+                CoreHandler.Instance.Writer.WriteLine(
+                    $"<p class='improve'>You cooked {recipe.Title}.</p>",
+                    player.ConnectionId
+                );
 
                 foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
                 {
-                    Core.Writer.WriteLine($"<p>{player.Name} cooked {recipe.Title}.</p>",
-                        pc.ConnectionId);
+                    CoreHandler.Instance.Writer.WriteLine(
+                        $"<p>{player.Name} cooked {recipe.Title}.</p>",
+                        pc.ConnectionId
+                    );
                 }
             }
 
             player.Status = CharacterStatus.Status.Standing;
 
-            Core.UpdateClient.UpdateInventory(player);
-            Core.UpdateClient.UpdateScore(player);
+            CoreHandler.Instance.UpdateClient.UpdateInventory(player);
+            CoreHandler.Instance.UpdateClient.UpdateScore(player);
         }
     }
 }

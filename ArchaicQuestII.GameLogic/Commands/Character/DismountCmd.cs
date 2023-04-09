@@ -9,7 +9,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 {
     public class DismountCmd : ICommand
     {
-        public DismountCmd(ICore core)
+        public DismountCmd()
         {
             Aliases = new[] {"dismount","dmount"};
             Description = "Use dismount to get off your mount and mount to get back on your horse, for example mount horse.";
@@ -24,7 +24,6 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
                 CharacterStatus.Status.Stunned
             };
             UserRole = UserRole.Player;
-            Core = core;
         }
         
         public string[] Aliases { get; }
@@ -33,13 +32,12 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
         public string Title { get; }
         public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
-        public ICore Core { get; }
 
         public void Execute(Player player, Room room, string[] input)
         {
             if (string.IsNullOrEmpty(player.Mounted.Name))
             {
-                Core.Writer.WriteLine("<p>You are not using a mount</p>");
+                CoreHandler.Instance.Writer.WriteLine("<p>You are not using a mount</p>");
                 return;
             }
 
@@ -51,8 +49,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
                 getMount.Mounted.MountedBy = string.Empty;
                 player.Mounted.Name = string.Empty;
 
-                Core.Writer.WriteLine($"<p>You dismount {getMount.Name}.</p>", player.ConnectionId);
-                Core.Writer.WriteToOthersInRoom($"<p>{player.Name} dismounts {getMount.Name}.</p>", room, player);
+                CoreHandler.Instance.Writer.WriteLine($"<p>You dismount {getMount.Name}.</p>", player.ConnectionId);
+                CoreHandler.Instance.Writer.WriteToOthersInRoom($"<p>{player.Name} dismounts {getMount.Name}.</p>", room, player);
             }
 
         }

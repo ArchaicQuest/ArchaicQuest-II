@@ -1,31 +1,28 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Character.Status;
-using ArchaicQuestII.GameLogic.Commands;
 
 namespace ArchaicQuestII.GameLogic.Loops
 {
-	public class CombatLoop : ILoop
+    public class CombatLoop : ILoop
 	{
         public int TickDelay => 3200;
 
         public bool ConfigureAwait => true;
 
-        private ICore _core;
         private List<Player> _combatants;
 
-        public void Init(ICore core, ICommandHandler commandHandler)
+        public void Init()
         {
-            _core = core;
+
         }
 
         public void PreTick()
         {
-            _combatants = _core.Cache.GetCombatList().Where(x => x.Status == CharacterStatus.Status.Fighting).ToList();
+            _combatants = CoreHandler.Instance.Cache.GetCombatList().Where(x => x.Status == CharacterStatus.Status.Fighting).ToList();
         }
 
         public void Tick()
@@ -97,7 +94,7 @@ namespace ArchaicQuestII.GameLogic.Loops
 
                 for (var i = 0; i < attackCount; i++)
                 {
-                    _core.Combat.Fight(player, player.Target, _core.Cache.GetRoom(player.RoomId), false);
+                    CoreHandler.Instance.Combat.Fight(player, player.Target, CoreHandler.Instance.Cache.GetRoom(player.RoomId), false);
                 }
 
             }

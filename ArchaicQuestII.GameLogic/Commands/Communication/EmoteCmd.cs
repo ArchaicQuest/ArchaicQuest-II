@@ -9,7 +9,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
 {
     public class EmoteCmd : ICommand
     {
-        public EmoteCmd(ICore core)
+        public EmoteCmd()
         {
             Aliases = new[] {"emote"};
             Description = "Sends a message about what your actions are, using a prebuilt social or a custom emote.";
@@ -27,7 +27,6 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
                 CharacterStatus.Status.Stunned,
             };
             UserRole = UserRole.Player;
-            Core = core;
         }
         
         public string[] Aliases { get; }
@@ -36,20 +35,19 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
         public string Title { get; }
         public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
-        public ICore Core { get; }
 
         public void Execute(Player player, Room room, string[] input)
         {
             if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
             {
-                Core.Writer.WriteLine("<p>Emote what?</p>", player.ConnectionId);
+                CoreHandler.Instance.Writer.WriteLine("<p>Emote what?</p>", player.ConnectionId);
                 return;
             }
             
             var emoteText = string.Join(" ", input.Skip(1));
             var emoteMessage = $"<p>{player.Name} {emoteText}</p>";
             
-            Core.Writer.WriteToOthersInRoom(emoteMessage, room, player);
+            CoreHandler.Instance.Writer.WriteToOthersInRoom(emoteMessage, room, player);
         }
     }
 }

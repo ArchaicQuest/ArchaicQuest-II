@@ -47,7 +47,7 @@ namespace ArchaicQuestII.GameLogic.Core
         {
             return _commands.TryGetValue(key, out var c);
         }
-        
+
         public ICommand GetCommand(string key)
         {
             _commands.TryGetValue(key, out var command);
@@ -55,7 +55,7 @@ namespace ArchaicQuestII.GameLogic.Core
         }
 
         #endregion
-        
+
         #region PlayerCache
 
         public bool AddPlayer(string id, Player player)
@@ -151,7 +151,6 @@ namespace ArchaicQuestII.GameLogic.Core
             return _originalRoomCache.Values.ToList();
         }
 
-
         public List<Room> GetAllRoomsInArea(int id)
         {
             var room = _roomCache.Values.Where(x => x.AreaId.Equals(id)).ToList();
@@ -166,7 +165,6 @@ namespace ArchaicQuestII.GameLogic.Core
             return room;
         }
 
-
         public List<Skill.Model.Skill> GetAllSkills()
         {
             var data = _skillCache.Values.ToList();
@@ -179,7 +177,6 @@ namespace ArchaicQuestII.GameLogic.Core
             var existingRoom = room;
             var newRoom = room;
             newRoom.Players.Add(player);
-
 
             return _roomCache.TryUpdate(id, existingRoom, newRoom);
         }
@@ -201,17 +198,13 @@ namespace ArchaicQuestII.GameLogic.Core
             return skill;
         }
 
-
         public List<Skill.Model.Skill> ReturnSkills()
         {
             return _skillCache.Values.ToList();
         }
 
-
-
-
         #endregion
-        
+
         #region HelpCache
 
 
@@ -227,10 +220,15 @@ namespace ArchaicQuestII.GameLogic.Core
             return help;
         }
 
-
         public List<Help> FindHelp(string id)
         {
-            return _helpCache.Values.Where(x => x.Keywords.Contains(id, StringComparison.CurrentCultureIgnoreCase) && x.Deleted.Equals(false)).ToList();
+            return _helpCache.Values
+                .Where(
+                    x =>
+                        x.Keywords.Contains(id, StringComparison.CurrentCultureIgnoreCase)
+                        && x.Deleted.Equals(false)
+                )
+                .ToList();
         }
 
         #endregion
@@ -265,7 +263,6 @@ namespace ArchaicQuestII.GameLogic.Core
             return _configCache;
         }
 
-
         public void ClearRoomCache()
         {
             _roomCache.Clear();
@@ -275,7 +272,6 @@ namespace ArchaicQuestII.GameLogic.Core
             _questCache.Clear();
             _skillCache.Clear();
             _craftingRecipesCache.Clear();
-
         }
 
         public void AddMap(string areaId, string map)
@@ -296,7 +292,6 @@ namespace ArchaicQuestII.GameLogic.Core
         {
             return _combatCache.ContainsKey(id);
         }
-
 
         public bool AddCharToCombat(string id, Player character)
         {
@@ -349,6 +344,5 @@ namespace ArchaicQuestII.GameLogic.Core
         }
 
         #endregion
-
     }
 }

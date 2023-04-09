@@ -1,5 +1,4 @@
 ﻿using ArchaicQuestII.GameLogic.Character.Status;
-using ArchaicQuestII.GameLogic.Commands;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Utilities;
@@ -15,19 +14,18 @@ namespace ArchaicQuestII.GameLogic.Loops
     {
         public int TickDelay => 120000;
         public bool ConfigureAwait => true;
-        private ICore _core;
         private List<Room> _rooms;
         private List<Player> _players;
 
-        public void Init(ICore core, ICommandHandler commandHandler)
+        public void Init()
         {
-            _core = core;
+
         }
 
         public void PreTick()
         {
-            _rooms = _core.Cache.GetAllRoomsToRepop();
-            _players = _core.Cache.GetPlayerCache().Values.ToList();
+            _rooms = CoreHandler.Instance.Cache.GetAllRoomsToRepop();
+            _players = CoreHandler.Instance.Cache.GetPlayerCache().Values.ToList();
         }
 
         public void Tick()
@@ -36,7 +34,7 @@ namespace ArchaicQuestII.GameLogic.Loops
             {
                 //max 187MB allocated type: string too much memory used here
                 var originalRoom = JsonConvert.DeserializeObject<Room>(
-                        JsonConvert.SerializeObject(_core.Cache.GetOriginalRoom(Helpers.ReturnRoomId(room))));
+                        JsonConvert.SerializeObject(CoreHandler.Instance.Cache.GetOriginalRoom(Helpers.ReturnRoomId(room))));
 
 
                 foreach (var mob in originalRoom.Mobs)
@@ -135,7 +133,7 @@ namespace ArchaicQuestII.GameLogic.Loops
 
                 foreach (var player in room.Players)
                 {
-                    _core.Writer.WriteLine("<p>The hairs on your neck stand up.</p>",
+                    CoreHandler.Instance.Writer.WriteLine("<p>The hairs on your neck stand up.</p>",
                         player.ConnectionId);
                 }
                 //  }
@@ -222,10 +220,10 @@ namespace ArchaicQuestII.GameLogic.Loops
                     }
                 }
 
-                _core.UpdateClient.UpdateHP(player);
-                _core.UpdateClient.UpdateMana(player);
-                _core.UpdateClient.UpdateMoves(player);
-                _core.UpdateClient.UpdateScore(player);
+                CoreHandler.Instance.UpdateClient.UpdateHP(player);
+                CoreHandler.Instance.UpdateClient.UpdateMana(player);
+                CoreHandler.Instance.UpdateClient.UpdateMoves(player);
+                CoreHandler.Instance.UpdateClient.UpdateScore(player);
 
             }
         }

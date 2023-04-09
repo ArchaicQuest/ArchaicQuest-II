@@ -12,7 +12,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 {
     public class QuitCmd : ICommand
     {
-        public QuitCmd(ICore core)
+        public QuitCmd()
         {
             Aliases = new[] {"quit"};
             Description = "Leave the game, it auto saves and removes your character from the game. If you don't quit you will go link dead and at risk of getting killed and robbed.";
@@ -24,7 +24,6 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
                 CharacterStatus.Status.Fighting
             };
             UserRole = UserRole.Player;
-            Core = core;
         }
         
         public string[] Aliases { get; }
@@ -33,7 +32,6 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
         public string Title { get; }
         public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
-        public ICore Core { get; }
 
         public void Execute(Player player, Room room, string[] input)
         {
@@ -45,20 +43,20 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
             var playTime = DateTime.Now.Subtract(lastLoginTime).TotalMinutes;
             player.PlayTime += (int)DateTime.Now.Subtract(lastLoginTime).TotalMinutes;
 
-            var account = Core.PlayerDataBase.GetById<Account.Account>(player.AccountId, PlayerDataBase.Collections.Account);
+            var account = CoreHandler.Instance.PlayerDataBase.GetById<Account.Account>(player.AccountId, PlayerDataBase.Collections.Account);
             account.Stats.TotalPlayTime += playTime;
 
-            Core.PlayerDataBase.Save(account, PlayerDataBase.Collections.Account);
-            Core.PlayerDataBase.Save(player, PlayerDataBase.Collections.Players);
+            CoreHandler.Instance.PlayerDataBase.Save(account, PlayerDataBase.Collections.Account);
+            CoreHandler.Instance.PlayerDataBase.Save(player, PlayerDataBase.Collections.Players);
             
-            Core.Writer.WriteLine("<p>Character saved.</p>", player.ConnectionId);
-            Core.Writer.WriteLine("<p>You wave goodbye and vanish.</p>", player.ConnectionId);
-            Core.Writer.WriteToOthersInRoom($"<p>{player.Name} waves goodbye and vanishes.</p>", room, player);
+            CoreHandler.Instance.Writer.WriteLine("<p>Character saved.</p>", player.ConnectionId);
+            CoreHandler.Instance.Writer.WriteLine("<p>You wave goodbye and vanish.</p>", player.ConnectionId);
+            CoreHandler.Instance.Writer.WriteToOthersInRoom($"<p>{player.Name} waves goodbye and vanishes.</p>", room, player);
 
             room.Players.Remove(player);
-            Core.Writer.WriteLine($"<p>We await your return {player.Name}. If you enjoyed your time here, help spread the word by tweeting, writing a blog posts or posting reviews online.</p>", player.ConnectionId);
-            Helpers.PostToDiscord($"{player.Name} quit after playing for {Math.Floor(DateTime.Now.Subtract(player.LastLoginTime).TotalMinutes)} minutes.", "event", Core.Cache.GetConfig());
-            Core.Cache.RemovePlayer(player.ConnectionId);
+            CoreHandler.Instance.Writer.WriteLine($"<p>We await your return {player.Name}. If you enjoyed your time here, help spread the word by tweeting, writing a blog posts or posting reviews online.</p>", player.ConnectionId);
+            Helpers.PostToDiscord($"{player.Name} quit after playing for {Math.Floor(DateTime.Now.Subtract(player.LastLoginTime).TotalMinutes)} minutes.", "event", CoreHandler.Instance.Cache.GetConfig());
+            CoreHandler.Instance.Cache.RemovePlayer(player.ConnectionId);
         }
     }
 }

@@ -34,33 +34,30 @@ namespace ArchaicQuestII.GameLogic.Tests.Skills
 
         public DamageSkillsTests()
         {
-
-
             _player = new Player()
             {
                 Id = Guid.NewGuid(),
                 Name = "Malleus",
-                ClassName = ClassName.Fighter,
+                ClassName = ClassName.Fighter.ToString(),
                 Status = CharacterStatus.Status.Standing,
                 Attributes = new Attributes()
                 {
                     Attribute = new Dictionary<EffectLocation, int>
                     {
-                        {EffectLocation.Mana, 250},
-                        {EffectLocation.Hitpoints, 10000},
-                        {EffectLocation.Moves, 10000},
-                        {EffectLocation.Strength, 60},
-                        {EffectLocation.Dexterity, 60},
-                        {EffectLocation.Constitution, 60},
-                        {EffectLocation.Intelligence, 60},
-                        {EffectLocation.Wisdom, 60},
-                        {EffectLocation.Charisma, 60},
+                        { EffectLocation.Mana, 250 },
+                        { EffectLocation.Hitpoints, 10000 },
+                        { EffectLocation.Moves, 10000 },
+                        { EffectLocation.Strength, 60 },
+                        { EffectLocation.Dexterity, 60 },
+                        { EffectLocation.Constitution, 60 },
+                        { EffectLocation.Intelligence, 60 },
+                        { EffectLocation.Wisdom, 60 },
+                        { EffectLocation.Charisma, 60 },
                     }
                 },
                 Spells = new List<Spell.Model.Spell>(),
                 Skills = new List<SkillList>()
             };
-
 
             _target = new Player()
             {
@@ -70,19 +67,18 @@ namespace ArchaicQuestII.GameLogic.Tests.Skills
                 Attributes = new Attributes()
                 {
                     Attribute = new Dictionary<EffectLocation, int>
-                   {
-                       {EffectLocation.Mana, 250},
-                       {EffectLocation.Hitpoints, 10000},
-                       {EffectLocation.Moves, 10000},
-                       {EffectLocation.Strength, 60},
-                       {EffectLocation.Dexterity, 60},
-                       {EffectLocation.Constitution, 60},
-                       {EffectLocation.Intelligence, 60},
-                       {EffectLocation.Wisdom, 60},
-                       {EffectLocation.Charisma, 60},
-                   }
+                    {
+                        { EffectLocation.Mana, 250 },
+                        { EffectLocation.Hitpoints, 10000 },
+                        { EffectLocation.Moves, 10000 },
+                        { EffectLocation.Strength, 60 },
+                        { EffectLocation.Dexterity, 60 },
+                        { EffectLocation.Constitution, 60 },
+                        { EffectLocation.Intelligence, 60 },
+                        { EffectLocation.Wisdom, 60 },
+                        { EffectLocation.Charisma, 60 },
+                    }
                 }
-
             };
             _room = new Room();
             _writer = new Mock<IWriteToClient>();
@@ -92,11 +88,13 @@ namespace ArchaicQuestII.GameLogic.Tests.Skills
             _combat = new Mock<ICombat>();
             _updateClientUI = new Mock<IUpdateClientUI>();
 
-            _damageSkills = new DamageSkills(_writer.Object, _updateClientUI.Object, _damage.Object, _combat.Object, _skillManager.Object);
+            _damageSkills = new DamageSkills(
+                _writer.Object,
+                _updateClientUI.Object,
+                _damage.Object,
+                _combat.Object,
+                _skillManager.Object
+            );
         }
-
-
-
-
     }
 }

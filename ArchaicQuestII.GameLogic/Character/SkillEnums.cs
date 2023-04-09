@@ -11,8 +11,8 @@ public enum SkillName
     Throw,
     Riposte,
     Dodge,
-    LongBlade,
-    ShortBlade,
+    LongBlades,
+    ShortBlades,
     Axe,
     Flail,
     Polearm,
@@ -55,4 +55,5 @@ public enum SkillName
     FourthAttack,
     OverheadCrush,
     FifthAttack,
+    Arrows,
 }

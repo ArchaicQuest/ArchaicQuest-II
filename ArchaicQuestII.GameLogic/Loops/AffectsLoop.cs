@@ -1,34 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
-using System.Threading.Tasks;
 using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Commands;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Spell;
 
 namespace ArchaicQuestII.GameLogic.Loops
 {
-	public class AffectsLoop : ILoop
+    public class AffectsLoop : ILoop
 	{
         public int TickDelay => 60000;
 
         public bool ConfigureAwait => true;
 
-        private ICore _core;
         private List<Player> _players;
 
-        public void Init(ICore core, ICommandHandler commandHandler)
+        public void Init()
         {
-            _core = core;
             _players = new List<Player>();
         }
 
         public void PreTick()
         {
-            _players = _core.Cache.GetPlayerCache().Values.ToList();
+            _players = CoreHandler.Instance.Cache.GetPlayerCache().Values.ToList();
         }
 
         public void Tick()
@@ -90,12 +85,12 @@ namespace ArchaicQuestII.GameLogic.Loops
 
                         pc.Affects.Custom.Remove(aff);
 
-                        _core.SpellList.CastSpell(aff.Name, "", pc, "", pc, _core.Cache.GetRoom(pc.RoomId), true);
+                        CoreHandler.Instance.SpellList.CastSpell(aff.Name, "", pc, "", pc, CoreHandler.Instance.Cache.GetRoom(pc.RoomId), true);
 
                         if (aff.Affects == DefineSpell.SpellAffect.Blind)
                         {
                             pc.Affects.Blind = false;
-                            _core.Writer.WriteLine("You are no longer blinded.", pc.ConnectionId);
+                            CoreHandler.Instance.Writer.WriteLine("You are no longer blinded.", pc.ConnectionId);
                         }
                         if (aff.Affects == DefineSpell.SpellAffect.Berserk)
                         {
@@ -127,14 +122,14 @@ namespace ArchaicQuestII.GameLogic.Loops
                             pc.Affects.Haste = false;
                         }
                     }
-                    _core.UpdateClient.UpdateAffects(pc);
+                    CoreHandler.Instance.UpdateClient.UpdateAffects(pc);
                 }
 
                 var idleTime5Mins = pc.LastCommandTime.AddMinutes(6) <= DateTime.Now;
 
                 if (!pc.Idle && idleTime5Mins)
                 {
-                    _core.Writer.WriteLine("You enter the void.", pc.ConnectionId);
+                    CoreHandler.Instance.Writer.WriteLine("You enter the void.", pc.ConnectionId);
                     pc.Idle = true;
                     return;
                 }
@@ -143,7 +138,7 @@ namespace ArchaicQuestII.GameLogic.Loops
                 var idleTime15Mins = pc.LastCommandTime.AddMinutes(16) <= DateTime.Now;
                 if (idleTime10Mins && !idleTime15Mins)
                 {
-                    _core.Writer.WriteLine("You go deeper into the void.", pc.ConnectionId);
+                    CoreHandler.Instance.Writer.WriteLine("You go deeper into the void.", pc.ConnectionId);
                 }
 
                 if (idleTime15Mins)

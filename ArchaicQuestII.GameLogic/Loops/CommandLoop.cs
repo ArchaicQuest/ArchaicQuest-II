@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Commands;
 using ArchaicQuestII.GameLogic.Core;
@@ -15,20 +14,18 @@ namespace ArchaicQuestII.GameLogic.Loops
         public bool ConfigureAwait => true;
 
         private int LagTick = 32;
-        private ICore _core;
         private ICommandHandler _commandHandler;
         private List<Player> _laggedPlayers;
         private List<Player> _bufferedPlayers;
 
-        public void Init(ICore core, ICommandHandler commandHandler)
+        public void Init()
         {
-            _core = core;
-            _commandHandler = commandHandler;
+
         }
 
         public void PreTick()
         {
-            var players = _core.Cache.GetPlayerCache().Values;
+            var players = CoreHandler.Instance.Cache.GetPlayerCache().Values;
             _laggedPlayers = players.Where(x => x.Lag > 0).ToList();
             _bufferedPlayers = players.Where(x => x.Buffer.Count > 0).ToList();
         }
@@ -45,7 +42,7 @@ namespace ArchaicQuestII.GameLogic.Loops
                 }
 
                 var command = player.Buffer.Dequeue();
-                var room = _core.Cache.GetRoom(player.RoomId);
+                var room = CoreHandler.Instance.Cache.GetRoom(player.RoomId);
                 player.LastCommandTime = DateTime.Now;
 
                 if (player.CommandLog.Count >= 2500)

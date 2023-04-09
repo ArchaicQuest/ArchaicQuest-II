@@ -7,6 +7,8 @@ namespace ArchaicQuestII.GameLogic.Character.Class;
 
 public interface IClass
 {
+    public int Id { get; set; }
+    public bool IsSubClass { get; }
     public string Name { get; }
     public string Description { get; }
     public string PreferredWeapon { get; }

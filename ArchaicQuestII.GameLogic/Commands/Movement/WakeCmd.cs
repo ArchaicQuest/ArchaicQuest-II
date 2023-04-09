@@ -8,11 +8,11 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement;
 
 public class WakeCmd : ICommand
 {
-    public WakeCmd(ICore core)
+    public WakeCmd()
     {
-        Aliases = new[] {"wake"};
+        Aliases = new[] { "wake" };
         Description = "Your character wakes from sleep.";
-        Usages = new[] {"Type: wake"};
+        Usages = new[] { "Type: wake" };
         Title = "";
         DeniedStatus = new[]
         {
@@ -29,22 +29,27 @@ public class WakeCmd : ICommand
             CharacterStatus.Status.Mounted
         };
         UserRole = UserRole.Player;
-        Core = core;
     }
-    
+
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
     public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
-    public ICore Core { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
         SetCharacterStatus(player, "", CharacterStatus.Status.Standing);
-        Core.Writer.WriteLine("<p>You move quickly to your feet.</p>", player.ConnectionId);
-        Core.Writer.WriteToOthersInRoom($"<p>{player.Name} arises from {(player.Gender == "Male" ? "his" : "her")} slumber.</p>", room, player);
+        CoreHandler.Instance.Writer.WriteLine(
+            "<p>You move quickly to your feet.</p>",
+            player.ConnectionId
+        );
+        CoreHandler.Instance.Writer.WriteToOthersInRoom(
+            $"<p>{player.Name} arises from {(player.Gender == "Male" ? "his" : "her")} slumber.</p>",
+            room,
+            player
+        );
     }
 
     private void SetCharacterStatus(Player player, string longName, CharacterStatus.Status status)

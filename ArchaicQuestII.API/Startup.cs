@@ -69,9 +69,9 @@ namespace ArchaicQuestII.API
 
             services.AddSingleton<IDataBase, DataBase>();
             services.AddSingleton<IPlayerDataBase>(new PlayerDataBase(new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AQ-PLAYERS.db"))));
-        services.AddSingleton<IWriteToClient, WriteToClient>((factory) =>
+            services.AddSingleton<IWriteToClient, WriteToClient>((factory) =>
                 new WriteToClient(_hubContext, TelnetHub.Instance, _cache));
-        services.AddGameLogic();
+            services.AddGameLogic();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

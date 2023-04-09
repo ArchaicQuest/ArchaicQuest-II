@@ -9,7 +9,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Combat;
 
 public class KillCmd : ICommand
 {
-    public KillCmd(ICore core)
+    public KillCmd()
     {
         Aliases = new[] {"k", "kill", "murder"};
         Description = "The kill command is used to begin combat against mobiles.  Once combat has been " +
@@ -32,7 +32,6 @@ public class KillCmd : ICommand
             CharacterStatus.Status.Resting
         };
         UserRole = UserRole.Player;
-        Core = core;
     }
     
     public string[] Aliases { get; }
@@ -41,7 +40,6 @@ public class KillCmd : ICommand
     public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
-    public ICore Core { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
@@ -49,6 +47,6 @@ public class KillCmd : ICommand
         var target = input.ElementAtOrDefault(1);
         var isMurder = command == "murder";
 
-        Core.Combat.Fight(player, target, room, isMurder);
+        CoreHandler.Instance.Combat.Fight(player, target, room, isMurder);
     }
 }

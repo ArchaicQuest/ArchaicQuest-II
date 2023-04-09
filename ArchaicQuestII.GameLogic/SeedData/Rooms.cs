@@ -22,15 +22,22 @@ namespace ArchaicQuestII.GameLogic.SeedData
             var areas = db.GetList<Area>(DataBase.Collections.Area);
             var updatedItems = new ItemList();
             var lastRandom = 0;
-            
+
             foreach (var room in rooms.Where(x => x.Deleted == false))
             {
-                foreach (var item in room.Items.Where(x => x.ItemType == Item.Item.ItemTypes.Forage))
+                foreach (
+                    var item in room.Items.Where(x => x.ItemType == Item.Item.ItemTypes.Forage)
+                )
                 {
                     updatedItems.Clear();
-                    foreach (var containerForageItem in item.Container.Items.Where(x => x.ItemType == Item.Item.ItemTypes.Crafting || x.ItemType == Item.Item.ItemTypes.Forage))
+                    foreach (
+                        var containerForageItem in item.Container.Items.Where(
+                            x =>
+                                x.ItemType == Item.Item.ItemTypes.Crafting
+                                || x.ItemType == Item.Item.ItemTypes.Forage
+                        )
+                    )
                     {
-
                         var rnd = DiceBag.Roll(1, 1, 11);
                         if (lastRandom == rnd)
                         {
@@ -45,13 +52,15 @@ namespace ArchaicQuestII.GameLogic.SeedData
                     }
 
                     item.Container.Items.AddRange(updatedItems);
-                    
                 }
-                
+
                 AddSkillsToMobs(db, room);
                 MapMobRoomId(room);
                 cache.AddRoom($"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}", room);
-                cache.AddOriginalRoom($"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}", JsonConvert.DeserializeObject<Room>(JsonConvert.SerializeObject(room)));
+                cache.AddOriginalRoom(
+                    $"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}",
+                    JsonConvert.DeserializeObject<Room>(JsonConvert.SerializeObject(room))
+                );
             }
 
             foreach (var area in areas)
@@ -61,7 +70,11 @@ namespace ArchaicQuestII.GameLogic.SeedData
                 foreach (var zarea in areaByZIndex)
                 {
                     var roomsByZ = new List<Room>();
-                    foreach (var room in roomList.FindAll(x => x.Coords.Z == zarea.Coords.Z && x.Deleted == false))
+                    foreach (
+                        var room in roomList.FindAll(
+                            x => x.Coords.Z == zarea.Coords.Z && x.Deleted == false
+                        )
+                    )
                     {
                         roomsByZ.Add(room);
                     }
@@ -97,10 +110,9 @@ namespace ArchaicQuestII.GameLogic.SeedData
             {
                 foreach (var mob in room.Mobs)
                 {
-
                     mob.Skills = new List<SkillList>();
 
-                    mob.AddSkills(mob.ClassName);
+                    mob.AddSkills(Enum.Parse<ClassName>(mob.ClassName));
 
                     foreach (var skill in mob.Skills)
                     {
@@ -113,7 +125,6 @@ namespace ArchaicQuestII.GameLogic.SeedData
                         Armour = mob.Level > 5 ? mob.Level * 3 : 1,
                         Magic = mob.Level * 3 / 4,
                     };
-
 
                     if (mob.Equipped.Light != null)
                     {
@@ -211,20 +222,17 @@ namespace ArchaicQuestII.GameLogic.SeedData
                         mob.ArmorRating.Magic += mob.Equipped.Wrist2.ArmourRating.Magic;
                     }
 
-
                     if (mob.Equipped.Wielded != null)
                     {
                         mob.ArmorRating.Armour += mob.Equipped.Wielded.ArmourRating.Armour;
                         mob.ArmorRating.Magic += mob.Equipped.Wielded.ArmourRating.Magic;
                     }
 
-
                     if (mob.Equipped.Secondary != null)
                     {
                         mob.ArmorRating.Armour += mob.Equipped.Secondary.ArmourRating.Armour;
                         mob.ArmorRating.Magic += mob.Equipped.Secondary.ArmourRating.Magic;
                     }
-
 
                     if (mob.Equipped.Shield != null)
                     {
@@ -243,9 +251,6 @@ namespace ArchaicQuestII.GameLogic.SeedData
                         mob.ArmorRating.Armour += mob.Equipped.Floating.ArmourRating.Armour;
                         mob.ArmorRating.Magic += mob.Equipped.Floating.ArmourRating.Magic;
                     }
-
-
-
 
                     //give mob unique IDs
                     mob.UniqueId = Guid.NewGuid();

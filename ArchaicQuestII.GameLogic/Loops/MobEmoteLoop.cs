@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Commands;
 using ArchaicQuestII.GameLogic.Core;
-using ArchaicQuestII.GameLogic.SeedData;
 using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
 
@@ -15,19 +13,16 @@ namespace ArchaicQuestII.GameLogic.Loops
     {
         public int TickDelay => 30000;
         public bool ConfigureAwait => false;
-        private ICore _core;
         private ICommandHandler _commandHandler;
         private List<Room> _mobRooms;
 
-        public void Init(ICore core, ICommandHandler commandHandler)
+        public void Init()
         {
-            _core = core;
-            _commandHandler = commandHandler;
         }
 
         public void PreTick()
         {
-            _mobRooms = _core.Cache.GetAllRooms().Where(x => x.Mobs.Any()).ToList();
+            _mobRooms = CoreHandler.Instance.Cache.GetAllRooms().Where(x => x.Mobs.Any()).ToList();
         }
 
         public void Tick()
@@ -49,7 +44,7 @@ namespace ArchaicQuestII.GameLogic.Loops
                             {
                                 continue;
                             }
-                            _core.Writer.WriteLine($"<p class='mob-emote'>{mob.Name} {emote}</p>",
+                            CoreHandler.Instance.Writer.WriteLine($"<p class='mob-emote'>{mob.Name} {emote}</p>",
                                 player.ConnectionId);
                         }
                     }
@@ -87,7 +82,7 @@ namespace ArchaicQuestII.GameLogic.Loops
 
                                     // Max mob can roam 3 times away from start loc
 
-                                    var newRoom = _core.Cache.GetRoom($"{newExit.AreaId}{newExit.Coords.X}{newExit.Coords.Y}{newExit.Coords.Z}");
+                                    var newRoom = CoreHandler.Instance.Cache.GetRoom($"{newExit.AreaId}{newExit.Coords.X}{newExit.Coords.Y}{newExit.Coords.Z}");
 
                                     if (newRoom != null)
                                     {
@@ -105,7 +100,7 @@ namespace ArchaicQuestII.GameLogic.Loops
 
 
                                             // 3rd room
-                                            newRoom = _core.Cache.GetRoom($"{newExit.AreaId}{newExit.Coords.X}{newExit.Coords.Y}{newExit.Coords.Z}");
+                                            newRoom = CoreHandler.Instance.Cache.GetRoom($"{newExit.AreaId}{newExit.Coords.X}{newExit.Coords.Y}{newExit.Coords.Z}");
 
                                             if (newRoom != null)
                                             {

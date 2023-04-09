@@ -1,31 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using ArchaicQuestII.GameLogic.Commands;
 using ArchaicQuestII.GameLogic.Core;
-using ArchaicQuestII.GameLogic.SeedData;
 using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Loops
 {
-	public class CorpseLoop : ILoop
+    public class CorpseLoop : ILoop
 	{
-        private ICore _core;
         public int TickDelay => 120000; // 2 Minutes
 
         public bool ConfigureAwait => true;
 
         private List<Room> _rooms;
 
-        public void Init(ICore core, ICommandHandler commandHandler)
+        public void Init()
         {
-            _core = core;
             _rooms = new List<Room>();
         }
 
         public void PreTick()
         {
-            var rooms = _core.Cache.GetAllRoomsToRepop();
+            var rooms = CoreHandler.Instance.Cache.GetAllRoomsToRepop();
         }
 
         public void Tick()
@@ -64,7 +59,7 @@ namespace ArchaicQuestII.GameLogic.Loops
 
                             foreach (var pc in room.Players)
                             {
-                                _core.Writer.WriteLine($"<p>A quivering horde of maggots consumes {corpse.Name.ToLower()}.</p>", pc.ConnectionId);
+                                CoreHandler.Instance.Writer.WriteLine($"<p>A quivering horde of maggots consumes {corpse.Name.ToLower()}.</p>", pc.ConnectionId);
                             }
                             room.Items.Remove(corpse);
                             break;

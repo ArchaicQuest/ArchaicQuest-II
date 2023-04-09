@@ -1,5 +1,4 @@
-﻿
-using ArchaicQuestII.DataAccess;
+﻿using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Equipment;
@@ -23,26 +22,13 @@ public class TransferChar
     public Guid NewAccountId { get; set; }
 }
 
-
-
-
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace ArchaicQuestII.Controllers.character
 {
-
     [ApiController]
     public class PlayerController : ControllerBase
     {
-        private IDataBase _db { get; }
-        private IPlayerDataBase _pdb { get; }
-        private ICache _cache { get; }
-        public PlayerController(IDataBase db, ICache cache, IPlayerDataBase pdb)
-        {
-            _db = db;
-            _pdb = pdb;
-            _cache = cache;
-        }
         [HttpPost]
         [AllowAnonymous]
         [Route("api/character/Player")]
@@ -63,11 +49,7 @@ namespace ArchaicQuestII.Controllers.character
                 Name = player.Name,
                 Status = CharacterStatus.Status.Standing,
                 Level = 1,
-                ArmorRating = new ArmourRating()
-                {
-                    Armour = 1,
-                    Magic = 1
-                },
+                ArmorRating = new ArmourRating() { Armour = 1, Magic = 1 },
                 Affects = new Affects(),
                 AlignmentScore = 0,
                 Attributes = player.Attributes,
@@ -80,21 +62,18 @@ namespace ArchaicQuestII.Controllers.character
                 Gender = player.Gender,
                 Stats = new Stats()
                 {
-                    HitPoints = player.Attributes.Attribute[GameLogic.Effect.EffectLocation.Constitution] * 2, //create formula to handle these stats
-                    MovePoints = player.Attributes.Attribute[GameLogic.Effect.EffectLocation.Dexterity] * 2,  // only for testing
-                    ManaPoints = player.Attributes.Attribute[GameLogic.Effect.EffectLocation.Intelligence] * 2,
+                    HitPoints =
+                        player.Attributes.Attribute[GameLogic.Effect.EffectLocation.Constitution]
+                        * 2, //create formula to handle these stats
+                    MovePoints =
+                        player.Attributes.Attribute[GameLogic.Effect.EffectLocation.Dexterity] * 2, // only for testing
+                    ManaPoints =
+                        player.Attributes.Attribute[GameLogic.Effect.EffectLocation.Intelligence]
+                        * 2,
                 },
                 MaxStats = player.Stats,
-                Money = new GameLogic.Character.Model.Money()
-                {
-                    Gold = 10,
-                    Silver = 0,
-                },
-                Bank = new GameLogic.Character.Model.Money()
-                {
-                    Gold = 10,
-                    Silver = 0,
-                },
+                Money = new GameLogic.Character.Model.Money() { Gold = 10, Silver = 0, },
+                Bank = new GameLogic.Character.Model.Money() { Gold = 10, Silver = 0, },
                 Race = player.Race,
                 JoinedDate = DateTime.Now,
                 LastLoginTime = DateTime.Now,
@@ -108,7 +87,7 @@ namespace ArchaicQuestII.Controllers.character
                 HairColour = player.HairColour,
                 HairLength = player.HairLength,
                 HairTexture = player.HairTexture,
-                RoomId = _cache.GetConfig().StartingRoom,
+                RoomId = CoreHandler.Instance.Cache.GetConfig().StartingRoom,
             };
 
             var ItemSeed = Items.seedData;
@@ -142,7 +121,6 @@ namespace ArchaicQuestII.Controllers.character
             newPlayer.Inventory.Add(boots);
             newPlayer.Equipped.Feet = boots;
 
-
             if (newPlayer.ClassName.Equals("Mage"))
             {
                 newPlayer.Inventory.Remove(shirt);
@@ -154,10 +132,9 @@ namespace ArchaicQuestII.Controllers.character
                 dagger.Equipped = true;
                 newPlayer.Inventory.Add(dagger);
                 newPlayer.Equipped.Wielded = dagger;
-
             }
 
-            if (newPlayer.ClassName.Equals("Thief"))
+            if (newPlayer.ClassName.Equals("Rogue"))
             {
                 dagger.Equipped = true;
                 newPlayer.Inventory.Add(dagger);
@@ -178,16 +155,29 @@ namespace ArchaicQuestII.Controllers.character
                 newPlayer.Equipped.Wielded = mace;
             }
 
+            if (newPlayer.ClassName.Equals("Scholar"))
+            {
+                newPlayer.Inventory.Remove(shirt);
+
+                robe.Equipped = true;
+                newPlayer.Inventory.Add(robe);
+                newPlayer.Equipped.Torso = robe;
+
+                dagger.Equipped = true;
+                newPlayer.Inventory.Add(dagger);
+                newPlayer.Equipped.Wielded = dagger;
+            }
 
             newPlayer.Skills = playerClass?.Skills ?? new List<SkillList>();
 
             ArchaicQuestII.GameLogic.SeedData.Classes.SetGenericTitle(newPlayer);
 
-
             if (!string.IsNullOrEmpty(player.Id.ToString()) && player.Id != Guid.Empty)
             {
-
-                var foundItem = _pdb.GetById<Character>(player.Id, PlayerDataBase.Collections.Players);
+                var foundItem = CoreHandler.Instance.PlayerDataBase.GetById<Character>(
+                    player.Id,
+                    PlayerDataBase.Collections.Players
+                );
 
                 if (foundItem == null)
                 {
@@ -197,33 +187,34 @@ namespace ArchaicQuestII.Controllers.character
                 newPlayer.Id = player.Id;
             }
 
-            var account = _pdb.GetById<Account>(player.AccountId, PlayerDataBase.Collections.Account);
+            var account = CoreHandler.Instance.PlayerDataBase.GetById<Account>(
+                player.AccountId,
+                PlayerDataBase.Collections.Account
+            );
             account.Characters.Add(newPlayer.Id);
-            Helpers.PostToDiscord($"{player.Name} has joined the realms for the first time.", "event", _cache.GetConfig());
+            Helpers.PostToDiscord(
+                $"{player.Name} has joined the realms for the first time.",
+                "event",
+                CoreHandler.Instance.Cache.GetConfig()
+            );
 
-
-            var dupeCheck = _pdb.GetCollection<Player>(PlayerDataBase.Collections.Players).FindOne(x => x.Name.Equals(newPlayer.Name));
+            var dupeCheck = CoreHandler.Instance.PlayerDataBase
+                .GetCollection<Player>(PlayerDataBase.Collections.Players)
+                .FindOne(x => x.Name.Equals(newPlayer.Name));
 
             if (dupeCheck != null)
             {
-
                 if (dupeCheck.Id != newPlayer.Id)
                 {
                     return Ok(newPlayer.Id);
                 }
-
             }
 
-
-
-            _pdb.Save(account, PlayerDataBase.Collections.Account);
-            _pdb.Save(newPlayer, PlayerDataBase.Collections.Players);
+            CoreHandler.Instance.PlayerDataBase.Save(account, PlayerDataBase.Collections.Account);
+            CoreHandler.Instance.PlayerDataBase.Save(newPlayer, PlayerDataBase.Collections.Players);
 
             return Ok(newPlayer.Id);
-
         }
-
-
 
         //[HttpGet]
         //[Route("api/mob/FindMobById")]
@@ -236,8 +227,9 @@ namespace ArchaicQuestII.Controllers.character
         [Route("api/player/NameAllowed")]
         public bool NameAllowed([FromQuery] string name)
         {
-
-            var nameExists = _pdb.GetCollection<Player>(PlayerDataBase.Collections.Players).FindOne(x => x.Name == name);
+            var nameExists = CoreHandler.Instance.PlayerDataBase
+                .GetCollection<Player>(PlayerDataBase.Collections.Players)
+                .FindOne(x => x.Name == name);
 
             if (nameExists == null)
             {
@@ -245,28 +237,32 @@ namespace ArchaicQuestII.Controllers.character
             }
 
             return false;
-
         }
-
 
         [HttpGet]
         [API.Helpers.Authorize]
         [Route("api/character/Player/{id:guid}")]
         public List<Player> Get(Guid? id)
         {
-
-            var pc = _pdb.GetCollection<Account>(PlayerDataBase.Collections.Account).FindById(id);
+            var pc = CoreHandler.Instance.PlayerDataBase
+                .GetCollection<Account>(PlayerDataBase.Collections.Account)
+                .FindById(id);
 
             if (id == null)
             {
-                return _pdb.GetCollection<Player>(PlayerDataBase.Collections.Players).FindAll().ToList();
+                return CoreHandler.Instance.PlayerDataBase
+                    .GetCollection<Player>(PlayerDataBase.Collections.Players)
+                    .FindAll()
+                    .ToList();
             }
 
             var players = new List<Player>();
 
             foreach (var character in pc.Characters)
             {
-                var foundPC = _pdb.GetCollection<Player>(PlayerDataBase.Collections.Players).FindById(character);
+                var foundPC = CoreHandler.Instance.PlayerDataBase
+                    .GetCollection<Player>(PlayerDataBase.Collections.Players)
+                    .FindById(character);
 
                 if (foundPC != null)
                 {
@@ -275,7 +271,6 @@ namespace ArchaicQuestII.Controllers.character
             }
 
             return players.OrderByDescending(x => x.LastLoginTime).ToList();
-
         }
 
         [HttpGet]
@@ -283,11 +278,11 @@ namespace ArchaicQuestII.Controllers.character
         [Route("api/character/viewPlayer/{id:guid}")]
         public Player GetPlayer(Guid? id)
         {
-
-            var pc = _pdb.GetCollection<Player>(PlayerDataBase.Collections.Players).FindById(id);
+            var pc = CoreHandler.Instance.PlayerDataBase
+                .GetCollection<Player>(PlayerDataBase.Collections.Players)
+                .FindById(id);
 
             return pc;
-
         }
 
         [HttpGet]
@@ -295,8 +290,11 @@ namespace ArchaicQuestII.Controllers.character
         [Route("api/character/accounts")]
         public List<Account> getAccounts([FromQuery] string query)
         {
-
-            var account = _pdb.GetCollection<Account>(PlayerDataBase.Collections.Account).FindAll().Where(x => x.Id != null).OrderByDescending(x => x.DateLastPlayed);
+            var account = CoreHandler.Instance.PlayerDataBase
+                .GetCollection<Account>(PlayerDataBase.Collections.Account)
+                .FindAll()
+                .Where(x => x.Id != null)
+                .OrderByDescending(x => x.DateLastPlayed);
 
             if (string.IsNullOrEmpty(query))
             {
@@ -304,63 +302,78 @@ namespace ArchaicQuestII.Controllers.character
             }
 
             return account.ToList();
-
         }
-
 
         [HttpGet]
         [AllowAnonymous]
         [Route("api/player/config/{id}")]
         public PlayerConfig GetConfig(string id)
         {
-     
-            var player = _cache.GetPlayer(id);
+            var player = CoreHandler.Instance.Cache.GetPlayer(id);
 
             return player?.Config;
         }
-        
+
         [HttpPost]
         [AllowAnonymous]
         [Route("api/player/config/{id}")]
         public IActionResult UpdateConfig(string id, [FromBody] PlayerConfig config)
         {
             // update cache
-            var player = _cache.GetPlayer(id);
+            var player = CoreHandler.Instance.Cache.GetPlayer(id);
 
             if (player != null)
             {
                 player.Config = config;
             }
 
-            var saved = _pdb.Save(player, PlayerDataBase.Collections.Players);
+            var saved = CoreHandler.Instance.PlayerDataBase.Save(
+                player,
+                PlayerDataBase.Collections.Players
+            );
 
             return saved ? Ok() : BadRequest("Failed Saving config");
         }
-        
+
         [API.Helpers.Authorize]
         [HttpPost("api/player/transferCharacter")]
         public IActionResult TransferCharacter([FromBody] TransferChar transferChar)
         {
-            var character = _pdb.GetById<Player>(transferChar.PlayerId, PlayerDataBase.Collections.Players);
+            var character = CoreHandler.Instance.PlayerDataBase.GetById<Player>(
+                transferChar.PlayerId,
+                PlayerDataBase.Collections.Players
+            );
             if (character == null)
             {
                 return BadRequest(new { message = "character does not exists." });
             }
-            
-            var characterAccount = _pdb.GetById<Account>(character.AccountId, PlayerDataBase.Collections.Account);
-            var newCharacterAccount = _pdb.GetById<Account>(transferChar.NewAccountId, PlayerDataBase.Collections.Account);
+
+            var characterAccount = CoreHandler.Instance.PlayerDataBase.GetById<Account>(
+                character.AccountId,
+                PlayerDataBase.Collections.Account
+            );
+            var newCharacterAccount = CoreHandler.Instance.PlayerDataBase.GetById<Account>(
+                transferChar.NewAccountId,
+                PlayerDataBase.Collections.Account
+            );
 
             characterAccount.Characters.Remove(character.Id);
             newCharacterAccount.Characters.Add(character.Id);
 
             character.AccountId = transferChar.NewAccountId;
-            _pdb.Save(character, PlayerDataBase.Collections.Players);
-            _pdb.Save(newCharacterAccount, PlayerDataBase.Collections.Account);
-            _pdb.Save(characterAccount, PlayerDataBase.Collections.Account);
+            CoreHandler.Instance.PlayerDataBase.Save(character, PlayerDataBase.Collections.Players);
+            CoreHandler.Instance.PlayerDataBase.Save(
+                newCharacterAccount,
+                PlayerDataBase.Collections.Account
+            );
+            CoreHandler.Instance.PlayerDataBase.Save(
+                characterAccount,
+                PlayerDataBase.Collections.Account
+            );
 
             return Ok(new { message = "Character transferred successfully" });
         }
-        
+
         [HttpPost]
         [API.Helpers.Authorize]
         [Route("api/character/update")]
@@ -372,134 +385,137 @@ namespace ArchaicQuestII.Controllers.character
                 throw exception;
             }
 
-            var foundItem = _pdb.GetById<Player>(player.Id, PlayerDataBase.Collections.Players);
+            var foundItem = CoreHandler.Instance.PlayerDataBase.GetById<Player>(
+                player.Id,
+                PlayerDataBase.Collections.Players
+            );
 
             if (foundItem == null)
             {
                 throw new Exception("player Id does not exist");
-                
             }
 
-            var activePlayer = _cache.GetRoom(player.RoomId).Players.FirstOrDefault(x => x.Name.Equals(foundItem.Name));
-           
-            _cache.GetCommand("quit").Execute(activePlayer,   _cache.GetRoom(foundItem.RoomId), new[]{"quit"});
-            
-            
+            var activePlayer = CoreHandler.Instance.Cache
+                .GetRoom(player.RoomId)
+                .Players.FirstOrDefault(x => x.Name.Equals(foundItem.Name));
+
+            CoreHandler.Instance.Cache
+                .GetCommand("quit")
+                .Execute(
+                    activePlayer,
+                    CoreHandler.Instance.Cache.GetRoom(foundItem.RoomId),
+                    new[] { "quit" }
+                );
 
             foundItem.ConnectionId = player.ConnectionId;
 
-            _cache.GetRoom(foundItem.RoomId).Players.Remove(foundItem);
-            _cache.RemovePlayer(foundItem.ConnectionId);
+            CoreHandler.Instance.Cache.GetRoom(foundItem.RoomId).Players.Remove(foundItem);
+            CoreHandler.Instance.Cache.RemovePlayer(foundItem.ConnectionId);
 
-          
             foundItem = player;
-/*
-            var newPlayer = new Player
-            {
-                ConnectionId = player.ConnectionId,
-                UniqueId = player.UniqueId,
-                AccountId = player.AccountId,
-                Id = player.Id,
-                Name = player.Name,
-                LongName = null,
-                Status = player.Status,
-                Level = player.Level,
-                ArmorRating = new ArmourRating()
-                {
-                    Armour = player.ArmorRating.Armour,
-                    Magic = player.ArmorRating.Magic
-                },
-                Affects = new Affects(),
-                AlignmentScore = player.AlignmentScore,
-                TotalExperience = player.TotalExperience,
-                Experience = player.Experience,
-                ExperienceToNextLevel = player.ExperienceToNextLevel,
-                Attributes = player.Attributes,
-                MaxAttributes = player.Attributes,
-                Target = player.Target,
-                Inventory = player.Inventory,
-                Equipped = player.Equipped,
-                ClassName = player.ClassName,
-                Config = player.Config,
-                Description = player.Description,
-                Gender = player.Gender,
-                Stats = player.Stats,
-                MaxStats = player.MaxStats,
-                Money = player.Money,
-                Bank = player.Bank,
-                Trains = player.Trains,
-                Practices = player.Practices,
-                MobKills = player.MobKills,
-                MobDeaths = player.MobDeaths,
-                PlayerKills = player.PlayerKills,
-                PlayerDeaths = player.PlayerDeaths,
-                QuestPoints = player.QuestPoints,
-                Idle = false,
-                AFK = false,
-                CommandLog = player.CommandLog,
-                Pose = player.Pose,
-                Race = player.Race,
-                JoinedDate = player.JoinedDate,
-                LastLoginTime = DateTime.Now,
-                LastCommandTime = player.LastCommandTime,
-                PlayTime = player.PlayTime,
-                IsTelnet = false,
-                Skills = player.Skills,
-                Deleted = false,
-                DateCreated = player.DateCreated,
-                DateUpdated = player.DateUpdated,
-                Emotes = player.Emotes,
-                Commands = player.Commands,
-                EnterEmote = player.EnterEmote,
-                LeaveEmote = player.LeaveEmote,
-                Roam = false,
-                Shopkeeper = false,
-                Trainer = false,
-                IsHiddenScriptMob = false,
-                Events = player.Events,
-                EventState = player.EventState,
-                QuestLog = player.QuestLog,
-                Weight = player.Weight,
-                Hunger = player.Hunger,
-                Lag = player.Lag,
-                Mounted = player.Mounted,
-                Pets = player.Pets,
-                SpellList = player.SpellList,
-                Aggro = false,
-                Flags = player.Flags,
-                Build = player.Build,
-                Face = player.Face,
-                Skin = player.Skin,
-                Eyes = player.Eyes,
-                FacialHair = player.FacialHair,
-                ReplyTo = player.ReplyTo,
-                Followers = player.Followers,
-                Following = player.Following,
-                Grouped = player.Grouped,
-                HairColour = player.HairColour,
-                HairLength = player.HairLength,
-                HairTexture = player.HairTexture,
-                RoomId = player.RoomId,
-                RoomType = player.RoomType,
-                RecallId = player.RecallId,
-                DefaultAttack = player.DefaultAttack,
-                Buffer = player.Buffer,
-                Spells = player.Spells,
-                UserRole = player.UserRole,
-                Title = player.Title,
-                OpenedBook = player.OpenedBook,
+            /*
+                        var newPlayer = new Player
+                        {
+                            ConnectionId = player.ConnectionId,
+                            UniqueId = player.UniqueId,
+                            AccountId = player.AccountId,
+                            Id = player.Id,
+                            Name = player.Name,
+                            LongName = null,
+                            Status = player.Status,
+                            Level = player.Level,
+                            ArmorRating = new ArmourRating()
+                            {
+                                Armour = player.ArmorRating.Armour,
+                                Magic = player.ArmorRating.Magic
+                            },
+                            Affects = new Affects(),
+                            AlignmentScore = player.AlignmentScore,
+                            TotalExperience = player.TotalExperience,
+                            Experience = player.Experience,
+                            ExperienceToNextLevel = player.ExperienceToNextLevel,
+                            Attributes = player.Attributes,
+                            MaxAttributes = player.Attributes,
+                            Target = player.Target,
+                            Inventory = player.Inventory,
+                            Equipped = player.Equipped,
+                            ClassName = player.ClassName,
+                            Config = player.Config,
+                            Description = player.Description,
+                            Gender = player.Gender,
+                            Stats = player.Stats,
+                            MaxStats = player.MaxStats,
+                            Money = player.Money,
+                            Bank = player.Bank,
+                            Trains = player.Trains,
+                            Practices = player.Practices,
+                            MobKills = player.MobKills,
+                            MobDeaths = player.MobDeaths,
+                            PlayerKills = player.PlayerKills,
+                            PlayerDeaths = player.PlayerDeaths,
+                            QuestPoints = player.QuestPoints,
+                            Idle = false,
+                            AFK = false,
+                            CommandLog = player.CommandLog,
+                            Pose = player.Pose,
+                            Race = player.Race,
+                            JoinedDate = player.JoinedDate,
+                            LastLoginTime = DateTime.Now,
+                            LastCommandTime = player.LastCommandTime,
+                            PlayTime = player.PlayTime,
+                            IsTelnet = false,
+                            Skills = player.Skills,
+                            Deleted = false,
+                            DateCreated = player.DateCreated,
+                            DateUpdated = player.DateUpdated,
+                            Emotes = player.Emotes,
+                            Commands = player.Commands,
+                            EnterEmote = player.EnterEmote,
+                            LeaveEmote = player.LeaveEmote,
+                            Roam = false,
+                            Shopkeeper = false,
+                            Trainer = false,
+                            IsHiddenScriptMob = false,
+                            Events = player.Events,
+                            EventState = player.EventState,
+                            QuestLog = player.QuestLog,
+                            Weight = player.Weight,
+                            Hunger = player.Hunger,
+                            Lag = player.Lag,
+                            Mounted = player.Mounted,
+                            Pets = player.Pets,
+                            SpellList = player.SpellList,
+                            Aggro = false,
+                            Flags = player.Flags,
+                            Build = player.Build,
+                            Face = player.Face,
+                            Skin = player.Skin,
+                            Eyes = player.Eyes,
+                            FacialHair = player.FacialHair,
+                            ReplyTo = player.ReplyTo,
+                            Followers = player.Followers,
+                            Following = player.Following,
+                            Grouped = player.Grouped,
+                            HairColour = player.HairColour,
+                            HairLength = player.HairLength,
+                            HairTexture = player.HairTexture,
+                            RoomId = player.RoomId,
+                            RoomType = player.RoomType,
+                            RecallId = player.RecallId,
+                            DefaultAttack = player.DefaultAttack,
+                            Buffer = player.Buffer,
+                            Spells = player.Spells,
+                            UserRole = player.UserRole,
+                            Title = player.Title,
+                            OpenedBook = player.OpenedBook,
+            
+            
+                        };
+            */
 
+            CoreHandler.Instance.PlayerDataBase.Save(foundItem, PlayerDataBase.Collections.Players);
 
-            };
-*/
-         
-            _pdb.Save(foundItem, PlayerDataBase.Collections.Players);
- 
             return Ok(foundItem.Id);
-
         }
-
-
-
     }
 }

@@ -10,7 +10,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication;
 
 public class GsayCmd : ICommand
 {
-    public GsayCmd(ICore core)
+    public GsayCmd()
     {
         Aliases = new[] {"gsay", "`", "gs"};
         Description = "Sends a message to your current group";
@@ -18,7 +18,6 @@ public class GsayCmd : ICommand
         Title = "";
         DeniedStatus = null;
         UserRole = UserRole.Player;
-        Core = core;
     }
 
     public string[] Aliases { get; }
@@ -27,19 +26,18 @@ public class GsayCmd : ICommand
     public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
-    public ICore Core { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
         if (!player.Grouped)
         {
-            Core.Writer.WriteLine("<p>You are not in a group.</p>", player.ConnectionId);
+            CoreHandler.Instance.Writer.WriteLine("<p>You are not in a group.</p>", player.ConnectionId);
             return;
         }
         
         if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
         {
-            Core.Writer.WriteLine("<p>Gsay what?</p>", player.ConnectionId);
+            CoreHandler.Instance.Writer.WriteLine("<p>Gsay what?</p>", player.ConnectionId);
             return;
         }
             
@@ -51,22 +49,22 @@ public class GsayCmd : ICommand
         }
         else
         {
-            foundLeader = Core.Cache.GetPlayerCache()
+            foundLeader = CoreHandler.Instance.Cache.GetPlayerCache()
                 .FirstOrDefault(x => x.Value.Name.Equals(player.Following, StringComparison.CurrentCultureIgnoreCase)).Value;
         }
         
         var text = string.Join(" ", input.Skip(1));
             
-        Core.Writer.WriteLine($"<p class='gsay'>[group] You: <span>{text}</span></p>", player.ConnectionId);
+        CoreHandler.Instance.Writer.WriteLine($"<p class='gsay'>[group] You: <span>{text}</span></p>", player.ConnectionId);
 
         if (!string.IsNullOrEmpty(player.Following) && foundLeader.Name == player.Following)
         {
-            Core.Writer.WriteLine($"<p class='gsay'>[group] {player.Name}: <span>{text}</span></p>", foundLeader.ConnectionId);
+            CoreHandler.Instance.Writer.WriteLine($"<p class='gsay'>[group] {player.Name}: <span>{text}</span></p>", foundLeader.ConnectionId);
         }
             
         foreach (var follower in foundLeader.Followers.Where(follower => !follower.Id.Equals(player.Id)))
         {
-            Core.Writer.WriteLine($"<p class='gsay'>[group] {player.Name}: <span>{text}</span></p>", follower.ConnectionId);
+            CoreHandler.Instance.Writer.WriteLine($"<p class='gsay'>[group] {player.Name}: <span>{text}</span></p>", follower.ConnectionId);
         }
     }
 }

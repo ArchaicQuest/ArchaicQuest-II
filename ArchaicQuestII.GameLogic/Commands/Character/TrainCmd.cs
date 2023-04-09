@@ -10,7 +10,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 {
     public class TrainCmd : ICommand
     {
-        public TrainCmd(ICore core)
+        public TrainCmd()
         {
             Aliases = new[] {"train"};
             Description = "Train increases one of your attributes.  When you start the game, your\ncharacter has standard attributes based on your class, and several initial\ntraining sessions.  You can increase your attributes by using these sessions\nat a trainer.<br /><br /> It takes one training session to " +
@@ -29,7 +29,6 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
                 CharacterStatus.Status.Stunned
             };
             UserRole = UserRole.Player;
-            Core = core;
         }
         
         public string[] Aliases { get; }
@@ -38,7 +37,6 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
         public string Title { get; }
         public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
-        public ICore Core { get; }
 
         public void Execute(Player player, Room room, string[] input)
         {
@@ -46,20 +44,20 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
             if (room.Mobs.Find(x => x.Trainer) == null)
             {
-                Core.Writer.WriteLine("<p>You can't do that here.</p>", player.ConnectionId);
+                CoreHandler.Instance.Writer.WriteLine("<p>You can't do that here.</p>", player.ConnectionId);
                 return;
             }
 
             if (player.Trains <= 0)
             {
-                Core.Writer.WriteLine("<p>You have no training sessions left.</p>", player.ConnectionId);
+                CoreHandler.Instance.Writer.WriteLine("<p>You have no training sessions left.</p>", player.ConnectionId);
                 return;
             }
 
             if (string.IsNullOrEmpty(stat) || stat == "train")
             {
 
-                Core.Writer.WriteLine(
+                CoreHandler.Instance.Writer.WriteLine(
                     $"<p>You have {player.Trains} training session{(player.Trains > 1 ? "s" : "")} remaining.<br />You can train: str dex con int wis cha hp mana move.</p>", player.ConnectionId);
             }
             else
@@ -67,7 +65,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
                 var statName = Helpers.GetStatName(stat);
                 if (string.IsNullOrEmpty(statName.Item1))
                 {
-                    Core.Writer.WriteLine(
+                    CoreHandler.Instance.Writer.WriteLine(
                         $"<p>{stat} not found. Please choose from the following. <br /> You can train: str dex con int wis cha hp mana move.</p>", player.ConnectionId);
                     return;
                 }
@@ -86,23 +84,23 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
                     player.MaxAttributes.Attribute[statName.Item2] += roll;
                     player.Attributes.Attribute[statName.Item2] += roll;
 
-                    Core.Writer.WriteLine(
+                    CoreHandler.Instance.Writer.WriteLine(
                         $"<p class='gain'>Your {statName.Item1} increases by {roll}.</p>", player.ConnectionId);
 
-                    Core.UpdateClient.UpdateHP(player);
-                    Core.UpdateClient.UpdateMana(player);
-                    Core.UpdateClient.UpdateMoves(player);
+                    CoreHandler.Instance.UpdateClient.UpdateHP(player);
+                    CoreHandler.Instance.UpdateClient.UpdateMana(player);
+                    CoreHandler.Instance.UpdateClient.UpdateMoves(player);
                 }
                 else
                 {
                     player.MaxAttributes.Attribute[statName.Item2] += 1;
                     player.Attributes.Attribute[statName.Item2] += 1;
 
-                    Core.Writer.WriteLine(
+                    CoreHandler.Instance.Writer.WriteLine(
                         $"<p class='gain'>Your {statName.Item1} increases by 1.</p>", player.ConnectionId);
                 }
                 
-                Core.UpdateClient.UpdateScore(player);
+                CoreHandler.Instance.UpdateClient.UpdateScore(player);
             }
         }
     }

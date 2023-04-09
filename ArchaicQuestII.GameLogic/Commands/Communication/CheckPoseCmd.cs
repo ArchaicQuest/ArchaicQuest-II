@@ -8,7 +8,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
 {
     public class CheckPoseCmd : ICommand
     {
-        public CheckPoseCmd(ICore core)
+        public CheckPoseCmd()
         {
             Aliases = new[] {"checkpose"};
             Description = "Shows you what your characters current pose is";
@@ -26,7 +26,6 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
                 CharacterStatus.Status.Stunned,
             };
             UserRole = UserRole.Player;
-            Core = core;
         }
         
         public string[] Aliases { get; }
@@ -35,8 +34,6 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
         public string Title { get; }
         public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
-        public ICore Core { get; }
-
 
         public void Execute(Player player, Room room, string[] input)
         {
@@ -58,7 +55,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
 
             poseText += "</p>";
 
-            Core.Writer.WriteLine(poseText, player.ConnectionId);
+            CoreHandler.Instance.Writer.WriteLine(poseText, player.ConnectionId);
         }
     }
 }

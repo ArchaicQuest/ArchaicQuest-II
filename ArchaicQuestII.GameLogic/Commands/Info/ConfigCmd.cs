@@ -9,31 +9,29 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 {
     public class ConfigCmd : ICommand
     {
-        public ConfigCmd(ICore core)
+        public ConfigCmd()
         {
-            Aliases = new[] {"config"};
+            Aliases = new[] { "config" };
             Description = "Displays current config settings. Use the UI Cog to edit your settings.";
-            Usages = new[] {"Type: config"};
-                Title = "";
-    DeniedStatus = null;
+            Usages = new[] { "Type: config" };
+            Title = "";
+            DeniedStatus = null;
             UserRole = UserRole.Player;
-            Core = core;
         }
-        
+
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
         public string Title { get; }
         public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
-        public ICore Core { get; }
 
         public void Execute(Player player, Room room, string[] input)
         {
             var sb = new StringBuilder();
-            
+
             sb.Append("<ul>");
-            
+
             sb.Append($"<li>ROLE          : {player.UserRole.ToString()}</li>");
             sb.Append($"<li>VERBOSE EXITS : {player.Config.VerboseExits}</li>");
             sb.Append($"<li>BRIEF         : {player.Config.Brief}</li>");
@@ -48,7 +46,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 
             sb.Append("</ul>");
 
-            Core.Writer.WriteLine(sb.ToString(), player.ConnectionId);
+            CoreHandler.Instance.Writer.WriteLine(sb.ToString(), player.ConnectionId);
         }
     }
 }

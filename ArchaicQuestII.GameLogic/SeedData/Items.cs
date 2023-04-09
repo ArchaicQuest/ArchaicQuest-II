@@ -24,19 +24,15 @@ namespace ArchaicQuestII.GameLogic.SeedData
                 Modifier = new Modifier(),
                 Description = new Description()
                 {
-                    Look = "A small gold coin with an embossed crown on one side and the number one on the opposite side, along the edge inscribed is 'de omnibus dubitandum'",
-                    Exam =  "A small gold coin with an embossed crown on one side and the number one on the opposite side, along the edge inscribed is 'de omnibus dubitandum'",
-                    Room =  "A single gold coin.",
+                    Look =
+                        "A small gold coin with an embossed crown on one side and the number one on the opposite side, along the edge inscribed is 'de omnibus dubitandum'",
+                    Exam =
+                        "A small gold coin with an embossed crown on one side and the number one on the opposite side, along the edge inscribed is 'de omnibus dubitandum'",
+                    Room = "A single gold coin.",
                 },
-                Book = new Book()
-                {
-                    Pages = new List<string>()
-                },
+                Book = new Book() { Pages = new List<string>() },
                 ArmourRating = new ArmourRating(),
-                Container = new Container()
-                {
-                    Items = new ItemList()
-                }
+                Container = new Container() { Items = new ItemList() }
             },
             new Item.Item()
             {
@@ -52,19 +48,15 @@ namespace ArchaicQuestII.GameLogic.SeedData
                 Modifier = new Modifier(),
                 Description = new Description()
                 {
-                    Look = "The Illuminatio is a magical torch carved from a smooth light wood. The flame that burns gives off no heat and glows yellow in colour. The words Dominus Illuminatio Mea are carved down the side of the torch",
-                    Exam =  "The Illuminatio is a magical torch carved from a smooth light wood. The flame that burns gives off no heat and glows yellow in colour. The words Dominus Illuminatio Mea are carved down the side of the torch",
-                    Room =  "A magical torch.",
+                    Look =
+                        "The Illuminatio is a magical torch carved from a smooth light wood. The flame that burns gives off no heat and glows yellow in colour. The words Dominus Illuminatio Mea are carved down the side of the torch",
+                    Exam =
+                        "The Illuminatio is a magical torch carved from a smooth light wood. The flame that burns gives off no heat and glows yellow in colour. The words Dominus Illuminatio Mea are carved down the side of the torch",
+                    Room = "A magical torch.",
                 },
-                Book = new Book()
-                {
-                    Pages = new List<string>()
-                },
+                Book = new Book() { Pages = new List<string>() },
                 ArmourRating = new ArmourRating(),
-                Container = new Container()
-                {
-                    Items = new ItemList()
-                }
+                Container = new Container() { Items = new ItemList() }
             },
             new Item.Item()
             {
@@ -80,22 +72,15 @@ namespace ArchaicQuestII.GameLogic.SeedData
                 Modifier = new Modifier(),
                 Description = new Description()
                 {
-                    Look = "This is a very simple cloth robe, undyed and scruffy. It provides some warmth and very little defense.",
-                    Exam =  "This is a very simple cloth robe, undyed and scruffy. It provides some warmth and very little defense.",
-                    Room =  "A ragged shirt has been discarded here.",
+                    Look =
+                        "This is a very simple cloth robe, undyed and scruffy. It provides some warmth and very little defense.",
+                    Exam =
+                        "This is a very simple cloth robe, undyed and scruffy. It provides some warmth and very little defense.",
+                    Room = "A ragged shirt has been discarded here.",
                 },
-                Book = new Book()
-                {
-                    Pages = new List<string>()
-                },
-                ArmourRating = new ArmourRating()
-                {
-                    Armour = 1
-                },
-                Container = new Container()
-                {
-                    Items = new ItemList()
-                }
+                Book = new Book() { Pages = new List<string>() },
+                ArmourRating = new ArmourRating() { Armour = 1 },
+                Container = new Container() { Items = new ItemList() }
             },
             new Item.Item()
             {
@@ -111,23 +96,15 @@ namespace ArchaicQuestII.GameLogic.SeedData
                 Modifier = new Modifier(),
                 Description = new Description()
                 {
-                    Look = "This is a very plain shirt, undyed and scruffy with a few buttons missing. It provides some warmth and very little defense.",
-                    Exam =  "This is a very plain shirt, undyed and scruffy with a few buttons missing. It provides some warmth and very little defense.",
-                    Room =  "A ragged shirt has been discarded here.",
+                    Look =
+                        "This is a very plain shirt, undyed and scruffy with a few buttons missing. It provides some warmth and very little defense.",
+                    Exam =
+                        "This is a very plain shirt, undyed and scruffy with a few buttons missing. It provides some warmth and very little defense.",
+                    Room = "A ragged shirt has been discarded here.",
                 },
-                Book = new Book()
-                {
-                    Pages = new List<string>()
-                },
-                ArmourRating = new ArmourRating()
-                {
-                    Armour = 1
-                },
-                Container = new Container()
-                {
-                    Items = new ItemList()
-                }
-
+                Book = new Book() { Pages = new List<string>() },
+                ArmourRating = new ArmourRating() { Armour = 1 },
+                Container = new Container() { Items = new ItemList() }
             },
             new Item.Item()
             {
@@ -143,23 +120,15 @@ namespace ArchaicQuestII.GameLogic.SeedData
                 Modifier = new Modifier(),
                 Description = new Description()
                 {
-                    Look = "These are scruffy looking baggy sleeves that provide some warmth and very little defense.",
-                    Exam =  "These are scruffy looking baggy sleeves that provide some warmth and very little defense.",
-                    Room =  "A pair of baggy sleeves has been discarded here.",
+                    Look =
+                        "These are scruffy looking baggy sleeves that provide some warmth and very little defense.",
+                    Exam =
+                        "These are scruffy looking baggy sleeves that provide some warmth and very little defense.",
+                    Room = "A pair of baggy sleeves has been discarded here.",
                 },
-                Book = new Book()
-                {
-                    Pages = new List<string>()
-                },
-                ArmourRating = new ArmourRating()
-                {
-                    Armour = 1
-                },
-                Container = new Container()
-                {
-                    Items = new ItemList()
-                }
-
+                Book = new Book() { Pages = new List<string>() },
+                ArmourRating = new ArmourRating() { Armour = 1 },
+                Container = new Container() { Items = new ItemList() }
             },
             new Item.Item()
             {
@@ -175,22 +144,15 @@ namespace ArchaicQuestII.GameLogic.SeedData
                 Modifier = new Modifier(),
                 Description = new Description()
                 {
-                    Look = "These baggy trousers are a dull brown with a few stains and the knees worn in, the bottom trouser legs are frayed in several places, it just about provides protection against the elements.",
-                    Exam =  "These baggy trousers are a dull brown with a few stains and the knees worn in, the bottom trouser legs are frayed in several places, it just about provides protection against the elements.",
-                    Room =  "A pair of baggy trousers have been discarded here.",
+                    Look =
+                        "These baggy trousers are a dull brown with a few stains and the knees worn in, the bottom trouser legs are frayed in several places, it just about provides protection against the elements.",
+                    Exam =
+                        "These baggy trousers are a dull brown with a few stains and the knees worn in, the bottom trouser legs are frayed in several places, it just about provides protection against the elements.",
+                    Room = "A pair of baggy trousers have been discarded here.",
                 },
-                Book = new Book()
-                {
-                    Pages = new List<string>()
-                },
-                ArmourRating = new ArmourRating()
-                {
-                    Armour = 1
-                },
-                Container = new Container()
-                {
-                    Items = new ItemList()
-                }
+                Book = new Book() { Pages = new List<string>() },
+                ArmourRating = new ArmourRating() { Armour = 1 },
+                Container = new Container() { Items = new ItemList() }
             },
             new Item.Item()
             {
@@ -206,22 +168,15 @@ namespace ArchaicQuestII.GameLogic.SeedData
                 Modifier = new Modifier(),
                 Description = new Description()
                 {
-                    Look = "Dirty Brown boots covered in scuff marks with worn soles. These boots look old and dull in colour",
-                    Exam =  "Dirty Brown boots covered in scuff marks with worn soles. These boots look old and dull in colour",
-                    Room =  "A pair of worn leather boots have been left here.",
+                    Look =
+                        "Dirty Brown boots covered in scuff marks with worn soles. These boots look old and dull in colour",
+                    Exam =
+                        "Dirty Brown boots covered in scuff marks with worn soles. These boots look old and dull in colour",
+                    Room = "A pair of worn leather boots have been left here.",
                 },
-                Book = new Book()
-                {
-                    Pages = new List<string>()
-                },
-                ArmourRating = new ArmourRating()
-                {
-                    Armour = 1
-                },
-                Container = new Container()
-                {
-                    Items = new ItemList()
-                }
+                Book = new Book() { Pages = new List<string>() },
+                ArmourRating = new ArmourRating() { Armour = 1 },
+                Container = new Container() { Items = new ItemList() }
             },
             new Item.Item()
             {
@@ -230,7 +185,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
                 ItemType = Item.Item.ItemTypes.Weapon,
                 ArmourType = Item.Item.ArmourTypes.Cloth,
                 AttackType = Item.Item.AttackTypes.Stab,
-                WeaponType = Character.SkillName.ShortBlade,
+                WeaponType = Character.SkillName.ShortBlades,
                 Gold = 1,
                 Slot = Equipment.EqSlot.Wielded,
                 Level = 1,
@@ -238,23 +193,13 @@ namespace ArchaicQuestII.GameLogic.SeedData
                 Description = new Description()
                 {
                     Look = "A basic iron dagger you see nothing special about it",
-                    Exam =  "A basic iron dagger you see nothing special about it",
-                    Room =  "A basic iron dagger left here.",
+                    Exam = "A basic iron dagger you see nothing special about it",
+                    Room = "A basic iron dagger left here.",
                 },
-                Book = new Book()
-                {
-                    Pages = new List<string>()
-                },
+                Book = new Book() { Pages = new List<string>() },
                 ArmourRating = new ArmourRating(),
-                Container = new Container()
-                {
-                    Items = new ItemList()
-                },
-                Damage = new Damage()
-                {
-                    Minimum = 1,
-                    Maximum = 4
-                }
+                Container = new Container() { Items = new ItemList() },
+                Damage = new Damage() { Minimum = 1, Maximum = 4 }
             },
             new Item.Item()
             {
@@ -271,23 +216,13 @@ namespace ArchaicQuestII.GameLogic.SeedData
                 Description = new Description()
                 {
                     Look = "A basic iron mace you see nothing special about it",
-                    Exam =  "A basic iron mace you see nothing special about it",
-                    Room =  "A basic iron mace left here.",
+                    Exam = "A basic iron mace you see nothing special about it",
+                    Room = "A basic iron mace left here.",
                 },
-                Book = new Book()
-                {
-                    Pages = new List<string>()
-                },
+                Book = new Book() { Pages = new List<string>() },
                 ArmourRating = new ArmourRating(),
-                Container = new Container()
-                {
-                    Items = new ItemList()
-                },
-                    Damage = new Damage()
-                {
-                    Minimum = 1,
-                    Maximum = 4
-                }
+                Container = new Container() { Items = new ItemList() },
+                Damage = new Damage() { Minimum = 1, Maximum = 4 }
             },
             new Item.Item()
             {
@@ -296,7 +231,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
                 ItemType = Item.Item.ItemTypes.Weapon,
                 ArmourType = Item.Item.ArmourTypes.Cloth,
                 AttackType = Item.Item.AttackTypes.Stab,
-                WeaponType = Character.SkillName.LongBlade,
+                WeaponType = Character.SkillName.LongBlades,
                 Gold = 1,
                 Slot = Equipment.EqSlot.Wielded,
                 Level = 1,
@@ -304,23 +239,13 @@ namespace ArchaicQuestII.GameLogic.SeedData
                 Description = new Description()
                 {
                     Look = "A basic iron sword you see nothing special about it",
-                    Exam =  "A basic iron sword you see nothing special about it",
-                    Room =  "A basic iron sword left here.",
+                    Exam = "A basic iron sword you see nothing special about it",
+                    Room = "A basic iron sword left here.",
                 },
-                Book = new Book()
-                {
-                    Pages = new List<string>()
-                },
+                Book = new Book() { Pages = new List<string>() },
                 ArmourRating = new ArmourRating(),
-                Container = new Container()
-                {
-                    Items = new ItemList()
-                },
-                Damage = new Damage()
-                {
-                    Minimum = 1,
-                    Maximum = 4
-                }
+                Container = new Container() { Items = new ItemList() },
+                Damage = new Damage() { Minimum = 1, Maximum = 4 }
             },
         };
 

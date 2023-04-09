@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Account;
@@ -13,10 +12,11 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 {
     public class BookCmd : ICommand
     {
-        public BookCmd(ICore core)
+        public BookCmd()
         {
-            Aliases = new[] {"book"};
-            Description = @"Books are useful for information, stories and recording progress. The commands below will tell you how to use books. <br />
+            Aliases = new[] { "book" };
+            Description =
+                @"Books are useful for information, stories and recording progress. The commands below will tell you how to use books. <br />
 <table class='simple'>
     <tr>
         <td style='min-width: 230px;'>book</td>
@@ -43,7 +43,10 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
         <td>specifies which page to write in, this opens the writing modal which accepts markdown</td>
     </tr>
 </table>";
-            Usages = new[] {"commands: book, book open, book close, book read 2, book write 3, book rename My Diary"};
+            Usages = new[]
+            {
+                "commands: book, book open, book close, book read 2, book write 3, book rename My Diary"
+            };
             Title = "";
             DeniedStatus = new[]
             {
@@ -57,16 +60,14 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                 CharacterStatus.Status.Resting
             };
             UserRole = UserRole.Player;
-            Core = core;
         }
-        
+
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
         public string Title { get; }
         public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
-        public ICore Core { get; }
 
         public void Execute(Player player, Room room, string[] input)
         {
@@ -76,23 +77,30 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
             if (string.IsNullOrEmpty(target1) && player.OpenedBook == null)
             {
                 var sb = new StringBuilder();
-                
+
                 sb.Append("<ul>Current Books:");
-                
-                foreach (var item in player.Inventory.Where(item => item.ItemType == Item.Item.ItemTypes.Book))
+
+                foreach (
+                    var item in player.Inventory.Where(
+                        item => item.ItemType == Item.Item.ItemTypes.Book
+                    )
+                )
                 {
                     sb.Append($"<li>{item.Name}</li>");
                 }
-                
+
                 sb.Append("</ul>");
-                
-                Core.Writer.WriteLine(sb.ToString(), player.ConnectionId);
+
+                CoreHandler.Instance.Writer.WriteLine(sb.ToString(), player.ConnectionId);
                 return;
             }
-            
+
             if (string.IsNullOrEmpty(target1) && player.OpenedBook != null)
             {
-                Core.Writer.WriteLine($"<p>You currently have {player.OpenedBook.Name} opened.</p>", player.ConnectionId);
+                CoreHandler.Instance.Writer.WriteLine(
+                    $"<p>You currently have {player.OpenedBook.Name} opened.</p>",
+                    player.ConnectionId
+                );
                 return;
             }
 
@@ -105,38 +113,45 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
             int page;
             switch (target1)
             {
-               case "close":
-                   CloseBook(player, room);
-                break;
-               case "read":
-                   int.TryParse(target2, out page);
-                   ReadBook(player, page);
-                   break;
-               case "rename":
-                   RenameBook(player, target2);
-                   break;
-               case "write":
-                   
-                   if (string.IsNullOrEmpty(target2))
-                   {
-                       Core.Writer.WriteLine("<p>What page do you want to write on?</p>", player.ConnectionId);
-                       return;
-                   }
-                
-                
-                   if (!int.TryParse(target2, out page))
-                   {
-                       Core.Writer.WriteLine("<p>Page number must be a number.</p>", player.ConnectionId);
-                       return;
-                   }
+                case "close":
+                    CloseBook(player, room);
+                    break;
+                case "read":
+                    int.TryParse(target2, out page);
+                    ReadBook(player, page);
+                    break;
+                case "rename":
+                    RenameBook(player, target2);
+                    break;
+                case "write":
 
-                   WriteBook(player, page, "");
-                   break;
-               default:
-                   Core.Writer.WriteLine("<p>What are you trying to do? Valid options: Close, Read, Rename, and Write.</p>", player.ConnectionId);
-                   break;
+                    if (string.IsNullOrEmpty(target2))
+                    {
+                        CoreHandler.Instance.Writer.WriteLine(
+                            "<p>What page do you want to write on?</p>",
+                            player.ConnectionId
+                        );
+                        return;
+                    }
+
+                    if (!int.TryParse(target2, out page))
+                    {
+                        CoreHandler.Instance.Writer.WriteLine(
+                            "<p>Page number must be a number.</p>",
+                            player.ConnectionId
+                        );
+                        return;
+                    }
+
+                    WriteBook(player, page, "");
+                    break;
+                default:
+                    CoreHandler.Instance.Writer.WriteLine(
+                        "<p>What are you trying to do? Valid options: Close, Read, Rename, and Write.</p>",
+                        player.ConnectionId
+                    );
+                    break;
             }
-    
         }
 
         private void OpenBook(Player player, Room room, string book)
@@ -146,35 +161,53 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 
             if (item == null)
             {
-                Core.Writer.WriteLine("<p>You dont have that book.</p>", player.ConnectionId);
-                return;
-            }
-                
-            if (item.ItemType != Item.Item.ItemTypes.Book)
-            {
-                Core.Writer.WriteLine($"<p>{item.Name} is not a book.</p>", player.ConnectionId);
+                CoreHandler.Instance.Writer.WriteLine(
+                    "<p>You dont have that book.</p>",
+                    player.ConnectionId
+                );
                 return;
             }
 
-            Core.Writer.WriteLine("<p>You open the book and prepare to 'read' or 'write' in it.</p>", player.ConnectionId);
-            
+            if (item.ItemType != Item.Item.ItemTypes.Book)
+            {
+                CoreHandler.Instance.Writer.WriteLine(
+                    $"<p>{item.Name} is not a book.</p>",
+                    player.ConnectionId
+                );
+                return;
+            }
+
+            CoreHandler.Instance.Writer.WriteLine(
+                "<p>You open the book and prepare to 'read' or 'write' in it.</p>",
+                player.ConnectionId
+            );
+
             foreach (var pc in room.Players)
             {
-                Core.Writer.WriteLine($"<p>{player.Name} gets out a book and opens it.</p>", pc.ConnectionId);
+                CoreHandler.Instance.Writer.WriteLine(
+                    $"<p>{player.Name} gets out a book and opens it.</p>",
+                    pc.ConnectionId
+                );
             }
-            
+
             player.OpenedBook = item;
         }
 
         private void CloseBook(Player player, Room room)
         {
-            Core.Writer.WriteLine($"<p>You close {player.OpenedBook.Name} and put it away.</p>", player.ConnectionId);
+            CoreHandler.Instance.Writer.WriteLine(
+                $"<p>You close {player.OpenedBook.Name} and put it away.</p>",
+                player.ConnectionId
+            );
 
             foreach (var pc in room.Players.Where(x => x.Id != player.Id))
             {
-                Core.Writer.WriteLine($"<p>{player.Name} closes a book and puts it away.</p>", pc.ConnectionId);
+                CoreHandler.Instance.Writer.WriteLine(
+                    $"<p>{player.Name} closes a book and puts it away.</p>",
+                    pc.ConnectionId
+                );
             }
-            
+
             player.OpenedBook = null;
         }
 
@@ -182,34 +215,44 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
         {
             if (pageNum == player.OpenedBook.Book.Pages.Count)
             {
-                Core.Writer.WriteLine($"<p>That exceeds the page count of {player.OpenedBook.Book.Pages.Count}.</p>", player.ConnectionId);
+                CoreHandler.Instance.Writer.WriteLine(
+                    $"<p>That exceeds the page count of {player.OpenedBook.Book.Pages.Count}.</p>",
+                    player.ConnectionId
+                );
                 return;
             }
 
             if (pageNum >= player.OpenedBook.Book.PageCount)
             {
-
-                Core.Writer.WriteLine($"<p>{player.OpenedBook.Name} does not contain that many pages.</p>", player.ConnectionId);
+                CoreHandler.Instance.Writer.WriteLine(
+                    $"<p>{player.OpenedBook.Name} does not contain that many pages.</p>",
+                    player.ConnectionId
+                );
 
                 return;
             }
 
             if (string.IsNullOrEmpty(player.OpenedBook.Book.Pages[pageNum]))
             {
-                Core.Writer.WriteLine("<p>This page is blank.</p>", player.ConnectionId);
+                CoreHandler.Instance.Writer.WriteLine(
+                    "<p>This page is blank.</p>",
+                    player.ConnectionId
+                );
                 return;
             }
 
             var result = Markdown.ToHtml(player.OpenedBook.Book.Pages[pageNum]);
-            Core.Writer.WriteLine($"<p>{result}</p>", player.ConnectionId);
+            CoreHandler.Instance.Writer.WriteLine($"<p>{result}</p>", player.ConnectionId);
         }
 
         private void WriteBook(Player player, int pageNum, string writing)
         {
-
             if (pageNum > player.OpenedBook.Book.PageCount)
             {
-                Core.Writer.WriteLine($"<p>{player.OpenedBook.Name} does not contain that many pages.</p>", player.ConnectionId);
+                CoreHandler.Instance.Writer.WriteLine(
+                    $"<p>{player.OpenedBook.Name} does not contain that many pages.</p>",
+                    player.ConnectionId
+                );
                 return;
             }
 
@@ -230,24 +273,32 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                 PageNumber = pageNum
             };
 
-            Core.UpdateClient.UpdateContentPopUp(player, bookContent);
+            CoreHandler.Instance.UpdateClient.UpdateContentPopUp(player, bookContent);
 
-            Core.Writer.WriteLine($"<p>You begin writing in {player.OpenedBook.Name}.</p>", player.ConnectionId);
+            CoreHandler.Instance.Writer.WriteLine(
+                $"<p>You begin writing in {player.OpenedBook.Name}.</p>",
+                player.ConnectionId
+            );
         }
 
         private void RenameBook(Player player, string title)
         {
-            Core.Writer.WriteLine($"<p>{player.OpenedBook.Name} has now been titled {title}.</p>", player.ConnectionId);
-            var originalBook = player.Inventory.FirstOrDefault(x => x.Name.Equals(player.OpenedBook.Name));
+            CoreHandler.Instance.Writer.WriteLine(
+                $"<p>{player.OpenedBook.Name} has now been titled {title}.</p>",
+                player.ConnectionId
+            );
+            var originalBook = player.Inventory.FirstOrDefault(
+                x => x.Name.Equals(player.OpenedBook.Name)
+            );
 
             if (originalBook != null)
             {
                 originalBook.Name = title;
             }
-            
+
             player.OpenedBook.Name = title;
-           
-            Core.UpdateClient.UpdateInventory(player);
+
+            CoreHandler.Instance.UpdateClient.UpdateInventory(player);
         }
     }
 }

@@ -4,10 +4,8 @@ using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Client;
-using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
-using ArchaicQuestII.GameLogic.World.Area;
 using ArchaicQuestII.GameLogic.World.Room;
 using Moq;
 using Xunit;
@@ -19,40 +17,27 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Movement
         private Room _room;
         private Player _player;
         private readonly Mock<IWriteToClient> _writer;
-        private readonly Mock<ICore> _core;
+        private readonly Mock<CoreHandler> _core;
         private readonly Cache _cache;
 
         public MovementTests()
         {
             _writer = new Mock<IWriteToClient>();
             _cache = new Cache();
-            _core = new Mock<ICore>();
+            _core = new Mock<CoreHandler>();
         }
 
         [Fact]
         public void Should_move_characters_position()
         {
-            var player2 = new Player
-            {
-                ConnectionId = "2",
-                Name = "Jane"
-            };
+            var player2 = new Player { ConnectionId = "2", Name = "Jane" };
 
             _player = new Player
             {
                 ConnectionId = "1",
                 Name = "Bob",
-                Stats = new Stats
-                {
-                    MovePoints = 110
-                },
-                Attributes = new Attributes
-                {
-                    Attribute =
-                    {
-                        [EffectLocation.Moves] = 100
-                    }
-                }
+                Stats = new Stats { MovePoints = 110 },
+                Attributes = new Attributes { Attribute = { [EffectLocation.Moves] = 100 } }
             };
 
             _room = new Room
@@ -84,11 +69,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Movement
                         Closed = false
                     }
                 },
-                Players = new List<Player>
-                {
-                    _player,
-                    player2
-                }
+                Players = new List<Player> { _player, player2 }
             };
 
             var room2 = new Room
@@ -111,8 +92,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Movement
                         Name = "South",
                         Door = false,
                         Closed = false,
-                        Coords =
-                        new Coordinates
+                        Coords = new Coordinates
                         {
                             X = 0,
                             Y = 0,
@@ -123,11 +103,17 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Movement
                 Players = new List<Player>()
             };
 
-            _cache.AddRoom($"{room2.AreaId}{room2.Coords.X}{room2.Coords.Y}{room2.Coords.Z}", room2);
-            _cache.AddRoom($"{_room.AreaId}{_room.Coords.X}{_room.Coords.Y}{_room.Coords.Z}", _room);
+            _cache.AddRoom(
+                $"{room2.AreaId}{room2.Coords.X}{room2.Coords.Y}{room2.Coords.Z}",
+                room2
+            );
+            _cache.AddRoom(
+                $"{_room.AreaId}{_room.Coords.X}{_room.Coords.Y}{_room.Coords.Z}",
+                _room
+            );
 
             _player.EnterEmote = "";
-            new GameLogic.Commands.CommandHandler(_core.Object).HandleCommand(_player, _room, "North");
+            new GameLogic.Commands.CommandHandler().HandleCommand(_player, _room, "North");
 
             //TODO: Need to change this to use the new room actions RoomChange() method
             //_writer.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("Bob walks north.")), "1"), Times.Never);
@@ -138,26 +124,14 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Movement
         [Fact]
         public void Should_not_move_if_no_moves()
         {
-            var player2 = new Player
-            {
-                ConnectionId = "2"
-            };
+            var player2 = new Player { ConnectionId = "2" };
 
             _player = new Player
             {
                 ConnectionId = "1",
                 Name = "Bob",
-                Stats = new Stats()
-                {
-                    MovePoints = 0
-                },
-                Attributes = new Attributes
-                {
-                    Attribute =
-                    {
-                        [EffectLocation.Moves] = 0
-                    }
-                }
+                Stats = new Stats() { MovePoints = 0 },
+                Attributes = new Attributes { Attribute = { [EffectLocation.Moves] = 0 } }
             };
 
             _room = new Room()
@@ -167,18 +141,9 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Movement
                 Description = "room 1",
                 Exits = new ExitDirections()
                 {
-                    North = new Exit()
-                    {
-                        AreaId = 2,
-                        Name = "North"
-                    }
+                    North = new Exit() { AreaId = 2, Name = "North" }
                 },
-                Players = new List<Player>()
-                {
-                    _player,
-
-                    player2
-                }
+                Players = new List<Player>() { _player, player2 }
             };
 
             var room2 = new Room()
@@ -188,51 +153,42 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Movement
                 Description = "room 2",
                 Exits = new ExitDirections()
                 {
-                    South = new Exit()
-                    {
-                        AreaId = 1,
-                        Name = "South"
-                    }
+                    South = new Exit() { AreaId = 1, Name = "South" }
                 },
                 Players = new List<Player>()
             };
 
             //_cache.Setup(x => x.GetRoom(2)).Returns(room2);
-            _cache.AddRoom($"{room2.AreaId}{room2.Coords.X}{room2.Coords.Y}{room2.Coords.Z}", room2);
-
+            _cache.AddRoom(
+                $"{room2.AreaId}{room2.Coords.X}{room2.Coords.Y}{room2.Coords.Z}",
+                room2
+            );
 
             //_cache.AddRoom(1, _room);
 
-            new GameLogic.Commands.CommandHandler(_core.Object).HandleCommand(_player, _room, "North");
+            new GameLogic.Commands.CommandHandler().HandleCommand(_player, _room, "North");
 
-            _writer.Verify(w => w.WriteLine(It.Is<string>(s => s == "<p>You are too exhausted to move.</p>"), "1"), Times.Once);
-
+            _writer.Verify(
+                w =>
+                    w.WriteLine(
+                        It.Is<string>(s => s == "<p>You are too exhausted to move.</p>"),
+                        "1"
+                    ),
+                Times.Once
+            );
         }
-
 
         [Fact]
         public void Should_return_error_if_room_not_found()
         {
-            var player2 = new Player
-            {
-                ConnectionId = "2"
-            };
+            var player2 = new Player { ConnectionId = "2" };
 
             _player = new Player
             {
                 ConnectionId = "1",
                 Name = "Bob",
-                Stats = new Stats
-                {
-                    MovePoints = 110
-                },
-                Attributes = new Attributes
-                {
-                    Attribute =
-                    {
-                        [EffectLocation.Moves] = 100
-                    }
-                }
+                Stats = new Stats { MovePoints = 110 },
+                Attributes = new Attributes { Attribute = { [EffectLocation.Moves] = 100 } }
             };
 
             _room = new Room
@@ -262,11 +218,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Movement
                         }
                     }
                 },
-                Players = new List<Player>
-                {
-                    _player,
-                    player2
-                }
+                Players = new List<Player> { _player, player2 }
             };
 
             var room2 = new Room
@@ -287,8 +239,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Movement
                     {
                         AreaId = 1,
                         Name = "South",
-                        Coords =
-                        new Coordinates
+                        Coords = new Coordinates
                         {
                             X = 0,
                             Y = 0,
@@ -298,32 +249,34 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Movement
                 },
                 Players = new List<Player>()
             };
-            
-            _cache.AddRoom("1020", room2);
-            
-            new GameLogic.Commands.CommandHandler(_core.Object).HandleCommand(_player, _room, "North");
 
-            _writer.Verify(w => w.WriteLine(It.Is<string>(s => s == "<p>A mysterious force prevents you from going that way.</p>"), "1"), Times.Once);
+            _cache.AddRoom("1020", room2);
+
+            new GameLogic.Commands.CommandHandler().HandleCommand(_player, _room, "North");
+
+            _writer.Verify(
+                w =>
+                    w.WriteLine(
+                        It.Is<string>(
+                            s => s == "<p>A mysterious force prevents you from going that way.</p>"
+                        ),
+                        "1"
+                    ),
+                Times.Once
+            );
         }
 
         [Fact]
         public void Should_sit_down()
         {
-            var player2 = new Player
-            {
-                ConnectionId = "2",
-                Id = new Guid()
-            };
+            var player2 = new Player { ConnectionId = "2", Id = new Guid() };
 
             _player = new Player
             {
                 Id = Guid.NewGuid(),
                 ConnectionId = "1",
                 Name = "Bob",
-                Stats = new Stats
-                {
-                    MovePoints = 110
-                }
+                Stats = new Stats { MovePoints = 110 }
             };
 
             _room = new Room
@@ -340,7 +293,6 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Movement
                 },
                 Exits = new ExitDirections
                 {
-
                     North = new Exit
                     {
                         AreaId = 1,
@@ -354,15 +306,14 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Movement
                         }
                     }
                 },
-                Players = new List<Player>
-                {
-                    _player,
-                    player2
-                }
+                Players = new List<Player> { _player, player2 }
             };
-            
-            new GameLogic.Commands.CommandHandler(_core.Object).HandleCommand(_player, _room, "sit");
-            _writer.Verify(w => w.WriteLine(It.Is<string>(s => s == "<p>You sit down.</p>"), "1"), Times.Once);
+
+            new GameLogic.Commands.CommandHandler().HandleCommand(_player, _room, "sit");
+            _writer.Verify(
+                w => w.WriteLine(It.Is<string>(s => s == "<p>You sit down.</p>"), "1"),
+                Times.Once
+            );
             Assert.Equal(CharacterStatus.Status.Sitting, _player.Status);
         }
     }

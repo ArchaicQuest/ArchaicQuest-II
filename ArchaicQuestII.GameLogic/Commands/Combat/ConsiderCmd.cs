@@ -10,7 +10,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Combat;
 
 public class ConsiderCmd : ICommand
 {
-    public ConsiderCmd(ICore core)
+    public ConsiderCmd()
     {
         Aliases = new[] {"con", "consider"};
         Description = "Consider tells you what your chances are of killing a character. Of course, it's only a rough estimate.";
@@ -28,7 +28,6 @@ public class ConsiderCmd : ICommand
             CharacterStatus.Status.Resting
         };
         UserRole = UserRole.Player;
-        Core = core;
     }
     
     public string[] Aliases { get; }
@@ -37,7 +36,6 @@ public class ConsiderCmd : ICommand
     public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
-    public ICore Core { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
@@ -45,7 +43,7 @@ public class ConsiderCmd : ICommand
 
         if (string.IsNullOrEmpty(target))
         {
-            Core.Writer.WriteLine("<p>Consider killing who?</p>", player.ConnectionId);
+            CoreHandler.Instance.Writer.WriteLine("<p>Consider killing who?</p>", player.ConnectionId);
             return;
         }
         
@@ -56,19 +54,19 @@ public class ConsiderCmd : ICommand
 
         if (victim == null)
         {
-            Core.Writer.WriteLine("<p>Consider killing who?</p>", player.ConnectionId);
+            CoreHandler.Instance.Writer.WriteLine("<p>Consider killing who?</p>", player.ConnectionId);
             return;
         }
 
         if (victim == player)
         {
-            Core.Writer.WriteLine("<p>You could take yourself.</p>", player.ConnectionId);
+            CoreHandler.Instance.Writer.WriteLine("<p>You could take yourself.</p>", player.ConnectionId);
             return;
         }
 
         if (!victim.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
         {
-            Core.Writer.WriteLine("<p>You would need a lot of luck!</p>", player.ConnectionId);
+            CoreHandler.Instance.Writer.WriteLine("<p>You would need a lot of luck!</p>", player.ConnectionId);
             return;
         }
 
@@ -77,37 +75,37 @@ public class ConsiderCmd : ICommand
         switch (diff)
         {
             case <= -10:
-                Core.Writer.WriteLine("<p>Now where did that chicken go?</p>", player.ConnectionId);
+                CoreHandler.Instance.Writer.WriteLine("<p>Now where did that chicken go?</p>", player.ConnectionId);
                 break;
             case <= -5:
-                Core.Writer.WriteLine("<p>You could do it with a needle!</p>", player.ConnectionId);
+                CoreHandler.Instance.Writer.WriteLine("<p>You could do it with a needle!</p>", player.ConnectionId);
                 break;
             case <= -2:
-                Core.Writer.WriteLine("<p>Easy.</p>", player.ConnectionId);
+                CoreHandler.Instance.Writer.WriteLine("<p>Easy.</p>", player.ConnectionId);
                 break;
             case <= -1:
-                Core.Writer.WriteLine("<p>Fairly easy.</p>", player.ConnectionId);
+                CoreHandler.Instance.Writer.WriteLine("<p>Fairly easy.</p>", player.ConnectionId);
                 break;
             case 0:
-                Core.Writer.WriteLine("<p>The perfect match!</p>", player.ConnectionId);
+                CoreHandler.Instance.Writer.WriteLine("<p>The perfect match!</p>", player.ConnectionId);
                 break;
             case <= 1:
-                Core.Writer.WriteLine("<p>You would need some luck!</p>", player.ConnectionId);
+                CoreHandler.Instance.Writer.WriteLine("<p>You would need some luck!</p>", player.ConnectionId);
                 break;
             case <= 2:
-                Core.Writer.WriteLine("<p>You would need a lot of luck!</p>", player.ConnectionId);
+                CoreHandler.Instance.Writer.WriteLine("<p>You would need a lot of luck!</p>", player.ConnectionId);
                 break;
             case <= 3:
-                Core.Writer.WriteLine("<p>You would need a lot of luck and great equipment!</p>", player.ConnectionId);
+                CoreHandler.Instance.Writer.WriteLine("<p>You would need a lot of luck and great equipment!</p>", player.ConnectionId);
                 break;
             case <= 5:
-                Core.Writer.WriteLine("<p>Do you feel lucky, punk?</p>", player.ConnectionId);
+                CoreHandler.Instance.Writer.WriteLine("<p>Do you feel lucky, punk?</p>", player.ConnectionId);
                 break;
             case <= 10:
-                Core.Writer.WriteLine("<p>Are you mad!?</p>", player.ConnectionId);
+                CoreHandler.Instance.Writer.WriteLine("<p>Are you mad!?</p>", player.ConnectionId);
                 break;
             case <= 100:
-                Core.Writer.WriteLine("<p>You ARE mad!? Death stands beside you ready to take your soul.</p>", player.ConnectionId);
+                CoreHandler.Instance.Writer.WriteLine("<p>You ARE mad!? Death stands beside you ready to take your soul.</p>", player.ConnectionId);
                 break;
         }
     }

@@ -27,10 +27,10 @@ namespace ArchaicQuestII.API.World
     [Authorize]
     public class RoomController : Controller
     {
-
         private IDataBase _db { get; }
         private IAddRoom _addRoom { get; }
         private ICache _cache { get; }
+
         public RoomController(IDataBase db, IAddRoom addRoom, ICache cache)
         {
             _db = db;
@@ -44,14 +44,11 @@ namespace ArchaicQuestII.API.World
         {
             var newRoom = _addRoom.MapRoom(room);
 
-
             _db.Save(newRoom, DataBase.Collections.Room);
 
             var user = (HttpContext.Items["User"] as AdminUser);
             user.Contributions += 1;
             _db.Save(user, DataBase.Collections.Users);
-
-
 
             return Ok(JsonConvert.SerializeObject(new { toast = $"Room saved successfully." }));
         }
@@ -85,21 +82,15 @@ namespace ArchaicQuestII.API.World
         [Route("api/World/Room/returnRoomTypes")]
         public JsonResult ReturnRoomTypes()
         {
-
             var roomTypes = new List<object>();
 
             foreach (var item in Enum.GetValues(typeof(Room.RoomType)))
             {
-
-                roomTypes.Add(new
-                {
-                    id = (int)item,
-                    name = item.ToString()
-                });
+                roomTypes.Add(new { id = (int)item, name = item.ToString() });
             }
             return Json(roomTypes);
-
         }
+
         [HttpPut]
         [Route("api/World/Room/{id:int}")]
         public void Put([FromBody] Room data)
@@ -113,19 +104,27 @@ namespace ArchaicQuestII.API.World
 
             var log = new AdminLog()
             {
-                Detail = $"({data.AreaId}, {data.Id}, x: {data.Coords.X} y: {data.Coords.Y}, z: {data.Coords.Z}) {data.Title}",
+                Detail =
+                    $"({data.AreaId}, {data.Id}, x: {data.Coords.X} y: {data.Coords.Y}, z: {data.Coords.Z}) {data.Title}",
                 Type = DataBase.Collections.Room,
                 UserName = user.Username
             };
             _db.Save(log, DataBase.Collections.Log);
-
         }
 
         [HttpGet("{x}/{y}/{z}/{areaId}")]
         [Route("api/World/Room/{x:int}/{y:int}/{z:int}/{areaId:int}")]
         public bool validExit(int x, int y, int z, int areaId)
         {
-            return _addRoom.GetRoomFromCoords(new Coordinates { X = x, Y = y, Z = z }, areaId) != null;
+            return _addRoom.GetRoomFromCoords(
+                    new Coordinates
+                    {
+                        X = x,
+                        Y = y,
+                        Z = z
+                    },
+                    areaId
+                ) != null;
         }
 
         public void MapMobRoomId(Room room)
@@ -141,8 +140,7 @@ namespace ArchaicQuestII.API.World
         {
             foreach (var mob in room.Mobs)
             {
-
-                mob.AddSkills(mob.ClassName);
+                mob.AddSkills(Enum.Parse<ClassName>(mob.ClassName));
 
                 foreach (var skill in mob.Skills)
                 {
@@ -161,12 +159,10 @@ namespace ArchaicQuestII.API.World
             }
         }
 
-
         [HttpPost]
         [Route("api/World/Room/updateCache")]
         public IActionResult UpdateRoomCache()
         {
-
             Stopwatch s = Stopwatch.StartNew();
 
             var roomsWithPlayers = _cache.GetAllRooms().Where(x => x.Players.Any());
@@ -191,9 +187,15 @@ namespace ArchaicQuestII.API.World
                             room.Players.Add(player);
                         }
                     }
-                    
-                    _cache.AddRoom($"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}", room);
-                    _cache.AddOriginalRoom($"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}", JsonConvert.DeserializeObject<Room>(JsonConvert.SerializeObject(room)));
+
+                    _cache.AddRoom(
+                        $"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}",
+                        room
+                    );
+                    _cache.AddOriginalRoom(
+                        $"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}",
+                        JsonConvert.DeserializeObject<Room>(JsonConvert.SerializeObject(room))
+                    );
                 }
 
                 var areas = _db.GetList<Area>(DataBase.Collections.Area);
@@ -238,34 +240,38 @@ namespace ArchaicQuestII.API.World
                     _cache.AddSkill(skill.Id, skill);
                 }
 
-                var craftingRecipes = _db.GetList<CraftingRecipes>(DataBase.Collections.CraftingRecipes);
+                var craftingRecipes = _db.GetList<CraftingRecipes>(
+                    DataBase.Collections.CraftingRecipes
+                );
                 foreach (var craftingRecipe in craftingRecipes)
                 {
                     _cache.AddCraftingRecipes(craftingRecipe.Id, craftingRecipe);
                 }
             }
-            catch (Exception)
-            {
-
-            }
+            catch (Exception) { }
 
             s.Stop();
 
-            return Ok(JsonConvert.SerializeObject(new { toast = $"Room and Map cache updated successfully. Elapsed Time: {s.ElapsedMilliseconds} ms" }));
+            return Ok(
+                JsonConvert.SerializeObject(
+                    new
+                    {
+                        toast = $"Room and Map cache updated successfully. Elapsed Time: {s.ElapsedMilliseconds} ms"
+                    }
+                )
+            );
         }
 
         [HttpDelete]
         [Route("api/World/Room/delete/{id:int}")]
         public IActionResult Delete(int id)
         {
-           var room = _db.GetCollection<Room>(DataBase.Collections.Room).FindById(id);
+            var room = _db.GetCollection<Room>(DataBase.Collections.Room).FindById(id);
             _db.Delete<Room>(id, DataBase.Collections.Room);
-      
-                return Ok(JsonConvert.SerializeObject(new { toast = $"{room.Title} deleted successfully." }));
-         
 
+            return Ok(
+                JsonConvert.SerializeObject(new { toast = $"{room.Title} deleted successfully." })
+            );
         }
-
-
     }
 }

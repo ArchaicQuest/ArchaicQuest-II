@@ -12,11 +12,12 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects;
 
 public class MineCmd : ICommand
 {
-    public MineCmd(ICore core)
+    public MineCmd()
     {
-        Aliases = new[] {"mine",};
-        Description = "Mine ore to gain raw metal materials and gems, must have a PickAxe type item in inventory such as a pickaxe. An Pickaxe that is of type weapon will not work. Mining uses the foraging skill.";
-        Usages = new[] {"Type: mine ore"};
+        Aliases = new[] { "mine", };
+        Description =
+            "Mine ore to gain raw metal materials and gems, must have a PickAxe type item in inventory such as a pickaxe. An Pickaxe that is of type weapon will not work. Mining uses the foraging skill.";
+        Usages = new[] { "Type: mine ore" };
         Title = "";
         DeniedStatus = new[]
         {
@@ -32,16 +33,14 @@ public class MineCmd : ICommand
             CharacterStatus.Status.Sitting,
         };
         UserRole = UserRole.Player;
-        Core = core;
     }
-    
+
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
     public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
-    public ICore Core { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
@@ -49,59 +48,74 @@ public class MineCmd : ICommand
 
         if (string.IsNullOrEmpty(target))
         {
-            Core.Writer.WriteLine("Chop what?", player.ConnectionId);
+            CoreHandler.Instance.Writer.WriteLine("Chop what?", player.ConnectionId);
             return;
         }
-        
+
         if (player.Status == CharacterStatus.Status.Busy)
         {
-            Core.Writer.WriteLine("You are already doing it.", player.ConnectionId);
+            CoreHandler.Instance.Writer.WriteLine("You are already doing it.", player.ConnectionId);
             return;
         }
-        
-        var thingToHarvest =
-            room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.OrdinalIgnoreCase));
+
+        var thingToHarvest = room.Items.FirstOrDefault(
+            x => x.Name.Contains(target, StringComparison.OrdinalIgnoreCase)
+        );
 
         if (thingToHarvest == null)
         {
-            Core.Writer.WriteLine($"You don't see that here.", player.ConnectionId);
+            CoreHandler.Instance.Writer.WriteLine($"You don't see that here.", player.ConnectionId);
             return;
         }
 
         if (thingToHarvest.ItemType != Item.Item.ItemTypes.Mineable)
         {
-            Core.Writer.WriteLine("You can't mine this.", player.ConnectionId);
+            CoreHandler.Instance.Writer.WriteLine("You can't mine this.", player.ConnectionId);
             return;
         }
-        
-        var hasChoppingTool = player.Inventory.FirstOrDefault(x => x.ItemType == Item.Item.ItemTypes.PickAxe);
+
+        var hasChoppingTool = player.Inventory.FirstOrDefault(
+            x => x.ItemType == Item.Item.ItemTypes.PickAxe
+        );
 
         if (hasChoppingTool == null)
         {
-            Core.Writer.WriteLine($"You attempt to dig {thingToHarvest.Name.ToLower()} with your bare hands. Probably better to try with a Pickaxe.", player.ConnectionId);
+            CoreHandler.Instance.Writer.WriteLine(
+                $"You attempt to dig {thingToHarvest.Name.ToLower()} with your bare hands. Probably better to try with a Pickaxe.",
+                player.ConnectionId
+            );
             return;
         }
 
-
         if (!thingToHarvest.Container.Items.Any())
         {
-            Core.Writer.WriteLine("There's nothing left to mine.", player.ConnectionId);
+            CoreHandler.Instance.Writer.WriteLine(
+                "There's nothing left to mine.",
+                player.ConnectionId
+            );
             return;
         }
 
         Harvest(player, room, thingToHarvest, hasChoppingTool);
     }
 
-    private async void Harvest(Player player, Room room, Item.Item thingToHarvest, Item.Item hasChoppingTool)
+    private async void Harvest(
+        Player player,
+        Room room,
+        Item.Item thingToHarvest,
+        Item.Item hasChoppingTool
+    )
     {
         player.Status = CharacterStatus.Status.Busy;
-      
+
         try
         {
+            CoreHandler.Instance.UpdateClient.PlaySound("mining", player);
 
-            Core.UpdateClient.PlaySound("mining", player);
-
-            Core.Writer.WriteLine($"<p>You begin mining {thingToHarvest.Name}.</p>", player.ConnectionId);
+            CoreHandler.Instance.Writer.WriteLine(
+                $"<p>You begin mining {thingToHarvest.Name}.</p>",
+                player.ConnectionId
+            );
 
             await Task.Delay(4000);
 
@@ -110,11 +124,12 @@ public class MineCmd : ICommand
                 return;
             }
 
-            Core.UpdateClient.PlaySound("mining", player);
+            CoreHandler.Instance.UpdateClient.PlaySound("mining", player);
 
-            Core.Writer.WriteLine(
+            CoreHandler.Instance.Writer.WriteLine(
                 $"<p>You swing your {hasChoppingTool.Name} back and forth striking the rock with each swing.</p>",
-                player.ConnectionId);
+                player.ConnectionId
+            );
 
             await Task.Delay(4000);
 
@@ -123,9 +138,12 @@ public class MineCmd : ICommand
                 return;
             }
 
-            Core.UpdateClient.PlaySound("mining", player);
+            CoreHandler.Instance.UpdateClient.PlaySound("mining", player);
 
-            Core.Writer.WriteLine("<p>You continue mining.</p>", player.ConnectionId);
+            CoreHandler.Instance.Writer.WriteLine(
+                "<p>You continue mining.</p>",
+                player.ConnectionId
+            );
 
             await Task.Delay(4000);
 
@@ -143,9 +161,10 @@ public class MineCmd : ICommand
 
             if (roll <= 3)
             {
-                Core.Writer.WriteLine(
+                CoreHandler.Instance.Writer.WriteLine(
                     $"<p>{{yellow}}You cut yourself mining, OUCH!{{/}}</p>",
-                    player.ConnectionId);
+                    player.ConnectionId
+                );
                 player.Status = CharacterStatus.Status.Standing;
                 return;
             }
@@ -153,8 +172,11 @@ public class MineCmd : ICommand
             if (!player.RollSkill(SkillName.Foraging))
             {
                 player.FailedSkill(SkillName.Foraging, out var message);
-                Core.Writer.WriteLine("<p>You fail to mine a thing.</p>", player.ConnectionId);
-                Core.Writer.WriteLine(message, player.ConnectionId);
+                CoreHandler.Instance.Writer.WriteLine(
+                    "<p>You fail to mine a thing.</p>",
+                    player.ConnectionId
+                );
+                CoreHandler.Instance.Writer.WriteLine(message, player.ConnectionId);
                 player.Status = CharacterStatus.Status.Standing;
                 return;
             }
@@ -162,10 +184,12 @@ public class MineCmd : ICommand
             var collected = "";
             var collectedCount = 0;
 
-            foreach (var harvestItem in thingToHarvest.Container.Items.Where(harvestItem => DiceBag.Roll(1, 1, 10) <= 3)
-                         .ToList())
+            foreach (
+                var harvestItem in thingToHarvest.Container.Items
+                    .Where(harvestItem => DiceBag.Roll(1, 1, 10) <= 3)
+                    .ToList()
+            )
             {
-
                 if (!collected.Contains(harvestItem.Name))
                 {
                     if (collected.Length > 0)
@@ -176,7 +200,6 @@ public class MineCmd : ICommand
                     {
                         collected += harvestItem.Name + " ";
                     }
-
                 }
 
                 collectedCount++;
@@ -203,19 +226,21 @@ public class MineCmd : ICommand
 
             if (string.IsNullOrEmpty(collected))
             {
-                Core.Writer.WriteLine(
+                CoreHandler.Instance.Writer.WriteLine(
                     $"<p>You fail to collect a single thing.</p>",
-                    player.ConnectionId);
+                    player.ConnectionId
+                );
             }
             else
             {
-                Core.Writer.WriteLine(
+                CoreHandler.Instance.Writer.WriteLine(
                     $"<p>Ah you have collected some {collected}</p>",
-                    player.ConnectionId);
+                    player.ConnectionId
+                );
             }
 
             player.Status = CharacterStatus.Status.Standing;
-            Core.UpdateClient.UpdateInventory(player);
+            CoreHandler.Instance.UpdateClient.UpdateInventory(player);
         }
         catch (Exception ex)
         {
@@ -227,7 +252,10 @@ public class MineCmd : ICommand
     {
         player.Target = string.IsNullOrEmpty(player.Target) ? target.Name : player.Target;
         player.Status = CharacterStatus.Status.Fighting;
-        target.Status = (target.Status & CharacterStatus.Status.Stunned) != 0 ? CharacterStatus.Status.Stunned : CharacterStatus.Status.Fighting;
+        target.Status =
+            (target.Status & CharacterStatus.Status.Stunned) != 0
+                ? CharacterStatus.Status.Stunned
+                : CharacterStatus.Status.Fighting;
         target.Target = string.IsNullOrEmpty(target.Target) ? player.Name : target.Target; //for group combat, if target is ganged, there target should not be changed when combat is initiated.
 
         if (player.Target == player.Name)
@@ -236,14 +264,14 @@ public class MineCmd : ICommand
             return;
         }
 
-        if (!Core.Cache.IsCharInCombat(player.Id.ToString()))
+        if (!CoreHandler.Instance.Cache.IsCharInCombat(player.Id.ToString()))
         {
-            Core.Cache.AddCharToCombat(player.Id.ToString(), player);
+            CoreHandler.Instance.Cache.AddCharToCombat(player.Id.ToString(), player);
         }
 
-        if (!Core.Cache.IsCharInCombat(target.Id.ToString()))
+        if (!CoreHandler.Instance.Cache.IsCharInCombat(target.Id.ToString()))
         {
-            Core.Cache.AddCharToCombat(target.Id.ToString(), target);
+            CoreHandler.Instance.Cache.AddCharToCombat(target.Id.ToString(), target);
         }
     }
 }

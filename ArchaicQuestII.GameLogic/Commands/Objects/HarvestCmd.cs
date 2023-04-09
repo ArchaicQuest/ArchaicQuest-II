@@ -16,12 +16,13 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects;
 
 public class HarvestCmd : ICommand
 {
-    public HarvestCmd(ICore core)
+    public HarvestCmd()
     {
-        Aliases = new[] {"harvest", "forage"};
-        Description = "Some plants or other objects can be harvested. Harvesting takes some time and the amount harvested is random. " +
-                      "You may also fail the task or be attacked while harvesting. Wood-Elfs are the best at harvesting. <br />Forage or harvest can be used for this command";
-        Usages = new[] {"Type: harvest strawberry, forage bush"};
+        Aliases = new[] { "harvest", "forage" };
+        Description =
+            "Some plants or other objects can be harvested. Harvesting takes some time and the amount harvested is random. "
+            + "You may also fail the task or be attacked while harvesting. Wood-Elfs are the best at harvesting. <br />Forage or harvest can be used for this command";
+        Usages = new[] { "Type: harvest strawberry, forage bush" };
         Title = "";
         DeniedStatus = new[]
         {
@@ -37,16 +38,14 @@ public class HarvestCmd : ICommand
             CharacterStatus.Status.Sitting,
         };
         UserRole = UserRole.Player;
-        Core = core;
     }
-    
+
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
     public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
-    public ICore Core { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
@@ -54,38 +53,40 @@ public class HarvestCmd : ICommand
 
         if (string.IsNullOrEmpty(target))
         {
-            Core.Writer.WriteLine("Harvest what?", player.ConnectionId);
+            CoreHandler.Instance.Writer.WriteLine("Harvest what?", player.ConnectionId);
             return;
         }
-        
+
         if (player.Status == CharacterStatus.Status.Busy)
         {
-            Core.Writer.WriteLine("You are already doing it.", player.ConnectionId);
+            CoreHandler.Instance.Writer.WriteLine("You are already doing it.", player.ConnectionId);
             return;
         }
-        
-        var thingToHarvest =
-            room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.OrdinalIgnoreCase));
+
+        var thingToHarvest = room.Items.FirstOrDefault(
+            x => x.Name.Contains(target, StringComparison.OrdinalIgnoreCase)
+        );
 
         if (thingToHarvest == null)
         {
-            Core.Writer.WriteLine($"You don't see that here.", player.ConnectionId);
+            CoreHandler.Instance.Writer.WriteLine($"You don't see that here.", player.ConnectionId);
             return;
         }
 
         if (thingToHarvest.ItemType != Item.Item.ItemTypes.Forage)
         {
-            Core.Writer.WriteLine("You can't harvest this.", player.ConnectionId);
+            CoreHandler.Instance.Writer.WriteLine("You can't harvest this.", player.ConnectionId);
             return;
         }
 
         if (!thingToHarvest.Container.Items.Any())
         {
-            Core.Writer.WriteLine("There's nothing left to harvest.", player.ConnectionId);
+            CoreHandler.Instance.Writer.WriteLine(
+                "There's nothing left to harvest.",
+                player.ConnectionId
+            );
             return;
         }
-        
-        
 
         Harvest(player, room, thingToHarvest);
     }
@@ -94,76 +95,90 @@ public class HarvestCmd : ICommand
     {
         player.Status = CharacterStatus.Status.Busy;
 
-        Core.UpdateClient.PlaySound("foraging", player);
+        CoreHandler.Instance.UpdateClient.PlaySound("foraging", player);
 
-        Core.Writer.WriteLine($"<p>You begin harvesting from {thingToHarvest.Name}.</p>", player.ConnectionId);
-        
+        CoreHandler.Instance.Writer.WriteLine(
+            $"<p>You begin harvesting from {thingToHarvest.Name}.</p>",
+            player.ConnectionId
+        );
+
         await Task.Delay(4000);
-        
+
         if (!room.Players.Contains(player) || player.Status != CharacterStatus.Status.Busy)
         {
             return;
         }
 
-        Core.UpdateClient.PlaySound("foraging", player);
+        CoreHandler.Instance.UpdateClient.PlaySound("foraging", player);
 
-        Core.Writer.WriteLine("<p>You rummage through the foliage looking for something to harvest.</p>",
-            player.ConnectionId);
-        
+        CoreHandler.Instance.Writer.WriteLine(
+            "<p>You rummage through the foliage looking for something to harvest.</p>",
+            player.ConnectionId
+        );
+
         await Task.Delay(4000);
-        
+
         if (!room.Players.Contains(player) || player.Status != CharacterStatus.Status.Busy)
         {
             return;
         }
 
-        Core.UpdateClient.PlaySound("foraging", player);
+        CoreHandler.Instance.UpdateClient.PlaySound("foraging", player);
 
-        Core.Writer.WriteLine("<p>You continue searching.</p>", player.ConnectionId);
+        CoreHandler.Instance.Writer.WriteLine(
+            "<p>You continue searching.</p>",
+            player.ConnectionId
+        );
 
         await Task.Delay(4000);
-        
+
         if (!room.Players.Contains(player) || player.Status != CharacterStatus.Status.Busy)
         {
             return;
         }
-        
+
         var roll = DiceBag.Roll(1, 1, 10);
 
         var randomMobObj = roll switch
         {
-            1 => new
-            {
-                Name = "A snake",
-                Description = "A black and red snake",
-                LongName = "A black snake slithers along here.",
-                DefaultAttack = "bite"
-            },
-            2 => new
-            {
-                Name = "A giant hornet",
-                Description = "An red and orange hornet",
-                LongName = "An angry red and orange hornet buzzes around here.",
-                DefaultAttack = "sting"
-            },
-            3 => new
-            {
-                Name = "An angry fairy",
-                Description = "A short winged fairy, angry at being disturbed",
-                LongName = "An angry fairy, annoyed at being disturbed is here.",
-                DefaultAttack = "punch"
-            },
-            _ => new
-            {
-                Name = "A racoon", Description = "A large grey racoon dog",
-                LongName = "A large racoon looks at you angrily", DefaultAttack = "bite"
-            }
+            1
+                => new
+                {
+                    Name = "A snake",
+                    Description = "A black and red snake",
+                    LongName = "A black snake slithers along here.",
+                    DefaultAttack = "bite"
+                },
+            2
+                => new
+                {
+                    Name = "A giant hornet",
+                    Description = "An red and orange hornet",
+                    LongName = "An angry red and orange hornet buzzes around here.",
+                    DefaultAttack = "sting"
+                },
+            3
+                => new
+                {
+                    Name = "An angry fairy",
+                    Description = "A short winged fairy, angry at being disturbed",
+                    LongName = "An angry fairy, annoyed at being disturbed is here.",
+                    DefaultAttack = "punch"
+                },
+            _
+                => new
+                {
+                    Name = "A racoon",
+                    Description = "A large grey racoon dog",
+                    LongName = "A large racoon looks at you angrily",
+                    DefaultAttack = "bite"
+                }
         };
 
         var randomMob = new Player
         {
             Name = randomMobObj.Name,
-            ClassName = ClassName.Fighter,
+            ClassName = ClassName.Fighter.ToString(),
             Target = string.Empty,
             Status = CharacterStatus.Status.Standing,
             Race = "Other",
@@ -205,24 +220,20 @@ public class HarvestCmd : ICommand
                     { EffectLocation.SavingSpell, 1 },
                 }
             },
-
             Description = randomMobObj.Description,
             LongName = randomMobObj.LongName,
-            ArmorRating = new ArmourRating
-            {
-                Armour = 5,
-                Magic = 5
-            },
+            ArmorRating = new ArmourRating { Armour = 5, Magic = 5 },
             DefaultAttack = randomMobObj.DefaultAttack,
             UniqueId = Guid.NewGuid(),
             Id = Guid.NewGuid()
         };
-        
+
         if (roll <= 1)
         {
-            Core.Writer.WriteLine(
+            CoreHandler.Instance.Writer.WriteLine(
                 $"<p>{{yellow}}{randomMob.Name} jumps out from the {thingToHarvest.Name} and attacks you!{{/}}</p>",
-                player.ConnectionId);
+                player.ConnectionId
+            );
             room.Mobs.Add(randomMob);
             player.Status = CharacterStatus.Status.Standing;
             InitFightStatus(randomMob, player);
@@ -231,9 +242,10 @@ public class HarvestCmd : ICommand
 
         if (roll <= 3)
         {
-            Core.Writer.WriteLine(
+            CoreHandler.Instance.Writer.WriteLine(
                 $"<p>{{yellow}}You cut yourself foraging, OUCH!{{/}}</p>",
-                player.ConnectionId);
+                player.ConnectionId
+            );
             player.Status = CharacterStatus.Status.Standing;
             return;
         }
@@ -241,18 +253,24 @@ public class HarvestCmd : ICommand
         if (!player.RollSkill(SkillName.Foraging))
         {
             player.FailedSkill(SkillName.Foraging, out var message);
-            Core.Writer.WriteLine("<p>You fail to harvest a thing.</p>", player.ConnectionId);
-            Core.Writer.WriteLine(message, player.ConnectionId);
+            CoreHandler.Instance.Writer.WriteLine(
+                "<p>You fail to harvest a thing.</p>",
+                player.ConnectionId
+            );
+            CoreHandler.Instance.Writer.WriteLine(message, player.ConnectionId);
             player.Status = CharacterStatus.Status.Standing;
             return;
         }
 
         var collected = "";
         var collectedCount = 0;
-        
-        foreach (var harvestItem in thingToHarvest.Container.Items.Where(harvestItem => DiceBag.Roll(1, 1, 10) <= 3).ToList())
-        {
 
+        foreach (
+            var harvestItem in thingToHarvest.Container.Items
+                .Where(harvestItem => DiceBag.Roll(1, 1, 10) <= 3)
+                .ToList()
+        )
+        {
             if (!collected.Contains(harvestItem.Name))
             {
                 if (collected.Length > 0)
@@ -263,12 +281,11 @@ public class HarvestCmd : ICommand
                 {
                     collected += harvestItem.Name + " ";
                 }
-               
             }
 
             collectedCount++;
             thingToHarvest.Container.Items.Remove(harvestItem);
-            
+
             // if the User has herbalism the conditions will be higher rated
             // on success skill check the roll could be 50, 100
             // if elven the condition can be 10 points higher
@@ -287,19 +304,23 @@ public class HarvestCmd : ICommand
 
             player.Inventory.Add(harvestItem);
         }
-        
-        Core.Writer.WriteLine(
+
+        CoreHandler.Instance.Writer.WriteLine(
             $"<p>Ah you have collected some {collected}</p>",
-            player.ConnectionId);
+            player.ConnectionId
+        );
         player.Status = CharacterStatus.Status.Standing;
-        Core.UpdateClient.UpdateInventory(player);
+        CoreHandler.Instance.UpdateClient.UpdateInventory(player);
     }
 
     private void InitFightStatus(Player player, Player target)
     {
         player.Target = string.IsNullOrEmpty(player.Target) ? target.Name : player.Target;
         player.Status = CharacterStatus.Status.Fighting;
-        target.Status = (target.Status & CharacterStatus.Status.Stunned) != 0 ? CharacterStatus.Status.Stunned : CharacterStatus.Status.Fighting;
+        target.Status =
+            (target.Status & CharacterStatus.Status.Stunned) != 0
+                ? CharacterStatus.Status.Stunned
+                : CharacterStatus.Status.Fighting;
         target.Target = string.IsNullOrEmpty(target.Target) ? player.Name : target.Target; //for group combat, if target is ganged, there target should not be changed when combat is initiated.
 
         if (player.Target == player.Name)
@@ -308,14 +329,14 @@ public class HarvestCmd : ICommand
             return;
         }
 
-        if (!Core.Cache.IsCharInCombat(player.Id.ToString()))
+        if (!CoreHandler.Instance.Cache.IsCharInCombat(player.Id.ToString()))
         {
-            Core.Cache.AddCharToCombat(player.Id.ToString(), player);
+            CoreHandler.Instance.Cache.AddCharToCombat(player.Id.ToString(), player);
         }
 
-        if (!Core.Cache.IsCharInCombat(target.Id.ToString()))
+        if (!CoreHandler.Instance.Cache.IsCharInCombat(target.Id.ToString()))
         {
-            Core.Cache.AddCharToCombat(target.Id.ToString(), target);
+            CoreHandler.Instance.Cache.AddCharToCombat(target.Id.ToString(), target);
         }
     }
 }

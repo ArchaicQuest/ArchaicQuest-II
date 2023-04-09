@@ -8,15 +8,12 @@ namespace ArchaicQuestII.GameLogic.Core
 {
     public class GameLoop : IGameLoop
     {
-        private ICore _core;
         private ICommandHandler _commandHandler;
         private List<string> _hints;
         private List<ILoop> _loops;
 
-        public GameLoop(ICore core, ICommandHandler commandHandler)
+        public GameLoop()
         {
-            _core = core;
-            _commandHandler = commandHandler;
             _loops = new List<ILoop>();
 
             var loopTypes = AppDomain.CurrentDomain.GetAssemblies()
@@ -28,7 +25,7 @@ namespace ArchaicQuestII.GameLogic.Core
                 var loop = (ILoop)Activator.CreateInstance(t);
                 if (loop == null) continue;
 
-                loop.Init(_core, _commandHandler);
+                loop.Init();
                 _loops.Add(loop);
             }
         }

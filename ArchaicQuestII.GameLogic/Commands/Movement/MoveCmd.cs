@@ -10,20 +10,20 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement;
 
 public class MoveCmd : ICommand
 {
-    public MoveCmd(ICore core)
+    public MoveCmd()
     {
         Title = "Movement";
         Aliases = new[]
         {
-            "north", 
-            "n", 
-            "south", 
-            "s", 
-            "east", 
-            "e", 
-            "west", 
-            "w", 
-            "southeast", 
+            "north",
+            "n",
+            "south",
+            "s",
+            "east",
+            "e",
+            "west",
+            "w",
+            "southeast",
             "se",
             "southwest",
             "sw",
@@ -36,8 +36,12 @@ public class MoveCmd : ICommand
             "down",
             "d"
         };
-        Description = @"<pre><p>To move around you type in one of the following commands: {yellow}north{/}, {yellow}east{/}, {yellow}south{/}, {yellow}west{/}, {yellow}up{/}, {yellow}down{/} {yellow}northeast{/}, {yellow}southeast{/}, {yellow}southwest{/}, and {yellow}northwest{/}. These commands may also be shortened to:  {yellow}n{/}, {yellow}e{/}, {yellow}s{/}, {yellow}w{/}, {yellow}u{/}, {yellow}d{/}, {yellow}ne{/}, {yellow}se{/}, {yellow}sw{/}, and {yellow}nw{/}.</p><p>Moving consumes movement points, shown in the green stat bar. Stats Replenish slowly but can be sped up by using the sit, rest, or sleep commands. When finished recovering you will need to wake or stand before you can move again.</p></pre>";
-        Usages = new[] { "Type: north or n for short to move north. Valid Directions: n,e,s,w,u,d,nw,ne,se,sw" };
+        Description =
+            @"<pre><p>To move around you type in one of the following commands: {yellow}north{/}, {yellow}east{/}, {yellow}south{/}, {yellow}west{/}, {yellow}up{/}, {yellow}down{/} {yellow}northeast{/}, {yellow}southeast{/}, {yellow}southwest{/}, and {yellow}northwest{/}. These commands may also be shortened to:  {yellow}n{/}, {yellow}e{/}, {yellow}s{/}, {yellow}w{/}, {yellow}u{/}, {yellow}d{/}, {yellow}ne{/}, {yellow}se{/}, {yellow}sw{/}, and {yellow}nw{/}.</p><p>Moving consumes movement points, shown in the green stat bar. Stats Replenish slowly but can be sped up by using the sit, rest, or sleep commands. When finished recovering you will need to wake or stand before you can move again.</p></pre>";
+        Usages = new[]
+        {
+            "Type: north or n for short to move north. Valid Directions: n,e,s,w,u,d,nw,ne,se,sw"
+        };
         DeniedStatus = new[]
         {
             CharacterStatus.Status.Busy,
@@ -51,34 +55,40 @@ public class MoveCmd : ICommand
             CharacterStatus.Status.Resting
         };
         UserRole = UserRole.Player;
-        Core = core;
     }
-    
+
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
     public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
-    public ICore Core { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
-
         var isFlee = !string.IsNullOrEmpty(input.ElementAtOrDefault(1));
         if (CharacterCanMove(player) == false)
         {
-            Core.Writer.WriteLine("<p>You are too exhausted to move.</p>", player.ConnectionId);
+            CoreHandler.Instance.Writer.WriteLine(
+                "<p>You are too exhausted to move.</p>",
+                player.ConnectionId
+            );
             return;
         }
 
-     // Don't allow movement if over weight limit
-     // ignore NPC that are over weight they can always move        
-     if(player.ConnectionId != "mob" && player.Weight > player.Attributes.Attribute[EffectLocation.Strength] * 3)
-     {
-         Core.Writer.WriteLine($"<p>You are over encumbered and cannot move.</p>", player.ConnectionId);
-         return;
-     }
+        // Don't allow movement if over weight limit
+        // ignore NPC that are over weight they can always move
+        if (
+            player.ConnectionId != "mob"
+            && player.Weight > player.Attributes.Attribute[EffectLocation.Strength] * 3
+        )
+        {
+            CoreHandler.Instance.Writer.WriteLine(
+                $"<p>You are over encumbered and cannot move.</p>",
+                player.ConnectionId
+            );
+            return;
+        }
 
         Exit getExitToNextRoom = null;
 
@@ -128,24 +138,30 @@ public class MoveCmd : ICommand
 
         if (getExitToNextRoom == null)
         {
-            Core.Writer.WriteLine("<p>You can't go that way.</p>", player.ConnectionId);
+            CoreHandler.Instance.Writer.WriteLine(
+                "<p>You can't go that way.</p>",
+                player.ConnectionId
+            );
             return;
         }
 
         var nextRoomKey =
             $"{getExitToNextRoom.AreaId}{getExitToNextRoom.Coords.X}{getExitToNextRoom.Coords.Y}{getExitToNextRoom.Coords.Z}";
-        var getNextRoom = Core.Cache.GetRoom(nextRoomKey);
+        var getNextRoom = CoreHandler.Instance.Cache.GetRoom(nextRoomKey);
 
         if (getNextRoom == null)
         {
-            Core.Writer.WriteLine("<p>A mysterious force prevents you from going that way.</p>", player.ConnectionId);
+            CoreHandler.Instance.Writer.WriteLine(
+                "<p>A mysterious force prevents you from going that way.</p>",
+                player.ConnectionId
+            );
             //TODO: log bug that the new room could not be found
             return;
         }
 
         if (getExitToNextRoom.Closed)
         {
-            Core.Writer.WriteLine("<p>The door is close.</p>", player.ConnectionId);
+            CoreHandler.Instance.Writer.WriteLine("<p>The door is close.</p>", player.ConnectionId);
             return;
         }
 
@@ -159,30 +175,38 @@ public class MoveCmd : ICommand
             }
         }
 
-        Core.RoomActions.RoomChange(player, room, getNextRoom, isFlee);
+        CoreHandler.Instance.RoomActions.RoomChange(player, room, getNextRoom, isFlee);
 
         if (player.Followers.Count >= 1)
         {
-            foreach (var follower in player.Followers.Where(follower => room.Players.Contains(follower) || room.Mobs.Contains(follower)))
+            foreach (
+                var follower in player.Followers.Where(
+                    follower => room.Players.Contains(follower) || room.Mobs.Contains(follower)
+                )
+            )
             {
-                Core.RoomActions.RoomChange(follower, room, getNextRoom, isFlee);
+                CoreHandler.Instance.RoomActions.RoomChange(follower, room, getNextRoom, isFlee);
             }
         }
 
         if (!string.IsNullOrEmpty(player.Mounted.Name))
         {
-            var mountedMob = room.Mobs.FirstOrDefault(x => 
-                !string.IsNullOrEmpty(x.Mounted.MountedBy) && x.Mounted.MountedBy.Equals(player.Name));
+            var mountedMob = room.Mobs.FirstOrDefault(
+                x =>
+                    !string.IsNullOrEmpty(x.Mounted.MountedBy)
+                    && x.Mounted.MountedBy.Equals(player.Name)
+            );
 
             if (mountedMob != null)
             {
-                Core.RoomActions.RoomChange(mountedMob, room, getNextRoom, isFlee);
+                CoreHandler.Instance.RoomActions.RoomChange(mountedMob, room, getNextRoom, isFlee);
             }
         }
     }
-    
+
     private bool CharacterCanMove(Player character)
     {
-        return character.ConnectionId == "mob" || character.Attributes.Attribute[EffectLocation.Moves] > 0;
+        return character.ConnectionId == "mob"
+            || character.Attributes.Attribute[EffectLocation.Moves] > 0;
     }
 }

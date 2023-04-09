@@ -3,6 +3,7 @@ using System.Linq;
 using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Commands;
+using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Spell;
 using ArchaicQuestII.GameLogic.Utilities;
@@ -13,7 +14,7 @@ public static class CharacterHelpers
 {
     public static void AddSkills(this Player player, SubClassName className)
     {
-        var c = CharacterHandler.Instance.GetClass(className); 
+        var c = CoreHandler.Instance.CharacterHandler.GetClass(className); 
 
         if(c != null)
         {
@@ -23,7 +24,7 @@ public static class CharacterHelpers
 
     public static void AddSkills(this Player player, ClassName className)
     {
-        var c = CharacterHandler.Instance.GetClass(className); 
+        var c = CoreHandler.Instance.CharacterHandler.GetClass(className); 
 
         if(c != null)
         {
@@ -53,7 +54,7 @@ public static class CharacterHelpers
 
     public static IClass GetClass(this Player player)
     {
-        return CharacterHandler.Instance.GetClass(player.ClassName);
+        return CoreHandler.Instance.CharacterHandler.GetClass(player.ClassName);
     }
 
     public static bool HasSkill(this Player player, SkillName skillName)

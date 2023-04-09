@@ -10,11 +10,11 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects;
 
 public class TouchCmd : ICommand
 {
-    public TouchCmd(ICore core)
+    public TouchCmd()
     {
-        Aliases = new[] {"touch"};
+        Aliases = new[] { "touch" };
         Description = "You can touch an object to find out how it feels.";
-        Usages = new[] {"Type: touch flag"};
+        Usages = new[] { "Type: touch flag" };
         Title = "";
         DeniedStatus = new[]
         {
@@ -30,40 +30,49 @@ public class TouchCmd : ICommand
             CharacterStatus.Status.Sitting,
         };
         UserRole = UserRole.Player;
-        Core = core;
     }
-    
+
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
     public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
-    public ICore Core { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
         var target = input.ElementAtOrDefault(1);
-        
+
         if (string.IsNullOrEmpty(target))
         {
-            Core.Writer.WriteLine("<p>Touch what?</p>", player.ConnectionId);
+            CoreHandler.Instance.Writer.WriteLine("<p>Touch what?</p>", player.ConnectionId);
             return;
         }
-        
+
         var nthTarget = Helpers.findNth(target);
-        var item = Helpers.findRoomObject(nthTarget, room) ?? Helpers.findObjectInInventory(nthTarget, player);
+        var item =
+            Helpers.findRoomObject(nthTarget, room)
+            ?? Helpers.findObjectInInventory(nthTarget, player);
 
         if (item == null)
         {
-            Core.Writer.WriteLine("<p>You don't see that here.</p>", player.ConnectionId);
+            CoreHandler.Instance.Writer.WriteLine(
+                "<p>You don't see that here.</p>",
+                player.ConnectionId
+            );
             return;
         }
 
-        var isDark = Core.RoomActions.RoomIsDark(player, room);
+        var isDark = CoreHandler.Instance.RoomActions.RoomIsDark(player, room);
 
-        Core.Writer.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{item.Description.Touch}</p>",
-            player.ConnectionId);
-        Core.Writer.WriteToOthersInRoom($"<p>{player.Name} feels {item.Name.ToLower()}.</p>", room, player);
+        CoreHandler.Instance.Writer.WriteLine(
+            $"<p class='{(isDark ? "room-dark" : "")}'>{item.Description.Touch}</p>",
+            player.ConnectionId
+        );
+        CoreHandler.Instance.Writer.WriteToOthersInRoom(
+            $"<p>{player.Name} feels {item.Name.ToLower()}.</p>",
+            room,
+            player
+        );
     }
 }
