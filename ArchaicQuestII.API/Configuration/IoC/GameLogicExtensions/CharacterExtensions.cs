@@ -1,9 +1,6 @@
 ﻿using ArchaicQuestII.GameLogic.Character.Equipment;
-using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Help;
-using ArchaicQuestII.GameLogic.Character.MobFunctions;
 using ArchaicQuestII.GameLogic.Character.MobFunctions.Healer;
-using ArchaicQuestII.GameLogic.Character.MobFunctions.Shop;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ArchaicQuestII.API.Configuration.IoC.GameLogicExtensions

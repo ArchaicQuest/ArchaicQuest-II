@@ -59,7 +59,7 @@ public abstract class SkillCore
             if (target != null)
             {
 
-                if (Core.Combat.IsTargetAlive(target))
+                if (target.IsAlive())
                 {
 
                     Core.Combat.InitFightStatus(player, target);
@@ -328,7 +328,7 @@ public abstract class SkillCore
         public void DamagePlayer(string skillName, int damage, Player player, Player target, Room room)
         {
 
-            if (Core.Combat.IsTargetAlive(target))
+            if (target.IsAlive())
             {
 
                 var totalDam = Core.Combat.CalculateSkillDamage(player, target, damage);
@@ -356,7 +356,7 @@ public abstract class SkillCore
 
                 target.Attributes.Attribute[EffectLocation.Hitpoints] -= totalDam;
 
-                if (!Core.Combat.IsTargetAlive(target))
+                if (!target.IsAlive())
                 {
                     Core.Combat.TargetKilled(player, target, room);
 

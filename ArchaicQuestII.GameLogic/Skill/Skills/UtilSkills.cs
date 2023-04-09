@@ -292,7 +292,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                     };
                     target.Affects.Custom.Add(affect);
 
-                    Helpers.ApplyAffects(affect, player);
+                    player.ApplyAffects(affect);
 
                     player.Attributes.Attribute[EffectLocation.Moves] = player.Attributes.Attribute[EffectLocation.Moves] /= 2;
                     player.Attributes.Attribute[EffectLocation.Hitpoints] += player.Level * 2;
@@ -426,7 +426,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
             player.Affects.Custom.Add(affect);
 
-            Helpers.ApplyAffects(affect, player);
+            player.ApplyAffects(affect);
             _updateClientUi.UpdateScore(player);
             _updateClientUi.UpdateMoves(player);
             _updateClientUi.UpdateHP(player);

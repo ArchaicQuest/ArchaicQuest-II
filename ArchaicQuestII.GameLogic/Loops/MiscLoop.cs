@@ -8,7 +8,6 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using ArchaicQuestII.GameLogic.Character;
 using System.Linq;
-using ArchaicQuestII.GameLogic.Character.Gain;
 
 namespace ArchaicQuestII.GameLogic.Loops
 {

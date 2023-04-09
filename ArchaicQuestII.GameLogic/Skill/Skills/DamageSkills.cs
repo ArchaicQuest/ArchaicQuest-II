@@ -1,6 +1,5 @@
 ﻿using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Model;
-using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Core;
@@ -244,7 +243,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
                 target.Affects.Custom.Add(affect);
 
-                Helpers.ApplyAffects(affect, target);
+                target.ApplyAffects(affect);
             }
             else
             {

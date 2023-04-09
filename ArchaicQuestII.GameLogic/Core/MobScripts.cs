@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Combat;
@@ -273,10 +272,10 @@ namespace ArchaicQuestII.GameLogic.Core
                 Name = "Script damage"
             };
             
-            _combat.HarmTarget(player, damage);
+            player.HarmTarget(damage);
             _updateClientUi.UpdateScore(player);
             _updateClientUi.UpdateHP(player);
-            if (!_combat.IsTargetAlive(player))
+            if (!player.IsAlive())
             {
                 _combat.TargetKilled(dummyPlayer, player, room);
             }

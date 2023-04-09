@@ -90,7 +90,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
             
             if (hasEffect == null)
             {
-                modBenefits = Helpers.UpdateAffect(player, food, newEffect);
+                modBenefits = player.UpdateAffect(food, newEffect);
 
                 benefits.Append(
                     $"<tr><td>Food:</td><td>{food.Name}<br />{modBenefits}</td></td>");
@@ -103,7 +103,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
             }
             else
             {
-                modBenefits = Helpers.UpdateAffect(player, food, hasEffect);
+                modBenefits = player.UpdateAffect(food, hasEffect);
                 
                 benefits.Append(
                     $"<tr><td>Food:</td><td>{food.Name}<br />{modBenefits}</td></td>");

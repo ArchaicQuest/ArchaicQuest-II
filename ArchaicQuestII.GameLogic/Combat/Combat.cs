@@ -4,16 +4,13 @@ using System.Globalization;
 using System.Linq;
 using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Equipment;
-using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Commands;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Item;
-using ArchaicQuestII.GameLogic.Skill.Model;
 using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
 
@@ -76,27 +73,7 @@ namespace ArchaicQuestII.GameLogic.Combat
             return dualWield ? player.Equipped.Secondary : player.Equipped.Wielded;
         }
 
-        public void HarmTarget(Player victim, int damage)
-        {
-            victim.Attributes.Attribute[EffectLocation.Hitpoints] -= damage;
-
-            if (victim.Attributes.Attribute[EffectLocation.Hitpoints] < 0)
-            {
-                victim.Attributes.Attribute[EffectLocation.Hitpoints] = 0;
-            }
-            
-            if (victim.Config.Wimpy > 0 && 
-                victim.Attributes.Attribute[EffectLocation.Hitpoints] <= victim.Config.Wimpy)
-            {
-                victim.Buffer.Clear();
-                victim.Buffer.Enqueue("flee");
-            }
-        }
-
-        public bool IsTargetAlive(Player victim)
-        {
-            return victim.Attributes.Attribute[EffectLocation.Hitpoints] > 0;
-        }
+        
 
         public void DisplayDamage(Player player, Player target, Room room, Item.Item weapon, int damage)
         {
@@ -418,13 +395,13 @@ namespace ArchaicQuestII.GameLogic.Combat
 
                                 ripDamage /= 3;
 
-                                HarmTarget(player, ripDamage);
+                                target.HarmTarget(ripDamage);
 
                                 DisplayDamage(target, player, room, weapon, ripDamage);
 
                                 _clientUi.UpdateHP(player);
 
-                                if (!IsTargetAlive(player))
+                                if (!target.IsAlive())
                                 {
                                     TargetKilled(target, player, room);
                                 }
@@ -504,13 +481,13 @@ namespace ArchaicQuestII.GameLogic.Combat
 
                     _clientUi.PlaySound("hit", target);
                     _clientUi.PlaySound("hit", player);
-                    HarmTarget(target, damage);
+                    player.HarmTarget(damage);
 
                     DisplayDamage(player, target, room, weapon, damage);
 
                     _clientUi.UpdateHP(target);
 
-                    if (!IsTargetAlive(target))
+                    if (!target.IsAlive())
                     {
                         TargetKilled(player, target, room);
                     }
@@ -624,13 +601,13 @@ namespace ArchaicQuestII.GameLogic.Combat
 
                                     ripDamage /= 3;
 
-                                    HarmTarget(player, ripDamage);
+                                    player.HarmTarget(ripDamage);
 
                                     DisplayDamage(target, player, room, weapon, ripDamage);
 
                                     _clientUi.UpdateHP(player);
 
-                                    if (!IsTargetAlive(player))
+                                    if (!player.IsAlive())
                                     {
                                         TargetKilled(target, player, room);
                                     }
@@ -692,13 +669,13 @@ namespace ArchaicQuestII.GameLogic.Combat
                             }
                         }
 
-                        HarmTarget(target, damage);
+                        target.HarmTarget(damage);
 
                         DisplayDamage(player, target, room, weapon, damage);
 
                         _clientUi.UpdateHP(target);
 
-                        if (!IsTargetAlive(target))
+                        if (!target.IsAlive())
                         {
                             TargetKilled(player, target, room);
                         }

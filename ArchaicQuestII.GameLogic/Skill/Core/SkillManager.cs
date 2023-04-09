@@ -36,7 +36,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
             if (target != null)
             {
 
-                if (_fight.IsTargetAlive(target))
+                if (target.IsAlive())
                 {
 
                     _fight.InitFightStatus(player, target);
@@ -65,7 +65,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
         public void DamagePlayer(string spellName, int damage, Player player, Player target, Room room)
         {
 
-            if (_fight.IsTargetAlive(target))
+            if (target.IsAlive())
             {
 
                 var totalDam = _fight.CalculateSkillDamage(player, target, damage);
@@ -93,7 +93,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
 
                 target.Attributes.Attribute[EffectLocation.Hitpoints] -= totalDam;
 
-                if (!_fight.IsTargetAlive(target))
+                if (!target.IsAlive())
                 {
                     _fight.TargetKilled(player, target, room);
 
