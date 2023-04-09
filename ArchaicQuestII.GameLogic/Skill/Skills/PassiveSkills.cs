@@ -3,7 +3,6 @@ using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Equipment;
-using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Core;
@@ -55,7 +54,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
         public int Haggle(Player player, Player target)
         {
             var foundSkill = player.Skills.FirstOrDefault(x =>
-                x.Name.StartsWith("haggle", StringComparison.CurrentCultureIgnoreCase));
+                x.Name == SkillName.Haggle);
 
             if (foundSkill == null)
             {
@@ -99,7 +98,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
             foundSkill.Proficiency += increase;
 
-            player.FailedSkill("haggle", out var message);
+            player.FailedSkill(SkillName.Haggle, out var message);
 
             _updateClientUi.UpdateExp(player);
 
@@ -119,7 +118,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             }
 
             var foundSkill = player.Skills.FirstOrDefault(x =>
-                x.Name.StartsWith("dual wield", StringComparison.CurrentCultureIgnoreCase));
+                x.Name == SkillName.DualWield);
 
             if (foundSkill == null)
             {

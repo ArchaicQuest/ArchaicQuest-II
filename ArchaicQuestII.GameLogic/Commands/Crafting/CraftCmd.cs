@@ -108,9 +108,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
             
             Core.Writer.WriteLine($"<p>You begin crafting {Helpers.AddArticle(recipe.Title).ToLower()}.</p>", player.ConnectionId);
 
-            var success = Helpers.SkillSuccessCheck(player, "crafting");
-            
-            if (success)
+            if (player.RollSkill(SkillName.Crafting))
             {
                 
                 // use up materials
@@ -210,7 +208,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
                         player.ConnectionId, 2000);
                 }
 
-                player.FailedSkill("Crafting", out var message);
+                player.FailedSkill(SkillName.Crafting, out var message);
 
                 Core.Writer.WriteLine(message, player.ConnectionId, 2120);
             }

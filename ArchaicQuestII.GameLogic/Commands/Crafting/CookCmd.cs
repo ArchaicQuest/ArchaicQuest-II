@@ -186,11 +186,9 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
 
             await Task.Delay(cookTime/4);
 
-            var success = Helpers.SkillSuccessCheck(player, "Cooking");
-
             pot.Container.Items.Clear();
 
-            if (!success)
+            if (!player.RollSkill(SkillName.Cooking))
             {
                 Core.Writer.WriteLine(
                         "<p class='improve'>You failed to cook something edible.</p>",

@@ -179,7 +179,7 @@ public class ChopCmd : ICommand
         var randomMob = new Player
         {
             Name = randomMobObj.Name,
-            ClassName = "Fighter",
+            ClassName = ClassName.Fighter,
             Target = string.Empty,
             Status = CharacterStatus.Status.Standing,
             Race = "Other",
@@ -254,9 +254,7 @@ public class ChopCmd : ICommand
             return;
         }
 
-        var canDoSkill = Helpers.SkillSuccessCheck(player, "foraging");
-
-        if (!canDoSkill)
+        if (!player.RollSkill(SkillName.Foraging))
         {
             player.FailedSkill(SkillName.Foraging, out var message);
             Core.Writer.WriteLine("<p>You fail to chop a thing.</p>", player.ConnectionId);

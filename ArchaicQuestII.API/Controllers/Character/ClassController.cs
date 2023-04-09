@@ -1,12 +1,9 @@
-﻿using System;
-using ArchaicQuestII.DataAccess;
+﻿using ArchaicQuestII.DataAccess;
 
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using ArchaicQuestII.API.Entities;
-using ArchaicQuestII.API.Models;
-using ArchaicQuestII.GameLogic.Character.Class;
 using Microsoft.AspNetCore.Authorization;
+using ArchaicQuestII.GameLogic.Character.Class;
 
 namespace ArchaicQuestII.API.Character
 {
@@ -23,70 +20,25 @@ namespace ArchaicQuestII.API.Character
         [HttpPost]
         [Helpers.Authorize]
         [Route("api/Character/Class")]
-        public void Post([FromBody] Class charClass)
+        public void Post([FromBody] IClass charClass)
         {
-            if (!ModelState.IsValid)
-            {
-                var exception = new Exception("Invalid object");
-                throw exception;
-            }
 
-            var newClass = new Class()
-            {
-                Name = charClass.Name,
-                AttributeBonus = charClass.AttributeBonus,
-                DateCreated = charClass.Id == -1 ? DateTime.Now : charClass.DateCreated,
-                DateUpdated = charClass.Id == -1 ? DateTime.Now : charClass.DateUpdated,
-                CreatedBy = "Malleus",
-                Description = charClass.Description,
-                ExperiencePointsCost = charClass.ExperiencePointsCost,
-                HitDice = charClass.HitDice,
-                Skills = charClass.Skills
-            };
-
-            if (!string.IsNullOrEmpty(charClass.Id.ToString()) && charClass.Id != -1)
-            {
-
-                var foundClass = _db.GetById<Class>(charClass.Id, DataBase.Collections.Class);
-
-                if (foundClass == null)
-                {
-                    throw new Exception("Item Id does not exist");
-                }
-
-                newClass.DateUpdated = DateTime.Now;
-                newClass.Id = charClass.Id;
-            }
-
-            _db.Save(newClass, DataBase.Collections.Class);
-
-            var user = (HttpContext.Items["User"] as AdminUser);
-            user.Contributions += 1;
-            _db.Save(user, DataBase.Collections.Users);
-
-            var log = new AdminLog()
-            {
-                Detail = $"({newClass.Id}) {newClass.Name}",
-                Type = DataBase.Collections.Class,
-                UserName = user.Username
-            };
-            _db.Save(log, DataBase.Collections.Log);
         }
 
         [HttpGet]
         [Helpers.Authorize]
         [Route("api/Character/Class/{id}")]
-        public Class Get(string id)
+        public IClass Get(string id)
         {
-            return Class.GetClassByName(id);
+            return null;
         }
 
         [HttpGet]
         [AllowAnonymous]
         [Route("api/Character/Class")]
-        public List<Class> Get()
+        public List<IClass> Get()
         {
-            return Class.GetListOfClasses();
+            return null;
         }
 
     }

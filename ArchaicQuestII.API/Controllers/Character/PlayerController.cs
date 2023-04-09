@@ -2,7 +2,6 @@
 using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Character.Status;
@@ -15,9 +14,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ArchaicQuestII.GameLogic.Character.Config;
-using ArchaicQuestII.GameLogic.Commands.Character;
 using ArchaicQuestII.GameLogic.Utilities;
-using Newtonsoft.Json;
+using ArchaicQuestII.GameLogic.Commands;
+
 public class TransferChar
 {
     public Guid PlayerId { get; set; }
@@ -55,7 +54,7 @@ namespace ArchaicQuestII.Controllers.character
                 throw exception;
             }
 
-            var playerClass = _db.GetList<Class>(DataBase.Collections.Class).FirstOrDefault(x => x.Name.Equals(player.ClassName));
+            var playerClass = player.GetClass();
 
             var newPlayer = new Player()
             {

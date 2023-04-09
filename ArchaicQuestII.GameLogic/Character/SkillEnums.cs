@@ -3,6 +3,10 @@ namespace ArchaicQuestII.GameLogic.Character;
 public enum SkillName
 {
     None,
+    Haggle,
+    Grip,
+    Berserk,
+    Fishing,
     Headbutt,
     Throw,
     Riposte,

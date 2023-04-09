@@ -160,7 +160,7 @@ public class FishCmd : ICommand
         var randomMob = new Player
         {
             Name = randomMobObj.Name,
-            ClassName = "Fighter",
+            ClassName = ClassName.Fighter,
             Target = string.Empty,
             Status = CharacterStatus.Status.Standing,
             Race = "Other",
@@ -240,11 +240,9 @@ public class FishCmd : ICommand
             return;
         }
 
-        var canDoSkill = Helpers.SkillSuccessCheck(player, "foraging");
-
-        if (!canDoSkill)
+        if (!player.RollSkill(SkillName.Fishing))
         {
-            player.FailedSkill("foraging", out var message);
+            player.FailedSkill(SkillName.Fishing, out var message);
             Core.Writer.WriteLine("<p>You fail to catch any fish.</p>", player.ConnectionId);
             Core.Writer.WriteLine(message, player.ConnectionId);
             player.Status = CharacterStatus.Status.Standing;
@@ -321,7 +319,7 @@ public class FishCmd : ICommand
             AttackType = Item.Item.AttackTypes.Charge,
             Slot = Equipment.EqSlot.Arms,
             Forage = null,
-            WeaponType = Item.Item.WeaponTypes.Arrow,
+            WeaponType = SkillName.None,
             WeaponSpeed = 0,
             Damage = null,
             KeyId = default,

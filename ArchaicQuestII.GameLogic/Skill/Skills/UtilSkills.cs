@@ -1,7 +1,5 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Client;
@@ -77,11 +75,11 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                 return 0;
             }
 
-            var playerWeaponSkill = Helpers.GetWeaponSkill(player.Equipped.Wielded, player);
+            var playerWeaponSkill = player.GetWeaponSkill(player.Equipped.Wielded);
 
-            var targetWeaponSkill = Helpers.GetWeaponSkill(target.Equipped.Wielded, target);
+            var targetWeaponSkill = target.GetWeaponSkill(target.Equipped.Wielded);
 
-            var playerSkillOfTargetsWeapon = Helpers.GetWeaponSkill(target.Equipped.Wielded, player);
+            var playerSkillOfTargetsWeapon = player.GetWeaponSkill(target.Equipped.Wielded);
 
             var chance = playerWeaponSkill;
 
@@ -103,7 +101,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             }
 
             var hasGrip = target.Skills.FirstOrDefault(x =>
-                x.Name.Equals("grip", StringComparison.CurrentCultureIgnoreCase));
+                x.Name == SkillName.Grip);
 
             var gripChance = DiceBag.Roll(1, 1, 100);
 
@@ -115,7 +113,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                 }
                 else
                 {
-                    target.FailedSkill("grip", out _);
+                    target.FailedSkill(SkillName.Grip, out _);
                 }
             }
 
@@ -204,7 +202,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             }
 
             var foundSkill = player.Skills
-                .FirstOrDefault(x => x.Name.Equals("Rescue", StringComparison.CurrentCultureIgnoreCase));
+                .FirstOrDefault(x => x.Name == SkillName.Rescue);
 
             var chance = foundSkill
                 .Proficiency;
@@ -235,7 +233,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                 return 0;
             }
 
-            player.FailedSkill("Rescue", out var message);
+            player.FailedSkill(SkillName.Rescue, out var message);
 
             _updateClientUi.UpdateExp(player);
 
@@ -262,7 +260,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             /* below 50% of hp helps, above hurts */
 
             var foundSkill = player.Skills
-                .FirstOrDefault(x => x.Name.Equals("Berserk", StringComparison.CurrentCultureIgnoreCase));
+                .FirstOrDefault(x => x.Name == SkillName.Berserk);
 
             if (foundSkill != null)
             {
@@ -290,7 +288,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
                         },
                         Affects = DefineSpell.SpellAffect.Berserk,
-                        Name = "Berserk"
+                        Name = SkillName.Berserk.ToString()
                     };
                     target.Affects.Custom.Add(affect);
 
@@ -319,7 +317,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
                     player.Attributes.Attribute[EffectLocation.Moves] = player.Attributes.Attribute[EffectLocation.Moves] /= 4;
 
-                    player.FailedSkill("Berserk", out var message);
+                    player.FailedSkill(SkillName.Berserk, out var message);
 
                     _updateClientUi.UpdateExp(player);
 

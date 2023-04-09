@@ -219,14 +219,9 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                 Core.Writer.WriteLine($"<p  class='{(isDark ? "room-dark" : "")}'>{item.Description.Look}",
                     player.ConnectionId);
 
-                // display item stats via lore
-                var hasLore = Helpers.FindSkill("lore", player);
-
-                if (hasLore != null)
+                if (player.HasSkill(SkillName.Lore))
                 {
-                    var success = Helpers.LoreSuccess(hasLore.Proficiency ?? 0);
-
-                    if (success)
+                    if (player.RollSkill(SkillName.Lore))
                     {
                         Core.PassiveSkills.Lore(player, room, item.Name);
                     }

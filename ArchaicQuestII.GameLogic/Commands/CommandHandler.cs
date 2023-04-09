@@ -200,7 +200,7 @@ namespace ArchaicQuestII.GameLogic.Commands
               }
               
               // Check level requirements met
-              if (player.Level < Core.Cache.GetClass(player.ClassName).Skills.FirstOrDefault(x => x.SkillName == command.Title)?.Level)
+              if (player.Level < player.Skills.FirstOrDefault(x => x.Name.ToString() == command.Title)?.Level)
               {
                   Core.Writer.WriteLine("You are not skilled enough to use this skill");
                   return false;

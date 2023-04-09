@@ -239,9 +239,7 @@ public class HarvestCmd : ICommand
             return;
         }
 
-        var canDoSkill = Helpers.SkillSuccessCheck(player, SkillName.Foraging);
-
-        if (!canDoSkill)
+        if (!player.RollSkill(SkillName.Foraging))
         {
             player.FailedSkill(SkillName.Foraging, out var message);
             Core.Writer.WriteLine("<p>You fail to harvest a thing.</p>", player.ConnectionId);
