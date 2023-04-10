@@ -20,7 +20,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
             var key = string.Empty;
             while ((line = file.ReadLine()) != null)
             {
-                System.Console.WriteLine(line);
+                //System.Console.WriteLine(line);
 
                 var x = line.Split(" ");
 

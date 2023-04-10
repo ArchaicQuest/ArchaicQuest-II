@@ -11,8 +11,8 @@ namespace ArchaicQuestII.GameLogic.Loops
         public int TickDelay => 125; //4000 for lag
         public bool ConfigureAwait => true;
         private int LagTick = 32;
-        private List<Player> _laggedPlayers;
-        private List<Player> _bufferedPlayers;
+        private List<Player> _laggedPlayers = new List<Player>();
+        private List<Player> _bufferedPlayers = new List<Player>();
 
         public void PreTick()
         {
@@ -60,6 +60,7 @@ namespace ArchaicQuestII.GameLogic.Loops
         public void PostTick()
         {
             _laggedPlayers.Clear();
+            _bufferedPlayers.Clear();
         }
     }
 }
