@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
-using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Utilities;
 using MoonSharp.Interpreter;
@@ -14,40 +13,17 @@ namespace ArchaicQuestII.GameLogic.World.Room
 {
     public class RoomActions : IRoomActions
     {
-        private readonly IWriteToClient _writeToClient;
-        private readonly ICache _cache;
-        private readonly ITime _time;
-        private readonly IUpdateClientUI _updateClient;
-        private readonly IMobScripts _mobScripts;
-        private readonly IDataBase _database;
-
-        public RoomActions(
-            IWriteToClient writeToClient,
-            ICache cache,
-            ITime time,
-            IUpdateClientUI updateClient, 
-            IMobScripts mobScripts, 
-            IDataBase database)
-        {
-            _writeToClient = writeToClient;
-            _cache = cache;
-            _time = time;
-            _updateClient = updateClient;
-            _mobScripts = mobScripts;
-            _database = database;
-        }
-
         public bool RoomIsDark(Player player, Room room)
         {
             if (room.IsLit)
                 return false;
-            
+
             if (player.Affects.DarkVision)
                 return false;
-            
+
             if (player.Equipped.Light != null)
                 return false;
-            
+
             foreach (var pc in room.Players)
             {
                 if (pc.Equipped.Light != null)
@@ -57,7 +33,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
             if (room.Type is Room.RoomType.Underground or Room.RoomType.Inside)
                 return true;
 
-            return _time.IsNightTime();
+            return Services.Instance.Time.IsNightTime();
         }
 
         /// <summary>
@@ -66,7 +42,9 @@ namespace ArchaicQuestII.GameLogic.World.Room
         /// <param name="room">Room to get area from</param>
         public Area.Area GetRoomArea(Room room)
         {
-            return _database.GetCollection<Area.Area>(DataBase.Collections.Area).FindById(room.AreaId);
+            return Services.Instance.DataBase
+                .GetCollection<Area.Area>(DataBase.Collections.Area)
+                .FindById(room.AreaId);
         }
 
         /// <summary>
@@ -82,7 +60,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
             }
 
             var roomId = $"{exit.AreaId}{exit.Coords.X}{exit.Coords.Y}{exit.Coords.Z}";
-            var room = _cache.GetRoom(roomId);
+            var room = Services.Instance.Cache.GetRoom(roomId);
 
             return room.Title;
         }
@@ -99,89 +77,119 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
             if (room.Exits.North != null)
             {
-                const string clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"n\"}))";
-                exits.Add(verbose
-                    ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.North)} </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.North)}</a></td></tr>"
-                    : Helpers.DisplayDoor(room.Exits.North));
+                const string clickEvent =
+                    "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"n\"}))";
+                exits.Add(
+                    verbose
+                        ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.North)} </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.North)}</a></td></tr>"
+                        : Helpers.DisplayDoor(room.Exits.North)
+                );
             }
-            
+
             if (room.Exits.East != null)
             {
-                const string clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"e\"}))";
-                exits.Add(verbose
-                    ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.East)} </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.East)}</a></td></tr>"
-                    : Helpers.DisplayDoor(room.Exits.East));
+                const string clickEvent =
+                    "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"e\"}))";
+                exits.Add(
+                    verbose
+                        ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.East)} </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.East)}</a></td></tr>"
+                        : Helpers.DisplayDoor(room.Exits.East)
+                );
             }
-            
+
             if (room.Exits.South != null)
             {
-                const string clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"s\"}))";
-                exits.Add(verbose
-                    ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.South)} </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.South)}</a></td></tr>"
-                    : Helpers.DisplayDoor(room.Exits.South));
+                const string clickEvent =
+                    "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"s\"}))";
+                exits.Add(
+                    verbose
+                        ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.South)} </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.South)}</a></td></tr>"
+                        : Helpers.DisplayDoor(room.Exits.South)
+                );
             }
 
             if (room.Exits.West != null)
             {
-                const string clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"w\"}))";
-                exits.Add(verbose
-                    ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.West)} </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.West)}</a></td></tr>"
-                    : Helpers.DisplayDoor(room.Exits.West));
+                const string clickEvent =
+                    "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"w\"}))";
+                exits.Add(
+                    verbose
+                        ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.West)} </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.West)}</a></td></tr>"
+                        : Helpers.DisplayDoor(room.Exits.West)
+                );
             }
 
             if (room.Exits.NorthEast != null)
             {
-                const string clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"ne\"}))";
-                exits.Add(verbose
-                    ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.NorthEast)}  </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.NorthEast)}</a></td></tr>"
-                    : Helpers.DisplayDoor(room.Exits.NorthEast));
+                const string clickEvent =
+                    "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"ne\"}))";
+                exits.Add(
+                    verbose
+                        ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.NorthEast)}  </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.NorthEast)}</a></td></tr>"
+                        : Helpers.DisplayDoor(room.Exits.NorthEast)
+                );
             }
 
             if (room.Exits.SouthEast != null)
             {
-                const string clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"se\"}))";
-                exits.Add(verbose
-                    ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.SouthEast)}  </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.SouthEast)}</a></td></tr>"
-                    : Helpers.DisplayDoor(room.Exits.SouthEast));
+                const string clickEvent =
+                    "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"se\"}))";
+                exits.Add(
+                    verbose
+                        ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.SouthEast)}  </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.SouthEast)}</a></td></tr>"
+                        : Helpers.DisplayDoor(room.Exits.SouthEast)
+                );
             }
 
             if (room.Exits.SouthWest != null)
             {
-                const string clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"sw\"}))";
-                exits.Add(verbose
-                    ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.SouthWest)}  </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.SouthWest)}</a></td></tr>"
-                    : Helpers.DisplayDoor(room.Exits.SouthWest));
+                const string clickEvent =
+                    "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"sw\"}))";
+                exits.Add(
+                    verbose
+                        ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.SouthWest)}  </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.SouthWest)}</a></td></tr>"
+                        : Helpers.DisplayDoor(room.Exits.SouthWest)
+                );
             }
 
             if (room.Exits.NorthWest != null)
             {
-                const string clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"nw\"}))";
-                exits.Add(verbose
-                    ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.NorthWest)}  </td> <td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.NorthWest)}</a></td></tr>"
-                    : Helpers.DisplayDoor(room.Exits.NorthWest));
+                const string clickEvent =
+                    "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"nw\"}))";
+                exits.Add(
+                    verbose
+                        ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.NorthWest)}  </td> <td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.NorthWest)}</a></td></tr>"
+                        : Helpers.DisplayDoor(room.Exits.NorthWest)
+                );
             }
 
             if (room.Exits.Down != null)
             {
-                const string clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"d\"}))";
-                exits.Add(verbose
-                    ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.Down)}  </td> <td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.Down)}</a></td></tr>"
-                    : Helpers.DisplayDoor(room.Exits.Down));
+                const string clickEvent =
+                    "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"d\"}))";
+                exits.Add(
+                    verbose
+                        ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.Down)}  </td> <td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.Down)}</a></td></tr>"
+                        : Helpers.DisplayDoor(room.Exits.Down)
+                );
             }
 
             if (room.Exits.Up != null)
             {
-                const string clickEvent = "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"u\"}))";
-                exits.Add(verbose
-                    ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.Up)}  </td> <td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.Up)}</a></td></tr>"
-                    : Helpers.DisplayDoor(room.Exits.Up));
+                const string clickEvent =
+                    "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"u\"}))";
+                exits.Add(
+                    verbose
+                        ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.Up)}  </td> <td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.Up)}</a></td></tr>"
+                        : Helpers.DisplayDoor(room.Exits.Up)
+                );
             }
 
             if (exits.Count <= 0)
             {
                 exits.Add("None");
             }
-            
+
             foreach (var exit in exits)
             {
                 if (!verbose)
@@ -212,31 +220,31 @@ namespace ArchaicQuestII.GameLogic.World.Room
         public async void RoomChange(Player player, Room oldRoom, Room newRoom, bool isFlee)
         {
             player.Pose = string.Empty;
-            
+
             if (oldRoom.Mobs.Any())
             {
                 OnPlayerLeaveEvent(oldRoom, player);
             }
 
             ExitRoom(player, newRoom, oldRoom, isFlee);
-            
+
             UpdateCharactersLocation(player, oldRoom, newRoom);
-            
+
             EnterRoom(player, newRoom, oldRoom, isFlee);
-            
-            _updateClient.GetMap(player, _cache.GetMap($"{newRoom.AreaId}{newRoom.Coords.Z}"));
-            _updateClient.UpdateMoves(player);
+
+            Services.Instance.UpdateClient.GetMap(
+                player,
+                Services.Instance.Cache.GetMap($"{newRoom.AreaId}{newRoom.Coords.Z}")
+            );
+            Services.Instance.UpdateClient.UpdateMoves(player);
             player.Buffer.Enqueue("look");
-            
-      
+
             if (newRoom.Mobs.Any())
             {
                 // force the on enter event to fire after Look
                 await Task.Delay(125);
                 OnPlayerEnterEvent(newRoom, player);
             }
-            
-            
         }
 
         /// <summary>
@@ -253,7 +261,8 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 oldRoom.Players.Remove(character);
 
                 //add player to room
-                character.RoomId = $"{newRoom.AreaId}{newRoom.Coords.X}{newRoom.Coords.Y}{newRoom.Coords.Z}";
+                character.RoomId =
+                    $"{newRoom.AreaId}{newRoom.Coords.X}{newRoom.Coords.Y}{newRoom.Coords.Z}";
                 newRoom.Players.Add(character);
 
                 //player entered new area TODO: Add area announce
@@ -266,7 +275,8 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 oldRoom.Mobs.Remove(character);
 
                 //add mob to room
-                character.RoomId = $"{newRoom.AreaId}{newRoom.Coords.X}{newRoom.Coords.Y}{newRoom.Coords.Z}";
+                character.RoomId =
+                    $"{newRoom.AreaId}{newRoom.Coords.X}{newRoom.Coords.Y}{newRoom.Coords.Z}";
                 newRoom.Mobs.Add(character);
             }
         }
@@ -309,23 +319,23 @@ namespace ArchaicQuestII.GameLogic.World.Room
                     movement = "rides";
                     break;
                 case CharacterStatus.Status.Standing:
-                    _updateClient.PlaySound("walk", character);
+                    Services.Instance.UpdateClient.PlaySound("walk", character);
                     movement = "walks";
                     break;
             }
 
             if (isFlee)
             {
-                _updateClient.PlaySound("flee", character);
+                Services.Instance.UpdateClient.PlaySound("flee", character);
                 movement = "rushes";
-          
             }
 
             foreach (var p in toRoom.Players.Where(p => character.Name != p.Name))
             {
-                _writeToClient.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     $"<span class='{(character.ConnectionId != "mob" ? "player" : "mob")}'>{character.Name} {movement} {direction}.</span>",
-                    p.ConnectionId);
+                    p.ConnectionId
+                );
             }
         }
 
@@ -370,7 +380,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
                     movement = "walks";
                     break;
             }
-            
+
             if (isFlee)
             {
                 movement = "flee";
@@ -378,9 +388,10 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
             foreach (var p in fromRoom.Players.Where(p => characterBase.Name != p.Name))
             {
-                _writeToClient.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     $"<span class='{(characterBase.ConnectionId != "mob" ? "player" : "mob")}'>{characterBase.Name} {movement} {direction}.</span>",
-                    p.ConnectionId);
+                    p.ConnectionId
+                );
             }
         }
 
@@ -392,15 +403,15 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
                 var script = new Script();
 
-                var obj = UserData.Create(_mobScripts);
+                var obj = UserData.Create(Services.Instance.MobScripts);
                 script.Globals.Set("obj", obj);
                 UserData.RegisterProxyType<MyProxy, Room>(r => new MyProxy(room));
                 UserData.RegisterProxyType<ProxyPlayer, Player>(r => new ProxyPlayer(character));
-                    
+
                 script.Globals["room"] = room;
                 script.Globals["player"] = character;
                 script.Globals["mob"] = mob;
-                    
+
                 var res = script.DoString(mob.Events.Leave);
             }
         }
@@ -417,10 +428,12 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
                         var script = new Script();
 
-                        var obj = UserData.Create(_mobScripts);
+                        var obj = UserData.Create(Services.Instance.MobScripts);
                         script.Globals.Set("obj", obj);
                         UserData.RegisterProxyType<MyProxy, Room>(r => new MyProxy(room));
-                        UserData.RegisterProxyType<ProxyPlayer, Player>(r => new ProxyPlayer(character));
+                        UserData.RegisterProxyType<ProxyPlayer, Player>(
+                            r => new ProxyPlayer(character)
+                        );
 
                         script.Globals["room"] = room;
                         script.Globals["player"] = character;
@@ -434,10 +447,17 @@ namespace ArchaicQuestII.GameLogic.World.Room
                     }
                 }
 
-                if (mob.Aggro && mob.Status != CharacterStatus.Status.Fighting && character.ConnectionId != "mob")
+                if (
+                    mob.Aggro
+                    && mob.Status != CharacterStatus.Status.Fighting
+                    && character.ConnectionId != "mob"
+                )
                 {
-                    _writeToClient.WriteLine($"{mob.Name} attacks you!", character.ConnectionId);
-                    _mobScripts.AttackPlayer(room, character, mob);
+                    Services.Instance.Writer.WriteLine(
+                        $"{mob.Name} attacks you!",
+                        character.ConnectionId
+                    );
+                    Services.Instance.MobScripts.AttackPlayer(room, character, mob);
                 }
             }
         }

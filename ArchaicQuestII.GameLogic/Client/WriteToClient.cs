@@ -13,25 +13,21 @@ namespace ArchaicQuestII.GameLogic.Client
     public class WriteToClient : IWriteToClient
     {
         private readonly IHubContext<GameHub> _hubContext;
-       private readonly ICache _cache;
         private readonly TelnetHub _telnetHub;
-        
-        public WriteToClient(IHubContext<GameHub> hubContext, TelnetHub telnetHub, ICache cache)
+
+        public WriteToClient(IHubContext<GameHub> hubContext, TelnetHub telnetHub)
         {
             _hubContext = hubContext;
-            _cache = cache;
             _telnetHub = telnetHub;
         }
 
         public async void WriteLine(string message, string id)
         {
-
             try
             {
                 if (id.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
                 {
                     return;
-
                 }
 
                 await _hubContext.Clients.Client(id).SendAsync("SendMessage", message, "");
@@ -44,13 +40,11 @@ namespace ArchaicQuestII.GameLogic.Client
 
         public async void WriteLineMobSay(string mobName, string message, string id)
         {
-
             try
             {
                 if (id.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
                 {
                     return;
-
                 }
 
                 var mobSay = $"<span class='mob'>{mobName} says '{message}'</span>";
@@ -64,7 +58,6 @@ namespace ArchaicQuestII.GameLogic.Client
 
         public async void WriteLine(string message, string id, int delay)
         {
-
             try
             {
                 await Task.Delay(delay);
@@ -76,13 +69,10 @@ namespace ArchaicQuestII.GameLogic.Client
             }
         }
 
-
         public async void WriteLine(string message)
         {
-
             try
             {
-
                 await _hubContext.Clients.All.SendAsync("SendMessage", message, "");
             }
             catch (Exception ex)
@@ -103,21 +93,21 @@ namespace ArchaicQuestII.GameLogic.Client
                 WriteLine(message, pc.ConnectionId);
             }
         }
-     
+
         public void WriteToOthersInGame(string message, Player player)
         {
-            var players = _cache.GetAllPlayers();
-            
+            var players = Services.Instance.Cache.GetAllPlayers();
+
             foreach (var pc in players.Where(pc => pc.Id != player.Id))
             {
                 WriteLine(message, pc.ConnectionId);
             }
         }
-        
+
         public void WriteToOthersInGame(string message, string type)
         {
-            var players = _cache.GetAllPlayers();
-            
+            var players = Services.Instance.Cache.GetAllPlayers();
+
             foreach (var pc in players)
             {
                 WriteLine(message, pc.ConnectionId);
@@ -125,4 +115,3 @@ namespace ArchaicQuestII.GameLogic.Client
         }
     }
 }
-

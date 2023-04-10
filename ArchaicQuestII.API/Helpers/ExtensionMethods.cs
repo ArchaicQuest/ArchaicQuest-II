@@ -35,27 +35,6 @@ namespace ArchaicQuestII.API.Helpers
 
         public static void StartLoops(this IApplicationBuilder app)
         {
-            GameLogic.Core.Services.Instance.InitServices(
-                app.ApplicationServices.GetRequiredService<ICache>(),
-                app.ApplicationServices.GetRequiredService<IWriteToClient>(),
-                app.ApplicationServices.GetRequiredService<IDataBase>(),
-                app.ApplicationServices.GetRequiredService<IUpdateClientUI>(),
-                app.ApplicationServices.GetRequiredService<ICombat>(),
-                app.ApplicationServices.GetRequiredService<IPlayerDataBase>(),
-                app.ApplicationServices.GetRequiredService<IRoomActions>(),
-                app.ApplicationServices.GetRequiredService<IMobScripts>(),
-                app.ApplicationServices.GetRequiredService<IErrorLog>(),
-                app.ApplicationServices.GetRequiredService<IPassiveSkills>(),
-                app.ApplicationServices.GetRequiredService<IFormulas>(),
-                app.ApplicationServices.GetRequiredService<ITime>(),
-                app.ApplicationServices.GetRequiredService<IDamage>(),
-                app.ApplicationServices.GetRequiredService<ISpellList>(),
-                app.ApplicationServices.GetRequiredService<IWeather>(),
-                app.ApplicationServices.GetRequiredService<ICharacterHandler>(),
-                app.ApplicationServices.GetRequiredService<ILoopHandler>(),
-                app.ApplicationServices.GetRequiredService<ICommandHandler>()
-            );
-
             Task.Run(TelnetHub.Instance.ProcessConnections);
             GameLogic.Core.Services.Instance.GameLoop.StartLoops();
         }

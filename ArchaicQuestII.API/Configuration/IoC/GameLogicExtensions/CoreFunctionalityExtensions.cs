@@ -10,7 +10,6 @@ namespace ArchaicQuestII.API.Configuration.IoC.GameLogicExtensions
     {
         public static IServiceCollection AddCoreFunctionality(this IServiceCollection services)
         {
-            services.AddSingleton<ICache>(new Cache());
             services.AddSingleton<IDamage, Damage>();
             services.AddSingleton<ILoopHandler, LoopHandler>();
             services.AddSingleton<IUpdateClientUI, UpdateClientUI>();

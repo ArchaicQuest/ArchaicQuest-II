@@ -43,10 +43,12 @@ namespace ArchaicQuestII.GameLogic.Core
             get { return instance; }
         }
 
-        private Services() { }
+        private Services()
+        {
+            Cache = new Cache();
+        }
 
         public void InitServices(
-            ICache cache,
             IWriteToClient writeToClient,
             IDataBase dataBase,
             IUpdateClientUI updateClient,
@@ -66,7 +68,6 @@ namespace ArchaicQuestII.GameLogic.Core
             ICommandHandler commandHandler
         )
         {
-            Cache = cache;
             Writer = writeToClient;
             DataBase = dataBase;
             UpdateClient = updateClient;

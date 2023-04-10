@@ -11,7 +11,6 @@ using ArchaicQuestII.API.Entities;
 using ArchaicQuestII.API.Helpers;
 using ArchaicQuestII.API.Models;
 using ArchaicQuestII.API.Services;
-using ArchaicQuestII.DataAccess.DataModels;
 using ArchaicQuestII.GameLogic.Core;
 using Newtonsoft.Json;
 using PostmarkDotNet;
@@ -38,15 +37,14 @@ public class ResetPassword
     public string Password { get; set; }
 }
 
-
 namespace ArchaicQuestII.API.Controllers
 {
     public class AccountController : Controller
     {
-       
         private IPlayerDataBase _pdb { get; }
         private IDataBase _db { get; }
         private readonly IUserService _userService;
+
         public AccountController(IPlayerDataBase pdb, IDataBase db, IUserService adminService)
         {
             _pdb = pdb;
@@ -58,14 +56,14 @@ namespace ArchaicQuestII.API.Controllers
         [Route("api/Account")]
         public IActionResult Post([FromBody] Account account)
         {
-
             if (!ModelState.IsValid)
             {
                 var exception = new Exception("Invalid Account details");
                 throw exception;
             }
 
-            var hasEmail = _pdb.GetCollection<Account>(PlayerDataBase.Collections.Account).FindOne(x => x.Email.Equals(account.Email));
+            var hasEmail = _pdb.GetCollection<Account>(PlayerDataBase.Collections.Account)
+                .FindOne(x => x.Email.Equals(account.Email));
 
             if (hasEmail != null)
             {
@@ -86,7 +84,9 @@ namespace ArchaicQuestII.API.Controllers
 
             var saved = _pdb.Save(data, PlayerDataBase.Collections.Account);
 
-            string json = JsonConvert.SerializeObject(new { toast = "account created successfully", id = data.Id });
+            string json = JsonConvert.SerializeObject(
+                new { toast = "account created successfully", id = data.Id }
+            );
             return saved ? (IActionResult)Ok(json) : BadRequest("Error saving account");
         }
 
@@ -94,14 +94,14 @@ namespace ArchaicQuestII.API.Controllers
         [Route("api/Account/Login")]
         public IActionResult Login([FromBody] Login login)
         {
-
             if (!ModelState.IsValid)
             {
                 var exception = new Exception("Invalid login details");
                 throw exception;
             }
 
-            var user = _pdb.GetCollection<Account>(PlayerDataBase.Collections.Account).FindOne(x => x.Email.Equals(login.Username));
+            var user = _pdb.GetCollection<Account>(PlayerDataBase.Collections.Account)
+                .FindOne(x => x.Email.Equals(login.Username));
 
             if (user == null)
             {
@@ -113,22 +113,23 @@ namespace ArchaicQuestII.API.Controllers
                 return BadRequest("Password is not correct.");
             }
 
-            return (IActionResult)Ok(JsonConvert.SerializeObject(new { toast = "logged in successfully", id = user.Id }));
-
+            return (IActionResult)Ok(
+                JsonConvert.SerializeObject(new { toast = "logged in successfully", id = user.Id })
+            );
         }
 
         [HttpPost]
         [Route("api/Account/Profile")]
         public IActionResult GetProfile([FromBody] Guid id)
         {
-
             if (!ModelState.IsValid)
             {
                 var exception = new Exception("Invalid request");
                 throw exception;
             }
 
-            var user = _pdb.GetCollection<Account>(PlayerDataBase.Collections.Account).FindOne(x => x.Id.Equals(id));
+            var user = _pdb.GetCollection<Account>(PlayerDataBase.Collections.Account)
+                .FindOne(x => x.Id.Equals(id));
 
             if (user == null)
             {
@@ -145,24 +146,18 @@ namespace ArchaicQuestII.API.Controllers
                     Characters = characters.ToList(),
                     Credits = 0,
                     DateJoined = user.DateJoined,
-                    Stats = new AccountStats()
-                    {
-
-                    }
+                    Stats = new AccountStats() { }
                 };
 
-
-                return Ok(JsonConvert.SerializeObject(new { toast = "logged in successfully", profile }));
+                return Ok(
+                    JsonConvert.SerializeObject(new { toast = "logged in successfully", profile })
+                );
             }
             catch (Exception ex)
             {
                 return BadRequest(JsonConvert.SerializeObject(new { toast = ex.Message }));
             }
-            
-            
-
         }
-
 
         //https://jasonwatmore.com/post/2019/10/11/aspnet-core-3-jwt-authentication-tutorial-with-example-api
         [HttpPost("api/Account/authenticate")]
@@ -180,7 +175,10 @@ namespace ArchaicQuestII.API.Controllers
         [HttpPost("api/Account/adduser")]
         public IActionResult Add([FromBody] AddAdminUser user)
         {
-            var userExists = _db.GetList<AdminUser>(DataBase.Collections.Users).FirstOrDefault(x => x.Username.Equals(user.Username, StringComparison.CurrentCultureIgnoreCase));
+            var userExists = _db.GetList<AdminUser>(DataBase.Collections.Users)
+                .FirstOrDefault(
+                    x => x.Username.Equals(user.Username, StringComparison.CurrentCultureIgnoreCase)
+                );
 
             var context = (HttpContext.Items["User"] as AdminUser);
             if (context.Role != Role.Admin)
@@ -201,7 +199,6 @@ namespace ArchaicQuestII.API.Controllers
             };
             _db.Save(adminUser, DataBase.Collections.Users);
 
-
             return Ok(new { message = "User successfully added" });
         }
 
@@ -220,12 +217,13 @@ namespace ArchaicQuestII.API.Controllers
             {
                 Id = user.Id,
                 Username = user.Username,
-                Password = string.IsNullOrEmpty(user.Password) ? userExists.Password : user.Password,
+                Password = string.IsNullOrEmpty(user.Password)
+                    ? userExists.Password
+                    : user.Password,
                 Role = user.Role,
                 LastActive = DateTime.Now
             };
             _db.Save(adminUser, DataBase.Collections.Users);
-
 
             return Ok(new { message = "User successfully updated" });
         }
@@ -241,12 +239,10 @@ namespace ArchaicQuestII.API.Controllers
                 return BadRequest(new { message = "User does not exists." });
             }
 
-
             if ((HttpContext.Items["User"] as AdminUser).Role != Role.Admin)
             {
                 return BadRequest(new { message = "You need to be admin to do this" });
             }
-
 
             var deleted = _db.Delete<AdminUser>(userExists.Id, DataBase.Collections.Users);
 
@@ -256,27 +252,31 @@ namespace ArchaicQuestII.API.Controllers
             }
 
             return BadRequest(new { message = "User deletion failed" });
-
         }
-        
+
         [HttpPost]
         [Route("api/Account/forgot-password")]
-        public async Task<IActionResult> RequestPasswordReset([FromBody] ForgotPassword forgotPassword)
+        public async Task<IActionResult> RequestPasswordReset(
+            [FromBody] ForgotPassword forgotPassword
+        )
         {
-
             if (!ModelState.IsValid)
             {
                 var exception = new Exception("Invalid request");
                 throw exception;
             }
 
-            var user = _pdb.GetCollection<Account>(PlayerDataBase.Collections.Account).FindOne(x => x.Email.Equals(forgotPassword.Email));
+            var user = _pdb.GetCollection<Account>(PlayerDataBase.Collections.Account)
+                .FindOne(x => x.Email.Equals(forgotPassword.Email));
 
             if (user == null)
             {
-                return Ok(JsonConvert.SerializeObject(new { toast = "Forgot password successfully requested." }));
+                return Ok(
+                    JsonConvert.SerializeObject(
+                        new { toast = "Forgot password successfully requested." }
+                    )
+                );
             }
-
 
             var id = new ResetPasswordId()
             {
@@ -286,13 +286,15 @@ namespace ArchaicQuestII.API.Controllers
             };
 
             var encodedId = ToBase64(id);
-            
+
             // Send an email asynchronously:
-            var message = new TemplatedPostmarkMessage {
-                From = "noreply@archaicquest.com",  
+            var message = new TemplatedPostmarkMessage
+            {
+                From = "noreply@archaicquest.com",
                 To = forgotPassword.Email,
                 TemplateAlias = "password-reset",
-                TemplateModel = new Dictionary<string,object> {
+                TemplateModel = new Dictionary<string, object>
+                {
                     { "product_url", "https://www.archaicquest.com" },
                     { "product_name", "ArchaicQuest" },
                     { "name", forgotPassword.Email },
@@ -315,21 +317,22 @@ namespace ArchaicQuestII.API.Controllers
 
             var response = await client.SendMessageAsync(message);
 
-            if(response.Status != PostmarkStatus.Success) {
+            if (response.Status != PostmarkStatus.Success)
+            {
                 Console.WriteLine("Response was: " + response.Message);
             }
-       
 
-            return Ok(JsonConvert.SerializeObject(new { toast = "Forgot password successfully requested." }));
-
+            return Ok(
+                JsonConvert.SerializeObject(
+                    new { toast = "Forgot password successfully requested." }
+                )
+            );
         }
-
 
         [HttpPost]
         [Route("api/Account/reset-password")]
         public async Task<IActionResult> PasswordReset([FromBody] ResetPassword resetPassword)
         {
-
             if (!ModelState.IsValid)
             {
                 var exception = new Exception("Invalid request");
@@ -337,14 +340,14 @@ namespace ArchaicQuestII.API.Controllers
             }
 
             ResetPasswordId decodedId = null;
-            
+
             try
             {
-                 decodedId = FromBase64<ResetPasswordId>(resetPassword.Id);
+                decodedId = FromBase64<ResetPasswordId>(resetPassword.Id);
             }
             catch (Exception ex)
             {
-                return BadRequest("Invalid reset password id" );
+                return BadRequest("Invalid reset password id");
             }
 
             var expiry = decodedId.DateTime;
@@ -353,25 +356,24 @@ namespace ArchaicQuestII.API.Controllers
             if (difference.Days > 0)
             {
                 return BadRequest("Change password request has expired.");
-
             }
 
-            var user = _pdb.GetCollection<Account>(PlayerDataBase.Collections.Account).FindOne(x => x.Id.Equals(decodedId.UserId) && x.Email.Equals(decodedId.Email));
+            var user = _pdb.GetCollection<Account>(PlayerDataBase.Collections.Account)
+                .FindOne(x => x.Id.Equals(decodedId.UserId) && x.Email.Equals(decodedId.Email));
 
             user.Password = BCrypt.Net.BCrypt.HashPassword(resetPassword.Password);
 
             _pdb.Save(user, PlayerDataBase.Collections.Account);
 
-            return Ok(JsonConvert.SerializeObject(new { toast = "Password successfully updated." }));
-
+            return Ok(
+                JsonConvert.SerializeObject(new { toast = "Password successfully updated." })
+            );
         }
 
         [Authorize]
         [HttpGet("api/Account/getusers")]
         public IActionResult GetAll()
         {
-
-
             var users = _userService.GetAll();
             var context = (HttpContext.Items["User"] as AdminUser);
             foreach (var user in users)
@@ -396,13 +398,10 @@ namespace ArchaicQuestII.API.Controllers
         [HttpGet("api/Account/logs")]
         public IActionResult GetLogs()
         {
-
             var logs = _db.GetList<AdminLog>(DataBase.Collections.Log);
             return Ok(logs);
         }
-        
 
-        
         public static string ToBase64(object obj)
         {
             string json = JsonConvert.SerializeObject(obj);
@@ -411,6 +410,7 @@ namespace ArchaicQuestII.API.Controllers
 
             return Convert.ToBase64String(bytes);
         }
+
         public static ResetPasswordId FromBase64<ResetPasswordId>(string base64Text)
         {
             byte[] bytes = Convert.FromBase64String(base64Text);
@@ -420,7 +420,4 @@ namespace ArchaicQuestII.API.Controllers
             return JsonConvert.DeserializeObject<ResetPasswordId>(json);
         }
     }
-
-
-
 }

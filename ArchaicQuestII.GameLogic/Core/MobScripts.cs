@@ -3,8 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Model;
-using ArchaicQuestII.GameLogic.Client;
-using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.Utilities;
@@ -13,13 +11,13 @@ using MoonSharp.Interpreter;
 
 namespace ArchaicQuestII.GameLogic.Core
 {
-
     public class MyProxy
     {
         private Room room;
         private Player player;
         private Player mob;
         private string command;
+
         [MoonSharpHidden]
         public MyProxy(Room room)
         {
@@ -28,98 +26,116 @@ namespace ArchaicQuestII.GameLogic.Core
             //this.mob = mob;
         }
 
-        public Room GetRoom() { return room; }
-        public Player GetPlayer() { return player; }
-        public Player GetMob() { return mob; }
-        public string GetCommand() { return command; }
-    }
+        public Room GetRoom()
+        {
+            return room;
+        }
 
+        public Player GetPlayer()
+        {
+            return player;
+        }
+
+        public Player GetMob()
+        {
+            return mob;
+        }
+
+        public string GetCommand()
+        {
+            return command;
+        }
+    }
 
     public class ProxyPlayer
     {
         private Player player;
+
         [MoonSharpHidden]
         public ProxyPlayer(Player player)
         {
             this.player = player;
         }
 
-        public Player GetPlayer() { return player; }
-
+        public Player GetPlayer()
+        {
+            return player;
+        }
     }
 
     public class ProxyCommand
     {
         private string command;
+
         [MoonSharpHidden]
         public ProxyCommand(string command)
         {
             this.command = command;
         }
 
-        public string getCommand() { return command; }
-
+        public string getCommand()
+        {
+            return command;
+        }
     }
-
 
     public class MobScripts : IMobScripts
     {
         public Player _player;
         public Player _mob;
         public Room _room;
-        public ICombat _combat;
-        private readonly ICache _cache;
-        private readonly IWriteToClient _writeToClient;
-        private readonly IUpdateClientUI _updateClientUi;
 
-        public MobScripts(
-            ICache cache, 
-            ICombat combat, 
-            IWriteToClient writeToClient, 
-            IUpdateClientUI updateClientUi)
-        {
-            _cache = cache;
-            _combat = combat;
-            _writeToClient = writeToClient;
-            _updateClientUi = updateClientUi;
-        }
         public bool IsInRoom(Room room, Player player)
         {
             return room.Players.Contains(player);
         }
-        
+
         public void Say(string n, int delay, Room room, Player player)
         {
             if (!IsInRoom(room, player))
             {
                 return;
-
             }
-            _writeToClient.WriteLine($"<p class='mob-emote'>{n.Replace("#name#", player.Name)}</p>", player.ConnectionId, delay);
+            Services.Instance.Writer.WriteLine(
+                $"<p class='mob-emote'>{n.Replace("#name#", player.Name)}</p>",
+                player.ConnectionId,
+                delay
+            );
         }
+
         public void Say(string n, int delay, Room room, Player player, Player mob)
         {
             if (!IsInRoom(room, player))
             {
                 return;
-
             }
-            _writeToClient.WriteLine($"<p class='mob-emote'>{mob.Name} says, \"{n}\"</p>", player.ConnectionId, delay);
+            Services.Instance.Writer.WriteLine(
+                $"<p class='mob-emote'>{mob.Name} says, \"{n}\"</p>",
+                player.ConnectionId,
+                delay
+            );
         }
+
         public string GetName(Player player)
         {
-
             return player.Name;
         }
 
         public void UpdateInv(Player player)
         {
-            player.Inventory.Add(new Item.Item() { Name = "test", Description = new Description() { Room = "A test LUA item" }, Id = 9999 });
+            player.Inventory.Add(
+                new Item.Item()
+                {
+                    Name = "test",
+                    Description = new Description() { Room = "A test LUA item" },
+                    Id = 9999
+                }
+            );
         }
 
         public void AttackPlayer(Room room, Player player, Player mob)
         {
-            _combat.Fight(mob, GetName(player), room, true);
+            Services.Instance.Combat.Fight(mob, GetName(player), room, true);
         }
 
         public void AddEventState(Player player, string key, int value)
@@ -131,7 +147,6 @@ namespace ArchaicQuestII.GameLogic.Core
         {
             player.EventState[key] = value;
         }
-
 
         public int ReadEventState(Player player, string key)
         {
@@ -207,14 +222,16 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public bool IsMobHere(string name, Room room)
         {
-            return room.Mobs.FirstOrDefault(x => x.Name.StartsWith(name, StringComparison.CurrentCultureIgnoreCase)) !=
-                   null;
+            return room.Mobs.FirstOrDefault(
+                    x => x.Name.StartsWith(name, StringComparison.CurrentCultureIgnoreCase)
+                ) != null;
         }
 
         public bool IsObjectHere(string name, Room room)
         {
-            return room.Items.FirstOrDefault(x => x.Name.StartsWith(name, StringComparison.CurrentCultureIgnoreCase)) !=
-                   null;
+            return room.Items.FirstOrDefault(
+                    x => x.Name.StartsWith(name, StringComparison.CurrentCultureIgnoreCase)
+                ) != null;
         }
 
         public bool IsImm(Player player)
@@ -224,34 +241,35 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public void GiveItem(Player player, Player mob, string name)
         {
-            var item = mob.Inventory.FirstOrDefault(x =>
-                x.Name.Contains(name, StringComparison.CurrentCultureIgnoreCase));
+            var item = mob.Inventory.FirstOrDefault(
+                x => x.Name.Contains(name, StringComparison.CurrentCultureIgnoreCase)
+            );
 
             if (item != null)
             {
-
                 player.Inventory.Add(item);
 
-                _updateClientUi.UpdateInventory(player);
+                Services.Instance.UpdateClient.UpdateInventory(player);
             }
             else
             {
-               // get item from cache
+                // get item from cache
             }
         }
-        
+
         public void RemoveItem(Player player, string name, int count = 1)
         {
             for (int i = 0; i < count; i++)
+            {
+                var item = player.Inventory.FirstOrDefault(
+                    x => x.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase)
+                );
+                if (item != null)
                 {
-                    var item = player.Inventory.FirstOrDefault(x =>
-                        x.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
-                    if (item != null)
-                    {
-                        player.Inventory.Remove(item);
-                    }
+                    player.Inventory.Remove(item);
                 }
-                _updateClientUi.UpdateInventory(player);
+            }
+            Services.Instance.UpdateClient.UpdateInventory(player);
         }
 
         public void GiveGold(int value, Player player)
@@ -262,36 +280,40 @@ namespace ArchaicQuestII.GameLogic.Core
             }
             player.Money.Gold += value;
         }
-        
+
         public void Harm(int maxValue, Player player, Room room)
         {
             var damage = DiceBag.Roll(1, 1, maxValue);
 
-            var dummyPlayer = new Player()
-            {
-                Name = "Script damage"
-            };
-            
+            var dummyPlayer = new Player() { Name = "Script damage" };
+
             player.HarmTarget(damage);
-            _updateClientUi.UpdateScore(player);
-            _updateClientUi.UpdateHP(player);
+            Services.Instance.UpdateClient.UpdateScore(player);
+            Services.Instance.UpdateClient.UpdateHP(player);
             if (!player.IsAlive())
             {
-                _combat.TargetKilled(dummyPlayer, player, room);
+                Services.Instance.Combat.TargetKilled(dummyPlayer, player, room);
             }
         }
 
         public bool HasObject(Player player, string name)
         {
-            return player.Inventory.FirstOrDefault(x => x.Name.StartsWith(name, StringComparison.CurrentCultureIgnoreCase)) !=
-                   null;
+            return player.Inventory.FirstOrDefault(
+                    x => x.Name.StartsWith(name, StringComparison.CurrentCultureIgnoreCase)
+                ) != null;
         }
-        
+
         public bool HasObjectCount(Player player, string name, int count)
         {
             var countx = player.Inventory
-                .FindAll(x => x.Name.StartsWith(name, StringComparison.CurrentCultureIgnoreCase)).Count();
-            var x =  player.Inventory.FindAll(x => x.Name.StartsWith(name, StringComparison.CurrentCultureIgnoreCase)).Count() >= count;
+                .FindAll(x => x.Name.StartsWith(name, StringComparison.CurrentCultureIgnoreCase))
+                .Count();
+            var x =
+                player.Inventory
+                    .FindAll(
+                        x => x.Name.StartsWith(name, StringComparison.CurrentCultureIgnoreCase)
+                    )
+                    .Count() >= count;
             return x;
         }
 
@@ -308,43 +330,46 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public void UpdateQuest(Player player, int questId, string message)
         {
-
             var quest = player.QuestLog.FirstOrDefault(x => x.Id == questId);
 
             if (quest != null)
             {
                 quest.Description += $"\r\n{message}";
-
             }
 
-            _writeToClient.WriteLine($"<p class='gain'>Updated Quest: {quest.Title}!</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine(
+                $"<p class='gain'>Updated Quest: {quest.Title}!</p>",
+                player.ConnectionId
+            );
         }
 
         public void AddQuest(Player player, int questId)
         {
-
-            var quest = _cache.GetQuest(questId);
+            var quest = Services.Instance.Cache.GetQuest(questId);
 
             if (player.QuestLog.FirstOrDefault(x => x.Id == quest.Id) == null)
             {
-
-                player.QuestLog.Add(new Quest()
-                {
-                    Id = quest.Id,
-                    Area = quest.Area,
-                    Title = quest.Title,
-                    Description = quest.Description,
-                    Type = quest.Type,
-                    ExpGain = quest.ExpGain,
-                    GoldGain = quest.GoldGain,
-                    MobsToKill = quest.MobsToKill,
-                    ItemGain = quest.ItemGain,
-
-                });
+                player.QuestLog.Add(
+                    new Quest()
+                    {
+                        Id = quest.Id,
+                        Area = quest.Area,
+                        Title = quest.Title,
+                        Description = quest.Description,
+                        Type = quest.Type,
+                        ExpGain = quest.ExpGain,
+                        GoldGain = quest.GoldGain,
+                        MobsToKill = quest.MobsToKill,
+                        ItemGain = quest.ItemGain,
+                    }
+                );
             }
 
-            _writeToClient.WriteLine($"<p class='gain'>New Quest: {quest.Title}!</p>", player.ConnectionId);
-            _updateClientUi.UpdateQuest(player);
+            Services.Instance.Writer.WriteLine(
+                $"<p class='gain'>New Quest: {quest.Title}!</p>",
+                player.ConnectionId
+            );
+            Services.Instance.UpdateClient.UpdateQuest(player);
         }
 
         public void CompleteQuest(Player player, int questId)
@@ -354,26 +379,32 @@ namespace ArchaicQuestII.GameLogic.Core
             if (quest != null)
             {
                 quest.Completed = true;
-                _writeToClient.WriteLine($"<p class='improve'>Quest Complete: {quest.Title}!</p>", player.ConnectionId);
-                _writeToClient.WriteLine($"<p class='improve'>You gain {quest.ExpGain} experience points{(quest.GoldGain == 0 ? "." : $" and {quest.GoldGain} gold. ")}</p>", player.ConnectionId);
+                Services.Instance.Writer.WriteLine(
+                    $"<p class='improve'>Quest Complete: {quest.Title}!</p>",
+                    player.ConnectionId
+                );
+                Services.Instance.Writer.WriteLine(
+                    $"<p class='improve'>You gain {quest.ExpGain} experience points{(quest.GoldGain == 0 ? "." : $" and {quest.GoldGain} gold. ")}</p>",
+                    player.ConnectionId
+                );
 
                 player.GainExperiencePoints(quest.ExpGain, out _);
                 player.Money.Gold = quest.GoldGain;
             }
 
-            _updateClientUi.UpdateQuest(player);
-            _updateClientUi.UpdateExp(player);
-            _updateClientUi.UpdateScore(player);
+            Services.Instance.UpdateClient.UpdateQuest(player);
+            Services.Instance.UpdateClient.UpdateExp(player);
+            Services.Instance.UpdateClient.UpdateScore(player);
         }
 
         public void GainXP(Player player, int xp)
         {
             player.GainExperiencePoints(xp, out var message);
-            _writeToClient.WriteLine($"message", player.ConnectionId);
-            _updateClientUi.UpdateExp(player);
-            _updateClientUi.UpdateScore(player);
+            Services.Instance.Writer.WriteLine($"message", player.ConnectionId);
+            Services.Instance.UpdateClient.UpdateExp(player);
+            Services.Instance.UpdateClient.UpdateScore(player);
         }
-        
+
         public void Sleep(int milliseconds)
         {
             Task.Delay(milliseconds).Wait();
@@ -383,7 +414,6 @@ namespace ArchaicQuestII.GameLogic.Core
         {
             // TODO: FIX ME
             //   _spells.DoSpell("armour", mob, player.Name, room);
-
         }
 
         public void MobSay(string n, Room room, Player player, Player mob, int delay = 0)
@@ -398,13 +428,17 @@ namespace ArchaicQuestII.GameLogic.Core
             {
                 says = "exclaims";
             }
-            
+
             if (n.EndsWith("?"))
             {
                 says = "wonders";
             }
-            
-            _writeToClient.WriteLine($"<p class='mob'>{mob.Name} {says}, '{n.Replace("#name#", player.Name)}'</p>", player.ConnectionId, delay);
+
+            Services.Instance.Writer.WriteLine(
+                $"<p class='mob'>{mob.Name} {says}, '{n.Replace("#name#", player.Name)}'</p>",
+                player.ConnectionId,
+                delay
+            );
         }
 
         public void MobEmote(string n, Room room, Player player, int delay)
@@ -412,44 +446,48 @@ namespace ArchaicQuestII.GameLogic.Core
             if (!IsInRoom(room, player))
             {
                 return;
-
             }
-            _writeToClient.WriteLine($"<p class='mob-emote'>{n.Replace("#name#", player.Name)}</p>", player.ConnectionId, delay);
+            Services.Instance.Writer.WriteLine(
+                $"<p class='mob-emote'>{n.Replace("#name#", player.Name)}</p>",
+                player.ConnectionId,
+                delay
+            );
         }
-        
+
         public void RemoveMobFromRoom(Player mob, Room room)
         {
             room.Mobs.Remove(mob);
         }
+
         public void Follow(Player player, Player mob)
         {
             mob.Following = player.Name;
             player.Followers.Add(mob);
         }
-        
+
         public void UnFollow(Player player, Player mob)
         {
             player.Following = string.Empty;
             player.Followers.Remove(mob);
         }
+
         public bool CanFollow(Player player)
         {
             return player.Config.CanFollow;
         }
-        
-        public void UnFollow(Player player,  Room room, string mobname)
-        {
 
-           var mob = room.Mobs.FirstOrDefault(x => x.Name.Equals(mobname));
+        public void UnFollow(Player player, Room room, string mobname)
+        {
+            var mob = room.Mobs.FirstOrDefault(x => x.Name.Equals(mobname));
             player.Following = string.Empty;
             player.Followers.Remove(mob);
         }
-        
+
         public void KillMob(Player mob, Room room)
         {
             room.Mobs.Remove(mob);
         }
-        
+
         public void KillMob(Room room, string mobname)
         {
             var mob = room.Mobs.FirstOrDefault(x => x.Name.Equals(mobname));
