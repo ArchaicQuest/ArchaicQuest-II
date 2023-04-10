@@ -29,14 +29,14 @@ namespace ArchaicQuestII.GameLogic.Commands
 
                 foreach (var alias in command.Aliases)
                 {
-                    if (CoreHandler.Instance.Cache.IsCommand(alias))
-                        CoreHandler.Instance.ErrorLog.Write(
+                    if (Services.Instance.Cache.IsCommand(alias))
+                        Services.Instance.ErrorLog.Write(
                             "CommandHandler.cs",
                             "Duplicate Alias",
                             ErrorLog.Priority.Low
                         );
                     else
-                        CoreHandler.Instance.Cache.AddCommand(alias, command);
+                        Services.Instance.Cache.AddCommand(alias, command);
                 }
             }
         }
@@ -53,11 +53,11 @@ namespace ArchaicQuestII.GameLogic.Commands
 
             commandInput[0] = commandInput[0].ToLower();
 
-            var command = CoreHandler.Instance.Cache.GetCommand(commandInput[0]);
+            var command = Services.Instance.Cache.GetCommand(commandInput[0]);
 
             // Handle social emote that are entered by just typing the name such as smile or smile Harvey
             // here manipulate the command to add social in front of it so the social command is called.
-            var social = CoreHandler.Instance.Cache
+            var social = Services.Instance.Cache
                 .GetSocials()
                 .Keys.FirstOrDefault(x => x.Equals(commandInput[0]));
             if (command == null && social != null)
@@ -69,12 +69,12 @@ namespace ArchaicQuestII.GameLogic.Commands
                     emoteTarget = commandInput[1];
                 }
                 commandInput = new[] { "social", commandInput[0], emoteTarget };
-                command = CoreHandler.Instance.Cache.GetCommand(commandInput[0]);
+                command = Services.Instance.Cache.GetCommand(commandInput[0]);
             }
 
             if (command == null)
             {
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     "<p>{yellow}That is not a command.{yellow}</p>",
                     player.ConnectionId
                 );
@@ -83,7 +83,7 @@ namespace ArchaicQuestII.GameLogic.Commands
 
             if (player.UserRole < command.UserRole)
             {
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     "<p>{red}You dont have the required role to use that command.{/}</p>",
                     player.ConnectionId
                 );
@@ -107,7 +107,7 @@ namespace ArchaicQuestII.GameLogic.Commands
 
                             Script script = new Script();
 
-                            DynValue obj = UserData.Create(CoreHandler.Instance.MobScripts);
+                            DynValue obj = UserData.Create(Services.Instance.MobScripts);
                             script.Globals.Set("obj", obj);
                             UserData.RegisterProxyType<MyProxy, Room>(r => new MyProxy(room));
                             UserData.RegisterProxyType<ProxyPlayer, Player>(
@@ -147,79 +147,79 @@ namespace ArchaicQuestII.GameLogic.Commands
             switch (player.Status)
             {
                 case CharacterStatus.Status.Standing:
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         "<p>{yellow}You can't do that while standing.{/}</p>",
                         player.ConnectionId
                     );
                     break;
                 case CharacterStatus.Status.Sitting:
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         "<p>{yellow}You can't do that while sitting.{/}</p>",
                         player.ConnectionId
                     );
                     break;
                 case CharacterStatus.Status.Sleeping:
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         "<p>{yellow}You can't do that while sleeping.{/}</p>",
                         player.ConnectionId
                     );
                     break;
                 case CharacterStatus.Status.Fighting:
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         "<p>{yellow}You can't do that while fighting.{/}</p>",
                         player.ConnectionId
                     );
                     break;
                 case CharacterStatus.Status.Resting:
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         "<p>{yellow}You can't do that while resting.{/}</p>",
                         player.ConnectionId
                     );
                     break;
                 case CharacterStatus.Status.Incapacitated:
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         "<p>{yellow}You can't do that while incapacitated.{/}</p>",
                         player.ConnectionId
                     );
                     break;
                 case CharacterStatus.Status.Dead:
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         "<p>{yellow}You can't do that while dead.{/}</p>",
                         player.ConnectionId
                     );
                     break;
                 case CharacterStatus.Status.Ghost:
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         "<p>{yellow}You can't do that while a ghost.{/}</p>",
                         player.ConnectionId
                     );
                     break;
                 case CharacterStatus.Status.Busy:
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         "<p>{yellow}You can't do that while busy.{/}</p>",
                         player.ConnectionId
                     );
                     break;
                 case CharacterStatus.Status.Floating:
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         "<p>{yellow}You can't do that while floating.{/}</p>",
                         player.ConnectionId
                     );
                     break;
                 case CharacterStatus.Status.Mounted:
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         "<p>{yellow}You can't do that while mounted.{/}</p>",
                         player.ConnectionId
                     );
                     break;
                 case CharacterStatus.Status.Stunned:
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         "<p>{yellow}You can't do that while stunned.{/}</p>",
                         player.ConnectionId
                     );
                     break;
                 case CharacterStatus.Status.Fleeing:
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         "<p>{yellow}You can't do that while fleeing.{/}</p>",
                         player.ConnectionId
                     );
@@ -247,7 +247,7 @@ namespace ArchaicQuestII.GameLogic.Commands
             // Check if player has skill
             if (player.Skills.FirstOrDefault(x => x.Name.Equals(command.Title)) == null)
             {
-                CoreHandler.Instance.Writer.WriteLine("You do not know that skill.");
+                Services.Instance.Writer.WriteLine("You do not know that skill.");
                 return false;
             }
 
@@ -257,9 +257,7 @@ namespace ArchaicQuestII.GameLogic.Commands
                 < player.Skills.FirstOrDefault(x => x.Name.ToString() == command.Title)?.Level
             )
             {
-                CoreHandler.Instance.Writer.WriteLine(
-                    "You are not skilled enough to use this skill"
-                );
+                Services.Instance.Writer.WriteLine("You are not skilled enough to use this skill");
                 return false;
             }
 

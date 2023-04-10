@@ -37,7 +37,7 @@ public class ImmTrainCmd : ICommand
                 skill.Proficiency = 85;
             }
 
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 "<p>You have max stats now.</p>",
                 player.ConnectionId
             );
@@ -46,7 +46,7 @@ public class ImmTrainCmd : ICommand
 
         Player foundPlayer = null;
 
-        foreach (var checkRoom in CoreHandler.Instance.Cache.GetAllRooms())
+        foreach (var checkRoom in Services.Instance.Cache.GetAllRooms())
         {
             foreach (
                 var checkRoomPlayer in checkRoom.Players.Where(
@@ -61,7 +61,7 @@ public class ImmTrainCmd : ICommand
 
         if (foundPlayer == null)
         {
-            CoreHandler.Instance.Writer.WriteLine("<p>They're not here.</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>They're not here.</p>", player.ConnectionId);
             return;
         }
 
@@ -70,7 +70,7 @@ public class ImmTrainCmd : ICommand
             skill.Proficiency = 85;
         }
 
-        CoreHandler.Instance.Writer.WriteLine(
+        Services.Instance.Writer.WriteLine(
             $"<p>{foundPlayer} has max stats now.</p>",
             player.ConnectionId
         );

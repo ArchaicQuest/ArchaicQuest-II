@@ -17,14 +17,14 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Movement
         private Room _room;
         private Player _player;
         private readonly Mock<IWriteToClient> _writer;
-        private readonly Mock<CoreHandler> _core;
+        private readonly Mock<Services> _core;
         private readonly Cache _cache;
 
         public MovementTests()
         {
             _writer = new Mock<IWriteToClient>();
             _cache = new Cache();
-            _core = new Mock<CoreHandler>();
+            _core = new Mock<Services>();
         }
 
         [Fact]

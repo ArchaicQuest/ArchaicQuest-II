@@ -52,7 +52,7 @@ sac rat
 
         if (string.IsNullOrEmpty(target))
         {
-            CoreHandler.Instance.Writer.WriteLine("<p>Sacrifice whom?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Sacrifice whom?</p>", player.ConnectionId);
             return;
         }
 
@@ -64,20 +64,20 @@ sac rat
             var coinCount = DiceBag.Roll(1, 1, 12);
             player.Money.Gold += coinCount;
 
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 coinCount == 1
                     ? "The gods give you a measly gold coin for your sacrifice."
                     : $"The gods give you {coinCount} gold coins for your sacrifice.",
                 player.ConnectionId
             );
 
-            CoreHandler.Instance.Writer.WriteToOthersInRoom(
+            Services.Instance.Writer.WriteToOthersInRoom(
                 $"{player.Name} sacrifices {itemToRemove.Name.ToLower()}.",
                 room,
                 player
             );
 
-            CoreHandler.Instance.UpdateClient.UpdateScore(player);
+            Services.Instance.UpdateClient.UpdateScore(player);
         }
     }
 }

@@ -47,13 +47,13 @@ public class LockCmd : ICommand
 
         if (string.IsNullOrEmpty(target))
         {
-            CoreHandler.Instance.Writer.WriteLine("<p>Lock what?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Lock what?</p>", player.ConnectionId);
             return;
         }
 
         if (player.Affects.Blind)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 "<p>You are blind and can't see a thing!</p>",
                 player.ConnectionId
             );
@@ -76,7 +76,7 @@ public class LockCmd : ICommand
                 );
                 if (playerDoorKey == null)
                 {
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         "<p>You don't have the key to lock this.</p>",
                         player.ConnectionId
                     );
@@ -85,7 +85,7 @@ public class LockCmd : ICommand
                 {
                     if (doorToUnlock.Locked)
                     {
-                        CoreHandler.Instance.Writer.WriteLine(
+                        Services.Instance.Writer.WriteLine(
                             "<p>It's already locked.</p>",
                             player.ConnectionId
                         );
@@ -93,11 +93,11 @@ public class LockCmd : ICommand
                     }
 
                     doorToUnlock.Locked = true;
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         "<p>You enter the key and turn it. *CLICK* </p>",
                         player.ConnectionId
                     );
-                    CoreHandler.Instance.Writer.WriteToOthersInRoom(
+                    Services.Instance.Writer.WriteToOthersInRoom(
                         $"<p>{player.Name} enters the key into {doorToUnlock.Name} door and turns it. *CLICK* </p>",
                         room,
                         player
@@ -110,7 +110,7 @@ public class LockCmd : ICommand
                     if (playerDoorKey.Uses == 0)
                     {
                         player.Inventory.Remove(playerDoorKey);
-                        CoreHandler.Instance.Writer.WriteLine(
+                        Services.Instance.Writer.WriteLine(
                             "<p>As you go to put the key away it crumbles to dust in your hand.</p>",
                             player.ConnectionId
                         );
@@ -122,7 +122,7 @@ public class LockCmd : ICommand
                 return;
             }
 
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 "<p>You don't see that here.</p>",
                 player.ConnectionId
             );
@@ -131,10 +131,7 @@ public class LockCmd : ICommand
 
         if (!objToUnlock.Container.CanLock)
         {
-            CoreHandler.Instance.Writer.WriteLine(
-                "<p>You can't lock that.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>You can't lock that.</p>", player.ConnectionId);
             return;
         }
 
@@ -146,7 +143,7 @@ public class LockCmd : ICommand
 
         if (playerContainerKey == null)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 "<p>You don't have the key to lock this.</p>",
                 player.ConnectionId
             );
@@ -155,7 +152,7 @@ public class LockCmd : ICommand
         {
             if (objToUnlock.Container.IsLocked)
             {
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     "<p>It's already locked.</p>",
                     player.ConnectionId
                 );
@@ -163,11 +160,11 @@ public class LockCmd : ICommand
             }
 
             objToUnlock.Container.IsLocked = true;
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 "<p>You enter the key and turn it. *CLICK* </p>",
                 player.ConnectionId
             );
-            CoreHandler.Instance.Writer.WriteToOthersInRoom(
+            Services.Instance.Writer.WriteToOthersInRoom(
                 $"<p>{player.Name} enters the key into {objToUnlock.Name} and turns it. *CLICK* </p>",
                 room,
                 player
@@ -180,7 +177,7 @@ public class LockCmd : ICommand
             if (playerContainerKey.Uses == 0)
             {
                 player.Inventory.Remove(playerContainerKey);
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     "<p>As you go to put the key away it crumbles to dust in your hand.</p>",
                     player.ConnectionId
                 );

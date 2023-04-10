@@ -46,7 +46,7 @@ public class FollowCmd : ICommand
 
         if (string.IsNullOrEmpty(target))
         {
-            CoreHandler.Instance.Writer.WriteLine("<p>Follow who?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Follow who?</p>", player.ConnectionId);
             return;
         }
 
@@ -55,7 +55,7 @@ public class FollowCmd : ICommand
             || target.Equals(player.Name, StringComparison.CurrentCultureIgnoreCase)
         )
         {
-            var leader = CoreHandler.Instance.Cache
+            var leader = Services.Instance.Cache
                 .GetPlayerCache()
                 .FirstOrDefault(
                     x =>
@@ -65,13 +65,13 @@ public class FollowCmd : ICommand
                         )
                 );
 
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p>You stop following {leader.Value.Name}.</p>",
                 player.ConnectionId
             );
             if (player.Name != leader.Value.Name)
             {
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     $"<p>{player.Name} stops following you.</p>",
                     leader.Value.ConnectionId
                 );
@@ -94,7 +94,7 @@ public class FollowCmd : ICommand
 
         if (foundPlayer == null)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 "<p>You don't see them here.</p>",
                 player.ConnectionId
             );
@@ -103,7 +103,7 @@ public class FollowCmd : ICommand
 
         if (foundPlayer.Followers.Contains(player))
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p>You are already following {foundPlayer.Name}.</p>",
                 player.ConnectionId
             );
@@ -112,7 +112,7 @@ public class FollowCmd : ICommand
 
         if (foundPlayer.Following == player.Name)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 "<p>You can't follow someone following you. Lest you be running around in circles indefinitely.</p>",
                 player.ConnectionId
             );
@@ -121,18 +121,18 @@ public class FollowCmd : ICommand
 
         if (foundPlayer.Config.CanFollow == false)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p>{foundPlayer.Name} doesn't want to be followed.</p>",
                 player.ConnectionId
             );
             return;
         }
 
-        CoreHandler.Instance.Writer.WriteLine(
+        Services.Instance.Writer.WriteLine(
             $"<p>{player.Name} now follows you.</p>",
             foundPlayer.ConnectionId
         );
-        CoreHandler.Instance.Writer.WriteLine(
+        Services.Instance.Writer.WriteLine(
             $"<p>You are now following {foundPlayer.Name}.</p>",
             player.ConnectionId
         );

@@ -28,7 +28,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
         private readonly Mock<IEquip> _equipment;
         private readonly Mock<ICombat> _combat;
         private readonly Mock<ICache> _cache;
-        private readonly Mock<CoreHandler> _core;
+        private readonly Mock<Services> _core;
         private readonly Mock<IMobFunctions> _mobFunctions;
         private readonly Mock<IHelp> _help;
         private readonly Mock<IMobScripts> _mobScripts;
@@ -46,7 +46,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
             _equipment = new Mock<IEquip>();
             _combat = new Mock<ICombat>();
             _cache = new Mock<ICache>();
-            _core = new Mock<CoreHandler>();
+            _core = new Mock<Services>();
             _mobFunctions = new Mock<IMobFunctions>();
             _mobScripts = new Mock<IMobScripts>();
             _player = new Player();

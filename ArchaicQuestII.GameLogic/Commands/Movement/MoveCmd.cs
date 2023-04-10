@@ -69,7 +69,7 @@ public class MoveCmd : ICommand
         var isFlee = !string.IsNullOrEmpty(input.ElementAtOrDefault(1));
         if (CharacterCanMove(player) == false)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 "<p>You are too exhausted to move.</p>",
                 player.ConnectionId
             );
@@ -83,7 +83,7 @@ public class MoveCmd : ICommand
             && player.Weight > player.Attributes.Attribute[EffectLocation.Strength] * 3
         )
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p>You are over encumbered and cannot move.</p>",
                 player.ConnectionId
             );
@@ -138,7 +138,7 @@ public class MoveCmd : ICommand
 
         if (getExitToNextRoom == null)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 "<p>You can't go that way.</p>",
                 player.ConnectionId
             );
@@ -147,11 +147,11 @@ public class MoveCmd : ICommand
 
         var nextRoomKey =
             $"{getExitToNextRoom.AreaId}{getExitToNextRoom.Coords.X}{getExitToNextRoom.Coords.Y}{getExitToNextRoom.Coords.Z}";
-        var getNextRoom = CoreHandler.Instance.Cache.GetRoom(nextRoomKey);
+        var getNextRoom = Services.Instance.Cache.GetRoom(nextRoomKey);
 
         if (getNextRoom == null)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 "<p>A mysterious force prevents you from going that way.</p>",
                 player.ConnectionId
             );
@@ -161,7 +161,7 @@ public class MoveCmd : ICommand
 
         if (getExitToNextRoom.Closed)
         {
-            CoreHandler.Instance.Writer.WriteLine("<p>The door is close.</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>The door is close.</p>", player.ConnectionId);
             return;
         }
 
@@ -175,7 +175,7 @@ public class MoveCmd : ICommand
             }
         }
 
-        CoreHandler.Instance.RoomActions.RoomChange(player, room, getNextRoom, isFlee);
+        Services.Instance.RoomActions.RoomChange(player, room, getNextRoom, isFlee);
 
         if (player.Followers.Count >= 1)
         {
@@ -185,7 +185,7 @@ public class MoveCmd : ICommand
                 )
             )
             {
-                CoreHandler.Instance.RoomActions.RoomChange(follower, room, getNextRoom, isFlee);
+                Services.Instance.RoomActions.RoomChange(follower, room, getNextRoom, isFlee);
             }
         }
 
@@ -199,7 +199,7 @@ public class MoveCmd : ICommand
 
             if (mountedMob != null)
             {
-                CoreHandler.Instance.RoomActions.RoomChange(mountedMob, room, getNextRoom, isFlee);
+                Services.Instance.RoomActions.RoomChange(mountedMob, room, getNextRoom, isFlee);
             }
         }
     }

@@ -73,7 +73,7 @@ namespace ArchaicQuestII.GameLogic.Commands.World
             {
                 var getRoomCoords = Helpers.IsExit(exit, room);
 
-                var getRoomObj = CoreHandler.Instance.Cache.GetRoom(
+                var getRoomObj = Services.Instance.Cache.GetRoom(
                     $"{getRoomCoords.AreaId}{getRoomCoords.Coords.X}{getRoomCoords.Coords.Y}{getRoomCoords.Coords.Z}"
                 );
 
@@ -120,7 +120,7 @@ namespace ArchaicQuestII.GameLogic.Commands.World
                 }
             }
 
-            CoreHandler.Instance.Writer.WriteLine(sb.ToString(), player.ConnectionId);
+            Services.Instance.Writer.WriteLine(sb.ToString(), player.ConnectionId);
         }
 
         private void ScanDirection(Player player, Room room, string direction)
@@ -145,7 +145,7 @@ namespace ArchaicQuestII.GameLogic.Commands.World
 
             if (getDirection == null)
             {
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     "You can't look in that direction.",
                     player.ConnectionId
                 );
@@ -154,7 +154,7 @@ namespace ArchaicQuestII.GameLogic.Commands.World
 
             var getRoomCoords = Helpers.IsExit(getDirection, room);
 
-            var getRoomObj = CoreHandler.Instance.Cache.GetRoom(
+            var getRoomObj = Services.Instance.Cache.GetRoom(
                 $"{getRoomCoords.AreaId}{getRoomCoords.Coords.X}{getRoomCoords.Coords.Y}{getRoomCoords.Coords.Z}"
             );
             var sb = new StringBuilder();
@@ -198,7 +198,7 @@ namespace ArchaicQuestII.GameLogic.Commands.World
                 sb.Append("<p>There is nobody there.</p>");
             }
 
-            CoreHandler.Instance.Writer.WriteLine(sb.ToString(), player.ConnectionId);
+            Services.Instance.Writer.WriteLine(sb.ToString(), player.ConnectionId);
         }
     }
 }

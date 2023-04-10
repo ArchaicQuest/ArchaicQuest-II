@@ -39,22 +39,22 @@ public class SayCmd : ICommand
     {
         if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
         {
-            CoreHandler.Instance.Writer.WriteLine("<p>Say what?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Say what?</p>", player.ConnectionId);
             return;
         }
 
         var text = string.Join(" ", input.Skip(1));
 
-        CoreHandler.Instance.Writer.WriteLine(
+        Services.Instance.Writer.WriteLine(
             $"<p class='say'>You say {text}</p>",
             player.ConnectionId
         );
-        CoreHandler.Instance.UpdateClient.UpdateCommunication(
+        Services.Instance.UpdateClient.UpdateCommunication(
             player,
             $"<p class='say'>You say {text}</p>",
             "room"
         );
-        CoreHandler.Instance.Writer.WriteToOthersInRoom(
+        Services.Instance.Writer.WriteToOthersInRoom(
             $"<p class='say'>{player.Name} says {text}</p>",
             room,
             player
@@ -62,7 +62,7 @@ public class SayCmd : ICommand
 
         foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
         {
-            CoreHandler.Instance.UpdateClient.UpdateCommunication(
+            Services.Instance.UpdateClient.UpdateCommunication(
                 pc,
                 $"<p class='say'>{player.Name} says {text}</p>",
                 "room"

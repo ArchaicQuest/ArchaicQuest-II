@@ -49,7 +49,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             var obj = input.ElementAtOrDefault(1)?.ToLower() ?? player.Target;
             if (string.IsNullOrEmpty(obj))
             {
-                CoreHandler.Instance.Writer.WriteLine("Headbutt What!?.", player.ConnectionId);
+                Services.Instance.Writer.WriteLine("Headbutt What!?.", player.ConnectionId);
                 return;
             }
 
@@ -74,7 +74,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
 
                 EmoteAction(textToTarget, textToRoom, target.Name, room, player);
                 player.FailedSkill(SkillName.Headbutt, out var message);
-                CoreHandler.Instance.Writer.WriteLine(message, player.ConnectionId);
+                Services.Instance.Writer.WriteLine(message, player.ConnectionId);
                 player.Lag += 1;
                 return;
             }

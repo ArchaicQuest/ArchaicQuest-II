@@ -43,8 +43,8 @@ namespace ArchaicQuestII.GameLogic.Commands.World
         {
             var target = input.ElementAtOrDefault(1);
             var sb = new StringBuilder();
-            var area = CoreHandler.Instance.RoomActions.GetRoomArea(room);
-            var roomCount = CoreHandler.Instance.Cache.GetAllRoomsInArea(room.AreaId).Count;
+            var area = Services.Instance.RoomActions.GetRoomArea(room);
+            var roomCount = Services.Instance.Cache.GetAllRoomsInArea(room.AreaId).Count;
 
             if (string.IsNullOrEmpty(target))
             {
@@ -66,7 +66,7 @@ namespace ArchaicQuestII.GameLogic.Commands.World
 
             if (target == "list")
             {
-                var areas = CoreHandler.Instance.DataBase
+                var areas = Services.Instance.DataBase
                     .GetCollection<Area>(DataBase.Collections.Area)
                     .FindAll()
                     .ToList();
@@ -87,20 +87,17 @@ namespace ArchaicQuestII.GameLogic.Commands.World
 
             if (target is "consider" or "con")
             {
-                CoreHandler.Instance.Writer.WriteLine(
-                    AreaConsider(player, room),
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine(AreaConsider(player, room), player.ConnectionId);
                 return;
             }
 
             if (target is "pop" or "population")
             {
-                CoreHandler.Instance.Writer.WriteLine(AreaPopulation(room), player.ConnectionId);
+                Services.Instance.Writer.WriteLine(AreaPopulation(room), player.ConnectionId);
                 return;
             }
 
-            CoreHandler.Instance.Writer.WriteLine(sb.ToString(), player.ConnectionId);
+            Services.Instance.Writer.WriteLine(sb.ToString(), player.ConnectionId);
         }
 
         /// <summary>
@@ -114,7 +111,7 @@ namespace ArchaicQuestII.GameLogic.Commands.World
             var mobCount = 0;
 
             foreach (
-                var mob in CoreHandler.Instance.Cache
+                var mob in Services.Instance.Cache
                     .GetAllRoomsInArea(room.AreaId)
                     .SelectMany(r => r.Mobs)
             )
@@ -140,7 +137,7 @@ namespace ArchaicQuestII.GameLogic.Commands.World
         /// <param name="room">Room where command was entered</param>
         private string AreaPopulation(Room room)
         {
-            var playerCount = CoreHandler.Instance.Cache
+            var playerCount = Services.Instance.Cache
                 .GetAllRoomsInArea(room.AreaId)
                 .SelectMany(r => r.Players)
                 .Count();

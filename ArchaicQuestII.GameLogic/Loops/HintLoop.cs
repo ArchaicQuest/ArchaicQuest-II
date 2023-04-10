@@ -8,35 +8,34 @@ using System.Linq;
 namespace ArchaicQuestII.GameLogic.Loops
 {
     public class HintLoop : ILoop
-	{
+    {
         public int TickDelay => 120000;
         public bool ConfigureAwait => true;
-        private List<Player> _players;
-        private List<string> _hints;
-
-        public void Init()
+        private List<Player> _players = new List<Player>();
+        private List<string> _hints = new List<string>()
         {
-            _hints = new List<string>()
-            {
-               "If you get lost, enter recall to return to the starting room.",
-               "If you need help use newbie to send a message. newbie help me",
-               "ArchaicQuest is a new game so might be quite, join the discord to chat to others https://discord.gg/QVF6Uutt",
-               "To communicate enter say then the message to speak. such as say hello there"
-            };
-        }
+            "If you get lost, enter recall to return to the starting room.",
+            "If you need help use newbie to send a message. newbie help me",
+            "ArchaicQuest is a new game so might be quite, join the discord to chat to others https://discord.gg/QVF6Uutt",
+            "To communicate enter say then the message to speak. such as say hello there"
+        };
 
         public void PreTick()
         {
-            _players = CoreHandler.Instance.Cache.GetPlayerCache().Values.Where(x => x.Config.Hints == true).ToList();
+            _players = Services.Instance.Cache
+                .GetPlayerCache()
+                .Values.Where(x => x.Config.Hints == true)
+                .ToList();
         }
 
         public void Tick()
         {
-            foreach(var player in _players)
+            foreach (var player in _players)
             {
-                CoreHandler.Instance.Writer.WriteLine(
-                        $"<span style='color:lawngreen'>[Hint]</span> {HttpUtility.HtmlEncode(_hints[DiceBag.Roll(1, 0, _hints.Count)])}",
-                        player.ConnectionId);
+                Services.Instance.Writer.WriteLine(
+                    $"<span style='color:lawngreen'>[Hint]</span> {HttpUtility.HtmlEncode(_hints[DiceBag.Roll(1, 0, _hints.Count)])}",
+                    player.ConnectionId
+                );
             }
         }
 
@@ -46,4 +45,3 @@ namespace ArchaicQuestII.GameLogic.Loops
         }
     }
 }
-

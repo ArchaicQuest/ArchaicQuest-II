@@ -50,7 +50,7 @@ public class BuyCmd : ICommand
 
         if (string.IsNullOrEmpty(itemName))
         {
-            CoreHandler.Instance.Writer.WriteLine("<p>Buy what?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Buy what?</p>", player.ConnectionId);
             return;
         }
 
@@ -64,7 +64,7 @@ public class BuyCmd : ICommand
 
         if (vendor == null)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 "<p>You can't do that here.</p>",
                 player.ConnectionId
             );
@@ -77,19 +77,19 @@ public class BuyCmd : ICommand
 
         if (hasItem == null)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p>{vendor.Name} says 'I don't sell that, please view my \'list\' of items for sale.'</p>",
                 player.ConnectionId
             );
             return;
         }
 
-        var haggleReduction = CoreHandler.Instance.PassiveSkills.Haggle(player, vendor);
+        var haggleReduction = Services.Instance.PassiveSkills.Haggle(player, vendor);
         var goldValue = AddMarkUp(hasItem.Value);
         var trueGoldValue = goldValue - Helpers.GetPercentage(haggleReduction, (int)goldValue);
         if (player.Money.Gold < trueGoldValue)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p>{vendor.Name} says 'Sorry you can't afford that.'</p>",
                 player.ConnectionId
             );
@@ -103,10 +103,10 @@ public class BuyCmd : ICommand
         // TODO: weight
         player.Weight += hasItem.Weight;
 
-        CoreHandler.Instance.UpdateClient.UpdateScore(player);
-        CoreHandler.Instance.UpdateClient.UpdateInventory(player);
+        Services.Instance.UpdateClient.UpdateScore(player);
+        Services.Instance.UpdateClient.UpdateInventory(player);
 
-        CoreHandler.Instance.Writer.WriteLine(
+        Services.Instance.Writer.WriteLine(
             $"<p>You buy {hasItem.Name.ToLower()} for {trueGoldValue} gold.</p>",
             player.ConnectionId
         );
@@ -124,7 +124,7 @@ public class BuyCmd : ICommand
 
         if (vendor == null)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 "<p>You can't do that here.</p>",
                 player.ConnectionId
             );
@@ -139,19 +139,19 @@ public class BuyCmd : ICommand
 
         if (hasItem == null)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p>{vendor.Name} says 'I don't sell that, please view my \'list\' of items for sale.'</p>",
                 player.ConnectionId
             );
             return;
         }
 
-        var haggleReduction = CoreHandler.Instance.PassiveSkills.Haggle(player, vendor);
+        var haggleReduction = Services.Instance.PassiveSkills.Haggle(player, vendor);
         var goldValue = AddMarkUp(hasItem.Value);
         var trueGoldValue = goldValue - Helpers.GetPercentage(haggleReduction, (int)goldValue);
         if (player.Money.Gold < trueGoldValue)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p>{vendor.Name} says 'Sorry you can't afford that.'</p>",
                 player.ConnectionId
             );
@@ -165,10 +165,10 @@ public class BuyCmd : ICommand
         // TODO: weight
         player.Weight += hasItem.Weight;
 
-        CoreHandler.Instance.UpdateClient.UpdateScore(player);
-        CoreHandler.Instance.UpdateClient.UpdateInventory(player);
+        Services.Instance.UpdateClient.UpdateScore(player);
+        Services.Instance.UpdateClient.UpdateInventory(player);
 
-        CoreHandler.Instance.Writer.WriteLine(
+        Services.Instance.Writer.WriteLine(
             $"<p>You buy {hasItem.Name.ToLower()} for {trueGoldValue} gold.</p>",
             player.ConnectionId
         );

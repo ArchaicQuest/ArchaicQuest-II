@@ -12,13 +12,14 @@ public class NewbieCmd : ICommand
 {
     public NewbieCmd()
     {
-        Aliases = new[] {"newbie"};
+        Aliases = new[] { "newbie" };
         Description = "Sends a message to newbie channel";
-        Usages = new[] {"Type: newbie i need help"};
+        Usages = new[] { "Type: newbie i need help" };
         Title = "";
         DeniedStatus = null;
         UserRole = UserRole.Player;
     }
+
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
@@ -30,21 +31,36 @@ public class NewbieCmd : ICommand
     {
         if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
         {
-            CoreHandler.Instance.Writer.WriteLine("<p>Newbie what?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Newbie what?</p>", player.ConnectionId);
             return;
         }
-        
+
         var text = string.Join(" ", input.Skip(1));
-        
-        CoreHandler.Instance.Writer.WriteLine($"<p class='newbie'>[<span>Newbie</span>] You: {text}</p>", player.ConnectionId);
-        CoreHandler.Instance.Writer.WriteToOthersInGame($"<p class='newbie'>[<span>Newbie</span>] {player.Name}: {text}</p>", player);
-        
-        foreach (var pc in CoreHandler.Instance.Cache.GetAllPlayers().Where(pc => pc.Config.NewbieChannel))
+
+        Services.Instance.Writer.WriteLine(
+            $"<p class='newbie'>[<span>Newbie</span>] You: {text}</p>",
+            player.ConnectionId
+        );
+        Services.Instance.Writer.WriteToOthersInGame(
+            $"<p class='newbie'>[<span>Newbie</span>] {player.Name}: {text}</p>",
+            player
+        );
+
+        foreach (
+            var pc in Services.Instance.Cache.GetAllPlayers().Where(pc => pc.Config.NewbieChannel)
+        )
         {
-            CoreHandler.Instance.UpdateClient.UpdateCommunication(pc, $"<p class='newbie'>[<span>Newbie</span>] {(player.Name == pc.Name ? "You" : player.Name)}: {text}</p>", "newbie");
+            Services.Instance.UpdateClient.UpdateCommunication(
+                pc,
+                $"<p class='newbie'>[<span>Newbie</span>] {(player.Name == pc.Name ? "You" : player.Name)}: {text}</p>",
+                "newbie"
+            );
         }
 
-        Helpers.PostToDiscordBot($"{player.Name}: {text}",1091818289249923162,  CoreHandler.Instance.Cache.GetConfig().ChannelDiscordWebHookURL);
-     
+        Helpers.PostToDiscordBot(
+            $"{player.Name}: {text}",
+            1091818289249923162,
+            Services.Instance.Cache.GetConfig().ChannelDiscordWebHookURL
+        );
     }
 }

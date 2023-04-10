@@ -12,14 +12,14 @@ public class OOCCmd : ICommand
 {
     public OOCCmd()
     {
-        Aliases = new[] {"ooc"};
+        Aliases = new[] { "ooc" };
         Description = "Sends a message to out of character channel";
-        Usages = new[] {"Type: ooc Did anyone see the game last night?"};
+        Usages = new[] { "Type: ooc Did anyone see the game last night?" };
         Title = "";
         DeniedStatus = null;
         UserRole = UserRole.Player;
     }
-    
+
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
@@ -27,26 +27,40 @@ public class OOCCmd : ICommand
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
 
-
     public void Execute(Player player, Room room, string[] input)
     {
         if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
         {
-            CoreHandler.Instance.Writer.WriteLine("<p>ooc what?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>ooc what?</p>", player.ConnectionId);
             return;
         }
-        
+
         var text = string.Join(" ", input.Skip(1));
-        
-        CoreHandler.Instance.Writer.WriteLine($"<p class='ooc'>[<span>OOC</span>] You: {text}</p>", player.ConnectionId);
-        CoreHandler.Instance.Writer.WriteToOthersInGame($"<p class='ooc'>[<span>OOC</span>] {player.Name}: {text}</p>", player);
-        
-        foreach (var pc in CoreHandler.Instance.Cache.GetAllPlayers().Where(pc => pc.Config.OocChannel))
+
+        Services.Instance.Writer.WriteLine(
+            $"<p class='ooc'>[<span>OOC</span>] You: {text}</p>",
+            player.ConnectionId
+        );
+        Services.Instance.Writer.WriteToOthersInGame(
+            $"<p class='ooc'>[<span>OOC</span>] {player.Name}: {text}</p>",
+            player
+        );
+
+        foreach (
+            var pc in Services.Instance.Cache.GetAllPlayers().Where(pc => pc.Config.OocChannel)
+        )
         {
-            CoreHandler.Instance.UpdateClient.UpdateCommunication(pc, $"<p class='ooc'>[<span>OOC</span>] {(player.Name == pc.Name ? "You" : player.Name)}: {text}</p>", "ooc");
+            Services.Instance.UpdateClient.UpdateCommunication(
+                pc,
+                $"<p class='ooc'>[<span>OOC</span>] {(player.Name == pc.Name ? "You" : player.Name)}: {text}</p>",
+                "ooc"
+            );
         }
 
-        Helpers.PostToDiscordBot($"{player.Name}: {text}",1092857287758057593,  CoreHandler.Instance.Cache.GetConfig().ChannelDiscordWebHookURL);
-
+        Helpers.PostToDiscordBot(
+            $"{player.Name}: {text}",
+            1092857287758057593,
+            Services.Instance.Cache.GetConfig().ChannelDiscordWebHookURL
+        );
     }
 }

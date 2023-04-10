@@ -6,6 +6,7 @@ using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Combat;
+using ArchaicQuestII.GameLogic.Commands;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Hubs.Telnet;
 using ArchaicQuestII.GameLogic.Skill.Skills;
@@ -25,7 +26,8 @@ namespace ArchaicQuestII.API.Helpers
 
         public static AdminUser WithoutPassword(this AdminUser user)
         {
-            if (user == null) return null;
+            if (user == null)
+                return null;
 
             user.Password = null;
             return user;
@@ -33,7 +35,7 @@ namespace ArchaicQuestII.API.Helpers
 
         public static void StartLoops(this IApplicationBuilder app)
         {
-            CoreHandler.Instance.InitServices(
+            GameLogic.Core.Services.Instance.InitServices(
                 app.ApplicationServices.GetRequiredService<ICache>(),
                 app.ApplicationServices.GetRequiredService<IWriteToClient>(),
                 app.ApplicationServices.GetRequiredService<IDataBase>(),
@@ -50,11 +52,12 @@ namespace ArchaicQuestII.API.Helpers
                 app.ApplicationServices.GetRequiredService<ISpellList>(),
                 app.ApplicationServices.GetRequiredService<IWeather>(),
                 app.ApplicationServices.GetRequiredService<ICharacterHandler>(),
-                app.ApplicationServices.GetRequiredService<IGameLoop>()
-                );
+                app.ApplicationServices.GetRequiredService<ILoopHandler>(),
+                app.ApplicationServices.GetRequiredService<ICommandHandler>()
+            );
 
             Task.Run(TelnetHub.Instance.ProcessConnections);
-            CoreHandler.Instance.GameLoop.StartLoops();
+            GameLogic.Core.Services.Instance.GameLoop.StartLoops();
         }
     }
 }

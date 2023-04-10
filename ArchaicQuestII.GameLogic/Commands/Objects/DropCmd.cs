@@ -64,13 +64,13 @@ Related help files: get, put, give, drop
 
         if (string.IsNullOrEmpty(target))
         {
-            CoreHandler.Instance.Writer.WriteLine("<p>Drop what?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Drop what?</p>", player.ConnectionId);
             return;
         }
 
         if (player.Affects.Blind)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 "<p>You are blind and can't see a thing!</p>",
                 player.ConnectionId
             );
@@ -100,7 +100,7 @@ Related help files: get, put, give, drop
 
         if (item == null)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 "<p>You don't have that item.</p>",
                 player.ConnectionId
             );
@@ -109,7 +109,7 @@ Related help files: get, put, give, drop
 
         if (item.Equipped)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p>You must remove {item.Name.ToLower()} before you can drop it.</p>",
                 player.ConnectionId
             );
@@ -118,7 +118,7 @@ Related help files: get, put, give, drop
 
         if ((item.ItemFlag & Item.Item.ItemFlags.Nodrop) != 0)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p>You can't let go of {item.Name.ToLower()}. It appears to be cursed.</p>",
                 player.ConnectionId
             );
@@ -129,25 +129,25 @@ Related help files: get, put, give, drop
         room.Items.Add(item);
         player.Weight -= item.Weight;
 
-        CoreHandler.Instance.Writer.WriteLine(
+        Services.Instance.Writer.WriteLine(
             $"<p>You drop {item.Name.ToLower()}.</p>",
             player.ConnectionId
         );
-        CoreHandler.Instance.Writer.WriteToOthersInRoom(
+        Services.Instance.Writer.WriteToOthersInRoom(
             $"<p>{player.Name} drops {item.Name.ToLower()}.</p>",
             room,
             player
         );
 
-        CoreHandler.Instance.UpdateClient.UpdateInventory(player);
-        CoreHandler.Instance.UpdateClient.UpdateScore(player);
+        Services.Instance.UpdateClient.UpdateInventory(player);
+        Services.Instance.UpdateClient.UpdateScore(player);
     }
 
     private void DropAll(Player player, Room room)
     {
         if (player.Inventory.Count == 0)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 "<p>You don't have anything to drop.</p>",
                 player.ConnectionId
             );
@@ -160,7 +160,7 @@ Related help files: get, put, give, drop
             {
                 if (player.Inventory[i].Equipped)
                 {
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         $"<p>You must remove {player.Inventory[i].Name.ToLower()} before you can drop it.</p>",
                         player.ConnectionId
                     );
@@ -169,22 +169,22 @@ Related help files: get, put, give, drop
 
                 if ((player.Inventory[i].ItemFlag & Item.Item.ItemFlags.Nodrop) != 0)
                 {
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         $"<p>You can't let go of {player.Inventory[i].Name}. It appears to be cursed.</p>",
                         player.ConnectionId
                     );
                     return;
                 }
 
-                CoreHandler.Instance.UpdateClient.PlaySound("drop", player);
+                Services.Instance.UpdateClient.PlaySound("drop", player);
                 room.Items.Add(player.Inventory[i]);
                 player.Weight -= player.Inventory[i].Weight;
 
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     $"<p>You drop {player.Inventory[i].Name.ToLower()}.</p>",
                     player.ConnectionId
                 );
-                CoreHandler.Instance.Writer.WriteToOthersInRoom(
+                Services.Instance.Writer.WriteToOthersInRoom(
                     $"<p>{player.Name} drops {player.Inventory[i].Name.ToLower()}.</p>",
                     room,
                     player
@@ -193,7 +193,7 @@ Related help files: get, put, give, drop
                 player.Inventory.RemoveAt(i);
             }
         }
-        CoreHandler.Instance.UpdateClient.UpdateInventory(player);
+        Services.Instance.UpdateClient.UpdateInventory(player);
         // TODO: You are over encumbered
     }
 
@@ -201,7 +201,7 @@ Related help files: get, put, give, drop
     {
         if (player.Money.Gold < amount)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 "<p>You don't have that much gold to drop.</p>",
                 player.ConnectionId
             );
@@ -232,12 +232,12 @@ Related help files: get, put, give, drop
             Container = new Container { Items = new ItemList() }
         };
 
-        CoreHandler.Instance.Writer.WriteLine(
+        Services.Instance.Writer.WriteLine(
             $"<p>You drop {(amount == 1 ? "1 gold coin." : $"{amount} gold coins.")}</p>",
             player.ConnectionId
         );
 
-        CoreHandler.Instance.Writer.WriteToOthersInRoom(
+        Services.Instance.Writer.WriteToOthersInRoom(
             $"<p>{player.Name} drops {ItemList.DisplayMoneyAmount(amount).ToLower()}.</p>",
             room,
             player
@@ -248,7 +248,7 @@ Related help files: get, put, give, drop
 
         player.Weight -= amount * 0.1;
 
-        CoreHandler.Instance.UpdateClient.UpdateScore(player);
+        Services.Instance.UpdateClient.UpdateScore(player);
     }
 
     private void DropInContainer(Player player, Room room, string target, string container)
@@ -267,7 +267,7 @@ Related help files: get, put, give, drop
 
         if (containerObj == null)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p>You don't see that here.</p>",
                 player.ConnectionId
             );
@@ -281,7 +281,7 @@ Related help files: get, put, give, drop
             )
         )
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p>{containerObj.Name} is not a container.</p>",
                 player.ConnectionId
             );
@@ -290,7 +290,7 @@ Related help files: get, put, give, drop
 
         if (!containerObj.Container.IsOpen)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p>You need to open it first.</p>",
                 player.ConnectionId
             );
@@ -311,7 +311,7 @@ Related help files: get, put, give, drop
 
         if (item == null)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 "<p>You don't have that item.</p>",
                 player.ConnectionId
             );
@@ -320,7 +320,7 @@ Related help files: get, put, give, drop
 
         if ((item.ItemFlag & Item.Item.ItemFlags.Nodrop) != 0)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p>You can't let go of {item.Name}. It appears to be cursed.</p>",
                 player.ConnectionId
             );
@@ -331,13 +331,13 @@ Related help files: get, put, give, drop
         player.Weight -= item.Weight;
 
         containerObj.Container.Items.Add(item);
-        CoreHandler.Instance.UpdateClient.PlaySound("drop", player);
+        Services.Instance.UpdateClient.PlaySound("drop", player);
 
-        CoreHandler.Instance.Writer.WriteLine(
+        Services.Instance.Writer.WriteLine(
             $"<p>You put {item.Name.ToLower()} into {containerObj.Name.ToLower()}.</p>",
             player.ConnectionId
         );
-        CoreHandler.Instance.Writer.WriteToOthersInRoom(
+        Services.Instance.Writer.WriteToOthersInRoom(
             $"<p>{player.Name} puts {item.Name.ToLower()} into {containerObj.Name.ToLower()}.</p>",
             room,
             player
@@ -349,21 +349,21 @@ Related help files: get, put, give, drop
             && containerObj.Container.Items.Count > 3
         )
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p>Too many items in the cook pot, Only 3 ingredients allowed.</p>",
                 player.ConnectionId
             );
         }
 
-        CoreHandler.Instance.UpdateClient.UpdateInventory(player);
-        CoreHandler.Instance.UpdateClient.UpdateScore(player);
+        Services.Instance.UpdateClient.UpdateInventory(player);
+        Services.Instance.UpdateClient.UpdateScore(player);
     }
 
     private void DropAllInContainer(Player player, Room room, Item.Item container)
     {
         if (player.Inventory.Count == 0)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 "<p>You don't have anything to drop.</p>",
                 player.ConnectionId
             );
@@ -374,21 +374,21 @@ Related help files: get, put, give, drop
         {
             if ((player.Inventory[i].ItemFlag & Item.Item.ItemFlags.Nodrop) != 0)
             {
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     $"<p>You can't let go of {player.Inventory[i].Name}. It appears to be cursed.</p>",
                     player.ConnectionId
                 );
                 continue;
             }
-            CoreHandler.Instance.UpdateClient.PlaySound("drop", player);
+            Services.Instance.UpdateClient.PlaySound("drop", player);
             container.Container.Items.Add(player.Inventory[i]);
             player.Weight -= player.Inventory[i].Weight;
 
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p>You place {player.Inventory[i].Name.ToLower()} into {container.Name.ToLower()}.</p>",
                 player.ConnectionId
             );
-            CoreHandler.Instance.Writer.WriteToOthersInRoom(
+            Services.Instance.Writer.WriteToOthersInRoom(
                 $"<p>{player.Name} puts {player.Inventory.Name.ToLower()} into {container.Name.ToLower()}.</p>",
                 room,
                 player
@@ -402,13 +402,13 @@ Related help files: get, put, give, drop
             container.ItemType == Item.Item.ItemTypes.Cooking && container.Container.Items.Count > 3
         )
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p>Too many items in the cook pot, Only 3 ingredients allowed.</p>",
                 player.ConnectionId
             );
         }
-        CoreHandler.Instance.UpdateClient.UpdateInventory(player);
-        CoreHandler.Instance.UpdateClient.UpdateScore(player);
+        Services.Instance.UpdateClient.UpdateInventory(player);
+        Services.Instance.UpdateClient.UpdateScore(player);
         // TODO: You are over encumbered
     }
 }

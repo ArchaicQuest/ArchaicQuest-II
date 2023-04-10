@@ -6,10 +6,11 @@ using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Skill.Skills;
 using ArchaicQuestII.GameLogic.World.Area;
 using ArchaicQuestII.GameLogic.Spell;
+using ArchaicQuestII.GameLogic.Commands;
 
 namespace ArchaicQuestII.GameLogic.Core
 {
-    public sealed class CoreHandler
+    public sealed class Services
     {
         public ICache Cache { get; private set; }
         public IWriteToClient Writer { get; private set; }
@@ -28,20 +29,21 @@ namespace ArchaicQuestII.GameLogic.Core
         public ISpellList SpellList { get; private set; }
         public IWeather Weather { get; private set; }
         public ICharacterHandler CharacterHandler { get; private set; }
-        public IGameLoop GameLoop { get; private set; }
+        public ILoopHandler GameLoop { get; private set; }
+        public ICommandHandler CommandHandler { get; private set; }
 
-        private static readonly CoreHandler instance = new CoreHandler();
+        private static readonly Services instance = new Services();
 
         // Explicit static constructor to tell C# compiler
         // not to mark type as beforefieldinit
-        static CoreHandler() { }
+        static Services() { }
 
-        public static CoreHandler Instance
+        public static Services Instance
         {
             get { return instance; }
         }
 
-        private CoreHandler() { }
+        private Services() { }
 
         public void InitServices(
             ICache cache,
@@ -60,7 +62,8 @@ namespace ArchaicQuestII.GameLogic.Core
             ISpellList spellList,
             IWeather weather,
             ICharacterHandler characterHandler,
-            IGameLoop gameLoop
+            ILoopHandler gameLoop,
+            ICommandHandler commandHandler
         )
         {
             Cache = cache;
@@ -80,6 +83,7 @@ namespace ArchaicQuestII.GameLogic.Core
             Weather = weather;
             CharacterHandler = characterHandler;
             GameLoop = gameLoop;
+            CommandHandler = commandHandler;
         }
     }
 }

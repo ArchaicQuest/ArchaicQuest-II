@@ -54,7 +54,7 @@ public class ListSpellsCmd : ICommand
             }
             else
             {
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     "<p>You have no spells, try skills instead.</p>",
                     player.ConnectionId
                 );
@@ -73,7 +73,7 @@ public class ListSpellsCmd : ICommand
             }
             else
             {
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     "<p>You have no spells, try skills instead.</p>",
                     player.ConnectionId
                 );
@@ -87,7 +87,7 @@ public class ListSpellsCmd : ICommand
     // TODO: show mana
     private void ReturnSkillList(List<SkillList> skillList, Player player, string skillTitle)
     {
-        CoreHandler.Instance.Writer.WriteLine(skillTitle, player.ConnectionId);
+        Services.Instance.Writer.WriteLine(skillTitle, player.ConnectionId);
 
         var sb = new StringBuilder();
         sb.Append("<table>");
@@ -126,6 +126,6 @@ public class ListSpellsCmd : ICommand
 
         sb.Append("</table>");
 
-        CoreHandler.Instance.Writer.WriteLine(sb.ToString(), player.ConnectionId);
+        Services.Instance.Writer.WriteLine(sb.ToString(), player.ConnectionId);
     }
 }

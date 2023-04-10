@@ -45,7 +45,7 @@ public class FleeCmd : ICommand
     {
         if (player.Status != CharacterStatus.Status.Fighting)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 "<p>You're not in a fight.</p>",
                 player.ConnectionId
             );
@@ -65,7 +65,7 @@ public class FleeCmd : ICommand
             && room.Exits.West == null
         )
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 "<p>You have no where to go!</p>",
                 player.ConnectionId
             );
@@ -117,7 +117,7 @@ public class FleeCmd : ICommand
 
         if (validExits.Count == 0)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 "<p>You have no where to go!</p>",
                 player.ConnectionId
             );
@@ -128,15 +128,15 @@ public class FleeCmd : ICommand
 
         player.Status = CharacterStatus.Status.Standing;
 
-        CoreHandler.Instance.Cache.RemoveCharFromCombat(player.Id.ToString());
+        Services.Instance.Cache.RemoveCharFromCombat(player.Id.ToString());
 
         foreach (var mob in room.Mobs.Where(mob => mob.Target == player.Name))
         {
             mob.Status = CharacterStatus.Status.Standing;
-            CoreHandler.Instance.Cache.RemoveCharFromCombat(mob.Id.ToString());
+            Services.Instance.Cache.RemoveCharFromCombat(mob.Id.ToString());
         }
 
-        CoreHandler.Instance.Cache
+        Services.Instance.Cache
             .GetCommand(validExits[getExitIndex].Name.ToLower())
             .Execute(player, room, new[] { validExits[getExitIndex].Name.ToLower(), "flee" });
 
@@ -144,6 +144,6 @@ public class FleeCmd : ICommand
         player.Attributes.Attribute[EffectLocation.Moves] -=
             (100 * 15) / player.MaxAttributes.Attribute[EffectLocation.Moves];
 
-        CoreHandler.Instance.UpdateClient.UpdateMoves(player);
+        Services.Instance.UpdateClient.UpdateMoves(player);
     }
 }

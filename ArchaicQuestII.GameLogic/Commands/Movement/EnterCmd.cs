@@ -46,7 +46,7 @@ public class EnterCmd : ICommand
 
         if (string.IsNullOrEmpty(target))
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 "<p>You can't do that here.</p>",
                 player.ConnectionId
             );
@@ -58,7 +58,7 @@ public class EnterCmd : ICommand
 
         if (item == null)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 "<p>You don't see that here.</p>",
                 player.ConnectionId
             );
@@ -67,25 +67,22 @@ public class EnterCmd : ICommand
 
         if (item.ItemType != Item.Item.ItemTypes.Portal)
         {
-            CoreHandler.Instance.Writer.WriteLine(
-                "<p>You can't enter that.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>You can't enter that.</p>", player.ConnectionId);
             return;
         }
 
-        CoreHandler.Instance.Writer.WriteLine(
+        Services.Instance.Writer.WriteLine(
             $"<p>You {item.Portal.EnterDescription}</p>",
             player.ConnectionId
         );
-        CoreHandler.Instance.Writer.WriteToOthersInRoom(
+        Services.Instance.Writer.WriteToOthersInRoom(
             $"<p>{player.Name} {item.Portal.EnterDescription}</p>",
             room,
             player
         );
 
-        var newRoom = CoreHandler.Instance.Cache.GetRoom(item.Portal.Destination);
+        var newRoom = Services.Instance.Cache.GetRoom(item.Portal.Destination);
 
-        CoreHandler.Instance.RoomActions.RoomChange(player, room, newRoom, false);
+        Services.Instance.RoomActions.RoomChange(player, room, newRoom, false);
     }
 }

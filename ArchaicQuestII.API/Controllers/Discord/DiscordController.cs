@@ -1,6 +1,5 @@
 using System.Linq;
 using System.Threading.Tasks;
-using ArchaicQuestII.GameLogic.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,11 +34,17 @@ public class DiscordController : Controller
             $"<p class='newbie'>[<span>Newbie</span>] {data.Username}: {data.Message}</p>";
 
         foreach (
-            var pc in CoreHandler.Instance.Cache.GetAllPlayers().Where(x => x.Config.NewbieChannel)
+            var pc in GameLogic.Core.Services.Instance.Cache
+                .GetAllPlayers()
+                .Where(x => x.Config.NewbieChannel)
         )
         {
-            CoreHandler.Instance.Writer.WriteLine(message, pc.ConnectionId);
-            CoreHandler.Instance.UpdateClient.UpdateCommunication(pc, message, data.Channel);
+            GameLogic.Core.Services.Instance.Writer.WriteLine(message, pc.ConnectionId);
+            GameLogic.Core.Services.Instance.UpdateClient.UpdateCommunication(
+                pc,
+                message,
+                data.Channel
+            );
         }
     }
 }

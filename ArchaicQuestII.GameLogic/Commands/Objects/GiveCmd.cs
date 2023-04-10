@@ -58,7 +58,7 @@ Related help files: get, put, give, drop
 
         if (string.IsNullOrEmpty(targetName))
         {
-            CoreHandler.Instance.Writer.WriteLine("<p>Give what to whom?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Give what to whom?</p>", player.ConnectionId);
             return;
         }
 
@@ -78,7 +78,7 @@ Related help files: get, put, give, drop
 
         if (player.Affects.Blind)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 "<p>You are blind and can't see a thing!</p>",
                 player.ConnectionId
             );
@@ -87,7 +87,7 @@ Related help files: get, put, give, drop
 
         if (string.IsNullOrEmpty(itemName))
         {
-            CoreHandler.Instance.Writer.WriteLine("<p>Give what to whom?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Give what to whom?</p>", player.ConnectionId);
             return;
         }
 
@@ -97,7 +97,7 @@ Related help files: get, put, give, drop
 
         if (target == null)
         {
-            CoreHandler.Instance.Writer.WriteLine("<p>They aren't here.</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>They aren't here.</p>", player.ConnectionId);
             return;
         }
 
@@ -111,7 +111,7 @@ Related help files: get, put, give, drop
 
         if (item == null)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 "<p>You do not have that item.</p>",
                 player.ConnectionId
             );
@@ -120,7 +120,7 @@ Related help files: get, put, give, drop
 
         if (item.Equipped)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p>You must remove {item.Name.ToLower()} before you can give it.</p>",
                 player.ConnectionId
             );
@@ -129,7 +129,7 @@ Related help files: get, put, give, drop
 
         if ((item.ItemFlag & Item.Item.ItemFlags.Nodrop) != 0)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p>You can't let go of {item.Name.ToLower()}. It appears to be cursed.</p>",
                 player.ConnectionId
             );
@@ -139,30 +139,30 @@ Related help files: get, put, give, drop
         player.Inventory.Remove(item);
         player.Weight -= item.Weight;
 
-        CoreHandler.Instance.Writer.WriteLine(
+        Services.Instance.Writer.WriteLine(
             $"<p>You give {item.Name.ToLower()} to {target.Name.ToLower()}.</p>",
             player.ConnectionId
         );
-        CoreHandler.Instance.Writer.WriteLine(
+        Services.Instance.Writer.WriteLine(
             $"<p>{player.Name} gives you {item.Name.ToLower()}.</p>",
             target.ConnectionId
         );
-        CoreHandler.Instance.Writer.WriteToOthersInRoom(
+        Services.Instance.Writer.WriteToOthersInRoom(
             $"<p>{player.Name} gives {item.Name.ToLower()} to {target.Name.ToLower()}.</p>",
             room,
             player
         );
 
         target.Inventory.Add(item);
-        CoreHandler.Instance.UpdateClient.UpdateInventory(player);
-        CoreHandler.Instance.UpdateClient.UpdateInventory(target);
+        Services.Instance.UpdateClient.UpdateInventory(player);
+        Services.Instance.UpdateClient.UpdateInventory(target);
 
         if (!string.IsNullOrEmpty(target.Events.Give))
         {
             UserData.RegisterType<MobScripts>();
 
             var script = new Script();
-            var obj = UserData.Create(CoreHandler.Instance.MobScripts);
+            var obj = UserData.Create(Services.Instance.MobScripts);
             script.Globals.Set("obj", obj);
             UserData.RegisterProxyType<MyProxy, Room>(r => new MyProxy(room));
             UserData.RegisterProxyType<ProxyPlayer, Player>(r => new ProxyPlayer(player));
@@ -176,7 +176,7 @@ Related help files: get, put, give, drop
 
         if (target.Weight > target.Attributes.Attribute[EffectLocation.Strength] * 3)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p>You are now over encumbered by carrying too much weight.</p>",
                 target.ConnectionId
             );
@@ -187,7 +187,7 @@ Related help files: get, put, give, drop
     {
         if (player.Money.Gold < amount)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 "<p>You don't have that much gold to give.</p>",
                 player.ConnectionId
             );
@@ -196,19 +196,19 @@ Related help files: get, put, give, drop
 
         if (target == null)
         {
-            CoreHandler.Instance.Writer.WriteLine("<p>They aren't here.</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>They aren't here.</p>", player.ConnectionId);
             return;
         }
 
-        CoreHandler.Instance.Writer.WriteLine(
+        Services.Instance.Writer.WriteLine(
             $"<p>You give {target.Name} {(amount == 1 ? "1 gold coin." : $"{amount} gold coins.")}</p>",
             player.ConnectionId
         );
-        CoreHandler.Instance.Writer.WriteLine(
+        Services.Instance.Writer.WriteLine(
             $"<p>{player.Name} gives you {(amount == 1 ? "1 gold coin." : $"{amount} gold coins.")}</p>",
             target.ConnectionId
         );
-        CoreHandler.Instance.Writer.WriteToOthersInRoom(
+        Services.Instance.Writer.WriteToOthersInRoom(
             $"<p>{player.Name} gives {target.Name} some gold.</p>",
             room,
             player
@@ -218,6 +218,6 @@ Related help files: get, put, give, drop
         player.Weight -= amount * 0.1;
         target.Money.Gold += amount;
         target.Weight += amount * 0.1;
-        CoreHandler.Instance.UpdateClient.UpdateScore(player);
+        Services.Instance.UpdateClient.UpdateScore(player);
     }
 }

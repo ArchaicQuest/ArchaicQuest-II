@@ -8,29 +8,29 @@ using ArchaicQuestII.GameLogic.Character.Status;
 namespace ArchaicQuestII.GameLogic.Loops
 {
     public class CombatLoop : ILoop
-	{
+    {
         public int TickDelay => 3200;
 
         public bool ConfigureAwait => true;
 
         private List<Player> _combatants;
 
-        public void Init()
-        {
-
-        }
-
         public void PreTick()
         {
-            _combatants = CoreHandler.Instance.Cache.GetCombatList().Where(x => x.Status == CharacterStatus.Status.Fighting).ToList();
+            _combatants = Services.Instance.Cache
+                .GetCombatList()
+                .Where(x => x.Status == CharacterStatus.Status.Fighting)
+                .ToList();
         }
 
         public void Tick()
         {
             foreach (var player in _combatants)
             {
-                if (player.Lag > 0 &&
-                    player.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
+                if (
+                    player.Lag > 0
+                    && player.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase)
+                )
                 {
                     player.Lag -= 1;
                     continue;
@@ -38,28 +38,33 @@ namespace ArchaicQuestII.GameLogic.Loops
 
                 var attackCount = 1;
 
-                var hasSecondAttack = player.Skills.FirstOrDefault(x =>
-                    x.Name == SkillName.SecondAttack);
+                var hasSecondAttack = player.Skills.FirstOrDefault(
+                    x => x.Name == SkillName.SecondAttack
+                );
                 if (hasSecondAttack != null)
                 {
-                    hasSecondAttack = player.Level >= hasSecondAttack.Level ? hasSecondAttack : null;
+                    hasSecondAttack =
+                        player.Level >= hasSecondAttack.Level ? hasSecondAttack : null;
                 }
 
-                var hasThirdAttack = player.Skills.FirstOrDefault(x =>
-                    x.Name == SkillName.ThirdAttack);
+                var hasThirdAttack = player.Skills.FirstOrDefault(
+                    x => x.Name == SkillName.ThirdAttack
+                );
                 if (hasThirdAttack != null)
                 {
                     hasThirdAttack = player.Level >= hasThirdAttack.Level ? hasThirdAttack : null;
                 }
 
-                var hasFouthAttack = player.Skills.FirstOrDefault(x =>
-                    x.Name == SkillName.FourthAttack);
+                var hasFouthAttack = player.Skills.FirstOrDefault(
+                    x => x.Name == SkillName.FourthAttack
+                );
                 if (hasFouthAttack != null)
                 {
                     hasFouthAttack = player.Level >= hasFouthAttack.Level ? hasFouthAttack : null;
                 }
-                var hasFithAttack = player.Skills.FirstOrDefault(x =>
-                    x.Name == SkillName.FifthAttack);
+                var hasFithAttack = player.Skills.FirstOrDefault(
+                    x => x.Name == SkillName.FifthAttack
+                );
 
                 if (hasFithAttack != null)
                 {
@@ -91,12 +96,15 @@ namespace ArchaicQuestII.GameLogic.Loops
                     attackCount += 1;
                 }
 
-
                 for (var i = 0; i < attackCount; i++)
                 {
-                    CoreHandler.Instance.Combat.Fight(player, player.Target, CoreHandler.Instance.Cache.GetRoom(player.RoomId), false);
+                    Services.Instance.Combat.Fight(
+                        player,
+                        player.Target,
+                        Services.Instance.Cache.GetRoom(player.RoomId),
+                        false
+                    );
                 }
-
             }
         }
 
@@ -106,4 +114,3 @@ namespace ArchaicQuestII.GameLogic.Loops
         }
     }
 }
-

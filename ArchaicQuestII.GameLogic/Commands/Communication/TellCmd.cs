@@ -34,19 +34,19 @@ public class TellCmd : ICommand
     {
         if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
         {
-            CoreHandler.Instance.Writer.WriteLine("<p>Tell who?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Tell who?</p>", player.ConnectionId);
             return;
         }
 
         if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
         {
-            CoreHandler.Instance.Writer.WriteLine("<p>Tell them what?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Tell them what?</p>", player.ConnectionId);
             return;
         }
 
         var text = string.Join(" ", input.Skip(2));
 
-        var foundPlayer = CoreHandler.Instance.Cache
+        var foundPlayer = Services.Instance.Cache
             .GetPlayerCache()
             .FirstOrDefault(
                 x => x.Value.Name.StartsWith(input[1], StringComparison.CurrentCultureIgnoreCase)
@@ -55,7 +55,7 @@ public class TellCmd : ICommand
 
         if (foundPlayer == null)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 "<p>They are not in this realm.</p>",
                 player.ConnectionId
             );
@@ -64,7 +64,7 @@ public class TellCmd : ICommand
 
         if (foundPlayer == player)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p>You tell yourself \"{text}\"</p>",
                 player.ConnectionId
             );
@@ -73,31 +73,28 @@ public class TellCmd : ICommand
 
         if (!foundPlayer.Config.Tells)
         {
-            CoreHandler.Instance.Writer.WriteLine(
-                $"<p>They can't hear you.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine($"<p>They can't hear you.</p>", player.ConnectionId);
             return;
         }
 
         player.ReplyTo = foundPlayer.Name;
         foundPlayer.ReplyTo = player.Name;
 
-        CoreHandler.Instance.Writer.WriteLine(
+        Services.Instance.Writer.WriteLine(
             $"<p class='say'>You tell {foundPlayer.Name} \"{text}\"</p>",
             player.ConnectionId
         );
-        CoreHandler.Instance.UpdateClient.UpdateCommunication(
+        Services.Instance.UpdateClient.UpdateCommunication(
             player,
             $"<p class='say'>You tell {foundPlayer.Name} \"{text}\"</p>",
             "all"
         );
 
-        CoreHandler.Instance.Writer.WriteLine(
+        Services.Instance.Writer.WriteLine(
             $"<p class='say'>{player.Name} tells you \"{text}\"</p>",
             foundPlayer.ConnectionId
         );
-        CoreHandler.Instance.UpdateClient.UpdateCommunication(
+        Services.Instance.UpdateClient.UpdateCommunication(
             foundPlayer,
             $"<p class='say'>{player.Name} tells you \"{text}\"</p>",
             "all"

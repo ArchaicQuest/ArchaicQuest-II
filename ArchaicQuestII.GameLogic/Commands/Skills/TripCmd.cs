@@ -48,7 +48,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             var obj = input.ElementAtOrDefault(1)?.ToLower() ?? player.Target;
             if (string.IsNullOrEmpty(obj))
             {
-                CoreHandler.Instance.Writer.WriteLine("Trip What!?.", player.ConnectionId);
+                Services.Instance.Writer.WriteLine("Trip What!?.", player.ConnectionId);
                 return;
             }
 
@@ -78,7 +78,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
 
             if (target.Lag <= 1)
             {
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     $"You trip {target.Name} and {target.Name} goes down!"
                 );
                 textToRoom = $"{player.Name} trips {target.Name} and {target.Name} goes down!";
@@ -96,14 +96,14 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 //Player already stunned
                 player.Lag += 1;
 
-                CoreHandler.Instance.Writer.WriteLine($"You try to trip {target.Name} and miss.");
+                Services.Instance.Writer.WriteLine($"You try to trip {target.Name} and miss.");
                 textToRoom =
                     $"{player.Name} tries to trip {target.Name} but {target.Name} easily avoids it.";
                 textToTarget = $"{player.Name} tries to trip you but fails.";
 
                 EmoteAction(textToTarget, textToRoom, target.Name, room, player);
                 player.FailedSkill(SkillName.Trip, out var message);
-                CoreHandler.Instance.Writer.WriteLine(message, player.ConnectionId);
+                Services.Instance.Writer.WriteLine(message, player.ConnectionId);
             }
             updateCombat(player, target, room);
         }

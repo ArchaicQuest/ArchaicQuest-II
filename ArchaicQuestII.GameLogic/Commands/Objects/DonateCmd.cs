@@ -55,7 +55,7 @@ Related help files: get, put, give, drop
     {
         if (!GetRandomDonationRoom(out var donationRoom))
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 "<p>There are no donation rooms.</p>",
                 player.ConnectionId
             );
@@ -66,13 +66,13 @@ Related help files: get, put, give, drop
 
         if (string.IsNullOrEmpty(target))
         {
-            CoreHandler.Instance.Writer.WriteLine("<p>Donate what?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Donate what?</p>", player.ConnectionId);
             return;
         }
 
         if (player.Affects.Blind)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 "<p>You are blind and can't see a thing!</p>",
                 player.ConnectionId
             );
@@ -91,7 +91,7 @@ Related help files: get, put, give, drop
 
         if (item == null)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 "<p>You don't have that item.</p>",
                 player.ConnectionId
             );
@@ -100,7 +100,7 @@ Related help files: get, put, give, drop
 
         if (item.Equipped)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p>You must remove {item.Name.ToLower()} before you can donate it.</p>",
                 player.ConnectionId
             );
@@ -109,7 +109,7 @@ Related help files: get, put, give, drop
 
         if ((item.ItemFlag & Item.Item.ItemFlags.Nodrop) != 0)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p>You can't let go of {item.Name.ToLower()}. It appears to be cursed.</p>",
                 player.ConnectionId
             );
@@ -120,15 +120,15 @@ Related help files: get, put, give, drop
         donationRoom.Items.Add(item);
         player.Weight -= item.Weight;
 
-        CoreHandler.Instance.Writer.WriteLine(
+        Services.Instance.Writer.WriteLine(
             $"<p>You donate {item.Name.ToLower()}.</p>",
             player.ConnectionId
         );
 
-        foreach (var pc in CoreHandler.Instance.Cache.GetAllPlayers())
+        foreach (var pc in Services.Instance.Cache.GetAllPlayers())
         {
             if (pc.Config.NewbieChannel)
-                CoreHandler.Instance.UpdateClient.UpdateCommunication(
+                Services.Instance.UpdateClient.UpdateCommunication(
                     pc,
                     $"<p class='newbie'>[<span>Newbie</span>]: {player.Name} donates {item.Name.ToLower()} to {donationRoom.Title}.</p>",
                     "newbie"
@@ -138,18 +138,18 @@ Related help files: get, put, give, drop
         Helpers.PostToDiscord(
             $"<p>[Newbie] {player.Name} donates {item.Name.ToLower()} to {donationRoom.Title}.</p>",
             "channels",
-            CoreHandler.Instance.Cache.GetConfig()
+            Services.Instance.Cache.GetConfig()
         );
 
-        CoreHandler.Instance.UpdateClient.UpdateInventory(player);
-        CoreHandler.Instance.UpdateClient.UpdateScore(player);
+        Services.Instance.UpdateClient.UpdateInventory(player);
+        Services.Instance.UpdateClient.UpdateScore(player);
     }
 
     private void DonateGold(Player player, int amount)
     {
         if (!GetRandomDonationRoom(out var donationRoom))
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 "<p>There are no donation rooms.</p>",
                 player.ConnectionId
             );
@@ -157,7 +157,7 @@ Related help files: get, put, give, drop
 
         if (player.Money.Gold < amount)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 "<p>You don't have that much gold to donate.</p>",
                 player.ConnectionId
             );
@@ -188,15 +188,15 @@ Related help files: get, put, give, drop
             Container = new Container { Items = new ItemList() }
         };
 
-        CoreHandler.Instance.Writer.WriteLine(
+        Services.Instance.Writer.WriteLine(
             $"<p>You donate {(amount == 1 ? "1 gold coin." : $"{amount} gold coins.")}</p>",
             player.ConnectionId
         );
 
-        foreach (var pc in CoreHandler.Instance.Cache.GetAllPlayers())
+        foreach (var pc in Services.Instance.Cache.GetAllPlayers())
         {
             if (pc.Config.NewbieChannel)
-                CoreHandler.Instance.UpdateClient.UpdateCommunication(
+                Services.Instance.UpdateClient.UpdateCommunication(
                     pc,
                     $"<p class='newbie'>[<span>Newbie</span>]: {player.Name} donates {ItemList.DisplayMoneyAmount(amount).ToLower()} to {donationRoom.Title}.</p>",
                     "newbie"
@@ -206,7 +206,7 @@ Related help files: get, put, give, drop
         Helpers.PostToDiscord(
             $"<p>[Newbie] {player.Name} donates {ItemList.DisplayMoneyAmount(amount).ToLower()} to {donationRoom.Title}.</p>",
             "channels",
-            CoreHandler.Instance.Cache.GetConfig()
+            Services.Instance.Cache.GetConfig()
         );
 
         player.Money.Gold -= amount;
@@ -214,14 +214,14 @@ Related help files: get, put, give, drop
 
         player.Weight -= amount * 0.1;
 
-        CoreHandler.Instance.UpdateClient.UpdateScore(player);
+        Services.Instance.UpdateClient.UpdateScore(player);
     }
 
     private bool GetRandomDonationRoom(out Room donationRoom)
     {
         var rooms = new List<Room>();
 
-        foreach (Room room in CoreHandler.Instance.Cache.GetAllRooms())
+        foreach (Room room in Services.Instance.Cache.GetAllRooms())
         {
             if (room.RoomFlags.Contains(Room.RoomFlag.Donation))
                 rooms.Add(room);

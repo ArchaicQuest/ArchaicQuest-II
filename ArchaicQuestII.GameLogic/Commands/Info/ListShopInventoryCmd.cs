@@ -34,7 +34,7 @@ public class ListShopInventoryCmd : ICommand
         var shopKeeper = FindShopKeeper(room);
         if (shopKeeper == null)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 "<p>There is no one selling here.</p>",
                 player.ConnectionId
             );
@@ -45,14 +45,14 @@ public class ListShopInventoryCmd : ICommand
         {
             if (shopKeeper.SpellList.Any())
             {
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     "<p>They have nothing for sale but do offer spells. Try 'heal'.</p>",
                     player.ConnectionId
                 );
                 return;
             }
 
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 "<p>They have nothing for sale.</p>",
                 player.ConnectionId
             );
@@ -66,7 +66,7 @@ public class ListShopInventoryCmd : ICommand
     {
         var hagglePriceReduction = Haggle(player, mob);
 
-        CoreHandler.Instance.Writer.WriteLine(
+        Services.Instance.Writer.WriteLine(
             mob.Name + " says 'Here's what I have for sale.'",
             player.ConnectionId
         );
@@ -85,7 +85,7 @@ public class ListShopInventoryCmd : ICommand
         }
 
         sb.Append("</table>");
-        CoreHandler.Instance.Writer.WriteLine(sb.ToString(), player.ConnectionId);
+        Services.Instance.Writer.WriteLine(sb.ToString(), player.ConnectionId);
     }
 
     private Player FindShopKeeper(Room room)
@@ -103,7 +103,7 @@ public class ListShopInventoryCmd : ICommand
 
     private int Haggle(Player player, Player target)
     {
-        var priceReduction = CoreHandler.Instance.PassiveSkills.Haggle(player, target);
+        var priceReduction = Services.Instance.PassiveSkills.Haggle(player, target);
 
         return priceReduction;
     }

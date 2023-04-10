@@ -32,16 +32,16 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 
             sb.Append("<ul>");
 
-            foreach (var pc in CoreHandler.Instance.Cache.GetPlayerCache())
+            foreach (var pc in Services.Instance.Cache.GetPlayerCache())
             {
                 sb.Append($"<li>[{pc.Value.Level} {pc.Value.Race} {pc.Value.ClassName}] ");
                 sb.Append($"<span class='player'>{pc.Value.Name}, {pc.Value.Title}</span></li>");
             }
 
             sb.Append("</ul>");
-            sb.Append($"<p>Players found: {CoreHandler.Instance.Cache.GetPlayerCache().Count}</p>");
+            sb.Append($"<p>Players found: {Services.Instance.Cache.GetPlayerCache().Count}</p>");
 
-            CoreHandler.Instance.Writer.WriteLine(sb.ToString(), player.ConnectionId);
+            Services.Instance.Writer.WriteLine(sb.ToString(), player.ConnectionId);
         }
     }
 }

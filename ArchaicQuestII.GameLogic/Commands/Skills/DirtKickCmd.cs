@@ -50,7 +50,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             var obj = input.ElementAtOrDefault(1)?.ToLower() ?? player.Target;
             if (string.IsNullOrEmpty(obj))
             {
-                CoreHandler.Instance.Writer.WriteLine("Dirt kick What!?.", player.ConnectionId);
+                Services.Instance.Writer.WriteLine("Dirt kick What!?.", player.ConnectionId);
                 return;
             }
 
@@ -62,7 +62,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
 
             if (target.Affects.Blind)
             {
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     $"{target.Name} has already been blinded.",
                     player.ConnectionId
                 );
@@ -74,7 +74,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 && DexterityAndLevelCheck(player, target) == true
             )
             {
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     $"You kick dirt in {target.Name}'s eyes!",
                     player.ConnectionId
                 );
@@ -83,10 +83,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
 
                 EmoteAction(textToTarget, textToRoom, target.Name, room, player);
 
-                CoreHandler.Instance.Writer.WriteLine(
-                    "You can't see a thing!",
-                    target.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine("You can't see a thing!", target.ConnectionId);
 
                 target.Affects.Blind = true;
 
@@ -104,7 +101,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             }
             else
             {
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     $"You try to kick dirt but {target.Name} shut their eyes in time.",
                     player.ConnectionId
                 );
@@ -113,7 +110,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
 
                 EmoteAction(textToTarget, textToRoom, target.Name, room, player);
                 player.FailedSkill(SkillName.DirtKick, out var message);
-                CoreHandler.Instance.Writer.WriteLine(message, player.ConnectionId);
+                Services.Instance.Writer.WriteLine(message, player.ConnectionId);
             }
 
             player.Lag += 1;

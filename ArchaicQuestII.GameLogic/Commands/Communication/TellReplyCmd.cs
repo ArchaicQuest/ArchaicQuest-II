@@ -30,7 +30,7 @@ public class TellReplyCmd : ICommand
     {
         if (string.IsNullOrEmpty(player.ReplyTo))
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 "<p>You have no one to reply too.</p>",
                 player.ConnectionId
             );
@@ -39,13 +39,13 @@ public class TellReplyCmd : ICommand
 
         if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
         {
-            CoreHandler.Instance.Writer.WriteLine("Reply what?", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("Reply what?", player.ConnectionId);
             return;
         }
 
         var replyInput = input.ToList();
         replyInput.Insert(1, player.ReplyTo);
 
-        CoreHandler.Instance.Cache.GetCommand("tell").Execute(player, room, replyInput.ToArray());
+        Services.Instance.Cache.GetCommand("tell").Execute(player, room, replyInput.ToArray());
     }
 }

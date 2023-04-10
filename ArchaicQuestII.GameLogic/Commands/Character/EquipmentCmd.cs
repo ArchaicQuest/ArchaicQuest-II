@@ -132,7 +132,7 @@ hold potion
         {
             if (!string.IsNullOrEmpty(target))
                 return true;
-            CoreHandler.Instance.Writer.WriteLine(errorMessage, player.ConnectionId);
+            Services.Instance.Writer.WriteLine(errorMessage, player.ConnectionId);
             return false;
         }
 
@@ -354,7 +354,7 @@ hold potion
 
             if (itemToRemove == null)
             {
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     "<p>You are not wearing that item.</p>",
                     player.ConnectionId
                 );
@@ -363,7 +363,7 @@ hold potion
 
             if ((itemToRemove.ItemFlag & Item.Item.ItemFlags.Noremove) != 0)
             {
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     $"<p>You can't remove {itemToRemove.Name}. It appears to be cursed.</p>",
                     player.ConnectionId
                 );
@@ -402,11 +402,11 @@ hold potion
             {
                 case Equipment.EqSlot.Arms:
                     player.Equipped.Arms = null;
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         $"<p>You stop using {itemToRemove.Name.ToLower()}.</p>",
                         player.ConnectionId
                     );
-                    CoreHandler.Instance.Writer.WriteToOthersInRoom(
+                    Services.Instance.Writer.WriteToOthersInRoom(
                         $"<p>{player.Name} stops using {itemToRemove.Name}",
                         room,
                         player
@@ -414,11 +414,11 @@ hold potion
                     break;
                 case Equipment.EqSlot.Body:
                     player.Equipped.AboutBody = null;
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         $"<p>You stop using {itemToRemove.Name.ToLower()}.</p>",
                         player.ConnectionId
                     );
-                    CoreHandler.Instance.Writer.WriteToOthersInRoom(
+                    Services.Instance.Writer.WriteToOthersInRoom(
                         $"<p>{player.Name} stops using {itemToRemove.Name}",
                         room,
                         player
@@ -426,11 +426,11 @@ hold potion
                     break;
                 case Equipment.EqSlot.Face:
                     player.Equipped.Face = null;
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         $"<p>You stop using {itemToRemove.Name.ToLower()}.</p>",
                         player.ConnectionId
                     );
-                    CoreHandler.Instance.Writer.WriteToOthersInRoom(
+                    Services.Instance.Writer.WriteToOthersInRoom(
                         $"<p>{player.Name} stops using {itemToRemove.Name}",
                         room,
                         player
@@ -438,11 +438,11 @@ hold potion
                     break;
                 case Equipment.EqSlot.Feet:
                     player.Equipped.Feet = null;
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         $"<p>You stop using {itemToRemove.Name.ToLower()}.</p>",
                         player.ConnectionId
                     );
-                    CoreHandler.Instance.Writer.WriteToOthersInRoom(
+                    Services.Instance.Writer.WriteToOthersInRoom(
                         $"<p>{player.Name} stops using {itemToRemove.Name}",
                         room,
                         player
@@ -453,11 +453,11 @@ hold potion
                         player.Equipped.Finger = null;
                     else if (player.Equipped.Finger2.Id == itemToRemove.Id)
                         player.Equipped.Finger2 = null;
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         $"<p>You stop using {itemToRemove.Name.ToLower()}.</p>",
                         player.ConnectionId
                     );
-                    CoreHandler.Instance.Writer.WriteToOthersInRoom(
+                    Services.Instance.Writer.WriteToOthersInRoom(
                         $"<p>{player.Name} stops using {itemToRemove.Name}",
                         room,
                         player
@@ -465,11 +465,11 @@ hold potion
                     break;
                 case Equipment.EqSlot.Floating:
                     player.Equipped.Floating = null;
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         $"<p>You stop using {itemToRemove.Name.ToLower()}.</p>",
                         player.ConnectionId
                     );
-                    CoreHandler.Instance.Writer.WriteToOthersInRoom(
+                    Services.Instance.Writer.WriteToOthersInRoom(
                         $"<p>{player.Name} stops using {itemToRemove.Name}",
                         room,
                         player
@@ -477,11 +477,11 @@ hold potion
                     break;
                 case Equipment.EqSlot.Hands:
                     player.Equipped.Hands = null;
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         $"<p>You stop using {itemToRemove.Name.ToLower()}.</p>",
                         player.ConnectionId
                     );
-                    CoreHandler.Instance.Writer.WriteToOthersInRoom(
+                    Services.Instance.Writer.WriteToOthersInRoom(
                         $"<p>{player.Name} stops using {itemToRemove.Name}",
                         room,
                         player
@@ -489,11 +489,11 @@ hold potion
                     break;
                 case Equipment.EqSlot.Head:
                     player.Equipped.Head = null;
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         $"<p>You stop using {itemToRemove.Name.ToLower()}.</p>",
                         player.ConnectionId
                     );
-                    CoreHandler.Instance.Writer.WriteToOthersInRoom(
+                    Services.Instance.Writer.WriteToOthersInRoom(
                         $"<p>{player.Name} stops using {itemToRemove.Name}",
                         room,
                         player
@@ -501,11 +501,11 @@ hold potion
                     break;
                 case Equipment.EqSlot.Held:
                     player.Equipped.Held = null; // TODO: handle when wield and shield or 2hand item are equipped
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         $"<p>You stop using {itemToRemove.Name.ToLower()}.</p>",
                         player.ConnectionId
                     );
-                    CoreHandler.Instance.Writer.WriteToOthersInRoom(
+                    Services.Instance.Writer.WriteToOthersInRoom(
                         $"<p>{player.Name} stops using {itemToRemove.Name}",
                         room,
                         player
@@ -513,11 +513,11 @@ hold potion
                     break;
                 case Equipment.EqSlot.Legs:
                     player.Equipped.Legs = null;
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         $"<p>You stop using {itemToRemove.Name.ToLower()}.</p>",
                         player.ConnectionId
                     );
-                    CoreHandler.Instance.Writer.WriteToOthersInRoom(
+                    Services.Instance.Writer.WriteToOthersInRoom(
                         $"<p>{player.Name} stops using {itemToRemove.Name}",
                         room,
                         player
@@ -525,11 +525,11 @@ hold potion
                     break;
                 case Equipment.EqSlot.Light:
                     player.Equipped.Light = null;
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         $"<p>You stop using {itemToRemove.Name.ToLower()}.</p>",
                         player.ConnectionId
                     );
-                    CoreHandler.Instance.Writer.WriteToOthersInRoom(
+                    Services.Instance.Writer.WriteToOthersInRoom(
                         $"<p>{player.Name} stops using {itemToRemove.Name}",
                         room,
                         player
@@ -540,11 +540,11 @@ hold potion
                         player.Equipped.Neck = null;
                     else if (player.Equipped.Neck2.Id == itemToRemove.Id)
                         player.Equipped.Neck2 = null;
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         $"<p>You stop using {itemToRemove.Name.ToLower()}.</p>",
                         player.ConnectionId
                     );
-                    CoreHandler.Instance.Writer.WriteToOthersInRoom(
+                    Services.Instance.Writer.WriteToOthersInRoom(
                         $"<p>{player.Name} stops using {itemToRemove.Name}",
                         room,
                         player
@@ -552,11 +552,11 @@ hold potion
                     break;
                 case Equipment.EqSlot.Shield:
                     player.Equipped.Shield = null;
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         $"<p>You stop using {itemToRemove.Name.ToLower()}.</p>",
                         player.ConnectionId
                     );
-                    CoreHandler.Instance.Writer.WriteToOthersInRoom(
+                    Services.Instance.Writer.WriteToOthersInRoom(
                         $"<p>{player.Name} stops using {itemToRemove.Name}",
                         room,
                         player
@@ -564,11 +564,11 @@ hold potion
                     break;
                 case Equipment.EqSlot.Torso:
                     player.Equipped.Torso = null;
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         $"<p>You stop using {itemToRemove.Name.ToLower()}.</p>",
                         player.ConnectionId
                     );
-                    CoreHandler.Instance.Writer.WriteToOthersInRoom(
+                    Services.Instance.Writer.WriteToOthersInRoom(
                         $"<p>{player.Name} stops using {itemToRemove.Name}",
                         room,
                         player
@@ -576,11 +576,11 @@ hold potion
                     break;
                 case Equipment.EqSlot.Waist:
                     player.Equipped.Waist = null;
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         $"<p>You stop using {itemToRemove.Name.ToLower()}.</p>",
                         player.ConnectionId
                     );
-                    CoreHandler.Instance.Writer.WriteToOthersInRoom(
+                    Services.Instance.Writer.WriteToOthersInRoom(
                         $"<p>{player.Name} stops using {itemToRemove.Name}",
                         room,
                         player
@@ -593,11 +593,11 @@ hold potion
                     )
                     {
                         player.Equipped.Secondary = null;
-                        CoreHandler.Instance.Writer.WriteLine(
+                        Services.Instance.Writer.WriteLine(
                             $"<p>You stop using {itemToRemove.Name.ToLower()}.</p>",
                             player.ConnectionId
                         );
-                        CoreHandler.Instance.Writer.WriteToOthersInRoom(
+                        Services.Instance.Writer.WriteToOthersInRoom(
                             $"<p>{player.Name} stops using {itemToRemove.Name}",
                             room,
                             player
@@ -606,11 +606,11 @@ hold potion
                     else
                     {
                         player.Equipped.Wielded = null;
-                        CoreHandler.Instance.Writer.WriteLine(
+                        Services.Instance.Writer.WriteLine(
                             $"<p>You stop using {itemToRemove.Name.ToLower()}.</p>",
                             player.ConnectionId
                         );
-                        CoreHandler.Instance.Writer.WriteToOthersInRoom(
+                        Services.Instance.Writer.WriteToOthersInRoom(
                             $"<p>{player.Name} stops using {itemToRemove.Name}",
                             room,
                             player
@@ -622,11 +622,11 @@ hold potion
                         player.Equipped.Wrist = null;
                     else if (player.Equipped.Wrist2.Id == itemToRemove.Id)
                         player.Equipped.Wrist2 = null;
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         $"<p>You stop using {itemToRemove.Name.ToLower()}.</p>",
                         player.ConnectionId
                     );
-                    CoreHandler.Instance.Writer.WriteToOthersInRoom(
+                    Services.Instance.Writer.WriteToOthersInRoom(
                         $"<p>{player.Name} stops using {itemToRemove.Name}",
                         room,
                         player
@@ -634,11 +634,11 @@ hold potion
                     break;
                 case Equipment.EqSlot.Secondary:
                     player.Equipped.Secondary = null;
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         $"<p>You stop using {itemToRemove.Name.ToLower()}.</p>",
                         player.ConnectionId
                     );
-                    CoreHandler.Instance.Writer.WriteToOthersInRoom(
+                    Services.Instance.Writer.WriteToOthersInRoom(
                         $"<p>{player.Name} stops using {itemToRemove.Name}",
                         room,
                         player
@@ -646,19 +646,19 @@ hold potion
                     break;
                 default:
                     itemToRemove.Equipped = false;
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         "<p>You don't know how to remove this.</p>",
                         player.ConnectionId
                     );
                     break;
             }
 
-            CoreHandler.Instance.UpdateClient.UpdateScore(player);
-            CoreHandler.Instance.UpdateClient.UpdateEquipment(player);
-            CoreHandler.Instance.UpdateClient.UpdateInventory(player);
-            CoreHandler.Instance.UpdateClient.UpdateHP(player);
-            CoreHandler.Instance.UpdateClient.UpdateMana(player);
-            CoreHandler.Instance.UpdateClient.UpdateMoves(player);
+            Services.Instance.UpdateClient.UpdateScore(player);
+            Services.Instance.UpdateClient.UpdateEquipment(player);
+            Services.Instance.UpdateClient.UpdateInventory(player);
+            Services.Instance.UpdateClient.UpdateHP(player);
+            Services.Instance.UpdateClient.UpdateMana(player);
+            Services.Instance.UpdateClient.UpdateMoves(player);
         }
 
         private void RemoveAll(Room room, Player player)
@@ -674,7 +674,7 @@ hold potion
         private void ShowEquipment(Player player)
         {
             var displayEquipment = ShowEquipmentUI(player);
-            CoreHandler.Instance.Writer.WriteLine(displayEquipment, player.ConnectionId);
+            Services.Instance.Writer.WriteLine(displayEquipment, player.ConnectionId);
         }
 
         // handle secondary equip
@@ -694,7 +694,7 @@ hold potion
 
             if (itemToWear == null)
             {
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     "<p>You don't have that item.</p>",
                     player.ConnectionId
                 );
@@ -705,7 +705,7 @@ hold potion
             {
                 if (itemToWear.ItemType != Item.Item.ItemTypes.Weapon)
                 {
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         "<p>You can't wield that.</p>",
                         player.ConnectionId
                     );
@@ -717,7 +717,7 @@ hold potion
             {
                 if (itemToWear.Slot != Equipment.EqSlot.Held)
                 {
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         "<p>You can't hold that.</p>",
                         player.ConnectionId
                     );
@@ -776,11 +776,11 @@ hold potion
                     }
 
                     player.Equipped.Arms = itemToWear;
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         $"<p>You wear {itemToWear.Name.ToLower()} on your arms.</p>",
                         player.ConnectionId
                     );
-                    CoreHandler.Instance.Writer.WriteToOthersInRoom(
+                    Services.Instance.Writer.WriteToOthersInRoom(
                         $"<p>{player.Name} equips {itemToWear.Name.ToLower()} on {Helpers.GetPronoun(player.Gender)} arms.</p>",
                         room,
                         player
@@ -792,11 +792,11 @@ hold potion
                         Remove(player.Equipped.AboutBody.Name, room, player);
                     }
                     player.Equipped.AboutBody = itemToWear;
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         $"<p>You wear {itemToWear.Name.ToLower()} about your body.</p>",
                         player.ConnectionId
                     );
-                    CoreHandler.Instance.Writer.WriteToOthersInRoom(
+                    Services.Instance.Writer.WriteToOthersInRoom(
                         $"<p>{player.Name} equips {itemToWear.Name.ToLower()} about {Helpers.GetPronoun(player.Gender)} body.",
                         room,
                         player
@@ -810,11 +810,11 @@ hold potion
                     }
 
                     player.Equipped.Face = itemToWear;
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         $"<p>You wear {itemToWear.Name.ToLower()} on your face.</p>",
                         player.ConnectionId
                     );
-                    CoreHandler.Instance.Writer.WriteToOthersInRoom(
+                    Services.Instance.Writer.WriteToOthersInRoom(
                         $"<p>{player.Name} equips {itemToWear.Name.ToLower()} on {Helpers.GetPronoun(player.Gender)} face.",
                         room,
                         player
@@ -828,11 +828,11 @@ hold potion
                     }
 
                     player.Equipped.Feet = itemToWear;
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         $"<p>You wear {itemToWear.Name.ToLower()} on your feet.</p>",
                         player.ConnectionId
                     );
-                    CoreHandler.Instance.Writer.WriteToOthersInRoom(
+                    Services.Instance.Writer.WriteToOthersInRoom(
                         $"<p>{player.Name} equips {itemToWear.Name.ToLower()} on {Helpers.GetPronoun(player.Gender)} feet.",
                         room,
                         player
@@ -854,11 +854,11 @@ hold potion
                         player.Equipped.Finger = itemToWear;
                     }
 
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         $"<p>You wear {itemToWear.Name.ToLower()} on your finger.</p>",
                         player.ConnectionId
                     );
-                    CoreHandler.Instance.Writer.WriteToOthersInRoom(
+                    Services.Instance.Writer.WriteToOthersInRoom(
                         $"<p>{player.Name} equips {itemToWear.Name.ToLower()} on {Helpers.GetPronoun(player.Gender)} finger.",
                         room,
                         player
@@ -872,11 +872,11 @@ hold potion
                     }
 
                     player.Equipped.Floating = itemToWear;
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         $"<p>You release {itemToWear.Name.ToLower()} to float around you.</p>",
                         player.ConnectionId
                     );
-                    CoreHandler.Instance.Writer.WriteToOthersInRoom(
+                    Services.Instance.Writer.WriteToOthersInRoom(
                         $"<p>{player.Name} equips {itemToWear.Name.ToLower()} to float around {Helpers.GetPronoun(player.Gender)}.",
                         room,
                         player
@@ -890,11 +890,11 @@ hold potion
                     }
 
                     player.Equipped.Hands = itemToWear;
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         $"<p>You wear {itemToWear.Name.ToLower()} on your hands.</p>",
                         player.ConnectionId
                     );
-                    CoreHandler.Instance.Writer.WriteToOthersInRoom(
+                    Services.Instance.Writer.WriteToOthersInRoom(
                         $"<p>{player.Name} equips {itemToWear.Name.ToLower()} on {Helpers.GetPronoun(player.Gender)} hands.",
                         room,
                         player
@@ -908,11 +908,11 @@ hold potion
                     }
 
                     player.Equipped.Head = itemToWear;
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         $"<p>You wear {itemToWear.Name.ToLower()} on your head.</p>",
                         player.ConnectionId
                     );
-                    CoreHandler.Instance.Writer.WriteToOthersInRoom(
+                    Services.Instance.Writer.WriteToOthersInRoom(
                         $"<p>{player.Name} equips {itemToWear.Name.ToLower()} on {Helpers.GetPronoun(player.Gender)} head.",
                         room,
                         player
@@ -925,11 +925,11 @@ hold potion
                     }
 
                     player.Equipped.Held = itemToWear; // TODO: handle when wield and shield or 2hand item are equipped
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         $"<p>You hold {itemToWear.Name.ToLower()} in your hands.</p>",
                         player.ConnectionId
                     );
-                    CoreHandler.Instance.Writer.WriteToOthersInRoom(
+                    Services.Instance.Writer.WriteToOthersInRoom(
                         $"<p>{player.Name} equips {itemToWear.Name.ToLower()} in {Helpers.GetPronoun(player.Gender)} hands.",
                         room,
                         player
@@ -942,11 +942,11 @@ hold potion
                         Remove(player.Equipped.Legs.Name, room, player);
                     }
                     player.Equipped.Legs = itemToWear;
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         $"<p>You wear {itemToWear.Name.ToLower()} on your legs.</p>",
                         player.ConnectionId
                     );
-                    CoreHandler.Instance.Writer.WriteToOthersInRoom(
+                    Services.Instance.Writer.WriteToOthersInRoom(
                         $"<p>{player.Name} equips {itemToWear.Name.ToLower()} on {Helpers.GetPronoun(player.Gender)} legs.",
                         room,
                         player
@@ -960,11 +960,11 @@ hold potion
                     }
 
                     player.Equipped.Light = itemToWear;
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         $"<p>You equip {itemToWear.Name.ToLower()} as your light.</p>",
                         player.ConnectionId
                     );
-                    CoreHandler.Instance.Writer.WriteToOthersInRoom(
+                    Services.Instance.Writer.WriteToOthersInRoom(
                         $"<p>{player.Name} equips {itemToWear.Name.ToLower()} as {Helpers.GetPronoun(player.Gender)} light.",
                         room,
                         player
@@ -986,11 +986,11 @@ hold potion
                         player.Equipped.Neck = itemToWear;
                     }
 
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         $"<p>You wear {itemToWear.Name.ToLower()} around your neck.</p>",
                         player.ConnectionId
                     );
-                    CoreHandler.Instance.Writer.WriteToOthersInRoom(
+                    Services.Instance.Writer.WriteToOthersInRoom(
                         $"<p>{player.Name} equips {itemToWear.Name.ToLower()} around {Helpers.GetPronoun(player.Gender)} neck.",
                         room,
                         player
@@ -1000,7 +1000,7 @@ hold potion
 
                     if (player.Equipped.Wielded != null && player.Equipped.Wielded.TwoHanded)
                     {
-                        CoreHandler.Instance.Writer.WriteLine(
+                        Services.Instance.Writer.WriteLine(
                             "Your hands are tied up with your two-handed weapon!",
                             player.ConnectionId
                         );
@@ -1018,11 +1018,11 @@ hold potion
                     }
 
                     player.Equipped.Shield = itemToWear;
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         $"<p>You equip {itemToWear.Name.ToLower()} as your shield.</p>",
                         player.ConnectionId
                     );
-                    CoreHandler.Instance.Writer.WriteToOthersInRoom(
+                    Services.Instance.Writer.WriteToOthersInRoom(
                         $"<p>{player.Name} equips {itemToWear.Name.ToLower()} as {Helpers.GetPronoun(player.Gender)} shield.",
                         room,
                         player
@@ -1036,11 +1036,11 @@ hold potion
                     }
 
                     player.Equipped.Torso = itemToWear;
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         $"<p>You wear {itemToWear.Name.ToLower()} around your torso.</p>",
                         player.ConnectionId
                     );
-                    CoreHandler.Instance.Writer.WriteToOthersInRoom(
+                    Services.Instance.Writer.WriteToOthersInRoom(
                         $"<p>{player.Name} equips {itemToWear.Name.ToLower()} around {Helpers.GetPronoun(player.Gender)} torso.",
                         room,
                         player
@@ -1054,11 +1054,11 @@ hold potion
                     }
 
                     player.Equipped.Waist = itemToWear;
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         $"<p>You wear {itemToWear.Name.ToLower()} around your waist.</p>",
                         player.ConnectionId
                     );
-                    CoreHandler.Instance.Writer.WriteToOthersInRoom(
+                    Services.Instance.Writer.WriteToOthersInRoom(
                         $"<p>{player.Name} equips {itemToWear.Name.ToLower()} around {Helpers.GetPronoun(player.Gender)} waist.",
                         room,
                         player
@@ -1068,7 +1068,7 @@ hold potion
 
                     if (itemToWear.TwoHanded && player.Equipped.Shield != null)
                     {
-                        CoreHandler.Instance.Writer.WriteLine(
+                        Services.Instance.Writer.WriteLine(
                             "You need two hands free for that weapon, remove your shield and try again.",
                             player.ConnectionId
                         );
@@ -1082,11 +1082,11 @@ hold potion
                     }
 
                     player.Equipped.Wielded = itemToWear;
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         $"<p>You wield {itemToWear.Name.ToLower()}.</p>",
                         player.ConnectionId
                     );
-                    CoreHandler.Instance.Writer.WriteToOthersInRoom(
+                    Services.Instance.Writer.WriteToOthersInRoom(
                         $"<p>{player.Name} equips {itemToWear.Name.ToLower()}.",
                         room,
                         player
@@ -1108,11 +1108,11 @@ hold potion
                         player.Equipped.Wrist = itemToWear;
                     }
 
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         $"<p>You wear {itemToWear.Name.ToLower()} on your wrist.</p>",
                         player.ConnectionId
                     );
-                    CoreHandler.Instance.Writer.WriteToOthersInRoom(
+                    Services.Instance.Writer.WriteToOthersInRoom(
                         $"<p>{player.Name} equips {itemToWear.Name.ToLower()} on {Helpers.GetPronoun(player.Gender)} wrist.",
                         room,
                         player
@@ -1126,11 +1126,11 @@ hold potion
                     }
 
                     player.Equipped.Secondary = itemToWear; // TODO: slot 2
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         $"<p>You wield {itemToWear.Name.ToLower()} as your second weapon.</p>",
                         player.ConnectionId
                     );
-                    CoreHandler.Instance.Writer.WriteToOthersInRoom(
+                    Services.Instance.Writer.WriteToOthersInRoom(
                         $"<p>{player.Name} equips {itemToWear.Name.ToLower()} as {Helpers.GetPronoun(player.Gender)} secondary weapon.",
                         room,
                         player
@@ -1138,19 +1138,19 @@ hold potion
                     break;
                 default:
                     itemToWear.Equipped = false;
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         "<p>You don't know how to wear this.</p>",
                         player.ConnectionId
                     );
                     break;
             }
 
-            CoreHandler.Instance.UpdateClient.UpdateEquipment(player);
-            CoreHandler.Instance.UpdateClient.UpdateScore(player);
-            CoreHandler.Instance.UpdateClient.UpdateHP(player);
-            CoreHandler.Instance.UpdateClient.UpdateMana(player);
-            CoreHandler.Instance.UpdateClient.UpdateMoves(player);
-            CoreHandler.Instance.UpdateClient.UpdateInventory(player);
+            Services.Instance.UpdateClient.UpdateEquipment(player);
+            Services.Instance.UpdateClient.UpdateScore(player);
+            Services.Instance.UpdateClient.UpdateHP(player);
+            Services.Instance.UpdateClient.UpdateMana(player);
+            Services.Instance.UpdateClient.UpdateMoves(player);
+            Services.Instance.UpdateClient.UpdateInventory(player);
         }
     }
 }

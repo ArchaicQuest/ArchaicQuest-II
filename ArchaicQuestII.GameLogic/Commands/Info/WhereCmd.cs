@@ -30,8 +30,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 
         public void Execute(Player player, Room room, string[] input)
         {
-            var area = CoreHandler.Instance.Cache.GetAllRoomsInArea(room.AreaId);
-            var areaName = CoreHandler.Instance.DataBase
+            var area = Services.Instance.Cache.GetAllRoomsInArea(room.AreaId);
+            var areaName = Services.Instance.DataBase
                 .GetCollection<Area>(DataBase.Collections.Area)
                 .FindById(room.AreaId);
 
@@ -50,7 +50,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 
             sb.Append("</ul>");
 
-            CoreHandler.Instance.Writer.WriteLine(sb.ToString(), player.ConnectionId);
+            Services.Instance.Writer.WriteLine(sb.ToString(), player.ConnectionId);
         }
     }
 }

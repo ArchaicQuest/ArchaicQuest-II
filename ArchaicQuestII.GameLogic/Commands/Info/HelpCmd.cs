@@ -127,8 +127,8 @@ say tell reply who
             };
 
             var command =
-                CoreHandler.Instance.Cache.GetCommand(target)
-                ?? CoreHandler.Instance.Cache
+                Services.Instance.Cache.GetCommand(target)
+                ?? Services.Instance.Cache
                     .GetCommands()
                     .Values.FirstOrDefault(
                         x => x.Title.StartsWith(target, StringComparison.CurrentCultureIgnoreCase)
@@ -142,7 +142,7 @@ say tell reply who
 
             if (command == null && help == null)
             {
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     $"<p>No help found for {target}.",
                     player.ConnectionId
                 );
@@ -158,7 +158,7 @@ say tell reply who
             };
 
             var helpString = HelpHtml(helpText, target);
-            CoreHandler.Instance.Writer.WriteLine(helpString, player.ConnectionId);
+            Services.Instance.Writer.WriteLine(helpString, player.ConnectionId);
         }
 
         private static string HelpHtml(HelpFileContent command, string target)

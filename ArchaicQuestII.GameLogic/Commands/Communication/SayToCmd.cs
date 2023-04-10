@@ -40,7 +40,7 @@ public class SayToCmd : ICommand
     {
         if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
         {
-            CoreHandler.Instance.Writer.WriteLine("<p>Say what?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Say what?</p>", player.ConnectionId);
             return;
         }
 
@@ -53,15 +53,15 @@ public class SayToCmd : ICommand
 
         if (sayTo == null)
         {
-            CoreHandler.Instance.Writer.WriteLine("<p>They are not here.</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>They are not here.</p>", player.ConnectionId);
             return;
         }
 
-        CoreHandler.Instance.Writer.WriteLine(
+        Services.Instance.Writer.WriteLine(
             $"<p class='say'>You say to {sayTo.Name}, {text}</p>",
             player.ConnectionId
         );
-        CoreHandler.Instance.UpdateClient.UpdateCommunication(
+        Services.Instance.UpdateClient.UpdateCommunication(
             player,
             $"<p class='say'>You say to {sayTo.Name}, {text}</p>",
             "room"
@@ -71,11 +71,11 @@ public class SayToCmd : ICommand
         {
             if (pc.Name == sayTo.Name)
             {
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     $"<p class='say'>{player.Name} says to you, {text}</p>",
                     pc.ConnectionId
                 );
-                CoreHandler.Instance.UpdateClient.UpdateCommunication(
+                Services.Instance.UpdateClient.UpdateCommunication(
                     pc,
                     $"<p class='say'>{player.Name} says to you, {text}</p>",
                     "room"
@@ -83,11 +83,11 @@ public class SayToCmd : ICommand
             }
             else
             {
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     $"<p class='say'>{player.Name} says to {sayTo.Name}, {text}</p>",
                     pc.ConnectionId
                 );
-                CoreHandler.Instance.UpdateClient.UpdateCommunication(
+                Services.Instance.UpdateClient.UpdateCommunication(
                     pc,
                     $"<p class='say'>{player.Name} says to {sayTo.Name}, {text}</p>",
                     "room"

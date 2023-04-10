@@ -40,7 +40,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
         {
             if (player.Affects.Blind)
             {
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     "<p>You are blind and can't see a thing!</p>",
                     player.ConnectionId
                 );
@@ -61,13 +61,13 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                 switch (verb)
                 {
                     case "at" when string.IsNullOrEmpty(target):
-                        CoreHandler.Instance.Writer.WriteLine(
+                        Services.Instance.Writer.WriteLine(
                             "<p>Look at what?</p>",
                             player.ConnectionId
                         );
                         return;
                     case "in" when string.IsNullOrEmpty(target):
-                        CoreHandler.Instance.Writer.WriteLine(
+                        Services.Instance.Writer.WriteLine(
                             "<p>Look in what?</p>",
                             player.ConnectionId
                         );
@@ -90,12 +90,12 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
         private void Look(Player player, Room room)
         {
             var showVerboseExits = player.Config.VerboseExits;
-            var exits = CoreHandler.Instance.RoomActions.FindValidExits(room, showVerboseExits);
+            var exits = Services.Instance.RoomActions.FindValidExits(room, showVerboseExits);
 
             var items = DisplayItems(room, player);
             var mobs = DisplayMobs(room, player);
             var players = DisplayPlayers(room, player);
-            var isDark = CoreHandler.Instance.RoomActions.RoomIsDark(player, room);
+            var isDark = Services.Instance.RoomActions.RoomIsDark(player, room);
             var roomDesc = new StringBuilder();
 
             roomDesc.Append(
@@ -128,7 +128,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                 .Append($"<p  class=\"{(isDark ? "room-dark" : "")}\">{mobs}</p>")
                 .Append($"<p  class=\"  {(isDark ? "room-dark" : "")}\">{players}</p>");
 
-            CoreHandler.Instance.Writer.WriteLine(roomDesc.ToString(), player.ConnectionId);
+            Services.Instance.Writer.WriteLine(roomDesc.ToString(), player.ConnectionId);
         }
 
         private void LookInContainer(Player player, Room room, string target)
@@ -150,7 +150,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     return;
                 }
 
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     $"<p>{container.Name} is not a container",
                     player.ConnectionId
                 );
@@ -159,7 +159,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 
             if (container == null)
             {
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     "<p>You don't see that here.",
                     player.ConnectionId
                 );
@@ -168,28 +168,28 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 
             if (container.Container.IsOpen == false)
             {
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     "<p>You need to open it first.",
                     player.ConnectionId
                 );
                 return;
             }
 
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p>{container.Name} contains:</p>",
                 player.ConnectionId
             );
 
             if (container.Container.Items.Count == 0)
             {
-                CoreHandler.Instance.Writer.WriteLine("<p>Nothing.</p>", player.ConnectionId);
+                Services.Instance.Writer.WriteLine("<p>Nothing.</p>", player.ConnectionId);
             }
 
-            var isDark = CoreHandler.Instance.RoomActions.RoomIsDark(player, room);
+            var isDark = Services.Instance.RoomActions.RoomIsDark(player, room);
 
             foreach (var obj in container.Container.Items.List(false))
             {
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     $"<span class='item {(isDark ? "room-dark" : "")}'>{obj.Name}</span>",
                     player.ConnectionId
                 );
@@ -197,7 +197,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 
             foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
             {
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     $"<p>{player.Name} looks inside {container.Name.ToLower()}.</p>",
                     pc.ConnectionId
                 );
@@ -206,16 +206,16 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 
         private void LookInPortal(Player player, Room room, Item.Item target)
         {
-            var getPortalLocation = CoreHandler.Instance.Cache.GetRoom(target.Portal.Destination);
+            var getPortalLocation = Services.Instance.Cache.GetRoom(target.Portal.Destination);
 
             if (getPortalLocation == null)
             {
-                CoreHandler.Instance.ErrorLog.Write(
+                Services.Instance.ErrorLog.Write(
                     "LookCmd.cs",
                     $"Portal ({target.Portal.Name}) location empty.",
                     ErrorLog.Priority.Medium
                 );
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     "<p>The dark abyss, I wouldn't enter if I were you.</p>",
                     player.ConnectionId
                 );
@@ -227,7 +227,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 
         private void LookAtObject(Player player, Room room, string target)
         {
-            var isDark = CoreHandler.Instance.RoomActions.RoomIsDark(player, room);
+            var isDark = Services.Instance.RoomActions.RoomIsDark(player, room);
             var nthTarget = Helpers.findNth(target);
 
             var item =
@@ -250,7 +250,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 
             if (item == null && character == null && roomObjects == null)
             {
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     "<p>You don't see that here.",
                     player.ConnectionId
                 );
@@ -259,7 +259,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 
             if (item != null)
             {
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     $"<p  class='{(isDark ? "room-dark" : "")}'>{item.Description.Look}",
                     player.ConnectionId
                 );
@@ -268,7 +268,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                 {
                     if (player.RollSkill(SkillName.Lore))
                     {
-                        CoreHandler.Instance.PassiveSkills.Lore(player, room, item.Name);
+                        Services.Instance.PassiveSkills.Lore(player, room, item.Name);
                     }
                     else
                     {
@@ -278,7 +278,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 
                 if (item.Container is { CanOpen: false } && item.Container.Items.Any())
                 {
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         $"<p  class='{(isDark ? "room-dark" : "")}'>{item.Name} contains:",
                         player.ConnectionId
                     );
@@ -291,7 +291,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                         );
                     }
 
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         listOfContainerItems.ToString(),
                         player.ConnectionId
                     );
@@ -299,7 +299,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 
                 foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
                 {
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         $"<p>{player.Name} looks at {item.Name.ToLower()}.</p>",
                         pc.ConnectionId
                     );
@@ -311,14 +311,14 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
             //for player?
             if (roomObjects != null)
             {
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     $"<p class='{(isDark ? "room-dark" : "")}'>{roomObjects.Look}",
                     player.ConnectionId
                 );
 
                 foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
                 {
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         $"<p>{player.Name} looks at {roomObjects.Name.ToLower()}.</p>",
                         pc.ConnectionId
                     );
@@ -329,7 +329,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 
             if (character == null)
             {
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     "<p>You don't see them here.",
                     player.ConnectionId
                 );
@@ -636,14 +636,14 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                 displayEquipment.Append("</table").Append("<p>Nothing.</p>");
             }
 
-            CoreHandler.Instance.Writer.WriteLine(
-                $"{sb}<p class='{(isDark ? "room-dark" : "")}'>{character.Description} <br/>{character.Name} {CoreHandler.Instance.Formulas.TargetHealth(player, character)} and is {statusText}<br/> {displayEquipment}",
+            Services.Instance.Writer.WriteLine(
+                $"{sb}<p class='{(isDark ? "room-dark" : "")}'>{character.Description} <br/>{character.Name} {Services.Instance.Formulas.TargetHealth(player, character)} and is {statusText}<br/> {displayEquipment}",
                 player.ConnectionId
             );
 
             foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
             {
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     $"<p>{player.Name} looks at {character.Name.ToLower()}.</p>",
                     pc.ConnectionId
                 );
@@ -652,7 +652,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 
         private string DisplayItems(Room room, Player player)
         {
-            var isDark = CoreHandler.Instance.RoomActions.RoomIsDark(player, room);
+            var isDark = Services.Instance.RoomActions.RoomIsDark(player, room);
             var items = room.Items.List();
             var x = string.Empty;
 
@@ -680,7 +680,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
         {
             var mobs = string.Empty;
             var mobName = string.Empty;
-            var isDark = CoreHandler.Instance.RoomActions.RoomIsDark(player, room);
+            var isDark = Services.Instance.RoomActions.RoomIsDark(player, room);
             var isFightingPC = false;
 
             foreach (var mob in room.Mobs.Where(x => x.IsHiddenScriptMob == false))
@@ -753,7 +753,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 
                 pcName += pc.Pose;
                 players +=
-                    $"<p class='player {(CoreHandler.Instance.RoomActions.RoomIsDark(player, room) ? "dark-room" : "")}'>{pcName}.</p>";
+                    $"<p class='player {(Services.Instance.RoomActions.RoomIsDark(player, room) ? "dark-room" : "")}'>{pcName}.</p>";
             }
 
             return players;

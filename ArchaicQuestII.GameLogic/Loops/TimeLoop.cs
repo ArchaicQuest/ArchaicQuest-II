@@ -7,44 +7,42 @@ using ArchaicQuestII.GameLogic.World.Room;
 namespace ArchaicQuestII.GameLogic.Loops
 {
     public class TimeLoop : ILoop
-	{
+    {
         public int TickDelay => 60000;
 
         public bool ConfigureAwait => false;
-        private List<Player> _players;
-
-        public void Init()
-        {
-
-        }
+        private List<Player> _players = new List<Player>();
 
         public void PreTick()
         {
-            _players = CoreHandler.Instance.Cache.GetPlayerCache().Values.ToList();
+            _players = Services.Instance.Cache.GetPlayerCache().Values.ToList();
         }
 
         public void Tick()
         {
-            CoreHandler.Instance.Time.DisplayTimeOfDayMessage(CoreHandler.Instance.Time.UpdateTime());
+            Services.Instance.Time.DisplayTimeOfDayMessage(Services.Instance.Time.UpdateTime());
 
-            var weather = $"<span class='weather'>{CoreHandler.Instance.Weather.SimulateWeatherTransitions()}</span>";
+            var weather =
+                $"<span class='weather'>{Services.Instance.Weather.SimulateWeatherTransitions()}</span>";
 
             foreach (var player in _players)
             {
                 //check if player is not indoors
                 // TODO:
-                CoreHandler.Instance.UpdateClient.UpdateTime(player);
-                var room = CoreHandler.Instance.Cache.GetRoom(player.RoomId);
+                Services.Instance.UpdateClient.UpdateTime(player);
+                var room = Services.Instance.Cache.GetRoom(player.RoomId);
 
                 if (room == null)
                 {
                     return;
                 }
 
-                if (room.Terrain != Room.TerrainType.Inside && room.Terrain != Room.TerrainType.Underground)
+                if (
+                    room.Terrain != Room.TerrainType.Inside
+                    && room.Terrain != Room.TerrainType.Underground
+                )
                 {
-                    CoreHandler.Instance.Writer.WriteLine(weather, player.ConnectionId);
-
+                    Services.Instance.Writer.WriteLine(weather, player.ConnectionId);
                 }
             }
         }
@@ -55,4 +53,3 @@ namespace ArchaicQuestII.GameLogic.Loops
         }
     }
 }
-

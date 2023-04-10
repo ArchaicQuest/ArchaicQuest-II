@@ -30,7 +30,9 @@ namespace ArchaicQuestII.API.Character
                 throw exception;
             }
 
-            IClass newClass = CoreHandler.Instance.CharacterHandler.GetClass(charClass.Name);
+            IClass newClass = GameLogic.Core.Services.Instance.CharacterHandler.GetClass(
+                charClass.Name
+            );
 
             _db.Save(newClass, DataBase.Collections.Class);
 
@@ -52,7 +54,7 @@ namespace ArchaicQuestII.API.Character
         [Route("api/Character/Class/{id}")]
         public IClass Get(string id)
         {
-            return CoreHandler.Instance.CharacterHandler.GetClass(id);
+            return GameLogic.Core.Services.Instance.CharacterHandler.GetClass(id);
         }
 
         [HttpGet]
@@ -60,7 +62,7 @@ namespace ArchaicQuestII.API.Character
         [Route("api/Character/Class")]
         public List<IClass> Get()
         {
-            return CoreHandler.Instance.CharacterHandler.GetClasses(false);
+            return GameLogic.Core.Services.Instance.CharacterHandler.GetClasses(false);
         }
     }
 }

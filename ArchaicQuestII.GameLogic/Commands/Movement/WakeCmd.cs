@@ -41,11 +41,11 @@ public class WakeCmd : ICommand
     public void Execute(Player player, Room room, string[] input)
     {
         SetCharacterStatus(player, "", CharacterStatus.Status.Standing);
-        CoreHandler.Instance.Writer.WriteLine(
+        Services.Instance.Writer.WriteLine(
             "<p>You move quickly to your feet.</p>",
             player.ConnectionId
         );
-        CoreHandler.Instance.Writer.WriteToOthersInRoom(
+        Services.Instance.Writer.WriteToOthersInRoom(
             $"<p>{player.Name} arises from {(player.Gender == "Male" ? "his" : "her")} slumber.</p>",
             room,
             player

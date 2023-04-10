@@ -12,7 +12,7 @@ namespace ArchaicQuestII.API.Configuration.IoC.GameLogicExtensions
         {
             services.AddSingleton<ICache>(new Cache());
             services.AddSingleton<IDamage, Damage>();
-            services.AddSingleton<IGameLoop, GameLoop>();
+            services.AddSingleton<ILoopHandler, LoopHandler>();
             services.AddSingleton<IUpdateClientUI, UpdateClientUI>();
             services.AddSingleton<IMobScripts, MobScripts>();
             services.AddSingleton<ITime, Time>();

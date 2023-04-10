@@ -14,13 +14,13 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
     public class Objects
     {
         private readonly Mock<IWriteToClient> _writer;
-        private readonly Mock<CoreHandler> _core;
+        private readonly Mock<Services> _core;
         private readonly Mock<ICommandHandler> _commandHandler;
 
         public Objects()
         {
             _writer = new Mock<IWriteToClient>();
-            _core = new Mock<CoreHandler>();
+            _core = new Mock<Services>();
             _commandHandler = new Mock<ICommandHandler>();
         }
 

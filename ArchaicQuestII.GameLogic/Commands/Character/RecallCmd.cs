@@ -12,9 +12,9 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
     {
         public RecallCmd()
         {
-            Aliases = new[] {"recall"};
+            Aliases = new[] { "recall" };
             Description = "Transports your character to their recall room.";
-            Usages = new[] {"Type: recall"};
+            Usages = new[] { "Type: recall" };
             Title = "";
             DeniedStatus = new[]
             {
@@ -30,7 +30,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
             };
             UserRole = UserRole.Player;
         }
-        
+
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
@@ -43,7 +43,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
             "You begin to channel your energy to perform recall.",
             "You focus your mind on returning to somewhere safe."
         };
-        
+
         private readonly string[] _castEnd =
         {
             "You feel the air crackle and the ground shift.",
@@ -52,28 +52,27 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
         public void Execute(Player player, Room room, string[] input)
         {
-            var recallRoom = CoreHandler.Instance.Cache.GetRoom(player.RecallId);
-            
+            var recallRoom = Services.Instance.Cache.GetRoom(player.RecallId);
+
             player.Buffer.Clear();
-            
+
             Recall(player, room, recallRoom);
         }
 
         private async void Recall(Player player, Room currentRoom, Room recallRoom)
         {
-
             var cb = DiceBag.Roll(1, 0, _castBegin.Length - 1);
             var ce = DiceBag.Roll(1, 0, _castEnd.Length - 1);
-            
-            CoreHandler.Instance.Writer.WriteLine($"<p>{_castBegin[cb]}</p>", player.ConnectionId);
+
+            Services.Instance.Writer.WriteLine($"<p>{_castBegin[cb]}</p>", player.ConnectionId);
 
             await Task.Delay(2000);
-            
-            CoreHandler.Instance.Writer.WriteLine($"<p>{_castEnd[ce]}</p>", player.ConnectionId);
-            
+
+            Services.Instance.Writer.WriteLine($"<p>{_castEnd[ce]}</p>", player.ConnectionId);
+
             await Task.Delay(2000);
-            
-            CoreHandler.Instance.RoomActions.RoomChange(player, currentRoom, recallRoom, false);
+
+            Services.Instance.RoomActions.RoomChange(player, currentRoom, recallRoom, false);
         }
     }
 }

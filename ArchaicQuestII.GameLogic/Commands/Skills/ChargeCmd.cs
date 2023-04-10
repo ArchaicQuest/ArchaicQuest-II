@@ -49,7 +49,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
 
             if (player.Equipped.Wielded == null)
             {
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     "You need to have a weapon equipped to do this.",
                     player.ConnectionId
                 );
@@ -58,7 +58,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
 
             if (player.Status == CharacterStatus.Status.Fighting)
             {
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     "You are already in combat, Charge can only be used to start a combat."
                 );
                 return;
@@ -67,7 +67,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             var obj = input.ElementAtOrDefault(1)?.ToLower() ?? player.Target;
             if (string.IsNullOrEmpty(obj))
             {
-                CoreHandler.Instance.Writer.WriteLine("Charge What!?.", player.ConnectionId);
+                Services.Instance.Writer.WriteLine("Charge What!?.", player.ConnectionId);
                 return;
             }
 
@@ -92,7 +92,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
 
                 EmoteAction(textToTarget, textToRoom, target.Name, room, player);
                 player.FailedSkill(SkillName.Charge, out var message);
-                CoreHandler.Instance.Writer.WriteLine(message, player.ConnectionId);
+                Services.Instance.Writer.WriteLine(message, player.ConnectionId);
                 player.Lag += 1;
                 return;
             }
@@ -110,7 +110,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             {
                 target.Lag += 2;
 
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     $"You smash {target.Name} to the ground with your charge."
                 );
                 textToTarget = $"{player.Name} charge smashes you off your feet.";

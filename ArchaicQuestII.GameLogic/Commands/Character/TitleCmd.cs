@@ -11,14 +11,15 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
     {
         public TitleCmd()
         {
-            Aliases = new[] {"title"};
-            Description = "Changes your characters title, this is what people see by your name when they enter who.";
-            Usages = new[] {"Type: title The Cleaver"};
+            Aliases = new[] { "title" };
+            Description =
+                "Changes your characters title, this is what people see by your name when they enter who.";
+            Usages = new[] { "Type: title The Cleaver" };
             DeniedStatus = default;
             UserRole = UserRole.Player;
             Title = "";
         }
-        
+
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
@@ -30,14 +31,20 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
         {
             if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
             {
-                CoreHandler.Instance.Writer.WriteLine("<p>Change your title to what?</p>", player.ConnectionId);
+                Services.Instance.Writer.WriteLine(
+                    "<p>Change your title to what?</p>",
+                    player.ConnectionId
+                );
                 return;
             }
-            
+
             var titleText = string.Join(' ', input.Skip(1));
 
             player.Title = new string(titleText.Take(55).ToArray());
-            CoreHandler.Instance.Writer.WriteLine($"<p>Title changed to {player.Title}.</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine(
+                $"<p>Title changed to {player.Title}.</p>",
+                player.ConnectionId
+            );
         }
     }
 }

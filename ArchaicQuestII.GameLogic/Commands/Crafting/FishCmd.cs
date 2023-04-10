@@ -51,7 +51,7 @@ public class FishCmd : ICommand
     {
         if (player.Status == CharacterStatus.Status.Busy)
         {
-            CoreHandler.Instance.Writer.WriteLine("You are already doing it.", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("You are already doing it.", player.ConnectionId);
             return;
         }
 
@@ -61,7 +61,7 @@ public class FishCmd : ICommand
 
         if (fishingSpot == null)
         {
-            CoreHandler.Instance.Writer.WriteLine($"You can't fish here.", player.ConnectionId);
+            Services.Instance.Writer.WriteLine($"You can't fish here.", player.ConnectionId);
             return;
         }
 
@@ -71,7 +71,7 @@ public class FishCmd : ICommand
 
         if (hasRod == null)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"You attempt to catch fish with your bare hands. Probably better to try with a fishing rod.",
                 player.ConnectionId
             );
@@ -87,19 +87,19 @@ public class FishCmd : ICommand
 
         // Core.UpdateClient.PlaySound("chopping", player);
 
-        CoreHandler.Instance.Writer.WriteLine(
+        Services.Instance.Writer.WriteLine(
             $"<p>You cast your line and begin fishing.</p>",
             player.ConnectionId
         );
-        CoreHandler.Instance.Writer.WriteLine($"<p>*PLOP*.</p>", player.ConnectionId);
+        Services.Instance.Writer.WriteLine($"<p>*PLOP*.</p>", player.ConnectionId);
 
         foreach (var character in room.Players.Where(character => character != player))
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p>{player.Name} casts their line and begin fishing.</p>",
                 character.ConnectionId
             );
-            CoreHandler.Instance.Writer.WriteLine($"<p>*PLOP*.</p>", character.ConnectionId);
+            Services.Instance.Writer.WriteLine($"<p>*PLOP*.</p>", character.ConnectionId);
         }
 
         await Task.Delay(4000);
@@ -111,14 +111,14 @@ public class FishCmd : ICommand
 
         //  Core.UpdateClient.PlaySound("chopping", player);
 
-        CoreHandler.Instance.Writer.WriteLine(
+        Services.Instance.Writer.WriteLine(
             $"<p>You throw some bait and gently reel in slightly.</p>",
             player.ConnectionId
         );
 
         foreach (var character in room.Players.Where(character => character != player))
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p>{player.Name} throws some bait and gently reels in slightly.</p>",
                 character.ConnectionId
             );
@@ -133,14 +133,14 @@ public class FishCmd : ICommand
 
         //Core.UpdateClient.PlaySound("chopping", player);
 
-        CoreHandler.Instance.Writer.WriteLine(
+        Services.Instance.Writer.WriteLine(
             "<p>You continue fishing, enjoying the serene tranquility of your fishing spot.</p>",
             player.ConnectionId
         );
 
         foreach (var character in room.Players.Where(character => character != player))
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p>{player.Name} continues fishing.</p>",
                 character.ConnectionId
             );
@@ -230,7 +230,7 @@ public class FishCmd : ICommand
 
         if (roll <= 1)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p>{{yellow}}You reel in {randomMob.Name} that attacks you!{{/}}</p>",
                 player.ConnectionId
             );
@@ -242,7 +242,7 @@ public class FishCmd : ICommand
 
         if (roll <= 3)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p>{{yellow}}You cut yourself on the fishing hook, OUCH!{{/}}</p>",
                 player.ConnectionId
             );
@@ -250,7 +250,7 @@ public class FishCmd : ICommand
 
             foreach (var character in room.Players.Where(character => character != player))
             {
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     $"<p>{player.Name} cuts themself on a fishing hook.</p>",
                     character.ConnectionId
                 );
@@ -261,11 +261,11 @@ public class FishCmd : ICommand
         if (!player.RollSkill(SkillName.Fishing))
         {
             player.FailedSkill(SkillName.Fishing, out var message);
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 "<p>You fail to catch any fish.</p>",
                 player.ConnectionId
             );
-            CoreHandler.Instance.Writer.WriteLine(message, player.ConnectionId);
+            Services.Instance.Writer.WriteLine(message, player.ConnectionId);
             player.Status = CharacterStatus.Status.Standing;
             return;
         }
@@ -278,14 +278,14 @@ public class FishCmd : ICommand
 
         // TODO mention if biggest catch today, biggest This week, This Month
         caught.Name = $"A {sizeText} {caught.Name}";
-        CoreHandler.Instance.Writer.WriteLine(
+        Services.Instance.Writer.WriteLine(
             $"<p>You caught {caught.Name.ToLower()}. It weighs {caught.Weight.ToString("0.00")} pounds!</p>",
             player.ConnectionId
         );
         player.Inventory.Add(caught);
 
         player.Status = CharacterStatus.Status.Standing;
-        CoreHandler.Instance.UpdateClient.UpdateInventory(player);
+        Services.Instance.UpdateClient.UpdateInventory(player);
     }
 
     private void InitFightStatus(Player player, Player target)
@@ -304,14 +304,14 @@ public class FishCmd : ICommand
             return;
         }
 
-        if (!CoreHandler.Instance.Cache.IsCharInCombat(player.Id.ToString()))
+        if (!Services.Instance.Cache.IsCharInCombat(player.Id.ToString()))
         {
-            CoreHandler.Instance.Cache.AddCharToCombat(player.Id.ToString(), player);
+            Services.Instance.Cache.AddCharToCombat(player.Id.ToString(), player);
         }
 
-        if (!CoreHandler.Instance.Cache.IsCharInCombat(target.Id.ToString()))
+        if (!Services.Instance.Cache.IsCharInCombat(target.Id.ToString()))
         {
-            CoreHandler.Instance.Cache.AddCharToCombat(target.Id.ToString(), target);
+            Services.Instance.Cache.AddCharToCombat(target.Id.ToString(), target);
         }
     }
 

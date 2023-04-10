@@ -15,9 +15,10 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
     {
         public EatCmd()
         {
-            Aliases = new[] {"eat"};
-            Description = "Eat some food, eating is for RP purposes only. Your character does not get hungry or thirsty.";
-            Usages = new[] {"Type: eat apple"};
+            Aliases = new[] { "eat" };
+            Description =
+                "Eat some food, eating is for RP purposes only. Your character does not get hungry or thirsty.";
+            Usages = new[] { "Type: eat apple" };
             Title = "";
             DeniedStatus = new[]
             {
@@ -32,7 +33,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
             };
             UserRole = UserRole.Player;
         }
-        
+
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
@@ -46,28 +47,40 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
             if (string.IsNullOrEmpty(target))
             {
-                CoreHandler.Instance.Writer.WriteLine("<p>Eat what?</p>", player.ConnectionId);
+                Services.Instance.Writer.WriteLine("<p>Eat what?</p>", player.ConnectionId);
                 return;
             }
-            
+
             var findNth = Helpers.findNth(target);
             var food = Helpers.findObjectInInventory(findNth, player);
 
             if (food == null)
             {
-                CoreHandler.Instance.Writer.WriteLine("<p>You have no food of that name.</p>", player.ConnectionId);
+                Services.Instance.Writer.WriteLine(
+                    "<p>You have no food of that name.</p>",
+                    player.ConnectionId
+                );
                 return;
             }
 
-            if (food.ItemType != Item.Item.ItemTypes.Food && food.ItemType != Item.Item.ItemTypes.Cooked)
+            if (
+                food.ItemType != Item.Item.ItemTypes.Food
+                && food.ItemType != Item.Item.ItemTypes.Cooked
+            )
             {
-                CoreHandler.Instance.Writer.WriteLine($"<p>You can't eat {food.Name.ToLower()}.</p>", player.ConnectionId);
+                Services.Instance.Writer.WriteLine(
+                    $"<p>You can't eat {food.Name.ToLower()}.</p>",
+                    player.ConnectionId
+                );
                 return;
             }
 
             if (player.Hunger >= 4)
             {
-                CoreHandler.Instance.Writer.WriteLine("<p>You are too full to eat more.</p>", player.ConnectionId);
+                Services.Instance.Writer.WriteLine(
+                    "<p>You are too full to eat more.</p>",
+                    player.ConnectionId
+                );
                 return;
             }
 
@@ -75,23 +88,26 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
             player.Inventory.Remove(food);
 
-            CoreHandler.Instance.Writer.WriteLine($"<p>You eat {food.Name.ToLower()}.</p>", player.ConnectionId);
-            CoreHandler.Instance.Writer.WriteToOthersInRoom($"<p>{player.Name} eats {food.Name.ToLower()}.</p>", room, player);
+            Services.Instance.Writer.WriteLine(
+                $"<p>You eat {food.Name.ToLower()}.</p>",
+                player.ConnectionId
+            );
+            Services.Instance.Writer.WriteToOthersInRoom(
+                $"<p>{player.Name} eats {food.Name.ToLower()}.</p>",
+                room,
+                player
+            );
 
             var benefits = new StringBuilder().Append("<table>");
             var modBenefits = "";
             var hasEffect = player.Affects.Custom.FirstOrDefault(x => x.Name.Equals(food.Name));
-            var newEffect = new Affect
-            {
-                Modifier = new Modifier()
-            };
-            
+            var newEffect = new Affect { Modifier = new Modifier() };
+
             if (hasEffect == null)
             {
                 modBenefits = player.UpdateAffect(food, newEffect);
 
-                benefits.Append(
-                    $"<tr><td>Food:</td><td>{food.Name}<br />{modBenefits}</td></td>");
+                benefits.Append($"<tr><td>Food:</td><td>{food.Name}<br />{modBenefits}</td></td>");
                 benefits.Append("</table>");
 
                 newEffect.Name = food.Name;
@@ -102,25 +118,27 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
             else
             {
                 modBenefits = player.UpdateAffect(food, hasEffect);
-                
-                benefits.Append(
-                    $"<tr><td>Food:</td><td>{food.Name}<br />{modBenefits}</td></td>");
+
+                benefits.Append($"<tr><td>Food:</td><td>{food.Name}<br />{modBenefits}</td></td>");
                 benefits.Append("</table>");
-                
+
                 hasEffect.Benefits = benefits.ToString();
             }
 
             if (player.Hunger >= 4)
             {
-                CoreHandler.Instance.Writer.WriteLine("<p>You are no longer hungry.<p>", player.ConnectionId);
+                Services.Instance.Writer.WriteLine(
+                    "<p>You are no longer hungry.<p>",
+                    player.ConnectionId
+                );
             }
 
-            CoreHandler.Instance.UpdateClient.UpdateAffects(player);
-            CoreHandler.Instance.UpdateClient.UpdateScore(player);
-            CoreHandler.Instance.UpdateClient.UpdateMoves(player);
-            CoreHandler.Instance.UpdateClient.UpdateHP(player);
-            CoreHandler.Instance.UpdateClient.UpdateMana(player);
-            CoreHandler.Instance.UpdateClient.UpdateInventory(player);
+            Services.Instance.UpdateClient.UpdateAffects(player);
+            Services.Instance.UpdateClient.UpdateScore(player);
+            Services.Instance.UpdateClient.UpdateMoves(player);
+            Services.Instance.UpdateClient.UpdateHP(player);
+            Services.Instance.UpdateClient.UpdateMana(player);
+            Services.Instance.UpdateClient.UpdateInventory(player);
         }
     }
 }

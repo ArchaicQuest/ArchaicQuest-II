@@ -10,16 +10,14 @@ namespace ArchaicQuestII.GameLogic.Loops
     {
         public int TickDelay => 45000;
         public bool ConfigureAwait => false;
-        private List<Room> _rooms;
-
-        public void Init()
-        {
-
-        }
+        private List<Room> _rooms = new List<Room>();
 
         public void PreTick()
         {
-            _rooms = CoreHandler.Instance.Cache.GetAllRooms().Where(x => x.Players.Any() && x.Emotes.Any()).ToList();
+            _rooms = Services.Instance.Cache
+                .GetAllRooms()
+                .Where(x => x.Players.Any() && x.Emotes.Any())
+                .ToList();
         }
 
         public void Tick()
@@ -35,8 +33,10 @@ namespace ArchaicQuestII.GameLogic.Loops
 
                 foreach (var player in room.Players)
                 {
-                    CoreHandler.Instance.Writer.WriteLine($"<p class='room-emote'>{emote}</p>",
-                        player.ConnectionId);
+                    Services.Instance.Writer.WriteLine(
+                        $"<p class='room-emote'>{emote}</p>",
+                        player.ConnectionId
+                    );
                 }
             }
         }
@@ -47,4 +47,3 @@ namespace ArchaicQuestII.GameLogic.Loops
         }
     }
 }
-

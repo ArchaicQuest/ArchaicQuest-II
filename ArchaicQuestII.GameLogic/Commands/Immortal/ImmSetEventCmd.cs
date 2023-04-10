@@ -36,10 +36,7 @@ public class ImmSetEventCmd : ICommand
         {
             foreach (var ev in player.EventState)
             {
-                CoreHandler.Instance.Writer.WriteLine(
-                    $"{ev.Key} - {ev.Value}",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine($"{ev.Key} - {ev.Value}", player.ConnectionId);
             }
 
             return;
@@ -48,13 +45,13 @@ public class ImmSetEventCmd : ICommand
         if (player.EventState.ContainsKey(eventName))
         {
             player.EventState[eventName] = num;
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"{eventName} state changed to {player.EventState[eventName]}",
                 player.ConnectionId
             );
             return;
         }
 
-        CoreHandler.Instance.Writer.WriteLine("Invalid Event state", player.ConnectionId);
+        Services.Instance.Writer.WriteLine("Invalid Event state", player.ConnectionId);
     }
 }

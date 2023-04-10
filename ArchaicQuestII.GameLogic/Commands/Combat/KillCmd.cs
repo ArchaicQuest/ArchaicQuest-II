@@ -11,13 +11,14 @@ public class KillCmd : ICommand
 {
     public KillCmd()
     {
-        Aliases = new[] {"k", "kill", "murder"};
-        Description = "The kill command is used to begin combat against mobiles.  Once combat has been " +
-                      "initiated, your character will automatically continue to fight using automatic " +
-                      "kills which include offensive use of weapons and defenses such as parry, " +
-                      "shield block and dodge.  Other means of attack may also be used, but will not " +
-                      " happen automatically. <br /><br /> To kill players you must MURDER them";
-        Usages = new[] {"Type: kill rat, murder Arthur"};
+        Aliases = new[] { "k", "kill", "murder" };
+        Description =
+            "The kill command is used to begin combat against mobiles.  Once combat has been "
+            + "initiated, your character will automatically continue to fight using automatic "
+            + "kills which include offensive use of weapons and defenses such as parry, "
+            + "shield block and dodge.  Other means of attack may also be used, but will not "
+            + " happen automatically. <br /><br /> To kill players you must MURDER them";
+        Usages = new[] { "Type: kill rat, murder Arthur" };
         Title = "";
         DeniedStatus = new[]
         {
@@ -33,7 +34,7 @@ public class KillCmd : ICommand
         };
         UserRole = UserRole.Player;
     }
-    
+
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
@@ -47,6 +48,6 @@ public class KillCmd : ICommand
         var target = input.ElementAtOrDefault(1);
         var isMurder = command == "murder";
 
-        CoreHandler.Instance.Combat.Fight(player, target, room, isMurder);
+        Services.Instance.Combat.Fight(player, target, room, isMurder);
     }
 }

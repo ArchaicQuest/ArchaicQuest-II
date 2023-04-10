@@ -46,14 +46,14 @@ public class SellCmd : ICommand
 
         if (string.IsNullOrEmpty(itemName))
         {
-            CoreHandler.Instance.Writer.WriteLine("<p>Sell what?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Sell what?</p>", player.ConnectionId);
             return;
         }
         var vendor = room.Mobs.FirstOrDefault(x => x.Shopkeeper.Equals(true));
 
         if (vendor == null)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 "<p>You can't do that here.</p>",
                 player.ConnectionId
             );
@@ -68,7 +68,7 @@ public class SellCmd : ICommand
 
         if (hasItem == null)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p>{vendor.Name} says 'You don't have that item.'</p>",
                 player.ConnectionId
             );
@@ -81,7 +81,7 @@ public class SellCmd : ICommand
 
         if (vendorInterested == null)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p>{vendor.Name} says 'I'm not interested in {hasItem.Name.ToLower()}.'</p>",
                 player.ConnectionId
             );
@@ -102,10 +102,10 @@ public class SellCmd : ICommand
         //}
 
         player.Weight -= hasItem.Weight;
-        CoreHandler.Instance.UpdateClient.UpdateScore(player);
-        CoreHandler.Instance.UpdateClient.UpdateInventory(player);
+        Services.Instance.UpdateClient.UpdateScore(player);
+        Services.Instance.UpdateClient.UpdateInventory(player);
 
-        CoreHandler.Instance.Writer.WriteLine(
+        Services.Instance.Writer.WriteLine(
             $"<p>You sell {hasItem.Name.ToLower()} for {(vendorBuyPrice <= 0 ? 1 : vendorBuyPrice)} gold.</p>",
             player.ConnectionId
         );

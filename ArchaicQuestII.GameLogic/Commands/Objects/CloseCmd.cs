@@ -47,13 +47,13 @@ public class CloseCmd : ICommand
 
         if (string.IsNullOrEmpty(target))
         {
-            CoreHandler.Instance.Writer.WriteLine("<p>Close what?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Close what?</p>", player.ConnectionId);
             return;
         }
 
         if (player.Affects.Blind)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 "<p>You are blind and can't see a thing!</p>",
                 player.ConnectionId
             );
@@ -66,7 +66,7 @@ public class CloseCmd : ICommand
 
         if (item != null && item.Container.CanOpen != true)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p>{item.Name} cannot be closed",
                 player.ConnectionId
             );
@@ -75,24 +75,21 @@ public class CloseCmd : ICommand
 
         if (item == null)
         {
-            CoreHandler.Instance.Writer.WriteLine(
-                "<p>You don't see that here.",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>You don't see that here.", player.ConnectionId);
             return;
         }
 
         if (!item.Container.IsOpen)
         {
-            CoreHandler.Instance.Writer.WriteLine("<p>It's already closed.", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>It's already closed.", player.ConnectionId);
             return;
         }
 
-        CoreHandler.Instance.Writer.WriteLine(
+        Services.Instance.Writer.WriteLine(
             $"<p>You close {item.Name.ToLower()}.</p>",
             player.ConnectionId
         );
-        CoreHandler.Instance.Writer.WriteToOthersInRoom(
+        Services.Instance.Writer.WriteToOthersInRoom(
             $"<p>{player.Name} closes {item.Name.ToLower()}</p>",
             room,
             player

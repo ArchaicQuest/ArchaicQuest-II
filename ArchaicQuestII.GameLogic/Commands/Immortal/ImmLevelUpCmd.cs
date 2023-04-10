@@ -36,16 +36,13 @@ public class ImmLevelUpCmd : ICommand
             return;
         }
 
-        var otherPlayer = CoreHandler.Instance.Cache
+        var otherPlayer = Services.Instance.Cache
             .GetAllPlayers()
             .FirstOrDefault(x => x.Name == target);
 
         if (otherPlayer == null)
         {
-            CoreHandler.Instance.Writer.WriteLine(
-                $"No player '{target}' found.",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine($"No player '{target}' found.", player.ConnectionId);
             return;
         }
 

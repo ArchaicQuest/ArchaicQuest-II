@@ -44,7 +44,7 @@ public class QuaffCmd : ICommand
 
         if (string.IsNullOrEmpty(target))
         {
-            CoreHandler.Instance.Writer.WriteLine("<p>Quaff what?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Quaff what?</p>", player.ConnectionId);
             return;
         }
 
@@ -54,7 +54,7 @@ public class QuaffCmd : ICommand
 
         if (foundItem == null)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 "<p>You can't find that potion.</p>",
                 player.ConnectionId
             );
@@ -62,23 +62,23 @@ public class QuaffCmd : ICommand
         }
 
         player.Inventory.Remove(foundItem);
-        CoreHandler.Instance.UpdateClient.UpdateInventory(player);
+        Services.Instance.UpdateClient.UpdateInventory(player);
 
-        CoreHandler.Instance.UpdateClient.PlaySound("quaff", player);
+        Services.Instance.UpdateClient.PlaySound("quaff", player);
 
         if (
             string.IsNullOrEmpty(foundItem.SpellName)
             && foundItem.ItemType == Item.Item.ItemTypes.Potion
         )
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 "<p>You quaff the potion but nothing happens.</p>",
                 player.ConnectionId
             );
             return;
         }
 
-        CoreHandler.Instance.Writer.WriteToOthersInRoom(
+        Services.Instance.Writer.WriteToOthersInRoom(
             $"{player.Name} quaffs {foundItem.Name.ToLower()}.",
             room,
             player

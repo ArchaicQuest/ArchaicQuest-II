@@ -48,13 +48,13 @@ public class MineCmd : ICommand
 
         if (string.IsNullOrEmpty(target))
         {
-            CoreHandler.Instance.Writer.WriteLine("Chop what?", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("Chop what?", player.ConnectionId);
             return;
         }
 
         if (player.Status == CharacterStatus.Status.Busy)
         {
-            CoreHandler.Instance.Writer.WriteLine("You are already doing it.", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("You are already doing it.", player.ConnectionId);
             return;
         }
 
@@ -64,13 +64,13 @@ public class MineCmd : ICommand
 
         if (thingToHarvest == null)
         {
-            CoreHandler.Instance.Writer.WriteLine($"You don't see that here.", player.ConnectionId);
+            Services.Instance.Writer.WriteLine($"You don't see that here.", player.ConnectionId);
             return;
         }
 
         if (thingToHarvest.ItemType != Item.Item.ItemTypes.Mineable)
         {
-            CoreHandler.Instance.Writer.WriteLine("You can't mine this.", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("You can't mine this.", player.ConnectionId);
             return;
         }
 
@@ -80,7 +80,7 @@ public class MineCmd : ICommand
 
         if (hasChoppingTool == null)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"You attempt to dig {thingToHarvest.Name.ToLower()} with your bare hands. Probably better to try with a Pickaxe.",
                 player.ConnectionId
             );
@@ -89,7 +89,7 @@ public class MineCmd : ICommand
 
         if (!thingToHarvest.Container.Items.Any())
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 "There's nothing left to mine.",
                 player.ConnectionId
             );
@@ -110,9 +110,9 @@ public class MineCmd : ICommand
 
         try
         {
-            CoreHandler.Instance.UpdateClient.PlaySound("mining", player);
+            Services.Instance.UpdateClient.PlaySound("mining", player);
 
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p>You begin mining {thingToHarvest.Name}.</p>",
                 player.ConnectionId
             );
@@ -124,9 +124,9 @@ public class MineCmd : ICommand
                 return;
             }
 
-            CoreHandler.Instance.UpdateClient.PlaySound("mining", player);
+            Services.Instance.UpdateClient.PlaySound("mining", player);
 
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p>You swing your {hasChoppingTool.Name} back and forth striking the rock with each swing.</p>",
                 player.ConnectionId
             );
@@ -138,12 +138,9 @@ public class MineCmd : ICommand
                 return;
             }
 
-            CoreHandler.Instance.UpdateClient.PlaySound("mining", player);
+            Services.Instance.UpdateClient.PlaySound("mining", player);
 
-            CoreHandler.Instance.Writer.WriteLine(
-                "<p>You continue mining.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>You continue mining.</p>", player.ConnectionId);
 
             await Task.Delay(4000);
 
@@ -161,7 +158,7 @@ public class MineCmd : ICommand
 
             if (roll <= 3)
             {
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     $"<p>{{yellow}}You cut yourself mining, OUCH!{{/}}</p>",
                     player.ConnectionId
                 );
@@ -172,11 +169,11 @@ public class MineCmd : ICommand
             if (!player.RollSkill(SkillName.Foraging))
             {
                 player.FailedSkill(SkillName.Foraging, out var message);
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     "<p>You fail to mine a thing.</p>",
                     player.ConnectionId
                 );
-                CoreHandler.Instance.Writer.WriteLine(message, player.ConnectionId);
+                Services.Instance.Writer.WriteLine(message, player.ConnectionId);
                 player.Status = CharacterStatus.Status.Standing;
                 return;
             }
@@ -226,21 +223,21 @@ public class MineCmd : ICommand
 
             if (string.IsNullOrEmpty(collected))
             {
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     $"<p>You fail to collect a single thing.</p>",
                     player.ConnectionId
                 );
             }
             else
             {
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     $"<p>Ah you have collected some {collected}</p>",
                     player.ConnectionId
                 );
             }
 
             player.Status = CharacterStatus.Status.Standing;
-            CoreHandler.Instance.UpdateClient.UpdateInventory(player);
+            Services.Instance.UpdateClient.UpdateInventory(player);
         }
         catch (Exception ex)
         {
@@ -264,14 +261,14 @@ public class MineCmd : ICommand
             return;
         }
 
-        if (!CoreHandler.Instance.Cache.IsCharInCombat(player.Id.ToString()))
+        if (!Services.Instance.Cache.IsCharInCombat(player.Id.ToString()))
         {
-            CoreHandler.Instance.Cache.AddCharToCombat(player.Id.ToString(), player);
+            Services.Instance.Cache.AddCharToCombat(player.Id.ToString(), player);
         }
 
-        if (!CoreHandler.Instance.Cache.IsCharInCombat(target.Id.ToString()))
+        if (!Services.Instance.Cache.IsCharInCombat(target.Id.ToString()))
         {
-            CoreHandler.Instance.Cache.AddCharToCombat(target.Id.ToString(), target);
+            Services.Instance.Cache.AddCharToCombat(target.Id.ToString(), target);
         }
     }
 }

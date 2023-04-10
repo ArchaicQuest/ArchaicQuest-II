@@ -50,14 +50,14 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
         {
             var target = string.Join(" ", input.Skip(1));
 
-            var recipes = CoreHandler.Instance.Cache
+            var recipes = Services.Instance.Cache
                 .GetCraftingRecipes()
                 .Where(x => x.CreatedItem.ItemType != Item.Item.ItemTypes.Food)
                 .ToList();
 
             if (recipes == null)
             {
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     "<p>No crafting recipes have been set up.</p>",
                     player.ConnectionId
                 );
@@ -89,7 +89,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
                     == null
             )
             {
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     "<p>To begin crafting you require the correct tools such as a crafting bench.</p>",
                     player.ConnectionId
                 );
@@ -102,7 +102,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
 
             if (recipe == null)
             {
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     "<p>You can't craft that.</p>",
                     player.ConnectionId
                 );
@@ -120,7 +120,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
 
                 if (craftItem == null || material.Quantity > materialCount)
                 {
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         "<p>You appear to be missing required items.</p>",
                         player.ConnectionId
                     );
@@ -128,7 +128,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
                 }
             }
 
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p>You begin crafting {Helpers.AddArticle(recipe.Title).ToLower()}.</p>",
                 player.ConnectionId
             );
@@ -148,7 +148,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
 
                     if (craftItem == null)
                     {
-                        CoreHandler.Instance.Writer.WriteLine(
+                        Services.Instance.Writer.WriteLine(
                             "<p>You appear to be missing required items.</p>",
                             player.ConnectionId
                         );
@@ -176,13 +176,13 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
                             JsonConvert.SerializeObject(recipe.CreatedItem)
                         )
                     );
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         $"<p>You continue working on {Helpers.AddArticle(recipe.Title).ToLower()}.</p>",
                         player.ConnectionId,
                         2000
                     );
 
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         $"<p class='improve'>You have successfully created {Helpers.AddArticle(recipe.Title).ToLower()}.</p>",
                         player.ConnectionId,
                         4000
@@ -196,20 +196,20 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
                         )
                     );
                     player.Weight += recipe.CreatedItem.Weight;
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         "<p>You slave over the crafting bench working away.</p>",
                         player.ConnectionId,
                         2000
                     );
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         $"<p class='improve'>You have crafted successfully {Helpers.AddArticle(recipe.Title).ToLower()}.</p>",
                         player.ConnectionId,
                         4000
                     );
                 }
 
-                CoreHandler.Instance.UpdateClient.UpdateScore(player);
-                CoreHandler.Instance.UpdateClient.UpdateInventory(player);
+                Services.Instance.UpdateClient.UpdateScore(player);
+                Services.Instance.UpdateClient.UpdateInventory(player);
             }
             else
             {
@@ -226,7 +226,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
 
                     if (craftItem == null)
                     {
-                        CoreHandler.Instance.Writer.WriteLine(
+                        Services.Instance.Writer.WriteLine(
                             "<p>You appear to be missing required items.</p>",
                             player.ConnectionId
                         );
@@ -252,12 +252,12 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
                     }
                 }
 
-                CoreHandler.Instance.UpdateClient.UpdateScore(player);
-                CoreHandler.Instance.UpdateClient.UpdateInventory(player);
+                Services.Instance.UpdateClient.UpdateScore(player);
+                Services.Instance.UpdateClient.UpdateInventory(player);
 
                 if (recipe.CreatedItemDropsInRoom)
                 {
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         $"<p>You have failed in making {recipe.Title}.</p>",
                         player.ConnectionId,
                         2000
@@ -265,7 +265,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
                 }
                 else
                 {
-                    CoreHandler.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLine(
                         $"<p>You have failed to craft {recipe.Title}. It looks nothing like!</p>",
                         player.ConnectionId,
                         2000
@@ -274,7 +274,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
 
                 player.FailedSkill(SkillName.Crafting, out var message);
 
-                CoreHandler.Instance.Writer.WriteLine(message, player.ConnectionId, 2120);
+                Services.Instance.Writer.WriteLine(message, player.ConnectionId, 2120);
             }
         }
 
@@ -290,7 +290,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
 
             if (craftingList.Count == 0)
             {
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     "<p>No crafting recipes found with the current materials you have.</p>",
                     player.ConnectionId
                 );
@@ -314,7 +314,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
 
             sb.Append($"</table>");
 
-            CoreHandler.Instance.Writer.WriteLine(sb.ToString(), player.ConnectionId);
+            Services.Instance.Writer.WriteLine(sb.ToString(), player.ConnectionId);
         }
 
         private List<CraftingRecipes> ReturnValidRecipes(

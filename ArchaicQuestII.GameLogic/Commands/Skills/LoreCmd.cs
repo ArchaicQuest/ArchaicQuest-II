@@ -48,24 +48,21 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
 
             if (string.IsNullOrEmpty(obj))
             {
-                CoreHandler.Instance.Writer.WriteLine("Lore What!?.", player.ConnectionId);
+                Services.Instance.Writer.WriteLine("Lore What!?.", player.ConnectionId);
                 return;
             }
 
             var item = FindItem(obj, room, player);
             if (item == null)
             {
-                CoreHandler.Instance.Writer.WriteLine(
-                    "You don't see that here.",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine("You don't see that here.", player.ConnectionId);
                 return;
             }
 
             // only lore items that can be picked up
             if (item.Stuck)
             {
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     "There is nothing more to note about that object.",
                     player.ConnectionId
                 );
@@ -176,13 +173,13 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
 
             foreach (var pc in room.Players.Where(x => x.Id != player.Id))
             {
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     $"{player.Name} twists and turns {item.Name.ToLower()} trying to figure out it's properties.",
                     pc.ConnectionId
                 );
             }
 
-            CoreHandler.Instance.Writer.WriteLine(sb.ToString(), player.ConnectionId);
+            Services.Instance.Writer.WriteLine(sb.ToString(), player.ConnectionId);
         }
     }
 }

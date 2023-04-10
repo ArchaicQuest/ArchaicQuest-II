@@ -47,7 +47,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
 
             if (player.Equipped.Wielded == null)
             {
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     "You need to have a weapon equipped to do this.",
                     player.ConnectionId
                 );
@@ -57,7 +57,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             var obj = input.ElementAtOrDefault(1)?.ToLower() ?? player.Target;
             if (string.IsNullOrEmpty(obj))
             {
-                CoreHandler.Instance.Writer.WriteLine("Impale What!?.", player.ConnectionId);
+                Services.Instance.Writer.WriteLine("Impale What!?.", player.ConnectionId);
                 return;
             }
 
@@ -84,7 +84,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
 
                 EmoteAction(textToTarget, textToRoom, target.Name, room, player);
                 player.FailedSkill(SkillName.Impale, out var message);
-                CoreHandler.Instance.Writer.WriteLine(message, player.ConnectionId);
+                Services.Instance.Writer.WriteLine(message, player.ConnectionId);
                 player.Lag += 1;
                 return;
             }

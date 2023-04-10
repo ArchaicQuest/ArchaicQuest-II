@@ -45,7 +45,7 @@ public class TasteCmd : ICommand
 
         if (string.IsNullOrEmpty(target))
         {
-            CoreHandler.Instance.Writer.WriteLine("<p>Taste what?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Taste what?</p>", player.ConnectionId);
             return;
         }
 
@@ -56,20 +56,20 @@ public class TasteCmd : ICommand
 
         if (item == null)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 "<p>You don't see that here.</p>",
                 player.ConnectionId
             );
             return;
         }
 
-        var isDark = CoreHandler.Instance.RoomActions.RoomIsDark(player, room);
+        var isDark = Services.Instance.RoomActions.RoomIsDark(player, room);
 
-        CoreHandler.Instance.Writer.WriteLine(
+        Services.Instance.Writer.WriteLine(
             $"<p class='{(isDark ? "room-dark" : "")}'>{item.Description.Taste}</p>",
             player.ConnectionId
         );
-        CoreHandler.Instance.Writer.WriteToOthersInRoom(
+        Services.Instance.Writer.WriteToOthersInRoom(
             $"<p>{player.Name} tastes {item.Name.ToLower()}.</p>",
             room,
             player

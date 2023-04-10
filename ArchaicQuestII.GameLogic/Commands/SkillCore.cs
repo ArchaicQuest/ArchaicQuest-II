@@ -50,7 +50,7 @@ public abstract class SkillCore
 
     public Player findTarget(Player player, string target, Room room, bool murder)
     {
-        return CoreHandler.Instance.Combat.FindTarget(player, target, room, murder);
+        return Services.Instance.Combat.FindTarget(player, target, room, murder);
     }
 
     public void updateCombat(Player player, Player target, Room room)
@@ -59,7 +59,7 @@ public abstract class SkillCore
         {
             if (target.IsAlive())
             {
-                CoreHandler.Instance.Combat.InitFightStatus(player, target);
+                Services.Instance.Combat.InitFightStatus(player, target);
             }
         }
     }
@@ -106,7 +106,7 @@ public abstract class SkillCore
             && target.Attributes.Attribute[attribute] == target.MaxAttributes.Attribute[attribute]
         )
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 ReplacePlaceholders(noAffect, target, false),
                 player.ConnectionId
             );
@@ -274,17 +274,17 @@ public abstract class SkillCore
             }
         }
 
-        CoreHandler.Instance.UpdateClient.UpdateAffects(target);
-        CoreHandler.Instance.UpdateClient.UpdateScore(target);
+        Services.Instance.UpdateClient.UpdateAffects(target);
+        Services.Instance.UpdateClient.UpdateScore(target);
     }
 
     public void UpdateClientUI(Player player)
     {
         //update UI
-        CoreHandler.Instance.UpdateClient.UpdateHP(player);
-        CoreHandler.Instance.UpdateClient.UpdateMana(player);
-        CoreHandler.Instance.UpdateClient.UpdateMoves(player);
-        CoreHandler.Instance.UpdateClient.UpdateScore(player);
+        Services.Instance.UpdateClient.UpdateHP(player);
+        Services.Instance.UpdateClient.UpdateMana(player);
+        Services.Instance.UpdateClient.UpdateMoves(player);
+        Services.Instance.UpdateClient.UpdateScore(player);
     }
 
     /// <summary>
@@ -307,11 +307,11 @@ public abstract class SkillCore
         {
             if (pc.Name.Equals(target))
             {
-                CoreHandler.Instance.Writer.WriteLine(textToTarget, pc.ConnectionId);
+                Services.Instance.Writer.WriteLine(textToTarget, pc.ConnectionId);
                 continue;
             }
 
-            CoreHandler.Instance.Writer.WriteLine(textToRoom, pc.ConnectionId);
+            Services.Instance.Writer.WriteLine(textToRoom, pc.ConnectionId);
         }
     }
 
@@ -321,14 +321,14 @@ public abstract class SkillCore
         {
             if (pc.ConnectionId.Equals(player.ConnectionId))
             {
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     $"<p>{emote.EffectWearOff.ToPlayer}</p>",
                     pc.ConnectionId
                 );
                 continue;
             }
 
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p>{ReplacePlaceholders(emote.EffectWearOff.ToRoom, player, false)}</p>",
                 pc.ConnectionId
             );
@@ -382,14 +382,14 @@ public abstract class SkillCore
     {
         if (target.IsAlive())
         {
-            var totalDam = CoreHandler.Instance.Combat.CalculateSkillDamage(player, target, damage);
+            var totalDam = Services.Instance.Combat.CalculateSkillDamage(player, target, damage);
 
-            CoreHandler.Instance.Writer.WriteLine(
-                $"<p>Your {skillName} {CoreHandler.Instance.Damage.DamageText(totalDam).Value} {target.Name}  <span class='damage'>[{damage}]</span></p>",
+            Services.Instance.Writer.WriteLine(
+                $"<p>Your {skillName} {Services.Instance.Damage.DamageText(totalDam).Value} {target.Name}  <span class='damage'>[{damage}]</span></p>",
                 player.ConnectionId
             );
-            CoreHandler.Instance.Writer.WriteLine(
-                $"<p>{player.Name}'s {skillName} {CoreHandler.Instance.Damage.DamageText(totalDam).Value} you!  <span class='damage'>[{damage}]</span></p>",
+            Services.Instance.Writer.WriteLine(
+                $"<p>{player.Name}'s {skillName} {Services.Instance.Damage.DamageText(totalDam).Value} you!  <span class='damage'>[{damage}]</span></p>",
                 target.ConnectionId
             );
 
@@ -403,8 +403,8 @@ public abstract class SkillCore
                     continue;
                 }
 
-                CoreHandler.Instance.Writer.WriteLine(
-                    $"<p>{player.Name}'s {skillName} {CoreHandler.Instance.Damage.DamageText(totalDam).Value} {target.Name}  <span class='damage'>[{damage}]</span></p>",
+                Services.Instance.Writer.WriteLine(
+                    $"<p>{player.Name}'s {skillName} {Services.Instance.Damage.DamageText(totalDam).Value} {target.Name}  <span class='damage'>[{damage}]</span></p>",
                     pc.ConnectionId
                 );
             }
@@ -413,18 +413,18 @@ public abstract class SkillCore
 
             if (!target.IsAlive())
             {
-                CoreHandler.Instance.Combat.TargetKilled(player, target, room);
+                Services.Instance.Combat.TargetKilled(player, target, room);
 
-                CoreHandler.Instance.UpdateClient.UpdateHP(target);
+                Services.Instance.UpdateClient.UpdateHP(target);
                 return;
                 //TODO: create corpse, refactor fight method from combat.cs
             }
 
             //update UI
-            CoreHandler.Instance.UpdateClient.UpdateHP(target);
+            Services.Instance.UpdateClient.UpdateHP(target);
 
-            CoreHandler.Instance.Combat.AddCharToCombat(target);
-            CoreHandler.Instance.Combat.AddCharToCombat(player);
+            Services.Instance.Combat.AddCharToCombat(target);
+            Services.Instance.Combat.AddCharToCombat(player);
         }
     }
 
@@ -443,7 +443,7 @@ public abstract class SkillCore
             return target;
         }
 
-        CoreHandler.Instance.Writer.WriteLine("They are not here.", player.ConnectionId);
+        Services.Instance.Writer.WriteLine("They are not here.", player.ConnectionId);
         return null;
     }
 
@@ -467,16 +467,13 @@ public abstract class SkillCore
 
         if (playerHasSkill == null)
         {
-            CoreHandler.Instance.Writer.WriteLine(
-                $"You do not know this skill.",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine($"You do not know this skill.", player.ConnectionId);
             return false;
         }
 
         if (player.Level < playerHasSkill.Level)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"You are not of the right level to use this skill.",
                 player.ConnectionId
             );
@@ -485,7 +482,7 @@ public abstract class SkillCore
 
         if (skill.ManaCost > player.Attributes.Attribute[EffectLocation.Mana])
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"You do not have enough mana to cast {skill.Name}.",
                 player.ConnectionId
             );
@@ -494,7 +491,7 @@ public abstract class SkillCore
 
         if (skill.MoveCost > player.Attributes.Attribute[EffectLocation.Moves])
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"You are too tired to {skill.Name}.",
                 player.ConnectionId
             );
@@ -529,7 +526,7 @@ public abstract class SkillCore
                     ? $"<p>You tried to cast {skill.Name} but failed miserably.</p>"
                     : $"<p>You tried to {skill.Name} but failed miserably.</p>";
 
-            CoreHandler.Instance.Writer.WriteLine(errorText, player.ConnectionId);
+            Services.Instance.Writer.WriteLine(errorText, player.ConnectionId);
             return false;
         }
 
@@ -540,7 +537,7 @@ public abstract class SkillCore
             var errorText =
                 skill.ManaCost > 0 ? $"<p>You lost concentration.</p>" : failedSkillMessage;
 
-            CoreHandler.Instance.Writer.WriteLine(errorText, player.ConnectionId);
+            Services.Instance.Writer.WriteLine(errorText, player.ConnectionId);
             return false;
         }
 

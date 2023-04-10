@@ -10,9 +10,9 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
     {
         public CheckPoseCmd()
         {
-            Aliases = new[] {"checkpose"};
+            Aliases = new[] { "checkpose" };
             Description = "Shows you what your characters current pose is";
-            Usages = new[] {"Type: checkpose"};
+            Usages = new[] { "Type: checkpose" };
             Title = "";
             DeniedStatus = new[]
             {
@@ -27,7 +27,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
             };
             UserRole = UserRole.Player;
         }
-        
+
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
@@ -39,7 +39,9 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
         {
             var poseText = string.Empty;
 
-            poseText = string.IsNullOrEmpty(player.LongName) ? $"<p>{ player.Name}" : $"{ player.Name} {player.LongName}";
+            poseText = string.IsNullOrEmpty(player.LongName)
+                ? $"<p>{player.Name}"
+                : $"{player.Name} {player.LongName}";
 
             if (!string.IsNullOrEmpty(player.Mounted.Name))
             {
@@ -48,14 +50,13 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
             else if (string.IsNullOrEmpty(player.LongName))
             {
                 poseText += " is here";
-
             }
 
             poseText += player.Pose;
 
             poseText += "</p>";
 
-            CoreHandler.Instance.Writer.WriteLine(poseText, player.ConnectionId);
+            Services.Instance.Writer.WriteLine(poseText, player.ConnectionId);
         }
     }
 }

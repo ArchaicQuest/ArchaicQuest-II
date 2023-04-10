@@ -50,8 +50,8 @@ public class SitCmd : ICommand
         if (string.IsNullOrEmpty(target))
         {
             SetCharacterStatus(player, "is sitting here", CharacterStatus.Status.Sitting);
-            CoreHandler.Instance.Writer.WriteLine("<p>You sit down.</p>", player.ConnectionId);
-            CoreHandler.Instance.Writer.WriteToOthersInRoom(
+            Services.Instance.Writer.WriteLine("<p>You sit down.</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteToOthersInRoom(
                 $"<p>{player.Name} sits down.</p>",
                 room,
                 player
@@ -65,7 +65,7 @@ public class SitCmd : ICommand
 
             if (obj == null)
             {
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     "<p>You can't sit on that.</p>",
                     player.ConnectionId
                 );
@@ -77,11 +77,11 @@ public class SitCmd : ICommand
                 $"is sitting down on {obj.Name.ToLower()}",
                 CharacterStatus.Status.Sitting
             );
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p>You sit down on {obj.Name.ToLower()}.</p>",
                 player.ConnectionId
             );
-            CoreHandler.Instance.Writer.WriteToOthersInRoom(
+            Services.Instance.Writer.WriteToOthersInRoom(
                 $"<p>{player.Name} sits down on {obj.Name.ToLower()}.</p>",
                 room,
                 player

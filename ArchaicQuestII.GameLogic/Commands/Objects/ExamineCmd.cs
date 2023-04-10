@@ -49,7 +49,7 @@ public class ExamineCmd : ICommand
 
         if (string.IsNullOrEmpty(target))
         {
-            CoreHandler.Instance.Writer.WriteLine("<p>Examine what?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Examine what?</p>", player.ConnectionId);
             return;
         }
 
@@ -57,7 +57,7 @@ public class ExamineCmd : ICommand
         var item =
             Helpers.findRoomObject(nthTarget, room)
             ?? Helpers.findObjectInInventory(nthTarget, player);
-        var isDark = CoreHandler.Instance.RoomActions.RoomIsDark(player, room);
+        var isDark = Services.Instance.RoomActions.RoomIsDark(player, room);
 
         if (item == null && room.RoomObjects.Count >= 1 && room.RoomObjects[0].Name != null)
         {
@@ -65,7 +65,7 @@ public class ExamineCmd : ICommand
                 x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)
             );
 
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p class='{(isDark ? "room-dark" : "")}'>{roomObjects.Examine ?? roomObjects.Look}",
                 player.ConnectionId
             );
@@ -75,10 +75,7 @@ public class ExamineCmd : ICommand
 
         if (item == null)
         {
-            CoreHandler.Instance.Writer.WriteLine(
-                "<p>You don't see that here.",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>You don't see that here.", player.ConnectionId);
             return;
         }
 
@@ -87,11 +84,11 @@ public class ExamineCmd : ICommand
                 ? $"On closer inspection you don't see anything special to note to what you already see. {item.Description.Look}"
                 : item.Description.Exam;
 
-        CoreHandler.Instance.Writer.WriteLine(
+        Services.Instance.Writer.WriteLine(
             $"<p class='{(isDark ? "room-dark" : "")}'>{examMessage}",
             player.ConnectionId
         );
-        CoreHandler.Instance.Writer.WriteToOthersInRoom(
+        Services.Instance.Writer.WriteToOthersInRoom(
             $"<p>{player.Name} examines {item.Name.ToLower()}.</p>",
             room,
             player

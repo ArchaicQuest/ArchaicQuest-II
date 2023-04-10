@@ -11,11 +11,12 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
     {
         public DismountCmd()
         {
-            Aliases = new[] {"dismount","dmount"};
-            Description = "Use dismount to get off your mount and mount to get back on your horse, for example mount horse.";
-            Usages = new[] {"Type: dismount"};
+            Aliases = new[] { "dismount", "dmount" };
+            Description =
+                "Use dismount to get off your mount and mount to get back on your horse, for example mount horse.";
+            Usages = new[] { "Type: dismount" };
             Title = "";
-            DeniedStatus = new []
+            DeniedStatus = new[]
             {
                 CharacterStatus.Status.Sleeping,
                 CharacterStatus.Status.Dead,
@@ -25,7 +26,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
             };
             UserRole = UserRole.Player;
         }
-        
+
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
@@ -37,7 +38,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
         {
             if (string.IsNullOrEmpty(player.Mounted.Name))
             {
-                CoreHandler.Instance.Writer.WriteLine("<p>You are not using a mount</p>");
+                Services.Instance.Writer.WriteLine("<p>You are not using a mount</p>");
                 return;
             }
 
@@ -49,10 +50,16 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
                 getMount.Mounted.MountedBy = string.Empty;
                 player.Mounted.Name = string.Empty;
 
-                CoreHandler.Instance.Writer.WriteLine($"<p>You dismount {getMount.Name}.</p>", player.ConnectionId);
-                CoreHandler.Instance.Writer.WriteToOthersInRoom($"<p>{player.Name} dismounts {getMount.Name}.</p>", room, player);
+                Services.Instance.Writer.WriteLine(
+                    $"<p>You dismount {getMount.Name}.</p>",
+                    player.ConnectionId
+                );
+                Services.Instance.Writer.WriteToOthersInRoom(
+                    $"<p>{player.Name} dismounts {getMount.Name}.</p>",
+                    room,
+                    player
+                );
             }
-
         }
     }
 }

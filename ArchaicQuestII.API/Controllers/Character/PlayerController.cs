@@ -87,7 +87,7 @@ namespace ArchaicQuestII.Controllers.character
                 HairColour = player.HairColour,
                 HairLength = player.HairLength,
                 HairTexture = player.HairTexture,
-                RoomId = CoreHandler.Instance.Cache.GetConfig().StartingRoom,
+                RoomId = Services.Instance.Cache.GetConfig().StartingRoom,
             };
 
             var ItemSeed = Items.seedData;
@@ -174,7 +174,7 @@ namespace ArchaicQuestII.Controllers.character
 
             if (!string.IsNullOrEmpty(player.Id.ToString()) && player.Id != Guid.Empty)
             {
-                var foundItem = CoreHandler.Instance.PlayerDataBase.GetById<Character>(
+                var foundItem = Services.Instance.PlayerDataBase.GetById<Character>(
                     player.Id,
                     PlayerDataBase.Collections.Players
                 );
@@ -187,7 +187,7 @@ namespace ArchaicQuestII.Controllers.character
                 newPlayer.Id = player.Id;
             }
 
-            var account = CoreHandler.Instance.PlayerDataBase.GetById<Account>(
+            var account = Services.Instance.PlayerDataBase.GetById<Account>(
                 player.AccountId,
                 PlayerDataBase.Collections.Account
             );
@@ -195,10 +195,10 @@ namespace ArchaicQuestII.Controllers.character
             Helpers.PostToDiscord(
                 $"{player.Name} has joined the realms for the first time.",
                 "event",
-                CoreHandler.Instance.Cache.GetConfig()
+                Services.Instance.Cache.GetConfig()
             );
 
-            var dupeCheck = CoreHandler.Instance.PlayerDataBase
+            var dupeCheck = Services.Instance.PlayerDataBase
                 .GetCollection<Player>(PlayerDataBase.Collections.Players)
                 .FindOne(x => x.Name.Equals(newPlayer.Name));
 
@@ -210,8 +210,8 @@ namespace ArchaicQuestII.Controllers.character
                 }
             }
 
-            CoreHandler.Instance.PlayerDataBase.Save(account, PlayerDataBase.Collections.Account);
-            CoreHandler.Instance.PlayerDataBase.Save(newPlayer, PlayerDataBase.Collections.Players);
+            Services.Instance.PlayerDataBase.Save(account, PlayerDataBase.Collections.Account);
+            Services.Instance.PlayerDataBase.Save(newPlayer, PlayerDataBase.Collections.Players);
 
             return Ok(newPlayer.Id);
         }
@@ -227,7 +227,7 @@ namespace ArchaicQuestII.Controllers.character
         [Route("api/player/NameAllowed")]
         public bool NameAllowed([FromQuery] string name)
         {
-            var nameExists = CoreHandler.Instance.PlayerDataBase
+            var nameExists = Services.Instance.PlayerDataBase
                 .GetCollection<Player>(PlayerDataBase.Collections.Players)
                 .FindOne(x => x.Name == name);
 
@@ -244,13 +244,13 @@ namespace ArchaicQuestII.Controllers.character
         [Route("api/character/Player/{id:guid}")]
         public List<Player> Get(Guid? id)
         {
-            var pc = CoreHandler.Instance.PlayerDataBase
+            var pc = Services.Instance.PlayerDataBase
                 .GetCollection<Account>(PlayerDataBase.Collections.Account)
                 .FindById(id);
 
             if (id == null)
             {
-                return CoreHandler.Instance.PlayerDataBase
+                return Services.Instance.PlayerDataBase
                     .GetCollection<Player>(PlayerDataBase.Collections.Players)
                     .FindAll()
                     .ToList();
@@ -260,7 +260,7 @@ namespace ArchaicQuestII.Controllers.character
 
             foreach (var character in pc.Characters)
             {
-                var foundPC = CoreHandler.Instance.PlayerDataBase
+                var foundPC = Services.Instance.PlayerDataBase
                     .GetCollection<Player>(PlayerDataBase.Collections.Players)
                     .FindById(character);
 
@@ -278,7 +278,7 @@ namespace ArchaicQuestII.Controllers.character
         [Route("api/character/viewPlayer/{id:guid}")]
         public Player GetPlayer(Guid? id)
         {
-            var pc = CoreHandler.Instance.PlayerDataBase
+            var pc = Services.Instance.PlayerDataBase
                 .GetCollection<Player>(PlayerDataBase.Collections.Players)
                 .FindById(id);
 
@@ -290,7 +290,7 @@ namespace ArchaicQuestII.Controllers.character
         [Route("api/character/accounts")]
         public List<Account> getAccounts([FromQuery] string query)
         {
-            var account = CoreHandler.Instance.PlayerDataBase
+            var account = Services.Instance.PlayerDataBase
                 .GetCollection<Account>(PlayerDataBase.Collections.Account)
                 .FindAll()
                 .Where(x => x.Id != null)
@@ -309,7 +309,7 @@ namespace ArchaicQuestII.Controllers.character
         [Route("api/player/config/{id}")]
         public PlayerConfig GetConfig(string id)
         {
-            var player = CoreHandler.Instance.Cache.GetPlayer(id);
+            var player = Services.Instance.Cache.GetPlayer(id);
 
             return player?.Config;
         }
@@ -320,14 +320,14 @@ namespace ArchaicQuestII.Controllers.character
         public IActionResult UpdateConfig(string id, [FromBody] PlayerConfig config)
         {
             // update cache
-            var player = CoreHandler.Instance.Cache.GetPlayer(id);
+            var player = Services.Instance.Cache.GetPlayer(id);
 
             if (player != null)
             {
                 player.Config = config;
             }
 
-            var saved = CoreHandler.Instance.PlayerDataBase.Save(
+            var saved = Services.Instance.PlayerDataBase.Save(
                 player,
                 PlayerDataBase.Collections.Players
             );
@@ -339,7 +339,7 @@ namespace ArchaicQuestII.Controllers.character
         [HttpPost("api/player/transferCharacter")]
         public IActionResult TransferCharacter([FromBody] TransferChar transferChar)
         {
-            var character = CoreHandler.Instance.PlayerDataBase.GetById<Player>(
+            var character = Services.Instance.PlayerDataBase.GetById<Player>(
                 transferChar.PlayerId,
                 PlayerDataBase.Collections.Players
             );
@@ -348,11 +348,11 @@ namespace ArchaicQuestII.Controllers.character
                 return BadRequest(new { message = "character does not exists." });
             }
 
-            var characterAccount = CoreHandler.Instance.PlayerDataBase.GetById<Account>(
+            var characterAccount = Services.Instance.PlayerDataBase.GetById<Account>(
                 character.AccountId,
                 PlayerDataBase.Collections.Account
             );
-            var newCharacterAccount = CoreHandler.Instance.PlayerDataBase.GetById<Account>(
+            var newCharacterAccount = Services.Instance.PlayerDataBase.GetById<Account>(
                 transferChar.NewAccountId,
                 PlayerDataBase.Collections.Account
             );
@@ -361,12 +361,12 @@ namespace ArchaicQuestII.Controllers.character
             newCharacterAccount.Characters.Add(character.Id);
 
             character.AccountId = transferChar.NewAccountId;
-            CoreHandler.Instance.PlayerDataBase.Save(character, PlayerDataBase.Collections.Players);
-            CoreHandler.Instance.PlayerDataBase.Save(
+            Services.Instance.PlayerDataBase.Save(character, PlayerDataBase.Collections.Players);
+            Services.Instance.PlayerDataBase.Save(
                 newCharacterAccount,
                 PlayerDataBase.Collections.Account
             );
-            CoreHandler.Instance.PlayerDataBase.Save(
+            Services.Instance.PlayerDataBase.Save(
                 characterAccount,
                 PlayerDataBase.Collections.Account
             );
@@ -385,7 +385,7 @@ namespace ArchaicQuestII.Controllers.character
                 throw exception;
             }
 
-            var foundItem = CoreHandler.Instance.PlayerDataBase.GetById<Player>(
+            var foundItem = Services.Instance.PlayerDataBase.GetById<Player>(
                 player.Id,
                 PlayerDataBase.Collections.Players
             );
@@ -395,22 +395,22 @@ namespace ArchaicQuestII.Controllers.character
                 throw new Exception("player Id does not exist");
             }
 
-            var activePlayer = CoreHandler.Instance.Cache
+            var activePlayer = Services.Instance.Cache
                 .GetRoom(player.RoomId)
                 .Players.FirstOrDefault(x => x.Name.Equals(foundItem.Name));
 
-            CoreHandler.Instance.Cache
+            Services.Instance.Cache
                 .GetCommand("quit")
                 .Execute(
                     activePlayer,
-                    CoreHandler.Instance.Cache.GetRoom(foundItem.RoomId),
+                    Services.Instance.Cache.GetRoom(foundItem.RoomId),
                     new[] { "quit" }
                 );
 
             foundItem.ConnectionId = player.ConnectionId;
 
-            CoreHandler.Instance.Cache.GetRoom(foundItem.RoomId).Players.Remove(foundItem);
-            CoreHandler.Instance.Cache.RemovePlayer(foundItem.ConnectionId);
+            Services.Instance.Cache.GetRoom(foundItem.RoomId).Players.Remove(foundItem);
+            Services.Instance.Cache.RemovePlayer(foundItem.ConnectionId);
 
             foundItem = player;
             /*
@@ -513,7 +513,7 @@ namespace ArchaicQuestII.Controllers.character
                         };
             */
 
-            CoreHandler.Instance.PlayerDataBase.Save(foundItem, PlayerDataBase.Collections.Players);
+            Services.Instance.PlayerDataBase.Save(foundItem, PlayerDataBase.Collections.Players);
 
             return Ok(foundItem.Id);
         }

@@ -33,21 +33,21 @@ public class ImmTeleportCmd : ICommand
 
         if (string.IsNullOrEmpty(target))
         {
-            CoreHandler.Instance.Writer.WriteLine("<p>Teleport to what room, or to whom?</p>");
+            Services.Instance.Writer.WriteLine("<p>Teleport to what room, or to whom?</p>");
             return;
         }
 
         if (int.TryParse(target, out var roomId))
         {
-            var newRoom = CoreHandler.Instance.Cache.GetRoom(roomId.ToString());
+            var newRoom = Services.Instance.Cache.GetRoom(roomId.ToString());
 
             if (newRoom != null)
             {
-                CoreHandler.Instance.RoomActions.RoomChange(player, room, newRoom, false);
+                Services.Instance.RoomActions.RoomChange(player, room, newRoom, false);
             }
             else
             {
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     "<p>That room does not exist.</p>",
                     player.ConnectionId
                 );
@@ -58,7 +58,7 @@ public class ImmTeleportCmd : ICommand
             Player foundPlayer = null;
 
             foreach (
-                var checkRoom in CoreHandler.Instance.Cache
+                var checkRoom in Services.Instance.Cache
                     .GetAllRooms()
                     .TakeWhile(checkRoom => foundPlayer == null)
             )
@@ -81,17 +81,14 @@ public class ImmTeleportCmd : ICommand
 
             if (foundPlayer == null)
             {
-                CoreHandler.Instance.Writer.WriteLine(
-                    "<p>They're not here.</p>",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine("<p>They're not here.</p>", player.ConnectionId);
                 return;
             }
 
-            CoreHandler.Instance.RoomActions.RoomChange(
+            Services.Instance.RoomActions.RoomChange(
                 player,
                 room,
-                CoreHandler.Instance.Cache.GetRoom(foundPlayer.RoomId),
+                Services.Instance.Cache.GetRoom(foundPlayer.RoomId),
                 false
             );
         }

@@ -52,7 +52,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             var obj = input.ElementAtOrDefault(1)?.ToLower() ?? player.Target;
             if (string.IsNullOrEmpty(obj))
             {
-                CoreHandler.Instance.Writer.WriteLine("Elbow What!?.", player.ConnectionId);
+                Services.Instance.Writer.WriteLine("Elbow What!?.", player.ConnectionId);
                 return;
             }
 
@@ -73,7 +73,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 var textToRoom = $"{player.Name} tries to elbow {target.Name} but stumbles.";
                 EmoteAction(textToTarget, textToRoom, target.Name, room, player);
                 player.FailedSkill(SkillName.Elbow, out var message);
-                CoreHandler.Instance.Writer.WriteLine(message, player.ConnectionId);
+                Services.Instance.Writer.WriteLine(message, player.ConnectionId);
                 player.Lag += 1;
                 return;
             }

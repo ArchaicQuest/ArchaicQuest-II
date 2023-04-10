@@ -30,7 +30,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Immortal
         {
             var jsonObject = JsonConvert.SerializeObject(room);
 
-            CoreHandler.Instance.Writer.WriteLine(jsonObject, player.ConnectionId);
+            Services.Instance.Writer.WriteLine(jsonObject, player.ConnectionId);
         }
     }
 }

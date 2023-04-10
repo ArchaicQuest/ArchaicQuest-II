@@ -38,15 +38,15 @@ public class YellCmd : ICommand
     {
         if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
         {
-            CoreHandler.Instance.Writer.WriteLine("<p>Yell what?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Yell what?</p>", player.ConnectionId);
             return;
         }
 
         var text = string.Join(" ", input.Skip(1));
 
-        var rooms = CoreHandler.Instance.Cache.GetAllRoomsInArea(room.AreaId);
+        var rooms = Services.Instance.Cache.GetAllRoomsInArea(room.AreaId);
 
-        CoreHandler.Instance.Writer.WriteLine(
+        Services.Instance.Writer.WriteLine(
             $"<p class='yell'>You yell, {text.ToUpper()}</p>",
             player.ConnectionId
         );
@@ -58,18 +58,18 @@ public class YellCmd : ICommand
             select pc
         )
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p class='yell'>{player.Name} yells, {text.ToUpper()}</p>",
                 pc.ConnectionId
             );
-            CoreHandler.Instance.UpdateClient.UpdateCommunication(
+            Services.Instance.UpdateClient.UpdateCommunication(
                 pc,
                 $"<p class='yell'>{player.Name} yells, {text.ToUpper()}</p>",
                 "room"
             );
         }
 
-        CoreHandler.Instance.UpdateClient.UpdateCommunication(
+        Services.Instance.UpdateClient.UpdateCommunication(
             player,
             $"<p class='yell'>You yell, {text.ToUpper()}</p>",
             "room"

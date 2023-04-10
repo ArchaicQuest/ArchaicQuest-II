@@ -52,13 +52,13 @@ public class ChopCmd : ICommand
 
         if (string.IsNullOrEmpty(target))
         {
-            CoreHandler.Instance.Writer.WriteLine("Chop what?", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("Chop what?", player.ConnectionId);
             return;
         }
 
         if (player.Status == CharacterStatus.Status.Busy)
         {
-            CoreHandler.Instance.Writer.WriteLine("You are already doing it.", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("You are already doing it.", player.ConnectionId);
             return;
         }
 
@@ -68,17 +68,17 @@ public class ChopCmd : ICommand
 
         if (thingToHarvest == null)
         {
-            CoreHandler.Instance.Writer.WriteLine($"You don't see that here.", player.ConnectionId);
+            Services.Instance.Writer.WriteLine($"You don't see that here.", player.ConnectionId);
             return;
         }
 
         if (thingToHarvest.ItemType != Item.Item.ItemTypes.Chopable)
         {
-            CoreHandler.Instance.Writer.WriteLine("You can't chop this.", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("You can't chop this.", player.ConnectionId);
 
             if (thingToHarvest.ItemType == Item.Item.ItemTypes.Forage)
             {
-                CoreHandler.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     $"You must forage {thingToHarvest.Name}",
                     player.ConnectionId
                 );
@@ -92,7 +92,7 @@ public class ChopCmd : ICommand
 
         if (hasChoppingTool == null)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"You attempt to karate chop {thingToHarvest.Name.ToLower()} with your bare hands. Probably better to try with an Axe.",
                 player.ConnectionId
             );
@@ -101,7 +101,7 @@ public class ChopCmd : ICommand
 
         if (!thingToHarvest.Container.Items.Any())
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 "There's nothing left to chop.",
                 player.ConnectionId
             );
@@ -120,9 +120,9 @@ public class ChopCmd : ICommand
     {
         player.Status = CharacterStatus.Status.Busy;
 
-        CoreHandler.Instance.UpdateClient.PlaySound("chopping", player);
+        Services.Instance.UpdateClient.PlaySound("chopping", player);
 
-        CoreHandler.Instance.Writer.WriteLine(
+        Services.Instance.Writer.WriteLine(
             $"<p>You begin chopping {thingToHarvest.Name}.</p>",
             player.ConnectionId
         );
@@ -134,9 +134,9 @@ public class ChopCmd : ICommand
             return;
         }
 
-        CoreHandler.Instance.UpdateClient.PlaySound("chopping", player);
+        Services.Instance.UpdateClient.PlaySound("chopping", player);
 
-        CoreHandler.Instance.Writer.WriteLine(
+        Services.Instance.Writer.WriteLine(
             $"<p>You swing your {hasChoppingTool.Name} back and forth striking the trunk with each swing.</p>",
             player.ConnectionId
         );
@@ -148,9 +148,9 @@ public class ChopCmd : ICommand
             return;
         }
 
-        CoreHandler.Instance.UpdateClient.PlaySound("chopping", player);
+        Services.Instance.UpdateClient.PlaySound("chopping", player);
 
-        CoreHandler.Instance.Writer.WriteLine("<p>You continue chopping.</p>", player.ConnectionId);
+        Services.Instance.Writer.WriteLine("<p>You continue chopping.</p>", player.ConnectionId);
 
         await Task.Delay(4000);
 
@@ -252,7 +252,7 @@ public class ChopCmd : ICommand
 
         if (roll <= 1)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p>{{yellow}}{randomMob.Name} jumps out from the {thingToHarvest.Name} and attacks you!{{/}}</p>",
                 player.ConnectionId
             );
@@ -264,7 +264,7 @@ public class ChopCmd : ICommand
 
         if (roll <= 3)
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p>{{yellow}}You cut yourself chopping, OUCH!{{/}}</p>",
                 player.ConnectionId
             );
@@ -275,11 +275,11 @@ public class ChopCmd : ICommand
         if (!player.RollSkill(SkillName.Foraging))
         {
             player.FailedSkill(SkillName.Foraging, out var message);
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 "<p>You fail to chop a thing.</p>",
                 player.ConnectionId
             );
-            CoreHandler.Instance.Writer.WriteLine(message, player.ConnectionId);
+            Services.Instance.Writer.WriteLine(message, player.ConnectionId);
             player.Status = CharacterStatus.Status.Standing;
             return;
         }
@@ -329,21 +329,21 @@ public class ChopCmd : ICommand
 
         if (string.IsNullOrEmpty(collected))
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p>You fail to collect a single thing.</p>",
                 player.ConnectionId
             );
         }
         else
         {
-            CoreHandler.Instance.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p>Ah you have collected some {collected}</p>",
                 player.ConnectionId
             );
         }
 
         player.Status = CharacterStatus.Status.Standing;
-        CoreHandler.Instance.UpdateClient.UpdateInventory(player);
+        Services.Instance.UpdateClient.UpdateInventory(player);
     }
 
     private void InitFightStatus(Player player, Player target)
@@ -362,14 +362,14 @@ public class ChopCmd : ICommand
             return;
         }
 
-        if (!CoreHandler.Instance.Cache.IsCharInCombat(player.Id.ToString()))
+        if (!Services.Instance.Cache.IsCharInCombat(player.Id.ToString()))
         {
-            CoreHandler.Instance.Cache.AddCharToCombat(player.Id.ToString(), player);
+            Services.Instance.Cache.AddCharToCombat(player.Id.ToString(), player);
         }
 
-        if (!CoreHandler.Instance.Cache.IsCharInCombat(target.Id.ToString()))
+        if (!Services.Instance.Cache.IsCharInCombat(target.Id.ToString()))
         {
-            CoreHandler.Instance.Cache.AddCharToCombat(target.Id.ToString(), target);
+            Services.Instance.Cache.AddCharToCombat(target.Id.ToString(), target);
         }
     }
 }

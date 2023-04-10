@@ -15,12 +15,13 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
     {
         public PracticeCmd()
         {
-            Aliases = new[] {"practice", "prac"};
-            Description = "Practice only works at a guild trainer to practice your skills or spells. Your learning " +
-            "percentage varies from 1% to a maximum of 75%. <br />The higher your intelligence, the more you will learn at each practice " +
-            "session.  <br />The higher your wisdom, the more practice sessions you will " +
-            "have each time you gain a level. <br />To view your skills just enter skills";
-            Usages = new[] {"Type: practice, practice <skill>"};
+            Aliases = new[] { "practice", "prac" };
+            Description =
+                "Practice only works at a guild trainer to practice your skills or spells. Your learning "
+                + "percentage varies from 1% to a maximum of 75%. <br />The higher your intelligence, the more you will learn at each practice "
+                + "session.  <br />The higher your wisdom, the more practice sessions you will "
+                + "have each time you gain a level. <br />To view your skills just enter skills";
+            Usages = new[] { "Type: practice, practice <skill>" };
             Title = "";
             DeniedStatus = new[]
             {
@@ -35,7 +36,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
             };
             UserRole = UserRole.Player;
         }
-        
+
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
@@ -49,13 +50,16 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
             if (string.IsNullOrEmpty(target))
             {
-                CoreHandler.Instance.Writer.WriteLine("<p>Practice what?</p>", player.ConnectionId);
+                Services.Instance.Writer.WriteLine("<p>Practice what?</p>", player.ConnectionId);
                 return;
             }
 
             if (room.Mobs.Find(x => x.Trainer) == null)
             {
-                CoreHandler.Instance.Writer.WriteLine("<p>You can't do that here.</p>", player.ConnectionId);
+                Services.Instance.Writer.WriteLine(
+                    "<p>You can't do that here.</p>",
+                    player.ConnectionId
+                );
                 return;
             }
 
@@ -65,11 +69,16 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
             if (string.IsNullOrEmpty(skillName))
             {
-                CoreHandler.Instance.Writer.WriteLine($"<p>You have {player.Practices} practice{(player.Practices <= 1 ? "" : "s")} left.</p>", player.ConnectionId);
+                Services.Instance.Writer.WriteLine(
+                    $"<p>You have {player.Practices} practice{(player.Practices <= 1 ? "" : "s")} left.</p>",
+                    player.ConnectionId
+                );
 
                 var sb = new StringBuilder();
 
-                sb.Append("<table class='simple'><thead><tr><th></th><th></th><th colspan='2'>Skills</th><th></th><th></th></tr></thead><tbody>");
+                sb.Append(
+                    "<table class='simple'><thead><tr><th></th><th></th><th colspan='2'>Skills</th><th></th><th></th></tr></thead><tbody>"
+                );
 
                 var i = 0;
                 foreach (var skill in player.Skills.OrderBy(x => x.Name))
@@ -91,8 +100,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
                         continue;
                     }
                     i++;
-
-                };
+                }
+                ;
 
                 sb.Append("</tbody></table>");
 
@@ -137,7 +146,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
                 //    sb.Append("</tbody></table>");
 
                 //}
-                CoreHandler.Instance.Writer.WriteLine(sb.ToString(), player.ConnectionId);
+                Services.Instance.Writer.WriteLine(sb.ToString(), player.ConnectionId);
                 return;
             }
 
@@ -145,25 +154,41 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
             if (foundSkill == null)
             {
-                CoreHandler.Instance.Writer.WriteLineMobSay(trainerName, "<p>You don't have that skill to practice.</p>", player.ConnectionId);
+                Services.Instance.Writer.WriteLineMobSay(
+                    trainerName,
+                    "<p>You don't have that skill to practice.</p>",
+                    player.ConnectionId
+                );
                 return;
             }
 
             if (player.Practices == 0)
             {
-                CoreHandler.Instance.Writer.WriteLineMobSay(trainerName, "<p>You have no practices left.</p>", player.ConnectionId);
+                Services.Instance.Writer.WriteLineMobSay(
+                    trainerName,
+                    "<p>You have no practices left.</p>",
+                    player.ConnectionId
+                );
                 return;
             }
 
             if (foundSkill.Proficiency == 100)
             {
-                CoreHandler.Instance.Writer.WriteLineMobSay(trainerName, $"<p>You have already mastered {foundSkill.Name}.</p>", player.ConnectionId);
+                Services.Instance.Writer.WriteLineMobSay(
+                    trainerName,
+                    $"<p>You have already mastered {foundSkill.Name}.</p>",
+                    player.ConnectionId
+                );
                 return;
             }
 
             if (foundSkill.Proficiency >= 75)
             {
-                CoreHandler.Instance.Writer.WriteLineMobSay(trainerName, $"<p>I've taught you everything I can about {foundSkill.Name}.</p>", player.ConnectionId);
+                Services.Instance.Writer.WriteLineMobSay(
+                    trainerName,
+                    $"<p>I've taught you everything I can about {foundSkill.Name}.</p>",
+                    player.ConnectionId
+                );
                 return;
             }
 
@@ -177,12 +202,22 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
             if (foundSkill.Proficiency >= 75)
             {
                 foundSkill.Proficiency = 75;
-                CoreHandler.Instance.Writer.WriteLine($"<p>You practice for some time. Your proficiency with {foundSkill.Name} is now {foundSkill.Proficiency}%.</p>", player.ConnectionId);
-                CoreHandler.Instance.Writer.WriteLineMobSay(trainerName, "<p>You'll have to practice it on your own now...</p>", player.ConnectionId);
+                Services.Instance.Writer.WriteLine(
+                    $"<p>You practice for some time. Your proficiency with {foundSkill.Name} is now {foundSkill.Proficiency}%.</p>",
+                    player.ConnectionId
+                );
+                Services.Instance.Writer.WriteLineMobSay(
+                    trainerName,
+                    "<p>You'll have to practice it on your own now...</p>",
+                    player.ConnectionId
+                );
                 return;
             }
 
-            CoreHandler.Instance.Writer.WriteLine($"<p>You practice for some time. Your proficiency with {foundSkill.Name} is now {foundSkill.Proficiency}%.</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine(
+                $"<p>You practice for some time. Your proficiency with {foundSkill.Name} is now {foundSkill.Proficiency}%.</p>",
+                player.ConnectionId
+            );
         }
     }
 }
