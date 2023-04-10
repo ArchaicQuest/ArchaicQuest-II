@@ -211,9 +211,9 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public void UpdateWeather()
         {
-            var season = "Autumn";
+            //var season = "Autumn";
 
-            switch (season) { }
+            //switch (season) { }
         }
 
         public string SimulateWeatherTransitions()

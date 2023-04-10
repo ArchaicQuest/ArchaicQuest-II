@@ -347,6 +347,7 @@ namespace ArchaicQuestII.API.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine("AccountController.cs: " + ex);
                 return BadRequest("Invalid reset password id");
             }
 

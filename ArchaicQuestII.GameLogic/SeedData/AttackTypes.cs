@@ -8,45 +8,24 @@ namespace ArchaicQuestII.GameLogic.SeedData
     {
         private static readonly List<Option> seedData = new List<Option>()
         {
-            new Option()
-            {
-                Name = "Punch",
-                CreatedBy = "Malleus"
-            },
-            new Option()
-            {
-                Name = "Pound",
-                CreatedBy = "Malleus"
-            },
-            new Option()
-            {
-                Name = "Bite",
-                CreatedBy = "Malleus"
-            },
-            new Option()
-            {
-                Name = "Charge",
-                CreatedBy = "Malleus"
-            },
-            new Option()
-            {
-                Name = "Peck",
-                CreatedBy = "Malleus"
-            },
-            new Option()
-            {
-                Name = "Headbutt",
-                CreatedBy = "Malleus"
-            },
+            new Option() { Name = "Punch", CreatedBy = "Malleus" },
+            new Option() { Name = "Pound", CreatedBy = "Malleus" },
+            new Option() { Name = "Bite", CreatedBy = "Malleus" },
+            new Option() { Name = "Charge", CreatedBy = "Malleus" },
+            new Option() { Name = "Peck", CreatedBy = "Malleus" },
+            new Option() { Name = "Headbutt", CreatedBy = "Malleus" },
         };
 
-        internal static void Seed(IDataBase db)
+        internal static void Seed()
         {
-            if (!db.DoesCollectionExist(DataBase.Collections.AttackType))
+            if (!Services.Instance.DataBase.DoesCollectionExist(DataBase.Collections.AttackType))
             {
                 foreach (var attackTypeSeed in seedData)
                 {
-                    db.Save(attackTypeSeed, DataBase.Collections.AttackType);
+                    Services.Instance.DataBase.Save(
+                        attackTypeSeed,
+                        DataBase.Collections.AttackType
+                    );
                 }
             }
         }

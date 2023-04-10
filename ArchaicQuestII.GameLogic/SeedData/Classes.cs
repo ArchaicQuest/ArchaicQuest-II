@@ -9,7 +9,6 @@ namespace ArchaicQuestII.GameLogic.SeedData
             var prevtitle = string.Empty;
             var title = string.Empty;
 
-
             if (player.Gender == "Male")
             {
                 title = GitTitleMale(player.ClassName.ToString(), player.Level);
@@ -106,9 +105,9 @@ namespace ArchaicQuestII.GameLogic.SeedData
                         case 51:
                             return "the Lady Champion";
 
-                        default: return "the Warrior";
+                        default:
+                            return "the Warrior";
                     }
-                    break;
                 case "Mage":
                     switch (level)
                     {
@@ -181,10 +180,10 @@ namespace ArchaicQuestII.GameLogic.SeedData
                         case 51:
                             return "Archwitch";
 
-                        default: return "the Wizard";
+                        default:
+                            return "the Wizard";
                     }
-                    break;
-                case "Thief":
+                case "Rogue":
                     switch (level)
                     {
                         case 1:
@@ -256,9 +255,9 @@ namespace ArchaicQuestII.GameLogic.SeedData
                         case 51:
                             return "the Cut-Throat";
 
-                        default: return "the Assasin";
+                        default:
+                            return "the Assasin";
                     }
-                    break;
                 case "Cleric":
                     switch (level)
                     {
@@ -331,9 +330,9 @@ namespace ArchaicQuestII.GameLogic.SeedData
                         case 51:
                             return "the Matriarch";
 
-                        default: return "the Assasin";
+                        default:
+                            return "the Assasin";
                     }
-                    break;
             }
 
             return string.Empty;
@@ -415,9 +414,9 @@ namespace ArchaicQuestII.GameLogic.SeedData
                         case 51:
                             return "the Champion";
 
-                        default: return "the Warrior";
+                        default:
+                            return "the Warrior";
                     }
-                    break;
                 case "Mage":
                     switch (level)
                     {
@@ -490,10 +489,10 @@ namespace ArchaicQuestII.GameLogic.SeedData
                         case 51:
                             return "Archmage";
 
-                        default: return "the Wizard";
+                        default:
+                            return "the Wizard";
                     }
-                    break;
-                case "Thief":
+                case "Rogue":
                     switch (level)
                     {
                         case 1:
@@ -565,9 +564,9 @@ namespace ArchaicQuestII.GameLogic.SeedData
                         case 51:
                             return "the Cut-Throat";
 
-                        default: return "the Assasin";
+                        default:
+                            return "the Assasin";
                     }
-                    break;
                 case "Cleric":
                     switch (level)
                     {
@@ -640,7 +639,8 @@ namespace ArchaicQuestII.GameLogic.SeedData
                         case 51:
                             return "the Patriarch";
 
-                        default: return "the Assasin";
+                        default:
+                            return "the Assasin";
                     }
             }
 

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character.Alignment;
+using ArchaicQuestII.GameLogic.Core;
 
 namespace ArchaicQuestII.GameLogic.SeedData
 {
@@ -70,13 +71,13 @@ namespace ArchaicQuestII.GameLogic.SeedData
             },
         };
 
-        internal static void Seed(IDataBase db)
+        internal static void Seed()
         {
-            if (!db.DoesCollectionExist(DataBase.Collections.Alignment))
+            if (!Services.Instance.DataBase.DoesCollectionExist(DataBase.Collections.Alignment))
             {
                 foreach (var alignmentSeed in seedData)
                 {
-                    db.Save(alignmentSeed, DataBase.Collections.Alignment);
+                    Services.Instance.DataBase.Save(alignmentSeed, DataBase.Collections.Alignment);
                 }
             }
         }

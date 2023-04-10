@@ -1,5 +1,6 @@
 ﻿using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character.Equipment;
+using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Item;
 using System.Collections.Generic;
 using System.Linq;
@@ -199,7 +200,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
                 Book = new Book() { Pages = new List<string>() },
                 ArmourRating = new ArmourRating(),
                 Container = new Container() { Items = new ItemList() },
-                Damage = new Damage() { Minimum = 1, Maximum = 4 }
+                Damage = new Item.Damage() { Minimum = 1, Maximum = 4 }
             },
             new Item.Item()
             {
@@ -222,7 +223,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
                 Book = new Book() { Pages = new List<string>() },
                 ArmourRating = new ArmourRating(),
                 Container = new Container() { Items = new ItemList() },
-                Damage = new Damage() { Minimum = 1, Maximum = 4 }
+                Damage = new Item.Damage() { Minimum = 1, Maximum = 4 }
             },
             new Item.Item()
             {
@@ -245,30 +246,31 @@ namespace ArchaicQuestII.GameLogic.SeedData
                 Book = new Book() { Pages = new List<string>() },
                 ArmourRating = new ArmourRating(),
                 Container = new Container() { Items = new ItemList() },
-                Damage = new Damage() { Minimum = 1, Maximum = 4 }
+                Damage = new Item.Damage() { Minimum = 1, Maximum = 4 }
             },
         };
 
-        internal static void Seed(IDataBase db)
+        internal static void Seed()
         {
-            if (!db.DoesCollectionExist(DataBase.Collections.Items))
+            if (!Services.Instance.DataBase.DoesCollectionExist(DataBase.Collections.Items))
             {
                 foreach (var itemSeed in seedData)
                 {
-                    db.Save(itemSeed, DataBase.Collections.Items);
+                    Services.Instance.DataBase.Save(itemSeed, DataBase.Collections.Items);
                 }
 
                 return;
             }
 
-            var hasMoney = db.GetList<Item.Item>(DataBase.Collections.Items)
+            var hasMoney = Services.Instance.DataBase
+                .GetList<Item.Item>(DataBase.Collections.Items)
                 .Any(x => x.ItemType == Item.Item.ItemTypes.Money);
 
             if (!hasMoney)
             {
                 foreach (var itemSeed in seedData)
                 {
-                    db.Save(itemSeed, DataBase.Collections.Items);
+                    Services.Instance.DataBase.Save(itemSeed, DataBase.Collections.Items);
                 }
             }
         }

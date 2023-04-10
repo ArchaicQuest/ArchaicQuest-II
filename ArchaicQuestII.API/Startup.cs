@@ -201,13 +201,12 @@ namespace ArchaicQuestII.API
 
             try
             {
-                new Bot(
-                    GameLogic.Core.Services.Instance.Cache,
-                    _hubContext,
-                    new DiscordSocketClient()
-                ).MainAsync();
+                new Bot(_hubContext, new DiscordSocketClient()).MainAsync();
             }
-            catch (Exception ex) { }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Startup.cs: " + ex);
+            }
         }
     }
 }

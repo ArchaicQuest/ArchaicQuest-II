@@ -26,7 +26,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Skills
         private readonly Mock<IWriteToClient> _writer;
         private readonly Mock<IDamage> _damage;
         private readonly Mock<ICombat> _combat;
-        private readonly Mock<ICache> _cache;
+        private readonly Mock<Cache> _cache;
         private readonly Mock<ISkillManager> _skillManager;
         private readonly Mock<IUpdateClientUI> _updateClientUI;
         private readonly Mock<IMobScripts> _mobScript;
@@ -84,17 +84,11 @@ namespace ArchaicQuestII.GameLogic.Tests.Skills
             _writer = new Mock<IWriteToClient>();
             _damage = new Mock<IDamage>();
             _skillManager = new Mock<ISkillManager>();
-            _cache = new Mock<ICache>();
+            _cache = new Mock<Cache>();
             _combat = new Mock<ICombat>();
             _updateClientUI = new Mock<IUpdateClientUI>();
 
-            _damageSkills = new DamageSkills(
-                _writer.Object,
-                _updateClientUI.Object,
-                _damage.Object,
-                _combat.Object,
-                _skillManager.Object
-            );
+            _damageSkills = new DamageSkills(_skillManager.Object);
         }
     }
 }

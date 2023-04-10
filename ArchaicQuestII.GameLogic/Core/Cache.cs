@@ -16,7 +16,7 @@ namespace ArchaicQuestII.GameLogic.Core
     /// Refactor me
     /// TODO: refactor cache
     /// </summary>
-    public class Cache : ICache
+    public class Cache
     {
         private readonly ConcurrentDictionary<string, Player> _playerCache = new();
         private readonly ConcurrentDictionary<string, Room> _originalRoomCache = new();

@@ -443,7 +443,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
                     }
                     catch (Exception ex)
                     {
-                        // ignored
+                        Console.WriteLine("RoomActions.cs: " + ex);
                     }
                 }
 

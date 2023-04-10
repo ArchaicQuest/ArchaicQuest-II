@@ -16,10 +16,10 @@ namespace ArchaicQuestII.GameLogic.SeedData
 {
     internal static class Rooms
     {
-        internal static void Cache(IDataBase db, ICache cache)
+        internal static void Cache()
         {
-            var rooms = db.GetList<Room>(DataBase.Collections.Room);
-            var areas = db.GetList<Area>(DataBase.Collections.Area);
+            var rooms = Services.Instance.DataBase.GetList<Room>(DataBase.Collections.Room);
+            var areas = Services.Instance.DataBase.GetList<Area>(DataBase.Collections.Area);
             var updatedItems = new ItemList();
             var lastRandom = 0;
 
@@ -54,10 +54,13 @@ namespace ArchaicQuestII.GameLogic.SeedData
                     item.Container.Items.AddRange(updatedItems);
                 }
 
-                AddSkillsToMobs(db, room);
+                AddSkillsToMobs(room);
                 MapMobRoomId(room);
-                cache.AddRoom($"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}", room);
-                cache.AddOriginalRoom(
+                Services.Instance.Cache.AddRoom(
+                    $"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}",
+                    room
+                );
+                Services.Instance.Cache.AddOriginalRoom(
                     $"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}",
                     JsonConvert.DeserializeObject<Room>(JsonConvert.SerializeObject(room))
                 );
@@ -79,11 +82,14 @@ namespace ArchaicQuestII.GameLogic.SeedData
                         roomsByZ.Add(room);
                     }
 
-                    cache.AddMap($"{area.Id}{zarea.Coords.Z}", Map.DrawMap(roomsByZ));
+                    Services.Instance.Cache.AddMap(
+                        $"{area.Id}{zarea.Coords.Z}",
+                        Map.DrawMap(roomsByZ)
+                    );
                 }
 
                 var rooms0index = roomList.FindAll(x => x.Coords.Z == 0 && x.Deleted == false);
-                cache.AddMap($"{area.Id}0", Map.DrawMap(rooms0index));
+                Services.Instance.Cache.AddMap($"{area.Id}0", Map.DrawMap(rooms0index));
             }
         }
 
@@ -104,7 +110,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
         /// probably others to add. maybe parry
         /// </summary>
         /// <param name="room"></param>
-        private static void AddSkillsToMobs(IDataBase db, Room room)
+        private static void AddSkillsToMobs(Room room)
         {
             try
             {

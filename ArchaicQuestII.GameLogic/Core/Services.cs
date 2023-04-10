@@ -12,7 +12,7 @@ namespace ArchaicQuestII.GameLogic.Core
 {
     public sealed class Services
     {
-        public ICache Cache { get; private set; }
+        public Cache Cache { get; private set; }
         public IWriteToClient Writer { get; private set; }
         public IDataBase DataBase { get; private set; }
         public IPlayerDataBase PlayerDataBase { get; private set; }

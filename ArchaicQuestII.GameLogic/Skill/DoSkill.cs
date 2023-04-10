@@ -1,52 +1,33 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
-using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Core;
-using ArchaicQuestII.GameLogic.Effect;
-using ArchaicQuestII.GameLogic.Skill.Enum;
-using ArchaicQuestII.GameLogic.Skill.Model;
 using ArchaicQuestII.GameLogic.Spell.Interface;
 using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Skill
 {
-
     public interface ISKill
     {
-        void PerfromSkill(Model.Skill skill, string command, Player origin, string targetName, Room room = null);
+        void PerfromSkill(
+            Model.Skill skill,
+            string command,
+            Player origin,
+            string targetName,
+            Room room = null
+        );
     }
 
     public class DoSkill
     {
-        private readonly IWriteToClient _writer;
         private readonly ISpellTargetCharacter _spellTargetCharacter;
-        private readonly ICache _cache;
-        private readonly IDamage _damage;
-        private readonly IUpdateClientUI _updateClientUi;
-        private readonly IMobScripts _mobScripts;
         private readonly ISkillList _skillList;
 
-
-        public DoSkill(
-            IWriteToClient writer,
-            ISpellTargetCharacter spellTargetCharacter,
-            ICache cache,
-            IDamage damage,
-            IUpdateClientUI updateClientUi,
-            IMobScripts mobScripts,
-            ISkillList skillList)
+        public DoSkill(ISpellTargetCharacter spellTargetCharacter, ISkillList skillList)
         {
-            _writer = writer;
             _spellTargetCharacter = spellTargetCharacter;
-            _cache = cache;
-            _damage = damage;
-            _updateClientUi = updateClientUi;
-            _mobScripts = mobScripts;
             _skillList = skillList;
-
         }
 
         public bool ValidStatus(Player player)
@@ -54,7 +35,7 @@ namespace ArchaicQuestII.GameLogic.Skill
             switch (player.Status)
             {
                 case CharacterStatus.Status.Sleeping:
-                    _writer.WriteLine("You can't do this while asleep.");
+                    Services.Instance.Writer.WriteLine("You can't do this while asleep.");
                     return false;
                 //case CharacterStatus.Status.Stunned:
                 //    _writer.WriteLine("You are stunned.");
@@ -76,7 +57,6 @@ namespace ArchaicQuestII.GameLogic.Skill
             }
         }
 
-
         public bool SkillSuccess(Player origin, Player target, Skill.Model.Skill spell)
         {
             var skill = origin.Skills.FirstOrDefault(x => x.Id.Equals(spell.Id));
@@ -88,23 +68,27 @@ namespace ArchaicQuestII.GameLogic.Skill
             }
 
             var proficiency = skill.Proficiency;
-            var success = DiceBag.Roll(1, 1,
-                101);
+            var success = DiceBag.Roll(1, 1, 101);
 
             if (success == 1 || success == 101)
             {
-                _writer.WriteLine($"<p>You got distracted.</p>", origin.ConnectionId);
+                Services.Instance.Writer.WriteLine(
+                    $"<p>You got distracted.</p>",
+                    origin.ConnectionId
+                );
                 return false;
             }
 
             if (proficiency < success)
             {
-                _writer.WriteLine($"<p>You lost concentration.</p>", origin.ConnectionId);
+                Services.Instance.Writer.WriteLine(
+                    $"<p>You lost concentration.</p>",
+                    origin.ConnectionId
+                );
                 return false;
             }
 
             return true;
-
         }
     }
 }
@@ -143,7 +127,7 @@ public Skill.Model.Skill FindSkill(Model.Skill skill, string skillName, Player p
 
 
 /// <summary>
-/// 
+///
 /// </summary>
 /// <param name="spell"></param>
 /// <param name="origin"></param>

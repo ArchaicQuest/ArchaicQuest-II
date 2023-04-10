@@ -241,6 +241,7 @@ public class MineCmd : ICommand
         }
         catch (Exception ex)
         {
+            Console.WriteLine("MineCommand.cs: " + ex);
             player.Status = CharacterStatus.Status.Standing;
         }
     }

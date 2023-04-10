@@ -277,7 +277,10 @@ hold potion
                     .Append("</td></tr>")
                     .Append("</table");
             }
-            catch (Exception ex) { }
+            catch (Exception ex)
+            {
+                Console.WriteLine("EquipmentCmd.cs: " + ex);
+            }
 
             return displayEquipment.ToString();
         }
