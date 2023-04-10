@@ -30,8 +30,6 @@ namespace ArchaicQuestII.API
 {
     public class Startup
     {
-        private IHubContext<GameHub> _hubContext;
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -85,7 +83,7 @@ namespace ArchaicQuestII.API
                 )
             );
             services.AddSingleton<IWriteToClient, WriteToClient>(
-                (factory) => new WriteToClient(_hubContext, TelnetHub.Instance)
+                (factory) => new WriteToClient(TelnetHub.Instance)
             );
             services.AddGameLogic();
         }
@@ -113,26 +111,6 @@ namespace ArchaicQuestII.API
             ICommandHandler commandHandler
         )
         {
-            GameLogic.Core.Services.Instance.InitServices(
-                writer,
-                db,
-                updateClient,
-                combat,
-                pdb,
-                roomActions,
-                mobScripts,
-                errorLog,
-                passiveSkills,
-                formulas,
-                time,
-                damage,
-                spellList,
-                weather,
-                characterHandler,
-                loopHandler,
-                commandHandler
-            );
-
             if (env.EnvironmentName == "dev")
             {
                 app.UseDeveloperExceptionPage();
@@ -167,7 +145,26 @@ namespace ArchaicQuestII.API
                 endpoints.MapHub<GameHub>("/Hubs/game");
             });
 
-            _hubContext = app.ApplicationServices.GetService<IHubContext<GameHub>>();
+            GameLogic.Core.Services.Instance.InitServices(
+                writer,
+                db,
+                updateClient,
+                combat,
+                pdb,
+                roomActions,
+                mobScripts,
+                errorLog,
+                passiveSkills,
+                formulas,
+                time,
+                damage,
+                spellList,
+                weather,
+                characterHandler,
+                loopHandler,
+                commandHandler,
+                app.ApplicationServices.GetService<IHubContext<GameHub>>()
+            );
 
             app.StartLoops();
 
@@ -201,7 +198,7 @@ namespace ArchaicQuestII.API
 
             try
             {
-                new Bot(_hubContext, new DiscordSocketClient()).MainAsync();
+                new Bot(new DiscordSocketClient()).MainAsync();
             }
             catch (Exception ex)
             {

@@ -23,6 +23,8 @@ namespace ArchaicQuestII.GameLogic.Loops
 
         public void Tick()
         {
+            //Console.WriteLine("CommandLoop");
+
             foreach (var player in _bufferedPlayers)
             {
                 // don't action commands if player is lagged
@@ -37,7 +39,7 @@ namespace ArchaicQuestII.GameLogic.Loops
 
                 if (player.CommandLog.Count >= 2500)
                 {
-                    player.CommandLog = new List<string>();
+                    player.CommandLog.Clear();
                 }
 
                 player.CommandLog.Add($"{string.Format("{0:f}", DateTime.Now)} - {command}");
@@ -51,6 +53,9 @@ namespace ArchaicQuestII.GameLogic.Loops
                 foreach (var player in _laggedPlayers)
                 {
                     player.Lag -= 1;
+
+                    if (player.Lag < 0)
+                        player.Lag = 0;
                 }
 
                 LagTick = 32;

@@ -21,6 +21,8 @@ namespace ArchaicQuestII.GameLogic.Loops
 
         public void Tick()
         {
+            //Console.WriteLine("MobEmoteLoop");
+
             var mobIds = new List<Guid>();
             foreach (var room in _mobRooms)
             {

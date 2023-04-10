@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Core;
-using ArchaicQuestII.GameLogic.Hubs;
 using ArchaicQuestII.GameLogic.Hubs.Telnet;
 using ArchaicQuestII.GameLogic.World.Room;
 using Microsoft.AspNetCore.SignalR;
@@ -12,12 +11,10 @@ namespace ArchaicQuestII.GameLogic.Client
 {
     public class WriteToClient : IWriteToClient
     {
-        private readonly IHubContext<GameHub> _hubContext;
         private readonly TelnetHub _telnetHub;
 
-        public WriteToClient(IHubContext<GameHub> hubContext, TelnetHub telnetHub)
+        public WriteToClient(TelnetHub telnetHub)
         {
-            _hubContext = hubContext;
             _telnetHub = telnetHub;
         }
 
@@ -30,7 +27,9 @@ namespace ArchaicQuestII.GameLogic.Client
                     return;
                 }
 
-                await _hubContext.Clients.Client(id).SendAsync("SendMessage", message, "");
+                await Services.Instance.Hub.Clients
+                    .Client(id)
+                    .SendAsync("SendMessage", message, "");
             }
             catch (Exception ex)
             {
@@ -48,7 +47,7 @@ namespace ArchaicQuestII.GameLogic.Client
                 }
 
                 var mobSay = $"<span class='mob'>{mobName} says '{message}'</span>";
-                await _hubContext.Clients.Client(id).SendAsync("SendMessage", mobSay, "");
+                await Services.Instance.Hub.Clients.Client(id).SendAsync("SendMessage", mobSay, "");
             }
             catch (Exception ex)
             {
@@ -61,7 +60,9 @@ namespace ArchaicQuestII.GameLogic.Client
             try
             {
                 await Task.Delay(delay);
-                await _hubContext.Clients.Client(id).SendAsync("SendMessage", message, "");
+                await Services.Instance.Hub.Clients
+                    .Client(id)
+                    .SendAsync("SendMessage", message, "");
             }
             catch (Exception ex)
             {
@@ -73,7 +74,7 @@ namespace ArchaicQuestII.GameLogic.Client
         {
             try
             {
-                await _hubContext.Clients.All.SendAsync("SendMessage", message, "");
+                await Services.Instance.Hub.Clients.All.SendAsync("SendMessage", message, "");
             }
             catch (Exception ex)
             {

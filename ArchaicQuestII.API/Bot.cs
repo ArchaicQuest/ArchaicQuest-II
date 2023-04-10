@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using ArchaicQuestII.API.Controllers.Discord;
+using ArchaicQuestII.GameLogic.Core;
 using Discord;
 using Discord.WebSocket;
 using Microsoft.AspNetCore.SignalR;
@@ -13,13 +14,11 @@ namespace ArchaicQuestII.DiscordBot;
 
 public class Bot
 {
-    private static IHubContext<GameLogic.Hubs.GameHub> _hubContext;
     private DiscordSocketClient _client;
     private static readonly HttpClient httpClient = new HttpClient();
 
-    public Bot(IHubContext<GameLogic.Hubs.GameHub> hubContext, DiscordSocketClient client)
+    public Bot(DiscordSocketClient client)
     {
-        _hubContext = hubContext;
         _client = client;
     }
 
@@ -154,7 +153,7 @@ public class Bot
     {
         try
         {
-            await _hubContext.Clients.Client(id).SendAsync("SendMessage", message, "");
+            await Services.Instance.Hub.Clients.Client(id).SendAsync("SendMessage", message, "");
         }
         catch (Exception ex)
         {
@@ -170,7 +169,7 @@ public class Bot
         }
         try
         {
-            await _hubContext.Clients.Client(id).SendAsync("CommUpdate", message, type);
+            await Services.Instance.Hub.Clients.Client(id).SendAsync("CommUpdate", message, type);
         }
         catch (Exception ex)
         {

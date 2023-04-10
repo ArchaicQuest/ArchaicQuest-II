@@ -7,6 +7,9 @@ using ArchaicQuestII.GameLogic.Skill.Skills;
 using ArchaicQuestII.GameLogic.World.Area;
 using ArchaicQuestII.GameLogic.Spell;
 using ArchaicQuestII.GameLogic.Commands;
+using System;
+using Microsoft.AspNetCore.SignalR;
+using ArchaicQuestII.GameLogic.Hubs;
 
 namespace ArchaicQuestII.GameLogic.Core
 {
@@ -31,16 +34,13 @@ namespace ArchaicQuestII.GameLogic.Core
         public ICharacterHandler CharacterHandler { get; private set; }
         public ILoopHandler GameLoop { get; private set; }
         public ICommandHandler CommandHandler { get; private set; }
+        public IHubContext<GameHub> Hub { get; private set; }
 
-        private static readonly Services instance = new Services();
-
-        // Explicit static constructor to tell C# compiler
-        // not to mark type as beforefieldinit
-        static Services() { }
+        private static readonly Lazy<Services> lazy = new Lazy<Services>(() => new Services());
 
         public static Services Instance
         {
-            get { return instance; }
+            get { return lazy.Value; }
         }
 
         private Services()
@@ -65,7 +65,8 @@ namespace ArchaicQuestII.GameLogic.Core
             IWeather weather,
             ICharacterHandler characterHandler,
             ILoopHandler gameLoop,
-            ICommandHandler commandHandler
+            ICommandHandler commandHandler,
+            IHubContext<GameHub> hub
         )
         {
             Writer = writeToClient;
@@ -85,6 +86,7 @@ namespace ArchaicQuestII.GameLogic.Core
             CharacterHandler = characterHandler;
             GameLoop = gameLoop;
             CommandHandler = commandHandler;
+            Hub = hub;
         }
     }
 }

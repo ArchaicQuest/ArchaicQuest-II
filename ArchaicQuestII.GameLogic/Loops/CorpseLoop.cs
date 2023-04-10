@@ -20,6 +20,8 @@ namespace ArchaicQuestII.GameLogic.Loops
 
         public void Tick()
         {
+            //Console.WriteLine("CorpseLoop");
+
             foreach (var room in _rooms)
             {
                 //get corpse and remove

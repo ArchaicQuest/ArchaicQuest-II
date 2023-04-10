@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using ArchaicQuestII.GameLogic.Character;
 using System.Linq;
+using System;
 
 namespace ArchaicQuestII.GameLogic.Loops
 {
@@ -25,6 +26,8 @@ namespace ArchaicQuestII.GameLogic.Loops
 
         public void Tick()
         {
+            //Console.WriteLine("MiscLoop");
+
             foreach (var room in _rooms)
             {
                 //max 187MB allocated type: string too much memory used here

@@ -4,6 +4,7 @@ using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Utilities;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace ArchaicQuestII.GameLogic.Loops
 {
@@ -30,6 +31,8 @@ namespace ArchaicQuestII.GameLogic.Loops
 
         public void Tick()
         {
+            //Console.WriteLine("HintLoop");
+
             foreach (var player in _players)
             {
                 Services.Instance.Writer.WriteLine(

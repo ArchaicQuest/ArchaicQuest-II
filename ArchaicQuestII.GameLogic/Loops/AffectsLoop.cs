@@ -23,6 +23,8 @@ namespace ArchaicQuestII.GameLogic.Loops
 
         public void Tick()
         {
+            //Console.WriteLine("AffectsLoop");
+
             foreach (var pc in _players)
             {
                 pc.Hunger--;

@@ -25,6 +25,8 @@ namespace ArchaicQuestII.GameLogic.Loops
 
         public void Tick()
         {
+            //Console.WriteLine("CombatLoop");
+
             foreach (var player in _combatants)
             {
                 if (
