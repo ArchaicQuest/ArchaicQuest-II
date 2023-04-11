@@ -242,7 +242,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
 
             pot.Container.Items.Clear();
 
-            if (!player.RollSkill(SkillName.Cooking))
+            if (!player.RollSkill(SkillName.Cooking, false))
             {
                 Services.Instance.Writer.WriteLine(
                     "<p class='improve'>You failed to cook something edible.</p>",
@@ -257,8 +257,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
                     );
                 }
 
-                player.FailedSkill(SkillName.Cooking, out var message);
-                Services.Instance.Writer.WriteLine(message, player.ConnectionId);
+                player.FailedSkill(SkillName.Cooking, true);
             }
             else
             {

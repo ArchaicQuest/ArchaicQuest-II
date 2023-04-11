@@ -66,9 +66,9 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             var textToTarget = string.Empty;
             var textToRoom = string.Empty;
 
-            var skillSuccess = SkillSuccessWithMessage(
-                player,
-                DefineSkill.Kick(),
+            var skillSuccess = player.RollSkill(
+                SkillName.Kick,
+                true,
                 "You miss your kick and stumble."
             );
             if (!skillSuccess)
@@ -77,8 +77,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 textToRoom = $"{player.Name} tries to kick {target.Name} but stumbles.";
                 EmoteAction(textToTarget, textToRoom, target.Name, room, player);
                 updateCombat(player, target, room);
-                player.FailedSkill(SkillName.Kick, out var message);
-                Services.Instance.Writer.WriteLine(message, player.ConnectionId);
+                player.FailedSkill(SkillName.Kick, true);
                 player.Lag += 1;
                 return;
             }

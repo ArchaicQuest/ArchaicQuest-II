@@ -32,7 +32,7 @@ public class ImmLevelUpCmd : ICommand
 
         if (string.IsNullOrEmpty(target))
         {
-            player.GainLevel(out _);
+            player.GainLevel(false);
             return;
         }
 
@@ -46,6 +46,6 @@ public class ImmLevelUpCmd : ICommand
             return;
         }
 
-        otherPlayer.GainLevel(out _);
+        otherPlayer.GainLevel(false);
     }
 }

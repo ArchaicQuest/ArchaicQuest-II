@@ -99,7 +99,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                 }
                 else
                 {
-                    target.FailedSkill(SkillName.Grip, out _);
+                    target.FailedSkill(SkillName.Grip, false);
                 }
             }
 
@@ -226,11 +226,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                 return 0;
             }
 
-            player.FailedSkill(SkillName.Rescue, out var message);
-
-            Services.Instance.UpdateClient.UpdateExp(player);
-
-            Services.Instance.Writer.WriteLine(message, player.ConnectionId);
+            player.FailedSkill(SkillName.Rescue, true);
 
             return 0;
         }
@@ -297,7 +293,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                         {
                             ToPlayer = "Your pulse races as you are consumed by rage!",
                             ToRoom =
-                                $"{player.Name} gets a wild look in {Helpers.GetPronoun(player.Gender)} eyes.",
+                                $"{player.Name} gets a wild look in {player.ReturnPronoun()} eyes.",
                             ToTarget = ""
                         }
                     };
@@ -315,11 +311,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                         EffectLocation.Moves
                     ] /= 4;
 
-                    player.FailedSkill(SkillName.Berserk, out var message);
-
-                    Services.Instance.UpdateClient.UpdateExp(player);
-
-                    Services.Instance.Writer.WriteLine(message, player.ConnectionId);
+                    player.FailedSkill(SkillName.Berserk, true);
                 }
             }
 

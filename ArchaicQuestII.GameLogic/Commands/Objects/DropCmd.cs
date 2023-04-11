@@ -96,7 +96,7 @@ Related help files: get, put, give, drop
 
         var nthTarget = Helpers.findNth(target);
 
-        var item = Helpers.findObjectInInventory(nthTarget, player);
+        var item = player.FindObjectInInventory(nthTarget);
 
         if (item == null)
         {
@@ -262,7 +262,7 @@ Related help files: get, put, give, drop
             var nthContainer = Helpers.findNth(container);
             containerObj =
                 Helpers.findRoomObject(nthContainer, room)
-                ?? Helpers.findObjectInInventory(nthContainer, player);
+                ?? player.FindObjectInInventory(nthContainer);
         }
 
         if (containerObj == null)

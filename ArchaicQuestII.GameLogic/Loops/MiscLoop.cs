@@ -182,13 +182,13 @@ namespace ArchaicQuestII.GameLogic.Loops
                 {
                     if (hasFastHealing != null)
                     {
-                        if (player.RollSkill(SkillName.FastHealing))
+                        if (player.RollSkill(SkillName.FastHealing, false))
                         {
                             hP *= 2;
                         }
                         else
                         {
-                            player.FailedSkill(SkillName.FastHealing, out _);
+                            player.FailedSkill(SkillName.FastHealing, false);
                         }
                     }
 

@@ -71,9 +71,9 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             var textToTarget = string.Empty;
             var textToRoom = string.Empty;
 
-            var skillSuccess = SkillSuccessWithMessage(
-                player,
-                DefineSkill.Lunge(),
+            var skillSuccess = player.RollSkill(
+                SkillName.Slash,
+                true,
                 $"You attempt to slash {target.Name} but miss."
             );
             if (!skillSuccess)
@@ -82,8 +82,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 textToRoom = $"{player.Name} tries to slash {target.Name} but misses.";
 
                 EmoteAction(textToTarget, textToRoom, target.Name, room, player);
-                player.FailedSkill(SkillName.Slash, out var message);
-                Services.Instance.Writer.WriteLine(message, player.ConnectionId);
+                player.FailedSkill(SkillName.Slash, true);
                 player.Lag += 1;
                 return;
             }

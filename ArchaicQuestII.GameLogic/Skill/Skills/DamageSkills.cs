@@ -357,9 +357,9 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                     {
                         ToPlayer = $"You lift your shield and smash it at {target.Name}",
                         ToRoom =
-                            $"{player.Name} lifts {Helpers.GetPronoun(player.Gender)} shield and smashes it at {target.Name}!",
+                            $"{player.Name} lifts {player.ReturnPronoun()} shield and smashes it at {target.Name}!",
                         ToTarget =
-                            $"{player.Name} lifts {Helpers.GetPronoun(player.Gender)} shield and smashes it at you!"
+                            $"{player.Name} lifts {player.ReturnPronoun()} shield and smashes it at you!"
                     }
                 };
 
@@ -375,9 +375,9 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                     {
                         ToPlayer = $"You lift your shield and swing it at {target.Name} but miss.",
                         ToRoom =
-                            $"{player.Name} lifts {Helpers.GetPronoun(player.Gender)} shield and swings it at {target.Name} but misses.",
+                            $"{player.Name} lifts {player.ReturnPronoun()} shield and swings it at {target.Name} but misses.",
                         ToTarget =
-                            $"{player.Name} lifts {Helpers.GetPronoun(player.Gender)} shield and swings it at you but you avoid it easily."
+                            $"{player.Name} lifts {player.ReturnPronoun()} shield and swings it at you but you avoid it easily."
                     }
                 };
 

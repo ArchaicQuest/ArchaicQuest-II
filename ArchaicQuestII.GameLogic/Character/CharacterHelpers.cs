@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Model;
@@ -7,6 +8,7 @@ using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Spell;
 using ArchaicQuestII.GameLogic.Utilities;
+using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Character;
 
@@ -66,13 +68,41 @@ public static class CharacterHelpers
         return false;
     }
 
-    public static bool RollSkill(this Player player, SkillName skillName, int modifier = 0)
+    public static bool RollSkill(
+        this Player player,
+        SkillName skillName,
+        bool display,
+        string customErrorText = "",
+        int modifier = 0
+    )
     {
-        return player.Skills.FirstOrDefault(x => x.Name == skillName).Proficiency
-            > DiceBag.Roll(1, 1, 100, modifier);
+        var roll = DiceBag.Roll(1, 1, 100);
+        var skill = player.Skills.FirstOrDefault(x => x.Name == skillName);
+        var success = skill.Proficiency > roll + modifier;
+
+        if (roll == 1 && display)
+        {
+            var errorText = skill.IsSpell
+                ? $"<p>You tried to cast {skill.Name} but failed miserably.</p>"
+                : $"<p>You tried to {skill.Name} but failed miserably.</p>";
+
+            Services.Instance.Writer.WriteLine(errorText, player.ConnectionId);
+            return false;
+        }
+
+        if (!success && display)
+        {
+            var failedSkillMessage = customErrorText ?? $"<p>You try to {skill.Name} but fail.</p>";
+
+            var errorText = skill.IsSpell ? $"<p>You lost concentration.</p>" : failedSkillMessage;
+
+            Services.Instance.Writer.WriteLine(errorText, player.ConnectionId);
+        }
+
+        return success;
     }
 
-    public static void FailedSkill(this Player player, SkillName name, out string message)
+    public static void FailedSkill(this Player player, SkillName name, bool display)
     {
         var skill = player.Skills.FirstOrDefault(x => x.Name == name);
 
@@ -80,13 +110,12 @@ public static class CharacterHelpers
 
         if (skill == null)
         {
-            message = null;
+            Services.Instance.Writer.WriteLine("Skill not found");
             return;
         }
 
         if (skill.Proficiency == 100)
         {
-            message = null;
             return;
         }
 
@@ -97,13 +126,14 @@ public static class CharacterHelpers
             skill.Proficiency = 100;
         }
 
-        player.GainExperiencePoints(100 * skill.Level / 4, out _);
+        player.GainExperiencePoints(100 * skill.Level / 4, false);
 
-        Services.Instance.UpdateClient.UpdateExp(player);
+        player.UpdateClientUI();
 
-        message =
+        Services.Instance.Writer.WriteLine(
             $"<p class='improve'>You learn from your mistakes and gain {100 * skill.Level / 4} experience points.</p>"
-            + $"<p class='improve'>Your knowledge of {skill.Name} increases by {increase}%.</p>";
+                + $"<p class='improve'>Your knowledge of {skill.Name} increases by {increase}%.</p>"
+        );
     }
 
     public static int GetExpWorth(this Player character)
@@ -131,7 +161,7 @@ public static class CharacterHelpers
         return exp > maxEXP ? maxEXP : exp;
     }
 
-    public static void GainExperiencePoints(this Player player, Player target, out string message)
+    public static void GainExperiencePoints(this Player player, Player target, bool display)
     {
         var expWorth = GetExpWorth(target);
         var halfPlayerLevel = Math.Ceiling((double)(player.Level / 2m));
@@ -159,26 +189,34 @@ public static class CharacterHelpers
 
         Services.Instance.UpdateClient.UpdateExp(player);
 
-        message =
+        if (!display)
+            return;
+
+        Services.Instance.Writer.WriteLine(
             expWorth == 1
                 ? "<p class='improve'>You gain 1 measly experience point.</p>"
-                : $"<p class='improve'>You receive {expWorth} experience points.</p>";
+                : $"<p class='improve'>You receive {expWorth} experience points.</p>"
+        );
     }
 
-    public static void GainExperiencePoints(this Player player, int amount, out string message)
+    public static void GainExperiencePoints(this Player player, int amount, bool display)
     {
         player.Experience += amount;
         player.ExperienceToNextLevel -= amount;
 
         Services.Instance.UpdateClient.UpdateExp(player);
 
-        message =
+        if (!display)
+            return;
+
+        Services.Instance.Writer.WriteLine(
             amount == 1
                 ? "<p class='improve'>You gain 1 measly experience point.</p>"
-                : $"<p class='improve'>You receive {amount} experience points.</p>";
+                : $"<p class='improve'>You receive {amount} experience points.</p>"
+        );
     }
 
-    public static void GainLevel(this Player player, out string message)
+    public static void GainLevel(this Player player, bool display)
     {
         player.Level++;
         player.ExperienceToNextLevel = player.Level * 4000; //TODO: have class and race mod
@@ -199,15 +237,15 @@ public static class CharacterHelpers
         player.MaxAttributes.Attribute[EffectLocation.Mana] += totalMana;
         player.MaxAttributes.Attribute[EffectLocation.Moves] += totalMove;
 
-        Services.Instance.UpdateClient.UpdateExp(player);
-        Services.Instance.UpdateClient.UpdateHP(player);
-        Services.Instance.UpdateClient.UpdateMana(player);
-        Services.Instance.UpdateClient.UpdateMoves(player);
-
-        message =
-            $"<p class='improve'>You have advanced to level {player.Level}, you gain: {totalHP} HP, {totalMana} Mana, {totalMove} Moves.</p>";
-
         SeedData.Classes.SetGenericTitle(player);
+        player.UpdateClientUI();
+
+        if (!display)
+            return;
+
+        Services.Instance.Writer.WriteLine(
+            $"<p class='improve'>You have advanced to level {player.Level}, you gain: {totalHP} HP, {totalMana} Mana, {totalMove} Moves.</p>"
+        );
     }
 
     /// <summary>
@@ -459,5 +497,238 @@ public static class CharacterHelpers
     public static bool IsAlive(this Player victim)
     {
         return victim.Attributes.Attribute[EffectLocation.Hitpoints] > 0;
+    }
+
+    public static Item.Item FindObjectInInventory(this Player player, Tuple<int, string> keyword)
+    {
+        if (keyword.Item2.Equals("book"))
+        {
+            return keyword.Item1 == -1
+                ? player.Inventory.FirstOrDefault(x => x.ItemType == Item.Item.ItemTypes.Book)
+                : player.Inventory
+                    .FindAll(x => x.ItemType == Item.Item.ItemTypes.Book)
+                    .Skip(keyword.Item1 - 1)
+                    .FirstOrDefault();
+        }
+
+        return keyword.Item1 == -1
+            ? player.Inventory.FirstOrDefault(
+                x => x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase)
+            )
+            : player.Inventory
+                .FindAll(
+                    x => x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase)
+                )
+                .Skip(keyword.Item1 - 1)
+                .FirstOrDefault();
+    }
+
+    /// <summary>
+    /// Her / His
+    /// </summary>
+    /// <param name="gender"></param>
+    /// <returns></returns>
+    public static string ReturnPronoun(this Character character)
+    {
+        return character.Gender switch
+        {
+            "Female" => "her",
+            "Male" => "his",
+            _ => "their",
+        };
+    }
+
+    /// <summary>
+    /// She / He
+    /// </summary>
+    /// <param name="gender"></param>
+    /// <returns></returns>
+    public static string ReturnSubjectPronoun(this Character character)
+    {
+        return character.Gender switch
+        {
+            "Female" => "she",
+            "Male" => "he",
+            _ => "it",
+        };
+    }
+
+    /// <summary>
+    /// Her / Him
+    /// </summary>
+    /// <param name="gender"></param>
+    /// <returns></returns>
+    public static string ReturnObjectPronoun(this Character character)
+    {
+        return character.Gender switch
+        {
+            "Female" => "her",
+            "Male" => "him",
+            _ => "it",
+        };
+    }
+
+    public static bool IsCaster(this Character character)
+    {
+        return character.ClassName switch
+        {
+            "Mage" => true,
+            "Cleric" => true,
+            "Druid" => true,
+            _ => false,
+        };
+    }
+
+    public static bool CanSee(this Character character, Room room)
+    {
+        if (character.Affects.Blind)
+            return false;
+
+        if (room.IsLit)
+            return true;
+
+        if (character.Affects.DarkVision)
+            return true;
+
+        if (character.Equipped.Light != null)
+            return true;
+
+        foreach (var pc in room.Players)
+        {
+            if (pc.Equipped.Light != null)
+                return true;
+        }
+
+        if (room.Type is Room.RoomType.Underground or Room.RoomType.Inside)
+            return false;
+
+        return !Services.Instance.Time.IsNightTime();
+    }
+
+    public static void UpdateClientUI(this Player player)
+    {
+        //update UI
+        Services.Instance.UpdateClient.UpdateHP(player);
+        Services.Instance.UpdateClient.UpdateMana(player);
+        Services.Instance.UpdateClient.UpdateMoves(player);
+        Services.Instance.UpdateClient.UpdateScore(player);
+    }
+
+    public static void DeathCry(this Player target, Room room)
+    {
+        Services.Instance.Writer.WriteToOthersInRoom(
+            $"<p class='combat'>Your blood freezes as you hear {target.Name.ToLower()}'s death cry.</p>",
+            room,
+            target
+        );
+
+        // Exit checks
+        var rooms = new List<Room>();
+
+        if (room.Exits.NorthWest != null)
+        {
+            rooms.Add(
+                Services.Instance.Cache.GetRoom(
+                    $"{room.Exits.NorthWest.AreaId}{room.Exits.NorthWest.Coords.X}{room.Exits.NorthWest.Coords.Y}{room.Exits.NorthWest.Coords.Z}"
+                )
+            );
+        }
+
+        if (room.Exits.North != null)
+        {
+            rooms.Add(
+                Services.Instance.Cache.GetRoom(
+                    $"{room.Exits.North.AreaId}{room.Exits.North.Coords.X}{room.Exits.North.Coords.Y}{room.Exits.North.Coords.Z}"
+                )
+            );
+        }
+
+        if (room.Exits.NorthEast != null)
+        {
+            rooms.Add(
+                Services.Instance.Cache.GetRoom(
+                    $"{room.Exits.NorthEast.AreaId}{room.Exits.NorthEast.Coords.X}{room.Exits.NorthEast.Coords.Y}{room.Exits.NorthEast.Coords.Z}"
+                )
+            );
+        }
+
+        if (room.Exits.East != null)
+        {
+            rooms.Add(
+                Services.Instance.Cache.GetRoom(
+                    $"{room.Exits.East.AreaId}{room.Exits.East.Coords.X}{room.Exits.East.Coords.Y}{room.Exits.East.Coords.Z}"
+                )
+            );
+        }
+
+        if (room.Exits.SouthEast != null)
+        {
+            rooms.Add(
+                Services.Instance.Cache.GetRoom(
+                    $"{room.Exits.SouthEast.AreaId}{room.Exits.SouthEast.Coords.X}{room.Exits.SouthEast.Coords.Y}{room.Exits.SouthEast.Coords.Z}"
+                )
+            );
+        }
+
+        if (room.Exits.South != null)
+        {
+            rooms.Add(
+                Services.Instance.Cache.GetRoom(
+                    $"{room.Exits.South.AreaId}{room.Exits.South.Coords.X}{room.Exits.South.Coords.Y}{room.Exits.South.Coords.Z}"
+                )
+            );
+        }
+
+        if (room.Exits.SouthWest != null)
+        {
+            rooms.Add(
+                Services.Instance.Cache.GetRoom(
+                    $"{room.Exits.SouthWest.AreaId}{room.Exits.SouthWest.Coords.X}{room.Exits.SouthWest.Coords.Y}{room.Exits.SouthWest.Coords.Z}"
+                )
+            );
+        }
+
+        if (room.Exits.West != null)
+        {
+            rooms.Add(
+                Services.Instance.Cache.GetRoom(
+                    $"{room.Exits.West.AreaId}{room.Exits.West.Coords.X}{room.Exits.West.Coords.Y}{room.Exits.West.Coords.Z}"
+                )
+            );
+        }
+
+        if (room.Exits.Up != null)
+        {
+            rooms.Add(
+                Services.Instance.Cache.GetRoom(
+                    $"{room.Exits.Up.AreaId}{room.Exits.Up.Coords.X}{room.Exits.Up.Coords.Y}{room.Exits.Up.Coords.Z}"
+                )
+            );
+        }
+
+        if (room.Exits.Down != null)
+        {
+            rooms.Add(
+                Services.Instance.Cache.GetRoom(
+                    $"{room.Exits.Down.AreaId}{room.Exits.Down.Coords.X}{room.Exits.Down.Coords.Y}{room.Exits.Down.Coords.Z}"
+                )
+            );
+        }
+
+        foreach (var pc in rooms.SelectMany(adjacentRoom => adjacentRoom.Players))
+        {
+            Services.Instance.Writer.WriteLine(
+                $"<p>Your blood freezes as you hear someone's death cry.</p>",
+                pc.ConnectionId
+            );
+        }
+    }
+
+    public static void AddToCombat(this Player character)
+    {
+        if (!Services.Instance.Cache.IsCharInCombat(character.Id.ToString()))
+        {
+            Services.Instance.Cache.AddCharToCombat(character.Id.ToString(), character);
+        }
     }
 }

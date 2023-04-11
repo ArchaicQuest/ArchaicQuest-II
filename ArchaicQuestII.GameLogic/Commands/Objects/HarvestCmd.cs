@@ -247,14 +247,13 @@ public class HarvestCmd : ICommand
             return;
         }
 
-        if (!player.RollSkill(SkillName.Foraging))
+        if (!player.RollSkill(SkillName.Foraging, false))
         {
-            player.FailedSkill(SkillName.Foraging, out var message);
+            player.FailedSkill(SkillName.Foraging, true);
             Services.Instance.Writer.WriteLine(
                 "<p>You fail to harvest a thing.</p>",
                 player.ConnectionId
             );
-            Services.Instance.Writer.WriteLine(message, player.ConnectionId);
             player.Status = CharacterStatus.Status.Standing;
             return;
         }

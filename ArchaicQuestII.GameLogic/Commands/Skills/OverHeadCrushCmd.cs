@@ -74,9 +74,9 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             var textToTarget = string.Empty;
             var textToRoom = string.Empty;
 
-            var skillSuccess = SkillSuccessWithMessage(
-                player,
-                DefineSkill.OverheadCrush(),
+            var skillSuccess = player.RollSkill(
+                SkillName.OverheadCrush,
+                true,
                 $"You attempt to crush the skull of {target.Name} but miss."
             );
             if (!skillSuccess)
@@ -85,8 +85,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 textToRoom = $"{player.Name} tries to crush the skull of {target.Name} but misses.";
 
                 EmoteAction(textToTarget, textToRoom, target.Name, room, player);
-                player.FailedSkill(SkillName.OverheadCrush, out var message);
-                Services.Instance.Writer.WriteLine(message, player.ConnectionId);
+                player.FailedSkill(SkillName.OverheadCrush, true);
                 player.Lag += 1;
                 return;
             }

@@ -159,130 +159,6 @@ namespace ArchaicQuestII.GameLogic.Combat
             }
         }
 
-        public void DeathCry(Room room, Player target)
-        {
-            foreach (
-                var pc in room.Players.Where(
-                    pc => !pc.Name.Equals(target.Name, StringComparison.CurrentCultureIgnoreCase)
-                )
-            )
-            {
-                Services.Instance.Writer.WriteLine(
-                    $"<p class='combat'>Your blood freezes as you hear {target.Name.ToLower()}'s death cry.</p>",
-                    pc.ConnectionId
-                );
-            }
-
-            // Exit checks
-            var rooms = new List<Room>();
-
-            if (room.Exits.NorthWest != null)
-            {
-                rooms.Add(
-                    Services.Instance.Cache.GetRoom(
-                        $"{room.Exits.NorthWest.AreaId}{room.Exits.NorthWest.Coords.X}{room.Exits.NorthWest.Coords.Y}{room.Exits.NorthWest.Coords.Z}"
-                    )
-                );
-            }
-
-            if (room.Exits.North != null)
-            {
-                rooms.Add(
-                    Services.Instance.Cache.GetRoom(
-                        $"{room.Exits.North.AreaId}{room.Exits.North.Coords.X}{room.Exits.North.Coords.Y}{room.Exits.North.Coords.Z}"
-                    )
-                );
-            }
-
-            if (room.Exits.NorthEast != null)
-            {
-                rooms.Add(
-                    Services.Instance.Cache.GetRoom(
-                        $"{room.Exits.NorthEast.AreaId}{room.Exits.NorthEast.Coords.X}{room.Exits.NorthEast.Coords.Y}{room.Exits.NorthEast.Coords.Z}"
-                    )
-                );
-            }
-
-            if (room.Exits.East != null)
-            {
-                rooms.Add(
-                    Services.Instance.Cache.GetRoom(
-                        $"{room.Exits.East.AreaId}{room.Exits.East.Coords.X}{room.Exits.East.Coords.Y}{room.Exits.East.Coords.Z}"
-                    )
-                );
-            }
-
-            if (room.Exits.SouthEast != null)
-            {
-                rooms.Add(
-                    Services.Instance.Cache.GetRoom(
-                        $"{room.Exits.SouthEast.AreaId}{room.Exits.SouthEast.Coords.X}{room.Exits.SouthEast.Coords.Y}{room.Exits.SouthEast.Coords.Z}"
-                    )
-                );
-            }
-
-            if (room.Exits.South != null)
-            {
-                rooms.Add(
-                    Services.Instance.Cache.GetRoom(
-                        $"{room.Exits.South.AreaId}{room.Exits.South.Coords.X}{room.Exits.South.Coords.Y}{room.Exits.South.Coords.Z}"
-                    )
-                );
-            }
-
-            if (room.Exits.SouthWest != null)
-            {
-                rooms.Add(
-                    Services.Instance.Cache.GetRoom(
-                        $"{room.Exits.SouthWest.AreaId}{room.Exits.SouthWest.Coords.X}{room.Exits.SouthWest.Coords.Y}{room.Exits.SouthWest.Coords.Z}"
-                    )
-                );
-            }
-
-            if (room.Exits.West != null)
-            {
-                rooms.Add(
-                    Services.Instance.Cache.GetRoom(
-                        $"{room.Exits.West.AreaId}{room.Exits.West.Coords.X}{room.Exits.West.Coords.Y}{room.Exits.West.Coords.Z}"
-                    )
-                );
-            }
-
-            if (room.Exits.Up != null)
-            {
-                rooms.Add(
-                    Services.Instance.Cache.GetRoom(
-                        $"{room.Exits.Up.AreaId}{room.Exits.Up.Coords.X}{room.Exits.Up.Coords.Y}{room.Exits.Up.Coords.Z}"
-                    )
-                );
-            }
-
-            if (room.Exits.Down != null)
-            {
-                rooms.Add(
-                    Services.Instance.Cache.GetRoom(
-                        $"{room.Exits.Down.AreaId}{room.Exits.Down.Coords.X}{room.Exits.Down.Coords.Y}{room.Exits.Down.Coords.Z}"
-                    )
-                );
-            }
-
-            foreach (var pc in rooms.SelectMany(adjacentRoom => adjacentRoom.Players))
-            {
-                Services.Instance.Writer.WriteLine(
-                    $"<p>Your blood freezes as you hear someone's death cry.</p>",
-                    pc.ConnectionId
-                );
-            }
-        }
-
-        public void AddCharToCombat(Player character)
-        {
-            if (!Services.Instance.Cache.IsCharInCombat(character.Id.ToString()))
-            {
-                Services.Instance.Cache.AddCharToCombat(character.Id.ToString(), character);
-            }
-        }
-
         public void InitFightStatus(Player player, Player target)
         {
             player.Target = string.IsNullOrEmpty(player.Target) ? target.Name : player.Target;
@@ -460,12 +336,11 @@ namespace ArchaicQuestII.GameLogic.Combat
                         }
                         else
                         {
-                            player.FailedSkill(SkillName.Dodge, out var message);
+                            player.FailedSkill(SkillName.Dodge, true);
                             Services.Instance.Writer.WriteLine(
                                 $"<p>You fail to dodge {player.Name}'s attack.</p>",
                                 target.ConnectionId
                             );
-                            Services.Instance.Writer.WriteLine(message, player.ConnectionId);
                         }
                     }
 
@@ -519,22 +394,20 @@ namespace ArchaicQuestII.GameLogic.Combat
                             }
                             else
                             {
-                                player.FailedSkill(SkillName.Riposte, out var message);
+                                player.FailedSkill(SkillName.Riposte, true);
                                 Services.Instance.Writer.WriteLine(
                                     $"<p>You fail to riposte {player.Name}'s attack.</p>",
                                     target.ConnectionId
                                 );
-                                Services.Instance.Writer.WriteLine(message, player.ConnectionId);
                             }
                         }
                         else
                         {
-                            player.FailedSkill(SkillName.Parry, out var message);
+                            player.FailedSkill(SkillName.Parry, true);
                             Services.Instance.Writer.WriteLine(
                                 $"<p>You fail to parry {player.Name}'s attack.</p>",
                                 target.ConnectionId
                             );
-                            Services.Instance.Writer.WriteLine(message, player.ConnectionId);
                         }
                     }
 
@@ -569,12 +442,11 @@ namespace ArchaicQuestII.GameLogic.Combat
                         }
                         else
                         {
-                            player.FailedSkill(SkillName.ShieldBlock, out var message);
+                            player.FailedSkill(SkillName.ShieldBlock, true);
                             Services.Instance.Writer.WriteLine(
                                 $"<p>You fail to block {player.Name}'s attack.</p>",
                                 target.ConnectionId
                             );
-                            Services.Instance.Writer.WriteLine(message, player.ConnectionId);
                         }
                     }
 
@@ -661,8 +533,7 @@ namespace ArchaicQuestII.GameLogic.Combat
                             player.ConnectionId
                         );
 
-                        player.GainExperiencePoints(getWeaponSkill.Level * 50, out var message);
-                        Services.Instance.Writer.WriteLine(message, player.ConnectionId);
+                        player.GainExperiencePoints(getWeaponSkill.Level * 50, true);
                     }
                 }
 
@@ -879,8 +750,7 @@ namespace ArchaicQuestII.GameLogic.Combat
                                 player.ConnectionId
                             );
 
-                            player.GainExperiencePoints(getWeaponSkill.Level * 50, out var message);
-                            Services.Instance.Writer.WriteLine(message, player.ConnectionId);
+                            player.GainExperiencePoints(getWeaponSkill.Level * 50, true);
                         }
                     }
                 }
@@ -978,7 +848,7 @@ namespace ArchaicQuestII.GameLogic.Combat
             target.Status = CharacterStatus.Status.Ghost;
             target.Target = string.Empty;
 
-            DeathCry(room, target);
+            target.DeathCry(room);
 
             if (player.Grouped)
             {
@@ -998,8 +868,7 @@ namespace ArchaicQuestII.GameLogic.Combat
                 }
 
                 var exp = target.GetExpWorth() / (groupLeader.Followers.Count + 1);
-                groupLeader.GainExperiencePoints(exp, out var glmessage);
-                Services.Instance.Writer.WriteLine(glmessage, player.ConnectionId);
+                groupLeader.GainExperiencePoints(exp, true);
 
                 foreach (
                     var follower in groupLeader.Followers.Where(
@@ -1007,8 +876,7 @@ namespace ArchaicQuestII.GameLogic.Combat
                     )
                 )
                 {
-                    follower.GainExperiencePoints(exp, out var message);
-                    Services.Instance.Writer.WriteLine(message, follower.ConnectionId);
+                    follower.GainExperiencePoints(exp, true);
                     follower.Status = CharacterStatus.Status.Standing;
                     follower.Target = string.Empty;
                     Services.Instance.Cache.RemoveCharFromCombat(follower.Id.ToString());
@@ -1016,8 +884,7 @@ namespace ArchaicQuestII.GameLogic.Combat
             }
             else
             {
-                player.GainExperiencePoints(target, out var message);
-                Services.Instance.Writer.WriteLine(message, player.ConnectionId);
+                player.GainExperiencePoints(target, true);
             }
 
             _quest.IsQuestMob(player, target.Name);
@@ -1249,16 +1116,9 @@ namespace ArchaicQuestII.GameLogic.Combat
 
             foundSkill.Proficiency += increase;
 
-            player.GainExperiencePoints(100 * foundSkill.Level / 4, out _);
+            player.GainExperiencePoints(100 * foundSkill.Level / 4, true);
 
             Services.Instance.UpdateClient.UpdateExp(player);
-
-            Services.Instance.Writer.WriteLine(
-                $"<p class='improve'>You learn from your mistakes and gain {100 * foundSkill.Level / 4} experience points.</p>"
-                    + $"<p class='improve'>Your knowledge of {foundSkill.Name} increases by {increase}%.</p>",
-                player.ConnectionId,
-                0
-            );
 
             return false;
         }

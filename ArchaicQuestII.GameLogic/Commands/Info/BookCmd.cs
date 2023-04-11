@@ -157,7 +157,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
         private void OpenBook(Player player, Room room, string book)
         {
             var nthTarget = Helpers.findNth(book);
-            var item = Helpers.findObjectInInventory(nthTarget, player);
+            var item = player.FindObjectInInventory(nthTarget);
 
             if (item == null)
             {

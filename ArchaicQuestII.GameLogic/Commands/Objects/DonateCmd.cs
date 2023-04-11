@@ -87,7 +87,7 @@ Related help files: get, put, give, drop
 
         var nthTarget = Helpers.findNth(target);
 
-        var item = Helpers.findObjectInInventory(nthTarget, player);
+        var item = player.FindObjectInInventory(nthTarget);
 
         if (item == null)
         {

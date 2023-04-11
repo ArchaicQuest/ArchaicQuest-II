@@ -80,9 +80,9 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             var textToTarget = string.Empty;
             var textToRoom = string.Empty;
 
-            var skillSuccess = SkillSuccessWithMessage(
-                player,
-                DefineSkill.Charge(),
+            var skillSuccess = player.RollSkill(
+                SkillName.Charge,
+                true,
                 $"You attempt to charge at to {target.Name} but miss."
             );
             if (!skillSuccess)
@@ -91,8 +91,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 textToRoom = $"{player.Name} tries to charge at {target.Name} but misses.";
 
                 EmoteAction(textToTarget, textToRoom, target.Name, room, player);
-                player.FailedSkill(SkillName.Charge, out var message);
-                Services.Instance.Writer.WriteLine(message, player.ConnectionId);
+                player.FailedSkill(SkillName.Charge, true);
                 player.Lag += 1;
                 return;
             }

@@ -133,7 +133,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
                 player.ConnectionId
             );
 
-            if (player.RollSkill(SkillName.Crafting))
+            if (player.RollSkill(SkillName.Crafting, true))
             {
                 // use up materials
                 foreach (var material in recipe.CraftingMaterials)
@@ -272,9 +272,9 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
                     );
                 }
 
-                player.FailedSkill(SkillName.Crafting, out var message);
+                //TODO: Add await here - like cooking
 
-                Services.Instance.Writer.WriteLine(message, player.ConnectionId, 2120);
+                player.FailedSkill(SkillName.Crafting, true);
             }
         }
 

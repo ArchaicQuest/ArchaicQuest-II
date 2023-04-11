@@ -52,7 +52,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
             }
 
             var findNth = Helpers.findNth(target);
-            var food = Helpers.findObjectInInventory(findNth, player);
+            var food = player.FindObjectInInventory(findNth);
 
             if (food == null)
             {

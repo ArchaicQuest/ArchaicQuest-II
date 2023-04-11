@@ -13,29 +13,6 @@ namespace ArchaicQuestII.GameLogic.World.Room
 {
     public class RoomActions : IRoomActions
     {
-        public bool RoomIsDark(Player player, Room room)
-        {
-            if (room.IsLit)
-                return false;
-
-            if (player.Affects.DarkVision)
-                return false;
-
-            if (player.Equipped.Light != null)
-                return false;
-
-            foreach (var pc in room.Players)
-            {
-                if (pc.Equipped.Light != null)
-                    return false;
-            }
-
-            if (room.Type is Room.RoomType.Underground or Room.RoomType.Inside)
-                return true;
-
-            return Services.Instance.Time.IsNightTime();
-        }
-
         /// <summary>
         /// Helper to get area from room
         /// </summary>

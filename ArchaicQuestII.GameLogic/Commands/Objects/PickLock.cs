@@ -69,8 +69,7 @@ public class PickLockCmd : ICommand
         }
 
         var nthItem = Helpers.findNth(target);
-        var item =
-            Helpers.findRoomObject(nthItem, room) ?? Helpers.findObjectInInventory(nthItem, player);
+        var item = Helpers.findRoomObject(nthItem, room) ?? player.FindObjectInInventory(nthItem);
         var roomExit = Services.Instance.RoomActions.GetRoomExit(target, room);
 
         if (item == null)
@@ -127,8 +126,7 @@ public class PickLockCmd : ICommand
                 room,
                 player
             );
-            player.FailedSkill(SkillName.Lockpick, out var message);
-            Services.Instance.Writer.WriteLine(message, player.ConnectionId);
+            player.FailedSkill(SkillName.Lockpick, true);
             player.Status = CharacterStatus.Status.Standing;
         }
     }
@@ -174,8 +172,7 @@ public class PickLockCmd : ICommand
                 room,
                 player
             );
-            player.FailedSkill(SkillName.Lockpick, out var message);
-            Services.Instance.Writer.WriteLine(message, player.ConnectionId);
+            player.FailedSkill(SkillName.Lockpick, true);
             player.Status = CharacterStatus.Status.Standing;
         }
     }

@@ -388,7 +388,7 @@ namespace ArchaicQuestII.GameLogic.Core
                     player.ConnectionId
                 );
 
-                player.GainExperiencePoints(quest.ExpGain, out _);
+                player.GainExperiencePoints(quest.ExpGain, false);
                 player.Money.Gold = quest.GoldGain;
             }
 
@@ -399,10 +399,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public void GainXP(Player player, int xp)
         {
-            player.GainExperiencePoints(xp, out var message);
-            Services.Instance.Writer.WriteLine($"message", player.ConnectionId);
-            Services.Instance.UpdateClient.UpdateExp(player);
-            Services.Instance.UpdateClient.UpdateScore(player);
+            player.GainExperiencePoints(xp, true);
         }
 
         public void Sleep(int milliseconds)

@@ -50,7 +50,7 @@ public class QuaffCmd : ICommand
 
         var nthItem = Helpers.findNth(target);
         var foundItem =
-            Helpers.findRoomObject(nthItem, room) ?? Helpers.findObjectInInventory(nthItem, player);
+            Helpers.findRoomObject(nthItem, room) ?? player.FindObjectInInventory(nthItem);
 
         if (foundItem == null)
         {

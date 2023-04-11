@@ -61,9 +61,9 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             var textToTarget = string.Empty;
             var textToRoom = string.Empty;
 
-            var skillSuccess = SkillSuccessWithMessage(
-                player,
-                DefineSkill.Trip(),
+            var skillSuccess = player.RollSkill(
+                SkillName.Trip,
+                true,
                 $"You try to trip {target.Name} and miss."
             );
             if (!skillSuccess)
@@ -102,8 +102,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 textToTarget = $"{player.Name} tries to trip you but fails.";
 
                 EmoteAction(textToTarget, textToRoom, target.Name, room, player);
-                player.FailedSkill(SkillName.Trip, out var message);
-                Services.Instance.Writer.WriteLine(message, player.ConnectionId);
+                player.FailedSkill(SkillName.Trip, true);
             }
             updateCombat(player, target, room);
         }

@@ -60,7 +60,7 @@ public class UnlockCmd : ICommand
 
         var nthItem = Helpers.findNth(target);
         var objToUnlock =
-            Helpers.findRoomObject(nthItem, room) ?? Helpers.findObjectInInventory(nthItem, player);
+            Helpers.findRoomObject(nthItem, room) ?? player.FindObjectInInventory(nthItem);
 
         if (objToUnlock == null)
         {

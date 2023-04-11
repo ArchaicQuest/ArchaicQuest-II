@@ -62,9 +62,9 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             var textToTarget = string.Empty;
             var textToRoom = string.Empty;
 
-            var skillSuccess = SkillSuccessWithMessage(
-                player,
-                DefineSkill.Headbutt(),
+            var skillSuccess = player.RollSkill(
+                SkillName.Headbutt,
+                true,
                 $"You try to headbutt {target.Name} but miss."
             );
             if (!skillSuccess)
@@ -73,8 +73,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 textToRoom = $"{player.Name} tries to headbutt {target.Name}.";
 
                 EmoteAction(textToTarget, textToRoom, target.Name, room, player);
-                player.FailedSkill(SkillName.Headbutt, out var message);
-                Services.Instance.Writer.WriteLine(message, player.ConnectionId);
+                player.FailedSkill(SkillName.Headbutt, true);
                 player.Lag += 1;
                 return;
             }

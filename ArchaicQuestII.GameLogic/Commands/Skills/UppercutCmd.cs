@@ -62,9 +62,9 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             var textToTarget = string.Empty;
             var textToRoom = string.Empty;
 
-            var skillSuccess = SkillSuccessWithMessage(
-                player,
-                DefineSkill.Stab(),
+            var skillSuccess = player.RollSkill(
+                SkillName.UpperCut,
+                true,
                 $"You attempt to uppercut {target.Name} but miss."
             );
             if (!skillSuccess)
@@ -73,8 +73,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 textToRoom = $"{player.Name} tries to uppercut {target.Name} but misses.";
 
                 EmoteAction(textToTarget, textToRoom, target.Name, room, player);
-                player.FailedSkill(SkillName.UpperCut, out var message);
-                Services.Instance.Writer.WriteLine(message, player.ConnectionId);
+                player.FailedSkill(SkillName.UpperCut, true);
                 player.Lag += 1;
                 return;
             }

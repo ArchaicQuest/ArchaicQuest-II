@@ -82,11 +82,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
             foundSkill.Proficiency += increase;
 
-            player.FailedSkill(SkillName.Haggle, out var message);
-
-            Services.Instance.UpdateClient.UpdateExp(player);
-
-            Services.Instance.Writer.WriteLine(message, player.ConnectionId);
+            player.FailedSkill(SkillName.Haggle, true);
 
             return 0;
         }
@@ -168,8 +164,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
             var nthTarget = Helpers.findNth(obj);
             var item =
-                Helpers.findRoomObject(nthTarget, room)
-                ?? Helpers.findObjectInInventory(nthTarget, player);
+                Helpers.findRoomObject(nthTarget, room) ?? player.FindObjectInInventory(nthTarget);
             // only lore items that can be picked up
             if (item.Stuck)
             {

@@ -50,8 +50,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
             var findNth = Helpers.findNth(target);
             var drink =
-                Helpers.findObjectInInventory(findNth, player)
-                ?? Helpers.findRoomObject(findNth, room);
+                player.FindObjectInInventory(findNth) ?? Helpers.findRoomObject(findNth, room);
 
             if (drink == null)
             {

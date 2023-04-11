@@ -272,14 +272,9 @@ public class ChopCmd : ICommand
             return;
         }
 
-        if (!player.RollSkill(SkillName.Foraging))
+        if (!player.RollSkill(SkillName.Foraging, true))
         {
-            player.FailedSkill(SkillName.Foraging, out var message);
-            Services.Instance.Writer.WriteLine(
-                "<p>You fail to chop a thing.</p>",
-                player.ConnectionId
-            );
-            Services.Instance.Writer.WriteLine(message, player.ConnectionId);
+            player.FailedSkill(SkillName.Foraging, true);
             player.Status = CharacterStatus.Status.Standing;
             return;
         }

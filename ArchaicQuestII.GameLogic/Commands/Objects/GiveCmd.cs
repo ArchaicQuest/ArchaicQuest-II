@@ -107,7 +107,7 @@ Related help files: get, put, give, drop
             return;
         }
 
-        var item = Helpers.findObjectInInventory(nthItem, player);
+        var item = player.FindObjectInInventory(nthItem);
 
         if (item == null)
         {

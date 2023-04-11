@@ -594,7 +594,7 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
                         player.ConnectionId
                     );
                     EmitWearActionToRoom(
-                        $"{itemToWear.Name.ToLower()} on {Helpers.GetPronoun(player.Gender)} arms.",
+                        $"{itemToWear.Name.ToLower()} on {player.ReturnPronoun()} arms.",
                         room,
                         player
                     );
@@ -610,7 +610,7 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
                         player.ConnectionId
                     );
                     EmitWearActionToRoom(
-                        $"{itemToWear.Name.ToLower()} about {Helpers.GetPronoun(player.Gender)} body.",
+                        $"{itemToWear.Name.ToLower()} about {player.ReturnPronoun()} body.",
                         room,
                         player
                     );
@@ -628,7 +628,7 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
                         player.ConnectionId
                     );
                     EmitWearActionToRoom(
-                        $"{itemToWear.Name.ToLower()} on {Helpers.GetPronoun(player.Gender)} face.",
+                        $"{itemToWear.Name.ToLower()} on {player.ReturnPronoun()} face.",
                         room,
                         player
                     );
@@ -646,7 +646,7 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
                         player.ConnectionId
                     );
                     EmitWearActionToRoom(
-                        $"{itemToWear.Name.ToLower()} on {Helpers.GetPronoun(player.Gender)} feet.",
+                        $"{itemToWear.Name.ToLower()} on {player.ReturnPronoun()} feet.",
                         room,
                         player
                     );
@@ -664,7 +664,7 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
                         player.ConnectionId
                     );
                     EmitWearActionToRoom(
-                        $"{itemToWear.Name.ToLower()} on {Helpers.GetPronoun(player.Gender)} finger.",
+                        $"{itemToWear.Name.ToLower()} on {player.ReturnPronoun()} finger.",
                         room,
                         player
                     );
@@ -682,7 +682,7 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
                         player.ConnectionId
                     );
                     EmitWearActionToRoom(
-                        $"{itemToWear.Name.ToLower()} to float around {Helpers.GetPronoun(player.Gender)}.",
+                        $"{itemToWear.Name.ToLower()} to float around {player.ReturnPronoun()}.",
                         room,
                         player
                     );
@@ -700,7 +700,7 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
                         player.ConnectionId
                     );
                     EmitWearActionToRoom(
-                        $"{itemToWear.Name.ToLower()} on {Helpers.GetPronoun(player.Gender)} hands.",
+                        $"{itemToWear.Name.ToLower()} on {player.ReturnPronoun()} hands.",
                         room,
                         player
                     );
@@ -718,7 +718,7 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
                         player.ConnectionId
                     );
                     EmitWearActionToRoom(
-                        $"{itemToWear.Name.ToLower()} on {Helpers.GetPronoun(player.Gender)} head.",
+                        $"{itemToWear.Name.ToLower()} on {player.ReturnPronoun()} head.",
                         room,
                         player
                     );
@@ -735,7 +735,7 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
                         player.ConnectionId
                     );
                     EmitWearActionToRoom(
-                        $"{itemToWear.Name.ToLower()} in {Helpers.GetPronoun(player.Gender)} hands.",
+                        $"{itemToWear.Name.ToLower()} in {player.ReturnPronoun()} hands.",
                         room,
                         player
                     );
@@ -752,7 +752,7 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
                         player.ConnectionId
                     );
                     EmitWearActionToRoom(
-                        $"{itemToWear.Name.ToLower()} on {Helpers.GetPronoun(player.Gender)} legs.",
+                        $"{itemToWear.Name.ToLower()} on {player.ReturnPronoun()} legs.",
                         room,
                         player
                     );
@@ -770,7 +770,7 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
                         player.ConnectionId
                     );
                     EmitWearActionToRoom(
-                        $"{itemToWear.Name.ToLower()} as {Helpers.GetPronoun(player.Gender)} light.",
+                        $"{itemToWear.Name.ToLower()} as {player.ReturnPronoun()} light.",
                         room,
                         player
                     );
@@ -788,7 +788,7 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
                         player.ConnectionId
                     );
                     EmitWearActionToRoom(
-                        $"{itemToWear.Name.ToLower()} around {Helpers.GetPronoun(player.Gender)} neck.",
+                        $"{itemToWear.Name.ToLower()} around {player.ReturnPronoun()} neck.",
                         room,
                         player
                     );
@@ -820,7 +820,7 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
                         player.ConnectionId
                     );
                     EmitWearActionToRoom(
-                        $"{itemToWear.Name.ToLower()} as {Helpers.GetPronoun(player.Gender)} shield.",
+                        $"{itemToWear.Name.ToLower()} as {player.ReturnPronoun()} shield.",
                         room,
                         player
                     );
@@ -838,7 +838,7 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
                         player.ConnectionId
                     );
                     EmitWearActionToRoom(
-                        $"{itemToWear.Name.ToLower()} around {Helpers.GetPronoun(player.Gender)} torso.",
+                        $"{itemToWear.Name.ToLower()} around {player.ReturnPronoun()} torso.",
                         room,
                         player
                     );
@@ -856,7 +856,7 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
                         player.ConnectionId
                     );
                     EmitWearActionToRoom(
-                        $"{itemToWear.Name.ToLower()} around {Helpers.GetPronoun(player.Gender)} waist.",
+                        $"{itemToWear.Name.ToLower()} around {player.ReturnPronoun()} waist.",
                         room,
                         player
                     );
@@ -898,7 +898,7 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
                         player.ConnectionId
                     );
                     EmitWearActionToRoom(
-                        $"{itemToWear.Name.ToLower()} on {Helpers.GetPronoun(player.Gender)} wrist.",
+                        $"{itemToWear.Name.ToLower()} on {player.ReturnPronoun()} wrist.",
                         room,
                         player
                     );
@@ -916,7 +916,7 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
                         player.ConnectionId
                     );
                     EmitWearActionToRoom(
-                        $"{itemToWear.Name.ToLower()} as {Helpers.GetPronoun(player.Gender)} secondary weapon.",
+                        $"{itemToWear.Name.ToLower()} as {player.ReturnPronoun()} secondary weapon.",
                         room,
                         player
                     );

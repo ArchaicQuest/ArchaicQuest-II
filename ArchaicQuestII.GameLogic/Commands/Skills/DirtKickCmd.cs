@@ -70,7 +70,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             var textToTarget = string.Empty;
             var textToRoom = string.Empty;
             if (
-                SkillSuccess(player, DefineSkill.DirtKick())
+                player.RollSkill(SkillName.DirtKick, true)
                 && DexterityAndLevelCheck(player, target) == true
             )
             {
@@ -109,8 +109,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 textToRoom = $"{player.Name} tries to kicks dirt into {target.Name}'s eyes!";
 
                 EmoteAction(textToTarget, textToRoom, target.Name, room, player);
-                player.FailedSkill(SkillName.DirtKick, out var message);
-                Services.Instance.Writer.WriteLine(message, player.ConnectionId);
+                player.FailedSkill(SkillName.DirtKick, true);
             }
 
             player.Lag += 1;

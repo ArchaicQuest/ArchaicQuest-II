@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Skill.Enum;
@@ -42,12 +40,6 @@ public abstract class SkillCore
         return setTarget;
     }
 
-    public bool HasSkill(Player player, SkillName skill)
-    {
-        return player.Skills.FirstOrDefault(x => x.Name == skill && x.Level <= player.Level)
-            != null;
-    }
-
     public Player findTarget(Player player, string target, Room room, bool murder)
     {
         return Services.Instance.Combat.FindTarget(player, target, room, murder);
@@ -77,214 +69,6 @@ public abstract class SkillCore
         newString = str.Replace("#target#", player.Name);
 
         return newString;
-    }
-
-    /*
-     * Message for when attribute is full
-     * message for player
-     * message for target
-     * message for room
-     *
-     */
-
-    public bool AffectPlayerAttributes(
-        string spellName,
-        EffectLocation attribute,
-        int value,
-        Player player,
-        Player target,
-        Room room,
-        string noAffect
-    )
-    {
-        if (
-            (
-                attribute == EffectLocation.Hitpoints
-                || attribute == EffectLocation.Mana
-                || attribute == EffectLocation.Moves
-            )
-            && target.Attributes.Attribute[attribute] == target.MaxAttributes.Attribute[attribute]
-        )
-        {
-            Services.Instance.Writer.WriteLine(
-                ReplacePlaceholders(noAffect, target, false),
-                player.ConnectionId
-            );
-            return false;
-        }
-
-        target.Attributes.Attribute[attribute] += value;
-
-        if (
-            (
-                attribute == EffectLocation.Hitpoints
-                || attribute == EffectLocation.Mana
-                || attribute == EffectLocation.Moves
-            )
-            && target.Attributes.Attribute[attribute] > target.MaxAttributes.Attribute[attribute]
-        )
-        {
-            target.Attributes.Attribute[attribute] = target.MaxAttributes.Attribute[attribute];
-        }
-
-        return true;
-    }
-
-    /// <summary>
-    /// Adds affects to player
-    /// Bless
-    /// HitRoll +10
-    /// DamRoll + 5
-    /// </summary>
-    /// <param name="spellAffects"></param>
-    /// <param name="player"></param>
-    /// <param name="target"></param>
-    /// <param name="room"></param>
-    public void AddAffectToPlayer(
-        List<Affect> spellAffects,
-        Player player,
-        Player target,
-        Room room
-    )
-    {
-        foreach (var affects in spellAffects)
-        {
-            var hasEffect = target.Affects.Custom.FirstOrDefault(x => x.Name.Equals(affects.Name));
-            if (hasEffect != null)
-            {
-                hasEffect.Duration = affects.Duration;
-            }
-            else
-            {
-                target.Affects.Custom.Add(
-                    new Affect()
-                    {
-                        Modifier = affects.Modifier,
-                        Benefits = affects.Benefits,
-                        Affects = affects.Affects,
-                        Duration =
-                            player.Level
-                            + player.Attributes.Attribute[EffectLocation.Intelligence] / 2,
-                        Name = affects.Name
-                    }
-                );
-
-                if (affects.Affects == DefineSpell.SpellAffect.Blind)
-                {
-                    target.Affects.Blind = true;
-                }
-
-                //apply affects to target
-                if (affects.Modifier.Strength != 0)
-                {
-                    target.Attributes.Attribute[EffectLocation.Strength] += affects
-                        .Modifier
-                        .Strength;
-                }
-
-                if (affects.Modifier.Dexterity != 0)
-                {
-                    target.Attributes.Attribute[EffectLocation.Dexterity] += affects
-                        .Modifier
-                        .Dexterity;
-                }
-
-                if (affects.Modifier.Charisma != 0)
-                {
-                    target.Attributes.Attribute[EffectLocation.Charisma] += affects
-                        .Modifier
-                        .Charisma;
-                }
-
-                if (affects.Modifier.Constitution != 0)
-                {
-                    target.Attributes.Attribute[EffectLocation.Constitution] += affects
-                        .Modifier
-                        .Constitution;
-                }
-
-                if (affects.Modifier.Intelligence != 0)
-                {
-                    target.Attributes.Attribute[EffectLocation.Intelligence] += affects
-                        .Modifier
-                        .Intelligence;
-                }
-
-                if (affects.Modifier.Wisdom != 0)
-                {
-                    target.Attributes.Attribute[EffectLocation.Wisdom] += affects.Modifier.Wisdom;
-                }
-
-                if (affects.Modifier.DamRoll != 0)
-                {
-                    target.Attributes.Attribute[EffectLocation.DamageRoll] += affects
-                        .Modifier
-                        .DamRoll;
-                }
-
-                if (affects.Modifier.HitRoll != 0)
-                {
-                    target.Attributes.Attribute[EffectLocation.HitRoll] += affects.Modifier.HitRoll;
-                }
-
-                if (affects.Modifier.HP != 0)
-                {
-                    target.Attributes.Attribute[EffectLocation.Hitpoints] += affects.Modifier.HP;
-
-                    if (
-                        target.Attributes.Attribute[EffectLocation.Hitpoints]
-                        > target.MaxAttributes.Attribute[EffectLocation.Hitpoints]
-                    )
-                    {
-                        target.Attributes.Attribute[EffectLocation.Hitpoints] = target
-                            .MaxAttributes
-                            .Attribute[EffectLocation.Hitpoints];
-                    }
-                }
-
-                if (affects.Modifier.Mana != 0)
-                {
-                    target.Attributes.Attribute[EffectLocation.Mana] += affects.Modifier.Mana;
-
-                    if (
-                        target.Attributes.Attribute[EffectLocation.Mana]
-                        > target.MaxAttributes.Attribute[EffectLocation.Mana]
-                    )
-                    {
-                        target.Attributes.Attribute[EffectLocation.Mana] = target
-                            .MaxAttributes
-                            .Attribute[EffectLocation.Mana];
-                    }
-                }
-
-                if (affects.Modifier.Moves != 0)
-                {
-                    target.Attributes.Attribute[EffectLocation.Moves] += affects.Modifier.Moves;
-
-                    if (
-                        target.Attributes.Attribute[EffectLocation.Moves]
-                        > target.MaxAttributes.Attribute[EffectLocation.Moves]
-                    )
-                    {
-                        target.Attributes.Attribute[EffectLocation.Moves] = target
-                            .MaxAttributes
-                            .Attribute[EffectLocation.Moves];
-                    }
-                }
-            }
-        }
-
-        Services.Instance.UpdateClient.UpdateAffects(target);
-        Services.Instance.UpdateClient.UpdateScore(target);
-    }
-
-    public void UpdateClientUI(Player player)
-    {
-        //update UI
-        Services.Instance.UpdateClient.UpdateHP(player);
-        Services.Instance.UpdateClient.UpdateMana(player);
-        Services.Instance.UpdateClient.UpdateMoves(player);
-        Services.Instance.UpdateClient.UpdateScore(player);
     }
 
     /// <summary>
@@ -423,8 +207,8 @@ public abstract class SkillCore
             //update UI
             Services.Instance.UpdateClient.UpdateHP(target);
 
-            Services.Instance.Combat.AddCharToCombat(target);
-            Services.Instance.Combat.AddCharToCombat(player);
+            target.AddToCombat();
+            player.AddToCombat();
         }
     }
 
@@ -457,8 +241,7 @@ public abstract class SkillCore
     public Item.Item FindItem(string obj, Room room, Player player)
     {
         var nthTarget = Helpers.findNth(obj);
-        return Helpers.findRoomObject(nthTarget, room)
-            ?? Helpers.findObjectInInventory(nthTarget, player);
+        return Helpers.findRoomObject(nthTarget, room) ?? player.FindObjectInInventory(nthTarget);
     }
 
     protected bool CanPerformSkill(Skill.Model.Skill skill, Player player)
@@ -499,64 +282,6 @@ public abstract class SkillCore
         }
 
         return true;
-    }
-
-    /// <summary>
-    /// Checks if skill is success or not and displays a generic error or a custom one
-    /// </summary>
-    /// <param name="player"></param>
-    /// <param name="skill"></param>
-    /// <param name="customErrorText"></param>
-    /// <returns></returns>
-    public bool SkillSuccessWithMessage(
-        Player player,
-        Skill.Model.Skill skill,
-        string customErrorText = ""
-    )
-    {
-        var playerSkillProficiency = player.Skills
-            .FirstOrDefault(x => x.Name.Equals(skill.Name))
-            ?.Proficiency;
-        var success = DiceBag.Roll(1, 1, 100);
-
-        if (success == 1)
-        {
-            var errorText =
-                skill.ManaCost > 0
-                    ? $"<p>You tried to cast {skill.Name} but failed miserably.</p>"
-                    : $"<p>You tried to {skill.Name} but failed miserably.</p>";
-
-            Services.Instance.Writer.WriteLine(errorText, player.ConnectionId);
-            return false;
-        }
-
-        if (playerSkillProficiency <= success)
-        {
-            var failedSkillMessage = customErrorText ?? $"<p>You try to {skill.Name} but fail.</p>";
-
-            var errorText =
-                skill.ManaCost > 0 ? $"<p>You lost concentration.</p>" : failedSkillMessage;
-
-            Services.Instance.Writer.WriteLine(errorText, player.ConnectionId);
-            return false;
-        }
-
-        return true;
-    }
-
-    public bool SkillSuccess(Player player, Skill.Model.Skill skill)
-    {
-        var playerSkillProficiency = player.Skills
-            .FirstOrDefault(x => x.Name.Equals(skill.Name))
-            ?.Proficiency;
-        var success = DiceBag.Roll(1, 1, 100);
-
-        if (success == 1)
-        {
-            return false;
-        }
-
-        return !(playerSkillProficiency <= success);
     }
 }
 

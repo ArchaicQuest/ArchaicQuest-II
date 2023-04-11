@@ -55,9 +55,7 @@ public class ExamineCmd : ICommand
 
         var nthTarget = Helpers.findNth(target);
         var item =
-            Helpers.findRoomObject(nthTarget, room)
-            ?? Helpers.findObjectInInventory(nthTarget, player);
-        var isDark = Services.Instance.RoomActions.RoomIsDark(player, room);
+            Helpers.findRoomObject(nthTarget, room) ?? player.FindObjectInInventory(nthTarget);
 
         if (item == null && room.RoomObjects.Count >= 1 && room.RoomObjects[0].Name != null)
         {
@@ -66,7 +64,7 @@ public class ExamineCmd : ICommand
             );
 
             Services.Instance.Writer.WriteLine(
-                $"<p class='{(isDark ? "room-dark" : "")}'>{roomObjects.Examine ?? roomObjects.Look}",
+                $"<p class='{(!player.CanSee(room) ? "room-dark" : "")}'>{roomObjects.Examine ?? roomObjects.Look}",
                 player.ConnectionId
             );
 
@@ -85,7 +83,7 @@ public class ExamineCmd : ICommand
                 : item.Description.Exam;
 
         Services.Instance.Writer.WriteLine(
-            $"<p class='{(isDark ? "room-dark" : "")}'>{examMessage}",
+            $"<p class='{(!player.CanSee(room) ? "room-dark" : "")}'>{examMessage}",
             player.ConnectionId
         );
         Services.Instance.Writer.WriteToOthersInRoom(

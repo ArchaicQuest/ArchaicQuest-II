@@ -51,8 +51,7 @@ public class SmellCmd : ICommand
 
         var nthTarget = Helpers.findNth(target);
         var item =
-            Helpers.findRoomObject(nthTarget, room)
-            ?? Helpers.findObjectInInventory(nthTarget, player);
+            Helpers.findRoomObject(nthTarget, room) ?? player.FindObjectInInventory(nthTarget);
 
         if (item == null)
         {
@@ -60,10 +59,8 @@ public class SmellCmd : ICommand
             return;
         }
 
-        var isDark = Services.Instance.RoomActions.RoomIsDark(player, room);
-
         Services.Instance.Writer.WriteLine(
-            $"<p class='{(isDark ? "room-dark" : "")}'>{item.Description.Smell}",
+            $"<p class='{(!player.CanSee(room) ? "room-dark" : "")}'>{item.Description.Smell}",
             player.ConnectionId
         );
         Services.Instance.Writer.WriteToOthersInRoom(

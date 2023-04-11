@@ -70,9 +70,9 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             var textToTarget = string.Empty;
             var textToRoom = string.Empty;
 
-            var skillSuccess = SkillSuccessWithMessage(
-                player,
-                DefineSkill.Impale(),
+            var skillSuccess = player.RollSkill(
+                SkillName.Impale,
+                true,
                 $"You attempt to impale {target.Name} but miss."
             );
             if (!skillSuccess)
@@ -83,8 +83,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                     $"{player.Name} tries to impale {target.Name} with {player.Equipped.Wielded.Name.ToLower()} but misses.";
 
                 EmoteAction(textToTarget, textToRoom, target.Name, room, player);
-                player.FailedSkill(SkillName.Impale, out var message);
-                Services.Instance.Writer.WriteLine(message, player.ConnectionId);
+                player.FailedSkill(SkillName.Impale, true);
                 player.Lag += 1;
                 return;
             }

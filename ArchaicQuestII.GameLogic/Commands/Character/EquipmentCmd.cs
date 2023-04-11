@@ -784,7 +784,7 @@ hold potion
                         player.ConnectionId
                     );
                     Services.Instance.Writer.WriteToOthersInRoom(
-                        $"<p>{player.Name} equips {itemToWear.Name.ToLower()} on {Helpers.GetPronoun(player.Gender)} arms.</p>",
+                        $"<p>{player.Name} equips {itemToWear.Name.ToLower()} on {player.ReturnPronoun()} arms.</p>",
                         room,
                         player
                     );
@@ -800,7 +800,7 @@ hold potion
                         player.ConnectionId
                     );
                     Services.Instance.Writer.WriteToOthersInRoom(
-                        $"<p>{player.Name} equips {itemToWear.Name.ToLower()} about {Helpers.GetPronoun(player.Gender)} body.",
+                        $"<p>{player.Name} equips {itemToWear.Name.ToLower()} about {player.ReturnPronoun()} body.",
                         room,
                         player
                     );
@@ -818,7 +818,7 @@ hold potion
                         player.ConnectionId
                     );
                     Services.Instance.Writer.WriteToOthersInRoom(
-                        $"<p>{player.Name} equips {itemToWear.Name.ToLower()} on {Helpers.GetPronoun(player.Gender)} face.",
+                        $"<p>{player.Name} equips {itemToWear.Name.ToLower()} on {player.ReturnPronoun()} face.",
                         room,
                         player
                     );
@@ -836,7 +836,7 @@ hold potion
                         player.ConnectionId
                     );
                     Services.Instance.Writer.WriteToOthersInRoom(
-                        $"<p>{player.Name} equips {itemToWear.Name.ToLower()} on {Helpers.GetPronoun(player.Gender)} feet.",
+                        $"<p>{player.Name} equips {itemToWear.Name.ToLower()} on {player.ReturnPronoun()} feet.",
                         room,
                         player
                     );
@@ -862,7 +862,7 @@ hold potion
                         player.ConnectionId
                     );
                     Services.Instance.Writer.WriteToOthersInRoom(
-                        $"<p>{player.Name} equips {itemToWear.Name.ToLower()} on {Helpers.GetPronoun(player.Gender)} finger.",
+                        $"<p>{player.Name} equips {itemToWear.Name.ToLower()} on {player.ReturnPronoun()} finger.",
                         room,
                         player
                     );
@@ -880,7 +880,7 @@ hold potion
                         player.ConnectionId
                     );
                     Services.Instance.Writer.WriteToOthersInRoom(
-                        $"<p>{player.Name} equips {itemToWear.Name.ToLower()} to float around {Helpers.GetPronoun(player.Gender)}.",
+                        $"<p>{player.Name} equips {itemToWear.Name.ToLower()} to float around {player.ReturnPronoun()}.",
                         room,
                         player
                     );
@@ -898,7 +898,7 @@ hold potion
                         player.ConnectionId
                     );
                     Services.Instance.Writer.WriteToOthersInRoom(
-                        $"<p>{player.Name} equips {itemToWear.Name.ToLower()} on {Helpers.GetPronoun(player.Gender)} hands.",
+                        $"<p>{player.Name} equips {itemToWear.Name.ToLower()} on {player.ReturnPronoun()} hands.",
                         room,
                         player
                     );
@@ -916,7 +916,7 @@ hold potion
                         player.ConnectionId
                     );
                     Services.Instance.Writer.WriteToOthersInRoom(
-                        $"<p>{player.Name} equips {itemToWear.Name.ToLower()} on {Helpers.GetPronoun(player.Gender)} head.",
+                        $"<p>{player.Name} equips {itemToWear.Name.ToLower()} on {player.ReturnPronoun()} head.",
                         room,
                         player
                     );
@@ -933,7 +933,7 @@ hold potion
                         player.ConnectionId
                     );
                     Services.Instance.Writer.WriteToOthersInRoom(
-                        $"<p>{player.Name} equips {itemToWear.Name.ToLower()} in {Helpers.GetPronoun(player.Gender)} hands.",
+                        $"<p>{player.Name} equips {itemToWear.Name.ToLower()} in {player.ReturnPronoun()} hands.",
                         room,
                         player
                     );
@@ -950,7 +950,7 @@ hold potion
                         player.ConnectionId
                     );
                     Services.Instance.Writer.WriteToOthersInRoom(
-                        $"<p>{player.Name} equips {itemToWear.Name.ToLower()} on {Helpers.GetPronoun(player.Gender)} legs.",
+                        $"<p>{player.Name} equips {itemToWear.Name.ToLower()} on {player.ReturnPronoun()} legs.",
                         room,
                         player
                     );
@@ -968,7 +968,7 @@ hold potion
                         player.ConnectionId
                     );
                     Services.Instance.Writer.WriteToOthersInRoom(
-                        $"<p>{player.Name} equips {itemToWear.Name.ToLower()} as {Helpers.GetPronoun(player.Gender)} light.",
+                        $"<p>{player.Name} equips {itemToWear.Name.ToLower()} as {player.ReturnPronoun()} light.",
                         room,
                         player
                     );
@@ -994,7 +994,7 @@ hold potion
                         player.ConnectionId
                     );
                     Services.Instance.Writer.WriteToOthersInRoom(
-                        $"<p>{player.Name} equips {itemToWear.Name.ToLower()} around {Helpers.GetPronoun(player.Gender)} neck.",
+                        $"<p>{player.Name} equips {itemToWear.Name.ToLower()} around {player.ReturnPronoun()} neck.",
                         room,
                         player
                     );
@@ -1026,7 +1026,7 @@ hold potion
                         player.ConnectionId
                     );
                     Services.Instance.Writer.WriteToOthersInRoom(
-                        $"<p>{player.Name} equips {itemToWear.Name.ToLower()} as {Helpers.GetPronoun(player.Gender)} shield.",
+                        $"<p>{player.Name} equips {itemToWear.Name.ToLower()} as {player.ReturnPronoun()} shield.",
                         room,
                         player
                     );
@@ -1044,7 +1044,7 @@ hold potion
                         player.ConnectionId
                     );
                     Services.Instance.Writer.WriteToOthersInRoom(
-                        $"<p>{player.Name} equips {itemToWear.Name.ToLower()} around {Helpers.GetPronoun(player.Gender)} torso.",
+                        $"<p>{player.Name} equips {itemToWear.Name.ToLower()} around {player.ReturnPronoun()} torso.",
                         room,
                         player
                     );
@@ -1062,7 +1062,7 @@ hold potion
                         player.ConnectionId
                     );
                     Services.Instance.Writer.WriteToOthersInRoom(
-                        $"<p>{player.Name} equips {itemToWear.Name.ToLower()} around {Helpers.GetPronoun(player.Gender)} waist.",
+                        $"<p>{player.Name} equips {itemToWear.Name.ToLower()} around {player.ReturnPronoun()} waist.",
                         room,
                         player
                     );
@@ -1116,7 +1116,7 @@ hold potion
                         player.ConnectionId
                     );
                     Services.Instance.Writer.WriteToOthersInRoom(
-                        $"<p>{player.Name} equips {itemToWear.Name.ToLower()} on {Helpers.GetPronoun(player.Gender)} wrist.",
+                        $"<p>{player.Name} equips {itemToWear.Name.ToLower()} on {player.ReturnPronoun()} wrist.",
                         room,
                         player
                     );
@@ -1134,7 +1134,7 @@ hold potion
                         player.ConnectionId
                     );
                     Services.Instance.Writer.WriteToOthersInRoom(
-                        $"<p>{player.Name} equips {itemToWear.Name.ToLower()} as {Helpers.GetPronoun(player.Gender)} secondary weapon.",
+                        $"<p>{player.Name} equips {itemToWear.Name.ToLower()} as {player.ReturnPronoun()} secondary weapon.",
                         room,
                         player
                     );

@@ -40,8 +40,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 return;
             }
 
-            var skillSuccess = SkillSuccessWithMessage(player, DefineSkill.Lore());
-            if (!skillSuccess)
+            if (!player.RollSkill(SkillName.Lore, true))
             {
                 return;
             }

@@ -61,8 +61,7 @@ public class OpenCmd : ICommand
         }
 
         var nthItem = Helpers.findNth(target);
-        var item =
-            Helpers.findRoomObject(nthItem, room) ?? Helpers.findObjectInInventory(nthItem, player);
+        var item = Helpers.findRoomObject(nthItem, room) ?? player.FindObjectInInventory(nthItem);
         var isExit = Helpers.IsExit(target, room);
 
         if (isExit != null)

@@ -258,14 +258,13 @@ public class FishCmd : ICommand
             return;
         }
 
-        if (!player.RollSkill(SkillName.Fishing))
+        if (!player.RollSkill(SkillName.Fishing, false))
         {
-            player.FailedSkill(SkillName.Fishing, out var message);
+            player.FailedSkill(SkillName.Fishing, true);
             Services.Instance.Writer.WriteLine(
                 "<p>You fail to catch any fish.</p>",
                 player.ConnectionId
             );
-            Services.Instance.Writer.WriteLine(message, player.ConnectionId);
             player.Status = CharacterStatus.Status.Standing;
             return;
         }
