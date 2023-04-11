@@ -135,7 +135,7 @@ namespace ArchaicQuestII.GameLogic.Character
         public int ExperienceToNextLevel { get; set; } = 1000;
 
         [JsonProperty("equipped")]
-        public Equipment.Equipment Equipped { get; set; } = new Equipment.Equipment();
+        public Equipment Equipped { get; set; } = new Equipment();
 
         [JsonProperty("inventory")]
         public ItemList Inventory { get; set; } = new ItemList();

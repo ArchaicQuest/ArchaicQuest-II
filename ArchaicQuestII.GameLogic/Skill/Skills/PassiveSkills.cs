@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Skill.Core;
 using ArchaicQuestII.GameLogic.Utilities;
@@ -20,12 +19,10 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
     public class PassiveSkills : IPassiveSkills
     {
         private readonly ISkillManager _skillManager;
-        private readonly IEquip _equip;
 
-        public PassiveSkills(ISkillManager skillManager, IEquip equip)
+        public PassiveSkills(ISkillManager skillManager)
         {
             _skillManager = skillManager;
-            _equip = equip;
         }
 
         public int Haggle(Player player, Player target)
@@ -143,10 +140,10 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             {
                 var shield = player.Equipped.Shield;
 
-                _equip.Remove(shield.Name, room, player);
+                player.Remove(shield.Name, room);
             }
 
-            _equip.Wear(findWeapon.Name, room, player, "dual");
+            player.Wear(findWeapon.Name, room, "dual");
 
             // combat on success 2 hits, on success for strength damage if not half damage
 
@@ -179,7 +176,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             var sb = new StringBuilder();
 
             sb.Append(
-                $"It is a level {item.Level} {item.ItemType}, weight {item.Weight}.<br/>Locations it can be worn: {(item.ItemType == Item.Item.ItemTypes.Light || item.ItemType == Item.Item.ItemTypes.Weapon || item.ItemType == Item.Item.ItemTypes.Armour ? item.Slot : Character.Equipment.Equipment.EqSlot.Held)}.<br /> This {item.ItemType} has a gold value of {item.Value}.<br />"
+                $"It is a level {item.Level} {item.ItemType}, weight {item.Weight}.<br/>Locations it can be worn: {(item.ItemType == Item.Item.ItemTypes.Light || item.ItemType == Item.Item.ItemTypes.Weapon || item.ItemType == Item.Item.ItemTypes.Armour ? item.Slot : EquipmentSlot.Held)}.<br /> This {item.ItemType} has a gold value of {item.Value}.<br />"
             );
 
             if (item.ItemType == Item.Item.ItemTypes.Weapon)

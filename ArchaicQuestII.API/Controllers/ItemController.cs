@@ -7,7 +7,6 @@ using System.Linq;
 using ArchaicQuestII.API.Entities;
 using ArchaicQuestII.API.Helpers;
 using ArchaicQuestII.API.Models;
-using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.World.Room;
 using Newtonsoft.Json;
 using ArchaicQuestII.GameLogic.Character;
@@ -25,23 +24,22 @@ namespace ArchaicQuestII.Controllers
     public class ItemController : Controller
     {
         private IDataBase _db { get; }
+
         public ItemController(IDataBase db)
         {
             _db = db;
         }
+
         [HttpPost]
         [Route("api/item/PostItem")]
         public IActionResult PostItem([FromBody] ItemData itemData)
         {
-
-
             if (!ModelState.IsValid)
             {
                 var exception = new Exception("Invalid object");
                 throw exception;
             }
-            
-            
+
             var newItem = new Item()
             {
                 Name = itemData.Item.Name,
@@ -114,7 +112,6 @@ namespace ArchaicQuestII.Controllers
                     ExitDescriptionRoom = itemData.Item.Portal.ExitDescriptionRoom,
                     Name = itemData.Item.Portal.Name,
                 }
-
             };
 
             if (itemData.Item.ItemType == Item.ItemTypes.Key)
@@ -122,10 +119,8 @@ namespace ArchaicQuestII.Controllers
                 newItem.KeyId = Guid.NewGuid();
             }
 
-
             if (!string.IsNullOrEmpty(itemData.Item.Id.ToString()) && itemData.Item.Id != -1)
             {
-
                 var foundItem = _db.GetById<Item>(itemData.Item.Id, DataBase.Collections.Items);
 
                 if (foundItem == null)
@@ -160,7 +155,6 @@ namespace ArchaicQuestII.Controllers
                                         newItem.Id = containerItem.Id;
                                         roomItem.Container.Items.Remove(containerItem);
                                         roomItem.Container.Items.Add(newItem);
-
                                     }
                                 }
                             }
@@ -170,8 +164,6 @@ namespace ArchaicQuestII.Controllers
                     }
                 }
             }
-
-
 
             _db.Save(newItem, DataBase.Collections.Items);
 
@@ -189,76 +181,75 @@ namespace ArchaicQuestII.Controllers
             return Ok(JsonConvert.SerializeObject(new { toast = $"Item saved successfully." }));
         }
 
-
         [HttpGet]
         [Route("api/item/Get")]
         public List<Item> GetItem()
         {
-
-            return _db.GetList<Item>(DataBase.Collections.Items).Where(x => x.Deleted == false).ToList();
-
+            return _db.GetList<Item>(DataBase.Collections.Items)
+                .Where(x => x.Deleted == false)
+                .ToList();
         }
-
 
         [HttpGet]
         [Route("api/item/FindItems")]
         public List<Item> FindItems([FromQuery] string query)
         {
-
-            var items = _db.GetCollection<Item>(DataBase.Collections.Items).FindAll().Where(x => x.Name != null && x.Deleted == false);
+            var items = _db.GetCollection<Item>(DataBase.Collections.Items)
+                .FindAll()
+                .Where(x => x.Name != null && x.Deleted == false);
 
             if (string.IsNullOrEmpty(query))
             {
                 return items.ToList();
             }
 
-            return items.Where(x => x.Name.IndexOf(query, StringComparison.OrdinalIgnoreCase) != -1).ToList();
-
+            return items
+                .Where(x => x.Name.IndexOf(query, StringComparison.OrdinalIgnoreCase) != -1)
+                .ToList();
         }
 
         [HttpGet]
         [Route("api/item/FindItemsByType")]
-        public List<Item> FindItemsByType([FromQuery] Equipment.EqSlot query)
+        public List<Item> FindItemsByType([FromQuery] EquipmentSlot query)
         {
-
-            var items = _db.GetCollection<Item>(DataBase.Collections.Items).FindAll().Where(x => x.Slot.Equals(query));
+            var items = _db.GetCollection<Item>(DataBase.Collections.Items)
+                .FindAll()
+                .Where(x => x.Slot.Equals(query));
 
             return items.ToList();
-
         }
 
         [HttpGet]
         [Route("api/item/FindItemById")]
         public Item FindItemById([FromQuery] int id)
         {
-
             return _db.GetCollection<Item>(DataBase.Collections.Items).FindById(id);
-
         }
 
         [HttpGet]
         [Route("api/item/FindKeyById")]
         public Item FindKeyById([FromQuery] string id)
         {
-
-            return _db.GetCollection<Item>(DataBase.Collections.Items).FindOne(x => x.KeyId.Equals(new Guid(id)) && x.ItemType == Item.ItemTypes.Key);
-
+            return _db.GetCollection<Item>(DataBase.Collections.Items)
+                .FindOne(x => x.KeyId.Equals(new Guid(id)) && x.ItemType == Item.ItemTypes.Key);
         }
 
         [HttpGet]
         [Route("api/item/FindKeys")]
         public List<Item> FindKeys([FromQuery] string query)
         {
-
-            var items = _db.GetCollection<Item>(DataBase.Collections.Items).FindAll().Where(x => x.Name != null && x.ItemType == Item.ItemTypes.Key);
+            var items = _db.GetCollection<Item>(DataBase.Collections.Items)
+                .FindAll()
+                .Where(x => x.Name != null && x.ItemType == Item.ItemTypes.Key);
 
             if (string.IsNullOrEmpty(query))
             {
                 return items.ToList();
             }
 
-            return items.Where(x => x.Name.IndexOf(query, StringComparison.OrdinalIgnoreCase) != -1).ToList();
-
+            return items
+                .Where(x => x.Name.IndexOf(query, StringComparison.OrdinalIgnoreCase) != -1)
+                .ToList();
         }
 
         [HttpGet]
@@ -269,12 +260,7 @@ namespace ArchaicQuestII.Controllers
 
             foreach (var size in Enum.GetValues(typeof(Container.ContainerSize)))
             {
-
-                containerSize.Add(new
-                {
-                    id = (int)size,
-                    name = size.ToString()
-                });
+                containerSize.Add(new { id = (int)size, name = size.ToString() });
             }
             return Json(containerSize);
         }
@@ -287,12 +273,9 @@ namespace ArchaicQuestII.Controllers
 
             foreach (var lockDifficulty in Enum.GetValues(typeof(Item.LockStrength)))
             {
-
-                lockStrength.Add(new
-                {
-                    id = (int)lockDifficulty,
-                    name = lockDifficulty.ToString()
-                });
+                lockStrength.Add(
+                    new { id = (int)lockDifficulty, name = lockDifficulty.ToString() }
+                );
             }
             return Json(lockStrength);
         }
@@ -301,141 +284,91 @@ namespace ArchaicQuestII.Controllers
         [Route("api/item/ReturnItemTypes")]
         public JsonResult ReturnItemTypes()
         {
-
             var itemTypes = new List<object>();
 
             foreach (var item in Enum.GetValues(typeof(Item.ItemTypes)))
             {
-
-                itemTypes.Add(new
-                {
-                    id = (int)item,
-                    name = item.ToString()
-                });
+                itemTypes.Add(new { id = (int)item, name = item.ToString() });
             }
             return Json(itemTypes);
-
         }
 
         [HttpGet]
         [Route("api/item/ReturnAttackTypes")]
         public JsonResult ReturnAttackTypes()
         {
-
             var itemTypes = new List<object>();
 
             foreach (var item in Enum.GetValues(typeof(Item.AttackTypes)))
             {
-
-                itemTypes.Add(new
-                {
-                    id = (int)item,
-                    name = item.ToString()
-                });
+                itemTypes.Add(new { id = (int)item, name = item.ToString() });
             }
             return Json(itemTypes);
-
         }
 
         [HttpGet]
         [Route("api/item/ReturnSlotTypes")]
         public JsonResult ReturnSlotTypes()
         {
-
             var itemTypes = new List<object>();
 
-            foreach (var item in Enum.GetValues(typeof(Equipment.EqSlot)))
+            foreach (var item in Enum.GetValues(typeof(EquipmentSlot)))
             {
-
-                itemTypes.Add(new
-                {
-                    id = (int)item,
-                    name = item.ToString()
-                });
+                itemTypes.Add(new { id = (int)item, name = item.ToString() });
             }
             return Json(itemTypes);
-
         }
 
         [HttpGet]
         [Route("api/item/ReturnFlagTypes")]
         public JsonResult ReturnFlagTypes()
         {
-
             var itemTypes = new List<object>();
 
             foreach (var item in Enum.GetValues(typeof(Item.ItemFlags)))
             {
-
-                itemTypes.Add(new
-                {
-                    id = (int)item,
-                    name = item.ToString()
-                });
+                itemTypes.Add(new { id = (int)item, name = item.ToString() });
             }
             return Json(itemTypes);
-
         }
 
         [HttpGet]
         [Route("api/item/ReturnDamageTypes")]
         public JsonResult ReturnDamageTypes()
         {
-
             var itemTypes = new List<object>();
 
             foreach (var item in Enum.GetValues(typeof(Item.DamageTypes)))
             {
-
-                itemTypes.Add(new
-                {
-                    id = (int)item,
-                    name = item.ToString()
-                });
+                itemTypes.Add(new { id = (int)item, name = item.ToString() });
             }
             return Json(itemTypes);
-
         }
-
 
         [HttpGet]
         [Route("api/item/ReturnWeaponTypes")]
         public JsonResult ReturnWeaponTypes()
         {
-
             var itemTypes = new List<object>();
 
             foreach (var item in Enum.GetValues(typeof(SkillName)))
             {
-                itemTypes.Add(new
-                {
-                    id = (int)item,
-                    name = item.ToString()
-                });
+                itemTypes.Add(new { id = (int)item, name = item.ToString() });
             }
             return Json(itemTypes);
-
         }
-
 
         [HttpGet]
         [Route("api/item/ReturnArmourTypes")]
         public JsonResult ReturnArmourTypes()
         {
-
             var itemTypes = new List<object>();
 
             foreach (var item in Enum.GetValues(typeof(Item.ArmourTypes)))
             {
-
-                itemTypes.Add(new
-                {
-                    id = (int)item,
-                    name = item.ToString()
-                });
+                itemTypes.Add(new { id = (int)item, name = item.ToString() });
             }
             return Json(itemTypes);
-
         }
 
         [HttpDelete]
@@ -448,14 +381,13 @@ namespace ArchaicQuestII.Controllers
 
             if (saved)
             {
-                return Ok(JsonConvert.SerializeObject(new { toast = $"{item.Name} deleted successfully." }));
+                return Ok(
+                    JsonConvert.SerializeObject(
+                        new { toast = $"{item.Name} deleted successfully." }
+                    )
+                );
             }
             return Ok(JsonConvert.SerializeObject(new { toast = $"{item.Name} deletion failed." }));
-
-
-
         }
-
-
     }
 }

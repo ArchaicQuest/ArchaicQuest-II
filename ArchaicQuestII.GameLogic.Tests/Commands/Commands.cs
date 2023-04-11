@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.Character.Help;
 using ArchaicQuestII.GameLogic.Character.MobFunctions;
 using ArchaicQuestII.GameLogic.Character.MobFunctions.Healer;
@@ -25,7 +24,6 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
         private ICommandHandler _commandHandler;
         private readonly Mock<IRoomActions> _roomActions;
         private readonly Mock<ISpells> _spell;
-        private readonly Mock<IEquip> _equipment;
         private readonly Mock<ICombat> _combat;
         private readonly Mock<Cache> _cache;
         private readonly Mock<Services> _core;
@@ -43,7 +41,6 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
         {
             _roomActions = new Mock<IRoomActions>();
             _spell = new Mock<ISpells>();
-            _equipment = new Mock<IEquip>();
             _combat = new Mock<ICombat>();
             _cache = new Mock<Cache>();
             _core = new Mock<Services>();

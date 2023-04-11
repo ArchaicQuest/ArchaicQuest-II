@@ -490,7 +490,7 @@ namespace ArchaicQuestII.GameLogic.Utilities
         /// </summary>
         /// <param name="item"></param>
         /// <returns>name of the weapon with prefixed flags</returns>
-        public static string DisplayEQNameWithFlags(Item.Item item)
+        public static string ReturnWithFlags(this Item.Item item)
         {
             if (item == null)
             {

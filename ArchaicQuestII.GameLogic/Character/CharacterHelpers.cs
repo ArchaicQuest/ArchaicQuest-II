@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Commands;
@@ -729,6 +730,638 @@ public static class CharacterHelpers
         if (!Services.Instance.Cache.IsCharInCombat(character.Id.ToString()))
         {
             Services.Instance.Cache.AddCharToCombat(character.Id.ToString(), character);
+        }
+    }
+
+    public static void DisplayEquipmentUI(this Player player)
+    {
+        var displayEquipment = new StringBuilder();
+
+        try
+        {
+            displayEquipment
+                .Append("<p>You are using:</p>")
+                .Append("<table>")
+                .Append("<tr><td style='width:175px;' title='Worn as light'>")
+                .Append("&lt;used as light&gt;")
+                .Append("</td>")
+                .Append("<td>")
+                .Append(player.Equipped.Light?.ReturnWithFlags() ?? "(nothing)")
+                .Append("</td></tr>")
+                .Append("<tr><td title='Worn on finger'>")
+                .Append(" &lt;worn on finger&gt;")
+                .Append("</td>")
+                .Append("<td>")
+                .Append(player.Equipped.Finger?.ReturnWithFlags() ?? "(nothing)")
+                .Append("</td></tr>")
+                .Append("<tr><td  title='Worn on finger'>")
+                .Append(" &lt;worn on finger&gt;")
+                .Append("</td>")
+                .Append("<td>")
+                .Append(player.Equipped.Finger2?.ReturnWithFlags() ?? "(nothing)")
+                .Append("</td></tr>")
+                .Append("<tr><td  title='Worn around neck'>")
+                .Append(" &lt;worn around neck&gt;")
+                .Append("</td>")
+                .Append("<td>")
+                .Append(player.Equipped.Neck?.ReturnWithFlags() ?? "(nothing)")
+                .Append("</td></tr>")
+                .Append("<tr><td title='Worn around neck'>")
+                .Append(" &lt;worn around neck&gt;")
+                .Append("</td>")
+                .Append("<td>")
+                .Append(player.Equipped.Neck2?.ReturnWithFlags() ?? "(nothing)")
+                .Append("</td></tr>")
+                .Append("<tr><td  title='Worn on face'>")
+                .Append(" &lt;worn on face&gt;")
+                .Append("</td>")
+                .Append("<td>")
+                .Append(player.Equipped.Face?.ReturnWithFlags() ?? "(nothing)")
+                .Append("</td></tr>")
+                .Append("<tr><td  title='Worn on head'>")
+                .Append(" &lt;worn on head&gt;")
+                .Append("</td>")
+                .Append("<td>")
+                .Append(player.Equipped.Head?.ReturnWithFlags() ?? "(nothing)")
+                .Append("</td></tr>")
+                .Append("<tr><td  title='Worn on torso'>")
+                .Append(" &lt;worn on torso&gt;")
+                .Append("</td>")
+                .Append("<td>")
+                .Append(player.Equipped.Torso?.ReturnWithFlags() ?? "(nothing)")
+                .Append("</td></tr>")
+                .Append("<tr><td  title='Worn on legs'>")
+                .Append(" &lt;worn on legs&gt;")
+                .Append("</td>")
+                .Append("<td>")
+                .Append(player.Equipped.Legs?.ReturnWithFlags() ?? "(nothing)")
+                .Append("</td></tr>")
+                .Append("<tr><td  title='Worn on feet'>")
+                .Append(" &lt;worn on feet&gt;")
+                .Append("</td>")
+                .Append("<td>")
+                .Append(player.Equipped.Feet?.ReturnWithFlags() ?? "(nothing)")
+                .Append("</td></tr>")
+                .Append("<tr><td  title='Worn on hands'>")
+                .Append(" &lt;worn on hands&gt;")
+                .Append("</td>")
+                .Append("<td>")
+                .Append(player.Equipped.Hands?.ReturnWithFlags() ?? "(nothing)")
+                .Append("</td></tr>")
+                .Append("<tr><td  title='Worn on arms'>")
+                .Append(" &lt;worn on arms&gt;")
+                .Append("</td>")
+                .Append("<td>")
+                .Append(player.Equipped.Arms?.ReturnWithFlags() ?? "(nothing)")
+                .Append("</td></tr>")
+                .Append("<tr><td  title='Worn about body'>")
+                .Append(" &lt;worn about body&gt;")
+                .Append("</td>")
+                .Append("<td>")
+                .Append(player.Equipped.AboutBody?.ReturnWithFlags() ?? "(nothing)")
+                .Append("</td></tr>")
+                .Append("<tr><td  title='Worn on waist'>")
+                .Append(" &lt;worn about waist&gt;")
+                .Append("</td>")
+                .Append("<td>")
+                .Append(player.Equipped.Waist?.ReturnWithFlags() ?? "(nothing)")
+                .Append("</td></tr>")
+                .Append("<tr><td  title='Worn on wrist'>")
+                .Append(" &lt;worn around wrist&gt;")
+                .Append("</td>")
+                .Append("<td>")
+                .Append(player.Equipped.Wrist?.ReturnWithFlags() ?? "(nothing)")
+                .Append("</td></tr>")
+                .Append("<tr><td  title='Worn on wrist'>")
+                .Append(" &lt;worn around wrist&gt;")
+                .Append("</td>")
+                .Append("<td>")
+                .Append(player.Equipped.Wrist2?.ReturnWithFlags() ?? "(nothing)")
+                .Append("</td></tr>")
+                .Append("<tr><td  title='worn as weapon'>")
+                .Append(" &lt;wielded&gt;")
+                .Append("</td>")
+                .Append("<td>")
+                .Append(player.Equipped.Wielded?.ReturnWithFlags() ?? "(nothing)")
+                .Append("</td></tr>")
+                .Append("<tr><td  title='worn as weapon'>")
+                .Append(" &lt;secondary&gt;")
+                .Append("</td>")
+                .Append("<td>")
+                .Append(player.Equipped.Secondary?.ReturnWithFlags() ?? "(nothing)")
+                .Append("</td></tr>")
+                .Append("<tr><td  title='Worn as shield'>")
+                .Append(" &lt;worn as shield&gt;")
+                .Append("</td>")
+                .Append("<td>")
+                .Append(player.Equipped.Shield?.ReturnWithFlags() ?? "(nothing)")
+                .Append("</td></tr>")
+                .Append("<tr><td  title='Held'>")
+                .Append(" &lt;Held&gt;")
+                .Append("</td>")
+                .Append("<td>")
+                .Append(player.Equipped.Held?.ReturnWithFlags() ?? "(nothing)")
+                .Append("</td></tr>")
+                .Append("<tr><td  title='Floating Nearby'>")
+                .Append(" &lt;Floating nearby&gt;")
+                .Append("</td>")
+                .Append("<td>")
+                .Append(player.Equipped.Floating?.ReturnWithFlags() ?? "(nothing)")
+                .Append("</td></tr>")
+                .Append("</table");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Equip.cs: " + ex);
+        }
+
+        Services.Instance.Writer.WriteLine(displayEquipment.ToString(), player.ConnectionId);
+    }
+
+    public static void WearAll(this Player player, Room room)
+    {
+        var itemsToWear = player.Inventory.Where(x => x.Equipped == false);
+
+        foreach (var itemToWear in itemsToWear)
+        {
+            if (!player.EqSlotSet(itemToWear.Slot))
+            {
+                player.Wear(itemToWear.Name, room);
+            }
+        }
+    }
+
+    public static void Remove(this Player player, string item, Room room)
+    {
+        if (item.Equals("all", StringComparison.CurrentCultureIgnoreCase))
+        {
+            player.RemoveAll(room);
+            return;
+        }
+
+        var itemToRemove = player.Inventory.FirstOrDefault(
+            x => x.Name.Contains(item, StringComparison.CurrentCultureIgnoreCase) && x.Equipped
+        );
+
+        if (itemToRemove == null)
+        {
+            Services.Instance.Writer.WriteLine(
+                "<p>You are not wearing that item.</p>",
+                player.ConnectionId
+            );
+            return;
+        }
+
+        if ((itemToRemove.ItemFlag & Item.Item.ItemFlags.Noremove) != 0)
+        {
+            Services.Instance.Writer.WriteLine(
+                $"<p>You can't remove {itemToRemove.Name}. It appears to be cursed.</p>",
+                player.ConnectionId
+            );
+            return;
+        }
+
+        itemToRemove.Equipped = false;
+        player.ArmorRating.Armour -= itemToRemove.ArmourRating.Armour + itemToRemove.Modifier.AcMod;
+        player.ArmorRating.Magic -=
+            itemToRemove.ArmourRating.Magic + itemToRemove.Modifier.AcMagicMod;
+        player.Attributes.Attribute[EffectLocation.Strength] -= itemToRemove.Modifier.Strength;
+        player.Attributes.Attribute[EffectLocation.Dexterity] -= itemToRemove.Modifier.Dexterity;
+        player.Attributes.Attribute[EffectLocation.Constitution] -= itemToRemove
+            .Modifier
+            .Constitution;
+        player.Attributes.Attribute[EffectLocation.Wisdom] -= itemToRemove.Modifier.Wisdom;
+        player.Attributes.Attribute[EffectLocation.Intelligence] -= itemToRemove
+            .Modifier
+            .Intelligence;
+        player.Attributes.Attribute[EffectLocation.Charisma] -= itemToRemove.Modifier.Charisma;
+
+        player.Attributes.Attribute[EffectLocation.Hitpoints] -= itemToRemove.Modifier.HP;
+        player.Attributes.Attribute[EffectLocation.Mana] -= itemToRemove.Modifier.Mana;
+        player.Attributes.Attribute[EffectLocation.Moves] -= itemToRemove.Modifier.Moves;
+        player.MaxAttributes.Attribute[EffectLocation.Hitpoints] -= itemToRemove.Modifier.HP;
+        player.MaxAttributes.Attribute[EffectLocation.Mana] -= itemToRemove.Modifier.Mana;
+        player.MaxAttributes.Attribute[EffectLocation.Moves] -= itemToRemove.Modifier.Moves;
+
+        player.Attributes.Attribute[EffectLocation.DamageRoll] -= itemToRemove.Modifier.DamRoll;
+        player.Attributes.Attribute[EffectLocation.HitRoll] -= itemToRemove.Modifier.HitRoll;
+        switch (itemToRemove.Slot)
+        {
+            case EquipmentSlot.Arms:
+                player.Equipped.Arms = null;
+                break;
+            case EquipmentSlot.Body:
+                player.Equipped.AboutBody = null;
+                break;
+            case EquipmentSlot.Face:
+                player.Equipped.Face = null;
+                break;
+            case EquipmentSlot.Feet:
+                player.Equipped.Feet = null;
+                break;
+            case EquipmentSlot.Finger:
+                player.Equipped.Finger = null; // TODO: slot 2
+                break;
+            case EquipmentSlot.Floating:
+                player.Equipped.Floating = null;
+                break;
+            case EquipmentSlot.Hands:
+                player.Equipped.Hands = null;
+                break;
+            case EquipmentSlot.Head:
+                player.Equipped.Head = null;
+                break;
+            case EquipmentSlot.Held:
+                player.Equipped.Held = null; // TODO: handle when wield and shield or 2hand item are equipped
+                break;
+            case EquipmentSlot.Legs:
+                player.Equipped.Legs = null;
+                break;
+            case EquipmentSlot.Light:
+                player.Equipped.Light = null;
+                break;
+            case EquipmentSlot.Neck:
+                player.Equipped.Neck = null; // TODO: slot 2
+                break;
+            case EquipmentSlot.Shield:
+                player.Equipped.Shield = null;
+                break;
+            case EquipmentSlot.Torso:
+                player.Equipped.Torso = null;
+                break;
+            case EquipmentSlot.Waist:
+                player.Equipped.Waist = null;
+                break;
+            case EquipmentSlot.Wielded:
+
+                if (
+                    player.Equipped.Secondary != null
+                    && itemToRemove.Name.Equals(player.Equipped.Secondary.Name)
+                )
+                {
+                    player.Equipped.Secondary = null;
+                }
+                else
+                {
+                    player.Equipped.Wielded = null;
+                }
+                break;
+            case EquipmentSlot.Wrist:
+                player.Equipped.Wrist = null; // TODO: slot 2
+                break;
+            case EquipmentSlot.Secondary:
+                player.Equipped.Secondary = null;
+                break;
+            default:
+                itemToRemove.Equipped = false;
+                Services.Instance.Writer.WriteLine(
+                    "<p>You don't know how to remove this.</p>",
+                    player.ConnectionId
+                );
+                return;
+        }
+
+        Services.Instance.Writer.WriteLine(
+            $"<p>You stop using {itemToRemove.Name.ToLower()}.</p>",
+            player.ConnectionId
+        );
+
+        Services.Instance.Writer.WriteToOthersInRoom(
+            $"<p>{player.Name} stops using {itemToRemove.Name.ToLower()}.</p>",
+            room,
+            player
+        );
+
+        player.UpdateClientUI();
+        Services.Instance.UpdateClient.UpdateEquipment(player);
+        Services.Instance.UpdateClient.UpdateInventory(player);
+    }
+
+    public static void RemoveAll(this Player player, Room room)
+    {
+        var itemsToRemove = player.Inventory.Where(x => x.Equipped == true);
+
+        foreach (var itemToRemove in itemsToRemove)
+        {
+            player.Remove(itemToRemove.Name, room);
+        }
+    }
+
+    // handle secondary equip
+    public static void Wear(this Player player, string item, Room room, string type = "")
+    {
+        if (item.Equals("all", StringComparison.CurrentCultureIgnoreCase))
+        {
+            player.WearAll(room);
+            return;
+        }
+
+        var itemToWear = player.Inventory.FirstOrDefault(
+            x =>
+                x.Name.Contains(item, StringComparison.CurrentCultureIgnoreCase)
+                && x.Equipped == false
+        );
+
+        if (itemToWear == null)
+        {
+            Services.Instance.Writer.WriteLine(
+                "<p>You don't have that item.</p>",
+                player.ConnectionId
+            );
+            return;
+        }
+
+        var itemSlot = itemToWear.Slot;
+
+        if (
+            itemToWear.ItemType != Item.Item.ItemTypes.Armour
+            && itemToWear.ItemType != Item.Item.ItemTypes.Weapon
+            && itemToWear.ItemType != Item.Item.ItemTypes.Light
+        )
+        {
+            itemSlot = EquipmentSlot.Held;
+        }
+
+        if (type == "dual")
+        {
+            itemSlot = EquipmentSlot.Secondary;
+        }
+
+        itemToWear.Equipped = true;
+        player.ArmorRating.Armour += itemToWear.ArmourRating.Armour + itemToWear.Modifier.AcMod;
+        player.ArmorRating.Magic += itemToWear.ArmourRating.Magic + itemToWear.Modifier.AcMagicMod;
+        player.Attributes.Attribute[EffectLocation.Strength] += itemToWear.Modifier.Strength;
+        player.Attributes.Attribute[EffectLocation.Dexterity] += itemToWear.Modifier.Dexterity;
+        player.Attributes.Attribute[EffectLocation.Constitution] += itemToWear
+            .Modifier
+            .Constitution;
+        player.Attributes.Attribute[EffectLocation.Wisdom] += itemToWear.Modifier.Wisdom;
+        player.Attributes.Attribute[EffectLocation.Intelligence] += itemToWear
+            .Modifier
+            .Intelligence;
+        player.Attributes.Attribute[EffectLocation.Charisma] += itemToWear.Modifier.Charisma;
+
+        player.Attributes.Attribute[EffectLocation.Hitpoints] += itemToWear.Modifier.HP;
+        player.Attributes.Attribute[EffectLocation.Mana] += itemToWear.Modifier.Mana;
+        player.Attributes.Attribute[EffectLocation.Moves] += itemToWear.Modifier.Moves;
+        player.MaxAttributes.Attribute[EffectLocation.Hitpoints] += itemToWear.Modifier.HP;
+        player.MaxAttributes.Attribute[EffectLocation.Mana] += itemToWear.Modifier.Mana;
+        player.MaxAttributes.Attribute[EffectLocation.Moves] += itemToWear.Modifier.Moves;
+
+        player.Attributes.Attribute[EffectLocation.DamageRoll] += itemToWear.Modifier.DamRoll;
+        player.Attributes.Attribute[EffectLocation.HitRoll] += itemToWear.Modifier.HitRoll;
+        // player.Attributes.Attribute[EffectLocation.DamageRoll] += itemToWear.Modifier.SpellDam; // spell dam no exist
+        // player.Attributes.Attribute[EffectLocation.SavingSpell] += itemToWear.Modifier.Saves; not implemented
+        switch (itemSlot)
+        {
+            case EquipmentSlot.Arms:
+
+                if (player.Equipped.Arms != null)
+                {
+                    player.Remove(player.Equipped.Arms.Name, room);
+                }
+
+                player.Equipped.Arms = itemToWear;
+                break;
+            case EquipmentSlot.Body:
+                if (player.Equipped.AboutBody != null)
+                {
+                    player.Remove(player.Equipped.AboutBody.Name, room);
+                }
+                player.Equipped.AboutBody = itemToWear;
+                break;
+            case EquipmentSlot.Face:
+
+                if (player.Equipped.Face != null)
+                {
+                    player.Remove(player.Equipped.Face.Name, room);
+                }
+
+                player.Equipped.Face = itemToWear;
+                break;
+            case EquipmentSlot.Feet:
+
+                if (player.Equipped.Feet != null)
+                {
+                    player.Remove(player.Equipped.Feet.Name, room);
+                }
+
+                player.Equipped.Feet = itemToWear;
+                break;
+            case EquipmentSlot.Finger:
+
+                if (player.Equipped.Finger != null)
+                {
+                    player.Remove(player.Equipped.Finger.Name, room);
+                }
+
+                player.Equipped.Finger = itemToWear; // TODO: slot 2
+                break;
+            case EquipmentSlot.Floating:
+
+                if (player.Equipped.Floating != null)
+                {
+                    player.Remove(player.Equipped.Floating.Name, room);
+                }
+
+                player.Equipped.Floating = itemToWear;
+                break;
+            case EquipmentSlot.Hands:
+
+                if (player.Equipped.Hands != null)
+                {
+                    player.Remove(player.Equipped.Hands.Name, room);
+                }
+
+                player.Equipped.Hands = itemToWear;
+                break;
+            case EquipmentSlot.Head:
+
+                if (player.Equipped.Head != null)
+                {
+                    player.Remove(player.Equipped.Head.Name, room);
+                }
+
+                player.Equipped.Head = itemToWear;
+                break;
+            case EquipmentSlot.Held:
+                if (player.Equipped.Held != null)
+                {
+                    player.Remove(player.Equipped.Held.Name, room);
+                }
+
+                player.Equipped.Held = itemToWear; // TODO: handle when wield and shield or 2hand item are equipped
+                break;
+            case EquipmentSlot.Legs:
+
+                if (player.Equipped.Legs != null)
+                {
+                    player.Remove(player.Equipped.Legs.Name, room);
+                }
+                player.Equipped.Legs = itemToWear;
+                break;
+            case EquipmentSlot.Light:
+
+                if (player.Equipped.Light != null)
+                {
+                    player.Remove(player.Equipped.Light.Name, room);
+                }
+
+                player.Equipped.Light = itemToWear;
+                break;
+            case EquipmentSlot.Neck:
+
+                if (player.Equipped.Neck != null)
+                {
+                    player.Remove(player.Equipped.Neck.Name, room);
+                }
+
+                player.Equipped.Neck = itemToWear; // TODO: slot 2
+                break;
+            case EquipmentSlot.Shield:
+
+                if (player.Equipped.Wielded != null && player.Equipped.Wielded.TwoHanded)
+                {
+                    Services.Instance.Writer.WriteLine(
+                        "Your hands are tied up with your two-handed weapon!",
+                        player.ConnectionId
+                    );
+                    return;
+                }
+
+                if (player.Equipped.Shield != null)
+                {
+                    player.Remove(player.Equipped.Shield.Name, room);
+                }
+
+                if (player.Equipped.Secondary != null)
+                {
+                    player.Remove(player.Equipped.Secondary.Name, room);
+                }
+
+                player.Equipped.Shield = itemToWear;
+                break;
+            case EquipmentSlot.Torso:
+
+                if (player.Equipped.Torso != null)
+                {
+                    player.Remove(player.Equipped.Torso.Name, room);
+                }
+
+                player.Equipped.Torso = itemToWear;
+                break;
+            case EquipmentSlot.Waist:
+
+                if (player.Equipped.Waist != null)
+                {
+                    player.Remove(player.Equipped.Waist.Name, room);
+                }
+
+                player.Equipped.Waist = itemToWear;
+                break;
+            case EquipmentSlot.Wielded:
+
+                if (itemToWear.TwoHanded && player.Equipped.Shield != null)
+                {
+                    Services.Instance.Writer.WriteLine(
+                        "You need two hands free for that weapon, remove your shield and try again.",
+                        player.ConnectionId
+                    );
+
+                    return;
+                }
+
+                if (player.Equipped.Wielded != null)
+                {
+                    player.Remove(player.Equipped.Wielded.Name, room);
+                }
+
+                player.Equipped.Wielded = itemToWear;
+                break;
+            case EquipmentSlot.Wrist:
+
+                if (player.Equipped.Wrist != null)
+                {
+                    player.Remove(player.Equipped.Wrist.Name, room);
+                }
+
+                player.Equipped.Wrist = itemToWear; // TODO: slot 2
+                break;
+            case EquipmentSlot.Secondary:
+
+                if (player.Equipped.Secondary != null)
+                {
+                    player.Remove(player.Equipped.Secondary.Name, room);
+                }
+
+                player.Equipped.Secondary = itemToWear; // TODO: slot 2
+                break;
+            default:
+                itemToWear.Equipped = false;
+                Services.Instance.Writer.WriteLine(
+                    "<p>You don't know how to wear this.</p>",
+                    player.ConnectionId
+                );
+                return;
+        }
+
+        Services.Instance.Writer.WriteLine(
+            $"<p>You wield {itemToWear.Name.ToLower()} as your second weapon.</p>",
+            player.ConnectionId
+        );
+        Services.Instance.Writer.WriteToOthersInRoom(
+            $"{itemToWear.Name.ToLower()} as {player.ReturnPronoun()} secondary weapon.",
+            room,
+            player
+        );
+
+        player.UpdateClientUI();
+        Services.Instance.UpdateClient.UpdateEquipment(player);
+        Services.Instance.UpdateClient.UpdateInventory(player);
+    }
+
+    public static bool EqSlotSet(this Player player, EquipmentSlot slot)
+    {
+        switch (slot)
+        {
+            case EquipmentSlot.Arms:
+                return player.Equipped.Arms != null;
+            case EquipmentSlot.Body:
+                return player.Equipped.AboutBody != null;
+            case EquipmentSlot.Face:
+                return player.Equipped.Face != null;
+            case EquipmentSlot.Feet:
+                return player.Equipped.Feet != null;
+            case EquipmentSlot.Finger:
+                return player.Equipped.Finger != null;
+            case EquipmentSlot.Floating:
+                return player.Equipped.Floating != null;
+            case EquipmentSlot.Hands:
+                return player.Equipped.Hands != null;
+            case EquipmentSlot.Head:
+                return player.Equipped.Head != null;
+            case EquipmentSlot.Held:
+                return player.Equipped.Held != null;
+            case EquipmentSlot.Legs:
+                return player.Equipped.Legs != null;
+            case EquipmentSlot.Light:
+                return player.Equipped.Light != null;
+            case EquipmentSlot.Neck:
+                return player.Equipped.Neck != null;
+            case EquipmentSlot.Shield:
+                return player.Equipped.Shield != null;
+            case EquipmentSlot.Torso:
+                return player.Equipped.Torso != null;
+            case EquipmentSlot.Waist:
+                return player.Equipped.Waist != null;
+            case EquipmentSlot.Wielded:
+                return player.Equipped.Wielded != null;
+            case EquipmentSlot.Wrist:
+                return player.Equipped.Wrist != null;
+            case EquipmentSlot.Secondary:
+                return player.Equipped.Secondary != null;
+            default:
+                return false;
         }
     }
 }

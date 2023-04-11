@@ -71,7 +71,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             var sb = new StringBuilder();
 
             sb.Append(
-                $"It is a level {item.Level} {item.ItemType}, weight {item.Weight}.<br/>Locations it can be worn: {(item.ItemType == Item.Item.ItemTypes.Light || item.ItemType == Item.Item.ItemTypes.Weapon || item.ItemType == Item.Item.ItemTypes.Armour ? item.Slot : GameLogic.Character.Equipment.Equipment.EqSlot.Held)}.<br /> This {item.ItemType} has a gold value of {item.Value}.<br />"
+                $"It is a level {item.Level} {item.ItemType}, weight {item.Weight}.<br/>Locations it can be worn: {(item.ItemType == Item.Item.ItemTypes.Light || item.ItemType == Item.Item.ItemTypes.Weapon || item.ItemType == Item.Item.ItemTypes.Armour ? item.Slot : EquipmentSlot.Held)}.<br /> This {item.ItemType} has a gold value of {item.Value}.<br />"
             );
 
             if (item.ItemType == Item.Item.ItemTypes.Weapon)

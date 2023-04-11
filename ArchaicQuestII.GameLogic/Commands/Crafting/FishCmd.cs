@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
@@ -339,7 +338,7 @@ public class FishCmd : ICommand
             ItemFlag = Item.Item.ItemFlags.None,
             ItemType = Item.Item.ItemTypes.Food,
             AttackType = Item.Item.AttackTypes.Charge,
-            Slot = Equipment.EqSlot.Arms,
+            Slot = EquipmentSlot.Arms,
             Forage = null,
             WeaponType = SkillName.None,
             WeaponSpeed = 0,

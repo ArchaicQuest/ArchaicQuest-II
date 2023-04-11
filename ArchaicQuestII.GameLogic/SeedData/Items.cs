@@ -1,5 +1,5 @@
 ﻿using ArchaicQuestII.DataAccess;
-using ArchaicQuestII.GameLogic.Character.Equipment;
+using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Item;
 using System.Collections.Generic;
@@ -20,7 +20,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
                 AttackType = Item.Item.AttackTypes.Charge,
                 WeaponType = Character.SkillName.Throw,
                 Gold = 1,
-                Slot = Equipment.EqSlot.Hands,
+                Slot = EquipmentSlot.Hands,
                 Level = 1,
                 Modifier = new Modifier(),
                 Description = new Description()
@@ -44,7 +44,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
                 AttackType = Item.Item.AttackTypes.Crush,
                 WeaponType = Character.SkillName.Throw,
                 Gold = 1,
-                Slot = Equipment.EqSlot.Light,
+                Slot = EquipmentSlot.Light,
                 Level = 1,
                 Modifier = new Modifier(),
                 Description = new Description()
@@ -68,7 +68,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
                 AttackType = Item.Item.AttackTypes.Crush,
                 WeaponType = Character.SkillName.None,
                 Gold = 1,
-                Slot = Equipment.EqSlot.Torso,
+                Slot = EquipmentSlot.Torso,
                 Level = 1,
                 Modifier = new Modifier(),
                 Description = new Description()
@@ -92,7 +92,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
                 AttackType = Item.Item.AttackTypes.Crush,
                 WeaponType = Character.SkillName.None,
                 Gold = 1,
-                Slot = Equipment.EqSlot.Torso,
+                Slot = EquipmentSlot.Torso,
                 Level = 1,
                 Modifier = new Modifier(),
                 Description = new Description()
@@ -116,7 +116,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
                 AttackType = Item.Item.AttackTypes.Crush,
                 WeaponType = Character.SkillName.None,
                 Gold = 1,
-                Slot = Equipment.EqSlot.Arms,
+                Slot = EquipmentSlot.Arms,
                 Level = 1,
                 Modifier = new Modifier(),
                 Description = new Description()
@@ -140,7 +140,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
                 AttackType = Item.Item.AttackTypes.Crush,
                 WeaponType = Character.SkillName.None,
                 Gold = 1,
-                Slot = Equipment.EqSlot.Legs,
+                Slot = EquipmentSlot.Legs,
                 Level = 1,
                 Modifier = new Modifier(),
                 Description = new Description()
@@ -164,7 +164,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
                 AttackType = Item.Item.AttackTypes.Crush,
                 WeaponType = Character.SkillName.None,
                 Gold = 1,
-                Slot = Equipment.EqSlot.Feet,
+                Slot = EquipmentSlot.Feet,
                 Level = 1,
                 Modifier = new Modifier(),
                 Description = new Description()
@@ -188,7 +188,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
                 AttackType = Item.Item.AttackTypes.Stab,
                 WeaponType = Character.SkillName.ShortBlades,
                 Gold = 1,
-                Slot = Equipment.EqSlot.Wielded,
+                Slot = EquipmentSlot.Wielded,
                 Level = 1,
                 Modifier = new Modifier(),
                 Description = new Description()
@@ -211,7 +211,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
                 AttackType = Item.Item.AttackTypes.Stab,
                 WeaponType = Character.SkillName.Hammer,
                 Gold = 1,
-                Slot = Equipment.EqSlot.Wielded,
+                Slot = EquipmentSlot.Wielded,
                 Level = 1,
                 Modifier = new Modifier(),
                 Description = new Description()
@@ -234,7 +234,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
                 AttackType = Item.Item.AttackTypes.Stab,
                 WeaponType = Character.SkillName.LongBlades,
                 Gold = 1,
-                Slot = Equipment.EqSlot.Wielded,
+                Slot = EquipmentSlot.Wielded,
                 Level = 1,
                 Modifier = new Modifier(),
                 Description = new Description()

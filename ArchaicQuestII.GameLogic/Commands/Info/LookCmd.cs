@@ -368,7 +368,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     .Append("&lt;used as light&gt;")
                     .Append("</td>")
                     .Append("<td>")
-                    .Append(character.Equipped.Light?.Name ?? "(nothing)")
+                    .Append(character.Equipped.Light?.ReturnWithFlags() ?? "(nothing)")
                     .Append("</td></tr>");
             }
 
@@ -379,7 +379,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     .Append(" &lt;worn on finger&gt;")
                     .Append("</td>")
                     .Append("<td>")
-                    .Append(character.Equipped.Finger?.Name ?? "(nothing)")
+                    .Append(character.Equipped.Finger?.ReturnWithFlags() ?? "(nothing)")
                     .Append("</td></tr>");
             }
 
@@ -390,7 +390,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     .Append(" &lt;worn on finger&gt;")
                     .Append("</td>")
                     .Append("<td>")
-                    .Append(character.Equipped.Finger2?.Name ?? "(nothing)")
+                    .Append(character.Equipped.Finger2?.ReturnWithFlags() ?? "(nothing)")
                     .Append("</td></tr>");
             }
 
@@ -401,7 +401,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     .Append(" &lt;worn around neck&gt;")
                     .Append("</td>")
                     .Append("<td>")
-                    .Append(character.Equipped.Neck?.Name ?? "(nothing)")
+                    .Append(character.Equipped.Neck?.ReturnWithFlags() ?? "(nothing)")
                     .Append("</td></tr>");
             }
 
@@ -412,7 +412,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     .Append(" &lt;worn around neck&gt;")
                     .Append("</td>")
                     .Append("<td>")
-                    .Append(character.Equipped.Neck2?.Name ?? "(nothing)")
+                    .Append(character.Equipped.Neck2?.ReturnWithFlags() ?? "(nothing)")
                     .Append("</td></tr>");
             }
 
@@ -423,7 +423,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     .Append(" &lt;worn on face&gt;")
                     .Append("</td>")
                     .Append("<td>")
-                    .Append(character.Equipped.Face?.Name ?? "(nothing)")
+                    .Append(character.Equipped.Face?.ReturnWithFlags() ?? "(nothing)")
                     .Append("</td></tr>");
             }
 
@@ -434,7 +434,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     .Append(" &lt;worn on head&gt;")
                     .Append("</td>")
                     .Append("<td>")
-                    .Append(character.Equipped.Head?.Name ?? "(nothing)")
+                    .Append(character.Equipped.Head?.ReturnWithFlags() ?? "(nothing)")
                     .Append("</td></tr>");
             }
 
@@ -445,7 +445,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     .Append(" &lt;worn on torso&gt;")
                     .Append("</td>")
                     .Append("<td>")
-                    .Append(character.Equipped.Torso?.Name ?? "(nothing)")
+                    .Append(character.Equipped.Torso?.ReturnWithFlags() ?? "(nothing)")
                     .Append("</td></tr>");
             }
 
@@ -456,7 +456,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     .Append(" &lt;worn on legs&gt;")
                     .Append("</td>")
                     .Append("<td>")
-                    .Append(character.Equipped.Legs?.Name ?? "(nothing)")
+                    .Append(character.Equipped.Legs?.ReturnWithFlags() ?? "(nothing)")
                     .Append("</td></tr>");
             }
 
@@ -467,7 +467,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     .Append(" &lt;worn on feet&gt;")
                     .Append("</td>")
                     .Append("<td>")
-                    .Append(character.Equipped.Feet?.Name ?? "(nothing)")
+                    .Append(character.Equipped.Feet?.ReturnWithFlags() ?? "(nothing)")
                     .Append("</td></tr>");
             }
 
@@ -478,7 +478,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     .Append(" &lt;worn on hands&gt;")
                     .Append("</td>")
                     .Append("<td>")
-                    .Append(character.Equipped.Hands?.Name ?? "(nothing)")
+                    .Append(character.Equipped.Hands?.ReturnWithFlags() ?? "(nothing)")
                     .Append("</td></tr>");
             }
 
@@ -489,7 +489,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     .Append(" &lt;worn on arms&gt;")
                     .Append("</td>")
                     .Append("<td>")
-                    .Append(character.Equipped.Arms?.Name ?? "(nothing)")
+                    .Append(character.Equipped.Arms?.ReturnWithFlags() ?? "(nothing)")
                     .Append("</td></tr>");
             }
 
@@ -500,9 +500,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     .Append(" &lt;worn about body&gt;")
                     .Append("</td>")
                     .Append("<td>")
-                    .Append(
-                        Helpers.DisplayEQNameWithFlags(character.Equipped.AboutBody) ?? "(nothing)"
-                    )
+                    .Append(character.Equipped.AboutBody?.ReturnWithFlags() ?? "(nothing)")
                     .Append("</td></tr>");
             }
 
@@ -513,7 +511,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     .Append(" &lt;worn about waist&gt;")
                     .Append("</td>")
                     .Append("<td>")
-                    .Append(character.Equipped.Waist?.Name ?? "(nothing)")
+                    .Append(character.Equipped.Waist?.ReturnWithFlags() ?? "(nothing)")
                     .Append("</td></tr>");
             }
 
@@ -524,7 +522,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     .Append(" &lt;worn around wrist&gt;")
                     .Append("</td>")
                     .Append("<td>")
-                    .Append(character.Equipped.Wrist?.Name ?? "(nothing)")
+                    .Append(character.Equipped.Wrist?.ReturnWithFlags() ?? "(nothing)")
                     .Append("</td></tr>");
             }
 
@@ -535,7 +533,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     .Append(" &lt;worn around wrist&gt;")
                     .Append("</td>")
                     .Append("<td>")
-                    .Append(character.Equipped.Wrist2?.Name ?? "(nothing)")
+                    .Append(character.Equipped.Wrist2?.ReturnWithFlags() ?? "(nothing)")
                     .Append("</td></tr>");
             }
 
@@ -546,7 +544,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     .Append(" &lt;wielded&gt;")
                     .Append("</td>")
                     .Append("<td>")
-                    .Append(character.Equipped.Wielded?.Name ?? "(nothing)")
+                    .Append(character.Equipped.Wielded?.ReturnWithFlags() ?? "(nothing)")
                     .Append("</td></tr>");
             }
 
@@ -557,7 +555,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     .Append(" &lt;secondary&gt;")
                     .Append("</td>")
                     .Append("<td>")
-                    .Append(character.Equipped.Secondary?.Name ?? "(nothing)")
+                    .Append(character.Equipped.Secondary?.ReturnWithFlags() ?? "(nothing)")
                     .Append("</td></tr>");
             }
 
@@ -568,7 +566,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     .Append(" &lt;worn as shield&gt;")
                     .Append("</td>")
                     .Append("<td>")
-                    .Append(character.Equipped.Shield?.Name ?? "(nothing)")
+                    .Append(character.Equipped.Shield?.ReturnWithFlags() ?? "(nothing)")
                     .Append("</td></tr>");
             }
 
@@ -579,7 +577,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     .Append(" &lt;Held&gt;")
                     .Append("</td>")
                     .Append("<td>")
-                    .Append(character.Equipped.Held?.Name ?? "(nothing)")
+                    .Append(character.Equipped.Held?.ReturnWithFlags() ?? "(nothing)")
                     .Append("</td></tr>");
             }
 
@@ -590,7 +588,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     .Append(" &lt;Floating nearby&gt;")
                     .Append("</td>")
                     .Append("<td>")
-                    .Append(character.Equipped.Floating?.Name ?? "(nothing)")
+                    .Append(character.Equipped.Floating?.ReturnWithFlags() ?? "(nothing)")
                     .Append("</td></tr>")
                     .Append("</table");
             }

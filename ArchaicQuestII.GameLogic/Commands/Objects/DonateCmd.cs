@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Item;
@@ -172,7 +171,7 @@ Related help files: get, put, give, drop
             AttackType = Item.Item.AttackTypes.Charge,
             WeaponType = SkillName.None,
             Gold = 1,
-            Slot = Equipment.EqSlot.Hands,
+            Slot = EquipmentSlot.Hands,
             Level = 1,
             Modifier = new Modifier(),
             Description = new Description

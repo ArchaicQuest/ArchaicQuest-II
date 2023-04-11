@@ -1,10 +1,10 @@
 ﻿using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Core;
 using System.Collections.Generic;
-using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.World.Area;
 using ArchaicQuestII.GameLogic.World.Room;
+using ArchaicQuestII.GameLogic.Character;
 
 namespace ArchaicQuestII.GameLogic.SeedData
 {
@@ -71,7 +71,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
                                 "The note feels slightly wet, probably caused by the occasional drip from above",
                             Taste = "Tastes putrid, what did you expect?"
                         },
-                        Slot = Equipment.EqSlot.Held,
+                        Slot = EquipmentSlot.Held,
                     }
                 }
             }

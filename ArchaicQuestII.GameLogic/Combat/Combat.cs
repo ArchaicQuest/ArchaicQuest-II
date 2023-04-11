@@ -4,7 +4,6 @@ using System.Globalization;
 using System.Linq;
 using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Commands;
 using ArchaicQuestII.GameLogic.Core;
@@ -923,7 +922,7 @@ namespace ArchaicQuestII.GameLogic.Combat
                     Exam = target.Description,
                     Look = target.Description,
                 },
-                Slot = Equipment.EqSlot.Held,
+                Slot = EquipmentSlot.Held,
                 Level = 1,
                 Stuck = true,
                 Container = new Container
