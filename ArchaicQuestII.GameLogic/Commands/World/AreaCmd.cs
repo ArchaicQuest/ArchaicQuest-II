@@ -87,17 +87,17 @@ namespace ArchaicQuestII.GameLogic.Commands.World
 
             if (target is "consider" or "con")
             {
-                Services.Instance.Writer.WriteLine(AreaConsider(player, room), player.ConnectionId);
+                Services.Instance.Writer.WriteLine(AreaConsider(player, room), player);
                 return;
             }
 
             if (target is "pop" or "population")
             {
-                Services.Instance.Writer.WriteLine(AreaPopulation(room), player.ConnectionId);
+                Services.Instance.Writer.WriteLine(AreaPopulation(room), player);
                 return;
             }
 
-            Services.Instance.Writer.WriteLine(sb.ToString(), player.ConnectionId);
+            Services.Instance.Writer.WriteLine(sb.ToString(), player);
         }
 
         /// <summary>

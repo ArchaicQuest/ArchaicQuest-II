@@ -320,7 +320,12 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
             _commandHandler.Object.HandleCommand(player, room, "give Mob bread");
 
             _writer.Verify(
-                w => w.WriteLine(It.Is<string>(s => s.Contains("You do not have that item.")), "1"),
+                w =>
+                    w.WriteLine(
+                        It.Is<string>(s => s.Contains("You do not have that item.")),
+                        player,
+                        0
+                    ),
                 Times.Once()
             );
         }
@@ -356,7 +361,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
             new GameLogic.Commands.CommandHandler().HandleCommand(player, room, "give Max apple");
 
             _writer.Verify(
-                w => w.WriteLine(It.Is<string>(s => s.Contains("They aren't here.")), "1"),
+                w => w.WriteLine(It.Is<string>(s => s.Contains("They aren't here.")), player, 0),
                 Times.Once()
             );
         }
@@ -377,7 +382,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
             new GameLogic.Commands.CommandHandler().HandleCommand(player, room, "open north");
 
             _writer.Verify(
-                w => w.WriteLine(It.Is<string>(s => s.Contains("You open the door")), "1"),
+                w => w.WriteLine(It.Is<string>(s => s.Contains("You open the door")), player, 0),
                 Times.Once()
             );
         }
@@ -433,7 +438,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
             new GameLogic.Commands.CommandHandler().HandleCommand(player, room, "open chest");
 
             _writer.Verify(
-                w => w.WriteLine(It.Is<string>(s => s.Contains("You open")), "1"),
+                w => w.WriteLine(It.Is<string>(s => s.Contains("You open")), player, 0),
                 Times.Once()
             );
             Assert.True(item.Container.IsOpen);
@@ -468,7 +473,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Objects
             new GameLogic.Commands.CommandHandler().HandleCommand(player, room, "close chest");
 
             _writer.Verify(
-                w => w.WriteLine(It.Is<string>(s => s.Contains("You close")), "1"),
+                w => w.WriteLine(It.Is<string>(s => s.Contains("You close")), player, 0),
                 Times.Once()
             );
             Assert.True(!item.Container.IsOpen);

@@ -59,7 +59,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
             {
                 Services.Instance.Writer.WriteLine(
                     "<p>No crafting recipes have been set up.</p>",
-                    player.ConnectionId
+                    player
                 );
                 return;
             }
@@ -91,7 +91,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
             {
                 Services.Instance.Writer.WriteLine(
                     "<p>To begin crafting you require the correct tools such as a crafting bench.</p>",
-                    player.ConnectionId
+                    player
                 );
                 return;
             }
@@ -102,10 +102,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
 
             if (recipe == null)
             {
-                Services.Instance.Writer.WriteLine(
-                    "<p>You can't craft that.</p>",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine("<p>You can't craft that.</p>", player);
                 return;
             }
 
@@ -122,7 +119,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
                 {
                     Services.Instance.Writer.WriteLine(
                         "<p>You appear to be missing required items.</p>",
-                        player.ConnectionId
+                        player
                     );
                     return;
                 }
@@ -130,7 +127,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
 
             Services.Instance.Writer.WriteLine(
                 $"<p>You begin crafting {Helpers.AddArticle(recipe.Title).ToLower()}.</p>",
-                player.ConnectionId
+                player
             );
 
             if (player.RollSkill(SkillName.Crafting, true))
@@ -150,7 +147,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
                     {
                         Services.Instance.Writer.WriteLine(
                             "<p>You appear to be missing required items.</p>",
-                            player.ConnectionId
+                            player
                         );
                         return;
                     }
@@ -178,13 +175,13 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
                     );
                     Services.Instance.Writer.WriteLine(
                         $"<p>You continue working on {Helpers.AddArticle(recipe.Title).ToLower()}.</p>",
-                        player.ConnectionId,
+                        player,
                         2000
                     );
 
                     Services.Instance.Writer.WriteLine(
                         $"<p class='improve'>You have successfully created {Helpers.AddArticle(recipe.Title).ToLower()}.</p>",
-                        player.ConnectionId,
+                        player,
                         4000
                     );
                 }
@@ -198,12 +195,12 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
                     player.Weight += recipe.CreatedItem.Weight;
                     Services.Instance.Writer.WriteLine(
                         "<p>You slave over the crafting bench working away.</p>",
-                        player.ConnectionId,
+                        player,
                         2000
                     );
                     Services.Instance.Writer.WriteLine(
                         $"<p class='improve'>You have crafted successfully {Helpers.AddArticle(recipe.Title).ToLower()}.</p>",
-                        player.ConnectionId,
+                        player,
                         4000
                     );
                 }
@@ -228,7 +225,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
                     {
                         Services.Instance.Writer.WriteLine(
                             "<p>You appear to be missing required items.</p>",
-                            player.ConnectionId
+                            player
                         );
                         return;
                     }
@@ -259,7 +256,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
                 {
                     Services.Instance.Writer.WriteLine(
                         $"<p>You have failed in making {recipe.Title}.</p>",
-                        player.ConnectionId,
+                        player,
                         2000
                     );
                 }
@@ -267,7 +264,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
                 {
                     Services.Instance.Writer.WriteLine(
                         $"<p>You have failed to craft {recipe.Title}. It looks nothing like!</p>",
-                        player.ConnectionId,
+                        player,
                         2000
                     );
                 }
@@ -292,7 +289,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
             {
                 Services.Instance.Writer.WriteLine(
                     "<p>No crafting recipes found with the current materials you have.</p>",
-                    player.ConnectionId
+                    player
                 );
                 return;
             }
@@ -314,7 +311,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
 
             sb.Append($"</table>");
 
-            Services.Instance.Writer.WriteLine(sb.ToString(), player.ConnectionId);
+            Services.Instance.Writer.WriteLine(sb.ToString(), player);
         }
 
         private List<CraftingRecipes> ReturnValidRecipes(

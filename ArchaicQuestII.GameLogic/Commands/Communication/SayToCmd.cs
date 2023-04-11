@@ -40,7 +40,7 @@ public class SayToCmd : ICommand
     {
         if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
         {
-            Services.Instance.Writer.WriteLine("<p>Say what?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Say what?</p>", player);
             return;
         }
 
@@ -53,13 +53,13 @@ public class SayToCmd : ICommand
 
         if (sayTo == null)
         {
-            Services.Instance.Writer.WriteLine("<p>They are not here.</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>They are not here.</p>", player);
             return;
         }
 
         Services.Instance.Writer.WriteLine(
             $"<p class='say'>You say to {sayTo.Name}, {text}</p>",
-            player.ConnectionId
+            player
         );
         Services.Instance.UpdateClient.UpdateCommunication(
             player,
@@ -73,7 +73,7 @@ public class SayToCmd : ICommand
             {
                 Services.Instance.Writer.WriteLine(
                     $"<p class='say'>{player.Name} says to you, {text}</p>",
-                    pc.ConnectionId
+                    pc
                 );
                 Services.Instance.UpdateClient.UpdateCommunication(
                     pc,
@@ -85,7 +85,7 @@ public class SayToCmd : ICommand
             {
                 Services.Instance.Writer.WriteLine(
                     $"<p class='say'>{player.Name} says to {sayTo.Name}, {text}</p>",
-                    pc.ConnectionId
+                    pc
                 );
                 Services.Instance.UpdateClient.UpdateCommunication(
                     pc,

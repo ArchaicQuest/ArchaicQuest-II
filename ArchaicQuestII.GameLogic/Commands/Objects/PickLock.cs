@@ -46,16 +46,13 @@ public class PickLockCmd : ICommand
 
         if (skill == null)
         {
-            Services.Instance.Writer.WriteLine(
-                "<p>You don't know how to do that.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>You don't know how to do that.</p>", player);
             return;
         }
 
         if (string.IsNullOrEmpty(target))
         {
-            Services.Instance.Writer.WriteLine("<p>Lock pick what?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Lock pick what?</p>", player);
             return;
         }
 
@@ -63,7 +60,7 @@ public class PickLockCmd : ICommand
         {
             Services.Instance.Writer.WriteLine(
                 "<p>You are blind and can't see a thing!</p>",
-                player.ConnectionId
+                player
             );
             return;
         }
@@ -76,10 +73,7 @@ public class PickLockCmd : ICommand
         {
             if (roomExit == null)
             {
-                Services.Instance.Writer.WriteLine(
-                    "<p>You don't see that here.",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine("<p>You don't see that here.", player);
                 return;
             }
 
@@ -89,10 +83,7 @@ public class PickLockCmd : ICommand
 
         if (item.Container.IsLocked != true)
         {
-            Services.Instance.Writer.WriteLine(
-                $"<p>{item.Name} is already unlocked.",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine($"<p>{item.Name} is already unlocked.", player);
             return;
         }
 
@@ -105,10 +96,10 @@ public class PickLockCmd : ICommand
             item.Container.IsLocked = false;
             Services.Instance.Writer.WriteLine(
                 $"You deftly pick the lock of {item.Name.FirstCharacterToLower()} and it clicks open.",
-                player.ConnectionId
+                player
             );
             Services.Instance.UpdateClient.PlaySound("unlock", player);
-            Services.Instance.Writer.WriteLine($"*Click*", player.ConnectionId);
+            Services.Instance.Writer.WriteLine($"*Click*", player);
             Services.Instance.Writer.WriteToOthersInRoom(
                 $"{player.Name} deftly picks the lock of {item.Name} and it clicks open.",
                 room,
@@ -119,7 +110,7 @@ public class PickLockCmd : ICommand
         {
             Services.Instance.Writer.WriteLine(
                 $"You try to pick the lock of {item.Name.FirstCharacterToLower()}, but it resists your attempts.",
-                player.ConnectionId
+                player
             );
             Services.Instance.Writer.WriteToOthersInRoom(
                 $"{player.Name} tries to pick the lock of {item.Name}.",
@@ -135,10 +126,7 @@ public class PickLockCmd : ICommand
     {
         if (exitDoor.Locked != true)
         {
-            Services.Instance.Writer.WriteLine(
-                $"<p>{exitDoor.Name} is already unlocked.",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine($"<p>{exitDoor.Name} is already unlocked.", player);
             return;
         }
 
@@ -151,10 +139,10 @@ public class PickLockCmd : ICommand
             exitDoor.Locked = false;
             Services.Instance.Writer.WriteLine(
                 $"You deftly pick the lock of the door and it clicks open.",
-                player.ConnectionId
+                player
             );
             Services.Instance.UpdateClient.PlaySound("unlock", player);
-            Services.Instance.Writer.WriteLine($"*Click*", player.ConnectionId);
+            Services.Instance.Writer.WriteLine($"*Click*", player);
             Services.Instance.Writer.WriteToOthersInRoom(
                 $"{player.Name} deftly picks the lock of the door and it clicks open.",
                 room,
@@ -165,7 +153,7 @@ public class PickLockCmd : ICommand
         {
             Services.Instance.Writer.WriteLine(
                 $"You try to pick the lock of the door, but it resists your attempts.",
-                player.ConnectionId
+                player
             );
             Services.Instance.Writer.WriteToOthersInRoom(
                 $"{player.Name} tries to pick the lock of the door.",

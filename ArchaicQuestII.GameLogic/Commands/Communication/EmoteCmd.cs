@@ -41,7 +41,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
         {
             if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
             {
-                Services.Instance.Writer.WriteLine("<p>Emote what?</p>", player.ConnectionId);
+                Services.Instance.Writer.WriteLine("<p>Emote what?</p>", player);
                 return;
             }
 

@@ -22,7 +22,7 @@ namespace ArchaicQuestII.GameLogic.World.Area
 
             Services.Instance.Writer.WriteLine(
                 $"<p>You have traversed into <b>{area.Title}</b>.",
-                player.ConnectionId
+                player
             );
         }
     }

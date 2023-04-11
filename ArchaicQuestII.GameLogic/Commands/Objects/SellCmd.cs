@@ -46,17 +46,14 @@ public class SellCmd : ICommand
 
         if (string.IsNullOrEmpty(itemName))
         {
-            Services.Instance.Writer.WriteLine("<p>Sell what?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Sell what?</p>", player);
             return;
         }
         var vendor = room.Mobs.FirstOrDefault(x => x.Shopkeeper.Equals(true));
 
         if (vendor == null)
         {
-            Services.Instance.Writer.WriteLine(
-                "<p>You can't do that here.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>You can't do that here.</p>", player);
             return;
         }
 
@@ -70,7 +67,7 @@ public class SellCmd : ICommand
         {
             Services.Instance.Writer.WriteLine(
                 $"<p>{vendor.Name} says 'You don't have that item.'</p>",
-                player.ConnectionId
+                player
             );
             return;
         }
@@ -83,7 +80,7 @@ public class SellCmd : ICommand
         {
             Services.Instance.Writer.WriteLine(
                 $"<p>{vendor.Name} says 'I'm not interested in {hasItem.Name.ToLower()}.'</p>",
-                player.ConnectionId
+                player
             );
             return;
         }
@@ -107,7 +104,7 @@ public class SellCmd : ICommand
 
         Services.Instance.Writer.WriteLine(
             $"<p>You sell {hasItem.Name.ToLower()} for {(vendorBuyPrice <= 0 ? 1 : vendorBuyPrice)} gold.</p>",
-            player.ConnectionId
+            player
         );
     }
 }

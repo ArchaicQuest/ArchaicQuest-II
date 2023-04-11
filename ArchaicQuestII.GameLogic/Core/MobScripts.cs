@@ -98,7 +98,7 @@ namespace ArchaicQuestII.GameLogic.Core
             }
             Services.Instance.Writer.WriteLine(
                 $"<p class='mob-emote'>{n.Replace("#name#", player.Name)}</p>",
-                player.ConnectionId,
+                player,
                 delay
             );
         }
@@ -111,7 +111,7 @@ namespace ArchaicQuestII.GameLogic.Core
             }
             Services.Instance.Writer.WriteLine(
                 $"<p class='mob-emote'>{mob.Name} says, \"{n}\"</p>",
-                player.ConnectionId,
+                player,
                 delay
             );
         }
@@ -339,7 +339,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
             Services.Instance.Writer.WriteLine(
                 $"<p class='gain'>Updated Quest: {quest.Title}!</p>",
-                player.ConnectionId
+                player
             );
         }
 
@@ -367,7 +367,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
             Services.Instance.Writer.WriteLine(
                 $"<p class='gain'>New Quest: {quest.Title}!</p>",
-                player.ConnectionId
+                player
             );
             Services.Instance.UpdateClient.UpdateQuest(player);
         }
@@ -381,11 +381,11 @@ namespace ArchaicQuestII.GameLogic.Core
                 quest.Completed = true;
                 Services.Instance.Writer.WriteLine(
                     $"<p class='improve'>Quest Complete: {quest.Title}!</p>",
-                    player.ConnectionId
+                    player
                 );
                 Services.Instance.Writer.WriteLine(
                     $"<p class='improve'>You gain {quest.ExpGain} experience points{(quest.GoldGain == 0 ? "." : $" and {quest.GoldGain} gold. ")}</p>",
-                    player.ConnectionId
+                    player
                 );
 
                 player.GainExperiencePoints(quest.ExpGain, false);
@@ -433,7 +433,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
             Services.Instance.Writer.WriteLine(
                 $"<p class='mob'>{mob.Name} {says}, '{n.Replace("#name#", player.Name)}'</p>",
-                player.ConnectionId,
+                player,
                 delay
             );
         }
@@ -446,7 +446,7 @@ namespace ArchaicQuestII.GameLogic.Core
             }
             Services.Instance.Writer.WriteLine(
                 $"<p class='mob-emote'>{n.Replace("#name#", player.Name)}</p>",
-                player.ConnectionId,
+                player,
                 delay
             );
         }

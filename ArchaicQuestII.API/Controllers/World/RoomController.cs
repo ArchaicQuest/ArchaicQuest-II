@@ -8,7 +8,6 @@ using System.Linq;
 using ArchaicQuestII.API.Entities;
 using ArchaicQuestII.API.Helpers;
 using ArchaicQuestII.API.Models;
-using ArchaicQuestII.GameLogic.Character.Help;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Crafting;
@@ -17,6 +16,7 @@ using ArchaicQuestII.GameLogic.Skill.Model;
 using Newtonsoft.Json;
 using ArchaicQuestII.GameLogic.World.Area;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Core;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 

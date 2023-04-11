@@ -142,7 +142,7 @@ namespace ArchaicQuestII.GameLogic.Loops
                 {
                     Services.Instance.Writer.WriteLine(
                         "<p>The hairs on your neck stand up.</p>",
-                        player.ConnectionId
+                        player
                     );
                 }
                 //  }

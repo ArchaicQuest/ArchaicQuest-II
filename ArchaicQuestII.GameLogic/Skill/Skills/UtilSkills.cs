@@ -34,20 +34,14 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
         {
             if (string.IsNullOrEmpty(player.Target))
             {
-                Services.Instance.Writer.WriteLine(
-                    "You are not fighting anyone.",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine("You are not fighting anyone.", player);
 
                 return 0;
             }
 
             if (player.Equipped.Wielded == null)
             {
-                Services.Instance.Writer.WriteLine(
-                    "You must wield a weapon to disarm.",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine("You must wield a weapon to disarm.", player);
 
                 return 0;
             }
@@ -56,7 +50,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             {
                 Services.Instance.Writer.WriteLine(
                     "Your opponent is not wielding a weapon.",
-                    player.ConnectionId
+                    player
                 );
 
                 return 0;
@@ -161,7 +155,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
         {
             if (target == null)
             {
-                Services.Instance.Writer.WriteLine("Rescue whom?", player.ConnectionId);
+                Services.Instance.Writer.WriteLine("Rescue whom?", player);
                 return 0;
             }
 
@@ -169,7 +163,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             {
                 Services.Instance.Writer.WriteLine(
                     "You can only rescue those in your group.",
-                    player.ConnectionId
+                    player
                 );
                 return 0;
             }
@@ -178,7 +172,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             {
                 Services.Instance.Writer.WriteLine(
                     $"{target.Name} is not fighting right now.",
-                    player.ConnectionId
+                    player
                 );
 
                 return 0;
@@ -186,10 +180,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
             if (target == player)
             {
-                Services.Instance.Writer.WriteLine(
-                    "What about fleeing instead?",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine("What about fleeing instead?", player);
 
                 return 0;
             }
@@ -235,16 +226,13 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
         {
             if (player.Affects.Berserk)
             {
-                Services.Instance.Writer.WriteLine("You get a little madder", player.ConnectionId);
+                Services.Instance.Writer.WriteLine("You get a little madder", player);
                 return 0;
             }
 
             if (player.Attributes.Attribute[EffectLocation.Moves] < 50)
             {
-                Services.Instance.Writer.WriteLine(
-                    "You can't get up enough energy.",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine("You can't get up enough energy.", player);
                 return 0;
             }
 
@@ -304,7 +292,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                 {
                     Services.Instance.Writer.WriteLine(
                         "Your pulse speeds up, but nothing happens",
-                        target.ConnectionId
+                        target
                     );
 
                     player.Attributes.Attribute[EffectLocation.Moves] = player.Attributes.Attribute[
@@ -331,7 +319,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             {
                 Services.Instance.Writer.WriteLine(
                     $"You are already riding a mount called {player.Mounted.Name}",
-                    player.ConnectionId
+                    player
                 );
                 return 0;
             }
@@ -343,7 +331,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             {
                 Services.Instance.Writer.WriteLine(
                     $"This mount is ridden by {target.Mounted.MountedBy}",
-                    player.ConnectionId
+                    player
                 );
                 return 0;
             }
@@ -352,17 +340,14 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             {
                 Services.Instance.Writer.WriteLine(
                     $"You must dismount {player.Mounted.Name} first.",
-                    player.ConnectionId
+                    player
                 );
                 return 0;
             }
 
             if (!target.Mounted.IsMount)
             {
-                Services.Instance.Writer.WriteLine(
-                    $"{target.Name} is not a mount.",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine($"{target.Name} is not a mount.", player);
                 return 0;
             }
 
@@ -391,10 +376,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
         {
             if (player.Affects.Custom.FirstOrDefault(x => x.Name.Equals("War Cry")) != null)
             {
-                Services.Instance.Writer.WriteLine(
-                    "You are already affected by War Cry.",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine("You are already affected by War Cry.", player);
                 return 0;
             }
 

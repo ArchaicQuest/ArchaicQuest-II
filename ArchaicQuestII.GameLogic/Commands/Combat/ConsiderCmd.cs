@@ -44,7 +44,7 @@ public class ConsiderCmd : ICommand
 
         if (string.IsNullOrEmpty(target))
         {
-            Services.Instance.Writer.WriteLine("<p>Consider killing who?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Consider killing who?</p>", player);
             return;
         }
 
@@ -60,25 +60,19 @@ public class ConsiderCmd : ICommand
 
         if (victim == null)
         {
-            Services.Instance.Writer.WriteLine("<p>Consider killing who?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Consider killing who?</p>", player);
             return;
         }
 
         if (victim == player)
         {
-            Services.Instance.Writer.WriteLine(
-                "<p>You could take yourself.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>You could take yourself.</p>", player);
             return;
         }
 
         if (!victim.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
         {
-            Services.Instance.Writer.WriteLine(
-                "<p>You would need a lot of luck!</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>You would need a lot of luck!</p>", player);
             return;
         }
 
@@ -87,60 +81,42 @@ public class ConsiderCmd : ICommand
         switch (diff)
         {
             case <= -10:
-                Services.Instance.Writer.WriteLine(
-                    "<p>Now where did that chicken go?</p>",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine("<p>Now where did that chicken go?</p>", player);
                 break;
             case <= -5:
-                Services.Instance.Writer.WriteLine(
-                    "<p>You could do it with a needle!</p>",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine("<p>You could do it with a needle!</p>", player);
                 break;
             case <= -2:
-                Services.Instance.Writer.WriteLine("<p>Easy.</p>", player.ConnectionId);
+                Services.Instance.Writer.WriteLine("<p>Easy.</p>", player);
                 break;
             case <= -1:
-                Services.Instance.Writer.WriteLine("<p>Fairly easy.</p>", player.ConnectionId);
+                Services.Instance.Writer.WriteLine("<p>Fairly easy.</p>", player);
                 break;
             case 0:
-                Services.Instance.Writer.WriteLine(
-                    "<p>The perfect match!</p>",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine("<p>The perfect match!</p>", player);
                 break;
             case <= 1:
-                Services.Instance.Writer.WriteLine(
-                    "<p>You would need some luck!</p>",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine("<p>You would need some luck!</p>", player);
                 break;
             case <= 2:
-                Services.Instance.Writer.WriteLine(
-                    "<p>You would need a lot of luck!</p>",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine("<p>You would need a lot of luck!</p>", player);
                 break;
             case <= 3:
                 Services.Instance.Writer.WriteLine(
                     "<p>You would need a lot of luck and great equipment!</p>",
-                    player.ConnectionId
+                    player
                 );
                 break;
             case <= 5:
-                Services.Instance.Writer.WriteLine(
-                    "<p>Do you feel lucky, punk?</p>",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine("<p>Do you feel lucky, punk?</p>", player);
                 break;
             case <= 10:
-                Services.Instance.Writer.WriteLine("<p>Are you mad!?</p>", player.ConnectionId);
+                Services.Instance.Writer.WriteLine("<p>Are you mad!?</p>", player);
                 break;
             case <= 100:
                 Services.Instance.Writer.WriteLine(
                     "<p>You ARE mad!? Death stands beside you ready to take your soul.</p>",
-                    player.ConnectionId
+                    player
                 );
                 break;
         }

@@ -48,7 +48,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             var obj = input.ElementAtOrDefault(1)?.ToLower() ?? player.Target;
             if (string.IsNullOrEmpty(obj))
             {
-                Services.Instance.Writer.WriteLine("Trip What!?.", player.ConnectionId);
+                Services.Instance.Writer.WriteLine("Trip What!?.", player);
                 return;
             }
 
@@ -78,7 +78,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
 
             if (target.Lag <= 1)
             {
-                Services.Instance.Writer.WriteLine(
+                Services.Instance.Writer.WriteLineAll(
                     $"You trip {target.Name} and {target.Name} goes down!"
                 );
                 textToRoom = $"{player.Name} trips {target.Name} and {target.Name} goes down!";
@@ -96,7 +96,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 //Player already stunned
                 player.Lag += 1;
 
-                Services.Instance.Writer.WriteLine($"You try to trip {target.Name} and miss.");
+                Services.Instance.Writer.WriteLineAll($"You try to trip {target.Name} and miss.");
                 textToRoom =
                     $"{player.Name} tries to trip {target.Name} but {target.Name} easily avoids it.";
                 textToTarget = $"{player.Name} tries to trip you but fails.";

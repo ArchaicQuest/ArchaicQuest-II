@@ -120,7 +120,7 @@ namespace ArchaicQuestII.GameLogic.Commands.World
                 }
             }
 
-            Services.Instance.Writer.WriteLine(sb.ToString(), player.ConnectionId);
+            Services.Instance.Writer.WriteLine(sb.ToString(), player);
         }
 
         private void ScanDirection(Player player, Room room, string direction)
@@ -145,10 +145,7 @@ namespace ArchaicQuestII.GameLogic.Commands.World
 
             if (getDirection == null)
             {
-                Services.Instance.Writer.WriteLine(
-                    "You can't look in that direction.",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine("You can't look in that direction.", player);
                 return;
             }
 
@@ -198,7 +195,7 @@ namespace ArchaicQuestII.GameLogic.Commands.World
                 sb.Append("<p>There is nobody there.</p>");
             }
 
-            Services.Instance.Writer.WriteLine(sb.ToString(), player.ConnectionId);
+            Services.Instance.Writer.WriteLine(sb.ToString(), player);
         }
     }
 }

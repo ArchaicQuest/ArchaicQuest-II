@@ -69,11 +69,11 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
 
                 _writer.WriteLine(
                     $"<p>Your {spellName} {_damage.DamageText(totalDam).Value} {target.Name}  <span class='damage'>[{damage}]</span></p>",
-                    player.ConnectionId
+                    player
                 );
                 _writer.WriteLine(
                     $"<p>{player.Name}'s {spellName} {_damage.DamageText(totalDam).Value} you!  <span class='damage'>[{damage}]</span></p>",
-                    target.ConnectionId
+                    target
                 );
 
                 foreach (var pc in room.Players)
@@ -88,7 +88,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
 
                     _writer.WriteLine(
                         $"<p>{player.Name}'s {spellName} {_damage.DamageText(totalDam).Value} {target.Name}  <span class='damage'>[{damage}]</span></p>",
-                        pc.ConnectionId
+                        pc
                     );
                 }
 
@@ -139,10 +139,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
                     == target.MaxAttributes.Attribute[attribute]
             )
             {
-                _writer.WriteLine(
-                    ReplacePlaceholders(noAffect, target, false),
-                    player.ConnectionId
-                );
+                _writer.WriteLine(ReplacePlaceholders(noAffect, target, false), player);
                 return false;
             }
 
@@ -179,20 +176,20 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
             {
                 _writer.WriteLine(
                     $"<p>{ReplacePlaceholders(emote.Hit.ToPlayer, target, true)}</p>",
-                    target.ConnectionId
+                    target
                 );
             }
             else
             {
                 _writer.WriteLine(
                     $"<p>{ReplacePlaceholders(emote.Hit.ToPlayer, target, false)}</p>",
-                    player.ConnectionId
+                    player
                 );
             }
 
             if (!string.IsNullOrEmpty(emote.Hit.ToTarget))
             {
-                _writer.WriteLine($"<p>{emote.Hit.ToTarget}</p>", target.ConnectionId);
+                _writer.WriteLine($"<p>{emote.Hit.ToTarget}</p>", target);
             }
 
             foreach (var pc in room.Players)
@@ -207,7 +204,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
 
                 _writer.WriteLine(
                     $"<p>{ReplacePlaceholders(emote.Hit.ToRoom, target, false)}</p>",
-                    pc.ConnectionId
+                    pc
                 );
             }
         }

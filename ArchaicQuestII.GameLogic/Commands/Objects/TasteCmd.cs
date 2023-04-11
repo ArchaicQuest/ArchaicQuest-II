@@ -45,7 +45,7 @@ public class TasteCmd : ICommand
 
         if (string.IsNullOrEmpty(target))
         {
-            Services.Instance.Writer.WriteLine("<p>Taste what?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Taste what?</p>", player);
             return;
         }
 
@@ -55,16 +55,13 @@ public class TasteCmd : ICommand
 
         if (item == null)
         {
-            Services.Instance.Writer.WriteLine(
-                "<p>You don't see that here.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>You don't see that here.</p>", player);
             return;
         }
 
         Services.Instance.Writer.WriteLine(
             $"<p class='{(!player.CanSee(room) ? "room-dark" : "")}'>{item.Description.Taste}</p>",
-            player.ConnectionId
+            player
         );
         Services.Instance.Writer.WriteToOthersInRoom(
             $"<p>{player.Name} tastes {item.Name.ToLower()}.</p>",

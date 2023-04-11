@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Help;
 using ArchaicQuestII.GameLogic.Character.MobFunctions;
 using ArchaicQuestII.GameLogic.Character.MobFunctions.Healer;
 using ArchaicQuestII.GameLogic.Combat;
@@ -28,7 +27,6 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
         private readonly Mock<Cache> _cache;
         private readonly Mock<Services> _core;
         private readonly Mock<IMobFunctions> _mobFunctions;
-        private readonly Mock<IHelp> _help;
         private readonly Mock<IMobScripts> _mobScripts;
         private readonly Mock<IUtilSkills> _utilSkills;
         private readonly Mock<IPassiveSkills> _passiveSkills;
@@ -47,7 +45,6 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
             _mobFunctions = new Mock<IMobFunctions>();
             _mobScripts = new Mock<IMobScripts>();
             _player = new Player();
-            _help = new Mock<IHelp>();
             _utilSkills = new Mock<IUtilSkills>();
             _passiveSkills = new Mock<IPassiveSkills>();
             _healer = new Mock<IHealer>();

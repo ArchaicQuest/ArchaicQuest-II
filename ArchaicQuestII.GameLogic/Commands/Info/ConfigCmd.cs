@@ -46,7 +46,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 
             sb.Append("</ul>");
 
-            Services.Instance.Writer.WriteLine(sb.ToString(), player.ConnectionId);
+            Services.Instance.Writer.WriteLine(sb.ToString(), player);
         }
     }
 }

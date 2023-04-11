@@ -42,7 +42,7 @@ public class ImmLevelUpCmd : ICommand
 
         if (otherPlayer == null)
         {
-            Services.Instance.Writer.WriteLine($"No player '{target}' found.", player.ConnectionId);
+            Services.Instance.Writer.WriteLine($"No player '{target}' found.", player);
             return;
         }
 

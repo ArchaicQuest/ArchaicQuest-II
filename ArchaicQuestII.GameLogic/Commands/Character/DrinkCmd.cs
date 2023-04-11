@@ -44,7 +44,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
             if (string.IsNullOrEmpty(target))
             {
-                Services.Instance.Writer.WriteLine("<p>Drink what?</p>", player.ConnectionId);
+                Services.Instance.Writer.WriteLine("<p>Drink what?</p>", player);
                 return;
             }
 
@@ -54,10 +54,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
             if (drink == null)
             {
-                Services.Instance.Writer.WriteLine(
-                    "<p>You can't find that.</p>",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine("<p>You can't find that.</p>", player);
                 return;
             }
 
@@ -65,7 +62,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
             {
                 Services.Instance.Writer.WriteLine(
                     $"<p>You can't drink from {drink.Name.ToLower()}.</p>",
-                    player.ConnectionId
+                    player
                 );
                 return;
             }
@@ -74,7 +71,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
             Services.Instance.Writer.WriteLine(
                 $"<p>You drink from {drink.Name.ToLower()}.</p>",
-                player.ConnectionId
+                player
             );
             Services.Instance.Writer.WriteToOthersInRoom(
                 $"<p>{player.Name} drink from {drink.Name.ToLower()}.</p>",

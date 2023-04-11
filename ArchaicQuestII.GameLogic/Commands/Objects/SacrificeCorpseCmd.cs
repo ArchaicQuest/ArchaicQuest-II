@@ -52,7 +52,7 @@ sac rat
 
         if (string.IsNullOrEmpty(target))
         {
-            Services.Instance.Writer.WriteLine("<p>Sacrifice whom?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Sacrifice whom?</p>", player);
             return;
         }
 
@@ -68,7 +68,7 @@ sac rat
                 coinCount == 1
                     ? "The gods give you a measly gold coin for your sacrifice."
                     : $"The gods give you {coinCount} gold coins for your sacrifice.",
-                player.ConnectionId
+                player
             );
 
             Services.Instance.Writer.WriteToOthersInRoom(

@@ -47,7 +47,7 @@ public class CloseCmd : ICommand
 
         if (string.IsNullOrEmpty(target))
         {
-            Services.Instance.Writer.WriteLine("<p>Close what?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Close what?</p>", player);
             return;
         }
 
@@ -55,7 +55,7 @@ public class CloseCmd : ICommand
         {
             Services.Instance.Writer.WriteLine(
                 "<p>You are blind and can't see a thing!</p>",
-                player.ConnectionId
+                player
             );
             return;
         }
@@ -65,29 +65,23 @@ public class CloseCmd : ICommand
 
         if (item != null && item.Container.CanOpen != true)
         {
-            Services.Instance.Writer.WriteLine(
-                $"<p>{item.Name} cannot be closed",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine($"<p>{item.Name} cannot be closed", player);
             return;
         }
 
         if (item == null)
         {
-            Services.Instance.Writer.WriteLine("<p>You don't see that here.", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>You don't see that here.", player);
             return;
         }
 
         if (!item.Container.IsOpen)
         {
-            Services.Instance.Writer.WriteLine("<p>It's already closed.", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>It's already closed.", player);
             return;
         }
 
-        Services.Instance.Writer.WriteLine(
-            $"<p>You close {item.Name.ToLower()}.</p>",
-            player.ConnectionId
-        );
+        Services.Instance.Writer.WriteLine($"<p>You close {item.Name.ToLower()}.</p>", player);
         Services.Instance.Writer.WriteToOthersInRoom(
             $"<p>{player.Name} closes {item.Name.ToLower()}</p>",
             room,

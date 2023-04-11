@@ -46,10 +46,7 @@ public class EnterCmd : ICommand
 
         if (string.IsNullOrEmpty(target))
         {
-            Services.Instance.Writer.WriteLine(
-                "<p>You can't do that here.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>You can't do that here.</p>", player);
             return;
         }
 
@@ -58,23 +55,17 @@ public class EnterCmd : ICommand
 
         if (item == null)
         {
-            Services.Instance.Writer.WriteLine(
-                "<p>You don't see that here.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>You don't see that here.</p>", player);
             return;
         }
 
         if (item.ItemType != Item.Item.ItemTypes.Portal)
         {
-            Services.Instance.Writer.WriteLine("<p>You can't enter that.</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>You can't enter that.</p>", player);
             return;
         }
 
-        Services.Instance.Writer.WriteLine(
-            $"<p>You {item.Portal.EnterDescription}</p>",
-            player.ConnectionId
-        );
+        Services.Instance.Writer.WriteLine($"<p>You {item.Portal.EnterDescription}</p>", player);
         Services.Instance.Writer.WriteToOthersInRoom(
             $"<p>{player.Name} {item.Portal.EnterDescription}</p>",
             room,

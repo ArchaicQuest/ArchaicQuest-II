@@ -63,7 +63,7 @@ Related help files: get, put, give, drop
 
         if (string.IsNullOrEmpty(target))
         {
-            Services.Instance.Writer.WriteLine("<p>Drop what?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Drop what?</p>", player);
             return;
         }
 
@@ -71,7 +71,7 @@ Related help files: get, put, give, drop
         {
             Services.Instance.Writer.WriteLine(
                 "<p>You are blind and can't see a thing!</p>",
-                player.ConnectionId
+                player
             );
             return;
         }
@@ -99,10 +99,7 @@ Related help files: get, put, give, drop
 
         if (item == null)
         {
-            Services.Instance.Writer.WriteLine(
-                "<p>You don't have that item.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>You don't have that item.</p>", player);
             return;
         }
 
@@ -110,7 +107,7 @@ Related help files: get, put, give, drop
         {
             Services.Instance.Writer.WriteLine(
                 $"<p>You must remove {item.Name.ToLower()} before you can drop it.</p>",
-                player.ConnectionId
+                player
             );
             return;
         }
@@ -119,7 +116,7 @@ Related help files: get, put, give, drop
         {
             Services.Instance.Writer.WriteLine(
                 $"<p>You can't let go of {item.Name.ToLower()}. It appears to be cursed.</p>",
-                player.ConnectionId
+                player
             );
             return;
         }
@@ -128,10 +125,7 @@ Related help files: get, put, give, drop
         room.Items.Add(item);
         player.Weight -= item.Weight;
 
-        Services.Instance.Writer.WriteLine(
-            $"<p>You drop {item.Name.ToLower()}.</p>",
-            player.ConnectionId
-        );
+        Services.Instance.Writer.WriteLine($"<p>You drop {item.Name.ToLower()}.</p>", player);
         Services.Instance.Writer.WriteToOthersInRoom(
             $"<p>{player.Name} drops {item.Name.ToLower()}.</p>",
             room,
@@ -146,10 +140,7 @@ Related help files: get, put, give, drop
     {
         if (player.Inventory.Count == 0)
         {
-            Services.Instance.Writer.WriteLine(
-                "<p>You don't have anything to drop.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>You don't have anything to drop.</p>", player);
             return;
         }
 
@@ -161,7 +152,7 @@ Related help files: get, put, give, drop
                 {
                     Services.Instance.Writer.WriteLine(
                         $"<p>You must remove {player.Inventory[i].Name.ToLower()} before you can drop it.</p>",
-                        player.ConnectionId
+                        player
                     );
                     return;
                 }
@@ -170,7 +161,7 @@ Related help files: get, put, give, drop
                 {
                     Services.Instance.Writer.WriteLine(
                         $"<p>You can't let go of {player.Inventory[i].Name}. It appears to be cursed.</p>",
-                        player.ConnectionId
+                        player
                     );
                     return;
                 }
@@ -181,7 +172,7 @@ Related help files: get, put, give, drop
 
                 Services.Instance.Writer.WriteLine(
                     $"<p>You drop {player.Inventory[i].Name.ToLower()}.</p>",
-                    player.ConnectionId
+                    player
                 );
                 Services.Instance.Writer.WriteToOthersInRoom(
                     $"<p>{player.Name} drops {player.Inventory[i].Name.ToLower()}.</p>",
@@ -202,7 +193,7 @@ Related help files: get, put, give, drop
         {
             Services.Instance.Writer.WriteLine(
                 "<p>You don't have that much gold to drop.</p>",
-                player.ConnectionId
+                player
             );
         }
 
@@ -233,7 +224,7 @@ Related help files: get, put, give, drop
 
         Services.Instance.Writer.WriteLine(
             $"<p>You drop {(amount == 1 ? "1 gold coin." : $"{amount} gold coins.")}</p>",
-            player.ConnectionId
+            player
         );
 
         Services.Instance.Writer.WriteToOthersInRoom(
@@ -266,10 +257,7 @@ Related help files: get, put, give, drop
 
         if (containerObj == null)
         {
-            Services.Instance.Writer.WriteLine(
-                $"<p>You don't see that here.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine($"<p>You don't see that here.</p>", player);
             return;
         }
 
@@ -282,17 +270,14 @@ Related help files: get, put, give, drop
         {
             Services.Instance.Writer.WriteLine(
                 $"<p>{containerObj.Name} is not a container.</p>",
-                player.ConnectionId
+                player
             );
             return;
         }
 
         if (!containerObj.Container.IsOpen)
         {
-            Services.Instance.Writer.WriteLine(
-                $"<p>You need to open it first.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine($"<p>You need to open it first.</p>", player);
             return;
         }
 
@@ -310,10 +295,7 @@ Related help files: get, put, give, drop
 
         if (item == null)
         {
-            Services.Instance.Writer.WriteLine(
-                "<p>You don't have that item.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>You don't have that item.</p>", player);
             return;
         }
 
@@ -321,7 +303,7 @@ Related help files: get, put, give, drop
         {
             Services.Instance.Writer.WriteLine(
                 $"<p>You can't let go of {item.Name}. It appears to be cursed.</p>",
-                player.ConnectionId
+                player
             );
             return;
         }
@@ -334,7 +316,7 @@ Related help files: get, put, give, drop
 
         Services.Instance.Writer.WriteLine(
             $"<p>You put {item.Name.ToLower()} into {containerObj.Name.ToLower()}.</p>",
-            player.ConnectionId
+            player
         );
         Services.Instance.Writer.WriteToOthersInRoom(
             $"<p>{player.Name} puts {item.Name.ToLower()} into {containerObj.Name.ToLower()}.</p>",
@@ -350,7 +332,7 @@ Related help files: get, put, give, drop
         {
             Services.Instance.Writer.WriteLine(
                 $"<p>Too many items in the cook pot, Only 3 ingredients allowed.</p>",
-                player.ConnectionId
+                player
             );
         }
 
@@ -362,10 +344,7 @@ Related help files: get, put, give, drop
     {
         if (player.Inventory.Count == 0)
         {
-            Services.Instance.Writer.WriteLine(
-                "<p>You don't have anything to drop.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>You don't have anything to drop.</p>", player);
             return;
         }
 
@@ -375,7 +354,7 @@ Related help files: get, put, give, drop
             {
                 Services.Instance.Writer.WriteLine(
                     $"<p>You can't let go of {player.Inventory[i].Name}. It appears to be cursed.</p>",
-                    player.ConnectionId
+                    player
                 );
                 continue;
             }
@@ -385,7 +364,7 @@ Related help files: get, put, give, drop
 
             Services.Instance.Writer.WriteLine(
                 $"<p>You place {player.Inventory[i].Name.ToLower()} into {container.Name.ToLower()}.</p>",
-                player.ConnectionId
+                player
             );
             Services.Instance.Writer.WriteToOthersInRoom(
                 $"<p>{player.Name} puts {player.Inventory.Name.ToLower()} into {container.Name.ToLower()}.</p>",
@@ -403,7 +382,7 @@ Related help files: get, put, give, drop
         {
             Services.Instance.Writer.WriteLine(
                 $"<p>Too many items in the cook pot, Only 3 ingredients allowed.</p>",
-                player.ConnectionId
+                player
             );
         }
         Services.Instance.UpdateClient.UpdateInventory(player);

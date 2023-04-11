@@ -58,7 +58,7 @@ Related help files: get, put, give, drop
 
         if (string.IsNullOrEmpty(targetName))
         {
-            Services.Instance.Writer.WriteLine("<p>Give what to whom?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Give what to whom?</p>", player);
             return;
         }
 
@@ -80,14 +80,14 @@ Related help files: get, put, give, drop
         {
             Services.Instance.Writer.WriteLine(
                 "<p>You are blind and can't see a thing!</p>",
-                player.ConnectionId
+                player
             );
             return;
         }
 
         if (string.IsNullOrEmpty(itemName))
         {
-            Services.Instance.Writer.WriteLine("<p>Give what to whom?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Give what to whom?</p>", player);
             return;
         }
 
@@ -97,7 +97,7 @@ Related help files: get, put, give, drop
 
         if (target == null)
         {
-            Services.Instance.Writer.WriteLine("<p>They aren't here.</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>They aren't here.</p>", player);
             return;
         }
 
@@ -111,10 +111,7 @@ Related help files: get, put, give, drop
 
         if (item == null)
         {
-            Services.Instance.Writer.WriteLine(
-                "<p>You do not have that item.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>You do not have that item.</p>", player);
             return;
         }
 
@@ -122,7 +119,7 @@ Related help files: get, put, give, drop
         {
             Services.Instance.Writer.WriteLine(
                 $"<p>You must remove {item.Name.ToLower()} before you can give it.</p>",
-                player.ConnectionId
+                player
             );
             return;
         }
@@ -131,7 +128,7 @@ Related help files: get, put, give, drop
         {
             Services.Instance.Writer.WriteLine(
                 $"<p>You can't let go of {item.Name.ToLower()}. It appears to be cursed.</p>",
-                player.ConnectionId
+                player
             );
             return;
         }
@@ -141,11 +138,11 @@ Related help files: get, put, give, drop
 
         Services.Instance.Writer.WriteLine(
             $"<p>You give {item.Name.ToLower()} to {target.Name.ToLower()}.</p>",
-            player.ConnectionId
+            player
         );
         Services.Instance.Writer.WriteLine(
             $"<p>{player.Name} gives you {item.Name.ToLower()}.</p>",
-            target.ConnectionId
+            target
         );
         Services.Instance.Writer.WriteToOthersInRoom(
             $"<p>{player.Name} gives {item.Name.ToLower()} to {target.Name.ToLower()}.</p>",
@@ -178,7 +175,7 @@ Related help files: get, put, give, drop
         {
             Services.Instance.Writer.WriteLine(
                 $"<p>You are now over encumbered by carrying too much weight.</p>",
-                target.ConnectionId
+                target
             );
         }
     }
@@ -189,24 +186,24 @@ Related help files: get, put, give, drop
         {
             Services.Instance.Writer.WriteLine(
                 "<p>You don't have that much gold to give.</p>",
-                player.ConnectionId
+                player
             );
             return;
         }
 
         if (target == null)
         {
-            Services.Instance.Writer.WriteLine("<p>They aren't here.</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>They aren't here.</p>", player);
             return;
         }
 
         Services.Instance.Writer.WriteLine(
             $"<p>You give {target.Name} {(amount == 1 ? "1 gold coin." : $"{amount} gold coins.")}</p>",
-            player.ConnectionId
+            player
         );
         Services.Instance.Writer.WriteLine(
             $"<p>{player.Name} gives you {(amount == 1 ? "1 gold coin." : $"{amount} gold coins.")}</p>",
-            target.ConnectionId
+            target
         );
         Services.Instance.Writer.WriteToOthersInRoom(
             $"<p>{player.Name} gives {target.Name} some gold.</p>",

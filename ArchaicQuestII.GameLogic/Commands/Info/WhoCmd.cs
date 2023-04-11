@@ -41,7 +41,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
             sb.Append("</ul>");
             sb.Append($"<p>Players found: {Services.Instance.Cache.GetPlayerCache().Count}</p>");
 
-            Services.Instance.Writer.WriteLine(sb.ToString(), player.ConnectionId);
+            Services.Instance.Writer.WriteLine(sb.ToString(), player);
         }
     }
 }

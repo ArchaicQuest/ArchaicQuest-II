@@ -38,7 +38,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
         {
             if (string.IsNullOrEmpty(player.Mounted.Name))
             {
-                Services.Instance.Writer.WriteLine("<p>You are not using a mount</p>");
+                Services.Instance.Writer.WriteLineAll("<p>You are not using a mount</p>");
                 return;
             }
 
@@ -50,10 +50,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
                 getMount.Mounted.MountedBy = string.Empty;
                 player.Mounted.Name = string.Empty;
 
-                Services.Instance.Writer.WriteLine(
-                    $"<p>You dismount {getMount.Name}.</p>",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine($"<p>You dismount {getMount.Name}.</p>", player);
                 Services.Instance.Writer.WriteToOthersInRoom(
                     $"<p>{player.Name} dismounts {getMount.Name}.</p>",
                     room,

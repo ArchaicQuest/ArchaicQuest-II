@@ -49,7 +49,7 @@ public class ExamineCmd : ICommand
 
         if (string.IsNullOrEmpty(target))
         {
-            Services.Instance.Writer.WriteLine("<p>Examine what?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Examine what?</p>", player);
             return;
         }
 
@@ -65,7 +65,7 @@ public class ExamineCmd : ICommand
 
             Services.Instance.Writer.WriteLine(
                 $"<p class='{(!player.CanSee(room) ? "room-dark" : "")}'>{roomObjects.Examine ?? roomObjects.Look}",
-                player.ConnectionId
+                player
             );
 
             return;
@@ -73,7 +73,7 @@ public class ExamineCmd : ICommand
 
         if (item == null)
         {
-            Services.Instance.Writer.WriteLine("<p>You don't see that here.", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>You don't see that here.", player);
             return;
         }
 
@@ -84,7 +84,7 @@ public class ExamineCmd : ICommand
 
         Services.Instance.Writer.WriteLine(
             $"<p class='{(!player.CanSee(room) ? "room-dark" : "")}'>{examMessage}",
-            player.ConnectionId
+            player
         );
         Services.Instance.Writer.WriteToOthersInRoom(
             $"<p>{player.Name} examines {item.Name.ToLower()}.</p>",

@@ -48,10 +48,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
             if (room.Mobs.Find(x => x.Trainer) == null)
             {
-                Services.Instance.Writer.WriteLine(
-                    "<p>You can't do that here.</p>",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine("<p>You can't do that here.</p>", player);
                 return;
             }
 
@@ -59,7 +56,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
             {
                 Services.Instance.Writer.WriteLine(
                     "<p>You have no training sessions left.</p>",
-                    player.ConnectionId
+                    player
                 );
                 return;
             }
@@ -68,7 +65,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
             {
                 Services.Instance.Writer.WriteLine(
                     $"<p>You have {player.Trains} training session{(player.Trains > 1 ? "s" : "")} remaining.<br />You can train: str dex con int wis cha hp mana move.</p>",
-                    player.ConnectionId
+                    player
                 );
             }
             else
@@ -78,7 +75,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
                 {
                     Services.Instance.Writer.WriteLine(
                         $"<p>{stat} not found. Please choose from the following. <br /> You can train: str dex con int wis cha hp mana move.</p>",
-                        player.ConnectionId
+                        player
                     );
                     return;
                 }
@@ -99,7 +96,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
                     Services.Instance.Writer.WriteLine(
                         $"<p class='gain'>Your {statName.Item1} increases by {roll}.</p>",
-                        player.ConnectionId
+                        player
                     );
 
                     Services.Instance.UpdateClient.UpdateHP(player);
@@ -113,7 +110,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
                     Services.Instance.Writer.WriteLine(
                         $"<p class='gain'>Your {statName.Item1} increases by 1.</p>",
-                        player.ConnectionId
+                        player
                     );
                 }
 

@@ -91,7 +91,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 
                 sb.Append("</ul>");
 
-                Services.Instance.Writer.WriteLine(sb.ToString(), player.ConnectionId);
+                Services.Instance.Writer.WriteLine(sb.ToString(), player);
                 return;
             }
 
@@ -99,7 +99,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
             {
                 Services.Instance.Writer.WriteLine(
                     $"<p>You currently have {player.OpenedBook.Name} opened.</p>",
-                    player.ConnectionId
+                    player
                 );
                 return;
             }
@@ -129,7 +129,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     {
                         Services.Instance.Writer.WriteLine(
                             "<p>What page do you want to write on?</p>",
-                            player.ConnectionId
+                            player
                         );
                         return;
                     }
@@ -138,7 +138,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     {
                         Services.Instance.Writer.WriteLine(
                             "<p>Page number must be a number.</p>",
-                            player.ConnectionId
+                            player
                         );
                         return;
                     }
@@ -148,7 +148,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                 default:
                     Services.Instance.Writer.WriteLine(
                         "<p>What are you trying to do? Valid options: Close, Read, Rename, and Write.</p>",
-                        player.ConnectionId
+                        player
                     );
                     break;
             }
@@ -161,32 +161,26 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 
             if (item == null)
             {
-                Services.Instance.Writer.WriteLine(
-                    "<p>You dont have that book.</p>",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine("<p>You dont have that book.</p>", player);
                 return;
             }
 
             if (item.ItemType != Item.Item.ItemTypes.Book)
             {
-                Services.Instance.Writer.WriteLine(
-                    $"<p>{item.Name} is not a book.</p>",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine($"<p>{item.Name} is not a book.</p>", player);
                 return;
             }
 
             Services.Instance.Writer.WriteLine(
                 "<p>You open the book and prepare to 'read' or 'write' in it.</p>",
-                player.ConnectionId
+                player
             );
 
             foreach (var pc in room.Players)
             {
                 Services.Instance.Writer.WriteLine(
                     $"<p>{player.Name} gets out a book and opens it.</p>",
-                    pc.ConnectionId
+                    pc
                 );
             }
 
@@ -197,14 +191,14 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
         {
             Services.Instance.Writer.WriteLine(
                 $"<p>You close {player.OpenedBook.Name} and put it away.</p>",
-                player.ConnectionId
+                player
             );
 
             foreach (var pc in room.Players.Where(x => x.Id != player.Id))
             {
                 Services.Instance.Writer.WriteLine(
                     $"<p>{player.Name} closes a book and puts it away.</p>",
-                    pc.ConnectionId
+                    pc
                 );
             }
 
@@ -217,7 +211,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
             {
                 Services.Instance.Writer.WriteLine(
                     $"<p>That exceeds the page count of {player.OpenedBook.Book.Pages.Count}.</p>",
-                    player.ConnectionId
+                    player
                 );
                 return;
             }
@@ -226,7 +220,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
             {
                 Services.Instance.Writer.WriteLine(
                     $"<p>{player.OpenedBook.Name} does not contain that many pages.</p>",
-                    player.ConnectionId
+                    player
                 );
 
                 return;
@@ -234,15 +228,12 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 
             if (string.IsNullOrEmpty(player.OpenedBook.Book.Pages[pageNum]))
             {
-                Services.Instance.Writer.WriteLine(
-                    "<p>This page is blank.</p>",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine("<p>This page is blank.</p>", player);
                 return;
             }
 
             var result = Markdown.ToHtml(player.OpenedBook.Book.Pages[pageNum]);
-            Services.Instance.Writer.WriteLine($"<p>{result}</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine($"<p>{result}</p>", player);
         }
 
         private void WriteBook(Player player, int pageNum, string writing)
@@ -251,7 +242,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
             {
                 Services.Instance.Writer.WriteLine(
                     $"<p>{player.OpenedBook.Name} does not contain that many pages.</p>",
-                    player.ConnectionId
+                    player
                 );
                 return;
             }
@@ -277,7 +268,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 
             Services.Instance.Writer.WriteLine(
                 $"<p>You begin writing in {player.OpenedBook.Name}.</p>",
-                player.ConnectionId
+                player
             );
         }
 
@@ -285,7 +276,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
         {
             Services.Instance.Writer.WriteLine(
                 $"<p>{player.OpenedBook.Name} has now been titled {title}.</p>",
-                player.ConnectionId
+                player
             );
             var originalBook = player.Inventory.FirstOrDefault(
                 x => x.Name.Equals(player.OpenedBook.Name)

@@ -35,7 +35,7 @@ namespace ArchaicQuestII.GameLogic.Skill
             switch (player.Status)
             {
                 case CharacterStatus.Status.Sleeping:
-                    Services.Instance.Writer.WriteLine("You can't do this while asleep.");
+                    Services.Instance.Writer.WriteLineAll("You can't do this while asleep.");
                     return false;
                 //case CharacterStatus.Status.Stunned:
                 //    _writer.WriteLine("You are stunned.");
@@ -72,19 +72,13 @@ namespace ArchaicQuestII.GameLogic.Skill
 
             if (success == 1 || success == 101)
             {
-                Services.Instance.Writer.WriteLine(
-                    $"<p>You got distracted.</p>",
-                    origin.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine($"<p>You got distracted.</p>", origin);
                 return false;
             }
 
             if (proficiency < success)
             {
-                Services.Instance.Writer.WriteLine(
-                    $"<p>You lost concentration.</p>",
-                    origin.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine($"<p>You lost concentration.</p>", origin);
                 return false;
             }
 

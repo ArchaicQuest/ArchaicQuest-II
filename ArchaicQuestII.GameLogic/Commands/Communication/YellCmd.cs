@@ -38,7 +38,7 @@ public class YellCmd : ICommand
     {
         if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
         {
-            Services.Instance.Writer.WriteLine("<p>Yell what?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Yell what?</p>", player);
             return;
         }
 
@@ -48,7 +48,7 @@ public class YellCmd : ICommand
 
         Services.Instance.Writer.WriteLine(
             $"<p class='yell'>You yell, {text.ToUpper()}</p>",
-            player.ConnectionId
+            player
         );
 
         foreach (
@@ -60,7 +60,7 @@ public class YellCmd : ICommand
         {
             Services.Instance.Writer.WriteLine(
                 $"<p class='yell'>{player.Name} yells, {text.ToUpper()}</p>",
-                pc.ConnectionId
+                pc
             );
             Services.Instance.UpdateClient.UpdateCommunication(
                 pc,

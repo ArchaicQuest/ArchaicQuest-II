@@ -52,16 +52,10 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                 switch (verb)
                 {
                     case "at" when string.IsNullOrEmpty(target):
-                        Services.Instance.Writer.WriteLine(
-                            "<p>Look at what?</p>",
-                            player.ConnectionId
-                        );
+                        Services.Instance.Writer.WriteLine("<p>Look at what?</p>", player);
                         return;
                     case "in" when string.IsNullOrEmpty(target):
-                        Services.Instance.Writer.WriteLine(
-                            "<p>Look in what?</p>",
-                            player.ConnectionId
-                        );
+                        Services.Instance.Writer.WriteLine("<p>Look in what?</p>", player);
                         return;
                 }
             }
@@ -120,7 +114,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     $"<p  class=\"  {(!player.CanSee(room) ? "room-dark" : "")}\">{players}</p>"
                 );
 
-            Services.Instance.Writer.WriteLine(roomDesc.ToString(), player.ConnectionId);
+            Services.Instance.Writer.WriteLine(roomDesc.ToString(), player);
         }
 
         private void LookInContainer(Player player, Room room, string target)
@@ -143,44 +137,35 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 
                 Services.Instance.Writer.WriteLine(
                     $"<p>{container.Name} is not a container",
-                    player.ConnectionId
+                    player
                 );
                 return;
             }
 
             if (container == null)
             {
-                Services.Instance.Writer.WriteLine(
-                    "<p>You don't see that here.",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine("<p>You don't see that here.", player);
                 return;
             }
 
             if (container.Container.IsOpen == false)
             {
-                Services.Instance.Writer.WriteLine(
-                    "<p>You need to open it first.",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine("<p>You need to open it first.", player);
                 return;
             }
 
-            Services.Instance.Writer.WriteLine(
-                $"<p>{container.Name} contains:</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine($"<p>{container.Name} contains:</p>", player);
 
             if (container.Container.Items.Count == 0)
             {
-                Services.Instance.Writer.WriteLine("<p>Nothing.</p>", player.ConnectionId);
+                Services.Instance.Writer.WriteLine("<p>Nothing.</p>", player);
             }
 
             foreach (var obj in container.Container.Items.List(false))
             {
                 Services.Instance.Writer.WriteLine(
                     $"<span class='item {(!player.CanSee(room) ? "room-dark" : "")}'>{obj.Name}</span>",
-                    player.ConnectionId
+                    player
                 );
             }
 
@@ -188,7 +173,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
             {
                 Services.Instance.Writer.WriteLine(
                     $"<p>{player.Name} looks inside {container.Name.ToLower()}.</p>",
-                    pc.ConnectionId
+                    pc
                 );
             }
         }
@@ -206,7 +191,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                 );
                 Services.Instance.Writer.WriteLine(
                     "<p>The dark abyss, I wouldn't enter if I were you.</p>",
-                    player.ConnectionId
+                    player
                 );
                 return;
             }
@@ -237,10 +222,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 
             if (item == null && character == null && roomObjects == null)
             {
-                Services.Instance.Writer.WriteLine(
-                    "<p>You don't see that here.",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine("<p>You don't see that here.", player);
                 return;
             }
 
@@ -248,7 +230,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
             {
                 Services.Instance.Writer.WriteLine(
                     $"<p  class='{(!player.CanSee(room) ? "room-dark" : "")}'>{item.Description.Look}",
-                    player.ConnectionId
+                    player
                 );
 
                 if (player.HasSkill(SkillName.Lore))
@@ -267,7 +249,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                 {
                     Services.Instance.Writer.WriteLine(
                         $"<p  class='{(!player.CanSee(room) ? "room-dark" : "")}'>{item.Name} contains:",
-                        player.ConnectionId
+                        player
                     );
 
                     var listOfContainerItems = new StringBuilder();
@@ -278,17 +260,14 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                         );
                     }
 
-                    Services.Instance.Writer.WriteLine(
-                        listOfContainerItems.ToString(),
-                        player.ConnectionId
-                    );
+                    Services.Instance.Writer.WriteLine(listOfContainerItems.ToString(), player);
                 }
 
                 foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
                 {
                     Services.Instance.Writer.WriteLine(
                         $"<p>{player.Name} looks at {item.Name.ToLower()}.</p>",
-                        pc.ConnectionId
+                        pc
                     );
                 }
 
@@ -300,14 +279,14 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
             {
                 Services.Instance.Writer.WriteLine(
                     $"<p class='{(!player.CanSee(room) ? "room-dark" : "")}'>{roomObjects.Look}",
-                    player.ConnectionId
+                    player
                 );
 
                 foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
                 {
                     Services.Instance.Writer.WriteLine(
                         $"<p>{player.Name} looks at {roomObjects.Name.ToLower()}.</p>",
-                        pc.ConnectionId
+                        pc
                     );
                 }
 
@@ -316,10 +295,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 
             if (character == null)
             {
-                Services.Instance.Writer.WriteLine(
-                    "<p>You don't see them here.",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine("<p>You don't see them here.", player);
                 return;
             }
 
@@ -623,14 +599,14 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 
             Services.Instance.Writer.WriteLine(
                 $"{sb}<p class='{(!player.CanSee(room) ? "room-dark" : "")}'>{character.Description} <br/>{character.Name} {Services.Instance.Formulas.TargetHealth(player, character)} and is {statusText}<br/> {displayEquipment}",
-                player.ConnectionId
+                player
             );
 
             foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
             {
                 Services.Instance.Writer.WriteLine(
                     $"<p>{player.Name} looks at {character.Name.ToLower()}.</p>",
-                    pc.ConnectionId
+                    pc
                 );
             }
         }

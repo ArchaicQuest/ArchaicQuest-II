@@ -36,7 +36,7 @@ public class ImmSetEventCmd : ICommand
         {
             foreach (var ev in player.EventState)
             {
-                Services.Instance.Writer.WriteLine($"{ev.Key} - {ev.Value}", player.ConnectionId);
+                Services.Instance.Writer.WriteLine($"{ev.Key} - {ev.Value}", player);
             }
 
             return;
@@ -47,11 +47,11 @@ public class ImmSetEventCmd : ICommand
             player.EventState[eventName] = num;
             Services.Instance.Writer.WriteLine(
                 $"{eventName} state changed to {player.EventState[eventName]}",
-                player.ConnectionId
+                player
             );
             return;
         }
 
-        Services.Instance.Writer.WriteLine("Invalid Event state", player.ConnectionId);
+        Services.Instance.Writer.WriteLine("Invalid Event state", player);
     }
 }

@@ -53,7 +53,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             var obj = input.ElementAtOrDefault(1)?.ToLower() ?? player.Target;
             if (string.IsNullOrEmpty(obj))
             {
-                Services.Instance.Writer.WriteLine("Kick What!?.", player.ConnectionId);
+                Services.Instance.Writer.WriteLine("Kick What!?.", player);
                 return;
             }
 

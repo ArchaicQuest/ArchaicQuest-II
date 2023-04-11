@@ -60,15 +60,12 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             {
                 Services.Instance.Writer.WriteLine(
                     $"<p>You charm {target.Name} in offering you favourable prices.</p>",
-                    player.ConnectionId
+                    player
                 );
                 return 25;
             }
 
-            Services.Instance.Writer.WriteLine(
-                "<p>Your haggle attempts fail.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>Your haggle attempts fail.</p>", player);
 
             if (foundSkill.Proficiency == 100)
             {
@@ -88,10 +85,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
         {
             if (string.IsNullOrEmpty(obj))
             {
-                Services.Instance.Writer.WriteLine(
-                    "Use what for a secondary weapon?",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine("Use what for a secondary weapon?", player);
                 return 0;
             }
 
@@ -101,7 +95,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             {
                 Services.Instance.Writer.WriteLine(
                     "One weapon is more than enough for you to worry about.",
-                    player.ConnectionId
+                    player
                 );
                 return 0;
             }
@@ -112,19 +106,13 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
             if (findWeapon == null)
             {
-                Services.Instance.Writer.WriteLine(
-                    "You can't find that weapon.",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine("You can't find that weapon.", player);
                 return 0;
             }
 
             if (player.Equipped.Wielded == null)
             {
-                Services.Instance.Writer.WriteLine(
-                    "You need to wield a weapon first.",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine("You need to wield a weapon first.", player);
                 return 0;
             }
 
@@ -154,7 +142,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
         {
             if (string.IsNullOrEmpty(obj))
             {
-                Services.Instance.Writer.WriteLine("Lore What!?.", player.ConnectionId);
+                Services.Instance.Writer.WriteLine("Lore What!?.", player);
 
                 return 0;
             }
@@ -167,7 +155,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             {
                 Services.Instance.Writer.WriteLine(
                     "There is nothing more to note about that object.",
-                    player.ConnectionId
+                    player
                 );
 
                 return 0;
@@ -273,7 +261,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                 sb.Append($"<br />Condition: {item.Condition}");
             }
 
-            Services.Instance.Writer.WriteLine(sb.ToString(), player.ConnectionId);
+            Services.Instance.Writer.WriteLine(sb.ToString(), player);
 
             return 0;
         }

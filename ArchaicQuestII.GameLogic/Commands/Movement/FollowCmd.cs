@@ -46,7 +46,7 @@ public class FollowCmd : ICommand
 
         if (string.IsNullOrEmpty(target))
         {
-            Services.Instance.Writer.WriteLine("<p>Follow who?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Follow who?</p>", player);
             return;
         }
 
@@ -67,13 +67,13 @@ public class FollowCmd : ICommand
 
             Services.Instance.Writer.WriteLine(
                 $"<p>You stop following {leader.Value.Name}.</p>",
-                player.ConnectionId
+                player
             );
             if (player.Name != leader.Value.Name)
             {
                 Services.Instance.Writer.WriteLine(
                     $"<p>{player.Name} stops following you.</p>",
-                    leader.Value.ConnectionId
+                    leader.Value
                 );
             }
 
@@ -94,10 +94,7 @@ public class FollowCmd : ICommand
 
         if (foundPlayer == null)
         {
-            Services.Instance.Writer.WriteLine(
-                "<p>You don't see them here.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>You don't see them here.</p>", player);
             return;
         }
 
@@ -105,7 +102,7 @@ public class FollowCmd : ICommand
         {
             Services.Instance.Writer.WriteLine(
                 $"<p>You are already following {foundPlayer.Name}.</p>",
-                player.ConnectionId
+                player
             );
             return;
         }
@@ -114,7 +111,7 @@ public class FollowCmd : ICommand
         {
             Services.Instance.Writer.WriteLine(
                 "<p>You can't follow someone following you. Lest you be running around in circles indefinitely.</p>",
-                player.ConnectionId
+                player
             );
             return;
         }
@@ -123,18 +120,15 @@ public class FollowCmd : ICommand
         {
             Services.Instance.Writer.WriteLine(
                 $"<p>{foundPlayer.Name} doesn't want to be followed.</p>",
-                player.ConnectionId
+                player
             );
             return;
         }
 
-        Services.Instance.Writer.WriteLine(
-            $"<p>{player.Name} now follows you.</p>",
-            foundPlayer.ConnectionId
-        );
+        Services.Instance.Writer.WriteLine($"<p>{player.Name} now follows you.</p>", foundPlayer);
         Services.Instance.Writer.WriteLine(
             $"<p>You are now following {foundPlayer.Name}.</p>",
-            player.ConnectionId
+            player
         );
 
         player.Following = foundPlayer.Name;

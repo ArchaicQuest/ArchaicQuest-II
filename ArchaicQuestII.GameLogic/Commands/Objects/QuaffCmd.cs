@@ -44,7 +44,7 @@ public class QuaffCmd : ICommand
 
         if (string.IsNullOrEmpty(target))
         {
-            Services.Instance.Writer.WriteLine("<p>Quaff what?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Quaff what?</p>", player);
             return;
         }
 
@@ -54,10 +54,7 @@ public class QuaffCmd : ICommand
 
         if (foundItem == null)
         {
-            Services.Instance.Writer.WriteLine(
-                "<p>You can't find that potion.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>You can't find that potion.</p>", player);
             return;
         }
 
@@ -73,7 +70,7 @@ public class QuaffCmd : ICommand
         {
             Services.Instance.Writer.WriteLine(
                 "<p>You quaff the potion but nothing happens.</p>",
-                player.ConnectionId
+                player
             );
             return;
         }

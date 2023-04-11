@@ -32,7 +32,7 @@ public class GossipCmd : ICommand
     {
         if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
         {
-            Services.Instance.Writer.WriteLine("Gossip what?", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("Gossip what?", player);
             return;
         }
 
@@ -40,7 +40,7 @@ public class GossipCmd : ICommand
 
         Services.Instance.Writer.WriteLine(
             $"<p class='gossip'>[<span>Gossip</span>] You: {text}</p>",
-            player.ConnectionId
+            player
         );
         Services.Instance.Writer.WriteToOthersInGame(
             $"<p class='gossip'>[<span>Gossip</span>] {player.Name}: {text}</p>",

@@ -6,13 +6,10 @@ namespace ArchaicQuestII.GameLogic.Client
 {
     public interface IWriteToClient
     {
-        void WriteLineMobSay(string mobName, string message, string id);
-        void WriteLine(string message, string id);
-        void WriteLine(string message, string id, int delay);
-        void WriteLine(string message);
-        void WriteLineRoom(string message, string id, int delay);
+        void WriteLineMobSay(string mobName, string message, Player player);
+        void WriteLine(string message, Player player, int delay = 0);
+        void WriteLineAll(string message);
         void WriteToOthersInRoom(string message, Room room, Player player);
         void WriteToOthersInGame(string message, Player player);
-         void WriteToOthersInGame(string message, string type);
     }
 }

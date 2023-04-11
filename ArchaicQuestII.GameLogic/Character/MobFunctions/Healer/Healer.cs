@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Client;
-using ArchaicQuestII.GameLogic.Commands;
-using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Skill.Skills;
 using ArchaicQuestII.GameLogic.Spell.Interface;
-using ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells;
 using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
 
@@ -20,7 +16,12 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Healer
         private readonly IPassiveSkills _passiveSkills;
         private readonly ISpells _spells;
 
-        public Healer(IWriteToClient writer, IUpdateClientUI clientUi, IPassiveSkills passiveSkills, ISpells spells)
+        public Healer(
+            IWriteToClient writer,
+            IUpdateClientUI clientUi,
+            IPassiveSkills passiveSkills,
+            ISpells spells
+        )
         {
             _writer = writer;
             _clientUi = clientUi;
@@ -30,24 +31,26 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Healer
 
         public void DisplayInventory(Player mob, Player player)
         {
-
             var hagglePriceReduction = Haggle(player, mob);
 
-            _writer.WriteLine(mob.Name + " says 'I offer the following spells:'", player.ConnectionId);
+            _writer.WriteLine(mob.Name + " says 'I offer the following spells:'", player);
             var sb = new StringBuilder();
-            sb.Append("<table class='data'><tr><td style='width: 275px; text-align: left;'>Spell</td><td>Price</td</tr>");
+            sb.Append(
+                "<table class='data'><tr><td style='width: 275px; text-align: left;'>Spell</td><td>Price</td</tr>"
+            );
 
             int i = 0;
             foreach (var item in mob.SpellList.OrderBy(x => x.Cost))
             {
                 i++;
-                sb.Append($"<tr><td style='width: 275px; text-align: left;'>{item.Name}</td><td>{DisplayUnit(item.Cost, hagglePriceReduction)} GP</td></tr>");
+                sb.Append(
+                    $"<tr><td style='width: 275px; text-align: left;'>{item.Name}</td><td>{DisplayUnit(item.Cost, hagglePriceReduction)} GP</td></tr>"
+                );
             }
 
             sb.Append("</table>");
             sb.Append("<p>Type heal &lt;type&gt; to be healed.</p>");
-            _writer.WriteLine(sb.ToString(), player.ConnectionId);
-
+            _writer.WriteLine(sb.ToString(), player);
         }
 
         public Player FindShopKeeper(Room room)
@@ -67,11 +70,10 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Healer
         {
             if (spellName.Equals("heal"))
             {
-
                 var shopKeeper = FindShopKeeper(room);
                 if (shopKeeper == null)
                 {
-                    _writer.WriteLine("<p>There is no one offering spells here.</p>", player.ConnectionId);
+                    _writer.WriteLine("<p>There is no one offering spells here.</p>", player);
                     return;
                 }
 
@@ -87,15 +89,12 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Healer
             var priceReduction = _passiveSkills.Haggle(player, target);
 
             return priceReduction;
-
         }
 
         public double AddMarkUp(int price)
         {
             return price * 1.5;
         }
-
-
 
         /// <summary>
         /// Each gold piece is worth 100 silver pieces.
@@ -114,25 +113,26 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Healer
             // return goldPrice < 1 ? $"{Math.Floor(goldPrice * 100)} SP" : $"{Math.Floor(goldPrice)} GP";
         }
 
-
-
         public void BuyItem(string itemName, Room room, Player player)
         {
-
             var vendor = room.Mobs.FirstOrDefault(x => x.Shopkeeper.Equals(true));
 
             if (vendor == null)
             {
-                _writer.WriteLine("<p>You can't do that here.</p>", player.ConnectionId);
+                _writer.WriteLine("<p>You can't do that here.</p>", player);
                 return;
             }
 
-            var hasItem = vendor.SpellList.FirstOrDefault(x =>
-                x.Name.StartsWith(itemName, StringComparison.InvariantCultureIgnoreCase));
+            var hasItem = vendor.SpellList.FirstOrDefault(
+                x => x.Name.StartsWith(itemName, StringComparison.InvariantCultureIgnoreCase)
+            );
 
             if (hasItem == null)
             {
-                _writer.WriteLine($"<p>{vendor.Name} says 'I don't offer that, please view my \'heal\' list of spells for sale.'</p>", player.ConnectionId);
+                _writer.WriteLine(
+                    $"<p>{vendor.Name} says 'I don't offer that, please view my \'heal\' list of spells for sale.'</p>",
+                    player
+                );
                 return;
             }
 
@@ -141,24 +141,27 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Healer
             var trueGoldValue = goldValue - Helpers.GetPercentage(haggleReduction, (int)goldValue);
             if (player.Money.Gold < trueGoldValue)
             {
-                _writer.WriteLine($"<p>{vendor.Name} says 'Sorry you can't afford that.'</p>", player.ConnectionId);
+                _writer.WriteLine(
+                    $"<p>{vendor.Name} says 'Sorry you can't afford that.'</p>",
+                    player
+                );
                 return;
             }
 
             player.Money.Gold -= (int)Math.Floor(trueGoldValue);
 
-
             _spells.DoSpell("cure light wounds", vendor, player.Name, room);
-
 
             // MOB CAST SPELL
 
             _clientUi.UpdateScore(player);
             _clientUi.UpdateInventory(player);
 
-            _writer.WriteLine($"<p>You buy {hasItem.Name.ToLower()} for {Math.Floor(trueGoldValue)} gold.</p>", player.ConnectionId);
+            _writer.WriteLine(
+                $"<p>You buy {hasItem.Name.ToLower()} for {Math.Floor(trueGoldValue)} gold.</p>",
+                player
+            );
         }
-
 
         public void InspectItem(int itemNumber, Room room, Player player)
         {

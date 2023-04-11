@@ -87,7 +87,7 @@ public static class CharacterHelpers
                 ? $"<p>You tried to cast {skill.Name} but failed miserably.</p>"
                 : $"<p>You tried to {skill.Name} but failed miserably.</p>";
 
-            Services.Instance.Writer.WriteLine(errorText, player.ConnectionId);
+            Services.Instance.Writer.WriteLine(errorText, player);
             return false;
         }
 
@@ -97,7 +97,7 @@ public static class CharacterHelpers
 
             var errorText = skill.IsSpell ? $"<p>You lost concentration.</p>" : failedSkillMessage;
 
-            Services.Instance.Writer.WriteLine(errorText, player.ConnectionId);
+            Services.Instance.Writer.WriteLine(errorText, player);
         }
 
         return success;
@@ -111,7 +111,7 @@ public static class CharacterHelpers
 
         if (skill == null)
         {
-            Services.Instance.Writer.WriteLine("Skill not found");
+            Services.Instance.Writer.WriteLineAll("Skill not found");
             return;
         }
 
@@ -131,7 +131,7 @@ public static class CharacterHelpers
 
         player.UpdateClientUI();
 
-        Services.Instance.Writer.WriteLine(
+        Services.Instance.Writer.WriteLineAll(
             $"<p class='improve'>You learn from your mistakes and gain {100 * skill.Level / 4} experience points.</p>"
                 + $"<p class='improve'>Your knowledge of {skill.Name} increases by {increase}%.</p>"
         );
@@ -193,7 +193,7 @@ public static class CharacterHelpers
         if (!display)
             return;
 
-        Services.Instance.Writer.WriteLine(
+        Services.Instance.Writer.WriteLineAll(
             expWorth == 1
                 ? "<p class='improve'>You gain 1 measly experience point.</p>"
                 : $"<p class='improve'>You receive {expWorth} experience points.</p>"
@@ -210,7 +210,7 @@ public static class CharacterHelpers
         if (!display)
             return;
 
-        Services.Instance.Writer.WriteLine(
+        Services.Instance.Writer.WriteLineAll(
             amount == 1
                 ? "<p class='improve'>You gain 1 measly experience point.</p>"
                 : $"<p class='improve'>You receive {amount} experience points.</p>"
@@ -244,7 +244,7 @@ public static class CharacterHelpers
         if (!display)
             return;
 
-        Services.Instance.Writer.WriteLine(
+        Services.Instance.Writer.WriteLineAll(
             $"<p class='improve'>You have advanced to level {player.Level}, you gain: {totalHP} HP, {totalMana} Mana, {totalMove} Moves.</p>"
         );
     }
@@ -720,7 +720,7 @@ public static class CharacterHelpers
         {
             Services.Instance.Writer.WriteLine(
                 $"<p>Your blood freezes as you hear someone's death cry.</p>",
-                pc.ConnectionId
+                pc
             );
         }
     }
@@ -875,7 +875,7 @@ public static class CharacterHelpers
             Console.WriteLine("Equip.cs: " + ex);
         }
 
-        Services.Instance.Writer.WriteLine(displayEquipment.ToString(), player.ConnectionId);
+        Services.Instance.Writer.WriteLine(displayEquipment.ToString(), player);
     }
 
     public static void WearAll(this Player player, Room room)
@@ -905,10 +905,7 @@ public static class CharacterHelpers
 
         if (itemToRemove == null)
         {
-            Services.Instance.Writer.WriteLine(
-                "<p>You are not wearing that item.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>You are not wearing that item.</p>", player);
             return;
         }
 
@@ -916,7 +913,7 @@ public static class CharacterHelpers
         {
             Services.Instance.Writer.WriteLine(
                 $"<p>You can't remove {itemToRemove.Name}. It appears to be cursed.</p>",
-                player.ConnectionId
+                player
             );
             return;
         }
@@ -1016,14 +1013,14 @@ public static class CharacterHelpers
                 itemToRemove.Equipped = false;
                 Services.Instance.Writer.WriteLine(
                     "<p>You don't know how to remove this.</p>",
-                    player.ConnectionId
+                    player
                 );
                 return;
         }
 
         Services.Instance.Writer.WriteLine(
             $"<p>You stop using {itemToRemove.Name.ToLower()}.</p>",
-            player.ConnectionId
+            player
         );
 
         Services.Instance.Writer.WriteToOthersInRoom(
@@ -1064,10 +1061,7 @@ public static class CharacterHelpers
 
         if (itemToWear == null)
         {
-            Services.Instance.Writer.WriteLine(
-                "<p>You don't have that item.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>You don't have that item.</p>", player);
             return;
         }
 
@@ -1224,7 +1218,7 @@ public static class CharacterHelpers
                 {
                     Services.Instance.Writer.WriteLine(
                         "Your hands are tied up with your two-handed weapon!",
-                        player.ConnectionId
+                        player
                     );
                     return;
                 }
@@ -1265,7 +1259,7 @@ public static class CharacterHelpers
                 {
                     Services.Instance.Writer.WriteLine(
                         "You need two hands free for that weapon, remove your shield and try again.",
-                        player.ConnectionId
+                        player
                     );
 
                     return;
@@ -1300,14 +1294,14 @@ public static class CharacterHelpers
                 itemToWear.Equipped = false;
                 Services.Instance.Writer.WriteLine(
                     "<p>You don't know how to wear this.</p>",
-                    player.ConnectionId
+                    player
                 );
                 return;
         }
 
         Services.Instance.Writer.WriteLine(
             $"<p>You wield {itemToWear.Name.ToLower()} as your second weapon.</p>",
-            player.ConnectionId
+            player
         );
         Services.Instance.Writer.WriteToOthersInRoom(
             $"{itemToWear.Name.ToLower()} as {player.ReturnPronoun()} secondary weapon.",

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Core;
@@ -45,7 +44,7 @@ namespace ArchaicQuestII.GameLogic.Loops
                     && room.Terrain != Room.TerrainType.Underground
                 )
                 {
-                    Services.Instance.Writer.WriteLine(weather, player.ConnectionId);
+                    Services.Instance.Writer.WriteLine(weather, player);
                 }
             }
         }

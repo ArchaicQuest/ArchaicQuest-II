@@ -50,7 +50,7 @@ public class BuyCmd : ICommand
 
         if (string.IsNullOrEmpty(itemName))
         {
-            Services.Instance.Writer.WriteLine("<p>Buy what?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Buy what?</p>", player);
             return;
         }
 
@@ -64,10 +64,7 @@ public class BuyCmd : ICommand
 
         if (vendor == null)
         {
-            Services.Instance.Writer.WriteLine(
-                "<p>You can't do that here.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>You can't do that here.</p>", player);
             return;
         }
 
@@ -79,7 +76,7 @@ public class BuyCmd : ICommand
         {
             Services.Instance.Writer.WriteLine(
                 $"<p>{vendor.Name} says 'I don't sell that, please view my \'list\' of items for sale.'</p>",
-                player.ConnectionId
+                player
             );
             return;
         }
@@ -91,7 +88,7 @@ public class BuyCmd : ICommand
         {
             Services.Instance.Writer.WriteLine(
                 $"<p>{vendor.Name} says 'Sorry you can't afford that.'</p>",
-                player.ConnectionId
+                player
             );
             return;
         }
@@ -108,7 +105,7 @@ public class BuyCmd : ICommand
 
         Services.Instance.Writer.WriteLine(
             $"<p>You buy {hasItem.Name.ToLower()} for {trueGoldValue} gold.</p>",
-            player.ConnectionId
+            player
         );
     }
 
@@ -124,10 +121,7 @@ public class BuyCmd : ICommand
 
         if (vendor == null)
         {
-            Services.Instance.Writer.WriteLine(
-                "<p>You can't do that here.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>You can't do that here.</p>", player);
             return;
         }
 
@@ -141,7 +135,7 @@ public class BuyCmd : ICommand
         {
             Services.Instance.Writer.WriteLine(
                 $"<p>{vendor.Name} says 'I don't sell that, please view my \'list\' of items for sale.'</p>",
-                player.ConnectionId
+                player
             );
             return;
         }
@@ -153,7 +147,7 @@ public class BuyCmd : ICommand
         {
             Services.Instance.Writer.WriteLine(
                 $"<p>{vendor.Name} says 'Sorry you can't afford that.'</p>",
-                player.ConnectionId
+                player
             );
             return;
         }
@@ -170,7 +164,7 @@ public class BuyCmd : ICommand
 
         Services.Instance.Writer.WriteLine(
             $"<p>You buy {hasItem.Name.ToLower()} for {trueGoldValue} gold.</p>",
-            player.ConnectionId
+            player
         );
     }
 

@@ -49,7 +49,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             var obj = input.ElementAtOrDefault(1)?.ToLower() ?? player.Target;
             if (string.IsNullOrEmpty(obj))
             {
-                Services.Instance.Writer.WriteLine("Uppercut What!?.", player.ConnectionId);
+                Services.Instance.Writer.WriteLine("Uppercut What!?.", player);
                 return;
             }
 
@@ -90,7 +90,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                     room.Items.Add(helmet);
                     target.Equipped.Head = null;
 
-                    Services.Instance.Writer.WriteLine(
+                    Services.Instance.Writer.WriteLineAll(
                         $"Your uppercut knocks {helmet.Name.ToLower()} off {target.Name}'s head."
                     );
                     textToTarget = $"{player.Name} knocks {helmet.Name.ToLower()} off your head.";
@@ -103,7 +103,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             {
                 if (chance <= 15)
                 {
-                    Services.Instance.Writer.WriteLine($"Your uppercut stuns {target.Name}.");
+                    Services.Instance.Writer.WriteLineAll($"Your uppercut stuns {target.Name}.");
                     textToTarget = $"{player.Name}'s uppercut stuns you!";
                     textToRoom = $"{player.Name}'s uppercut stuns {target.Name}.";
                     EmoteAction(textToTarget, textToRoom, target.Name, room, player);

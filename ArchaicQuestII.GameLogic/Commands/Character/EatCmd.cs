@@ -47,7 +47,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
             if (string.IsNullOrEmpty(target))
             {
-                Services.Instance.Writer.WriteLine("<p>Eat what?</p>", player.ConnectionId);
+                Services.Instance.Writer.WriteLine("<p>Eat what?</p>", player);
                 return;
             }
 
@@ -56,10 +56,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
             if (food == null)
             {
-                Services.Instance.Writer.WriteLine(
-                    "<p>You have no food of that name.</p>",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine("<p>You have no food of that name.</p>", player);
                 return;
             }
 
@@ -70,17 +67,14 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
             {
                 Services.Instance.Writer.WriteLine(
                     $"<p>You can't eat {food.Name.ToLower()}.</p>",
-                    player.ConnectionId
+                    player
                 );
                 return;
             }
 
             if (player.Hunger >= 4)
             {
-                Services.Instance.Writer.WriteLine(
-                    "<p>You are too full to eat more.</p>",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine("<p>You are too full to eat more.</p>", player);
                 return;
             }
 
@@ -88,10 +82,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
             player.Inventory.Remove(food);
 
-            Services.Instance.Writer.WriteLine(
-                $"<p>You eat {food.Name.ToLower()}.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine($"<p>You eat {food.Name.ToLower()}.</p>", player);
             Services.Instance.Writer.WriteToOthersInRoom(
                 $"<p>{player.Name} eats {food.Name.ToLower()}.</p>",
                 room,
@@ -127,10 +118,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
             if (player.Hunger >= 4)
             {
-                Services.Instance.Writer.WriteLine(
-                    "<p>You are no longer hungry.<p>",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine("<p>You are no longer hungry.<p>", player);
             }
 
             Services.Instance.UpdateClient.UpdateAffects(player);

@@ -67,7 +67,7 @@ namespace ArchaicQuestII.GameLogic.Loops
                             {
                                 Services.Instance.Writer.WriteLine(
                                     $"<p>A quivering horde of maggots consumes {corpse.Name.ToLower()}.</p>",
-                                    pc.ConnectionId
+                                    pc
                                 );
                             }
                             room.Items.Remove(corpse);

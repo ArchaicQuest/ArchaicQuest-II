@@ -59,7 +59,7 @@ public class ListSkillsCmd : ICommand
 
             Services.Instance.Writer.WriteLine(
                 "<p>You have no skills, try spells instead.</p>",
-                player.ConnectionId
+                player
             );
             return;
         }
@@ -79,7 +79,7 @@ public class ListSkillsCmd : ICommand
 
     private void ReturnSkillList(List<SkillList> skillList, Player player, string skillTitle)
     {
-        Services.Instance.Writer.WriteLine(skillTitle, player.ConnectionId);
+        Services.Instance.Writer.WriteLine(skillTitle, player);
 
         var sb = new StringBuilder();
         sb.Append("<table>");
@@ -118,6 +118,6 @@ public class ListSkillsCmd : ICommand
 
         sb.Append("</table>");
 
-        Services.Instance.Writer.WriteLine(sb.ToString(), player.ConnectionId);
+        Services.Instance.Writer.WriteLine(sb.ToString(), player);
     }
 }

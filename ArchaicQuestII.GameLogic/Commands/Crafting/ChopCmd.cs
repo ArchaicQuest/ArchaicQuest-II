@@ -52,13 +52,13 @@ public class ChopCmd : ICommand
 
         if (string.IsNullOrEmpty(target))
         {
-            Services.Instance.Writer.WriteLine("Chop what?", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("Chop what?", player);
             return;
         }
 
         if (player.Status == CharacterStatus.Status.Busy)
         {
-            Services.Instance.Writer.WriteLine("You are already doing it.", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("You are already doing it.", player);
             return;
         }
 
@@ -68,19 +68,19 @@ public class ChopCmd : ICommand
 
         if (thingToHarvest == null)
         {
-            Services.Instance.Writer.WriteLine($"You don't see that here.", player.ConnectionId);
+            Services.Instance.Writer.WriteLine($"You don't see that here.", player);
             return;
         }
 
         if (thingToHarvest.ItemType != Item.Item.ItemTypes.Chopable)
         {
-            Services.Instance.Writer.WriteLine("You can't chop this.", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("You can't chop this.", player);
 
             if (thingToHarvest.ItemType == Item.Item.ItemTypes.Forage)
             {
                 Services.Instance.Writer.WriteLine(
                     $"You must forage {thingToHarvest.Name}",
-                    player.ConnectionId
+                    player
                 );
             }
             return;
@@ -94,17 +94,14 @@ public class ChopCmd : ICommand
         {
             Services.Instance.Writer.WriteLine(
                 $"You attempt to karate chop {thingToHarvest.Name.ToLower()} with your bare hands. Probably better to try with an Axe.",
-                player.ConnectionId
+                player
             );
             return;
         }
 
         if (!thingToHarvest.Container.Items.Any())
         {
-            Services.Instance.Writer.WriteLine(
-                "There's nothing left to chop.",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("There's nothing left to chop.", player);
             return;
         }
 
@@ -124,7 +121,7 @@ public class ChopCmd : ICommand
 
         Services.Instance.Writer.WriteLine(
             $"<p>You begin chopping {thingToHarvest.Name}.</p>",
-            player.ConnectionId
+            player
         );
 
         await Task.Delay(4000);
@@ -138,7 +135,7 @@ public class ChopCmd : ICommand
 
         Services.Instance.Writer.WriteLine(
             $"<p>You swing your {hasChoppingTool.Name} back and forth striking the trunk with each swing.</p>",
-            player.ConnectionId
+            player
         );
 
         await Task.Delay(4000);
@@ -150,7 +147,7 @@ public class ChopCmd : ICommand
 
         Services.Instance.UpdateClient.PlaySound("chopping", player);
 
-        Services.Instance.Writer.WriteLine("<p>You continue chopping.</p>", player.ConnectionId);
+        Services.Instance.Writer.WriteLine("<p>You continue chopping.</p>", player);
 
         await Task.Delay(4000);
 
@@ -254,7 +251,7 @@ public class ChopCmd : ICommand
         {
             Services.Instance.Writer.WriteLine(
                 $"<p>{{yellow}}{randomMob.Name} jumps out from the {thingToHarvest.Name} and attacks you!{{/}}</p>",
-                player.ConnectionId
+                player
             );
             room.Mobs.Add(randomMob);
             player.Status = CharacterStatus.Status.Standing;
@@ -266,7 +263,7 @@ public class ChopCmd : ICommand
         {
             Services.Instance.Writer.WriteLine(
                 $"<p>{{yellow}}You cut yourself chopping, OUCH!{{/}}</p>",
-                player.ConnectionId
+                player
             );
             player.Status = CharacterStatus.Status.Standing;
             return;
@@ -326,14 +323,14 @@ public class ChopCmd : ICommand
         {
             Services.Instance.Writer.WriteLine(
                 $"<p>You fail to collect a single thing.</p>",
-                player.ConnectionId
+                player
             );
         }
         else
         {
             Services.Instance.Writer.WriteLine(
                 $"<p>Ah you have collected some {collected}</p>",
-                player.ConnectionId
+                player
             );
         }
 

@@ -37,10 +37,7 @@ public class ImmTrainCmd : ICommand
                 skill.Proficiency = 85;
             }
 
-            Services.Instance.Writer.WriteLine(
-                "<p>You have max stats now.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>You have max stats now.</p>", player);
             return;
         }
 
@@ -61,7 +58,7 @@ public class ImmTrainCmd : ICommand
 
         if (foundPlayer == null)
         {
-            Services.Instance.Writer.WriteLine("<p>They're not here.</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>They're not here.</p>", player);
             return;
         }
 
@@ -70,9 +67,6 @@ public class ImmTrainCmd : ICommand
             skill.Proficiency = 85;
         }
 
-        Services.Instance.Writer.WriteLine(
-            $"<p>{foundPlayer} has max stats now.</p>",
-            player.ConnectionId
-        );
+        Services.Instance.Writer.WriteLine($"<p>{foundPlayer} has max stats now.</p>", player);
     }
 }

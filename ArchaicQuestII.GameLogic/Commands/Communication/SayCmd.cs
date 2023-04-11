@@ -39,16 +39,13 @@ public class SayCmd : ICommand
     {
         if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
         {
-            Services.Instance.Writer.WriteLine("<p>Say what?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Say what?</p>", player);
             return;
         }
 
         var text = string.Join(" ", input.Skip(1));
 
-        Services.Instance.Writer.WriteLine(
-            $"<p class='say'>You say {text}</p>",
-            player.ConnectionId
-        );
+        Services.Instance.Writer.WriteLine($"<p class='say'>You say {text}</p>", player);
         Services.Instance.UpdateClient.UpdateCommunication(
             player,
             $"<p class='say'>You say {text}</p>",

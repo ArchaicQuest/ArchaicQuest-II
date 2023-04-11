@@ -56,7 +56,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
 
             poseText += "</p>";
 
-            Services.Instance.Writer.WriteLine(poseText, player.ConnectionId);
+            Services.Instance.Writer.WriteLine(poseText, player);
         }
     }
 }

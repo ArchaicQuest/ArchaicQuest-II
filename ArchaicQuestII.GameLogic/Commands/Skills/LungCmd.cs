@@ -50,7 +50,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             {
                 Services.Instance.Writer.WriteLine(
                     "You need to have a weapon equipped to do this.",
-                    player.ConnectionId
+                    player
                 );
                 return;
             }
@@ -58,7 +58,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             var obj = input.ElementAtOrDefault(1)?.ToLower() ?? player.Target;
             if (string.IsNullOrEmpty(obj))
             {
-                Services.Instance.Writer.WriteLine("Lunge What!?.", player.ConnectionId);
+                Services.Instance.Writer.WriteLine("Lunge What!?.", player);
                 return;
             }
 

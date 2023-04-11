@@ -1,9 +1,5 @@
-﻿
-using System;
-using System.Collections.Generic;
-using ArchaicQuestII.GameLogic.Character.Model;
+﻿using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Core;
-using ArchaicQuestII.GameLogic.Effect;
 using LiteDB;
 
 namespace ArchaicQuestII.GameLogic.Character.Race
@@ -12,9 +8,8 @@ namespace ArchaicQuestII.GameLogic.Character.Race
     {
         [BsonField("p")]
         public bool Playable { get; set; }
+
         [BsonField("a")]
         public Attributes Attributes { get; set; } = new Attributes();
     }
-
-
 }

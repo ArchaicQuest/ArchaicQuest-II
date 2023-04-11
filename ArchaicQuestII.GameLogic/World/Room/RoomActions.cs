@@ -311,7 +311,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
             {
                 Services.Instance.Writer.WriteLine(
                     $"<span class='{(character.ConnectionId != "mob" ? "player" : "mob")}'>{character.Name} {movement} {direction}.</span>",
-                    p.ConnectionId
+                    p
                 );
             }
         }
@@ -367,7 +367,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
             {
                 Services.Instance.Writer.WriteLine(
                     $"<span class='{(characterBase.ConnectionId != "mob" ? "player" : "mob")}'>{characterBase.Name} {movement} {direction}.</span>",
-                    p.ConnectionId
+                    p
                 );
             }
         }
@@ -430,10 +430,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
                     && character.ConnectionId != "mob"
                 )
                 {
-                    Services.Instance.Writer.WriteLine(
-                        $"{mob.Name} attacks you!",
-                        character.ConnectionId
-                    );
+                    Services.Instance.Writer.WriteLine($"{mob.Name} attacks you!", character);
                     Services.Instance.MobScripts.AttackPlayer(room, character, mob);
                 }
             }

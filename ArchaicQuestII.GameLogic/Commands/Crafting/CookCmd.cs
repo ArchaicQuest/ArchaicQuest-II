@@ -58,10 +58,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
 
             if (recipes == null)
             {
-                Services.Instance.Writer.WriteLine(
-                    "<p>No recipes are known.</p>",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine("<p>No recipes are known.</p>", player);
                 return;
             }
 
@@ -88,7 +85,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
             {
                 Services.Instance.Writer.WriteLine(
                     "<p>No recipes found with the current items you have.</p>",
-                    player.ConnectionId
+                    player
                 );
                 return;
             }
@@ -110,7 +107,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
 
             sb.Append($"</table>");
 
-            Services.Instance.Writer.WriteLine(sb.ToString(), player.ConnectionId);
+            Services.Instance.Writer.WriteLine(sb.ToString(), player);
         }
 
         private List<CraftingRecipes> ReturnValidRecipes(
@@ -163,7 +160,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
             {
                 Services.Instance.Writer.WriteLine(
                     "<p>To being cooking you require a fire and a cooking pot.</p>",
-                    player.ConnectionId
+                    player
                 );
 
                 return;
@@ -175,10 +172,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
 
             if (recipe == null)
             {
-                Services.Instance.Writer.WriteLine(
-                    "<p>You can't cook that.</p>",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine("<p>You can't cook that.</p>", player);
                 return;
             }
 
@@ -195,7 +189,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
                 {
                     Services.Instance.Writer.WriteLine(
                         "<p>You appear to be missing required items.</p>",
-                        player.ConnectionId
+                        player
                     );
                     return;
                 }
@@ -214,29 +208,20 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
         {
             player.Status = CharacterStatus.Status.Busy;
 
-            Services.Instance.Writer.WriteLine("<p>You begin cooking.</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>You begin cooking.</p>", player);
 
             Services.Instance.UpdateClient.PlaySound("cooking", player);
 
             await Task.Delay(cookTime / 4);
 
-            Services.Instance.Writer.WriteLine(
-                "<p>You stir the ingredients.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>You stir the ingredients.</p>", player);
 
             await Task.Delay(cookTime / 4);
 
-            Services.Instance.Writer.WriteLine(
-                "<p>You taste and season the dish.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>You taste and season the dish.</p>", player);
 
             await Task.Delay(cookTime / 4);
-            Services.Instance.Writer.WriteLine(
-                "<p>You stir the ingredients.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>You stir the ingredients.</p>", player);
 
             await Task.Delay(cookTime / 4);
 
@@ -246,14 +231,14 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
             {
                 Services.Instance.Writer.WriteLine(
                     "<p class='improve'>You failed to cook something edible.</p>",
-                    player.ConnectionId
+                    player
                 );
 
                 foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
                 {
                     Services.Instance.Writer.WriteLine(
                         $"<p>{player.Name} fails to cook something edible</p>",
-                        pc.ConnectionId
+                        pc
                     );
                 }
 
@@ -265,14 +250,14 @@ namespace ArchaicQuestII.GameLogic.Commands.Crafting
 
                 Services.Instance.Writer.WriteLine(
                     $"<p class='improve'>You cooked {recipe.Title}.</p>",
-                    player.ConnectionId
+                    player
                 );
 
                 foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
                 {
                     Services.Instance.Writer.WriteLine(
                         $"<p>{player.Name} cooked {recipe.Title}.</p>",
-                        pc.ConnectionId
+                        pc
                     );
                 }
             }

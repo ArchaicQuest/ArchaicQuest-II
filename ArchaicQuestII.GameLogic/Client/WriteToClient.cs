@@ -18,36 +18,19 @@ namespace ArchaicQuestII.GameLogic.Client
             _telnetHub = telnetHub;
         }
 
-        public async void WriteLine(string message, string id)
+        public async void WriteLineMobSay(string mobName, string message, Player player)
         {
             try
             {
-                if (id.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
-                {
-                    return;
-                }
-
-                await Services.Instance.Hub.Clients
-                    .Client(id)
-                    .SendAsync("SendMessage", message, "");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-        }
-
-        public async void WriteLineMobSay(string mobName, string message, string id)
-        {
-            try
-            {
-                if (id.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
+                if (player.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
                 {
                     return;
                 }
 
                 var mobSay = $"<span class='mob'>{mobName} says '{message}'</span>";
-                await Services.Instance.Hub.Clients.Client(id).SendAsync("SendMessage", mobSay, "");
+                await Services.Instance.Hub.Clients
+                    .Client(player.ConnectionId)
+                    .SendAsync("SendMessage", mobSay, "");
             }
             catch (Exception ex)
             {
@@ -55,13 +38,18 @@ namespace ArchaicQuestII.GameLogic.Client
             }
         }
 
-        public async void WriteLine(string message, string id, int delay)
+        public async void WriteLine(string message, Player player, int delay = 0)
         {
+            if (player.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
+            {
+                return;
+            }
+
             try
             {
                 await Task.Delay(delay);
                 await Services.Instance.Hub.Clients
-                    .Client(id)
+                    .Client(player.ConnectionId)
                     .SendAsync("SendMessage", message, "");
             }
             catch (Exception ex)
@@ -70,7 +58,7 @@ namespace ArchaicQuestII.GameLogic.Client
             }
         }
 
-        public async void WriteLine(string message)
+        public async void WriteLineAll(string message)
         {
             try
             {
@@ -82,16 +70,11 @@ namespace ArchaicQuestII.GameLogic.Client
             }
         }
 
-        public void WriteLineRoom(string message, string id, int delay)
-        {
-            throw new NotImplementedException();
-        }
-
         public void WriteToOthersInRoom(string message, Room room, Player player)
         {
             foreach (var pc in room.Players.Where(pc => pc.Id != player.Id))
             {
-                WriteLine(message, pc.ConnectionId);
+                WriteLine(message, pc);
             }
         }
 
@@ -101,17 +84,7 @@ namespace ArchaicQuestII.GameLogic.Client
 
             foreach (var pc in players.Where(pc => pc.Id != player.Id))
             {
-                WriteLine(message, pc.ConnectionId);
-            }
-        }
-
-        public void WriteToOthersInGame(string message, string type)
-        {
-            var players = Services.Instance.Cache.GetAllPlayers();
-
-            foreach (var pc in players)
-            {
-                WriteLine(message, pc.ConnectionId);
+                WriteLine(message, pc);
             }
         }
     }

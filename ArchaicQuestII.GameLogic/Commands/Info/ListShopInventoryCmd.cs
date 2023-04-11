@@ -34,10 +34,7 @@ public class ListShopInventoryCmd : ICommand
         var shopKeeper = FindShopKeeper(room);
         if (shopKeeper == null)
         {
-            Services.Instance.Writer.WriteLine(
-                "<p>There is no one selling here.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>There is no one selling here.</p>", player);
             return;
         }
 
@@ -47,15 +44,12 @@ public class ListShopInventoryCmd : ICommand
             {
                 Services.Instance.Writer.WriteLine(
                     "<p>They have nothing for sale but do offer spells. Try 'heal'.</p>",
-                    player.ConnectionId
+                    player
                 );
                 return;
             }
 
-            Services.Instance.Writer.WriteLine(
-                "<p>They have nothing for sale.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>They have nothing for sale.</p>", player);
             return;
         }
 
@@ -68,7 +62,7 @@ public class ListShopInventoryCmd : ICommand
 
         Services.Instance.Writer.WriteLine(
             mob.Name + " says 'Here's what I have for sale.'",
-            player.ConnectionId
+            player
         );
         var sb = new StringBuilder();
         sb.Append(
@@ -85,7 +79,7 @@ public class ListShopInventoryCmd : ICommand
         }
 
         sb.Append("</table>");
-        Services.Instance.Writer.WriteLine(sb.ToString(), player.ConnectionId);
+        Services.Instance.Writer.WriteLine(sb.ToString(), player);
     }
 
     private Player FindShopKeeper(Room room)

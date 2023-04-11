@@ -64,11 +64,11 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
             var cb = DiceBag.Roll(1, 0, _castBegin.Length - 1);
             var ce = DiceBag.Roll(1, 0, _castEnd.Length - 1);
 
-            Services.Instance.Writer.WriteLine($"<p>{_castBegin[cb]}</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine($"<p>{_castBegin[cb]}</p>", player);
 
             await Task.Delay(2000);
 
-            Services.Instance.Writer.WriteLine($"<p>{_castEnd[ce]}</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine($"<p>{_castEnd[ce]}</p>", player);
 
             await Task.Delay(2000);
 

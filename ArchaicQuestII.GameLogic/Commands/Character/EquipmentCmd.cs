@@ -127,7 +127,7 @@ hold potion
         {
             if (!string.IsNullOrEmpty(target))
                 return true;
-            Services.Instance.Writer.WriteLine(errorMessage, player.ConnectionId);
+            Services.Instance.Writer.WriteLine(errorMessage, player);
             return false;
         }
     }

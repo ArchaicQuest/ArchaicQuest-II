@@ -53,13 +53,13 @@ public class HarvestCmd : ICommand
 
         if (string.IsNullOrEmpty(target))
         {
-            Services.Instance.Writer.WriteLine("Harvest what?", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("Harvest what?", player);
             return;
         }
 
         if (player.Status == CharacterStatus.Status.Busy)
         {
-            Services.Instance.Writer.WriteLine("You are already doing it.", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("You are already doing it.", player);
             return;
         }
 
@@ -69,22 +69,19 @@ public class HarvestCmd : ICommand
 
         if (thingToHarvest == null)
         {
-            Services.Instance.Writer.WriteLine($"You don't see that here.", player.ConnectionId);
+            Services.Instance.Writer.WriteLine($"You don't see that here.", player);
             return;
         }
 
         if (thingToHarvest.ItemType != Item.Item.ItemTypes.Forage)
         {
-            Services.Instance.Writer.WriteLine("You can't harvest this.", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("You can't harvest this.", player);
             return;
         }
 
         if (!thingToHarvest.Container.Items.Any())
         {
-            Services.Instance.Writer.WriteLine(
-                "There's nothing left to harvest.",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("There's nothing left to harvest.", player);
             return;
         }
 
@@ -99,7 +96,7 @@ public class HarvestCmd : ICommand
 
         Services.Instance.Writer.WriteLine(
             $"<p>You begin harvesting from {thingToHarvest.Name}.</p>",
-            player.ConnectionId
+            player
         );
 
         await Task.Delay(4000);
@@ -113,7 +110,7 @@ public class HarvestCmd : ICommand
 
         Services.Instance.Writer.WriteLine(
             "<p>You rummage through the foliage looking for something to harvest.</p>",
-            player.ConnectionId
+            player
         );
 
         await Task.Delay(4000);
@@ -125,7 +122,7 @@ public class HarvestCmd : ICommand
 
         Services.Instance.UpdateClient.PlaySound("foraging", player);
 
-        Services.Instance.Writer.WriteLine("<p>You continue searching.</p>", player.ConnectionId);
+        Services.Instance.Writer.WriteLine("<p>You continue searching.</p>", player);
 
         await Task.Delay(4000);
 
@@ -229,7 +226,7 @@ public class HarvestCmd : ICommand
         {
             Services.Instance.Writer.WriteLine(
                 $"<p>{{yellow}}{randomMob.Name} jumps out from the {thingToHarvest.Name} and attacks you!{{/}}</p>",
-                player.ConnectionId
+                player
             );
             room.Mobs.Add(randomMob);
             player.Status = CharacterStatus.Status.Standing;
@@ -241,7 +238,7 @@ public class HarvestCmd : ICommand
         {
             Services.Instance.Writer.WriteLine(
                 $"<p>{{yellow}}You cut yourself foraging, OUCH!{{/}}</p>",
-                player.ConnectionId
+                player
             );
             player.Status = CharacterStatus.Status.Standing;
             return;
@@ -250,10 +247,7 @@ public class HarvestCmd : ICommand
         if (!player.RollSkill(SkillName.Foraging, false))
         {
             player.FailedSkill(SkillName.Foraging, true);
-            Services.Instance.Writer.WriteLine(
-                "<p>You fail to harvest a thing.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>You fail to harvest a thing.</p>", player);
             player.Status = CharacterStatus.Status.Standing;
             return;
         }
@@ -303,7 +297,7 @@ public class HarvestCmd : ICommand
 
         Services.Instance.Writer.WriteLine(
             $"<p>Ah you have collected some {collected}</p>",
-            player.ConnectionId
+            player
         );
         player.Status = CharacterStatus.Status.Standing;
         Services.Instance.UpdateClient.UpdateInventory(player);

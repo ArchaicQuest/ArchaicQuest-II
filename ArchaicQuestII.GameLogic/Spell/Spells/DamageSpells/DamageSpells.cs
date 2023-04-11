@@ -36,24 +36,20 @@ namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
         private readonly ICombat _fight;
         private readonly ISkillManager _skillManager;
 
-
-
         public DamageSpells(
-            IWriteToClient writer, 
+            IWriteToClient writer,
             IUpdateClientUI updateClientUi,
-            IDamage damage, 
-            ICombat fight, 
-            ISkillManager skillManager)
+            IDamage damage,
+            ICombat fight,
+            ISkillManager skillManager
+        )
         {
             _writer = writer;
             _updateClientUi = updateClientUi;
             _damage = damage;
             _fight = fight;
             _skillManager = skillManager;
-
         }
-
-
 
         public int MagicMissile(Player player, Player target, Room room)
         {
@@ -73,7 +69,7 @@ namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
 
             return damage;
         }
-        
+
         /*
 
         public void Armor(Player player, Player target, Room room, bool wearOff)
@@ -244,10 +240,7 @@ namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
 
             var skillMessage = new SkillMessage()
             {
-                NoEffect = new Messages()
-                {
-                    ToPlayer = "#target# is at full health."
-                },
+                NoEffect = new Messages() { ToPlayer = "#target# is at full health." },
                 Hit = new Messages()
                 {
                     ToPlayer = "#target# looks better!",
@@ -271,7 +264,7 @@ namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
                 Miss = new Messages()
             };
 
-            var hasAffcted = false;//_skillManager.AffectPlayerAttributes("Cure light wounds", EffectLocation.Hitpoints, value, player, target, room, skillMessage.NoEffect.ToPlayer);
+            var hasAffcted = false; //_skillManager.AffectPlayerAttributes("Cure light wounds", EffectLocation.Hitpoints, value, player, target, room, skillMessage.NoEffect.ToPlayer);
 
             if (hasAffcted)
             {
@@ -285,83 +278,102 @@ namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
             }
 
             _skillManager.UpdateClientUI(player);
-
         }
 
         public void Identify(Player player, string obj, Room room)
         {
-
             if (string.IsNullOrEmpty(obj))
             {
-                _writer.WriteLine("Identify what!?", player.ConnectionId);
+                _writer.WriteLine("Identify what!?", player);
                 return;
             }
-            var item = player.Inventory.FirstOrDefault(x => x.Name.Contains(obj, StringComparison.CurrentCultureIgnoreCase));
+            var item = player.Inventory.FirstOrDefault(
+                x => x.Name.Contains(obj, StringComparison.CurrentCultureIgnoreCase)
+            );
 
             if (item == null)
             {
-                _writer.WriteLine($"You don't have an item starting with '{item}'", player.ConnectionId);
+                _writer.WriteLine($"You don't have an item starting with '{item}'", player);
                 return;
             }
 
             var sb = new StringBuilder();
 
-
             List<string> itemFlags = new List<string>();
             foreach (Item.Item.ItemFlags itemFlag in Enum.GetValues(typeof(Item.Item.ItemFlags)))
             {
-                if ((item.ItemFlag & itemFlag) != 0) itemFlags.Add(itemFlag.ToString());
+                if ((item.ItemFlag & itemFlag) != 0)
+                    itemFlags.Add(itemFlag.ToString());
             }
 
-            sb.Append($"<p>Object '{item.Name}' is type {item.ItemType}, extra flags: {(itemFlags.Any() ? String.Join(", ", itemFlags) : "none")}.<br /><br />");
-            sb.Append($"Weight is {item.Weight}, value is {item.Value}, level is {item.Level}.<br />");
+            sb.Append(
+                $"<p>Object '{item.Name}' is type {item.ItemType}, extra flags: {(itemFlags.Any() ? String.Join(", ", itemFlags) : "none")}.<br /><br />"
+            );
+            sb.Append(
+                $"Weight is {item.Weight}, value is {item.Value}, level is {item.Level}.<br />"
+            );
 
             if (item.ItemType == Item.Item.ItemTypes.Armour)
             {
-                sb.Append($"Armour Type: {item.ArmourType}, Defense {item.ArmourRating.Armour} and {item.ArmourRating.Magic} vs magic.<br />");
+                sb.Append(
+                    $"Armour Type: {item.ArmourType}, Defense {item.ArmourRating.Armour} and {item.ArmourRating.Magic} vs magic.<br />"
+                );
             }
 
             if (item.ItemType == Item.Item.ItemTypes.Weapon)
             {
-                sb.Append($"Weapon Type: {item.WeaponType}, Damage is {item.Damage.Minimum}-{item.Damage.Maximum} (average {item.Damage.Minimum + item.Damage.Maximum / 2}).<br />");
+                sb.Append(
+                    $"Weapon Type: {item.WeaponType}, Damage is {item.Damage.Minimum}-{item.Damage.Maximum} (average {item.Damage.Minimum + item.Damage.Maximum / 2}).<br />"
+                );
                 sb.Append($"Attack type: {item.AttackType}</br>");
                 sb.Append($"Damage type: {item.DamageType}</br>");
             }
-            
+
             if (item.ItemType == Item.Item.ItemTypes.Potion)
             {
                 sb.Append($"Potion of: {item.SpellName}.<br />");
-                sb.Append($"Potion Strength: {item.SpellLevel}</br>"); 
+                sb.Append($"Potion Strength: {item.SpellLevel}</br>");
             }
 
             sb.Append($"Affects:</br>");
-      
-            
+
             if (item.Modifier.Strength != 0)
             {
-                sb.Append($"{(item.Modifier.Strength > 0 ? "+" : "-")}{item.Modifier.Strength} Strength</br>");
+                sb.Append(
+                    $"{(item.Modifier.Strength > 0 ? "+" : "-")}{item.Modifier.Strength} Strength</br>"
+                );
             }
             if (item.Modifier.Dexterity != 0)
             {
-                sb.Append($"{(item.Modifier.Dexterity > 0 ? "+" : "-")}{item.Modifier.Dexterity} Dexterity</br>");
+                sb.Append(
+                    $"{(item.Modifier.Dexterity > 0 ? "+" : "-")}{item.Modifier.Dexterity} Dexterity</br>"
+                );
             }
             if (item.Modifier.Constitution != 0)
             {
-                sb.Append($"{(item.Modifier.Constitution > 0 ? "+" : "-")}{item.Modifier.Constitution} Constitution</br>");
+                sb.Append(
+                    $"{(item.Modifier.Constitution > 0 ? "+" : "-")}{item.Modifier.Constitution} Constitution</br>"
+                );
             }
             if (item.Modifier.Wisdom != 0)
             {
-                sb.Append($"{(item.Modifier.Wisdom > 0 ? "+" : "-")}{item.Modifier.Wisdom} Wisdom</br>");
+                sb.Append(
+                    $"{(item.Modifier.Wisdom > 0 ? "+" : "-")}{item.Modifier.Wisdom} Wisdom</br>"
+                );
             }
             if (item.Modifier.Intelligence != 0)
             {
-                sb.Append($"{(item.Modifier.Intelligence > 0 ? "+" : "-")}{item.Modifier.Intelligence} Intelligence</br>");
+                sb.Append(
+                    $"{(item.Modifier.Intelligence > 0 ? "+" : "-")}{item.Modifier.Intelligence} Intelligence</br>"
+                );
             }
             if (item.Modifier.Charisma != 0)
             {
-                sb.Append($"{(item.Modifier.Charisma > 0 ? "+" : "-")}{item.Modifier.Charisma} Charisma</br>");
+                sb.Append(
+                    $"{(item.Modifier.Charisma > 0 ? "+" : "-")}{item.Modifier.Charisma} Charisma</br>"
+                );
             }
-            
+
             if (item.Modifier.HP != 0)
             {
                 sb.Append($"{(item.Modifier.HP > 0 ? "+" : "-")}{item.Modifier.HP} HP</br>");
@@ -372,38 +384,48 @@ namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
             }
             if (item.Modifier.Moves != 0)
             {
-                sb.Append($"{(item.Modifier.Moves > 0 ? "+" : "-")}{item.Modifier.Moves} Moves</br>");
+                sb.Append(
+                    $"{(item.Modifier.Moves > 0 ? "+" : "-")}{item.Modifier.Moves} Moves</br>"
+                );
             }
             if (item.Modifier.DamRoll != 0)
             {
-                sb.Append($"{(item.Modifier.DamRoll > 0 ? "+" : "-")}{item.Modifier.DamRoll} Damage Roll</br>");
+                sb.Append(
+                    $"{(item.Modifier.DamRoll > 0 ? "+" : "-")}{item.Modifier.DamRoll} Damage Roll</br>"
+                );
             }
             if (item.Modifier.HitRoll != 0)
             {
-                sb.Append($"{(item.Modifier.HitRoll > 0 ? "+" : "-")}{item.Modifier.HitRoll} Hit Roll</br>");
+                sb.Append(
+                    $"{(item.Modifier.HitRoll > 0 ? "+" : "-")}{item.Modifier.HitRoll} Hit Roll</br>"
+                );
             }
             if (item.Modifier.SpellDam != 0)
             {
-                sb.Append($"{(item.Modifier.SpellDam > 0 ? "+" : "-")}{item.Modifier.SpellDam} Spell Damage Roll</br>");
+                sb.Append(
+                    $"{(item.Modifier.SpellDam > 0 ? "+" : "-")}{item.Modifier.SpellDam} Spell Damage Roll</br>"
+                );
             }
             if (item.Modifier.AcMod != 0)
             {
-                sb.Append($"{(item.Modifier.AcMod > 0 ? "+" : "-")}{item.Modifier.AcMod} Armour</br>");
+                sb.Append(
+                    $"{(item.Modifier.AcMod > 0 ? "+" : "-")}{item.Modifier.AcMod} Armour</br>"
+                );
             }
             if (item.Modifier.AcMagicMod != 0)
             {
-                sb.Append($"{(item.Modifier.AcMagicMod > 0 ? "+" : "-")}{item.Modifier.AcMagicMod} Magic Armour</br>");
+                sb.Append(
+                    $"{(item.Modifier.AcMagicMod > 0 ? "+" : "-")}{item.Modifier.AcMagicMod} Magic Armour</br>"
+                );
             }
 
-
-            // TODO: container? Affects? what else? 
+            // TODO: container? Affects? what else?
             // show crafted by
             // show enchanted by
 
             sb.Append("</p>");
 
-            _writer.WriteLine(sb.ToString(), player.ConnectionId);
-
+            _writer.WriteLine(sb.ToString(), player);
         }
     }
 }

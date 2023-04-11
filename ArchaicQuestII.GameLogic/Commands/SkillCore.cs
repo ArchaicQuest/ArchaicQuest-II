@@ -91,11 +91,11 @@ public abstract class SkillCore
         {
             if (pc.Name.Equals(target))
             {
-                Services.Instance.Writer.WriteLine(textToTarget, pc.ConnectionId);
+                Services.Instance.Writer.WriteLine(textToTarget, pc);
                 continue;
             }
 
-            Services.Instance.Writer.WriteLine(textToRoom, pc.ConnectionId);
+            Services.Instance.Writer.WriteLine(textToRoom, pc);
         }
     }
 
@@ -105,16 +105,13 @@ public abstract class SkillCore
         {
             if (pc.ConnectionId.Equals(player.ConnectionId))
             {
-                Services.Instance.Writer.WriteLine(
-                    $"<p>{emote.EffectWearOff.ToPlayer}</p>",
-                    pc.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine($"<p>{emote.EffectWearOff.ToPlayer}</p>", pc);
                 continue;
             }
 
             Services.Instance.Writer.WriteLine(
                 $"<p>{ReplacePlaceholders(emote.EffectWearOff.ToRoom, player, false)}</p>",
-                pc.ConnectionId
+                pc
             );
         }
     }
@@ -170,11 +167,11 @@ public abstract class SkillCore
 
             Services.Instance.Writer.WriteLine(
                 $"<p>Your {skillName} {Services.Instance.Damage.DamageText(totalDam).Value} {target.Name}  <span class='damage'>[{damage}]</span></p>",
-                player.ConnectionId
+                player
             );
             Services.Instance.Writer.WriteLine(
                 $"<p>{player.Name}'s {skillName} {Services.Instance.Damage.DamageText(totalDam).Value} you!  <span class='damage'>[{damage}]</span></p>",
-                target.ConnectionId
+                target
             );
 
             foreach (var pc in room.Players)
@@ -189,7 +186,7 @@ public abstract class SkillCore
 
                 Services.Instance.Writer.WriteLine(
                     $"<p>{player.Name}'s {skillName} {Services.Instance.Damage.DamageText(totalDam).Value} {target.Name}  <span class='damage'>[{damage}]</span></p>",
-                    pc.ConnectionId
+                    pc
                 );
             }
 
@@ -227,7 +224,7 @@ public abstract class SkillCore
             return target;
         }
 
-        Services.Instance.Writer.WriteLine("They are not here.", player.ConnectionId);
+        Services.Instance.Writer.WriteLine("They are not here.", player);
         return null;
     }
 
@@ -250,7 +247,7 @@ public abstract class SkillCore
 
         if (playerHasSkill == null)
         {
-            Services.Instance.Writer.WriteLine($"You do not know this skill.", player.ConnectionId);
+            Services.Instance.Writer.WriteLine($"You do not know this skill.", player);
             return false;
         }
 
@@ -258,7 +255,7 @@ public abstract class SkillCore
         {
             Services.Instance.Writer.WriteLine(
                 $"You are not of the right level to use this skill.",
-                player.ConnectionId
+                player
             );
             return false;
         }
@@ -267,17 +264,14 @@ public abstract class SkillCore
         {
             Services.Instance.Writer.WriteLine(
                 $"You do not have enough mana to cast {skill.Name}.",
-                player.ConnectionId
+                player
             );
             return false;
         }
 
         if (skill.MoveCost > player.Attributes.Attribute[EffectLocation.Moves])
         {
-            Services.Instance.Writer.WriteLine(
-                $"You are too tired to {skill.Name}.",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine($"You are too tired to {skill.Name}.", player);
             return false;
         }
 

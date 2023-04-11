@@ -1,5 +1,4 @@
 ﻿using ArchaicQuestII.DataAccess;
-using ArchaicQuestII.GameLogic.Character.Help;
 using ArchaicQuestII.GameLogic.Core;
 using System;
 using System.Collections.Generic;

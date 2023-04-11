@@ -60,7 +60,7 @@ Related help files: drop, put, give
 
         if (string.IsNullOrEmpty(target))
         {
-            Services.Instance.Writer.WriteLine("<p>Get what?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Get what?</p>", player);
             return;
         }
 
@@ -68,7 +68,7 @@ Related help files: drop, put, give
         {
             Services.Instance.Writer.WriteLine(
                 "<p>You are blind and can't see a thing!</p>",
-                player.ConnectionId
+                player
             );
             return;
         }
@@ -95,10 +95,7 @@ Related help files: drop, put, give
 
             if (containerObj == null)
             {
-                Services.Instance.Writer.WriteLine(
-                    "<p>You don't see that here.</p>",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine("<p>You don't see that here.</p>", player);
                 return;
             }
 
@@ -109,17 +106,11 @@ Related help files: drop, put, give
             {
                 if (containerObj.ItemType == Item.Item.ItemTypes.Forage)
                 {
-                    Services.Instance.Writer.WriteLine(
-                        "<p>Try forage instead.</p>",
-                        player.ConnectionId
-                    );
+                    Services.Instance.Writer.WriteLine("<p>Try forage instead.</p>", player);
                     return;
                 }
 
-                Services.Instance.Writer.WriteLine(
-                    "<p>This is not a container.</p>",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine("<p>This is not a container.</p>", player);
                 return;
             }
 
@@ -134,19 +125,13 @@ Related help files: drop, put, give
 
         if (item == null)
         {
-            Services.Instance.Writer.WriteLine(
-                "<p>You don't see that here.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>You don't see that here.</p>", player);
             return;
         }
 
         if (item.Stuck)
         {
-            Services.Instance.Writer.WriteLine(
-                "<p>You can't pick that up.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>You can't pick that up.</p>", player);
             return;
         }
 
@@ -169,7 +154,7 @@ Related help files: drop, put, give
         {
             Services.Instance.Writer.WriteLine(
                 $"<p>You pick up {ItemList.DisplayMoneyAmount(item.Value).ToLower()}.</p>",
-                player.ConnectionId
+                player
             );
             player.Money.Gold += item.Value;
             player.Weight += item.Value * 0.1;
@@ -181,7 +166,7 @@ Related help files: drop, put, give
             player.Weight += item.Weight;
             Services.Instance.Writer.WriteLine(
                 $"<p>You pick up {item.Name.ToLower()}.</p>",
-                player.ConnectionId
+                player
             );
         }
 
@@ -193,7 +178,7 @@ Related help files: drop, put, give
         {
             Services.Instance.Writer.WriteLine(
                 $"<p>You are now over encumbered by carrying too much weight.</p>",
-                player.ConnectionId
+                player
             );
         }
     }
@@ -202,10 +187,7 @@ Related help files: drop, put, give
     {
         if (room.Items.Count == 0)
         {
-            Services.Instance.Writer.WriteLine(
-                "<p>You don't see anything here.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>You don't see anything here.</p>", player);
             return;
         }
 
@@ -217,7 +199,7 @@ Related help files: drop, put, give
                 {
                     Services.Instance.Writer.WriteLine(
                         $"<p>You pick up {ItemList.DisplayMoneyAmount(room.Items[i].Value).ToLower()}.</p>",
-                        player.ConnectionId
+                        player
                     );
 
                     player.Money.Gold += room.Items[i].Value;
@@ -230,7 +212,7 @@ Related help files: drop, put, give
                     player.Inventory.Add(room.Items[i]);
                     Services.Instance.Writer.WriteLine(
                         $"<p>You pick up {room.Items[i].Name.ToLower()}</p>",
-                        player.ConnectionId
+                        player
                     );
                     player.Weight += room.Items[i].Weight;
                 }
@@ -252,10 +234,7 @@ Related help files: drop, put, give
             }
             else
             {
-                Services.Instance.Writer.WriteLine(
-                    "<p>You can't get that.</p>",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine("<p>You can't get that.</p>", player);
             }
         }
 
@@ -267,7 +246,7 @@ Related help files: drop, put, give
         {
             Services.Instance.Writer.WriteLine(
                 $"<p>You are now over encumbered by carrying too much weight.</p>",
-                player.ConnectionId
+                player
             );
         }
     }
@@ -276,10 +255,7 @@ Related help files: drop, put, give
     {
         if (container.Container.CanOpen && !container.Container.IsOpen)
         {
-            Services.Instance.Writer.WriteLine(
-                "<p>You need to open it first.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>You need to open it first.</p>", player);
             return;
         }
 
@@ -297,10 +273,7 @@ Related help files: drop, put, give
 
         if (item == null)
         {
-            Services.Instance.Writer.WriteLine(
-                "<p>You don't have that item.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>You don't have that item.</p>", player);
             return;
         }
 
@@ -323,7 +296,7 @@ Related help files: drop, put, give
         {
             Services.Instance.Writer.WriteLine(
                 $"<p>You get {ItemList.DisplayMoneyAmount(item.Value).ToLower()} from {container.Name.ToLower()}.</p>",
-                player.ConnectionId
+                player
             );
             player.Money.Gold += item.Value;
             player.Weight += item.Value * 0.1;
@@ -336,7 +309,7 @@ Related help files: drop, put, give
             player.Weight += item.Weight;
             Services.Instance.Writer.WriteLine(
                 $"<p>You get {item.Name.ToLower()} from {container.Name.ToLower()}.</p>",
-                player.ConnectionId
+                player
             );
         }
 
@@ -348,7 +321,7 @@ Related help files: drop, put, give
         {
             Services.Instance.Writer.WriteLine(
                 $"<p>You are now over encumbered by carrying too much weight.</p>",
-                player.ConnectionId
+                player
             );
         }
     }
@@ -359,7 +332,7 @@ Related help files: drop, put, give
         {
             Services.Instance.Writer.WriteLine(
                 $"<p>You see nothing in {container.Name.ToLower()}.</p>",
-                player.ConnectionId
+                player
             );
             return;
         }
@@ -370,7 +343,7 @@ Related help files: drop, put, give
             {
                 Services.Instance.Writer.WriteLine(
                     $"<p>You pick up {ItemList.DisplayMoneyAmount(container.Container.Items[i].Value).ToLower()} from {container.Name.ToLower()}.</p>",
-                    player.ConnectionId
+                    player
                 );
 
                 player.Money.Gold += container.Container.Items[i].Value;
@@ -384,7 +357,7 @@ Related help files: drop, put, give
                 player.Weight += container.Container.Items[i].Weight;
                 Services.Instance.Writer.WriteLine(
                     $"<p>You pick up {container.Container.Items[i].Name.ToLower()} from {container.Name.ToLower()}.</p>",
-                    player.ConnectionId
+                    player
                 );
             }
 
@@ -411,7 +384,7 @@ Related help files: drop, put, give
         {
             Services.Instance.Writer.WriteLine(
                 $"<p>You are now over encumbered by carrying too much weight.</p>",
-                player.ConnectionId
+                player
             );
         }
     }
