@@ -35,7 +35,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
                 DefineSkill.Whip(),
                 DefineSkill.DirtKick(),
                 DefineSkill.HamString(),
-                DefineSkill.LongBlade(),
+                DefineSkill.LongBlades(),
                 DefineSkill.OverheadCrush(),
                 DefineSkill.ShieldBash(),
                 DefineSkill.ShortBlades(),

@@ -5,7 +5,7 @@ public static class DefineSkill
 
     #region WeaponSkills
 
-    public static Skill LongBlade()
+    public static Skill LongBlades()
     {
         return new Skill
         {
@@ -338,7 +338,14 @@ public static class DefineSkill
         };
     }
     
-    
+    public static Skill LockPick()
+    {
+        return new Skill
+        {
+            Name = "Lock Picking",
+        };
+    }
+
 
 
     #endregion
