@@ -99,6 +99,8 @@ public static class CharacterHelpers
 
         player.GainExperiencePoints(100 * skill.Level / 4, out _);
 
+        Services.Instance.UpdateClient.UpdateExp(player);
+
         message =
             $"<p class='improve'>You learn from your mistakes and gain {100 * skill.Level / 4} experience points.</p>"
             + $"<p class='improve'>Your knowledge of {skill.Name} increases by {increase}%.</p>";
@@ -155,6 +157,8 @@ public static class CharacterHelpers
         player.Experience += expWorth;
         player.ExperienceToNextLevel -= expWorth;
 
+        Services.Instance.UpdateClient.UpdateExp(player);
+
         message =
             expWorth == 1
                 ? "<p class='improve'>You gain 1 measly experience point.</p>"
@@ -165,6 +169,8 @@ public static class CharacterHelpers
     {
         player.Experience += amount;
         player.ExperienceToNextLevel -= amount;
+
+        Services.Instance.UpdateClient.UpdateExp(player);
 
         message =
             amount == 1
@@ -192,6 +198,11 @@ public static class CharacterHelpers
         player.MaxAttributes.Attribute[EffectLocation.Hitpoints] += totalHP;
         player.MaxAttributes.Attribute[EffectLocation.Mana] += totalMana;
         player.MaxAttributes.Attribute[EffectLocation.Moves] += totalMove;
+
+        Services.Instance.UpdateClient.UpdateExp(player);
+        Services.Instance.UpdateClient.UpdateHP(player);
+        Services.Instance.UpdateClient.UpdateMana(player);
+        Services.Instance.UpdateClient.UpdateMoves(player);
 
         message =
             $"<p class='improve'>You have advanced to level {player.Level}, you gain: {totalHP} HP, {totalMana} Mana, {totalMove} Moves.</p>";
@@ -287,6 +298,8 @@ public static class CharacterHelpers
         {
             player.Affects.Haste = true;
         }
+
+        Services.Instance.UpdateClient.UpdateAffects(player);
     }
 
     public static string UpdateAffect(this Player player, Item.Item item, Affect affect)
@@ -416,6 +429,8 @@ public static class CharacterHelpers
             modBenefits =
                 $"modifies Dam Roll by {item.Modifier.DamRoll} for {affect.Duration} minutes<br />";
         }
+
+        Services.Instance.UpdateClient.UpdateAffects(player);
 
         // saves / saving spell
 

@@ -3,6 +3,7 @@ namespace ArchaicQuestII.GameLogic.Character;
 public enum SkillName
 {
     None,
+    Lockpick,
     Blunt,
     Haggle,
     Grip,

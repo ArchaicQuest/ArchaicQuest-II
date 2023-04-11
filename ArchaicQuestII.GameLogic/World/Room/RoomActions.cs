@@ -461,5 +461,56 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 }
             }
         }
+
+        public Exit GetRoomExit(string exit, Room room)
+        {
+            Exit getExitToNextRoom = null;
+
+            switch (exit)
+            {
+                case "north":
+                case "n":
+                    getExitToNextRoom = room.Exits.North;
+                    break;
+                case "south":
+                case "s":
+                    getExitToNextRoom = room.Exits.South;
+                    break;
+                case "east":
+                case "e":
+                    getExitToNextRoom = room.Exits.East;
+                    break;
+                case "west":
+                case "w":
+                    getExitToNextRoom = room.Exits.West;
+                    break;
+                case "southeast":
+                case "se":
+                    getExitToNextRoom = room.Exits.SouthEast;
+                    break;
+                case "southwest":
+                case "sw":
+                    getExitToNextRoom = room.Exits.SouthWest;
+                    break;
+                case "northeast":
+                case "ne":
+                    getExitToNextRoom = room.Exits.NorthEast;
+                    break;
+                case "northwest":
+                case "nw":
+                    getExitToNextRoom = room.Exits.NorthWest;
+                    break;
+                case "down":
+                case "d":
+                    getExitToNextRoom = room.Exits.Down;
+                    break;
+                case "up":
+                case "u":
+                    getExitToNextRoom = room.Exits.Up;
+                    break;
+            }
+
+            return getExitToNextRoom;
+        }
     }
 }
