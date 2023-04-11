@@ -8,5 +8,6 @@ namespace ArchaicQuestII.GameLogic.World.Room
         bool RoomIsDark(Player player, Room room);
         string FindValidExits(Room room, bool showVerboseExits);
         void RoomChange(Player player, Room oldRoom, Room newRoom, bool isFlee);
+        Exit GetRoomExit(string exit, Room room);
     }
 }

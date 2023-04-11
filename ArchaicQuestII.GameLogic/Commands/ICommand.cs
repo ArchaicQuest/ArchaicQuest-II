@@ -1,9 +1,6 @@
-using System;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
-using ArchaicQuestII.GameLogic.Commands.Objects;
-using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Commands
@@ -37,11 +34,6 @@ namespace ArchaicQuestII.GameLogic.Commands
         /// Player role required to execute command
         /// </summary>
         UserRole UserRole { get; }
-
-        /// <summary>
-        /// Cached items
-        /// </summary>
-        ICore Core { get; }
 
         /// <summary>
         /// Executes the command

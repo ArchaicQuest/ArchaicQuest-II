@@ -1,20 +1,18 @@
 ﻿using System;
 using System.Threading.Tasks;
-using ArchaicQuestII.GameLogic.Commands;
 
 namespace ArchaicQuestII.GameLogic.Core
 {
-	public interface ILoop
-	{
-		int TickDelay { get; }
+    public interface ILoop
+    {
+        int TickDelay { get; }
         bool ConfigureAwait { get; }
-        void Init(ICore core, ICommandHandler commandHandler);
-		void PreTick();
-		void Tick();
-		void PostTick();
+        void PreTick();
+        void Tick();
+        void PostTick();
 
-		async Task Loop()
-		{
+        async Task Loop()
+        {
             while (true)
             {
                 await Task.Delay(TickDelay);
@@ -25,14 +23,10 @@ namespace ArchaicQuestII.GameLogic.Core
                 {
                     Tick();
                 }
-                catch (Exception)
-                {
-
-                }
+                catch (Exception) { }
 
                 PostTick();
             }
         }
-	}
+    }
 }
-

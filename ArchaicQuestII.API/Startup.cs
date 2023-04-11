@@ -19,14 +19,17 @@ using System.IO;
 using ArchaicQuestII.DiscordBot;
 using ArchaicQuestII.GameLogic.Client;
 using Discord.WebSocket;
+using ArchaicQuestII.GameLogic.Combat;
+using ArchaicQuestII.GameLogic.World.Room;
+using ArchaicQuestII.GameLogic.Skill.Skills;
+using ArchaicQuestII.GameLogic.Spell;
+using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Commands;
 
 namespace ArchaicQuestII.API
 {
     public class Startup
     {
-        private IDataBase _db;
-        private ICache _cache;
-        private IHubContext<GameHub> _hubContext;
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -39,18 +42,21 @@ namespace ArchaicQuestII.API
         {
             services.AddCors(options =>
             {
-                options.AddPolicy("client",
-                    builder => builder
+                options.AddPolicy(
+                    "client",
+                    builder =>
+                        builder
                             .WithOrigins(
                                 "http://localhost:4200",
                                 "http://localhost:1337",
                                 "https://api.archaicquest.com",
                                 "https://admin.archaicquest.com",
-                                "https://play.archaicquest.com")
+                                "https://play.archaicquest.com"
+                            )
                             .AllowAnyMethod()
                             .AllowAnyHeader()
-                            .AllowCredentials());
-                
+                            .AllowCredentials()
+                );
             });
 
             services.AddControllers().AddNewtonsoftJson();
@@ -65,17 +71,45 @@ namespace ArchaicQuestII.API
             // configure DI for application services
             services.AddScoped<IUserService, UserService>();
             services.AddSingleton(
-                new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AQ.db")));
+                new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AQ.db"))
+            );
 
             services.AddSingleton<IDataBase, DataBase>();
-            services.AddSingleton<IPlayerDataBase>(new PlayerDataBase(new LiteDatabase(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AQ-PLAYERS.db"))));
-        services.AddSingleton<IWriteToClient, WriteToClient>((factory) =>
-                new WriteToClient(_hubContext, TelnetHub.Instance, _cache));
-        services.AddGameLogic();
+            services.AddSingleton<IPlayerDataBase>(
+                new PlayerDataBase(
+                    new LiteDatabase(
+                        Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AQ-PLAYERS.db")
+                    )
+                )
+            );
+            services.AddSingleton<IWriteToClient, WriteToClient>(
+                (factory) => new WriteToClient(TelnetHub.Instance)
+            );
+            services.AddGameLogic();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IDataBase db, ICache cache)
+        public void Configure(
+            IApplicationBuilder app,
+            IWebHostEnvironment env,
+            IWriteToClient writer,
+            IDataBase db,
+            IUpdateClientUI updateClient,
+            ICombat combat,
+            IPlayerDataBase pdb,
+            IRoomActions roomActions,
+            IMobScripts mobScripts,
+            IErrorLog errorLog,
+            IPassiveSkills passiveSkills,
+            IFormulas formulas,
+            ITime time,
+            IDamage damage,
+            ISpellList spellList,
+            IWeather weather,
+            ICharacterHandler characterHandler,
+            ILoopHandler loopHandler,
+            ICommandHandler commandHandler
+        )
         {
             if (env.EnvironmentName == "dev")
             {
@@ -85,8 +119,6 @@ namespace ArchaicQuestII.API
             {
                 app.UseExceptionHandler("/Play/Error");
             }
-            _db = db;
-            _cache = cache;
 
             app.UseDefaultFiles();
             app.UseStaticFiles();
@@ -96,10 +128,13 @@ namespace ArchaicQuestII.API
 
             // Forward headers for Ngnix
 
-            app.UseForwardedHeaders(new ForwardedHeadersOptions
-            {
-                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-            });
+            app.UseForwardedHeaders(
+                new ForwardedHeadersOptions
+                {
+                    ForwardedHeaders =
+                        ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+                }
+            );
 
             app.UseRouting();
             app.UseAuthentication();
@@ -110,13 +145,32 @@ namespace ArchaicQuestII.API
                 endpoints.MapHub<GameHub>("/Hubs/game");
             });
 
-            _hubContext = app.ApplicationServices.GetService<IHubContext<GameHub>>();
+            GameLogic.Core.Services.Instance.InitServices(
+                writer,
+                db,
+                updateClient,
+                combat,
+                pdb,
+                roomActions,
+                mobScripts,
+                errorLog,
+                passiveSkills,
+                formulas,
+                time,
+                damage,
+                spellList,
+                weather,
+                characterHandler,
+                loopHandler,
+                commandHandler,
+                app.ApplicationServices.GetService<IHubContext<GameHub>>()
+            );
 
             app.StartLoops();
 
             var watch = System.Diagnostics.Stopwatch.StartNew();
 
-            SeedData.SeedAndCache(_db, _cache);
+            SeedData.SeedAndCache();
 
             if (!db.DoesCollectionExist(DataBase.Collections.Users))
             {
@@ -136,15 +190,19 @@ namespace ArchaicQuestII.API
             var elapsedMs = watch.ElapsedMilliseconds;
 
             Console.WriteLine($"Start up completed in {elapsedMs}");
-            GameLogic.Utilities.Helpers.PostToDiscord($"Start up completed in {Math.Ceiling((decimal)elapsedMs / 1000)} seconds", "event", _cache.GetConfig());
+            GameLogic.Utilities.Helpers.PostToDiscord(
+                $"Start up completed in {Math.Ceiling((decimal)elapsedMs / 1000)} seconds",
+                "event",
+                GameLogic.Core.Services.Instance.Cache.GetConfig()
+            );
 
-           try
+            try
             {
-                new Bot(_cache, _hubContext, new DiscordSocketClient()).MainAsync();
+                new Bot(new DiscordSocketClient()).MainAsync();
             }
             catch (Exception ex)
             {
-                
+                Console.WriteLine("Startup.cs: " + ex);
             }
         }
     }

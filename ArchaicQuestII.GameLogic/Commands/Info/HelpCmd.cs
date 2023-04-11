@@ -17,27 +17,30 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
         /// Help Title
         /// </summary>
         public string Title { get; set; }
+
         /// <summary>
         /// Command Aliases
         /// </summary>
         public string[] Aliases { get; set; }
+
         /// <summary>
         /// Help Description
         /// </summary>
         public string Description { get; set; }
+
         /// <summary>
         /// How to use command
         /// </summary>
         public string[] Usages { get; set; }
-
     }
-    
+
     public class HelpCmd : ICommand
     {
-        public HelpCmd(ICore core)
+        public HelpCmd()
         {
-            Aliases = new[] {"help"};
-            Description = @"
+            Aliases = new[] { "help" };
+            Description =
+                @"
 <table class='simple heading'>
 <tbody>
 <tr>
@@ -81,20 +84,21 @@ say tell reply who
 </tr>
 </tbody>
                 </table>";
-            Usages = new[] {$"help {WebUtility.HtmlEncode("<keyword>")} <br /> for example, help quaff"};
+            Usages = new[]
+            {
+                $"help {WebUtility.HtmlEncode("<keyword>")} <br /> for example, help quaff"
+            };
             Title = "";
-    DeniedStatus = null;
+            DeniedStatus = null;
             UserRole = UserRole.Player;
-            Core = core;
         }
-        
+
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
         public string Title { get; }
         public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
-        public ICore Core { get; }
 
         public void Execute(Player player, Room room, string[] input)
         {
@@ -104,14 +108,15 @@ say tell reply who
             {
                 target = "help";
             }
-            
-            // TODO: move to startup to build and cache 
+
+            // TODO: move to startup to build and cache
             // Proof of concept, have help file for anything that's not a command
             // example help newbie could explain about the game
-            var nonCommandHelpFiles = new Dictionary<string,HelpFileContent>()
+            var nonCommandHelpFiles = new Dictionary<string, HelpFileContent>()
             {
                 {
-                    "test", new HelpFileContent()
+                    "test",
+                    new HelpFileContent()
                     {
                         Title = "test",
                         Description = "it works",
@@ -121,8 +126,13 @@ say tell reply who
                 }
             };
 
-            var command = Core.Cache.GetCommand(target) ?? Core.Cache.GetCommands().Values
-                .FirstOrDefault(x => x.Title.StartsWith(target, StringComparison.CurrentCultureIgnoreCase));
+            var command =
+                Services.Instance.Cache.GetCommand(target)
+                ?? Services.Instance.Cache
+                    .GetCommands()
+                    .Values.FirstOrDefault(
+                        x => x.Title.StartsWith(target, StringComparison.CurrentCultureIgnoreCase)
+                    );
 
             HelpFileContent help = null;
             if (string.IsNullOrEmpty(command?.Title))
@@ -132,7 +142,10 @@ say tell reply who
 
             if (command == null && help == null)
             {
-                Core.Writer.WriteLine($"<p>No help found for {target}.", player.ConnectionId);
+                Services.Instance.Writer.WriteLine(
+                    $"<p>No help found for {target}.",
+                    player.ConnectionId
+                );
                 return;
             }
 
@@ -145,21 +158,22 @@ say tell reply who
             };
 
             var helpString = HelpHtml(helpText, target);
-            Core.Writer.WriteLine(helpString, player.ConnectionId);
+            Services.Instance.Writer.WriteLine(helpString, player.ConnectionId);
         }
 
-    
         private static string HelpHtml(HelpFileContent command, string target)
         {
             var sb = new StringBuilder();
 
             sb.Append("<div class='help-section'><table>");
-            sb.Append($"<tr><td>Help Title</td><td>{(string.IsNullOrEmpty(command.Title) ? target : command.Title)}</td></tr>");
-                
+            sb.Append(
+                $"<tr><td>Help Title</td><td>{(string.IsNullOrEmpty(command.Title) ? target : command.Title)}</td></tr>"
+            );
+
             sb.Append("<tr><td>Aliases:</td><td>");
-                
+
             var index = command.Aliases.Length;
-                
+
             foreach (var alias in command.Aliases)
             {
                 sb.Append($"{alias}");

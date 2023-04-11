@@ -1,6 +1,5 @@
 ﻿using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Model;
-using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Core;
@@ -13,7 +12,6 @@ using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Skill.Skills
 {
-
     public interface IDamageSkills
     {
         int Kick(Player player, Player target, Room room);
@@ -35,74 +33,47 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
     public class DamageSkills : IDamageSkills
     {
-        private readonly IWriteToClient _writer;
-        private readonly IUpdateClientUI _updateClientUi;
-        private readonly IDamage _damage;
-        private readonly ICombat _fight;
         private readonly ISkillManager _skillManager;
 
-
-
-        public DamageSkills(
-            IWriteToClient writer, 
-            IUpdateClientUI updateClientUi,
-            IDamage damage,
-            ICombat fight, 
-            ISkillManager skillManager)
+        public DamageSkills(ISkillManager skillManager)
         {
-            _writer = writer;
-            _updateClientUi = updateClientUi;
-            _damage = damage;
-            _fight = fight;
             _skillManager = skillManager;
-
         }
 
         public int Kick(Player player, Player target, Room room)
         {
-        
-
             return 0;
         }
 
         public int Elbow(Player player, Player target, Room room)
         {
-          
             return 0;
         }
 
         // TODO skill success check
         public int HeadButt(Player player, Player target, Room room)
         {
-          
-
             return 0;
         }
 
         public int Charge(Player player, Player target, Room room, string obj)
         {
-           
-
             return 0;
         }
 
         public int Stab(Player player, Player target, Room room, string obj)
         {
-   
-
             return 0;
         }
 
         public int OverheadCrush(Player player, Player target, Room room, string obj)
         {
-            
             return 0;
         }
 
         public int Cleave(Player player, Player target, Room room, string obj)
         {
             return 0;
-
         }
 
         public int Impale(Player player, Player target, Room room, string obj)
@@ -117,17 +88,13 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
         public int Trip(Player player, Player target, Room room)
         {
-
             return 0;
         }
 
         public int UpperCut(Player player, Player target, Room room, string obj)
         {
-
-
             var str = player.Attributes.Attribute[EffectLocation.Strength];
             var damage = DiceBag.Roll(1, 1, 6) + str / 5;
-
 
             _skillManager.DamagePlayer("uppercut", damage, player, target, room);
 
@@ -135,20 +102,21 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             var chance = DiceBag.Roll(1, 1, 100);
             if (helmet != null)
             {
-
                 if (chance <= 15)
                 {
                     room.Items.Add(helmet);
                     target.Equipped.Head = null;
 
-
                     var skillMessage = new SkillMessage()
                     {
                         Hit =
                         {
-                            ToPlayer = $"Your uppercut knocks{helmet.Name.ToLower()} off {target.Name}'s head.",
-                            ToRoom = $"{player.Name} knocks {helmet.Name.ToLower()} off {target.Name}'s head.",
-                            ToTarget = $"{player.Name} knocks {helmet.Name.ToLower()} off your head."
+                            ToPlayer =
+                                $"Your uppercut knocks{helmet.Name.ToLower()} off {target.Name}'s head.",
+                            ToRoom =
+                                $"{player.Name} knocks {helmet.Name.ToLower()} off {target.Name}'s head.",
+                            ToTarget =
+                                $"{player.Name} knocks {helmet.Name.ToLower()} off your head."
                         }
                     };
 
@@ -159,7 +127,6 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             {
                 if (chance <= 15)
                 {
-
                     var skillMessage = new SkillMessage()
                     {
                         Hit =
@@ -185,10 +152,12 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
         public int DirtKick(Player player, Player target, Room room, string obj)
         {
-
             if (target.Affects.Blind)
             {
-                _writer.WriteLine($"{target.Name} has already been blinded.", player.ConnectionId);
+                Services.Instance.Writer.WriteLine(
+                    $"{target.Name} has already been blinded.",
+                    player.ConnectionId
+                );
             }
 
             /*dexterity check */
@@ -226,25 +195,21 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
                 _skillManager.EmoteAction(player, target, room, skillMessage);
 
-                _writer.WriteLine("You can't see a thing!", target.ConnectionId);
+                Services.Instance.Writer.WriteLine("You can't see a thing!", target.ConnectionId);
 
                 target.Affects.Blind = true;
 
                 var affect = new Affect()
                 {
                     Duration = 2,
-                    Modifier = new Modifier()
-                    {
-                        Dexterity = -4,
-                        HitRoll = -4
-                    },
+                    Modifier = new Modifier() { Dexterity = -4, HitRoll = -4 },
                     Affects = DefineSpell.SpellAffect.Blind,
                     Name = "Blindness from dirt kick"
                 };
 
                 target.Affects.Custom.Add(affect);
 
-                Helpers.ApplyAffects(affect, target);
+                target.ApplyAffects(affect);
             }
             else
             {
@@ -259,26 +224,23 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                 };
 
                 _skillManager.EmoteAction(player, target, room, skillMessage);
-
             }
 
             player.Lag += 1;
 
             _skillManager.updateCombat(player, target, room);
 
-            _updateClientUi.UpdateScore(player);
-            _updateClientUi.UpdateMoves(player);
-            _updateClientUi.UpdateHP(player);
-            _updateClientUi.UpdateAffects(target);
-            _updateClientUi.UpdateExp(player);
-
+            Services.Instance.UpdateClient.UpdateScore(player);
+            Services.Instance.UpdateClient.UpdateMoves(player);
+            Services.Instance.UpdateClient.UpdateHP(player);
+            Services.Instance.UpdateClient.UpdateAffects(target);
+            Services.Instance.UpdateClient.UpdateExp(player);
 
             return 0;
         }
 
         public int Lunge(Player player, Player target, Room room, string obj)
         {
-
             /*dexterity check */
             var chance = 50;
             chance += player.Attributes.Attribute[EffectLocation.Strength];
@@ -297,10 +259,10 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             /* level check */
             chance += player.Level - target.Level;
 
-            var weaponDam = player.Equipped.Wielded != null ? player.Equipped.Wielded.Damage.Maximum : 1 * 2;
+            var weaponDam =
+                player.Equipped.Wielded != null ? player.Equipped.Wielded.Damage.Maximum : 1 * 2;
             var str = player.Attributes.Attribute[EffectLocation.Strength];
             var damage = DiceBag.Roll(3, 1, 6) + str / 5 + weaponDam;
-
 
             if (DiceBag.Roll(1, 1, 100) < chance)
             {
@@ -314,7 +276,6 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                     }
                 };
                 player.Lag += 1;
-
 
                 _skillManager.EmoteAction(player, target, room, skillMessage);
                 _skillManager.DamagePlayer("lunge", damage, player, target, room);
@@ -333,10 +294,8 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
                 _skillManager.EmoteAction(player, target, room, skillMessage);
 
-
                 player.Lag += 2;
             }
-
 
             _skillManager.updateCombat(player, target, room);
 
@@ -345,10 +304,12 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
         public int ShieldBash(Player player, Player target, Room room, string obj)
         {
-
             if (player.Equipped.Shield == null)
             {
-                _writer.WriteLine("You need a shield before you can bash", player.ConnectionId);
+                Services.Instance.Writer.WriteLine(
+                    "You need a shield before you can bash",
+                    player.ConnectionId
+                );
                 return 0;
             }
 
@@ -383,7 +344,8 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
             /* level check */
             chance += player.Level - target.Level;
-            var weaponDam = player.Equipped.Shield != null ? player.Equipped.Shield.ArmourRating.Armour : 1 * 2;
+            var weaponDam =
+                player.Equipped.Shield != null ? player.Equipped.Shield.ArmourRating.Armour : 1 * 2;
             var str = player.Attributes.Attribute[EffectLocation.Strength];
             var damage = DiceBag.Roll(3, 1, 6) + str / 5 + weaponDam;
 
@@ -394,8 +356,10 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                     Hit =
                     {
                         ToPlayer = $"You lift your shield and smash it at {target.Name}",
-                        ToRoom = $"{player.Name} lifts {Helpers.GetPronoun(player.Gender)} shield and smashes it at {target.Name}!",
-                        ToTarget = $"{player.Name} lifts {Helpers.GetPronoun(player.Gender)} shield and smashes it at you!"
+                        ToRoom =
+                            $"{player.Name} lifts {Helpers.GetPronoun(player.Gender)} shield and smashes it at {target.Name}!",
+                        ToTarget =
+                            $"{player.Name} lifts {Helpers.GetPronoun(player.Gender)} shield and smashes it at you!"
                     }
                 };
 
@@ -410,19 +374,19 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                     Hit =
                     {
                         ToPlayer = $"You lift your shield and swing it at {target.Name} but miss.",
-                        ToRoom = $"{player.Name} lifts {Helpers.GetPronoun(player.Gender)} shield and swings it at {target.Name} but misses.",
-                        ToTarget = $"{player.Name} lifts {Helpers.GetPronoun(player.Gender)} shield and swings it at you but you avoid it easily."
+                        ToRoom =
+                            $"{player.Name} lifts {Helpers.GetPronoun(player.Gender)} shield and swings it at {target.Name} but misses.",
+                        ToTarget =
+                            $"{player.Name} lifts {Helpers.GetPronoun(player.Gender)} shield and swings it at you but you avoid it easily."
                     }
                 };
 
                 _skillManager.EmoteAction(player, target, room, skillMessage);
 
-
                 player.Lag += 2;
             }
 
             player.Lag += 1;
-
 
             _skillManager.updateCombat(player, target, room);
 
@@ -431,7 +395,6 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
         public int HamString(Player player, Player target, Room room, string obj)
         {
-
             /*dexterity check */
             var chance = 50;
             chance += player.Attributes.Attribute[EffectLocation.Strength];
@@ -450,10 +413,10 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             /* level check */
             chance += player.Level - target.Level;
 
-            var weaponDam = player.Equipped.Wielded != null ? player.Equipped.Wielded.Damage.Maximum : 1 * 2;
+            var weaponDam =
+                player.Equipped.Wielded != null ? player.Equipped.Wielded.Damage.Maximum : 1 * 2;
             var str = player.Attributes.Attribute[EffectLocation.Strength];
             var damage = DiceBag.Roll(2, 1, 6) + str / 5 + weaponDam;
-
 
             if (DiceBag.Roll(1, 1, 100) < chance)
             {
@@ -485,13 +448,13 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                     Hit =
                     {
                         ToPlayer = $"You try to slash the back of {target.Name}'s legs but miss.",
-                        ToRoom = $"{player.Name} tries to slash the back of {target.Name}'s legs. but misses",
+                        ToRoom =
+                            $"{player.Name} tries to slash the back of {target.Name}'s legs. but misses",
                         ToTarget = $"{player.Name} tries to slash the back of your legs but misses."
                     }
                 };
 
                 _skillManager.EmoteAction(player, target, room, skillMessage);
-
 
                 player.Lag += 3;
             }
@@ -502,6 +465,5 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
             return 0;
         }
-
     }
 }

@@ -71,7 +71,8 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
                 Name = "Astral",
                 MinDamage = 10,
                 MaxDamage = 16,
-                Description = "shimmering a turquoise colour, it appears solid with wisps of Astral energy rotating around the #weaponName# from the grip to the tip like a turquoise flame."
+                Description =
+                    "shimmering a turquoise colour, it appears solid with wisps of Astral energy rotating around the #weaponName# from the grip to the tip like a turquoise flame."
             },
             new PrefixItemMods()
             {
@@ -79,7 +80,6 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
                 MinDamage = 12,
                 MaxDamage = 18,
                 Description = "pure quartz, translucent and very sharp to touch."
-
             },
             new PrefixItemMods()
             {
@@ -93,14 +93,16 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
                 Name = "Elvian",
                 MinDamage = 6,
                 MaxDamage = 12,
-                Description = "expertly crafted with intricate elvian patterns decorating the weapon."
+                Description =
+                    "expertly crafted with intricate elvian patterns decorating the weapon."
             },
             new PrefixItemMods()
             {
                 Name = "Bone",
                 MinDamage = 6,
                 MaxDamage = 12,
-                Description = "elaborately carved and stained brown with various sigils carved into the bone."
+                Description =
+                    "elaborately carved and stained brown with various sigils carved into the bone."
             },
             new PrefixItemMods()
             {
@@ -167,87 +169,93 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
 
         public List<Weapon> WeaponNames = new List<Weapon>()
         {
-
             new Weapon()
             {
                 Name = "Dagger",
-                WeaponType = Item.WeaponTypes.ShortBlades,
+                WeaponType = SkillName.ShortBlades,
                 AttackTypes = Item.AttackTypes.Slash,
-                Description = "A good sized #prefix# dagger with an ornate hilt, the blade is #prefixDescription"
-
+                Description =
+                    "A good sized #prefix# dagger with an ornate hilt, the blade is #prefixDescription"
             },
             new Weapon()
             {
                 Name = "Long Sword",
-                WeaponType = Item.WeaponTypes.LongBlades,
+                WeaponType = SkillName.LongBlades,
                 AttackTypes = Item.AttackTypes.Slash,
-                Description = "A good sized #prefix# long sword with an ornate hilt, the blade is #prefixDescription"
-
+                Description =
+                    "A good sized #prefix# long sword with an ornate hilt, the blade is #prefixDescription"
             },
             new Weapon()
             {
                 Name = "Short Sword",
-                WeaponType = Item.WeaponTypes.ShortBlades,
+                WeaponType = SkillName.ShortBlades,
                 AttackTypes = Item.AttackTypes.Slash,
-                Description = "A good sized #prefix# short sword with an ornate hilt, the blade is #prefixDescription"
-
+                Description =
+                    "A good sized #prefix# short sword with an ornate hilt, the blade is #prefixDescription"
             },
             new Weapon()
             {
                 Name = "Scimitar",
-                WeaponType = Item.WeaponTypes.LongBlades,
+                WeaponType = SkillName.LongBlades,
                 AttackTypes = Item.AttackTypes.Slash,
-                Description = "A good sized #prefix# scimitar with an ornate hilt, the blade is #prefixDescription"
+                Description =
+                    "A good sized #prefix# scimitar with an ornate hilt, the blade is #prefixDescription"
             },
             new Weapon()
             {
                 Name = "Polearm",
-                WeaponType = Item.WeaponTypes.Polearm,
+                WeaponType = SkillName.Polearm,
                 AttackTypes = Item.AttackTypes.Smash,
-                Description = "A good sized #prefix# polearm with an ornate shaft, the spiked topped axe head is #prefixDescription"
+                Description =
+                    "A good sized #prefix# polearm with an ornate shaft, the spiked topped axe head is #prefixDescription"
             },
             new Weapon()
             {
                 Name = "Trident",
-                WeaponType = Item.WeaponTypes.Polearm,
+                WeaponType = SkillName.Polearm,
                 AttackTypes = Item.AttackTypes.Pierce,
-                Description = "A good sized #prefix# trident with an ornate shaft, the three sharp prongs are #prefixDescription"
+                Description =
+                    "A good sized #prefix# trident with an ornate shaft, the three sharp prongs are #prefixDescription"
             },
             new Weapon()
             {
                 Name = "Mace",
-                WeaponType = Item.WeaponTypes.Blunt,
+                WeaponType = SkillName.Hammer,
                 AttackTypes = Item.AttackTypes.Crush,
-                Description = "A good sized #prefix# mace with an ornate shaft and head that protrudes in multiple directions and is #prefixDescription"
+                Description =
+                    "A good sized #prefix# mace with an ornate shaft and head that protrudes in multiple directions and is #prefixDescription"
             },
             new Weapon()
             {
                 Name = "Morning Star",
-                WeaponType = Item.WeaponTypes.Blunt,
+                WeaponType = SkillName.Hammer,
                 AttackTypes = Item.AttackTypes.Smash,
-                Description = "A good sized #prefix# morning star with an ornate shaft, the spiked ball is #prefixDescription"
-
+                Description =
+                    "A good sized #prefix# morning star with an ornate shaft, the spiked ball is #prefixDescription"
             },
             new Weapon()
             {
                 Name = "Quarterstaff",
-                WeaponType = Item.WeaponTypes.Blunt,
+                WeaponType = SkillName.Staff,
                 AttackTypes = Item.AttackTypes.Crush,
-                Description = "A good sized #prefix# quarterstaff with an ornate shaft, the quarterstaff is #prefixDescription"
+                Description =
+                    "A good sized #prefix# quarterstaff with an ornate shaft, the quarterstaff is #prefixDescription"
             },
             new Weapon()
             {
                 Name = "Axe",
-                WeaponType = Item.WeaponTypes.Axe,
+                WeaponType = SkillName.Axe,
                 AttackTypes = Item.AttackTypes.Cleave,
-                Description = "A good sized #prefix# axe with an ornate shaft, the axe head is #prefixDescription"
+                Description =
+                    "A good sized #prefix# axe with an ornate shaft, the axe head is #prefixDescription"
             },
             new Weapon()
             {
                 Name = "Double-edge Axe",
-                WeaponType = Item.WeaponTypes.Axe,
+                WeaponType = SkillName.Axe,
                 AttackTypes = Item.AttackTypes.Cleave,
-                Description = "A good sized #prefix# double-edge axe with an ornate shaft, the double sided blade is #prefixDescription"
+                Description =
+                    "A good sized #prefix# double-edge axe with an ornate shaft, the double sided blade is #prefixDescription"
             }
         };
 
@@ -255,7 +263,6 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
         {
             var prefix = Prefix[DiceBag.Roll(1, 0, Prefix.Count)];
             var weaponChoice = WeaponNames[DiceBag.Roll(1, 0, WeaponNames.Count)];
-
 
             var item = new Item()
             {
@@ -267,89 +274,79 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
                 WeaponType = weaponChoice.WeaponType,
                 Weight = 11,
                 Modifier = new Modifier(),
-                Damage = new Damage()
-                {
-                    Minimum = prefix.MinDamage,
-                    Maximum = prefix.MaxDamage
-                },
+                Damage = new Damage() { Minimum = prefix.MinDamage, Maximum = prefix.MaxDamage },
                 Gold = player.Level * 75,
-                Description = new Description()
-                {
-                    Look = $"a {prefix.Name} {weaponChoice.Name}",
-                },
+                Description = new Description() { Look = $"a {prefix.Name} {weaponChoice.Name}", },
                 Slot = Equipment.EqSlot.Wielded,
                 AttackType = weaponChoice.AttackTypes,
-
             };
-        
-           // stats to buff
 
-           for (int i = 0; i < (legendary ? 5 : 3); i++)
-           {
-               switch (DiceBag.Roll(1, 1, 16))
-               {
-                   case 1:
-                       item.Modifier.Armour = DiceBag.Roll(1, 1, 10);
-                       break;
+            // stats to buff
 
-                   case 2:
-                       item.Modifier.Charisma = DiceBag.Roll(1, 1, 10);
-                       break;
+            for (int i = 0; i < (legendary ? 5 : 3); i++)
+            {
+                switch (DiceBag.Roll(1, 1, 16))
+                {
+                    case 1:
+                        item.Modifier.Armour = DiceBag.Roll(1, 1, 10);
+                        break;
 
-                   case 3:
-                       item.Modifier.Constitution = DiceBag.Roll(1, 1, 10);
-                       break;
+                    case 2:
+                        item.Modifier.Charisma = DiceBag.Roll(1, 1, 10);
+                        break;
 
-                   case 4:
-                       item.Modifier.Dexterity = DiceBag.Roll(1, 1, 10);
-                       break;
+                    case 3:
+                        item.Modifier.Constitution = DiceBag.Roll(1, 1, 10);
+                        break;
 
-                   case 5:
-                       item.Modifier.Intelligence = DiceBag.Roll(1, 1, 10);
-                       break;
+                    case 4:
+                        item.Modifier.Dexterity = DiceBag.Roll(1, 1, 10);
+                        break;
 
-                   case 6:
-                       item.Modifier.Mana = DiceBag.Roll(1, 1, 10);
-                       break;
+                    case 5:
+                        item.Modifier.Intelligence = DiceBag.Roll(1, 1, 10);
+                        break;
 
-                   case 7:
-                       item.Modifier.Moves = DiceBag.Roll(1, 1, 10);
-                       break;
+                    case 6:
+                        item.Modifier.Mana = DiceBag.Roll(1, 1, 10);
+                        break;
 
-                   case 8:
-                       item.Modifier.Saves = DiceBag.Roll(1, 1, 10);
-                       break;
-                   case 9:
-                       item.Modifier.Strength = DiceBag.Roll(1, 1, 10);
-                       break;
-                   case 10:
-                       item.Modifier.Wisdom = DiceBag.Roll(1, 1, 10);
-                       break;
-                   case 11:
-                       item.Modifier.AcMod = DiceBag.Roll(1, 1, 10);
-                       break;
-                   case 12:
-                       item.Modifier.DamRoll = DiceBag.Roll(1, 1, 10);
-                       break;
-                   case 13:
-                       item.Modifier.HitRoll = DiceBag.Roll(1, 1, 10);
-                       break;
-                   case 14:
-                       item.Modifier.HP = DiceBag.Roll(1, 1, 10);
-                       break;
-                   case 15:
-                       item.Modifier.SpellDam = DiceBag.Roll(1, 1, 10);
-                       break;
-                   case 16:
-                       item.Modifier.AcMagicMod = DiceBag.Roll(1, 1, 10);
+                    case 7:
+                        item.Modifier.Moves = DiceBag.Roll(1, 1, 10);
+                        break;
 
-                       break;
+                    case 8:
+                        item.Modifier.Saves = DiceBag.Roll(1, 1, 10);
+                        break;
+                    case 9:
+                        item.Modifier.Strength = DiceBag.Roll(1, 1, 10);
+                        break;
+                    case 10:
+                        item.Modifier.Wisdom = DiceBag.Roll(1, 1, 10);
+                        break;
+                    case 11:
+                        item.Modifier.AcMod = DiceBag.Roll(1, 1, 10);
+                        break;
+                    case 12:
+                        item.Modifier.DamRoll = DiceBag.Roll(1, 1, 10);
+                        break;
+                    case 13:
+                        item.Modifier.HitRoll = DiceBag.Roll(1, 1, 10);
+                        break;
+                    case 14:
+                        item.Modifier.HP = DiceBag.Roll(1, 1, 10);
+                        break;
+                    case 15:
+                        item.Modifier.SpellDam = DiceBag.Roll(1, 1, 10);
+                        break;
+                    case 16:
+                        item.Modifier.AcMagicMod = DiceBag.Roll(1, 1, 10);
 
-               }
-           }
+                        break;
+                }
+            }
 
-
-           if (legendary)
+            if (legendary)
             {
                 item.Damage.Minimum += DiceBag.Roll(1, prefix.MinDamage, prefix.MinDamage * 2);
                 item.Damage.Maximum += DiceBag.Roll(1, prefix.MaxDamage, prefix.MaxDamage * 2);
@@ -359,7 +356,6 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
             }
 
             return item;
-
         }
     }
 }

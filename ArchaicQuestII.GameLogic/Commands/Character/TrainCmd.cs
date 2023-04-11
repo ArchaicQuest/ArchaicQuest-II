@@ -10,12 +10,16 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 {
     public class TrainCmd : ICommand
     {
-        public TrainCmd(ICore core)
+        public TrainCmd()
         {
-            Aliases = new[] {"train"};
-            Description = "Train increases one of your attributes.  When you start the game, your\ncharacter has standard attributes based on your class, and several initial\ntraining sessions.  You can increase your attributes by using these sessions\nat a trainer.<br /><br /> It takes one training session to " +
-                          "improve an attribute by 1, or to increase mana or hp by 1-6.<br /><br />You receive one session per level.  The best attributes to train first are WIS and CON.<br /><br />WIS gives you more practice when you gain a level.  CON gives you more hit\npoints.  In the long run, your character will be most powerful if you train\nWIS and CON both to their maximum values before practicing or training";
-            Usages = new[] {"Type: train <stat>, valid stats to train: str, int, wis, dex, con, hp, mana"};
+            Aliases = new[] { "train" };
+            Description =
+                "Train increases one of your attributes.  When you start the game, your\ncharacter has standard attributes based on your class, and several initial\ntraining sessions.  You can increase your attributes by using these sessions\nat a trainer.<br /><br /> It takes one training session to "
+                + "improve an attribute by 1, or to increase mana or hp by 1-6.<br /><br />You receive one session per level.  The best attributes to train first are WIS and CON.<br /><br />WIS gives you more practice when you gain a level.  CON gives you more hit\npoints.  In the long run, your character will be most powerful if you train\nWIS and CON both to their maximum values before practicing or training";
+            Usages = new[]
+            {
+                "Type: train <stat>, valid stats to train: str, int, wis, dex, con, hp, mana"
+            };
             Title = "";
             DeniedStatus = new[]
             {
@@ -29,16 +33,14 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
                 CharacterStatus.Status.Stunned
             };
             UserRole = UserRole.Player;
-            Core = core;
         }
-        
+
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
         public string Title { get; }
         public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
-        public ICore Core { get; }
 
         public void Execute(Player player, Room room, string[] input)
         {
@@ -46,29 +48,38 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
             if (room.Mobs.Find(x => x.Trainer) == null)
             {
-                Core.Writer.WriteLine("<p>You can't do that here.</p>", player.ConnectionId);
+                Services.Instance.Writer.WriteLine(
+                    "<p>You can't do that here.</p>",
+                    player.ConnectionId
+                );
                 return;
             }
 
             if (player.Trains <= 0)
             {
-                Core.Writer.WriteLine("<p>You have no training sessions left.</p>", player.ConnectionId);
+                Services.Instance.Writer.WriteLine(
+                    "<p>You have no training sessions left.</p>",
+                    player.ConnectionId
+                );
                 return;
             }
 
             if (string.IsNullOrEmpty(stat) || stat == "train")
             {
-
-                Core.Writer.WriteLine(
-                    $"<p>You have {player.Trains} training session{(player.Trains > 1 ? "s" : "")} remaining.<br />You can train: str dex con int wis cha hp mana move.</p>", player.ConnectionId);
+                Services.Instance.Writer.WriteLine(
+                    $"<p>You have {player.Trains} training session{(player.Trains > 1 ? "s" : "")} remaining.<br />You can train: str dex con int wis cha hp mana move.</p>",
+                    player.ConnectionId
+                );
             }
             else
             {
                 var statName = Helpers.GetStatName(stat);
                 if (string.IsNullOrEmpty(statName.Item1))
                 {
-                    Core.Writer.WriteLine(
-                        $"<p>{stat} not found. Please choose from the following. <br /> You can train: str dex con int wis cha hp mana move.</p>", player.ConnectionId);
+                    Services.Instance.Writer.WriteLine(
+                        $"<p>{stat} not found. Please choose from the following. <br /> You can train: str dex con int wis cha hp mana move.</p>",
+                        player.ConnectionId
+                    );
                     return;
                 }
 
@@ -80,29 +91,33 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
                 if (statName.Item1 is "hit points" or "moves" or "mana")
                 {
-                    var hitDie = Core.Cache.GetClass(player.ClassName);
+                    var hitDie = player.GetClass();
                     var roll = DiceBag.Roll(hitDie.HitDice);
 
                     player.MaxAttributes.Attribute[statName.Item2] += roll;
                     player.Attributes.Attribute[statName.Item2] += roll;
 
-                    Core.Writer.WriteLine(
-                        $"<p class='gain'>Your {statName.Item1} increases by {roll}.</p>", player.ConnectionId);
+                    Services.Instance.Writer.WriteLine(
+                        $"<p class='gain'>Your {statName.Item1} increases by {roll}.</p>",
+                        player.ConnectionId
+                    );
 
-                    Core.UpdateClient.UpdateHP(player);
-                    Core.UpdateClient.UpdateMana(player);
-                    Core.UpdateClient.UpdateMoves(player);
+                    Services.Instance.UpdateClient.UpdateHP(player);
+                    Services.Instance.UpdateClient.UpdateMana(player);
+                    Services.Instance.UpdateClient.UpdateMoves(player);
                 }
                 else
                 {
                     player.MaxAttributes.Attribute[statName.Item2] += 1;
                     player.Attributes.Attribute[statName.Item2] += 1;
 
-                    Core.Writer.WriteLine(
-                        $"<p class='gain'>Your {statName.Item1} increases by 1.</p>", player.ConnectionId);
+                    Services.Instance.Writer.WriteLine(
+                        $"<p class='gain'>Your {statName.Item1} increases by 1.</p>",
+                        player.ConnectionId
+                    );
                 }
-                
-                Core.UpdateClient.UpdateScore(player);
+
+                Services.Instance.UpdateClient.UpdateScore(player);
             }
         }
     }

@@ -11,7 +11,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
 {
     public class LoreCmd : SkillCore, ICommand
     {
-        public LoreCmd(ICore core) : base (core)
+        public LoreCmd()
+            : base()
         {
             Aliases = new[] { "lore", "lor" };
             Description =
@@ -20,7 +21,6 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             DeniedStatus = null;
             Title = DefineSkill.Lore().Name;
             UserRole = UserRole.Player;
-            Core = core;
         }
 
         public string[] Aliases { get; }
@@ -29,48 +29,51 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
         public string Title { get; }
         public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
-        public ICore Core { get; }
-        
+
         public void Execute(Player player, Room room, string[] input)
         {
             var obj = input.ElementAtOrDefault(1)?.ToLower();
-            
+
             var canDoSkill = CanPerformSkill(DefineSkill.Lore(), player);
             if (!canDoSkill)
-            { 
+            {
                 return;
             }
-            
+
             var skillSuccess = SkillSuccessWithMessage(player, DefineSkill.Lore());
             if (!skillSuccess)
             {
                 return;
             }
-   
+
             if (string.IsNullOrEmpty(obj))
             {
-                Core.Writer.WriteLine("Lore What!?.", player.ConnectionId);
+                Services.Instance.Writer.WriteLine("Lore What!?.", player.ConnectionId);
                 return;
             }
 
             var item = FindItem(obj, room, player);
             if (item == null)
             {
-                Core.Writer.WriteLine("You don't see that here.", player.ConnectionId);
+                Services.Instance.Writer.WriteLine("You don't see that here.", player.ConnectionId);
                 return;
             }
-            
+
             // only lore items that can be picked up
             if (item.Stuck)
             {
-                Core.Writer.WriteLine("There is nothing more to note about that object.", player.ConnectionId);
+                Services.Instance.Writer.WriteLine(
+                    "There is nothing more to note about that object.",
+                    player.ConnectionId
+                );
                 return;
             }
 
             var sb = new StringBuilder();
 
             sb.Append(
-                $"It is a level {item.Level} {item.ItemType}, weight {item.Weight}.<br/>Locations it can be worn: {(item.ItemType == Item.Item.ItemTypes.Light || item.ItemType == Item.Item.ItemTypes.Weapon || item.ItemType == Item.Item.ItemTypes.Armour ? item.Slot : GameLogic.Character.Equipment.Equipment.EqSlot.Held)}.<br /> This {item.ItemType} has a gold value of {item.Value}.<br />");
+                $"It is a level {item.Level} {item.ItemType}, weight {item.Weight}.<br/>Locations it can be worn: {(item.ItemType == Item.Item.ItemTypes.Light || item.ItemType == Item.Item.ItemTypes.Weapon || item.ItemType == Item.Item.ItemTypes.Armour ? item.Slot : GameLogic.Character.Equipment.Equipment.EqSlot.Held)}.<br /> This {item.ItemType} has a gold value of {item.Value}.<br />"
+            );
 
             if (item.ItemType == Item.Item.ItemTypes.Weapon)
             {
@@ -78,10 +81,14 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 sb.Append($"Damage Type {item.DamageType}");
             }
 
-            if (item.ItemType == Item.Item.ItemTypes.Armour &&
-                (item.ArmourRating.Armour != 0 || item.ArmourRating.Magic != 0))
+            if (
+                item.ItemType == Item.Item.ItemTypes.Armour
+                && (item.ArmourRating.Armour != 0 || item.ArmourRating.Magic != 0)
+            )
             {
-                sb.Append($"Affects armour by {item.ArmourRating.Armour} / {item.ArmourRating.Magic}");
+                sb.Append(
+                    $"Affects armour by {item.ArmourRating.Armour} / {item.ArmourRating.Magic}"
+                );
             }
 
             if (item.ItemType == Item.Item.ItemTypes.Potion)
@@ -125,7 +132,6 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 sb.Append($"<br />Affects HP by {item.Modifier.HP}");
             }
 
-
             if (item.Modifier.Mana != 0)
             {
                 sb.Append($"<br />Affects mana by {item.Modifier.Mana}");
@@ -156,23 +162,24 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 sb.Append($"<br />Affects spell dam by {item.Modifier.SpellDam}");
             }
 
-            if (item.ItemType == Item.Item.ItemTypes.Crafting || item.ItemType == Item.Item.ItemTypes.Forage ||
-                item.ItemType == Item.Item.ItemTypes.Food)
+            if (
+                item.ItemType == Item.Item.ItemTypes.Crafting
+                || item.ItemType == Item.Item.ItemTypes.Forage
+                || item.ItemType == Item.Item.ItemTypes.Food
+            )
             {
                 sb.Append($"<br />Condition: {item.Condition}");
             }
 
             foreach (var pc in room.Players.Where(x => x.Id != player.Id))
             {
-                Core.Writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     $"{player.Name} twists and turns {item.Name.ToLower()} trying to figure out it's properties.",
-                    pc.ConnectionId);
+                    pc.ConnectionId
+                );
             }
 
-            Core.Writer.WriteLine(sb.ToString(), player.ConnectionId);
+            Services.Instance.Writer.WriteLine(sb.ToString(), player.ConnectionId);
         }
-
-
     }
-
 }

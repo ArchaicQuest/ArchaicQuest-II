@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Equipment;
-using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
@@ -19,11 +17,12 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects;
 
 public class FishCmd : ICommand
 {
-    public FishCmd(ICore core)
+    public FishCmd()
     {
-        Aliases = new[] {"fish", };
-        Description = "Fish at fishing spots for a chance to catch fish. If you're lucky you may catch the fish of the day. Requires a fishing rod in inventory to fish.";
-        Usages = new[] {"Type: fish"};
+        Aliases = new[] { "fish", };
+        Description =
+            "Fish at fishing spots for a chance to catch fish. If you're lucky you may catch the fish of the day. Requires a fishing rod in inventory to fish.";
+        Usages = new[] { "Type: fish" };
         Title = "";
         DeniedStatus = new[]
         {
@@ -39,44 +38,46 @@ public class FishCmd : ICommand
             CharacterStatus.Status.Sitting,
         };
         UserRole = UserRole.Player;
-        Core = core;
     }
-    
+
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
     public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
-    public ICore Core { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
-
         if (player.Status == CharacterStatus.Status.Busy)
         {
-            Core.Writer.WriteLine("You are already doing it.", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("You are already doing it.", player.ConnectionId);
             return;
         }
-        
-        var fishingSpot =
-            room.Items.FirstOrDefault(x => x.ItemType == Item.Item.ItemTypes.FishingSpot);
+
+        var fishingSpot = room.Items.FirstOrDefault(
+            x => x.ItemType == Item.Item.ItemTypes.FishingSpot
+        );
 
         if (fishingSpot == null)
         {
-            Core.Writer.WriteLine($"You can't fish here.", player.ConnectionId);
+            Services.Instance.Writer.WriteLine($"You can't fish here.", player.ConnectionId);
             return;
         }
 
-     
-        var hasRod = player.Inventory.FirstOrDefault(x => x.ItemType == Item.Item.ItemTypes.FishingRod);
+        var hasRod = player.Inventory.FirstOrDefault(
+            x => x.ItemType == Item.Item.ItemTypes.FishingRod
+        );
 
         if (hasRod == null)
         {
-            Core.Writer.WriteLine($"You attempt to catch fish with your bare hands. Probably better to try with a fishing rod.", player.ConnectionId);
+            Services.Instance.Writer.WriteLine(
+                $"You attempt to catch fish with your bare hands. Probably better to try with a fishing rod.",
+                player.ConnectionId
+            );
             return;
         }
-        
+
         Harvest(player, room);
     }
 
@@ -84,37 +85,47 @@ public class FishCmd : ICommand
     {
         player.Status = CharacterStatus.Status.Busy;
 
-            // Core.UpdateClient.PlaySound("chopping", player);
+        // Core.UpdateClient.PlaySound("chopping", player);
 
-        Core.Writer.WriteLine($"<p>You cast your line and begin fishing.</p>", player.ConnectionId);
-        Core.Writer.WriteLine($"<p>*PLOP*.</p>", player.ConnectionId);
-        
+        Services.Instance.Writer.WriteLine(
+            $"<p>You cast your line and begin fishing.</p>",
+            player.ConnectionId
+        );
+        Services.Instance.Writer.WriteLine($"<p>*PLOP*.</p>", player.ConnectionId);
+
         foreach (var character in room.Players.Where(character => character != player))
         {
-            Core.Writer.WriteLine($"<p>{player.Name} casts their line and begin fishing.</p>", character.ConnectionId);
-            Core.Writer.WriteLine($"<p>*PLOP*.</p>", character.ConnectionId);
+            Services.Instance.Writer.WriteLine(
+                $"<p>{player.Name} casts their line and begin fishing.</p>",
+                character.ConnectionId
+            );
+            Services.Instance.Writer.WriteLine($"<p>*PLOP*.</p>", character.ConnectionId);
         }
 
-        
         await Task.Delay(4000);
-        
+
         if (!room.Players.Contains(player) || player.Status != CharacterStatus.Status.Busy)
         {
             return;
         }
 
-      //  Core.UpdateClient.PlaySound("chopping", player);
+        //  Core.UpdateClient.PlaySound("chopping", player);
 
-        Core.Writer.WriteLine($"<p>You throw some bait and gently reel in slightly.</p>",
-            player.ConnectionId);
-        
+        Services.Instance.Writer.WriteLine(
+            $"<p>You throw some bait and gently reel in slightly.</p>",
+            player.ConnectionId
+        );
+
         foreach (var character in room.Players.Where(character => character != player))
         {
-            Core.Writer.WriteLine($"<p>{player.Name} throws some bait and gently reels in slightly.</p>", character.ConnectionId);
+            Services.Instance.Writer.WriteLine(
+                $"<p>{player.Name} throws some bait and gently reels in slightly.</p>",
+                character.ConnectionId
+            );
         }
-        
+
         await Task.Delay(4000);
-        
+
         if (!room.Players.Contains(player) || player.Status != CharacterStatus.Status.Busy)
         {
             return;
@@ -122,45 +133,52 @@ public class FishCmd : ICommand
 
         //Core.UpdateClient.PlaySound("chopping", player);
 
-        Core.Writer.WriteLine("<p>You continue fishing, enjoying the serene tranquility of your fishing spot.</p>", player.ConnectionId);
-        
+        Services.Instance.Writer.WriteLine(
+            "<p>You continue fishing, enjoying the serene tranquility of your fishing spot.</p>",
+            player.ConnectionId
+        );
+
         foreach (var character in room.Players.Where(character => character != player))
         {
-            Core.Writer.WriteLine($"<p>{player.Name} continues fishing.</p>", character.ConnectionId);
+            Services.Instance.Writer.WriteLine(
+                $"<p>{player.Name} continues fishing.</p>",
+                character.ConnectionId
+            );
         }
 
         await Task.Delay(4000);
-        
+
         if (!room.Players.Contains(player) || player.Status != CharacterStatus.Status.Busy)
         {
             return;
         }
-        
+
         var roll = DiceBag.Roll(1, 1, 10);
 
         var randomMobObj = roll switch
         {
-            1 => new
-            {
-                Name = "A water snake",
-                Description = "A black and red water snake",
-                LongName = "A black snake slithers along here.",
-                DefaultAttack = "bite"
-            },
-            _ => new
-            {
-                Name = "An Alligator",
-                Description = "An angry large alligator with thick rubbery skin and a large mouth full of sharp teeth.",
-                LongName = "An angry alligator is here with it's mouth open.",
-                DefaultAttack = "bite"
-            },
-          
+            1
+                => new
+                {
+                    Name = "A water snake",
+                    Description = "A black and red water snake",
+                    LongName = "A black snake slithers along here.",
+                    DefaultAttack = "bite"
+                },
+            _
+                => new
+                {
+                    Name = "An Alligator",
+                    Description = "An angry large alligator with thick rubbery skin and a large mouth full of sharp teeth.",
+                    LongName = "An angry alligator is here with it's mouth open.",
+                    DefaultAttack = "bite"
+                },
         };
 
         var randomMob = new Player
         {
             Name = randomMobObj.Name,
-            ClassName = "Fighter",
+            ClassName = ClassName.Fighter.ToString(),
             Target = string.Empty,
             Status = CharacterStatus.Status.Standing,
             Race = "Other",
@@ -202,24 +220,20 @@ public class FishCmd : ICommand
                     { EffectLocation.SavingSpell, 1 },
                 }
             },
-
             Description = randomMobObj.Description,
             LongName = randomMobObj.LongName,
-            ArmorRating = new ArmourRating
-            {
-                Armour = 5,
-                Magic = 5
-            },
+            ArmorRating = new ArmourRating { Armour = 5, Magic = 5 },
             DefaultAttack = randomMobObj.DefaultAttack,
             UniqueId = Guid.NewGuid(),
             Id = Guid.NewGuid()
         };
-        
+
         if (roll <= 1)
         {
-            Core.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p>{{yellow}}You reel in {randomMob.Name} that attacks you!{{/}}</p>",
-                player.ConnectionId);
+                player.ConnectionId
+            );
             room.Mobs.Add(randomMob);
             player.Status = CharacterStatus.Status.Standing;
             InitFightStatus(randomMob, player);
@@ -228,49 +242,60 @@ public class FishCmd : ICommand
 
         if (roll <= 3)
         {
-            Core.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p>{{yellow}}You cut yourself on the fishing hook, OUCH!{{/}}</p>",
-                player.ConnectionId);
+                player.ConnectionId
+            );
             player.Status = CharacterStatus.Status.Standing;
-            
+
             foreach (var character in room.Players.Where(character => character != player))
             {
-                Core.Writer.WriteLine($"<p>{player.Name} cuts themself on a fishing hook.</p>", character.ConnectionId);
+                Services.Instance.Writer.WriteLine(
+                    $"<p>{player.Name} cuts themself on a fishing hook.</p>",
+                    character.ConnectionId
+                );
             }
             return;
         }
 
-        var canDoSkill = Helpers.SkillSuccessCheck(player, "foraging");
-
-        if (!canDoSkill)
+        if (!player.RollSkill(SkillName.Fishing))
         {
-            player.FailedSkill("foraging", out var message);
-            Core.Writer.WriteLine("<p>You fail to catch any fish.</p>", player.ConnectionId);
-            Core.Writer.WriteLine(message, player.ConnectionId);
+            player.FailedSkill(SkillName.Fishing, out var message);
+            Services.Instance.Writer.WriteLine(
+                "<p>You fail to catch any fish.</p>",
+                player.ConnectionId
+            );
+            Services.Instance.Writer.WriteLine(message, player.ConnectionId);
             player.Status = CharacterStatus.Status.Standing;
             return;
         }
 
-      var caught =  PossibleFish();
-      var weight = FishWeight();
-      var sizeText = FishSizeGrade(weight);
+        var caught = PossibleFish();
+        var weight = FishWeight();
+        var sizeText = FishSizeGrade(weight);
 
-      caught.Weight = weight;
-      
-      // TODO mention if biggest catch today, biggest This week, This Month
-      caught.Name = $"A {sizeText} {caught.Name}";
-      Core.Writer.WriteLine($"<p>You caught {caught.Name.ToLower()}. It weighs {caught.Weight.ToString("0.00")} pounds!</p>", player.ConnectionId);
-      player.Inventory.Add(caught);
-      
+        caught.Weight = weight;
+
+        // TODO mention if biggest catch today, biggest This week, This Month
+        caught.Name = $"A {sizeText} {caught.Name}";
+        Services.Instance.Writer.WriteLine(
+            $"<p>You caught {caught.Name.ToLower()}. It weighs {caught.Weight.ToString("0.00")} pounds!</p>",
+            player.ConnectionId
+        );
+        player.Inventory.Add(caught);
+
         player.Status = CharacterStatus.Status.Standing;
-        Core.UpdateClient.UpdateInventory(player);
+        Services.Instance.UpdateClient.UpdateInventory(player);
     }
 
     private void InitFightStatus(Player player, Player target)
     {
         player.Target = string.IsNullOrEmpty(player.Target) ? target.Name : player.Target;
         player.Status = CharacterStatus.Status.Fighting;
-        target.Status = (target.Status & CharacterStatus.Status.Stunned) != 0 ? CharacterStatus.Status.Stunned : CharacterStatus.Status.Fighting;
+        target.Status =
+            (target.Status & CharacterStatus.Status.Stunned) != 0
+                ? CharacterStatus.Status.Stunned
+                : CharacterStatus.Status.Fighting;
         target.Target = string.IsNullOrEmpty(target.Target) ? player.Name : target.Target; //for group combat, if target is ganged, there target should not be changed when combat is initiated.
 
         if (player.Target == player.Name)
@@ -279,17 +304,17 @@ public class FishCmd : ICommand
             return;
         }
 
-        if (!Core.Cache.IsCharInCombat(player.Id.ToString()))
+        if (!Services.Instance.Cache.IsCharInCombat(player.Id.ToString()))
         {
-            Core.Cache.AddCharToCombat(player.Id.ToString(), player);
+            Services.Instance.Cache.AddCharToCombat(player.Id.ToString(), player);
         }
 
-        if (!Core.Cache.IsCharInCombat(target.Id.ToString()))
+        if (!Services.Instance.Cache.IsCharInCombat(target.Id.ToString()))
         {
-            Core.Cache.AddCharToCombat(target.Id.ToString(), target);
+            Services.Instance.Cache.AddCharToCombat(target.Id.ToString(), target);
         }
     }
-    
+
     private Item.Item PossibleFish()
     {
         var fish = new Item.Item
@@ -300,11 +325,7 @@ public class FishCmd : ICommand
             Level = 1,
             Value = 0,
             KnownByName = false,
-            Description = new Description()
-            {
-                Look = "",
-
-            },
+            Description = new Description() { Look = "", },
             Keywords = null,
             IsHiddenInRoom = false,
             Hidden = false,
@@ -321,7 +342,7 @@ public class FishCmd : ICommand
             AttackType = Item.Item.AttackTypes.Charge,
             Slot = Equipment.EqSlot.Arms,
             Forage = null,
-            WeaponType = Item.Item.WeaponTypes.Arrows,
+            WeaponType = SkillName.None,
             WeaponSpeed = 0,
             Damage = null,
             KeyId = default,
@@ -329,7 +350,7 @@ public class FishCmd : ICommand
             Book = null,
             Modifier = null,
             ArmourRating = null,
-            Weight = DiceBag.Roll(1,1, 100),
+            Weight = DiceBag.Roll(1, 1, 100),
             Gold = 0,
             Silver = 0,
             ForageRank = 0,
@@ -349,8 +370,9 @@ public class FishCmd : ICommand
         fish.Name = "Perch";
         fish.Description = new Description()
         {
-            Look = "Perch fish are a freshwater fish that are typically found in lakes and rivers. " +
-                   "They have a distinctive spiny dorsal fin and are usually yellowish-green in color with vertical black stripes along their sides."
+            Look =
+                "Perch fish are a freshwater fish that are typically found in lakes and rivers. "
+                + "They have a distinctive spiny dorsal fin and are usually yellowish-green in color with vertical black stripes along their sides."
         };
 
         switch (typeOfFish)
@@ -359,8 +381,9 @@ public class FishCmd : ICommand
                 fish.Name = "Silvery Green Bream";
                 fish.Description = new Description()
                 {
-                    Look = "A bream fish is a freshwater fish that is typically found in rivers, lakes, and ponds. " +
-                           "They have a deep, flattened body and are generally silver, green, or brown in color with a slightly forked tail."
+                    Look =
+                        "A bream fish is a freshwater fish that is typically found in rivers, lakes, and ponds. "
+                        + "They have a deep, flattened body and are generally silver, green, or brown in color with a slightly forked tail."
                 };
                 break;
             case 2:
@@ -368,8 +391,9 @@ public class FishCmd : ICommand
                 fish.Name = "Brown Trout";
                 fish.Description = new Description()
                 {
-                    Look = "Trout fish are a type of freshwater fish found in rivers, streams, and lakes." +
-                           " They have a streamlined body shape and are typically brown or rainbow-colored with small black spots along their sides."
+                    Look =
+                        "Trout fish are a type of freshwater fish found in rivers, streams, and lakes."
+                        + " They have a streamlined body shape and are typically brown or rainbow-colored with small black spots along their sides."
                 };
                 break;
             case 4:
@@ -377,8 +401,9 @@ public class FishCmd : ICommand
                 fish.Name = "A Golden Carp";
                 fish.Description = new Description()
                 {
-                    Look = "Carp fish are a freshwater fish that are typically found in lakes, rivers, and ponds. " +
-                           "They have a large, scaled body that can range in color from gold to gray, and are often used for food or as a sport fish."
+                    Look =
+                        "Carp fish are a freshwater fish that are typically found in lakes, rivers, and ponds. "
+                        + "They have a large, scaled body that can range in color from gold to gray, and are often used for food or as a sport fish."
                 };
                 break;
             case 6:
@@ -389,54 +414,66 @@ public class FishCmd : ICommand
                 fish.Name = "Grey Chub";
                 fish.Description = new Description()
                 {
-                    Look = "Chub fish are a freshwater fish that are commonly found in rivers and streams." +
-                           " They have a deep, rounded body shape with large scales, and are typically brown or gray in color with a white underbelly."
+                    Look =
+                        "Chub fish are a freshwater fish that are commonly found in rivers and streams."
+                        + " They have a deep, rounded body shape with large scales, and are typically brown or gray in color with a white underbelly."
                 };
                 break;
             case 11:
                 fish.Name = "Yellowish-green Perch";
                 fish.Description = new Description()
                 {
-                    Look = "Perch fish are a freshwater fish that are typically found in lakes and rivers. " +
-                           "They have a distinctive spiny dorsal fin and are usually yellowish-green in color with vertical black stripes along their sides."
+                    Look =
+                        "Perch fish are a freshwater fish that are typically found in lakes and rivers. "
+                        + "They have a distinctive spiny dorsal fin and are usually yellowish-green in color with vertical black stripes along their sides."
                 };
                 break;
             case 12:
                 fish.Name = "Snapping turtle";
                 fish.Description = new Description()
                 {
-                    Look = "Snapping turtles are freshwater turtles known for their aggressive behavior and powerful bite." +
-                           " They have a large, muscular head, a long tail, and rough, scaly skin, and are typically found in ponds, lakes, and slow-moving streams."
+                    Look =
+                        "Snapping turtles are freshwater turtles known for their aggressive behavior and powerful bite."
+                        + " They have a large, muscular head, a long tail, and rough, scaly skin, and are typically found in ponds, lakes, and slow-moving streams."
                 };
                 break;
             case 13:
                 fish.Name = "Brown Eel";
                 fish.Description = new Description()
                 {
-                    Look = "Eels are a type of fish that can be found in both freshwater and saltwater environments. " +
-                           "They have a long, snake-like body with smooth, slimy skin, and are typically brown or greenish-brown in color."
+                    Look =
+                        "Eels are a type of fish that can be found in both freshwater and saltwater environments. "
+                        + "They have a long, snake-like body with smooth, slimy skin, and are typically brown or greenish-brown in color."
                 };
                 break;
             case 14:
                 fish.Name = "Green Frog";
                 fish.Description = new Description()
                 {
-                    Look = "Frogs are amphibians that are known for their long, sticky tongues and powerful hind legs, " +
-                           "which they use to jump and catch prey. They have smooth, moist skin and are typically green or brown in color, " +
-                           "making them excellent at blending in with their surroundings."
+                    Look =
+                        "Frogs are amphibians that are known for their long, sticky tongues and powerful hind legs, "
+                        + "which they use to jump and catch prey. They have smooth, moist skin and are typically green or brown in color, "
+                        + "making them excellent at blending in with their surroundings."
                 };
                 break;
-            
-
         }
         return fish;
     }
 
     private string FishSizeGrade(float weight)
     {
-
         double[] weightRanges = new double[] { 10, 30, 60, 90, 120, 150, 180, 230 };
-        string[] sizeCategories = new string[] { "small", "medium", "large", "trophy", "monster", "behemoth", "goliath", "titan" };
+        string[] sizeCategories = new string[]
+        {
+            "small",
+            "medium",
+            "large",
+            "trophy",
+            "monster",
+            "behemoth",
+            "goliath",
+            "titan"
+        };
 
         // Initialize the fish size to "unknown"
         string size = "unknown";
@@ -452,23 +489,20 @@ public class FishCmd : ICommand
         }
 
         return size;
-
     }
 
     private float FishWeight()
     {
-        
-      
-/*
-    small 0.5 - 10
-    medium 10 - 30
-    large: 30 - 60
-    trophy: 60 - 90
-    Monster: 90 - 120
-    Behemoth: 120 - 150
-    Goliath: 150 - 180
-    Titan: 180 - 230  
-*/
+        /*
+            small 0.5 - 10
+            medium 10 - 30
+            large: 30 - 60
+            trophy: 60 - 90
+            Monster: 90 - 120
+            Behemoth: 120 - 150
+            Goliath: 150 - 180
+            Titan: 180 - 230
+        */
 
         // Define the weight ranges for each fish category
         double[] weightRanges = new double[] { 10, 30, 60, 90, 120, 150, 180, 230 };
@@ -476,7 +510,7 @@ public class FishCmd : ICommand
         // Define the chances of catching each fish category
         double[] chances = new double[] { 0.5, 0.3, 0.1, 0.05, 0.03, 0.015, 0.007, 0.005 };
 
-        Random rng = new Random(Guid.NewGuid().GetHashCode());                                
+        Random rng = new Random(Guid.NewGuid().GetHashCode());
         // Get a random number between 0 and 1
         double random = rng.NextDouble();
 
@@ -489,12 +523,15 @@ public class FishCmd : ICommand
             if (random < chances[i])
             {
                 // Get a random weight within the weight range for this fish category
-                weight = new Random().NextDouble() * (weightRanges[i] - (i == 0 ? 0 : weightRanges[i - 1])) + (i == 0 ? 0 : weightRanges[i - 1]);
+                weight =
+                    new Random().NextDouble()
+                        * (weightRanges[i] - (i == 0 ? 0 : weightRanges[i - 1]))
+                    + (i == 0 ? 0 : weightRanges[i - 1]);
                 break;
             }
             random -= chances[i];
         }
 
-      return (float)weight;
+        return (float)weight;
     }
 }

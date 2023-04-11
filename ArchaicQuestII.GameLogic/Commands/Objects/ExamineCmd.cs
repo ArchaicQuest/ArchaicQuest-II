@@ -11,13 +11,14 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects;
 
 public class ExamineCmd : ICommand
 {
-    public ExamineCmd(ICore core)
+    public ExamineCmd()
     {
-        Aliases = new[] {"examine"};
-        Description = "You examine an object, showing you a more detailed description if you want it. " +
-                      "This may provide more information or clues about your surroundings, there are plenty of hidden and secret places" +
-                      "in ArchaicQuest.";
-        Usages = new[] {"Type: examine flag"};
+        Aliases = new[] { "examine" };
+        Description =
+            "You examine an object, showing you a more detailed description if you want it. "
+            + "This may provide more information or clues about your surroundings, there are plenty of hidden and secret places"
+            + "in ArchaicQuest.";
+        Usages = new[] { "Type: examine flag" };
         Title = "";
         DeniedStatus = new[]
         {
@@ -33,16 +34,14 @@ public class ExamineCmd : ICommand
             CharacterStatus.Status.Sitting,
         };
         UserRole = UserRole.Player;
-        Core = core;
     }
-    
+
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
     public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
-    public ICore Core { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
@@ -50,37 +49,49 @@ public class ExamineCmd : ICommand
 
         if (string.IsNullOrEmpty(target))
         {
-            Core.Writer.WriteLine("<p>Examine what?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Examine what?</p>", player.ConnectionId);
             return;
         }
-        
+
         var nthTarget = Helpers.findNth(target);
-        var item = Helpers.findRoomObject(nthTarget, room) ?? Helpers.findObjectInInventory(nthTarget, player);
-        var isDark = Core.RoomActions.RoomIsDark(player, room);
-            
+        var item =
+            Helpers.findRoomObject(nthTarget, room)
+            ?? Helpers.findObjectInInventory(nthTarget, player);
+        var isDark = Services.Instance.RoomActions.RoomIsDark(player, room);
+
         if (item == null && room.RoomObjects.Count >= 1 && room.RoomObjects[0].Name != null)
         {
-            var roomObjects = room.RoomObjects.FirstOrDefault(x =>
-                x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+            var roomObjects = room.RoomObjects.FirstOrDefault(
+                x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)
+            );
 
-            Core.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p class='{(isDark ? "room-dark" : "")}'>{roomObjects.Examine ?? roomObjects.Look}",
-                player.ConnectionId);
+                player.ConnectionId
+            );
 
             return;
         }
 
         if (item == null)
         {
-            Core.Writer.WriteLine("<p>You don't see that here.", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>You don't see that here.", player.ConnectionId);
             return;
         }
 
-        var examMessage = item.Description.Exam == "You don't see anything special."
-            ? $"On closer inspection you don't see anything special to note to what you already see. {item.Description.Look}"
-            : item.Description.Exam;
-        
-        Core.Writer.WriteLine($"<p class='{(isDark ? "room-dark" : "")}'>{examMessage}", player.ConnectionId);
-        Core.Writer.WriteToOthersInRoom($"<p>{player.Name} examines {item.Name.ToLower()}.</p>", room, player);
+        var examMessage =
+            item.Description.Exam == "You don't see anything special."
+                ? $"On closer inspection you don't see anything special to note to what you already see. {item.Description.Look}"
+                : item.Description.Exam;
+
+        Services.Instance.Writer.WriteLine(
+            $"<p class='{(isDark ? "room-dark" : "")}'>{examMessage}",
+            player.ConnectionId
+        );
+        Services.Instance.Writer.WriteToOthersInRoom(
+            $"<p>{player.Name} examines {item.Name.ToLower()}.</p>",
+            room,
+            player
+        );
     }
 }

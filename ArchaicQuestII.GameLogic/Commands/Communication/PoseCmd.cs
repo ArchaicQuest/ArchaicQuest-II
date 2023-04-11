@@ -9,11 +9,11 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
 {
     public class PoseCmd : ICommand
     {
-        public PoseCmd(ICore core)
+        public PoseCmd()
         {
-            Aliases = new[] {"pose"};
+            Aliases = new[] { "pose" };
             Description = "Sets your characters current pose";
-            Usages = new[] {"Type: pose Leans against the wall"};
+            Usages = new[] { "Type: pose Leans against the wall" };
             Title = "";
             DeniedStatus = new[]
             {
@@ -27,23 +27,22 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
                 CharacterStatus.Status.Stunned,
             };
             UserRole = UserRole.Player;
-            Core = core;
         }
-        
+
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
         public string Title { get; }
         public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
-        public ICore Core { get; }
-
 
         public void Execute(Player player, Room room, string[] input)
         {
             if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
             {
-                var poseText = string.IsNullOrEmpty(player.LongName) ? $"<p>{ player.Name}" : $"{ player.Name} {player.LongName}";
+                var poseText = string.IsNullOrEmpty(player.LongName)
+                    ? $"<p>{player.Name}"
+                    : $"{player.Name} {player.LongName}";
 
                 if (!string.IsNullOrEmpty(player.Mounted.Name))
                 {
@@ -58,12 +57,12 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
 
                 poseText += "</p>";
 
-                Core.Writer.WriteLine(poseText, player.ConnectionId);
+                Services.Instance.Writer.WriteLine(poseText, player.ConnectionId);
                 return;
             }
 
             player.Pose = $", {string.Join(" ", input.Skip(1))}";
-            Core.Writer.WriteLine("Pose set.", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("Pose set.", player.ConnectionId);
         }
     }
 }

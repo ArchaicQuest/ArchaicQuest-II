@@ -1,45 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Status;
-using ArchaicQuestII.GameLogic.Client;
-using ArchaicQuestII.GameLogic.Core;
-using ArchaicQuestII.GameLogic.Effect;
-using ArchaicQuestII.GameLogic.Skill.Enum;
-using ArchaicQuestII.GameLogic.Skill.Model;
-using ArchaicQuestII.GameLogic.Spell.Interface;
-using ArchaicQuestII.GameLogic.Utilities;
-using ArchaicQuestII.GameLogic.World.Room;
+﻿using ArchaicQuestII.GameLogic.Spell.Interface;
 
 namespace ArchaicQuestII.GameLogic.Spell
 {
     public class CastSpell
     {
-        private readonly IWriteToClient _writer;
         private readonly ISpellTargetCharacter _spellTargetCharacter;
-        private readonly ICache _cache;
-        private readonly IDamage _damage;
-        private readonly IUpdateClientUI _updateClientUi;
         private readonly ISpellList _spellList;
-        
-        public CastSpell(
-            IWriteToClient writer,
-            ISpellTargetCharacter spellTargetCharacter, 
-            ICache cache, 
-            IDamage damage,
-            IUpdateClientUI updateClientUi,
-            ISpellList spellList)
+
+        public CastSpell(ISpellTargetCharacter spellTargetCharacter, ISpellList spellList)
         {
-            _writer = writer;
             _spellTargetCharacter = spellTargetCharacter;
-            _cache = cache;
-            _damage = damage;
-            _updateClientUi = updateClientUi;
             _spellList = spellList;
         }
-        
+
         /*
 
         public bool ValidStatus(Player player)
@@ -71,7 +44,7 @@ namespace ArchaicQuestII.GameLogic.Spell
 
         public Skill.Model.Skill FindSpell(string skill, Player player)
         {
-            // I think this is a debug bug where the hot reload doesn't correctly run startup again 
+            // I think this is a debug bug where the hot reload doesn't correctly run startup again
             // and mobs loose there skills adding this hack just incase, should solve it
             if (player.Skills == null && player.ConnectionId == "mob")
             {
@@ -199,7 +172,7 @@ namespace ArchaicQuestII.GameLogic.Spell
 
         public void ReciteSpellCharacter(Player origin, Player target, Skill.Model.Skill spell, Room room)
         {
-            // not correct need to send to room 
+            // not correct need to send to room
             if (origin.Id == target.Id)
             {
 
@@ -269,7 +242,7 @@ namespace ArchaicQuestII.GameLogic.Spell
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="spell"></param>
         /// <param name="origin"></param>
@@ -540,6 +513,4 @@ namespace ArchaicQuestII.GameLogic.Spell
         }
         */
     }
-
 }
-

@@ -1,8 +1,6 @@
-
 using System.Linq;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
@@ -12,17 +10,25 @@ using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Commands.Skills
 {
-    public class LungCmd :  SkillCore, ICommand
+    public class LungCmd : SkillCore, ICommand
     {
-        public LungCmd(ICore core): base (core)
+        public LungCmd()
+            : base()
         {
-            Aliases = new[] { "lunge"};
-            Description = "Does what it says, a strong slash of your weapon. Weapon max damage + 1d10";
+            Aliases = new[] { "lunge" };
+            Description =
+                "Does what it says, a strong slash of your weapon. Weapon max damage + 1d10";
             Usages = new[] { "Type: lung bob" };
-            DeniedStatus = new [] { CharacterStatus.Status.Sleeping, CharacterStatus.Status.Resting, CharacterStatus.Status.Dead, CharacterStatus.Status.Mounted, CharacterStatus.Status.Stunned };
+            DeniedStatus = new[]
+            {
+                CharacterStatus.Status.Sleeping,
+                CharacterStatus.Status.Resting,
+                CharacterStatus.Status.Dead,
+                CharacterStatus.Status.Mounted,
+                CharacterStatus.Status.Stunned
+            };
             Title = DefineSkill.Lunge().Name;
             UserRole = UserRole.Player;
-            Core = core;
         }
 
         public string[] Aliases { get; }
@@ -31,52 +37,57 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
         public string Title { get; }
         public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
-        public ICore Core { get; }
 
         public void Execute(Player player, Room room, string[] input)
         {
-   
             var canDoSkill = CanPerformSkill(DefineSkill.Lunge(), player);
             if (!canDoSkill)
-            { 
+            {
                 return;
             }
-            
+
             if (player.Equipped.Wielded == null)
             {
-                Core.Writer.WriteLine("You need to have a weapon equipped to do this.", player.ConnectionId);
+                Services.Instance.Writer.WriteLine(
+                    "You need to have a weapon equipped to do this.",
+                    player.ConnectionId
+                );
                 return;
             }
 
             var obj = input.ElementAtOrDefault(1)?.ToLower() ?? player.Target;
             if (string.IsNullOrEmpty(obj))
             {
-                Core.Writer.WriteLine("Lunge What!?.", player.ConnectionId);
+                Services.Instance.Writer.WriteLine("Lunge What!?.", player.ConnectionId);
                 return;
             }
-          
+
             var target = FindTargetInRoom(obj, room, player);
             if (target == null)
             {
                 return;
             }
-            
+
             var textToTarget = string.Empty;
             var textToRoom = string.Empty;
 
-            var skillSuccess = SkillSuccessWithMessage(player, DefineSkill.Lunge(), $"You attempt to lunge at {target.Name} but miss.");
+            var skillSuccess = SkillSuccessWithMessage(
+                player,
+                DefineSkill.Lunge(),
+                $"You attempt to lunge at {target.Name} but miss."
+            );
             if (!skillSuccess)
-            { 
-                textToTarget = $"{player.Name} tries to lunge at you but misses."; 
+            {
+                textToTarget = $"{player.Name} tries to lunge at you but misses.";
                 textToRoom = $"{player.Name} tries to lunge at {target.Name} but misses.";
-                
+
                 EmoteAction(textToTarget, textToRoom, target.Name, room, player);
-                player.FailedSkill(DefineSkill.Lunge().Name, out var message);
-                Core.Writer.WriteLine(message, player.ConnectionId);
+                player.FailedSkill(SkillName.Lunge, out var message);
+                Services.Instance.Writer.WriteLine(message, player.ConnectionId);
                 player.Lag += 1;
                 return;
             }
-            
+
             var weaponDam = player.Equipped.Wielded.Damage.Maximum;
             var str = player.Attributes.Attribute[EffectLocation.Strength];
             var damage = DiceBag.Roll(3, 1, 6) + str / 5 + weaponDam;
@@ -86,8 +97,6 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             player.Lag += 1;
 
             updateCombat(player, target, room);
-            
         }
     }
-
 }

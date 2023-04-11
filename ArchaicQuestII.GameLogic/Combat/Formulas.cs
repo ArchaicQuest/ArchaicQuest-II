@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Status;
-using ArchaicQuestII.GameLogic.Core;
+using ArchaicQuestII.GameLogic.Commands;
 using ArchaicQuestII.GameLogic.Effect;
-using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.Utilities;
 
 namespace ArchaicQuestII.GameLogic.Combat
@@ -25,10 +21,8 @@ namespace ArchaicQuestII.GameLogic.Combat
             SkillList getWeaponSkill = null;
             if (weapon != null && !player.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
             {
-                // urgh this is ugly
                 getWeaponSkill = player.Skills.FirstOrDefault(x =>
-                   x.SkillName.Replace(" ", string.Empty)
-                       .Equals(Enum.GetName(typeof(Item.Item.WeaponTypes), weapon.WeaponType)));
+                   x.Name == weapon.WeaponType);
 
                 maxWeaponDam = player.Equipped.Wielded.Damage.Maximum;
             }
@@ -36,7 +30,7 @@ namespace ArchaicQuestII.GameLogic.Combat
             if (weapon == null && !player.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
             {
                 getWeaponSkill = player.Skills.FirstOrDefault(x =>
-                    x.SkillName.Equals("Hand To Hand", StringComparison.CurrentCultureIgnoreCase));
+                    x.Name == SkillName.Unarmed);
             }
 
             // mob always have 100% skills
@@ -57,16 +51,14 @@ namespace ArchaicQuestII.GameLogic.Combat
             SkillList getWeaponSkill = null;
             if (weapon != null && !player.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
             {
-                // urgh this is ugly
                 getWeaponSkill = player.Skills.FirstOrDefault(x =>
-                   x.SkillName.Replace(" ", string.Empty)
-                       .Equals(Enum.GetName(typeof(Item.Item.WeaponTypes), weapon.WeaponType)));
+                   x.Name == weapon.WeaponType);
             }
 
             if (weapon == null && !player.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
             {
                 getWeaponSkill = player.Skills.FirstOrDefault(x =>
-                    x.SkillName.Equals("Hand To Hand", StringComparison.CurrentCultureIgnoreCase));
+                    x.Name == SkillName.Unarmed);
             }
 
             // mob always have 100% skills
@@ -130,16 +122,15 @@ namespace ArchaicQuestII.GameLogic.Combat
             if (weapon != null)
             {
 
-                var skill = player.Skills.FirstOrDefault(x =>
-                    x.SkillName.Replace(" ", string.Empty)
-                        .Equals(Enum.GetName(typeof(Item.Item.WeaponTypes), weapon.WeaponType)));
+                var getWeaponSkill = player.Skills.FirstOrDefault(x =>
+                   x.Name == weapon.WeaponType);
 
                 damage = DiceBag.Roll(1, weapon.Damage.Minimum, weapon.Damage.Maximum);
 
-                if (skill != null)
+                if (getWeaponSkill != null)
                 {
 
-                    damage = (int)(damage * (skill.Proficiency + 1) / 100) + DiceBag.Roll(1, 1, 3); // 1-3 to stop hand to hand being OP earlier levels if weapon dam is less than 1d6
+                    damage = (int)(damage * (getWeaponSkill.Proficiency + 1) / 100) + DiceBag.Roll(1, 1, 3); // 1-3 to stop hand to hand being OP earlier levels if weapon dam is less than 1d6
                 }
                 else
                 {

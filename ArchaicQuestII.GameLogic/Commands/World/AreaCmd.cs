@@ -12,11 +12,11 @@ namespace ArchaicQuestII.GameLogic.Commands.World
 {
     public class AreaCmd : ICommand
     {
-        public AreaCmd(ICore core)
+        public AreaCmd()
         {
-            Aliases = new[] {"area"};
+            Aliases = new[] { "area" };
             Description = "Displays info about area.";
-            Usages = new[] {"Type: area"};
+            Usages = new[] { "Type: area" };
             Title = "";
             DeniedStatus = new[]
             {
@@ -30,33 +30,35 @@ namespace ArchaicQuestII.GameLogic.Commands.World
                 CharacterStatus.Status.Stunned,
             };
             UserRole = UserRole.Player;
-            Core = core;
         }
-        
+
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
         public string Title { get; }
         public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
-        public ICore Core { get; }
 
         public void Execute(Player player, Room room, string[] input)
         {
             var target = input.ElementAtOrDefault(1);
             var sb = new StringBuilder();
-            var area = Core.RoomActions.GetRoomArea(room);
-            var roomCount = Core.Cache.GetAllRoomsInArea(room.AreaId).Count;
-            
+            var area = Services.Instance.RoomActions.GetRoomArea(room);
+            var roomCount = Services.Instance.Cache.GetAllRoomsInArea(room.AreaId).Count;
+
             if (string.IsNullOrEmpty(target))
             {
-                sb.Append($"<p>You are currently in <b>{area.Title}</b>.</p><p>{area.Description}</p>");
+                sb.Append(
+                    $"<p>You are currently in <b>{area.Title}</b>.</p><p>{area.Description}</p>"
+                );
                 sb.Append($"<p>{AreaPopulation(room)}<.p>");
                 sb.Append($"<p>{AreaConsider(player, room)}<.p>");
 
-                sb.Append(roomCount > 1
-                    ? $"<p>Area contains <b>{roomCount}</b> rooms.</p>"
-                    : "<p>Area contains <b>1</b> room.</p>");
+                sb.Append(
+                    roomCount > 1
+                        ? $"<p>Area contains <b>{roomCount}</b> rooms.</p>"
+                        : "<p>Area contains <b>1</b> room.</p>"
+                );
 
                 if (area.CreatedBy != null)
                     sb.Append($"<p>(Created by {area.CreatedBy})</p>");
@@ -64,11 +66,14 @@ namespace ArchaicQuestII.GameLogic.Commands.World
 
             if (target == "list")
             {
-                var areas = Core.DataBase.GetCollection<Area>(DataBase.Collections.Area).FindAll().ToList();
+                var areas = Services.Instance.DataBase
+                    .GetCollection<Area>(DataBase.Collections.Area)
+                    .FindAll()
+                    .ToList();
 
                 sb.Append($"Total Areas: {areas.Count}");
                 sb.Append("<ul>");
-           
+
                 foreach (var a in areas)
                 {
                     sb.Append($"<li>[{GetAreaLevelScale(a)}] {a.Title}");
@@ -82,21 +87,21 @@ namespace ArchaicQuestII.GameLogic.Commands.World
 
             if (target is "consider" or "con")
             {
-                Core.Writer.WriteLine(AreaConsider(player, room), player.ConnectionId);
-                return;
-            }
-            
-            if (target is "pop" or "population")
-            {
-                Core.Writer.WriteLine(AreaPopulation(room), player.ConnectionId);
+                Services.Instance.Writer.WriteLine(AreaConsider(player, room), player.ConnectionId);
                 return;
             }
 
-            Core.Writer.WriteLine(sb.ToString(), player.ConnectionId);
+            if (target is "pop" or "population")
+            {
+                Services.Instance.Writer.WriteLine(AreaPopulation(room), player.ConnectionId);
+                return;
+            }
+
+            Services.Instance.Writer.WriteLine(sb.ToString(), player.ConnectionId);
         }
-        
+
         /// <summary>
-        /// Display player difficulty for area 
+        /// Display player difficulty for area
         /// </summary>
         /// <param name="player">Player entering command</param>
         /// <param name="room">Room where command was entered</param>
@@ -104,14 +109,18 @@ namespace ArchaicQuestII.GameLogic.Commands.World
         {
             var mobLevels = 0;
             var mobCount = 0;
-            
-            foreach (var mob in Core.Cache.GetAllRoomsInArea(room.AreaId).SelectMany(r => r.Mobs))
+
+            foreach (
+                var mob in Services.Instance.Cache
+                    .GetAllRoomsInArea(room.AreaId)
+                    .SelectMany(r => r.Mobs)
+            )
             {
                 mobLevels += mob.Level;
                 mobCount++;
             }
 
-            var dangerLevel = mobCount == 0 ? 0 : mobLevels/mobCount - player.Level;
+            var dangerLevel = mobCount == 0 ? 0 : mobLevels / mobCount - player.Level;
 
             return dangerLevel switch
             {
@@ -121,14 +130,17 @@ namespace ArchaicQuestII.GameLogic.Commands.World
                 _ => "{green}You feel relaxed here.{/}"
             };
         }
-        
+
         /// <summary>
         /// Display player population in area
         /// </summary>
         /// <param name="room">Room where command was entered</param>
         private string AreaPopulation(Room room)
         {
-            var playerCount = Core.Cache.GetAllRoomsInArea(room.AreaId).SelectMany(r => r.Players).Count();
+            var playerCount = Services.Instance.Cache
+                .GetAllRoomsInArea(room.AreaId)
+                .SelectMany(r => r.Players)
+                .Count();
 
             return playerCount switch
             {
@@ -139,7 +151,7 @@ namespace ArchaicQuestII.GameLogic.Commands.World
                 _ => "The area shows no signs of being traveled."
             };
         }
-        
+
         /// <summary>
         /// Helper to get area levels
         /// </summary>

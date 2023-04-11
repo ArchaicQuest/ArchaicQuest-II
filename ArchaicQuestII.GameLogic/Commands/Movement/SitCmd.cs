@@ -10,13 +10,14 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement;
 
 public class SitCmd : ICommand
 {
-    public SitCmd(ICore core)
+    public SitCmd()
     {
-        Aliases = new[] {"sit"};
-        Description =  "Your character will sit down or sit upon something. Sitting does not increase the speed of health, mana, or moves regeneration." +
-                       " Only resting or sleeping will do that, if attacked while sitting it will be a critical hit." +
-                       "<br /><br />Examples<br />sit<br />sit stool";
-        Usages = new[] {"Type: sit stool"};
+        Aliases = new[] { "sit" };
+        Description =
+            "Your character will sit down or sit upon something. Sitting does not increase the speed of health, mana, or moves regeneration."
+            + " Only resting or sleeping will do that, if attacked while sitting it will be a critical hit."
+            + "<br /><br />Examples<br />sit<br />sit stool";
+        Usages = new[] { "Type: sit stool" };
         Title = "";
         DeniedStatus = new[]
         {
@@ -33,16 +34,14 @@ public class SitCmd : ICommand
             CharacterStatus.Status.Mounted
         };
         UserRole = UserRole.Player;
-        Core = core;
     }
-    
+
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
     public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
-    public ICore Core { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
@@ -51,23 +50,42 @@ public class SitCmd : ICommand
         if (string.IsNullOrEmpty(target))
         {
             SetCharacterStatus(player, "is sitting here", CharacterStatus.Status.Sitting);
-            Core.Writer.WriteLine("<p>You sit down.</p>", player.ConnectionId);
-            Core.Writer.WriteToOthersInRoom($"<p>{player.Name} sits down.</p>", room, player);
+            Services.Instance.Writer.WriteLine("<p>You sit down.</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteToOthersInRoom(
+                $"<p>{player.Name} sits down.</p>",
+                room,
+                player
+            );
         }
         else
         {
-            var obj = room.Items.FirstOrDefault(x =>
-                x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase));
+            var obj = room.Items.FirstOrDefault(
+                x => x.Name.Contains(target, StringComparison.CurrentCultureIgnoreCase)
+            );
 
             if (obj == null)
             {
-                Core.Writer.WriteLine("<p>You can't sit on that.</p>", player.ConnectionId);
+                Services.Instance.Writer.WriteLine(
+                    "<p>You can't sit on that.</p>",
+                    player.ConnectionId
+                );
                 return;
             }
 
-            SetCharacterStatus(player, $"is sitting down on {obj.Name.ToLower()}", CharacterStatus.Status.Sitting);
-            Core.Writer.WriteLine($"<p>You sit down on {obj.Name.ToLower()}.</p>", player.ConnectionId);
-            Core.Writer.WriteToOthersInRoom($"<p>{player.Name} sits down on {obj.Name.ToLower()}.</p>", room, player);
+            SetCharacterStatus(
+                player,
+                $"is sitting down on {obj.Name.ToLower()}",
+                CharacterStatus.Status.Sitting
+            );
+            Services.Instance.Writer.WriteLine(
+                $"<p>You sit down on {obj.Name.ToLower()}.</p>",
+                player.ConnectionId
+            );
+            Services.Instance.Writer.WriteToOthersInRoom(
+                $"<p>{player.Name} sits down on {obj.Name.ToLower()}.</p>",
+                room,
+                player
+            );
         }
     }
 

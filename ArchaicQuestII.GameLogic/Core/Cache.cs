@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Emote;
 using ArchaicQuestII.GameLogic.Character.Help;
 using ArchaicQuestII.GameLogic.Character.Model;
@@ -17,7 +16,7 @@ namespace ArchaicQuestII.GameLogic.Core
     /// Refactor me
     /// TODO: refactor cache
     /// </summary>
-    public class Cache : ICache
+    public class Cache
     {
         private readonly ConcurrentDictionary<string, Player> _playerCache = new();
         private readonly ConcurrentDictionary<string, Room> _originalRoomCache = new();
@@ -29,7 +28,6 @@ namespace ArchaicQuestII.GameLogic.Core
         private readonly ConcurrentDictionary<int, Help> _helpCache = new();
         private readonly ConcurrentDictionary<int, CraftingRecipes> _craftingRecipesCache = new();
         private readonly Dictionary<string, Emote> _socials = new();
-        private readonly Dictionary<string, Class> _pcClass = new();
         private readonly Dictionary<string, ICommand> _commands = new();
         private Config _configCache = new();
 
@@ -49,7 +47,7 @@ namespace ArchaicQuestII.GameLogic.Core
         {
             return _commands.TryGetValue(key, out var c);
         }
-        
+
         public ICommand GetCommand(string key)
         {
             _commands.TryGetValue(key, out var command);
@@ -57,7 +55,7 @@ namespace ArchaicQuestII.GameLogic.Core
         }
 
         #endregion
-        
+
         #region PlayerCache
 
         public bool AddPlayer(string id, Player player)
@@ -153,7 +151,6 @@ namespace ArchaicQuestII.GameLogic.Core
             return _originalRoomCache.Values.ToList();
         }
 
-
         public List<Room> GetAllRoomsInArea(int id)
         {
             var room = _roomCache.Values.Where(x => x.AreaId.Equals(id)).ToList();
@@ -168,7 +165,6 @@ namespace ArchaicQuestII.GameLogic.Core
             return room;
         }
 
-
         public List<Skill.Model.Skill> GetAllSkills()
         {
             var data = _skillCache.Values.ToList();
@@ -181,7 +177,6 @@ namespace ArchaicQuestII.GameLogic.Core
             var existingRoom = room;
             var newRoom = room;
             newRoom.Players.Add(player);
-
 
             return _roomCache.TryUpdate(id, existingRoom, newRoom);
         }
@@ -203,33 +198,13 @@ namespace ArchaicQuestII.GameLogic.Core
             return skill;
         }
 
-
         public List<Skill.Model.Skill> ReturnSkills()
         {
             return _skillCache.Values.ToList();
         }
 
-
-
-
         #endregion
-        
-        #region ClassCache
 
-        public bool AddClass(string id, Class pcClass)
-        {
-            return _pcClass.TryAdd(id, pcClass);
-        }
-
-
-        public Class GetClass(string id)
-        {
-            return _pcClass[id];
-        }
-
-
-        #endregion
-        
         #region HelpCache
 
 
@@ -245,10 +220,15 @@ namespace ArchaicQuestII.GameLogic.Core
             return help;
         }
 
-
         public List<Help> FindHelp(string id)
         {
-            return _helpCache.Values.Where(x => x.Keywords.Contains(id, StringComparison.CurrentCultureIgnoreCase) && x.Deleted.Equals(false)).ToList();
+            return _helpCache.Values
+                .Where(
+                    x =>
+                        x.Keywords.Contains(id, StringComparison.CurrentCultureIgnoreCase)
+                        && x.Deleted.Equals(false)
+                )
+                .ToList();
         }
 
         #endregion
@@ -283,7 +263,6 @@ namespace ArchaicQuestII.GameLogic.Core
             return _configCache;
         }
 
-
         public void ClearRoomCache()
         {
             _roomCache.Clear();
@@ -293,7 +272,6 @@ namespace ArchaicQuestII.GameLogic.Core
             _questCache.Clear();
             _skillCache.Clear();
             _craftingRecipesCache.Clear();
-
         }
 
         public void AddMap(string areaId, string map)
@@ -314,7 +292,6 @@ namespace ArchaicQuestII.GameLogic.Core
         {
             return _combatCache.ContainsKey(id);
         }
-
 
         public bool AddCharToCombat(string id, Player character)
         {
@@ -367,6 +344,5 @@ namespace ArchaicQuestII.GameLogic.Core
         }
 
         #endregion
-
     }
 }

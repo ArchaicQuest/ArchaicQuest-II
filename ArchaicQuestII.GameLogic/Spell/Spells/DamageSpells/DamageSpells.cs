@@ -3,12 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Core;
-using ArchaicQuestII.GameLogic.Effect;
-using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.Skill.Core;
 using ArchaicQuestII.GameLogic.Skill.Model;
 using ArchaicQuestII.GameLogic.Utilities;
@@ -274,7 +271,7 @@ namespace ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells
                 Miss = new Messages()
             };
 
-            var hasAffcted = _skillManager.AffectPlayerAttributes("Cure light wounds", EffectLocation.Hitpoints, value, player, target, room, skillMessage.NoEffect.ToPlayer);
+            var hasAffcted = false;//_skillManager.AffectPlayerAttributes("Cure light wounds", EffectLocation.Hitpoints, value, player, target, room, skillMessage.NoEffect.ToPlayer);
 
             if (hasAffcted)
             {

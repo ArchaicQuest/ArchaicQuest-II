@@ -17,7 +17,7 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
         private Player _player;
         private readonly Mock<IWriteToClient> _writer;
         private readonly Mock<ITime> _time;
-        private readonly Mock<ICache> _cache;
+        private readonly Mock<Cache> _cache;
         private readonly Mock<IFormulas> _formulas;
         private readonly Mock<IPassiveSkills> _passiveSkills;
         private readonly Mock<IMobScripts> _mobScripts;
@@ -27,7 +27,7 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
         {
             _writer = new Mock<IWriteToClient>();
             _time = new Mock<ITime>();
-            _cache = new Mock<ICache>();
+            _cache = new Mock<Cache>();
             _formulas = new Mock<IFormulas>();
             _passiveSkills = new Mock<IPassiveSkills>();
             _mobScripts = new Mock<IMobScripts>();
@@ -69,11 +69,7 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
             {
                 Exits = new ExitDirections()
                 {
-                    North = new Exit()
-                    {
-                        Name = "North",
-                        Door = false,
-                    }
+                    North = new Exit() { Name = "North", Door = false, }
                 }
             };
 
@@ -89,11 +85,7 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
             {
                 Exits = new ExitDirections()
                 {
-                    NorthEast = new Exit()
-                    {
-                        Name = "North East",
-                        Door = false,
-                    }
+                    NorthEast = new Exit() { Name = "North East", Door = false, }
                 }
             };
 
@@ -130,11 +122,7 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
             {
                 Exits = new ExitDirections()
                 {
-                    SouthEast = new Exit()
-                    {
-                        Name = "South East",
-                        Door = false,
-                    }
+                    SouthEast = new Exit() { Name = "South East", Door = false, }
                 }
             };
 
@@ -150,11 +138,7 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
             {
                 Exits = new ExitDirections()
                 {
-                    South = new Exit()
-                    {
-                        Name = "South",
-                        Door = false,
-                    }
+                    South = new Exit() { Name = "South", Door = false, }
                 }
             };
 
@@ -170,11 +154,7 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
             {
                 Exits = new ExitDirections()
                 {
-                    SouthWest = new Exit()
-                    {
-                        Name = "South West",
-                        Door = false,
-                    }
+                    SouthWest = new Exit() { Name = "South West", Door = false, }
                 }
             };
 
@@ -190,11 +170,7 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
             {
                 Exits = new ExitDirections()
                 {
-                    West = new Exit()
-                    {
-                        Name = "West",
-                        Door = false,
-                    }
+                    West = new Exit() { Name = "West", Door = false, }
                 }
             };
 
@@ -210,11 +186,7 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
             {
                 Exits = new ExitDirections()
                 {
-                    NorthWest = new Exit()
-                    {
-                        Name = "North West",
-                        Door = false,
-                    }
+                    NorthWest = new Exit() { Name = "North West", Door = false, }
                 }
             };
 
@@ -226,12 +198,7 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
         [Fact]
         public void Should_return_none_exits()
         {
-            _room = new GameLogic.World.Room.Room()
-            {
-                Exits = new ExitDirections()
-                {
-                }
-            };
+            _room = new GameLogic.World.Room.Room() { Exits = new ExitDirections() { } };
 
             //var exits = new RoomActions(_writer.Object, _time.Object, _cache.Object, _dice.Object, _gain.Object, _formulas.Object,  _passiveSkills.Object, _updateClient.Object, _mobScripts.Object).FindValidExits(_room, false);
 
@@ -251,7 +218,6 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
                         Door = false,
                         Coords = new Coordinates()
                     },
-
                     North = new Exit()
                     {
                         Name = " North",
@@ -294,7 +260,6 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
                         Door = false,
                         Coords = new Coordinates()
                     },
-
                 }
             };
 
@@ -310,11 +275,7 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
             {
                 Exits = new ExitDirections()
                 {
-                    NorthWest = new Exit()
-                    {
-                        Name = "A hole in the wall",
-                        Door = false,
-                    }
+                    NorthWest = new Exit() { Name = "A hole in the wall", Door = false, }
                 }
             };
 
@@ -331,15 +292,11 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
             _player.Config.VerboseExits = false;
             _player.ConnectionId = "1";
 
-
             var item = new GameLogic.Item.Item()
             {
                 Name = "A portal",
                 ItemType = GameLogic.Item.Item.ItemTypes.Portal,
-                Portal = new Portal()
-                {
-                    Destination = "0000"
-                }
+                Portal = new Portal() { Destination = "0000" }
             };
             var currentRoom = new GameLogic.World.Room.Room()
             {
@@ -352,10 +309,7 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
                     Z = 0
                 },
                 Players = new List<Player>() { _player }
-
             };
-
-
 
             _room = new GameLogic.World.Room.Room()
             {
@@ -367,13 +321,15 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
                     Y = 0,
                     Z = 0
                 }
-
             };
 
             _cache.Setup(x => x.GetRoom("0000")).Returns(_room);
             //new RoomActions(_writer.Object, _time.Object, _cache.Object, _dice.Object, _gain.Object, _formulas.Object,  _passiveSkills.Object, _updateClient.Object, _mobScripts.Object).LookInPortal(item, currentRoom, _player);
 
-            _writer.Verify(w => w.WriteLine(It.Is<string>(s => s.Contains("Room description")), "1"), Times.Once());
+            _writer.Verify(
+                w => w.WriteLine(It.Is<string>(s => s.Contains("Room description")), "1"),
+                Times.Once()
+            );
         }
     }
 }

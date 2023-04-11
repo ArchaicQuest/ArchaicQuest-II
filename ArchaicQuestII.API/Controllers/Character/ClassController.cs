@@ -1,20 +1,19 @@
 ﻿using System;
 using ArchaicQuestII.DataAccess;
-
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using ArchaicQuestII.API.Entities;
 using ArchaicQuestII.API.Models;
-using ArchaicQuestII.GameLogic.Character.Class;
 using Microsoft.AspNetCore.Authorization;
+using ArchaicQuestII.GameLogic.Character.Class;
+using ArchaicQuestII.GameLogic.Core;
 
 namespace ArchaicQuestII.API.Character
 {
-
     public class ClassController : Controller
     {
-
         private IDataBase _db { get; }
+
         public ClassController(IDataBase db)
         {
             _db = db;
@@ -23,7 +22,7 @@ namespace ArchaicQuestII.API.Character
         [HttpPost]
         [Helpers.Authorize]
         [Route("api/Character/Class")]
-        public void Post([FromBody] Class charClass)
+        public void Post([FromBody] IClass charClass)
         {
             if (!ModelState.IsValid)
             {
@@ -31,32 +30,9 @@ namespace ArchaicQuestII.API.Character
                 throw exception;
             }
 
-            var newClass = new Class()
-            {
-                Name = charClass.Name,
-                AttributeBonus = charClass.AttributeBonus,
-                DateCreated = charClass.Id == -1 ? DateTime.Now : charClass.DateCreated,
-                DateUpdated = charClass.Id == -1 ? DateTime.Now : charClass.DateUpdated,
-                CreatedBy = "Malleus",
-                Description = charClass.Description,
-                ExperiencePointsCost = charClass.ExperiencePointsCost,
-                HitDice = charClass.HitDice,
-                Skills = charClass.Skills
-            };
-
-            if (!string.IsNullOrEmpty(charClass.Id.ToString()) && charClass.Id != -1)
-            {
-
-                var foundClass = _db.GetById<Class>(charClass.Id, DataBase.Collections.Class);
-
-                if (foundClass == null)
-                {
-                    throw new Exception("Item Id does not exist");
-                }
-
-                newClass.DateUpdated = DateTime.Now;
-                newClass.Id = charClass.Id;
-            }
+            IClass newClass = GameLogic.Core.Services.Instance.CharacterHandler.GetClass(
+                charClass.Name
+            );
 
             _db.Save(newClass, DataBase.Collections.Class);
 
@@ -76,18 +52,17 @@ namespace ArchaicQuestII.API.Character
         [HttpGet]
         [Helpers.Authorize]
         [Route("api/Character/Class/{id}")]
-        public Class Get(string id)
+        public IClass Get(string id)
         {
-            return Class.GetClassByName(id);
+            return GameLogic.Core.Services.Instance.CharacterHandler.GetClass(id);
         }
 
         [HttpGet]
         [AllowAnonymous]
         [Route("api/Character/Class")]
-        public List<Class> Get()
+        public List<IClass> Get()
         {
-            return Class.GetListOfClasses();
+            return GameLogic.Core.Services.Instance.CharacterHandler.GetClasses(false);
         }
-
     }
 }

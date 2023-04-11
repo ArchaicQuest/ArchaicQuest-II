@@ -9,11 +9,12 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication;
 
 public class SayCmd : ICommand
 {
-    public SayCmd(ICore core)
+    public SayCmd()
     {
-        Aliases = new[] {"say", "'"};
-        Description = "Say something to the room. Everyone present will hear what you say if they're awake.";
-        Usages = new[] {"Type: say what ever you want"};
+        Aliases = new[] { "say", "'" };
+        Description =
+            "Say something to the room. Everyone present will hear what you say if they're awake.";
+        Usages = new[] { "Type: say what ever you want" };
         Title = "";
         DeniedStatus = new[]
         {
@@ -25,34 +26,47 @@ public class SayCmd : ICommand
             CharacterStatus.Status.Stunned
         };
         UserRole = UserRole.Player;
-        Core = core;
     }
-    
+
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
     public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
-    public ICore Core { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
         if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
         {
-            Core.Writer.WriteLine("<p>Say what?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Say what?</p>", player.ConnectionId);
             return;
         }
-        
+
         var text = string.Join(" ", input.Skip(1));
-        
-        Core.Writer.WriteLine($"<p class='say'>You say {text}</p>", player.ConnectionId);
-        Core.UpdateClient.UpdateCommunication(player, $"<p class='say'>You say {text}</p>", "room");
-        Core.Writer.WriteToOthersInRoom($"<p class='say'>{player.Name} says {text}</p>", room, player);
-        
+
+        Services.Instance.Writer.WriteLine(
+            $"<p class='say'>You say {text}</p>",
+            player.ConnectionId
+        );
+        Services.Instance.UpdateClient.UpdateCommunication(
+            player,
+            $"<p class='say'>You say {text}</p>",
+            "room"
+        );
+        Services.Instance.Writer.WriteToOthersInRoom(
+            $"<p class='say'>{player.Name} says {text}</p>",
+            room,
+            player
+        );
+
         foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
         {
-            Core.UpdateClient.UpdateCommunication(pc, $"<p class='say'>{player.Name} says {text}</p>", "room");
+            Services.Instance.UpdateClient.UpdateCommunication(
+                pc,
+                $"<p class='say'>{player.Name} says {text}</p>",
+                "room"
+            );
         }
     }
 }

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
@@ -17,11 +16,12 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects;
 
 public class ChopCmd : ICommand
 {
-    public ChopCmd(ICore core)
+    public ChopCmd()
     {
-        Aliases = new[] {"chop", "fell"};
-        Description = "Chop trees to gain fire wood, twigs and leaves, must have a woodcutter type item in inventory such as an Axe. An Axe that is of type weapon will not work. Chopping uses the foraging skill.";
-        Usages = new[] {"Type: chop tree, fell tree"};
+        Aliases = new[] { "chop", "fell" };
+        Description =
+            "Chop trees to gain fire wood, twigs and leaves, must have a woodcutter type item in inventory such as an Axe. An Axe that is of type weapon will not work. Chopping uses the foraging skill.";
+        Usages = new[] { "Type: chop tree, fell tree" };
         Title = "";
         DeniedStatus = new[]
         {
@@ -37,16 +37,14 @@ public class ChopCmd : ICommand
             CharacterStatus.Status.Sitting,
         };
         UserRole = UserRole.Player;
-        Core = core;
     }
-    
+
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
     public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
-    public ICore Core { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
@@ -54,132 +52,155 @@ public class ChopCmd : ICommand
 
         if (string.IsNullOrEmpty(target))
         {
-            Core.Writer.WriteLine("Chop what?", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("Chop what?", player.ConnectionId);
             return;
         }
-        
+
         if (player.Status == CharacterStatus.Status.Busy)
         {
-            Core.Writer.WriteLine("You are already doing it.", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("You are already doing it.", player.ConnectionId);
             return;
         }
-        
-        var thingToHarvest =
-            room.Items.FirstOrDefault(x => x.Name.Contains(target, StringComparison.OrdinalIgnoreCase));
+
+        var thingToHarvest = room.Items.FirstOrDefault(
+            x => x.Name.Contains(target, StringComparison.OrdinalIgnoreCase)
+        );
 
         if (thingToHarvest == null)
         {
-            Core.Writer.WriteLine($"You don't see that here.", player.ConnectionId);
+            Services.Instance.Writer.WriteLine($"You don't see that here.", player.ConnectionId);
             return;
         }
 
         if (thingToHarvest.ItemType != Item.Item.ItemTypes.Chopable)
         {
-            Core.Writer.WriteLine("You can't chop this.", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("You can't chop this.", player.ConnectionId);
 
             if (thingToHarvest.ItemType == Item.Item.ItemTypes.Forage)
             {
-                Core.Writer.WriteLine($"You must forage {thingToHarvest.Name}", player.ConnectionId);
+                Services.Instance.Writer.WriteLine(
+                    $"You must forage {thingToHarvest.Name}",
+                    player.ConnectionId
+                );
             }
             return;
         }
-        
-        var hasChoppingTool = player.Inventory.FirstOrDefault(x => x.ItemType == Item.Item.ItemTypes.WoodCutter);
+
+        var hasChoppingTool = player.Inventory.FirstOrDefault(
+            x => x.ItemType == Item.Item.ItemTypes.WoodCutter
+        );
 
         if (hasChoppingTool == null)
         {
-            Core.Writer.WriteLine($"You attempt to karate chop {thingToHarvest.Name.ToLower()} with your bare hands. Probably better to try with an Axe.", player.ConnectionId);
+            Services.Instance.Writer.WriteLine(
+                $"You attempt to karate chop {thingToHarvest.Name.ToLower()} with your bare hands. Probably better to try with an Axe.",
+                player.ConnectionId
+            );
             return;
         }
-
 
         if (!thingToHarvest.Container.Items.Any())
         {
-            Core.Writer.WriteLine("There's nothing left to chop.", player.ConnectionId);
+            Services.Instance.Writer.WriteLine(
+                "There's nothing left to chop.",
+                player.ConnectionId
+            );
             return;
         }
-        
-    
-        
-        
 
         Harvest(player, room, thingToHarvest, hasChoppingTool);
     }
 
-    private async void Harvest(Player player, Room room, Item.Item thingToHarvest, Item.Item hasChoppingTool)
+    private async void Harvest(
+        Player player,
+        Room room,
+        Item.Item thingToHarvest,
+        Item.Item hasChoppingTool
+    )
     {
         player.Status = CharacterStatus.Status.Busy;
 
-        Core.UpdateClient.PlaySound("chopping", player);
+        Services.Instance.UpdateClient.PlaySound("chopping", player);
 
-        Core.Writer.WriteLine($"<p>You begin chopping {thingToHarvest.Name}.</p>", player.ConnectionId);
-        
+        Services.Instance.Writer.WriteLine(
+            $"<p>You begin chopping {thingToHarvest.Name}.</p>",
+            player.ConnectionId
+        );
+
         await Task.Delay(4000);
-        
+
         if (!room.Players.Contains(player) || player.Status != CharacterStatus.Status.Busy)
         {
             return;
         }
 
-        Core.UpdateClient.PlaySound("chopping", player);
+        Services.Instance.UpdateClient.PlaySound("chopping", player);
 
-        Core.Writer.WriteLine($"<p>You swing your {hasChoppingTool.Name} back and forth striking the trunk with each swing.</p>",
-            player.ConnectionId);
-        
+        Services.Instance.Writer.WriteLine(
+            $"<p>You swing your {hasChoppingTool.Name} back and forth striking the trunk with each swing.</p>",
+            player.ConnectionId
+        );
+
         await Task.Delay(4000);
-        
+
         if (!room.Players.Contains(player) || player.Status != CharacterStatus.Status.Busy)
         {
             return;
         }
 
-        Core.UpdateClient.PlaySound("chopping", player);
+        Services.Instance.UpdateClient.PlaySound("chopping", player);
 
-        Core.Writer.WriteLine("<p>You continue chopping.</p>", player.ConnectionId);
+        Services.Instance.Writer.WriteLine("<p>You continue chopping.</p>", player.ConnectionId);
 
         await Task.Delay(4000);
-        
+
         if (!room.Players.Contains(player) || player.Status != CharacterStatus.Status.Busy)
         {
             return;
         }
-        
+
         var roll = DiceBag.Roll(1, 1, 10);
 
         var randomMobObj = roll switch
         {
-            1 => new
-            {
-                Name = "A snake",
-                Description = "A black and red snake",
-                LongName = "A black snake slithers along here.",
-                DefaultAttack = "bite"
-            },
-            2 => new
-            {
-                Name = "A giant hornet",
-                Description = "An red and orange hornet",
-                LongName = "An angry red and orange hornet buzzes around here.",
-                DefaultAttack = "sting"
-            },
-            3 => new
-            {
-                Name = "An angry fairy",
-                Description = "A short winged fairy, angry at being disturbed",
-                LongName = "An angry fairy, annoyed at being disturbed is here.",
-                DefaultAttack = "punch"
-            },
-            _ => new
-            {
-                Name = "A racoon", Description = "A large grey racoon dog",
-                LongName = "A large racoon looks at you angrily", DefaultAttack = "bite"
-            }
+            1
+                => new
+                {
+                    Name = "A snake",
+                    Description = "A black and red snake",
+                    LongName = "A black snake slithers along here.",
+                    DefaultAttack = "bite"
+                },
+            2
+                => new
+                {
+                    Name = "A giant hornet",
+                    Description = "An red and orange hornet",
+                    LongName = "An angry red and orange hornet buzzes around here.",
+                    DefaultAttack = "sting"
+                },
+            3
+                => new
+                {
+                    Name = "An angry fairy",
+                    Description = "A short winged fairy, angry at being disturbed",
+                    LongName = "An angry fairy, annoyed at being disturbed is here.",
+                    DefaultAttack = "punch"
+                },
+            _
+                => new
+                {
+                    Name = "A racoon",
+                    Description = "A large grey racoon dog",
+                    LongName = "A large racoon looks at you angrily",
+                    DefaultAttack = "bite"
+                }
         };
 
         var randomMob = new Player
         {
             Name = randomMobObj.Name,
-            ClassName = "Fighter",
+            ClassName = ClassName.Fighter.ToString(),
             Target = string.Empty,
             Status = CharacterStatus.Status.Standing,
             Race = "Other",
@@ -221,24 +242,20 @@ public class ChopCmd : ICommand
                     { EffectLocation.SavingSpell, 1 },
                 }
             },
-
             Description = randomMobObj.Description,
             LongName = randomMobObj.LongName,
-            ArmorRating = new ArmourRating
-            {
-                Armour = 5,
-                Magic = 5
-            },
+            ArmorRating = new ArmourRating { Armour = 5, Magic = 5 },
             DefaultAttack = randomMobObj.DefaultAttack,
             UniqueId = Guid.NewGuid(),
             Id = Guid.NewGuid()
         };
-        
+
         if (roll <= 1)
         {
-            Core.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p>{{yellow}}{randomMob.Name} jumps out from the {thingToHarvest.Name} and attacks you!{{/}}</p>",
-                player.ConnectionId);
+                player.ConnectionId
+            );
             room.Mobs.Add(randomMob);
             player.Status = CharacterStatus.Status.Standing;
             InitFightStatus(randomMob, player);
@@ -247,30 +264,35 @@ public class ChopCmd : ICommand
 
         if (roll <= 3)
         {
-            Core.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p>{{yellow}}You cut yourself chopping, OUCH!{{/}}</p>",
-                player.ConnectionId);
+                player.ConnectionId
+            );
             player.Status = CharacterStatus.Status.Standing;
             return;
         }
 
-        var canDoSkill = Helpers.SkillSuccessCheck(player, "foraging");
-
-        if (!canDoSkill)
+        if (!player.RollSkill(SkillName.Foraging))
         {
-            player.FailedSkill("foraging", out var message);
-            Core.Writer.WriteLine("<p>You fail to chop a thing.</p>", player.ConnectionId);
-            Core.Writer.WriteLine(message, player.ConnectionId);
+            player.FailedSkill(SkillName.Foraging, out var message);
+            Services.Instance.Writer.WriteLine(
+                "<p>You fail to chop a thing.</p>",
+                player.ConnectionId
+            );
+            Services.Instance.Writer.WriteLine(message, player.ConnectionId);
             player.Status = CharacterStatus.Status.Standing;
             return;
         }
 
         var collected = "";
         var collectedCount = 0;
-        
-        foreach (var harvestItem in thingToHarvest.Container.Items.Where(harvestItem => DiceBag.Roll(1, 1, 10) <= 3).ToList())
-        {
 
+        foreach (
+            var harvestItem in thingToHarvest.Container.Items
+                .Where(harvestItem => DiceBag.Roll(1, 1, 10) <= 3)
+                .ToList()
+        )
+        {
             if (!collected.Contains(harvestItem.Name))
             {
                 if (collected.Length > 0)
@@ -281,12 +303,11 @@ public class ChopCmd : ICommand
                 {
                     collected += harvestItem.Name + " ";
                 }
-               
             }
 
             collectedCount++;
             thingToHarvest.Container.Items.Remove(harvestItem);
-            
+
             // if the User has herbalism the conditions will be higher rated
             // on success skill check the roll could be 50, 100
             // if elven the condition can be 10 points higher
@@ -308,26 +329,31 @@ public class ChopCmd : ICommand
 
         if (string.IsNullOrEmpty(collected))
         {
-            Core.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p>You fail to collect a single thing.</p>",
-                player.ConnectionId);
+                player.ConnectionId
+            );
         }
         else
         {
-            Core.Writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p>Ah you have collected some {collected}</p>",
-                player.ConnectionId);
+                player.ConnectionId
+            );
         }
 
         player.Status = CharacterStatus.Status.Standing;
-        Core.UpdateClient.UpdateInventory(player);
+        Services.Instance.UpdateClient.UpdateInventory(player);
     }
 
     private void InitFightStatus(Player player, Player target)
     {
         player.Target = string.IsNullOrEmpty(player.Target) ? target.Name : player.Target;
         player.Status = CharacterStatus.Status.Fighting;
-        target.Status = (target.Status & CharacterStatus.Status.Stunned) != 0 ? CharacterStatus.Status.Stunned : CharacterStatus.Status.Fighting;
+        target.Status =
+            (target.Status & CharacterStatus.Status.Stunned) != 0
+                ? CharacterStatus.Status.Stunned
+                : CharacterStatus.Status.Fighting;
         target.Target = string.IsNullOrEmpty(target.Target) ? player.Name : target.Target; //for group combat, if target is ganged, there target should not be changed when combat is initiated.
 
         if (player.Target == player.Name)
@@ -336,14 +362,14 @@ public class ChopCmd : ICommand
             return;
         }
 
-        if (!Core.Cache.IsCharInCombat(player.Id.ToString()))
+        if (!Services.Instance.Cache.IsCharInCombat(player.Id.ToString()))
         {
-            Core.Cache.AddCharToCombat(player.Id.ToString(), player);
+            Services.Instance.Cache.AddCharToCombat(player.Id.ToString(), player);
         }
 
-        if (!Core.Cache.IsCharInCombat(target.Id.ToString()))
+        if (!Services.Instance.Cache.IsCharInCombat(target.Id.ToString()))
         {
-            Core.Cache.AddCharToCombat(target.Id.ToString(), target);
+            Services.Instance.Cache.AddCharToCombat(target.Id.ToString(), target);
         }
     }
 }

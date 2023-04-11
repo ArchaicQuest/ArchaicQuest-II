@@ -1,11 +1,7 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Gain;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Character.Status;
-using ArchaicQuestII.GameLogic.Client;
-using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Item;
@@ -16,7 +12,6 @@ using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Skill.Skills
 {
-
     public interface IUtilSkills
     {
         int Disarm(Player player, Player target, Room room, string obj);
@@ -24,64 +19,54 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
         int Mount(Player player, Player target, Room room);
         int Berserk(Player player, Player target, Room room);
         int WarCry(Player player, Player target, Room room);
-
     }
 
     public class UtilSkills : IUtilSkills
     {
-        private readonly IWriteToClient _writer;
-        private readonly IUpdateClientUI _updateClientUi;
-        private readonly IDamage _damage;
-        private readonly ICombat _fight;
         private readonly ISkillManager _skillManager;
-        private readonly ICache _cache;
 
-
-
-        public UtilSkills(
-            IWriteToClient writer,
-            IUpdateClientUI updateClientUi,
-            IDamage damage, 
-            ICombat fight, 
-            ISkillManager skillManager,
-            ICache cache)
+        public UtilSkills(ISkillManager skillManager)
         {
-            _writer = writer;
-            _updateClientUi = updateClientUi;
-            _damage = damage;
-            _fight = fight;
             _skillManager = skillManager;
-            _cache = cache;
         }
 
         public int Disarm(Player player, Player target, Room room, string obj)
         {
             if (string.IsNullOrEmpty(player.Target))
             {
-                _writer.WriteLine("You are not fighting anyone.", player.ConnectionId);
+                Services.Instance.Writer.WriteLine(
+                    "You are not fighting anyone.",
+                    player.ConnectionId
+                );
 
                 return 0;
             }
 
             if (player.Equipped.Wielded == null)
             {
-                _writer.WriteLine("You must wield a weapon to disarm.", player.ConnectionId);
+                Services.Instance.Writer.WriteLine(
+                    "You must wield a weapon to disarm.",
+                    player.ConnectionId
+                );
 
                 return 0;
             }
 
             if (target.Equipped.Wielded == null)
             {
-                _writer.WriteLine("Your opponent is not wielding a weapon.", player.ConnectionId);
+                Services.Instance.Writer.WriteLine(
+                    "Your opponent is not wielding a weapon.",
+                    player.ConnectionId
+                );
 
                 return 0;
             }
 
-            var playerWeaponSkill = Helpers.GetWeaponSkill(player.Equipped.Wielded, player);
+            var playerWeaponSkill = player.GetWeaponSkill(player.Equipped.Wielded);
 
-            var targetWeaponSkill = Helpers.GetWeaponSkill(target.Equipped.Wielded, target);
+            var targetWeaponSkill = target.GetWeaponSkill(target.Equipped.Wielded);
 
-            var playerSkillOfTargetsWeapon = Helpers.GetWeaponSkill(target.Equipped.Wielded, player);
+            var playerSkillOfTargetsWeapon = player.GetWeaponSkill(target.Equipped.Wielded);
 
             var chance = playerWeaponSkill;
 
@@ -102,8 +87,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                 chance -= 25;
             }
 
-            var hasGrip = target.Skills.FirstOrDefault(x =>
-                x.SkillName.Equals("grip", StringComparison.CurrentCultureIgnoreCase));
+            var hasGrip = target.Skills.FirstOrDefault(x => x.Name == SkillName.Grip);
 
             var gripChance = DiceBag.Roll(1, 1, 100);
 
@@ -115,13 +99,12 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                 }
                 else
                 {
-                    target.FailedSkill("grip", out _);
+                    target.FailedSkill(SkillName.Grip, out _);
                 }
             }
 
             if (DiceBag.Roll(1, 1, 100) < chance)
             {
-
                 if ((target.Equipped.Wielded.ItemFlag & Item.Item.ItemFlags.Noremove) != 0)
                 {
                     var skillMessageNoRemove = new SkillMessage()
@@ -130,7 +113,8 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                         {
                             ToPlayer = $"{target.Name}'s weapon won't budge!",
                             ToRoom = $"{player.Name} tries to disarm {target.Name}, but fails.",
-                            ToTarget = $"{player.Name} tries to disarm you, but your weapon won't budge!"
+                            ToTarget =
+                                $"{player.Name} tries to disarm you, but your weapon won't budge!"
                         }
                     };
 
@@ -166,7 +150,6 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                 };
 
                 _skillManager.EmoteAction(player, target, room, skillMessage);
-
             }
 
             player.Lag += 1;
@@ -178,36 +161,42 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
         {
             if (target == null)
             {
-                _writer.WriteLine("Rescue whom?", player.ConnectionId);
+                Services.Instance.Writer.WriteLine("Rescue whom?", player.ConnectionId);
                 return 0;
             }
 
             if (player.Followers.FirstOrDefault(x => x.Name.Equals(target.Name)) == null)
             {
-                _writer.WriteLine("You can only rescue those in your group.", player.ConnectionId);
+                Services.Instance.Writer.WriteLine(
+                    "You can only rescue those in your group.",
+                    player.ConnectionId
+                );
                 return 0;
             }
 
-
             if ((target.Status & CharacterStatus.Status.Fighting) == 0)
             {
-                _writer.WriteLine($"{target.Name} is not fighting right now.", player.ConnectionId);
+                Services.Instance.Writer.WriteLine(
+                    $"{target.Name} is not fighting right now.",
+                    player.ConnectionId
+                );
 
                 return 0;
             }
 
             if (target == player)
             {
-                _writer.WriteLine("What about fleeing instead?", player.ConnectionId);
+                Services.Instance.Writer.WriteLine(
+                    "What about fleeing instead?",
+                    player.ConnectionId
+                );
 
                 return 0;
             }
 
-            var foundSkill = player.Skills
-                .FirstOrDefault(x => x.SkillName.Equals("Rescue", StringComparison.CurrentCultureIgnoreCase));
+            var foundSkill = player.Skills.FirstOrDefault(x => x.Name == SkillName.Rescue);
 
-            var chance = foundSkill
-                .Proficiency;
+            var chance = foundSkill.Proficiency;
 
             if (DiceBag.Roll(1, 1, 100) < chance)
             {
@@ -215,18 +204,20 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                 target.Target = string.Empty;
                 target.Status = CharacterStatus.Status.Standing;
 
-                var findTarget = Helpers.FindMob(Helpers.findNth($"{player.Target}"), room) ?? Helpers.FindPlayer(Helpers.findNth($"{player.Target}"), room);
+                var findTarget =
+                    Helpers.FindMob(Helpers.findNth($"{player.Target}"), room)
+                    ?? Helpers.FindPlayer(Helpers.findNth($"{player.Target}"), room);
 
                 findTarget.Target = player.Name;
 
                 var skillMessage = new SkillMessage()
                 {
                     Hit =
-                   {
-                       ToPlayer = $"You rescue {target.Name}!",
-                       ToRoom = $"{player.Name} rescues {target.Name}!",
-                       ToTarget = $"{player.Name} rescues you!"
-                   }
+                    {
+                        ToPlayer = $"You rescue {target.Name}!",
+                        ToRoom = $"{player.Name} rescues {target.Name}!",
+                        ToTarget = $"{player.Name} rescues you!"
+                    }
                 };
 
                 _skillManager.EmoteAction(player, target, room, skillMessage);
@@ -235,49 +226,49 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                 return 0;
             }
 
-            player.FailedSkill("Rescue", out var message);
+            player.FailedSkill(SkillName.Rescue, out var message);
 
-            _updateClientUi.UpdateExp(player);
+            Services.Instance.UpdateClient.UpdateExp(player);
 
-            _writer.WriteLine(message, player.ConnectionId);
+            Services.Instance.Writer.WriteLine(message, player.ConnectionId);
 
             return 0;
         }
 
         public int Berserk(Player player, Player target, Room room)
         {
-
             if (player.Affects.Berserk)
             {
-                _writer.WriteLine("You get a little madder", player.ConnectionId);
+                Services.Instance.Writer.WriteLine("You get a little madder", player.ConnectionId);
                 return 0;
             }
 
             if (player.Attributes.Attribute[EffectLocation.Moves] < 50)
             {
-                _writer.WriteLine("You can't get up enough energy.", player.ConnectionId);
+                Services.Instance.Writer.WriteLine(
+                    "You can't get up enough energy.",
+                    player.ConnectionId
+                );
                 return 0;
             }
 
             /* below 50% of hp helps, above hurts */
 
-            var foundSkill = player.Skills
-                .FirstOrDefault(x => x.SkillName.Equals("Berserk", StringComparison.CurrentCultureIgnoreCase));
+            var foundSkill = player.Skills.FirstOrDefault(x => x.Name == SkillName.Berserk);
 
             if (foundSkill != null)
             {
-                var chance = foundSkill
-                    .Proficiency;
+                var chance = foundSkill.Proficiency;
 
                 chance += (player.Status & CharacterStatus.Status.Fighting) != 0 ? 10 : 1;
-                var hpPercent = 100 * player.Attributes.Attribute[EffectLocation.Hitpoints] /
-                                player.MaxAttributes.Attribute[EffectLocation.Hitpoints];
+                var hpPercent =
+                    100
+                    * player.Attributes.Attribute[EffectLocation.Hitpoints]
+                    / player.MaxAttributes.Attribute[EffectLocation.Hitpoints];
                 chance += 25 - hpPercent / 2;
-
 
                 if (DiceBag.Roll(1, 1, 100) < chance)
                 {
-
                     target.Affects.Berserk = true;
                     var affect = new Affect()
                     {
@@ -287,16 +278,17 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                             DamRoll = 4 + player.Level / 5,
                             HitRoll = 4 + player.Level / 8,
                             Armour = 4 + player.Level / 5
-
                         },
                         Affects = DefineSpell.SpellAffect.Berserk,
-                        Name = "Berserk"
+                        Name = SkillName.Berserk.ToString()
                     };
                     target.Affects.Custom.Add(affect);
 
-                    Helpers.ApplyAffects(affect, player);
+                    player.ApplyAffects(affect);
 
-                    player.Attributes.Attribute[EffectLocation.Moves] = player.Attributes.Attribute[EffectLocation.Moves] /= 2;
+                    player.Attributes.Attribute[EffectLocation.Moves] = player.Attributes.Attribute[
+                        EffectLocation.Moves
+                    ] /= 2;
                     player.Attributes.Attribute[EffectLocation.Hitpoints] += player.Level * 2;
 
                     var skillMessage = new SkillMessage()
@@ -304,66 +296,83 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                         Hit =
                         {
                             ToPlayer = "Your pulse races as you are consumed by rage!",
-                            ToRoom = $"{player.Name} gets a wild look in {Helpers.GetPronoun(player.Gender)} eyes.",
+                            ToRoom =
+                                $"{player.Name} gets a wild look in {Helpers.GetPronoun(player.Gender)} eyes.",
                             ToTarget = ""
                         }
                     };
 
                     _skillManager.EmoteAction(player, target, room, skillMessage);
-
-
                 }
                 else
                 {
-                    _writer.WriteLine("Your pulse speeds up, but nothing happens", target.ConnectionId);
+                    Services.Instance.Writer.WriteLine(
+                        "Your pulse speeds up, but nothing happens",
+                        target.ConnectionId
+                    );
 
-                    player.Attributes.Attribute[EffectLocation.Moves] = player.Attributes.Attribute[EffectLocation.Moves] /= 4;
+                    player.Attributes.Attribute[EffectLocation.Moves] = player.Attributes.Attribute[
+                        EffectLocation.Moves
+                    ] /= 4;
 
-                    player.FailedSkill("Berserk", out var message);
+                    player.FailedSkill(SkillName.Berserk, out var message);
 
-                    _updateClientUi.UpdateExp(player);
+                    Services.Instance.UpdateClient.UpdateExp(player);
 
-                    _writer.WriteLine(message, player.ConnectionId);
+                    Services.Instance.Writer.WriteLine(message, player.ConnectionId);
                 }
             }
 
             player.Lag += 1;
-            _updateClientUi.UpdateScore(player);
-            _updateClientUi.UpdateMoves(player);
-            _updateClientUi.UpdateHP(player);
-            _updateClientUi.UpdateAffects(player);
-            _updateClientUi.UpdateExp(player);
+            Services.Instance.UpdateClient.UpdateScore(player);
+            Services.Instance.UpdateClient.UpdateMoves(player);
+            Services.Instance.UpdateClient.UpdateHP(player);
+            Services.Instance.UpdateClient.UpdateAffects(player);
+            Services.Instance.UpdateClient.UpdateExp(player);
 
             return 0;
         }
 
         public int Mount(Player player, Player target, Room room)
         {
-
             if (!string.IsNullOrEmpty(player.Mounted.Name))
             {
-                _writer.WriteLine($"You are already riding a mount called {player.Mounted.Name}", player.ConnectionId);
+                Services.Instance.Writer.WriteLine(
+                    $"You are already riding a mount called {player.Mounted.Name}",
+                    player.ConnectionId
+                );
                 return 0;
             }
 
-            if (!string.IsNullOrEmpty(target.Mounted.MountedBy) && target.Mounted.MountedBy != player.Name)
+            if (
+                !string.IsNullOrEmpty(target.Mounted.MountedBy)
+                && target.Mounted.MountedBy != player.Name
+            )
             {
-                _writer.WriteLine($"This mount is ridden by {target.Mounted.MountedBy}", player.ConnectionId);
+                Services.Instance.Writer.WriteLine(
+                    $"This mount is ridden by {target.Mounted.MountedBy}",
+                    player.ConnectionId
+                );
                 return 0;
             }
 
             if (!string.IsNullOrEmpty(player.Mounted.Name) && target.Name != player.Mounted.Name)
             {
-                _writer.WriteLine($"You must dismount {player.Mounted.Name} first.", player.ConnectionId);
+                Services.Instance.Writer.WriteLine(
+                    $"You must dismount {player.Mounted.Name} first.",
+                    player.ConnectionId
+                );
                 return 0;
             }
 
             if (!target.Mounted.IsMount)
             {
-                _writer.WriteLine($"{target.Name} is not a mount.", player.ConnectionId);
+                Services.Instance.Writer.WriteLine(
+                    $"{target.Name} is not a mount.",
+                    player.ConnectionId
+                );
                 return 0;
             }
-
 
             var skillMessage = new SkillMessage()
             {
@@ -375,30 +384,27 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                 }
             };
 
-
             target.Mounted.MountedBy = player.Name;
             player.Mounted.Name = target.Name;
             player.Pets.Add(target);
 
             _skillManager.EmoteAction(player, target, room, skillMessage);
 
-
-            _updateClientUi.UpdateScore(player);
-
-
+            Services.Instance.UpdateClient.UpdateScore(player);
 
             return 0;
         }
 
         public int WarCry(Player player, Player target, Room room)
         {
-
             if (player.Affects.Custom.FirstOrDefault(x => x.Name.Equals("War Cry")) != null)
             {
-                _writer.WriteLine("You are already affected by War Cry.", player.ConnectionId);
+                Services.Instance.Writer.WriteLine(
+                    "You are already affected by War Cry.",
+                    player.ConnectionId
+                );
                 return 0;
             }
-
 
             var skillMessage = new SkillMessage()
             {
@@ -410,31 +416,24 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                 }
             };
 
-
             _skillManager.EmoteAction(player, target, room, skillMessage);
 
             var affect = new Affect()
             {
                 Duration = player.Level + player.Level / 5,
-                Modifier = new Modifier()
-                {
-                    DamRoll = 3,
-                    Armour = -2
-
-                },
+                Modifier = new Modifier() { DamRoll = 3, Armour = -2 },
                 Affects = DefineSpell.SpellAffect.Berserk,
                 Name = "War Cry"
             };
 
             player.Affects.Custom.Add(affect);
 
-            Helpers.ApplyAffects(affect, player);
-            _updateClientUi.UpdateScore(player);
-            _updateClientUi.UpdateMoves(player);
-            _updateClientUi.UpdateHP(player);
-            _updateClientUi.UpdateAffects(player);
-            _updateClientUi.UpdateExp(player);
-
+            player.ApplyAffects(affect);
+            Services.Instance.UpdateClient.UpdateScore(player);
+            Services.Instance.UpdateClient.UpdateMoves(player);
+            Services.Instance.UpdateClient.UpdateHP(player);
+            Services.Instance.UpdateClient.UpdateAffects(player);
+            Services.Instance.UpdateClient.UpdateExp(player);
 
             return 0;
         }

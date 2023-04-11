@@ -10,6 +10,7 @@ using ArchaicQuestII.API.Models;
 using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.World.Room;
 using Newtonsoft.Json;
+using ArchaicQuestII.GameLogic.Character;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 public class ItemData
@@ -404,9 +405,8 @@ namespace ArchaicQuestII.Controllers
 
             var itemTypes = new List<object>();
 
-            foreach (var item in Enum.GetValues(typeof(Item.WeaponTypes)))
+            foreach (var item in Enum.GetValues(typeof(SkillName)))
             {
-
                 itemTypes.Add(new
                 {
                     id = (int)item,
