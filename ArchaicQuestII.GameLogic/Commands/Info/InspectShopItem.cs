@@ -36,7 +36,7 @@ public class InspectShopItemCmd : ICommand
 
         if (string.IsNullOrEmpty(itemName))
         {
-            Services.Instance.Writer.WriteLineAll("Inspect what?");
+            Services.Instance.Writer.WriteLine("Inspect what?", player);
             return;
         }
         if (int.TryParse(itemName, out var n))

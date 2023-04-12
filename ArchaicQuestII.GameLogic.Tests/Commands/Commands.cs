@@ -6,8 +6,6 @@ using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Commands;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Skill.Skills;
-using ArchaicQuestII.GameLogic.Spell.Interface;
-using ArchaicQuestII.GameLogic.Spell.Spells.DamageSpells;
 using ArchaicQuestII.GameLogic.World.Room;
 using Moq;
 using Xunit;
@@ -20,7 +18,6 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
         private Room _room;
         private Player _player;
         private ICommandHandler _commandHandler;
-        private readonly Mock<ISpells> _spell;
         private readonly Mock<ICombat> _combat;
         private readonly Mock<Cache> _cache;
         private readonly Mock<Services> _core;
@@ -29,12 +26,10 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
         private readonly Mock<IUtilSkills> _utilSkills;
         private readonly Mock<IPassiveSkills> _passiveSkills;
         private readonly Mock<IHealer> _healer;
-        private readonly Mock<IDamageSpells> _damageSpells;
         private readonly Mock<ICommand> _command;
 
         public CommandsTests()
         {
-            _spell = new Mock<ISpells>();
             _combat = new Mock<ICombat>();
             _cache = new Mock<Cache>();
             _core = new Mock<Services>();
@@ -44,7 +39,6 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
             _utilSkills = new Mock<IUtilSkills>();
             _passiveSkills = new Mock<IPassiveSkills>();
             _healer = new Mock<IHealer>();
-            _damageSpells = new Mock<IDamageSpells>();
             _command = new Mock<ICommand>();
 
             _commandHandler = new CommandHandler();

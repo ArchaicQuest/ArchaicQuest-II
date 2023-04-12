@@ -58,8 +58,9 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
 
             if (player.Status == CharacterStatus.Status.Fighting)
             {
-                Services.Instance.Writer.WriteLineAll(
-                    "You are already in combat, Charge can only be used to start a combat."
+                Services.Instance.Writer.WriteLine(
+                    "You are already in combat, Charge can only be used to start a combat.",
+                    player
                 );
                 return;
             }
@@ -109,8 +110,9 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             {
                 target.Lag += 2;
 
-                Services.Instance.Writer.WriteLineAll(
-                    $"You smash {target.Name} to the ground with your charge."
+                Services.Instance.Writer.WriteLine(
+                    $"You smash {target.Name} to the ground with your charge.",
+                    player
                 );
                 textToTarget = $"{player.Name} charge smashes you off your feet.";
                 textToRoom = $"{player.Name} charge smashes {target.Name} off their feet.";

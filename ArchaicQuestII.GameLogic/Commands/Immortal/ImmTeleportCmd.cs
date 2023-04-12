@@ -33,7 +33,7 @@ public class ImmTeleportCmd : ICommand
 
         if (string.IsNullOrEmpty(target))
         {
-            Services.Instance.Writer.WriteLineAll("<p>Teleport to what room, or to whom?</p>");
+            Services.Instance.Writer.WriteLine("<p>Teleport to what room, or to whom?</p>", player);
             return;
         }
 

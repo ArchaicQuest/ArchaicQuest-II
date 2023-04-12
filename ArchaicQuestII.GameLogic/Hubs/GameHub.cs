@@ -54,7 +54,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
 
             if (player == null)
             {
-                Services.Instance.Writer.WriteLineAll("<p>Refresh the page to reconnect!</p>");
+                Services.Instance.Writer.WriteLine("<p>Refresh the page to reconnect!</p>", player);
                 return;
             }
             player.Buffer.Enqueue(message);

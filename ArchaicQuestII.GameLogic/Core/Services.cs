@@ -3,7 +3,6 @@ using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Skill.Skills;
-using ArchaicQuestII.GameLogic.Spell;
 using ArchaicQuestII.GameLogic.Commands;
 using System;
 using Microsoft.AspNetCore.SignalR;
@@ -25,7 +24,6 @@ namespace ArchaicQuestII.GameLogic.Core
         public IErrorLog ErrorLog { get; private set; }
         public ITime Time { get; private set; }
         public IDamage Damage { get; private set; }
-        public ISpellList SpellList { get; private set; }
         public IWeather Weather { get; private set; }
         public ICharacterHandler CharacterHandler { get; private set; }
         public ILoopHandler GameLoop { get; private set; }
@@ -56,7 +54,6 @@ namespace ArchaicQuestII.GameLogic.Core
             IFormulas formulas,
             ITime time,
             IDamage damage,
-            ISpellList spellList,
             IWeather weather,
             ICharacterHandler characterHandler,
             ILoopHandler gameLoop,
@@ -75,7 +72,6 @@ namespace ArchaicQuestII.GameLogic.Core
             Formulas = formulas;
             Time = time;
             Damage = damage;
-            SpellList = spellList;
             Weather = weather;
             CharacterHandler = characterHandler;
             GameLoop = gameLoop;

@@ -112,7 +112,7 @@ public static class CharacterHelpers
 
         if (skill == null)
         {
-            Services.Instance.Writer.WriteLineAll("Skill not found");
+            Services.Instance.Writer.WriteLine("Skill not found", player);
             return;
         }
 
@@ -132,9 +132,10 @@ public static class CharacterHelpers
 
         player.UpdateClientUI();
 
-        Services.Instance.Writer.WriteLineAll(
+        Services.Instance.Writer.WriteLine(
             $"<p class='improve'>You learn from your mistakes and gain {100 * skill.Level / 4} experience points.</p>"
-                + $"<p class='improve'>Your knowledge of {skill.Name} increases by {increase}%.</p>"
+                + $"<p class='improve'>Your knowledge of {skill.Name} increases by {increase}%.</p>",
+            player
         );
     }
 
@@ -194,10 +195,11 @@ public static class CharacterHelpers
         if (!display)
             return;
 
-        Services.Instance.Writer.WriteLineAll(
+        Services.Instance.Writer.WriteLine(
             expWorth == 1
                 ? "<p class='improve'>You gain 1 measly experience point.</p>"
-                : $"<p class='improve'>You receive {expWorth} experience points.</p>"
+                : $"<p class='improve'>You receive {expWorth} experience points.</p>",
+            player
         );
     }
 
@@ -211,10 +213,11 @@ public static class CharacterHelpers
         if (!display)
             return;
 
-        Services.Instance.Writer.WriteLineAll(
+        Services.Instance.Writer.WriteLine(
             amount == 1
                 ? "<p class='improve'>You gain 1 measly experience point.</p>"
-                : $"<p class='improve'>You receive {amount} experience points.</p>"
+                : $"<p class='improve'>You receive {amount} experience points.</p>",
+            player
         );
     }
 
@@ -245,8 +248,9 @@ public static class CharacterHelpers
         if (!display)
             return;
 
-        Services.Instance.Writer.WriteLineAll(
-            $"<p class='improve'>You have advanced to level {player.Level}, you gain: {totalHP} HP, {totalMana} Mana, {totalMove} Moves.</p>"
+        Services.Instance.Writer.WriteLine(
+            $"<p class='improve'>You have advanced to level {player.Level}, you gain: {totalHP} HP, {totalMana} Mana, {totalMove} Moves.</p>",
+            player
         );
     }
 

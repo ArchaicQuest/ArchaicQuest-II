@@ -111,56 +111,6 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
             }
         }
 
-        /*
-         * Message for when attribute is full
-         * message for player
-         * message for target
-         * message for room
-         *
-         */
-
-        public bool AffectPlayerAttributes(
-            string spellName,
-            EffectLocation attribute,
-            int value,
-            Player player,
-            Player target,
-            Room room,
-            string noAffect
-        )
-        {
-            if (
-                (
-                    attribute == EffectLocation.Hitpoints
-                    || attribute == EffectLocation.Mana
-                    || attribute == EffectLocation.Moves
-                )
-                && target.Attributes.Attribute[attribute]
-                    == target.MaxAttributes.Attribute[attribute]
-            )
-            {
-                _writer.WriteLine(ReplacePlaceholders(noAffect, target, false), player);
-                return false;
-            }
-
-            target.Attributes.Attribute[attribute] += value;
-
-            if (
-                (
-                    attribute == EffectLocation.Hitpoints
-                    || attribute == EffectLocation.Mana
-                    || attribute == EffectLocation.Moves
-                )
-                && target.Attributes.Attribute[attribute]
-                    > target.MaxAttributes.Attribute[attribute]
-            )
-            {
-                target.Attributes.Attribute[attribute] = target.MaxAttributes.Attribute[attribute];
-            }
-
-            return true;
-        }
-
         public void UpdateClientUI(Player player)
         {
             //update UI

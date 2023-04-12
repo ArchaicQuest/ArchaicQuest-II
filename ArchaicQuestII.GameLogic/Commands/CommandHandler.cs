@@ -247,7 +247,7 @@ namespace ArchaicQuestII.GameLogic.Commands
             // Check if player has skill
             if (player.Skills.FirstOrDefault(x => x.Name.Equals(command.Title)) == null)
             {
-                Services.Instance.Writer.WriteLineAll("You do not know that skill.");
+                Services.Instance.Writer.WriteLine("You do not know that skill.", player);
                 return false;
             }
 
@@ -257,8 +257,9 @@ namespace ArchaicQuestII.GameLogic.Commands
                 < player.Skills.FirstOrDefault(x => x.Name.ToString() == command.Title)?.Level
             )
             {
-                Services.Instance.Writer.WriteLineAll(
-                    "You are not skilled enough to use this skill"
+                Services.Instance.Writer.WriteLine(
+                    "You are not skilled enough to use this skill",
+                    player
                 );
                 return false;
             }

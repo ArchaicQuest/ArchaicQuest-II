@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
-using ArchaicQuestII.GameLogic.Client;
-using ArchaicQuestII.GameLogic.Skill.Skills;
-using ArchaicQuestII.GameLogic.Spell.Interface;
+using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
 
@@ -11,29 +9,14 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Healer
 {
     public class Healer : IHealer
     {
-        private readonly IWriteToClient _writer;
-        private readonly IUpdateClientUI _clientUi;
-        private readonly IPassiveSkills _passiveSkills;
-        private readonly ISpells _spells;
-
-        public Healer(
-            IWriteToClient writer,
-            IUpdateClientUI clientUi,
-            IPassiveSkills passiveSkills,
-            ISpells spells
-        )
-        {
-            _writer = writer;
-            _clientUi = clientUi;
-            _passiveSkills = passiveSkills;
-            _spells = spells;
-        }
-
         public void DisplayInventory(Player mob, Player player)
         {
             var hagglePriceReduction = Haggle(player, mob);
 
-            _writer.WriteLine(mob.Name + " says 'I offer the following spells:'", player);
+            Services.Instance.Writer.WriteLine(
+                mob.Name + " says 'I offer the following spells:'",
+                player
+            );
             var sb = new StringBuilder();
             sb.Append(
                 "<table class='data'><tr><td style='width: 275px; text-align: left;'>Spell</td><td>Price</td</tr>"
@@ -50,7 +33,7 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Healer
 
             sb.Append("</table>");
             sb.Append("<p>Type heal &lt;type&gt; to be healed.</p>");
-            _writer.WriteLine(sb.ToString(), player);
+            Services.Instance.Writer.WriteLine(sb.ToString(), player);
         }
 
         public Player FindShopKeeper(Room room)
@@ -73,7 +56,10 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Healer
                 var shopKeeper = FindShopKeeper(room);
                 if (shopKeeper == null)
                 {
-                    _writer.WriteLine("<p>There is no one offering spells here.</p>", player);
+                    Services.Instance.Writer.WriteLine(
+                        "<p>There is no one offering spells here.</p>",
+                        player
+                    );
                     return;
                 }
 
@@ -86,7 +72,7 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Healer
 
         public int Haggle(Player player, Player target)
         {
-            var priceReduction = _passiveSkills.Haggle(player, target);
+            var priceReduction = Services.Instance.PassiveSkills.Haggle(player, target);
 
             return priceReduction;
         }
@@ -119,7 +105,7 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Healer
 
             if (vendor == null)
             {
-                _writer.WriteLine("<p>You can't do that here.</p>", player);
+                Services.Instance.Writer.WriteLine("<p>You can't do that here.</p>", player);
                 return;
             }
 
@@ -129,19 +115,19 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Healer
 
             if (hasItem == null)
             {
-                _writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     $"<p>{vendor.Name} says 'I don't offer that, please view my \'heal\' list of spells for sale.'</p>",
                     player
                 );
                 return;
             }
 
-            var haggleReduction = _passiveSkills.Haggle(player, vendor);
+            var haggleReduction = Services.Instance.PassiveSkills.Haggle(player, vendor);
             var goldValue = AddMarkUp(hasItem.Cost);
             var trueGoldValue = goldValue - Helpers.GetPercentage(haggleReduction, (int)goldValue);
             if (player.Money.Gold < trueGoldValue)
             {
-                _writer.WriteLine(
+                Services.Instance.Writer.WriteLine(
                     $"<p>{vendor.Name} says 'Sorry you can't afford that.'</p>",
                     player
                 );
@@ -150,14 +136,14 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Healer
 
             player.Money.Gold -= (int)Math.Floor(trueGoldValue);
 
-            _spells.DoSpell("cure light wounds", vendor, player.Name, room);
+            //_spells.DoSpell("cure light wounds", vendor, player.Name, room);
 
             // MOB CAST SPELL
 
-            _clientUi.UpdateScore(player);
-            _clientUi.UpdateInventory(player);
+            Services.Instance.UpdateClient.UpdateScore(player);
+            Services.Instance.UpdateClient.UpdateInventory(player);
 
-            _writer.WriteLine(
+            Services.Instance.Writer.WriteLine(
                 $"<p>You buy {hasItem.Name.ToLower()} for {Math.Floor(trueGoldValue)} gold.</p>",
                 player
             );

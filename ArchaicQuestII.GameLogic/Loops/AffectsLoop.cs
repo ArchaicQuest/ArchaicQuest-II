@@ -87,16 +87,6 @@ namespace ArchaicQuestII.GameLogic.Loops
 
                         pc.Affects.Custom.Remove(aff);
 
-                        Services.Instance.SpellList.CastSpell(
-                            aff.Name,
-                            "",
-                            pc,
-                            "",
-                            pc,
-                            Services.Instance.Cache.GetRoom(pc.RoomId),
-                            true
-                        );
-
                         if (aff.Affects == DefineSpell.SpellAffect.Blind)
                         {
                             pc.Affects.Blind = false;

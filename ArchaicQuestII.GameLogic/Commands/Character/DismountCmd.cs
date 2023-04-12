@@ -38,7 +38,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
         {
             if (string.IsNullOrEmpty(player.Mounted.Name))
             {
-                Services.Instance.Writer.WriteLineAll("<p>You are not using a mount</p>");
+                Services.Instance.Writer.WriteLine("<p>You are not using a mount</p>", player);
                 return;
             }
 

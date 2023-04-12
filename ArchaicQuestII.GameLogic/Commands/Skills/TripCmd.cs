@@ -78,8 +78,9 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
 
             if (target.Lag <= 1)
             {
-                Services.Instance.Writer.WriteLineAll(
-                    $"You trip {target.Name} and {target.Name} goes down!"
+                Services.Instance.Writer.WriteLine(
+                    $"You trip {target.Name} and {target.Name} goes down!",
+                    player
                 );
                 textToRoom = $"{player.Name} trips {target.Name} and {target.Name} goes down!";
                 textToTarget = $"{player.Name} trips you and you go down!";
@@ -96,7 +97,10 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 //Player already stunned
                 player.Lag += 1;
 
-                Services.Instance.Writer.WriteLineAll($"You try to trip {target.Name} and miss.");
+                Services.Instance.Writer.WriteLine(
+                    $"You try to trip {target.Name} and miss.",
+                    player
+                );
                 textToRoom =
                     $"{player.Name} tries to trip {target.Name} but {target.Name} easily avoids it.";
                 textToTarget = $"{player.Name} tries to trip you but fails.";
