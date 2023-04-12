@@ -1,10 +1,8 @@
 ﻿using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.World.Room;
 using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Skill.Skills;
-using ArchaicQuestII.GameLogic.World.Area;
 using ArchaicQuestII.GameLogic.Spell;
 using ArchaicQuestII.GameLogic.Commands;
 using System;
@@ -21,8 +19,6 @@ namespace ArchaicQuestII.GameLogic.Core
         public IPlayerDataBase PlayerDataBase { get; private set; }
         public IUpdateClientUI UpdateClient { get; private set; }
         public ICombat Combat { get; private set; }
-        public IRoomActions RoomActions { get; private set; }
-        public IAreaActions AreaActions { get; private set; }
         public IMobScripts MobScripts { get; private set; }
         public IPassiveSkills PassiveSkills { get; private set; }
         public IFormulas Formulas { get; private set; }
@@ -54,7 +50,6 @@ namespace ArchaicQuestII.GameLogic.Core
             IUpdateClientUI updateClient,
             ICombat combat,
             IPlayerDataBase playerDataBase,
-            IRoomActions roomActions,
             IMobScripts mobScripts,
             IErrorLog errorLog,
             IPassiveSkills passiveSkills,
@@ -74,7 +69,6 @@ namespace ArchaicQuestII.GameLogic.Core
             UpdateClient = updateClient;
             Combat = combat;
             PlayerDataBase = playerDataBase;
-            RoomActions = roomActions;
             MobScripts = mobScripts;
             ErrorLog = errorLog;
             PassiveSkills = passiveSkills;

@@ -72,7 +72,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
             await Task.Delay(2000);
 
-            Services.Instance.RoomActions.RoomChange(player, currentRoom, recallRoom, false);
+            player.ChangeRoom(currentRoom, recallRoom, false);
         }
     }
 }

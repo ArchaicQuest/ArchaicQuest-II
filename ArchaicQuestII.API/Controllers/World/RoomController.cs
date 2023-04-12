@@ -25,18 +25,11 @@ namespace ArchaicQuestII.API.World
     [Authorize]
     public class RoomController : Controller
     {
-        private IAddRoom _addRoom { get; }
-
-        public RoomController(IAddRoom addRoom)
-        {
-            _addRoom = addRoom;
-        }
-
         [HttpPost]
         [Route("api/World/Room")]
         public IActionResult Post([FromBody] Room room)
         {
-            var newRoom = _addRoom.MapRoom(room);
+            var newRoom = room.MapRoom();
 
             GameLogic.Core.Services.Instance.DataBase.Save(newRoom, DataBase.Collections.Room);
 
@@ -92,7 +85,7 @@ namespace ArchaicQuestII.API.World
         [Route("api/World/Room/{id:int}")]
         public void Put([FromBody] Room data)
         {
-            var updateRoom = _addRoom.MapRoom(data);
+            var updateRoom = data.MapRoom();
             GameLogic.Core.Services.Instance.DataBase.Save(updateRoom, DataBase.Collections.Room);
 
             var user = (HttpContext.Items["User"] as AdminUser);
@@ -113,7 +106,7 @@ namespace ArchaicQuestII.API.World
         [Route("api/World/Room/{x:int}/{y:int}/{z:int}/{areaId:int}")]
         public bool validExit(int x, int y, int z, int areaId)
         {
-            return _addRoom.GetRoomFromCoords(
+            return AddRoom.GetRoomFromCoords(
                     new Coordinates
                     {
                         X = x,

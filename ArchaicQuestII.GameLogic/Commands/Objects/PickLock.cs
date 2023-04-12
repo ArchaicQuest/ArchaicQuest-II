@@ -67,7 +67,7 @@ public class PickLockCmd : ICommand
 
         var nthItem = Helpers.findNth(target);
         var item = Helpers.findRoomObject(nthItem, room) ?? player.FindObjectInInventory(nthItem);
-        var roomExit = Services.Instance.RoomActions.GetRoomExit(target, room);
+        var roomExit = room.GetExit(target);
 
         if (item == null)
         {

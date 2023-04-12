@@ -169,7 +169,7 @@ public class MoveCmd : ICommand
             }
         }
 
-        Services.Instance.RoomActions.RoomChange(player, room, getNextRoom, isFlee);
+        player.ChangeRoom(room, getNextRoom, isFlee);
 
         if (player.Followers.Count >= 1)
         {
@@ -179,7 +179,7 @@ public class MoveCmd : ICommand
                 )
             )
             {
-                Services.Instance.RoomActions.RoomChange(follower, room, getNextRoom, isFlee);
+                follower.ChangeRoom(room, getNextRoom, isFlee);
             }
         }
 
@@ -193,7 +193,7 @@ public class MoveCmd : ICommand
 
             if (mountedMob != null)
             {
-                Services.Instance.RoomActions.RoomChange(mountedMob, room, getNextRoom, isFlee);
+                mountedMob.ChangeRoom(room, getNextRoom, isFlee);
             }
         }
     }

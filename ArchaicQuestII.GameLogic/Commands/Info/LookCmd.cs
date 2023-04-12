@@ -75,7 +75,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
         private void Look(Player player, Room room)
         {
             var showVerboseExits = player.Config.VerboseExits;
-            var exits = Services.Instance.RoomActions.FindValidExits(room, showVerboseExits);
+            var exits = room.ValidExits(showVerboseExits);
 
             var items = DisplayItems(room, player);
             var mobs = DisplayMobs(room, player);

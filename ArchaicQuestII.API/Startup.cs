@@ -20,7 +20,6 @@ using ArchaicQuestII.DiscordBot;
 using ArchaicQuestII.GameLogic.Client;
 using Discord.WebSocket;
 using ArchaicQuestII.GameLogic.Combat;
-using ArchaicQuestII.GameLogic.World.Room;
 using ArchaicQuestII.GameLogic.Skill.Skills;
 using ArchaicQuestII.GameLogic.Spell;
 using ArchaicQuestII.GameLogic.Character;
@@ -97,7 +96,6 @@ namespace ArchaicQuestII.API
             IUpdateClientUI updateClient,
             ICombat combat,
             IPlayerDataBase pdb,
-            IRoomActions roomActions,
             IMobScripts mobScripts,
             IErrorLog errorLog,
             IPassiveSkills passiveSkills,
@@ -151,7 +149,6 @@ namespace ArchaicQuestII.API
                 updateClient,
                 combat,
                 pdb,
-                roomActions,
                 mobScripts,
                 errorLog,
                 passiveSkills,

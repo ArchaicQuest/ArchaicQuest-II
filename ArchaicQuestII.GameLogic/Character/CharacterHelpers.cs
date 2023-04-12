@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Model;
+using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Commands;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
@@ -1356,6 +1357,194 @@ public static class CharacterHelpers
                 return player.Equipped.Secondary != null;
             default:
                 return false;
+        }
+    }
+
+    /// <summary>
+    /// Used to Change Player room
+    /// </summary>
+    /// <param name="player"></param>
+    /// <param name="oldRoom"></param>
+    /// <param name="newRoom"></param>
+    /// <param name="isFlee"></param>
+    public static void ChangeRoom(this Player player, Room oldRoom, Room newRoom, bool isFlee)
+    {
+        player.Pose = string.Empty;
+
+        if (oldRoom.Mobs.Any())
+        {
+            oldRoom.OnPlayerLeaveEvent(player);
+        }
+
+        player.ExitMessage(oldRoom, newRoom, isFlee);
+
+        player.UpdateLocation(oldRoom, newRoom);
+
+        player.EnterMessage(newRoom, oldRoom, isFlee);
+
+        Services.Instance.UpdateClient.GetMap(
+            player,
+            Services.Instance.Cache.GetMap($"{newRoom.AreaId}{newRoom.Coords.Z}")
+        );
+        Services.Instance.UpdateClient.UpdateMoves(player);
+        player.Buffer.Enqueue("look");
+
+        if (newRoom.Mobs.Any())
+        {
+            newRoom.OnPlayerEnterEvent(player);
+        }
+    }
+
+    /// <summary>
+    /// Updates the characters location
+    /// </summary>
+    /// <param name="character"></param>
+    /// <param name="oldRoom"></param>
+    /// <param name="newRoom"></param>
+    private static void UpdateLocation(this Player character, Room oldRoom, Room newRoom)
+    {
+        if (character.ConnectionId != "mob")
+        {
+            // remove player from room
+            oldRoom.Players.Remove(character);
+
+            //add player to room
+            character.RoomId =
+                $"{newRoom.AreaId}{newRoom.Coords.X}{newRoom.Coords.Y}{newRoom.Coords.Z}";
+            newRoom.Players.Add(character);
+
+            //player entered new area TODO: Add area announce
+            //if(oldRoom.AreaId != newRoom.AreaId)
+            //    _areaActions.AreaEntered(player, newRoom);
+        }
+        else
+        {
+            // remove mob from room
+            oldRoom.Mobs.Remove(character);
+
+            //add mob to room
+            character.RoomId =
+                $"{newRoom.AreaId}{newRoom.Coords.X}{newRoom.Coords.Y}{newRoom.Coords.Z}";
+            newRoom.Mobs.Add(character);
+        }
+    }
+
+    private static void EnterMessage(this Player character, Room toRoom, Room fromRoom, bool isFlee)
+    {
+        var direction = "from nowhere";
+        var movement = "appears";
+
+        if (toRoom.Exits != null)
+        {
+            if (toRoom.Exits.Down?.RoomId == fromRoom.Id)
+                direction = "in from below";
+            if (toRoom.Exits.Up?.RoomId == fromRoom.Id)
+                direction = "in from above";
+            if (toRoom.Exits.North?.RoomId == fromRoom.Id)
+                direction = "in from the north";
+            if (toRoom.Exits.South?.RoomId == fromRoom.Id)
+                direction = "in from the south";
+            if (toRoom.Exits.East?.RoomId == fromRoom.Id)
+                direction = "in from the east";
+            if (toRoom.Exits.West?.RoomId == fromRoom.Id)
+                direction = "in from the west";
+            if (toRoom.Exits.NorthEast?.RoomId == fromRoom.Id)
+                direction = "in from the northeast";
+            if (toRoom.Exits.NorthWest?.RoomId == fromRoom.Id)
+                direction = "in from the northwest";
+            if (toRoom.Exits.SouthEast?.RoomId == fromRoom.Id)
+                direction = "in from the southeast";
+            if (toRoom.Exits.SouthWest?.RoomId == fromRoom.Id)
+                direction = "in from the southwest";
+        }
+
+        switch (character.Status)
+        {
+            case CharacterStatus.Status.Floating:
+                movement = "floats";
+                break;
+            case CharacterStatus.Status.Mounted:
+                movement = "rides";
+                break;
+            case CharacterStatus.Status.Standing:
+                Services.Instance.UpdateClient.PlaySound("walk", character);
+                movement = "walks";
+                break;
+        }
+
+        if (isFlee)
+        {
+            Services.Instance.UpdateClient.PlaySound("flee", character);
+            movement = "rushes";
+        }
+
+        foreach (var p in toRoom.Players.Where(p => character.Name != p.Name))
+        {
+            Services.Instance.Writer.WriteLine(
+                $"<span class='{(character.ConnectionId != "mob" ? "player" : "mob")}'>{character.Name} {movement} {direction}.</span>",
+                p
+            );
+        }
+    }
+
+    private static void ExitMessage(
+        this Player characterBase,
+        Room fromRoom,
+        Room toRoom,
+        bool isFlee
+    )
+    {
+        var direction = "to thin air";
+        var movement = "vanishes";
+
+        if (fromRoom.Exits != null)
+        {
+            if (fromRoom.Exits.Down?.RoomId == toRoom.Id)
+                direction = "down";
+            if (fromRoom.Exits.Up?.RoomId == toRoom.Id)
+                direction = "up";
+            if (fromRoom.Exits.North?.RoomId == toRoom.Id)
+                direction = "to the north";
+            if (fromRoom.Exits.South?.RoomId == toRoom.Id)
+                direction = "to the south";
+            if (fromRoom.Exits.East?.RoomId == toRoom.Id)
+                direction = "to the east";
+            if (fromRoom.Exits.West?.RoomId == toRoom.Id)
+                direction = "to the west";
+            if (fromRoom.Exits.NorthEast?.RoomId == toRoom.Id)
+                direction = "to the northeast";
+            if (fromRoom.Exits.NorthWest?.RoomId == toRoom.Id)
+                direction = "to the northwest";
+            if (fromRoom.Exits.SouthEast?.RoomId == toRoom.Id)
+                direction = "to the southeast";
+            if (fromRoom.Exits.SouthWest?.RoomId == toRoom.Id)
+                direction = "to the southwest";
+        }
+
+        switch (characterBase.Status)
+        {
+            case CharacterStatus.Status.Floating:
+                movement = "floats";
+                break;
+            case CharacterStatus.Status.Mounted:
+                movement = "rides";
+                break;
+            case CharacterStatus.Status.Standing:
+                movement = "walks";
+                break;
+        }
+
+        if (isFlee)
+        {
+            movement = "flee";
+        }
+
+        foreach (var p in fromRoom.Players.Where(p => characterBase.Name != p.Name))
+        {
+            Services.Instance.Writer.WriteLine(
+                $"<span class='{(characterBase.ConnectionId != "mob" ? "player" : "mob")}'>{characterBase.Name} {movement} {direction}.</span>",
+                p
+            );
         }
     }
 }
