@@ -31,7 +31,7 @@ public class NewbieCmd : ICommand
     {
         if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
         {
-            Services.Instance.Writer.WriteLine("<p>Newbie what?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Newbie what?</p>", player);
             return;
         }
 
@@ -39,7 +39,7 @@ public class NewbieCmd : ICommand
 
         Services.Instance.Writer.WriteLine(
             $"<p class='newbie'>[<span>Newbie</span>] You: {text}</p>",
-            player.ConnectionId
+            player
         );
         Services.Instance.Writer.WriteToOthersInGame(
             $"<p class='newbie'>[<span>Newbie</span>] {player.Name}: {text}</p>",

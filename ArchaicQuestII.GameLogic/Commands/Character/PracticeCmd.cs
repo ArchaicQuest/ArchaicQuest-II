@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Account;
@@ -50,16 +49,13 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
             if (string.IsNullOrEmpty(target))
             {
-                Services.Instance.Writer.WriteLine("<p>Practice what?</p>", player.ConnectionId);
+                Services.Instance.Writer.WriteLine("<p>Practice what?</p>", player);
                 return;
             }
 
             if (room.Mobs.Find(x => x.Trainer) == null)
             {
-                Services.Instance.Writer.WriteLine(
-                    "<p>You can't do that here.</p>",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine("<p>You can't do that here.</p>", player);
                 return;
             }
 
@@ -71,7 +67,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
             {
                 Services.Instance.Writer.WriteLine(
                     $"<p>You have {player.Practices} practice{(player.Practices <= 1 ? "" : "s")} left.</p>",
-                    player.ConnectionId
+                    player
                 );
 
                 var sb = new StringBuilder();
@@ -146,7 +142,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
                 //    sb.Append("</tbody></table>");
 
                 //}
-                Services.Instance.Writer.WriteLine(sb.ToString(), player.ConnectionId);
+                Services.Instance.Writer.WriteLine(sb.ToString(), player);
                 return;
             }
 
@@ -157,7 +153,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
                 Services.Instance.Writer.WriteLineMobSay(
                     trainerName,
                     "<p>You don't have that skill to practice.</p>",
-                    player.ConnectionId
+                    player
                 );
                 return;
             }
@@ -167,7 +163,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
                 Services.Instance.Writer.WriteLineMobSay(
                     trainerName,
                     "<p>You have no practices left.</p>",
-                    player.ConnectionId
+                    player
                 );
                 return;
             }
@@ -177,7 +173,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
                 Services.Instance.Writer.WriteLineMobSay(
                     trainerName,
                     $"<p>You have already mastered {foundSkill.Name}.</p>",
-                    player.ConnectionId
+                    player
                 );
                 return;
             }
@@ -187,7 +183,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
                 Services.Instance.Writer.WriteLineMobSay(
                     trainerName,
                     $"<p>I've taught you everything I can about {foundSkill.Name}.</p>",
-                    player.ConnectionId
+                    player
                 );
                 return;
             }
@@ -204,19 +200,19 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
                 foundSkill.Proficiency = 75;
                 Services.Instance.Writer.WriteLine(
                     $"<p>You practice for some time. Your proficiency with {foundSkill.Name} is now {foundSkill.Proficiency}%.</p>",
-                    player.ConnectionId
+                    player
                 );
                 Services.Instance.Writer.WriteLineMobSay(
                     trainerName,
                     "<p>You'll have to practice it on your own now...</p>",
-                    player.ConnectionId
+                    player
                 );
                 return;
             }
 
             Services.Instance.Writer.WriteLine(
                 $"<p>You practice for some time. Your proficiency with {foundSkill.Name} is now {foundSkill.Proficiency}%.</p>",
-                player.ConnectionId
+                player
             );
         }
     }

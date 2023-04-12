@@ -44,7 +44,7 @@ namespace ArchaicQuestII.GameLogic.Loops
                             }
                             Services.Instance.Writer.WriteLine(
                                 $"<p class='mob-emote'>{mob.Name} {emote}</p>",
-                                player.ConnectionId
+                                player
                             );
                         }
                     }

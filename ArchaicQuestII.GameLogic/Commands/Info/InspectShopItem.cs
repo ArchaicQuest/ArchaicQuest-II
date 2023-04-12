@@ -36,7 +36,7 @@ public class InspectShopItemCmd : ICommand
 
         if (string.IsNullOrEmpty(itemName))
         {
-            Services.Instance.Writer.WriteLine("Inspect what?");
+            Services.Instance.Writer.WriteLine("Inspect what?", player);
             return;
         }
         if (int.TryParse(itemName, out var n))
@@ -49,10 +49,7 @@ public class InspectShopItemCmd : ICommand
 
         if (vendor == null)
         {
-            Services.Instance.Writer.WriteLine(
-                "<p>You can't do that here.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>You can't do that here.</p>", player);
             return;
         }
 
@@ -64,7 +61,7 @@ public class InspectShopItemCmd : ICommand
         {
             Services.Instance.Writer.WriteLine(
                 $"<p>{vendor.Name} says 'I don't have anything like that to show you.'</p>",
-                player.ConnectionId
+                player
             );
             return;
         }
@@ -103,7 +100,7 @@ public class InspectShopItemCmd : ICommand
 
         sb.Append($"{flags}<br />");
         sb.Append("</p>");
-        Services.Instance.Writer.WriteLine(sb.ToString(), player.ConnectionId);
+        Services.Instance.Writer.WriteLine(sb.ToString(), player);
     }
 
     public void InspectItem(int itemNumber, Room room, Player player)
@@ -118,10 +115,7 @@ public class InspectShopItemCmd : ICommand
 
         if (vendor == null)
         {
-            Services.Instance.Writer.WriteLine(
-                "<p>You can't do that here.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>You can't do that here.</p>", player);
             return;
         }
 
@@ -134,7 +128,7 @@ public class InspectShopItemCmd : ICommand
         {
             Services.Instance.Writer.WriteLine(
                 $"<p>{vendor.Name} says 'I don't have anything like that to show you.'</p>",
-                player.ConnectionId
+                player
             );
             return;
         }
@@ -173,6 +167,6 @@ public class InspectShopItemCmd : ICommand
 
         sb.Append($"{flags}<br />");
         sb.Append("</p>");
-        Services.Instance.Writer.WriteLine(sb.ToString(), player.ConnectionId);
+        Services.Instance.Writer.WriteLine(sb.ToString(), player);
     }
 }

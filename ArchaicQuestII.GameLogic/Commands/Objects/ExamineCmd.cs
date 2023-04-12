@@ -49,15 +49,13 @@ public class ExamineCmd : ICommand
 
         if (string.IsNullOrEmpty(target))
         {
-            Services.Instance.Writer.WriteLine("<p>Examine what?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Examine what?</p>", player);
             return;
         }
 
         var nthTarget = Helpers.findNth(target);
         var item =
-            Helpers.findRoomObject(nthTarget, room)
-            ?? Helpers.findObjectInInventory(nthTarget, player);
-        var isDark = Services.Instance.RoomActions.RoomIsDark(player, room);
+            Helpers.findRoomObject(nthTarget, room) ?? player.FindObjectInInventory(nthTarget);
 
         if (item == null && room.RoomObjects.Count >= 1 && room.RoomObjects[0].Name != null)
         {
@@ -66,8 +64,8 @@ public class ExamineCmd : ICommand
             );
 
             Services.Instance.Writer.WriteLine(
-                $"<p class='{(isDark ? "room-dark" : "")}'>{roomObjects.Examine ?? roomObjects.Look}",
-                player.ConnectionId
+                $"<p class='{(!player.CanSee(room) ? "room-dark" : "")}'>{roomObjects.Examine ?? roomObjects.Look}",
+                player
             );
 
             return;
@@ -75,7 +73,7 @@ public class ExamineCmd : ICommand
 
         if (item == null)
         {
-            Services.Instance.Writer.WriteLine("<p>You don't see that here.", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>You don't see that here.", player);
             return;
         }
 
@@ -85,8 +83,8 @@ public class ExamineCmd : ICommand
                 : item.Description.Exam;
 
         Services.Instance.Writer.WriteLine(
-            $"<p class='{(isDark ? "room-dark" : "")}'>{examMessage}",
-            player.ConnectionId
+            $"<p class='{(!player.CanSee(room) ? "room-dark" : "")}'>{examMessage}",
+            player
         );
         Services.Instance.Writer.WriteToOthersInRoom(
             $"<p>{player.Name} examines {item.Name.ToLower()}.</p>",

@@ -5,10 +5,8 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
-using ArchaicQuestII.GameLogic.Spell;
 using ArchaicQuestII.GameLogic.World.Room;
 using Discord;
 using Discord.Rest;
@@ -30,32 +28,27 @@ namespace ArchaicQuestII.GameLogic.Utilities
                 return new Tuple<int, string>(-1, command);
             }
 
-
             var target = splitCommand[1];
 
             return new Tuple<int, string>(nth, target);
         }
 
-
         public static Item.Item findRoomObject(Tuple<int, string> keyword, Room room)
         {
             return keyword.Item1 == -1
-                ? room.Items.FirstOrDefault(x =>
-                    x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase))
-                : room.Items.FindAll(x => x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase))
-                    .Skip(keyword.Item1 - 1).FirstOrDefault();
-        }
-
-        public static Item.Item findObjectInInventory(Tuple<int, string> keyword, Player player)
-        {
-            if (keyword.Item2.Equals("book"))
-            {
-                return keyword.Item1 == -1 ? player.Inventory.FirstOrDefault(x => x.ItemType == Item.Item.ItemTypes.Book) :
-                player.Inventory.FindAll(x => x.ItemType == Item.Item.ItemTypes.Book).Skip(keyword.Item1 - 1).FirstOrDefault();
-            }
-
-            return keyword.Item1 == -1 ? player.Inventory.FirstOrDefault(x => x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase)) :
-                player.Inventory.FindAll(x => x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase)).Skip(keyword.Item1 - 1).FirstOrDefault();
+                ? room.Items.FirstOrDefault(
+                    x => x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase)
+                )
+                : room.Items
+                    .FindAll(
+                        x =>
+                            x.Name.Contains(
+                                keyword.Item2,
+                                StringComparison.CurrentCultureIgnoreCase
+                            )
+                    )
+                    .Skip(keyword.Item1 - 1)
+                    .FirstOrDefault();
         }
 
         /// <summary>
@@ -67,36 +60,98 @@ namespace ArchaicQuestII.GameLogic.Utilities
         public static Player findPlayerObject(Tuple<int, string> keyword, Room room)
         {
             return keyword.Item1 == -1
-                ? room.Players.FirstOrDefault(x =>
-                    x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase))
-                : room.Players.FindAll(x => x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase))
-                    .Skip(keyword.Item1 - 1).FirstOrDefault() ?? (keyword.Item1 == null
-                    ? room.Mobs.FirstOrDefault(x =>
-                        x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase))
-                    : room.Mobs
-                        .FindAll(x => x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase))
-                        .Skip(keyword.Item1 - 1).FirstOrDefault());
+                ? room.Players.FirstOrDefault(
+                    x => x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase)
+                )
+                : room.Players
+                    .FindAll(
+                        x =>
+                            x.Name.Contains(
+                                keyword.Item2,
+                                StringComparison.CurrentCultureIgnoreCase
+                            )
+                    )
+                    .Skip(keyword.Item1 - 1)
+                    .FirstOrDefault()
+                    ?? (
+                        keyword.Item1 == null
+                            ? room.Mobs.FirstOrDefault(
+                                x =>
+                                    x.Name.Contains(
+                                        keyword.Item2,
+                                        StringComparison.CurrentCultureIgnoreCase
+                                    )
+                            )
+                            : room.Mobs
+                                .FindAll(
+                                    x =>
+                                        x.Name.Contains(
+                                            keyword.Item2,
+                                            StringComparison.CurrentCultureIgnoreCase
+                                        )
+                                )
+                                .Skip(keyword.Item1 - 1)
+                                .FirstOrDefault()
+                    );
         }
 
         public static Player FindPlayer(Tuple<int, string> keyword, Room room)
         {
             return keyword.Item1 == -1
-                ? room.Players.FirstOrDefault(x =>
-                    x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase))
-                : room.Players.FindAll(x => x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase))
-                    .Skip(keyword.Item1 - 1).FirstOrDefault();
+                ? room.Players.FirstOrDefault(
+                    x => x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase)
+                )
+                : room.Players
+                    .FindAll(
+                        x =>
+                            x.Name.Contains(
+                                keyword.Item2,
+                                StringComparison.CurrentCultureIgnoreCase
+                            )
+                    )
+                    .Skip(keyword.Item1 - 1)
+                    .FirstOrDefault();
         }
 
         public static Player FindMob(Tuple<int, string> keyword, Room room)
         {
-
             return keyword.Item1 == -1
-                ? room.Mobs.Where(x => x.IsHiddenScriptMob == false).FirstOrDefault(x =>
-                    x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase)) ?? room.Mobs.FirstOrDefault(x =>
-                    x.LongName.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase))
-                : room.Mobs.FindAll(x => x.Name.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase))
-                    .Skip(keyword.Item1 - 1).FirstOrDefault() ?? room.Mobs.FindAll(x => x.LongName.Contains(keyword.Item2, StringComparison.CurrentCultureIgnoreCase))
-                    .Skip(keyword.Item1 - 1).FirstOrDefault();
+                ? room.Mobs
+                    .Where(x => x.IsHiddenScriptMob == false)
+                    .FirstOrDefault(
+                        x =>
+                            x.Name.Contains(
+                                keyword.Item2,
+                                StringComparison.CurrentCultureIgnoreCase
+                            )
+                    )
+                    ?? room.Mobs.FirstOrDefault(
+                        x =>
+                            x.LongName.Contains(
+                                keyword.Item2,
+                                StringComparison.CurrentCultureIgnoreCase
+                            )
+                    )
+                : room.Mobs
+                    .FindAll(
+                        x =>
+                            x.Name.Contains(
+                                keyword.Item2,
+                                StringComparison.CurrentCultureIgnoreCase
+                            )
+                    )
+                    .Skip(keyword.Item1 - 1)
+                    .FirstOrDefault()
+                    ?? room.Mobs
+                        .FindAll(
+                            x =>
+                                x.LongName.Contains(
+                                    keyword.Item2,
+                                    StringComparison.CurrentCultureIgnoreCase
+                                )
+                        )
+                        .Skip(keyword.Item1 - 1)
+                        .FirstOrDefault();
         }
 
         public static string ReturnRoomId(Room room)
@@ -114,7 +169,10 @@ namespace ArchaicQuestII.GameLogic.Utilities
             var wordWithOutArticle = word;
             var splitWord = word.Split(" ");
 
-            if (splitWord[0].Equals("a", StringComparison.CurrentCultureIgnoreCase) || splitWord[0].Equals("an", StringComparison.CurrentCultureIgnoreCase))
+            if (
+                splitWord[0].Equals("a", StringComparison.CurrentCultureIgnoreCase)
+                || splitWord[0].Equals("an", StringComparison.CurrentCultureIgnoreCase)
+            )
             {
                 wordWithOutArticle = word.Substring(word.IndexOf(" ") + 1);
             }
@@ -132,8 +190,10 @@ namespace ArchaicQuestII.GameLogic.Utilities
         /// <returns> string</returns>
         public static string AddArticle(string word)
         {
-
-            var startsWithVowel = "aeiou".Contains(word[0], StringComparison.CurrentCultureIgnoreCase);
+            var startsWithVowel = "aeiou".Contains(
+                word[0],
+                StringComparison.CurrentCultureIgnoreCase
+            );
             var newWord = string.Empty;
 
             if (startsWithVowel)
@@ -145,61 +205,6 @@ namespace ArchaicQuestII.GameLogic.Utilities
                 newWord = "A " + word;
             }
             return newWord;
-        }
-
-        /// <summary>
-        /// Her / His
-        /// </summary>
-        /// <param name="gender"></param>
-        /// <returns></returns>
-        public static string GetPronoun(string gender)
-        {
-            return gender switch
-            {
-                "Female" => "her",
-                "Male" => "his",
-                _ => "their",
-            };
-        }
-        /// <summary>
-        /// She / He
-        /// </summary>
-        /// <param name="gender"></param>
-        /// <returns></returns>
-        public static string GetSubjectPronoun(string gender)
-        {
-            return gender switch
-            {
-                "Female" => "she",
-                "Male" => "he",
-                _ => "it",
-            };
-        }
-
-        /// <summary>
-        /// Her / Him
-        /// </summary>
-        /// <param name="gender"></param>
-        /// <returns></returns>
-        public static string GetObjectPronoun(string gender)
-        {
-            return gender switch
-            {
-                "Female" => "her",
-                "Male" => "him",
-                _ => "it",
-            };
-        }
-
-        public static bool isCaster(string classname)
-        {
-            return classname switch
-            {
-                "Mage" => true,
-                "Cleric" => true,
-                "Druid" => true,
-                _ => false,
-            };
         }
 
         public static string DisplayDoor(Exit exit)
@@ -218,49 +223,91 @@ namespace ArchaicQuestII.GameLogic.Utilities
 
         public static Exit IsExit(string exit, Room room)
         {
-            if (room.Exits.North != null && room.Exits.North.Name.StartsWith(exit, StringComparison.CurrentCultureIgnoreCase))
+            if (
+                room.Exits.North != null
+                && room.Exits.North.Name.StartsWith(exit, StringComparison.CurrentCultureIgnoreCase)
+            )
             {
                 return room.Exits.North;
             }
 
-            if (room.Exits.East != null && room.Exits.East.Name.StartsWith(exit, StringComparison.CurrentCultureIgnoreCase))
+            if (
+                room.Exits.East != null
+                && room.Exits.East.Name.StartsWith(exit, StringComparison.CurrentCultureIgnoreCase)
+            )
             {
                 return room.Exits.East;
             }
 
-            if (room.Exits.South != null && room.Exits.South.Name.StartsWith(exit, StringComparison.CurrentCultureIgnoreCase))
+            if (
+                room.Exits.South != null
+                && room.Exits.South.Name.StartsWith(exit, StringComparison.CurrentCultureIgnoreCase)
+            )
             {
                 return room.Exits.South;
             }
 
-            if (room.Exits.West != null && room.Exits.West.Name.StartsWith(exit, StringComparison.CurrentCultureIgnoreCase))
+            if (
+                room.Exits.West != null
+                && room.Exits.West.Name.StartsWith(exit, StringComparison.CurrentCultureIgnoreCase)
+            )
             {
                 return room.Exits.West;
             }
 
-            if (room.Exits.NorthWest != null && room.Exits.NorthWest.Name.StartsWith(exit, StringComparison.CurrentCultureIgnoreCase))
+            if (
+                room.Exits.NorthWest != null
+                && room.Exits.NorthWest.Name.StartsWith(
+                    exit,
+                    StringComparison.CurrentCultureIgnoreCase
+                )
+            )
             {
                 return room.Exits.NorthWest;
             }
 
-            if (room.Exits.NorthEast != null && room.Exits.NorthEast.Name.StartsWith(exit, StringComparison.CurrentCultureIgnoreCase))
+            if (
+                room.Exits.NorthEast != null
+                && room.Exits.NorthEast.Name.StartsWith(
+                    exit,
+                    StringComparison.CurrentCultureIgnoreCase
+                )
+            )
             {
                 return room.Exits.NorthEast;
             }
 
-            if (room.Exits.SouthEast != null && room.Exits.SouthEast.Name.StartsWith(exit, StringComparison.CurrentCultureIgnoreCase))
+            if (
+                room.Exits.SouthEast != null
+                && room.Exits.SouthEast.Name.StartsWith(
+                    exit,
+                    StringComparison.CurrentCultureIgnoreCase
+                )
+            )
             {
                 return room.Exits.SouthEast;
             }
-            if (room.Exits.SouthWest != null && room.Exits.SouthWest.Name.StartsWith(exit, StringComparison.CurrentCultureIgnoreCase))
+            if (
+                room.Exits.SouthWest != null
+                && room.Exits.SouthWest.Name.StartsWith(
+                    exit,
+                    StringComparison.CurrentCultureIgnoreCase
+                )
+            )
             {
                 return room.Exits.SouthWest;
             }
-            if (room.Exits.Down != null && room.Exits.Down.Name.StartsWith(exit, StringComparison.CurrentCultureIgnoreCase))
+            if (
+                room.Exits.Down != null
+                && room.Exits.Down.Name.StartsWith(exit, StringComparison.CurrentCultureIgnoreCase)
+            )
             {
                 return room.Exits.Down;
             }
-            if (room.Exits.Up != null && room.Exits.Up.Name.StartsWith(exit, StringComparison.CurrentCultureIgnoreCase))
+            if (
+                room.Exits.Up != null
+                && room.Exits.Up.Name.StartsWith(exit, StringComparison.CurrentCultureIgnoreCase)
+            )
             {
                 return room.Exits.Up;
             }
@@ -330,15 +377,14 @@ namespace ArchaicQuestII.GameLogic.Utilities
             // Create a new instance of the DiscordRestClient
             var client = new DiscordRestClient();
 
-// Login to Discord using your bot token
-            await client.LoginAsync(TokenType.Bot,  token);
+            // Login to Discord using your bot token
+            await client.LoginAsync(TokenType.Bot, token);
 
-// Get the channel you want to post the message to
+            // Get the channel you want to post the message to
             var channel = await client.GetChannelAsync(channelId); // replace with the channel ID
 
-// Send the message to the channel
+            // Send the message to the channel
             await (channel as IMessageChannel).SendMessageAsync(message);
-
         }
 
         public static async void PostToDiscord(string botToSay, string eventName, Config config)
@@ -348,12 +394,13 @@ namespace ArchaicQuestII.GameLogic.Utilities
                 return;
             }
             var client = new HttpClient();
-            var content = new FormUrlEncodedContent(new[]
-            {
-                new KeyValuePair<string, string>("content", botToSay)
-            });
+            var content = new FormUrlEncodedContent(
+                new[] { new KeyValuePair<string, string>("content", botToSay) }
+            );
 
-            content.Headers.ContentType = new MediaTypeHeaderValue("application/x-www-form-urlencoded");
+            content.Headers.ContentType = new MediaTypeHeaderValue(
+                "application/x-www-form-urlencoded"
+            );
 
             switch (eventName)
             {
@@ -364,7 +411,7 @@ namespace ArchaicQuestII.GameLogic.Utilities
                     }
 
                     break;
-               
+
                 case "error":
                     if (!string.IsNullOrEmpty(config.ErrorDiscordWebHookURL))
                     {
@@ -378,7 +425,6 @@ namespace ArchaicQuestII.GameLogic.Utilities
 
             client.Dispose();
         }
-
 
         public static int GetPercentage(int percentage, int value)
         {
@@ -411,7 +457,6 @@ namespace ArchaicQuestII.GameLogic.Utilities
         {
             switch (direction)
             {
-
                 case "North":
                     return "South";
                 case "North East":
@@ -432,52 +477,63 @@ namespace ArchaicQuestII.GameLogic.Utilities
                     return "Up";
                 case "Up":
                     return "Down";
-                default: { return direction; }
+                default:
+                {
+                    return direction;
+                }
             }
         }
-        
+
         /// <summary>
         /// Adds flags to display of items
         /// e.g (glow) A Long sword
         /// </summary>
         /// <param name="item"></param>
         /// <returns>name of the weapon with prefixed flags</returns>
-        public static string DisplayEQNameWithFlags(Item.Item item)
+        public static string ReturnWithFlags(this Item.Item item)
         {
             if (item == null)
             {
                 return null;
             }
-            
+
             var sb = new StringBuilder();
-           if ((item.ItemFlag & Item.Item.ItemFlags.Glow) != 0)
+            if ((item.ItemFlag & Item.Item.ItemFlags.Glow) != 0)
             {
                 sb.Append("({teal}Glowing{/}) ");
             }
-           
-           if ((item.ItemFlag & Item.Item.ItemFlags.Hum) != 0)
-           {
-               sb.Append("({yellow}Humming{/}) ");
-           }
 
-           if ((item.ItemFlag & Item.Item.ItemFlags.Holy) != 0)
-           {
-               sb.Append("(Holy) ");
-           }
+            if ((item.ItemFlag & Item.Item.ItemFlags.Hum) != 0)
+            {
+                sb.Append("({yellow}Humming{/}) ");
+            }
 
-           sb.Append(item.Name);
+            if ((item.ItemFlag & Item.Item.ItemFlags.Holy) != 0)
+            {
+                sb.Append("(Holy) ");
+            }
+
+            sb.Append(item.Name);
 
             return sb.ToString();
         }
-        
+
         public static Tuple<string, EffectLocation> GetStatName(string name)
         {
             return name switch
             {
                 "str" => new Tuple<string, EffectLocation>("strength", EffectLocation.Strength),
                 "dex" => new Tuple<string, EffectLocation>("dexterity", EffectLocation.Dexterity),
-                "con" => new Tuple<string, EffectLocation>("constitution", EffectLocation.Constitution),
-                "int" => new Tuple<string, EffectLocation>("intelligence", EffectLocation.Intelligence),
+                "con"
+                    => new Tuple<string, EffectLocation>(
+                        "constitution",
+                        EffectLocation.Constitution
+                    ),
+                "int"
+                    => new Tuple<string, EffectLocation>(
+                        "intelligence",
+                        EffectLocation.Intelligence
+                    ),
                 "wis" => new Tuple<string, EffectLocation>("wisdom", EffectLocation.Wisdom),
                 "cha" => new Tuple<string, EffectLocation>("charisma", EffectLocation.Charisma),
                 "hp" => new Tuple<string, EffectLocation>("hit points", EffectLocation.Hitpoints),
@@ -486,10 +542,14 @@ namespace ArchaicQuestII.GameLogic.Utilities
                 _ => new Tuple<string, EffectLocation>("", EffectLocation.None)
             };
         }
-        
-        public static string Replace(string source, string oldString,
-            string newString, StringComparison comparison,
-            bool recursive = false)
+
+        public static string Replace(
+            string source,
+            string oldString,
+            string newString,
+            StringComparison comparison,
+            bool recursive = false
+        )
         {
             var index = source.IndexOf(oldString, comparison);
 
@@ -507,39 +567,39 @@ namespace ArchaicQuestII.GameLogic.Utilities
 
             return source;
         }
-        
+
         public static string ReplaceSocialTags(string text, Player player, Player target)
         {
             if (text == "null")
             {
                 return "You can't do that.";
             }
-            var newText = text.Replace("#player#", player.Name).Replace("#pgender#", Helpers.GetPronoun(player.Gender))
-                .Replace("#pgender2#", Helpers.GetSubjectPronoun(player.Gender))
-                .Replace("#pgender3#", Helpers.GetObjectPronoun(player.Gender))
-                .Replace("#pgender#", Helpers.GetPronoun(player.Gender));
+            var newText = text.Replace("#player#", player.Name)
+                .Replace("#pgender#", player.ReturnPronoun())
+                .Replace("#pgender2#", player.ReturnSubjectPronoun())
+                .Replace("#pgender3#", player.ReturnObjectPronoun())
+                .Replace("#pgender#", player.ReturnPronoun());
 
             if (target != null)
             {
-                newText = newText.Replace("#target#", target.Name)
-                    .Replace("#tgender#", Helpers.GetPronoun(target.Gender))
-                    .Replace("#tgender2#", Helpers.GetSubjectPronoun(target.Gender))
-                    .Replace("#tgender3#", Helpers.GetObjectPronoun(target.Gender));
+                newText = newText
+                    .Replace("#target#", target.Name)
+                    .Replace("#tgender#", target.ReturnPronoun())
+                    .Replace("#tgender2#", target.ReturnSubjectPronoun())
+                    .Replace("#tgender3#", target.ReturnObjectPronoun());
             }
 
             return newText;
         }
 
-   
-            public static string FirstCharacterToLower(this string str)
+        public static string FirstCharacterToLower(this string str)
+        {
+            if (String.IsNullOrEmpty(str) || Char.IsLower(str, 0))
             {
-                if (String.IsNullOrEmpty(str) || Char.IsLower(str, 0))
-                {
-                    return str;
-                }
-
-                return Char.ToLowerInvariant(str[0]) + str.Substring(1);
+                return str;
             }
-        
+
+            return Char.ToLowerInvariant(str[0]) + str.Substring(1);
+        }
     }
 }

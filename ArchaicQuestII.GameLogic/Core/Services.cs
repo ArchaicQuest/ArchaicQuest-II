@@ -1,11 +1,8 @@
 ﻿using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.World.Room;
 using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Skill.Skills;
-using ArchaicQuestII.GameLogic.World.Area;
-using ArchaicQuestII.GameLogic.Spell;
 using ArchaicQuestII.GameLogic.Commands;
 using System;
 using Microsoft.AspNetCore.SignalR;
@@ -21,15 +18,12 @@ namespace ArchaicQuestII.GameLogic.Core
         public IPlayerDataBase PlayerDataBase { get; private set; }
         public IUpdateClientUI UpdateClient { get; private set; }
         public ICombat Combat { get; private set; }
-        public IRoomActions RoomActions { get; private set; }
-        public IAreaActions AreaActions { get; private set; }
         public IMobScripts MobScripts { get; private set; }
         public IPassiveSkills PassiveSkills { get; private set; }
         public IFormulas Formulas { get; private set; }
         public IErrorLog ErrorLog { get; private set; }
         public ITime Time { get; private set; }
         public IDamage Damage { get; private set; }
-        public ISpellList SpellList { get; private set; }
         public IWeather Weather { get; private set; }
         public ICharacterHandler CharacterHandler { get; private set; }
         public ILoopHandler GameLoop { get; private set; }
@@ -54,14 +48,12 @@ namespace ArchaicQuestII.GameLogic.Core
             IUpdateClientUI updateClient,
             ICombat combat,
             IPlayerDataBase playerDataBase,
-            IRoomActions roomActions,
             IMobScripts mobScripts,
             IErrorLog errorLog,
             IPassiveSkills passiveSkills,
             IFormulas formulas,
             ITime time,
             IDamage damage,
-            ISpellList spellList,
             IWeather weather,
             ICharacterHandler characterHandler,
             ILoopHandler gameLoop,
@@ -74,14 +66,12 @@ namespace ArchaicQuestII.GameLogic.Core
             UpdateClient = updateClient;
             Combat = combat;
             PlayerDataBase = playerDataBase;
-            RoomActions = roomActions;
             MobScripts = mobScripts;
             ErrorLog = errorLog;
             PassiveSkills = passiveSkills;
             Formulas = formulas;
             Time = time;
             Damage = damage;
-            SpellList = spellList;
             Weather = weather;
             CharacterHandler = characterHandler;
             GameLoop = gameLoop;

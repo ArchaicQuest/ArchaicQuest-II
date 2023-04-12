@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.Utilities;
 
 namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
 {
     public class RandomChainMailItems : IRandomChainMailArmour
     {
-        
         public List<PrefixItemMods> Prefix = new List<PrefixItemMods>()
         {
             new PrefixItemMods()
@@ -88,23 +86,22 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
 
         public List<Item> HeadItemName = new List<Item>()
         {
-
             new Item()
             {
                 Name = "Helmet",
-               ArmourType = Item.ArmourTypes.Cloth,
-               Slot = Equipment.EqSlot.Head,
-               Description = new Description()
-               {
-                   Look = "A fitted #prefix# helmet.",
-                   Exam = "A fitted #prefix# helmet."
-               }
+                ArmourType = Item.ArmourTypes.Cloth,
+                Slot = EquipmentSlot.Head,
+                Description = new Description()
+                {
+                    Look = "A fitted #prefix# helmet.",
+                    Exam = "A fitted #prefix# helmet."
+                }
             },
             new Item()
             {
                 Name = "Coif",
                 ArmourType = Item.ArmourTypes.Cloth,
-                Slot = Equipment.EqSlot.Head,
+                Slot = EquipmentSlot.Head,
                 Description = new Description()
                 {
                     Look = "A simple #prefix# coif that protects the neck and shoulders.",
@@ -115,7 +112,7 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
             {
                 Name = "Helm",
                 ArmourType = Item.ArmourTypes.Cloth,
-                Slot = Equipment.EqSlot.Head,
+                Slot = EquipmentSlot.Head,
                 Description = new Description()
                 {
                     Look = "A fitted #prefix# helm.",
@@ -125,23 +122,22 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
         };
         public List<Item> LegItemName = new List<Item>()
         {
-
             new Item()
             {
                 Name = "Leggings",
-               ArmourType = Item.ArmourTypes.Cloth,
-               Slot = Equipment.EqSlot.Legs,
-               Description = new Description()
-               {
-                   Look = "A pair of #prefix# leggings",
-                   Exam = "A pair of #prefix# leggings",
-               }
+                ArmourType = Item.ArmourTypes.Cloth,
+                Slot = EquipmentSlot.Legs,
+                Description = new Description()
+                {
+                    Look = "A pair of #prefix# leggings",
+                    Exam = "A pair of #prefix# leggings",
+                }
             },
             new Item()
             {
                 Name = "Greaves",
                 ArmourType = Item.ArmourTypes.Cloth,
-                Slot = Equipment.EqSlot.Legs,
+                Slot = EquipmentSlot.Legs,
                 Description = new Description()
                 {
                     Look = "Some #prefix# greaves.",
@@ -152,23 +148,21 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
             {
                 Name = "Skirt",
                 ArmourType = Item.ArmourTypes.Cloth,
-                Slot = Equipment.EqSlot.Legs,
+                Slot = EquipmentSlot.Legs,
                 Description = new Description()
                 {
                     Look = "A protective #prefix# skirt.",
                     Exam = "A protective #prefix# skirt."
                 }
             }
-
         };
         public List<Item> ArmItemName = new List<Item>()
         {
-
             new Item()
             {
                 Name = "Sleeves",
                 ArmourType = Item.ArmourTypes.Cloth,
-                Slot = Equipment.EqSlot.Arms,
+                Slot = EquipmentSlot.Arms,
                 Description = new Description()
                 {
                     Look = "A pair of #prefix# sleeves",
@@ -179,7 +173,7 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
             {
                 Name = "Armbands",
                 ArmourType = Item.ArmourTypes.Cloth,
-                Slot = Equipment.EqSlot.Arms,
+                Slot = EquipmentSlot.Arms,
                 Description = new Description()
                 {
                     Look = "A pair #prefix# armbands.",
@@ -190,23 +184,21 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
             {
                 Name = "Armplates",
                 ArmourType = Item.ArmourTypes.Cloth,
-                Slot = Equipment.EqSlot.Arms,
+                Slot = EquipmentSlot.Arms,
                 Description = new Description()
                 {
                     Look = "A pair #prefix# Armplates.",
                     Exam = "A pair #prefix# Armplates."
                 }
             }
-
         };
         public List<Item> HandItemName = new List<Item>()
         {
-
             new Item()
             {
                 Name = "Gloves",
                 ArmourType = Item.ArmourTypes.Cloth,
-                Slot = Equipment.EqSlot.Hands,
+                Slot = EquipmentSlot.Hands,
                 Description = new Description()
                 {
                     Look = "A pair of #prefix# gloves",
@@ -217,7 +209,7 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
             {
                 Name = "Gauntlets",
                 ArmourType = Item.ArmourTypes.Cloth,
-                Slot = Equipment.EqSlot.Hands,
+                Slot = EquipmentSlot.Hands,
                 Description = new Description()
                 {
                     Look = "A pair of #prefix# gauntlets",
@@ -227,30 +219,25 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
         };
         public List<Item> FeetItemName = new List<Item>()
         {
-
             new Item()
             {
                 Name = "Boots",
                 ArmourType = Item.ArmourTypes.Cloth,
-                Slot = Equipment.EqSlot.Feet,
+                Slot = EquipmentSlot.Feet,
                 Description = new Description()
                 {
                     Look = "A pair of #prefix# boots",
                     Exam = "A pair of #prefix# boots",
                 }
             },
-
-
         };
         public List<Item> BodyItemName = new List<Item>()
         {
-
-
             new Item()
             {
                 Name = "Jerkin",
                 ArmourType = Item.ArmourTypes.Cloth,
-                Slot = Equipment.EqSlot.Body,
+                Slot = EquipmentSlot.Body,
                 Description = new Description()
                 {
                     Look = "A #prefix# jerkin.",
@@ -261,7 +248,7 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
             {
                 Name = "Armour",
                 ArmourType = Item.ArmourTypes.Cloth,
-                Slot = Equipment.EqSlot.Body,
+                Slot = EquipmentSlot.Body,
                 Description = new Description()
                 {
                     Look = "A #prefix# armour.",
@@ -272,7 +259,7 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
             {
                 Name = "Tunic",
                 ArmourType = Item.ArmourTypes.Cloth,
-                Slot = Equipment.EqSlot.Body,
+                Slot = EquipmentSlot.Body,
                 Description = new Description()
                 {
                     Look = "A #prefix# tunic.",
@@ -283,7 +270,7 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
             {
                 Name = "Vest",
                 ArmourType = Item.ArmourTypes.Cloth,
-                Slot = Equipment.EqSlot.Body,
+                Slot = EquipmentSlot.Body,
                 Description = new Description()
                 {
                     Look = "A #prefix# vest.",
@@ -294,33 +281,47 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
             {
                 Name = "Jacket",
                 ArmourType = Item.ArmourTypes.Cloth,
-                Slot = Equipment.EqSlot.Body,
+                Slot = EquipmentSlot.Body,
                 Description = new Description()
                 {
                     Look = "A #prefix# jacket.",
                     Exam = "A #prefix# jacket."
                 }
             },
-
         };
-
 
         public Item CreateRandomItem(Player player, bool legendary)
         {
-            var items = HeadItemName.Concat(LegItemName).Concat(ArmItemName).Concat(HandItemName).Concat(FeetItemName)
-                .Concat(BodyItemName).ToList();
+            var items = HeadItemName
+                .Concat(LegItemName)
+                .Concat(ArmItemName)
+                .Concat(HandItemName)
+                .Concat(FeetItemName)
+                .Concat(BodyItemName)
+                .ToList();
             var prefix = Prefix[DiceBag.Roll(1, 0, Prefix.Count)];
             var choice = items[DiceBag.Roll(1, 0, items.Count)];
 
             var name = "a " + prefix.Name + " " + choice.Name;
 
-            if (choice.Slot == Equipment.EqSlot.Hands || choice.Slot == Equipment.EqSlot.Legs || choice.Slot == Equipment.EqSlot.Arms)
+            if (
+                choice.Slot == EquipmentSlot.Hands
+                || choice.Slot == EquipmentSlot.Legs
+                || choice.Slot == EquipmentSlot.Arms
+            )
             {
                 var pairOrSome = DiceBag.Roll(1, 1, 2);
-                name = $"{(pairOrSome == 1 ? "A pair of " : "some ")}" + prefix.Name + " " + choice.Name;
+                name =
+                    $"{(pairOrSome == 1 ? "A pair of " : "some ")}"
+                    + prefix.Name
+                    + " "
+                    + choice.Name;
             }
 
-            if (choice.Slot == Equipment.EqSlot.Legs && choice.Name.StartsWith("skirt", StringComparison.CurrentCultureIgnoreCase))
+            if (
+                choice.Slot == EquipmentSlot.Legs
+                && choice.Name.StartsWith("skirt", StringComparison.CurrentCultureIgnoreCase)
+            )
             {
                 name = "a " + prefix.Name + " " + choice.Name;
             }
@@ -348,77 +349,79 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
                 },
                 Slot = choice.Slot,
             };
-        
-           // stats to buff
 
-           for (int i = 0; i < (legendary ? 5 : 3); i++)
-           {
-                  switch (DiceBag.Roll(1, 1, 16))
-           {
-               case 1:
-                   item.Modifier.Armour = DiceBag.Roll(1, 1, 10);
-                   break;
-               
-               case 2:
-                   item.Modifier.Charisma = DiceBag.Roll(1, 1, 10);
-                   break;
-               
-               case 3:
-                   item.Modifier.Constitution = DiceBag.Roll(1, 1, 10);
-                   break;
-               
-               case 4:
-                   item.Modifier.Dexterity = DiceBag.Roll(1, 1, 10);
-                   break;
-               
-               case 5:
-                   item.Modifier.Intelligence = DiceBag.Roll(1, 1, 10);
-                   break;
-               
-               case 6:
-                   item.Modifier.Mana = DiceBag.Roll(1, 1, 10);
-                   break;
-               
-               case 7:
-                   item.Modifier.Moves = DiceBag.Roll(1, 1, 10);
-                   break;
-               
-               case 8:
-                   item.Modifier.Saves = DiceBag.Roll(1, 1, 10);
-                   break;
-               case 9:
-                   item.Modifier.Strength = DiceBag.Roll(1, 1, 10);
-                   break;
-               case 10:
-                   item.Modifier.Wisdom = DiceBag.Roll(1, 1, 10);
-                   break;
-               case 11:
-                   item.Modifier.AcMod = DiceBag.Roll(1, 1, 10);
-                   break;
-               case 12:
-                   item.Modifier.DamRoll = DiceBag.Roll(1, 1, 10);
-                   break;
-               case 13:
-                   item.Modifier.HitRoll = DiceBag.Roll(1, 1, 10);
-                   break;
-               case 14:
-                   item.Modifier.HP = DiceBag.Roll(1, 1, 10);
-                   break;
-               case 15:
-                   item.Modifier.SpellDam = DiceBag.Roll(1, 1, 10);
-                   break;
-               case 16:
-                   item.Modifier.AcMagicMod = DiceBag.Roll(1, 1, 10);
-                   
-                   break;
-                
-           }
-           }
+            // stats to buff
 
+            for (int i = 0; i < (legendary ? 5 : 3); i++)
+            {
+                switch (DiceBag.Roll(1, 1, 16))
+                {
+                    case 1:
+                        item.Modifier.Armour = DiceBag.Roll(1, 1, 10);
+                        break;
+
+                    case 2:
+                        item.Modifier.Charisma = DiceBag.Roll(1, 1, 10);
+                        break;
+
+                    case 3:
+                        item.Modifier.Constitution = DiceBag.Roll(1, 1, 10);
+                        break;
+
+                    case 4:
+                        item.Modifier.Dexterity = DiceBag.Roll(1, 1, 10);
+                        break;
+
+                    case 5:
+                        item.Modifier.Intelligence = DiceBag.Roll(1, 1, 10);
+                        break;
+
+                    case 6:
+                        item.Modifier.Mana = DiceBag.Roll(1, 1, 10);
+                        break;
+
+                    case 7:
+                        item.Modifier.Moves = DiceBag.Roll(1, 1, 10);
+                        break;
+
+                    case 8:
+                        item.Modifier.Saves = DiceBag.Roll(1, 1, 10);
+                        break;
+                    case 9:
+                        item.Modifier.Strength = DiceBag.Roll(1, 1, 10);
+                        break;
+                    case 10:
+                        item.Modifier.Wisdom = DiceBag.Roll(1, 1, 10);
+                        break;
+                    case 11:
+                        item.Modifier.AcMod = DiceBag.Roll(1, 1, 10);
+                        break;
+                    case 12:
+                        item.Modifier.DamRoll = DiceBag.Roll(1, 1, 10);
+                        break;
+                    case 13:
+                        item.Modifier.HitRoll = DiceBag.Roll(1, 1, 10);
+                        break;
+                    case 14:
+                        item.Modifier.HP = DiceBag.Roll(1, 1, 10);
+                        break;
+                    case 15:
+                        item.Modifier.SpellDam = DiceBag.Roll(1, 1, 10);
+                        break;
+                    case 16:
+                        item.Modifier.AcMagicMod = DiceBag.Roll(1, 1, 10);
+
+                        break;
+                }
+            }
 
             if (legendary)
             {
-                item.ArmourRating.Armour += DiceBag.Roll(1, (int)(prefix.MinArmour * 1.5), prefix.MaxArmour * 2);
+                item.ArmourRating.Armour += DiceBag.Roll(
+                    1,
+                    (int)(prefix.MinArmour * 1.5),
+                    prefix.MaxArmour * 2
+                );
                 item.ArmourRating.Magic += prefix.MaxArmour * 2 / prefix.MinArmour;
                 item.Condition = 100;
 
@@ -426,7 +429,6 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
             }
 
             return item;
-
         }
     }
 }

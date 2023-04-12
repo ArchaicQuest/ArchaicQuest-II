@@ -33,7 +33,7 @@ public class ImmTeleportCmd : ICommand
 
         if (string.IsNullOrEmpty(target))
         {
-            Services.Instance.Writer.WriteLine("<p>Teleport to what room, or to whom?</p>");
+            Services.Instance.Writer.WriteLine("<p>Teleport to what room, or to whom?</p>", player);
             return;
         }
 
@@ -43,14 +43,11 @@ public class ImmTeleportCmd : ICommand
 
             if (newRoom != null)
             {
-                Services.Instance.RoomActions.RoomChange(player, room, newRoom, false);
+                player.ChangeRoom(room, newRoom, false);
             }
             else
             {
-                Services.Instance.Writer.WriteLine(
-                    "<p>That room does not exist.</p>",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine("<p>That room does not exist.</p>", player);
             }
         }
         else
@@ -81,16 +78,11 @@ public class ImmTeleportCmd : ICommand
 
             if (foundPlayer == null)
             {
-                Services.Instance.Writer.WriteLine("<p>They're not here.</p>", player.ConnectionId);
+                Services.Instance.Writer.WriteLine("<p>They're not here.</p>", player);
                 return;
             }
 
-            Services.Instance.RoomActions.RoomChange(
-                player,
-                room,
-                Services.Instance.Cache.GetRoom(foundPlayer.RoomId),
-                false
-            );
+            player.ChangeRoom(room, Services.Instance.Cache.GetRoom(foundPlayer.RoomId), false);
         }
     }
 }

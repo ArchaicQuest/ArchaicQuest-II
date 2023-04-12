@@ -50,7 +50,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             {
                 Services.Instance.Writer.WriteLine(
                     "You need to have a weapon equipped to do this.",
-                    player.ConnectionId
+                    player
                 );
                 return;
             }
@@ -58,7 +58,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             var obj = input.ElementAtOrDefault(1)?.ToLower() ?? player.Target;
             if (string.IsNullOrEmpty(obj))
             {
-                Services.Instance.Writer.WriteLine("Lunge What!?.", player.ConnectionId);
+                Services.Instance.Writer.WriteLine("Lunge What!?.", player);
                 return;
             }
 
@@ -71,9 +71,9 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             var textToTarget = string.Empty;
             var textToRoom = string.Empty;
 
-            var skillSuccess = SkillSuccessWithMessage(
-                player,
-                DefineSkill.Lunge(),
+            var skillSuccess = player.RollSkill(
+                SkillName.Lunge,
+                true,
                 $"You attempt to lunge at {target.Name} but miss."
             );
             if (!skillSuccess)
@@ -82,8 +82,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 textToRoom = $"{player.Name} tries to lunge at {target.Name} but misses.";
 
                 EmoteAction(textToTarget, textToRoom, target.Name, room, player);
-                player.FailedSkill(SkillName.Lunge, out var message);
-                Services.Instance.Writer.WriteLine(message, player.ConnectionId);
+                player.FailedSkill(SkillName.Lunge, true);
                 player.Lag += 1;
                 return;
             }

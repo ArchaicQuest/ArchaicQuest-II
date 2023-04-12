@@ -40,7 +40,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
             newPlayer.Grouped = false;
 
             Services.Instance.PlayerDataBase.Save(newPlayer, PlayerDataBase.Collections.Players);
-            Services.Instance.Writer.WriteLine("<p>Character saved.</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Character saved.</p>", player);
         }
     }
 }

@@ -39,7 +39,7 @@ public class DiscordController : Controller
                 .Where(x => x.Config.NewbieChannel)
         )
         {
-            GameLogic.Core.Services.Instance.Writer.WriteLine(message, pc.ConnectionId);
+            GameLogic.Core.Services.Instance.Writer.WriteLine(message, pc);
             GameLogic.Core.Services.Instance.UpdateClient.UpdateCommunication(
                 pc,
                 message,

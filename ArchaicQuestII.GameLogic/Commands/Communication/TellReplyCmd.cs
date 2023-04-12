@@ -30,16 +30,13 @@ public class TellReplyCmd : ICommand
     {
         if (string.IsNullOrEmpty(player.ReplyTo))
         {
-            Services.Instance.Writer.WriteLine(
-                "<p>You have no one to reply too.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>You have no one to reply too.</p>", player);
             return;
         }
 
         if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
         {
-            Services.Instance.Writer.WriteLine("Reply what?", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("Reply what?", player);
             return;
         }
 

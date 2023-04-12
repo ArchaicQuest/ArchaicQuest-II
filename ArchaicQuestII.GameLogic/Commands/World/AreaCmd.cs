@@ -43,7 +43,7 @@ namespace ArchaicQuestII.GameLogic.Commands.World
         {
             var target = input.ElementAtOrDefault(1);
             var sb = new StringBuilder();
-            var area = Services.Instance.RoomActions.GetRoomArea(room);
+            var area = room.GetArea();
             var roomCount = Services.Instance.Cache.GetAllRoomsInArea(room.AreaId).Count;
 
             if (string.IsNullOrEmpty(target))
@@ -87,17 +87,17 @@ namespace ArchaicQuestII.GameLogic.Commands.World
 
             if (target is "consider" or "con")
             {
-                Services.Instance.Writer.WriteLine(AreaConsider(player, room), player.ConnectionId);
+                Services.Instance.Writer.WriteLine(AreaConsider(player, room), player);
                 return;
             }
 
             if (target is "pop" or "population")
             {
-                Services.Instance.Writer.WriteLine(AreaPopulation(room), player.ConnectionId);
+                Services.Instance.Writer.WriteLine(AreaPopulation(room), player);
                 return;
             }
 
-            Services.Instance.Writer.WriteLine(sb.ToString(), player.ConnectionId);
+            Services.Instance.Writer.WriteLine(sb.ToString(), player);
         }
 
         /// <summary>

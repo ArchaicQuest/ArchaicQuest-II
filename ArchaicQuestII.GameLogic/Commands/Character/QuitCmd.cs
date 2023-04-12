@@ -49,11 +49,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
             Services.Instance.PlayerDataBase.Save(account, PlayerDataBase.Collections.Account);
             Services.Instance.PlayerDataBase.Save(player, PlayerDataBase.Collections.Players);
 
-            Services.Instance.Writer.WriteLine("<p>Character saved.</p>", player.ConnectionId);
-            Services.Instance.Writer.WriteLine(
-                "<p>You wave goodbye and vanish.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>Character saved.</p>", player);
+            Services.Instance.Writer.WriteLine("<p>You wave goodbye and vanish.</p>", player);
             Services.Instance.Writer.WriteToOthersInRoom(
                 $"<p>{player.Name} waves goodbye and vanishes.</p>",
                 room,
@@ -63,7 +60,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
             room.Players.Remove(player);
             Services.Instance.Writer.WriteLine(
                 $"<p>We await your return {player.Name}. If you enjoyed your time here, help spread the word by tweeting, writing a blog posts or posting reviews online.</p>",
-                player.ConnectionId
+                player
             );
             Helpers.PostToDiscord(
                 $"{player.Name} quit after playing for {Math.Floor(DateTime.Now.Subtract(player.LastLoginTime).TotalMinutes)} minutes.",

@@ -83,22 +83,19 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
 
                 Services.Instance.Writer.WriteLine(
                     "<h3>Socials</h3> <p>Available socials:</p>" + table,
-                    player.ConnectionId
+                    player
                 );
             }
 
             if (string.IsNullOrEmpty(target))
             {
-                Services.Instance.Writer.WriteLine(
-                    $"<p>{social.CharNoTarget}</p>",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine($"<p>{social.CharNoTarget}</p>", player);
 
                 foreach (var pc in room.Players.Where(pc => pc.Id != player.Id))
                 {
                     Services.Instance.Writer.WriteLine(
                         $"<p>{Helpers.ReplaceSocialTags(social.RoomNoTarget, player, null)}</p>",
-                        pc.ConnectionId
+                        pc
                     );
                 }
 
@@ -124,7 +121,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
                 {
                     Services.Instance.Writer.WriteLine(
                         $"<p>{Helpers.ReplaceSocialTags(social.TargetSelf, player, getTarget)}</p>",
-                        player.ConnectionId
+                        player
                     );
                     Services.Instance.Writer.WriteToOthersInRoom(
                         $"<p>{Helpers.ReplaceSocialTags(social.RoomSelf, player, getTarget)}</p>",
@@ -137,11 +134,11 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
                 {
                     Services.Instance.Writer.WriteLine(
                         $"<p>{Helpers.ReplaceSocialTags(social.TargetFound, player, getTarget)}<p>",
-                        player.ConnectionId
+                        player
                     );
                     Services.Instance.Writer.WriteLine(
                         $"<p>{Helpers.ReplaceSocialTags(social.ToTarget, player, getTarget)}</p>",
-                        getTarget.ConnectionId
+                        getTarget
                     );
                 }
 
@@ -151,7 +148,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
                 {
                     Services.Instance.Writer.WriteLine(
                         $"<p>{Helpers.ReplaceSocialTags(social.RoomTarget, player, getTarget)}</p>",
-                        pc.ConnectionId
+                        pc
                     );
                 }
 
@@ -180,10 +177,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
             }
             else
             {
-                Services.Instance.Writer.WriteLine(
-                    "<p>They are not here.</p>",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine("<p>They are not here.</p>", player);
             }
         }
     }

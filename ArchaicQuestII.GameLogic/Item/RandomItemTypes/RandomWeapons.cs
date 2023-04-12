@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.Utilities;
 
 namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
@@ -277,7 +276,7 @@ namespace ArchaicQuestII.GameLogic.Item.RandomItemTypes
                 Damage = new Damage() { Minimum = prefix.MinDamage, Maximum = prefix.MaxDamage },
                 Gold = player.Level * 75,
                 Description = new Description() { Look = $"a {prefix.Name} {weaponChoice.Name}", },
-                Slot = Equipment.EqSlot.Wielded,
+                Slot = EquipmentSlot.Wielded,
                 AttackType = weaponChoice.AttackTypes,
             };
 

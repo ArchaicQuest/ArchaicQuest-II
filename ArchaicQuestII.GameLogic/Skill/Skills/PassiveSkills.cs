@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Skill.Core;
 using ArchaicQuestII.GameLogic.Utilities;
@@ -20,12 +19,10 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
     public class PassiveSkills : IPassiveSkills
     {
         private readonly ISkillManager _skillManager;
-        private readonly IEquip _equip;
 
-        public PassiveSkills(ISkillManager skillManager, IEquip equip)
+        public PassiveSkills(ISkillManager skillManager)
         {
             _skillManager = skillManager;
-            _equip = equip;
         }
 
         public int Haggle(Player player, Player target)
@@ -63,15 +60,12 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             {
                 Services.Instance.Writer.WriteLine(
                     $"<p>You charm {target.Name} in offering you favourable prices.</p>",
-                    player.ConnectionId
+                    player
                 );
                 return 25;
             }
 
-            Services.Instance.Writer.WriteLine(
-                "<p>Your haggle attempts fail.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>Your haggle attempts fail.</p>", player);
 
             if (foundSkill.Proficiency == 100)
             {
@@ -82,11 +76,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
             foundSkill.Proficiency += increase;
 
-            player.FailedSkill(SkillName.Haggle, out var message);
-
-            Services.Instance.UpdateClient.UpdateExp(player);
-
-            Services.Instance.Writer.WriteLine(message, player.ConnectionId);
+            player.FailedSkill(SkillName.Haggle, true);
 
             return 0;
         }
@@ -95,10 +85,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
         {
             if (string.IsNullOrEmpty(obj))
             {
-                Services.Instance.Writer.WriteLine(
-                    "Use what for a secondary weapon?",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine("Use what for a secondary weapon?", player);
                 return 0;
             }
 
@@ -108,7 +95,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             {
                 Services.Instance.Writer.WriteLine(
                     "One weapon is more than enough for you to worry about.",
-                    player.ConnectionId
+                    player
                 );
                 return 0;
             }
@@ -119,19 +106,13 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
             if (findWeapon == null)
             {
-                Services.Instance.Writer.WriteLine(
-                    "You can't find that weapon.",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine("You can't find that weapon.", player);
                 return 0;
             }
 
             if (player.Equipped.Wielded == null)
             {
-                Services.Instance.Writer.WriteLine(
-                    "You need to wield a weapon first.",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine("You need to wield a weapon first.", player);
                 return 0;
             }
 
@@ -147,10 +128,10 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             {
                 var shield = player.Equipped.Shield;
 
-                _equip.Remove(shield.Name, room, player);
+                player.Remove(shield.Name, room);
             }
 
-            _equip.Wear(findWeapon.Name, room, player, "dual");
+            player.Wear(findWeapon.Name, room, "dual");
 
             // combat on success 2 hits, on success for strength damage if not half damage
 
@@ -161,21 +142,20 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
         {
             if (string.IsNullOrEmpty(obj))
             {
-                Services.Instance.Writer.WriteLine("Lore What!?.", player.ConnectionId);
+                Services.Instance.Writer.WriteLine("Lore What!?.", player);
 
                 return 0;
             }
 
             var nthTarget = Helpers.findNth(obj);
             var item =
-                Helpers.findRoomObject(nthTarget, room)
-                ?? Helpers.findObjectInInventory(nthTarget, player);
+                Helpers.findRoomObject(nthTarget, room) ?? player.FindObjectInInventory(nthTarget);
             // only lore items that can be picked up
             if (item.Stuck)
             {
                 Services.Instance.Writer.WriteLine(
                     "There is nothing more to note about that object.",
-                    player.ConnectionId
+                    player
                 );
 
                 return 0;
@@ -184,7 +164,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             var sb = new StringBuilder();
 
             sb.Append(
-                $"It is a level {item.Level} {item.ItemType}, weight {item.Weight}.<br/>Locations it can be worn: {(item.ItemType == Item.Item.ItemTypes.Light || item.ItemType == Item.Item.ItemTypes.Weapon || item.ItemType == Item.Item.ItemTypes.Armour ? item.Slot : Character.Equipment.Equipment.EqSlot.Held)}.<br /> This {item.ItemType} has a gold value of {item.Value}.<br />"
+                $"It is a level {item.Level} {item.ItemType}, weight {item.Weight}.<br/>Locations it can be worn: {(item.ItemType == Item.Item.ItemTypes.Light || item.ItemType == Item.Item.ItemTypes.Weapon || item.ItemType == Item.Item.ItemTypes.Armour ? item.Slot : EquipmentSlot.Held)}.<br /> This {item.ItemType} has a gold value of {item.Value}.<br />"
             );
 
             if (item.ItemType == Item.Item.ItemTypes.Weapon)
@@ -281,7 +261,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                 sb.Append($"<br />Condition: {item.Condition}");
             }
 
-            Services.Instance.Writer.WriteLine(sb.ToString(), player.ConnectionId);
+            Services.Instance.Writer.WriteLine(sb.ToString(), player);
 
             return 0;
         }

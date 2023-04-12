@@ -31,16 +31,13 @@ public class GsayCmd : ICommand
     {
         if (!player.Grouped)
         {
-            Services.Instance.Writer.WriteLine(
-                "<p>You are not in a group.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>You are not in a group.</p>", player);
             return;
         }
 
         if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
         {
-            Services.Instance.Writer.WriteLine("<p>Gsay what?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Gsay what?</p>", player);
             return;
         }
 
@@ -68,14 +65,14 @@ public class GsayCmd : ICommand
 
         Services.Instance.Writer.WriteLine(
             $"<p class='gsay'>[group] You: <span>{text}</span></p>",
-            player.ConnectionId
+            player
         );
 
         if (!string.IsNullOrEmpty(player.Following) && foundLeader.Name == player.Following)
         {
             Services.Instance.Writer.WriteLine(
                 $"<p class='gsay'>[group] {player.Name}: <span>{text}</span></p>",
-                foundLeader.ConnectionId
+                foundLeader
             );
         }
 
@@ -85,7 +82,7 @@ public class GsayCmd : ICommand
         {
             Services.Instance.Writer.WriteLine(
                 $"<p class='gsay'>[group] {player.Name}: <span>{text}</span></p>",
-                follower.ConnectionId
+                follower
             );
         }
     }

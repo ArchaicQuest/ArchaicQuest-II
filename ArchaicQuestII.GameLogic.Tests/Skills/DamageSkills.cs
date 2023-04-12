@@ -4,7 +4,6 @@ using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
-using ArchaicQuestII.GameLogic.Spell;
 using ArchaicQuestII.GameLogic.World.Room;
 using Moq;
 using System.Collections.Generic;
@@ -22,7 +21,6 @@ namespace ArchaicQuestII.GameLogic.Tests.Skills
         private readonly Player _player;
         private readonly Player _target;
         private readonly Room _room;
-        private readonly CastSpell _spell;
         private readonly Mock<IWriteToClient> _writer;
         private readonly Mock<IDamage> _damage;
         private readonly Mock<ICombat> _combat;

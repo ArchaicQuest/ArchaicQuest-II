@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using ArchaicQuestII.GameLogic.World.Room;
+﻿using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
 {
@@ -22,7 +19,5 @@ namespace ArchaicQuestII.GameLogic.Character.MobFunctions.Shop
         public void BuyItem(int itemNumber, Room room, Player player);
         public void BuyItem(string itemName, Room room, Player player);
         public void SellItem(string itemName, Room room, Player player);
-
-
     }
 }

@@ -8,7 +8,6 @@ using System.Linq;
 using ArchaicQuestII.API.Entities;
 using ArchaicQuestII.API.Helpers;
 using ArchaicQuestII.API.Models;
-using ArchaicQuestII.GameLogic.Character.Help;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Crafting;
@@ -17,6 +16,7 @@ using ArchaicQuestII.GameLogic.Skill.Model;
 using Newtonsoft.Json;
 using ArchaicQuestII.GameLogic.World.Area;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Core;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -25,18 +25,11 @@ namespace ArchaicQuestII.API.World
     [Authorize]
     public class RoomController : Controller
     {
-        private IAddRoom _addRoom { get; }
-
-        public RoomController(IAddRoom addRoom)
-        {
-            _addRoom = addRoom;
-        }
-
         [HttpPost]
         [Route("api/World/Room")]
         public IActionResult Post([FromBody] Room room)
         {
-            var newRoom = _addRoom.MapRoom(room);
+            var newRoom = room.MapRoom();
 
             GameLogic.Core.Services.Instance.DataBase.Save(newRoom, DataBase.Collections.Room);
 
@@ -92,7 +85,7 @@ namespace ArchaicQuestII.API.World
         [Route("api/World/Room/{id:int}")]
         public void Put([FromBody] Room data)
         {
-            var updateRoom = _addRoom.MapRoom(data);
+            var updateRoom = data.MapRoom();
             GameLogic.Core.Services.Instance.DataBase.Save(updateRoom, DataBase.Collections.Room);
 
             var user = (HttpContext.Items["User"] as AdminUser);
@@ -113,7 +106,7 @@ namespace ArchaicQuestII.API.World
         [Route("api/World/Room/{x:int}/{y:int}/{z:int}/{areaId:int}")]
         public bool validExit(int x, int y, int z, int areaId)
         {
-            return _addRoom.GetRoomFromCoords(
+            return AddRoom.GetRoomFromCoords(
                     new Coordinates
                     {
                         X = x,

@@ -49,10 +49,7 @@ public class StandCmd : ICommand
         }
 
         SetCharacterStatus(player, "", CharacterStatus.Status.Standing);
-        Services.Instance.Writer.WriteLine(
-            "<p>You move quickly to your feet.</p>",
-            player.ConnectionId
-        );
+        Services.Instance.Writer.WriteLine("<p>You move quickly to your feet.</p>", player);
         Services.Instance.Writer.WriteToOthersInRoom(
             $"<p>{player.Name} {standMessage}</p>",
             room,

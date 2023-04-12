@@ -34,13 +34,13 @@ public class TellCmd : ICommand
     {
         if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
         {
-            Services.Instance.Writer.WriteLine("<p>Tell who?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Tell who?</p>", player);
             return;
         }
 
         if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
         {
-            Services.Instance.Writer.WriteLine("<p>Tell them what?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Tell them what?</p>", player);
             return;
         }
 
@@ -55,25 +55,19 @@ public class TellCmd : ICommand
 
         if (foundPlayer == null)
         {
-            Services.Instance.Writer.WriteLine(
-                "<p>They are not in this realm.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>They are not in this realm.</p>", player);
             return;
         }
 
         if (foundPlayer == player)
         {
-            Services.Instance.Writer.WriteLine(
-                $"<p>You tell yourself \"{text}\"</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine($"<p>You tell yourself \"{text}\"</p>", player);
             return;
         }
 
         if (!foundPlayer.Config.Tells)
         {
-            Services.Instance.Writer.WriteLine($"<p>They can't hear you.</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine($"<p>They can't hear you.</p>", player);
             return;
         }
 
@@ -82,7 +76,7 @@ public class TellCmd : ICommand
 
         Services.Instance.Writer.WriteLine(
             $"<p class='say'>You tell {foundPlayer.Name} \"{text}\"</p>",
-            player.ConnectionId
+            player
         );
         Services.Instance.UpdateClient.UpdateCommunication(
             player,
@@ -92,7 +86,7 @@ public class TellCmd : ICommand
 
         Services.Instance.Writer.WriteLine(
             $"<p class='say'>{player.Name} tells you \"{text}\"</p>",
-            foundPlayer.ConnectionId
+            foundPlayer
         );
         Services.Instance.UpdateClient.UpdateCommunication(
             foundPlayer,

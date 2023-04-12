@@ -6,13 +6,12 @@ namespace ArchaicQuestII.API.Configuration.IoC.GameLogicExtensions
     {
         public static IServiceCollection AddGameLogic(this IServiceCollection services)
         {
-            services.AddCoreFunctionality()
-                    .AddCharacterLogic()
-                    .AddCombatLogic()
-                    .AddItems()
-                    .AddSkills()
-                    .AddSpells()
-                    .AddWorld();
+            services
+                .AddCoreFunctionality()
+                .AddCharacterLogic()
+                .AddCombatLogic()
+                .AddItems()
+                .AddSkills();
 
             return services;
         }

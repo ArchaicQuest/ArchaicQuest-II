@@ -78,7 +78,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                 $"<tr><td class=\"cell-title\">Bank:</td><td>0</td><td class=\"cell-title\">TNL</td><td>{player.ExperienceToNextLevel}</td><td class=\"cell-title\"></td><td></td></tr></table>"
             );
 
-            Services.Instance.Writer.WriteLine(sb.ToString(), player.ConnectionId);
+            Services.Instance.Writer.WriteLine(sb.ToString(), player);
         }
 
         private float CalculateWeight(Player player)

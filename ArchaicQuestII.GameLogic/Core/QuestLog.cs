@@ -29,7 +29,7 @@ namespace ArchaicQuestII.GameLogic.Core
 
                     Services.Instance.Writer.WriteLine(
                         $"<h3 class='gain'>{quest.Title} Completed!</h3><p>Return to the quest giver for your reward.</p>",
-                        player.ConnectionId
+                        player
                     );
                 }
             }

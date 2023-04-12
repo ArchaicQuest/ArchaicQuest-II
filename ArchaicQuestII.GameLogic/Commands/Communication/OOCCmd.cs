@@ -31,7 +31,7 @@ public class OOCCmd : ICommand
     {
         if (string.IsNullOrEmpty(input.ElementAtOrDefault(1)))
         {
-            Services.Instance.Writer.WriteLine("<p>ooc what?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>ooc what?</p>", player);
             return;
         }
 
@@ -39,7 +39,7 @@ public class OOCCmd : ICommand
 
         Services.Instance.Writer.WriteLine(
             $"<p class='ooc'>[<span>OOC</span>] You: {text}</p>",
-            player.ConnectionId
+            player
         );
         Services.Instance.Writer.WriteToOthersInGame(
             $"<p class='ooc'>[<span>OOC</span>] {player.Name}: {text}</p>",

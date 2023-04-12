@@ -45,10 +45,7 @@ public class FleeCmd : ICommand
     {
         if (player.Status != CharacterStatus.Status.Fighting)
         {
-            Services.Instance.Writer.WriteLine(
-                "<p>You're not in a fight.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>You're not in a fight.</p>", player);
             return;
         }
 
@@ -65,10 +62,7 @@ public class FleeCmd : ICommand
             && room.Exits.West == null
         )
         {
-            Services.Instance.Writer.WriteLine(
-                "<p>You have no where to go!</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>You have no where to go!</p>", player);
             return;
         }
 
@@ -117,10 +111,7 @@ public class FleeCmd : ICommand
 
         if (validExits.Count == 0)
         {
-            Services.Instance.Writer.WriteLine(
-                "<p>You have no where to go!</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>You have no where to go!</p>", player);
             return;
         }
 

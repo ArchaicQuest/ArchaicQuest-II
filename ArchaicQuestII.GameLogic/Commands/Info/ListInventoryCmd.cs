@@ -59,6 +59,6 @@ public class ListInventoryCmd : ICommand
             inventory.Append("<p>Nothing.</p>");
         }
 
-        Services.Instance.Writer.WriteLine(inventory.ToString(), player.ConnectionId);
+        Services.Instance.Writer.WriteLine(inventory.ToString(), player);
     }
 }

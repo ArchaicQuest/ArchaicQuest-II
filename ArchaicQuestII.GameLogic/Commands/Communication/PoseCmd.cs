@@ -57,12 +57,12 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
 
                 poseText += "</p>";
 
-                Services.Instance.Writer.WriteLine(poseText, player.ConnectionId);
+                Services.Instance.Writer.WriteLine(poseText, player);
                 return;
             }
 
             player.Pose = $", {string.Join(" ", input.Skip(1))}";
-            Services.Instance.Writer.WriteLine("Pose set.", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("Pose set.", player);
         }
     }
 }

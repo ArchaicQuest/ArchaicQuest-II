@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Utilities;
@@ -38,7 +37,7 @@ namespace ArchaicQuestII.GameLogic.Loops
                 {
                     Services.Instance.Writer.WriteLine(
                         $"<p class='room-emote'>{emote}</p>",
-                        player.ConnectionId
+                        player
                     );
                 }
             }

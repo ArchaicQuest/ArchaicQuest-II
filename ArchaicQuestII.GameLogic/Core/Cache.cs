@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Emote;
-using ArchaicQuestII.GameLogic.Character.Help;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Commands;
 using ArchaicQuestII.GameLogic.Crafting;

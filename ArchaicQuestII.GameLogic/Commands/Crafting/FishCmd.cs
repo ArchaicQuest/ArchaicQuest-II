@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Equipment;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
@@ -51,7 +50,7 @@ public class FishCmd : ICommand
     {
         if (player.Status == CharacterStatus.Status.Busy)
         {
-            Services.Instance.Writer.WriteLine("You are already doing it.", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("You are already doing it.", player);
             return;
         }
 
@@ -61,7 +60,7 @@ public class FishCmd : ICommand
 
         if (fishingSpot == null)
         {
-            Services.Instance.Writer.WriteLine($"You can't fish here.", player.ConnectionId);
+            Services.Instance.Writer.WriteLine($"You can't fish here.", player);
             return;
         }
 
@@ -73,7 +72,7 @@ public class FishCmd : ICommand
         {
             Services.Instance.Writer.WriteLine(
                 $"You attempt to catch fish with your bare hands. Probably better to try with a fishing rod.",
-                player.ConnectionId
+                player
             );
             return;
         }
@@ -87,19 +86,16 @@ public class FishCmd : ICommand
 
         // Core.UpdateClient.PlaySound("chopping", player);
 
-        Services.Instance.Writer.WriteLine(
-            $"<p>You cast your line and begin fishing.</p>",
-            player.ConnectionId
-        );
-        Services.Instance.Writer.WriteLine($"<p>*PLOP*.</p>", player.ConnectionId);
+        Services.Instance.Writer.WriteLine($"<p>You cast your line and begin fishing.</p>", player);
+        Services.Instance.Writer.WriteLine($"<p>*PLOP*.</p>", player);
 
         foreach (var character in room.Players.Where(character => character != player))
         {
             Services.Instance.Writer.WriteLine(
                 $"<p>{player.Name} casts their line and begin fishing.</p>",
-                character.ConnectionId
+                character
             );
-            Services.Instance.Writer.WriteLine($"<p>*PLOP*.</p>", character.ConnectionId);
+            Services.Instance.Writer.WriteLine($"<p>*PLOP*.</p>", character);
         }
 
         await Task.Delay(4000);
@@ -113,14 +109,14 @@ public class FishCmd : ICommand
 
         Services.Instance.Writer.WriteLine(
             $"<p>You throw some bait and gently reel in slightly.</p>",
-            player.ConnectionId
+            player
         );
 
         foreach (var character in room.Players.Where(character => character != player))
         {
             Services.Instance.Writer.WriteLine(
                 $"<p>{player.Name} throws some bait and gently reels in slightly.</p>",
-                character.ConnectionId
+                character
             );
         }
 
@@ -135,14 +131,14 @@ public class FishCmd : ICommand
 
         Services.Instance.Writer.WriteLine(
             "<p>You continue fishing, enjoying the serene tranquility of your fishing spot.</p>",
-            player.ConnectionId
+            player
         );
 
         foreach (var character in room.Players.Where(character => character != player))
         {
             Services.Instance.Writer.WriteLine(
                 $"<p>{player.Name} continues fishing.</p>",
-                character.ConnectionId
+                character
             );
         }
 
@@ -232,7 +228,7 @@ public class FishCmd : ICommand
         {
             Services.Instance.Writer.WriteLine(
                 $"<p>{{yellow}}You reel in {randomMob.Name} that attacks you!{{/}}</p>",
-                player.ConnectionId
+                player
             );
             room.Mobs.Add(randomMob);
             player.Status = CharacterStatus.Status.Standing;
@@ -244,7 +240,7 @@ public class FishCmd : ICommand
         {
             Services.Instance.Writer.WriteLine(
                 $"<p>{{yellow}}You cut yourself on the fishing hook, OUCH!{{/}}</p>",
-                player.ConnectionId
+                player
             );
             player.Status = CharacterStatus.Status.Standing;
 
@@ -252,20 +248,16 @@ public class FishCmd : ICommand
             {
                 Services.Instance.Writer.WriteLine(
                     $"<p>{player.Name} cuts themself on a fishing hook.</p>",
-                    character.ConnectionId
+                    character
                 );
             }
             return;
         }
 
-        if (!player.RollSkill(SkillName.Fishing))
+        if (!player.RollSkill(SkillName.Fishing, false))
         {
-            player.FailedSkill(SkillName.Fishing, out var message);
-            Services.Instance.Writer.WriteLine(
-                "<p>You fail to catch any fish.</p>",
-                player.ConnectionId
-            );
-            Services.Instance.Writer.WriteLine(message, player.ConnectionId);
+            player.FailedSkill(SkillName.Fishing, true);
+            Services.Instance.Writer.WriteLine("<p>You fail to catch any fish.</p>", player);
             player.Status = CharacterStatus.Status.Standing;
             return;
         }
@@ -280,7 +272,7 @@ public class FishCmd : ICommand
         caught.Name = $"A {sizeText} {caught.Name}";
         Services.Instance.Writer.WriteLine(
             $"<p>You caught {caught.Name.ToLower()}. It weighs {caught.Weight.ToString("0.00")} pounds!</p>",
-            player.ConnectionId
+            player
         );
         player.Inventory.Add(caught);
 
@@ -340,7 +332,7 @@ public class FishCmd : ICommand
             ItemFlag = Item.Item.ItemFlags.None,
             ItemType = Item.Item.ItemTypes.Food,
             AttackType = Item.Item.AttackTypes.Charge,
-            Slot = Equipment.EqSlot.Arms,
+            Slot = EquipmentSlot.Arms,
             Forage = null,
             WeaponType = SkillName.None,
             WeaponSpeed = 0,

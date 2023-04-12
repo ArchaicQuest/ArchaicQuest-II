@@ -41,10 +41,7 @@ public class SleepCmd : ICommand
     public void Execute(Player player, Room room, string[] input)
     {
         SetCharacterStatus(player, "is sleeping nearby", CharacterStatus.Status.Sleeping);
-        Services.Instance.Writer.WriteLine(
-            "<p>You collapse into a deep sleep.</p>",
-            player.ConnectionId
-        );
+        Services.Instance.Writer.WriteLine("<p>You collapse into a deep sleep.</p>", player);
         Services.Instance.Writer.WriteToOthersInRoom(
             $"<p>{player.Name} collapses into a deep sleep.</p>",
             room,

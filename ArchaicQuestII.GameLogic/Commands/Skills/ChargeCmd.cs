@@ -51,7 +51,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             {
                 Services.Instance.Writer.WriteLine(
                     "You need to have a weapon equipped to do this.",
-                    player.ConnectionId
+                    player
                 );
                 return;
             }
@@ -59,7 +59,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             if (player.Status == CharacterStatus.Status.Fighting)
             {
                 Services.Instance.Writer.WriteLine(
-                    "You are already in combat, Charge can only be used to start a combat."
+                    "You are already in combat, Charge can only be used to start a combat.",
+                    player
                 );
                 return;
             }
@@ -67,7 +68,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             var obj = input.ElementAtOrDefault(1)?.ToLower() ?? player.Target;
             if (string.IsNullOrEmpty(obj))
             {
-                Services.Instance.Writer.WriteLine("Charge What!?.", player.ConnectionId);
+                Services.Instance.Writer.WriteLine("Charge What!?.", player);
                 return;
             }
 
@@ -80,9 +81,9 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             var textToTarget = string.Empty;
             var textToRoom = string.Empty;
 
-            var skillSuccess = SkillSuccessWithMessage(
-                player,
-                DefineSkill.Charge(),
+            var skillSuccess = player.RollSkill(
+                SkillName.Charge,
+                true,
                 $"You attempt to charge at to {target.Name} but miss."
             );
             if (!skillSuccess)
@@ -91,8 +92,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 textToRoom = $"{player.Name} tries to charge at {target.Name} but misses.";
 
                 EmoteAction(textToTarget, textToRoom, target.Name, room, player);
-                player.FailedSkill(SkillName.Charge, out var message);
-                Services.Instance.Writer.WriteLine(message, player.ConnectionId);
+                player.FailedSkill(SkillName.Charge, true);
                 player.Lag += 1;
                 return;
             }
@@ -111,7 +111,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 target.Lag += 2;
 
                 Services.Instance.Writer.WriteLine(
-                    $"You smash {target.Name} to the ground with your charge."
+                    $"You smash {target.Name} to the ground with your charge.",
+                    player
                 );
                 textToTarget = $"{player.Name} charge smashes you off your feet.";
                 textToRoom = $"{player.Name} charge smashes {target.Name} off their feet.";

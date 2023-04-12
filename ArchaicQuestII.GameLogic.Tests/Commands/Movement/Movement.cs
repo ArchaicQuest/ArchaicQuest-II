@@ -172,7 +172,8 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Movement
                 w =>
                     w.WriteLine(
                         It.Is<string>(s => s == "<p>You are too exhausted to move.</p>"),
-                        "1"
+                        _player,
+                        0
                     ),
                 Times.Once
             );
@@ -260,7 +261,8 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Movement
                         It.Is<string>(
                             s => s == "<p>A mysterious force prevents you from going that way.</p>"
                         ),
-                        "1"
+                        _player,
+                        0
                     ),
                 Times.Once
             );
@@ -311,7 +313,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands.Movement
 
             new GameLogic.Commands.CommandHandler().HandleCommand(_player, _room, "sit");
             _writer.Verify(
-                w => w.WriteLine(It.Is<string>(s => s == "<p>You sit down.</p>"), "1"),
+                w => w.WriteLine(It.Is<string>(s => s == "<p>You sit down.</p>"), _player, 0),
                 Times.Once
             );
             Assert.Equal(CharacterStatus.Status.Sitting, _player.Status);

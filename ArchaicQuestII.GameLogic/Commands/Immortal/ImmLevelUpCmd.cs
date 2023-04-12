@@ -32,7 +32,7 @@ public class ImmLevelUpCmd : ICommand
 
         if (string.IsNullOrEmpty(target))
         {
-            player.GainLevel(out _);
+            player.GainLevel(false);
             return;
         }
 
@@ -42,10 +42,10 @@ public class ImmLevelUpCmd : ICommand
 
         if (otherPlayer == null)
         {
-            Services.Instance.Writer.WriteLine($"No player '{target}' found.", player.ConnectionId);
+            Services.Instance.Writer.WriteLine($"No player '{target}' found.", player);
             return;
         }
 
-        otherPlayer.GainLevel(out _);
+        otherPlayer.GainLevel(false);
     }
 }

@@ -162,7 +162,7 @@ namespace ArchaicQuestII.GameLogic.Core
                 {
                     Services.Instance.Writer.WriteLine(
                         $"<span class='time-of-day'>{TickMessage}</span>",
-                        pc.ConnectionId
+                        pc
                     );
                 }
             }

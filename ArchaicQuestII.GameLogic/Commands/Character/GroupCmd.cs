@@ -59,23 +59,20 @@ public class GroupCmd : ICommand
         {
             Services.Instance.Writer.WriteLine(
                 "<p>But you are not the member of a group!</p>",
-                player.ConnectionId
+                player
             );
             return;
         }
 
         if (target.Equals(player.Name, StringComparison.CurrentCultureIgnoreCase))
         {
-            Services.Instance.Writer.WriteLine(
-                $"<p>You can't group yourself.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine($"<p>You can't group yourself.</p>", player);
             return;
         }
 
         if (target.Equals("list", StringComparison.CurrentCultureIgnoreCase) && player.Grouped)
         {
-            Services.Instance.Writer.WriteLine("<p>Grouped with:</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Grouped with:</p>", player);
 
             var sb = new StringBuilder();
             sb.Append("<ul>");
@@ -112,7 +109,7 @@ public class GroupCmd : ICommand
             }
 
             sb.Append("</ul>");
-            Services.Instance.Writer.WriteLine(sb.ToString(), player.ConnectionId);
+            Services.Instance.Writer.WriteLine(sb.ToString(), player);
 
             return;
         }
@@ -123,19 +120,13 @@ public class GroupCmd : ICommand
 
         if (foundPlayer == null)
         {
-            Services.Instance.Writer.WriteLine(
-                "<p>They are not following you!</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>They are not following you!</p>", player);
             return;
         }
 
         if (foundPlayer == player)
         {
-            Services.Instance.Writer.WriteLine(
-                "<p>You can't group with yourself!</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>You can't group with yourself!</p>", player);
             return;
         }
 
@@ -145,11 +136,11 @@ public class GroupCmd : ICommand
 
             Services.Instance.Writer.WriteLine(
                 $"<p>{foundPlayer.Name} is no longer a member of your group.</p>",
-                player.ConnectionId
+                player
             );
             Services.Instance.Writer.WriteLine(
                 $"<p>You are no longer a member of {player.Name}'s group.</p>",
-                foundPlayer.ConnectionId
+                foundPlayer
             );
             return;
         }
@@ -158,18 +149,18 @@ public class GroupCmd : ICommand
         player.Grouped = true;
         Services.Instance.Writer.WriteLine(
             $"<p>{foundPlayer.Name} is now a member of your group.</p>",
-            player.ConnectionId
+            player
         );
         Services.Instance.Writer.WriteLine(
             $"<p>You are now a member of {player.Name}'s group.</p>",
-            foundPlayer.ConnectionId
+            foundPlayer
         );
 
         foreach (var pc in room.Players.Where(pc => pc.Id != player.Id && pc.Id != foundPlayer.Id))
         {
             Services.Instance.Writer.WriteLine(
                 $"<p>{foundPlayer.Name} is now a member of {player.Name}'s group.</p>",
-                pc.ConnectionId
+                pc
             );
         }
     }

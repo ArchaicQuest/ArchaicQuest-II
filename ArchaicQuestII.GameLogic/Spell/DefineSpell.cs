@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using ArchaicQuestII.GameLogic.Character.Model;
-using ArchaicQuestII.GameLogic.Item;
-using ArchaicQuestII.GameLogic.Skill.Enum;
-using ArchaicQuestII.GameLogic.Skill.Model;
+﻿using ArchaicQuestII.GameLogic.Skill.Model;
 
 namespace ArchaicQuestII.GameLogic.Spell
 {
-
     public class SkillMessage
     {
         public Messages NoEffect { get; set; } = new Messages();
@@ -23,13 +16,10 @@ namespace ArchaicQuestII.GameLogic.Spell
         public bool Reflex { get; set; } // check dex
         public bool Mental { get; set; } // check intelligence and wisdom
         public bool Strength { get; set; } // check strength and constitution?
-
     }
 
     public class DefineSpell
     {
-
-
         /// <summary>
         /// shows in players Affect list
         /// spells or skills can affect the player
@@ -85,14 +75,7 @@ namespace ArchaicQuestII.GameLogic.Spell
             Berserk,
             Haste
         }
-
-
     }
 
-
-    public class SeedTestSpells
-    {
-
-
-    }
+    public class SeedTestSpells { }
 }

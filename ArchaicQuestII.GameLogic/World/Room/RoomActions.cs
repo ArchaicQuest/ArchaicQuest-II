@@ -11,36 +11,13 @@ using MoonSharp.Interpreter;
 
 namespace ArchaicQuestII.GameLogic.World.Room
 {
-    public class RoomActions : IRoomActions
+    public static class RoomActions
     {
-        public bool RoomIsDark(Player player, Room room)
-        {
-            if (room.IsLit)
-                return false;
-
-            if (player.Affects.DarkVision)
-                return false;
-
-            if (player.Equipped.Light != null)
-                return false;
-
-            foreach (var pc in room.Players)
-            {
-                if (pc.Equipped.Light != null)
-                    return false;
-            }
-
-            if (room.Type is Room.RoomType.Underground or Room.RoomType.Inside)
-                return true;
-
-            return Services.Instance.Time.IsNightTime();
-        }
-
         /// <summary>
         /// Helper to get area from room
         /// </summary>
         /// <param name="room">Room to get area from</param>
-        public Area.Area GetRoomArea(Room room)
+        public static Area.Area GetArea(this Room room)
         {
             return Services.Instance.DataBase
                 .GetCollection<Area.Area>(DataBase.Collections.Area)
@@ -52,7 +29,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
         /// </summary>
         /// <param name="exit"></param>
         /// <returns></returns>
-        public string GetRoom(Exit exit)
+        public static string GetRoomTitle(this Exit exit)
         {
             if (exit == null)
             {
@@ -68,7 +45,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
         /// <summary>
         /// Displays valid exits
         /// </summary>
-        public string FindValidExits(Room room, bool verbose)
+        public static string ValidExits(this Room room, bool verbose)
         {
             var exits = new List<string>();
             var exitList = string.Empty;
@@ -81,7 +58,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
                     "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"n\"}))";
                 exits.Add(
                     verbose
-                        ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.North)} </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.North)}</a></td></tr>"
+                        ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.North)} </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{room.Exits.North.GetRoomTitle()}</a></td></tr>"
                         : Helpers.DisplayDoor(room.Exits.North)
                 );
             }
@@ -92,7 +69,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
                     "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"e\"}))";
                 exits.Add(
                     verbose
-                        ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.East)} </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.East)}</a></td></tr>"
+                        ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.East)} </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{room.Exits.East.GetRoomTitle()}</a></td></tr>"
                         : Helpers.DisplayDoor(room.Exits.East)
                 );
             }
@@ -103,7 +80,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
                     "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"s\"}))";
                 exits.Add(
                     verbose
-                        ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.South)} </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.South)}</a></td></tr>"
+                        ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.South)} </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{room.Exits.South.GetRoomTitle()}</a></td></tr>"
                         : Helpers.DisplayDoor(room.Exits.South)
                 );
             }
@@ -114,7 +91,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
                     "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"w\"}))";
                 exits.Add(
                     verbose
-                        ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.West)} </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.West)}</a></td></tr>"
+                        ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.West)} </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{room.Exits.West.GetRoomTitle()}</a></td></tr>"
                         : Helpers.DisplayDoor(room.Exits.West)
                 );
             }
@@ -125,7 +102,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
                     "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"ne\"}))";
                 exits.Add(
                     verbose
-                        ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.NorthEast)}  </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.NorthEast)}</a></td></tr>"
+                        ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.NorthEast)}  </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{room.Exits.NorthEast.GetRoomTitle()}</a></td></tr>"
                         : Helpers.DisplayDoor(room.Exits.NorthEast)
                 );
             }
@@ -136,7 +113,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
                     "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"se\"}))";
                 exits.Add(
                     verbose
-                        ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.SouthEast)}  </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.SouthEast)}</a></td></tr>"
+                        ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.SouthEast)}  </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{room.Exits.SouthEast.GetRoomTitle()}</a></td></tr>"
                         : Helpers.DisplayDoor(room.Exits.SouthEast)
                 );
             }
@@ -147,7 +124,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
                     "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"sw\"}))";
                 exits.Add(
                     verbose
-                        ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.SouthWest)}  </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.SouthWest)}</a></td></tr>"
+                        ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.SouthWest)}  </td><td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{room.Exits.SouthWest.GetRoomTitle()}</a></td></tr>"
                         : Helpers.DisplayDoor(room.Exits.SouthWest)
                 );
             }
@@ -158,7 +135,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
                     "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"nw\"}))";
                 exits.Add(
                     verbose
-                        ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.NorthWest)}  </td> <td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.NorthWest)}</a></td></tr>"
+                        ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.NorthWest)}  </td> <td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{room.Exits.NorthWest.GetRoomTitle()}</a></td></tr>"
                         : Helpers.DisplayDoor(room.Exits.NorthWest)
                 );
             }
@@ -169,7 +146,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
                     "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"d\"}))";
                 exits.Add(
                     verbose
-                        ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.Down)}  </td> <td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.Down)}</a></td></tr>"
+                        ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.Down)}  </td> <td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{room.Exits.Down.GetRoomTitle()}</a></td></tr>"
                         : Helpers.DisplayDoor(room.Exits.Down)
                 );
             }
@@ -180,7 +157,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
                     "window.dispatchEvent(new CustomEvent(\"post-to-server\", {\"detail\":\"u\"}))";
                 exits.Add(
                     verbose
-                        ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.Up)}  </td> <td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{GetRoom(room.Exits.Up)}</a></td></tr>"
+                        ? $"<tr class='verbose-exit-wrapper'><td class='verbose-exit'>{Helpers.DisplayDoor(room.Exits.Up)}  </td> <td style='text-align:center; color:#fff'> - </td><td class='verbose-exit-name'><a href='javascript:void(0)' onclick='{clickEvent}'>{room.Exits.Up.GetRoomTitle()}</a></td></tr>"
                         : Helpers.DisplayDoor(room.Exits.Up)
                 );
             }
@@ -210,192 +187,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
             return exitList;
         }
 
-        /// <summary>
-        /// Used to Change Player room
-        /// </summary>
-        /// <param name="player"></param>
-        /// <param name="oldRoom"></param>
-        /// <param name="newRoom"></param>
-        /// <param name="isFlee"></param>
-        public async void RoomChange(Player player, Room oldRoom, Room newRoom, bool isFlee)
-        {
-            player.Pose = string.Empty;
-
-            if (oldRoom.Mobs.Any())
-            {
-                OnPlayerLeaveEvent(oldRoom, player);
-            }
-
-            ExitRoom(player, newRoom, oldRoom, isFlee);
-
-            UpdateCharactersLocation(player, oldRoom, newRoom);
-
-            EnterRoom(player, newRoom, oldRoom, isFlee);
-
-            Services.Instance.UpdateClient.GetMap(
-                player,
-                Services.Instance.Cache.GetMap($"{newRoom.AreaId}{newRoom.Coords.Z}")
-            );
-            Services.Instance.UpdateClient.UpdateMoves(player);
-            player.Buffer.Enqueue("look");
-
-            if (newRoom.Mobs.Any())
-            {
-                // force the on enter event to fire after Look
-                await Task.Delay(125);
-                OnPlayerEnterEvent(newRoom, player);
-            }
-        }
-
-        /// <summary>
-        /// Updates the characters location
-        /// </summary>
-        /// <param name="character"></param>
-        /// <param name="oldRoom"></param>
-        /// <param name="newRoom"></param>
-        private void UpdateCharactersLocation(Player character, Room oldRoom, Room newRoom)
-        {
-            if (character.ConnectionId != "mob")
-            {
-                // remove player from room
-                oldRoom.Players.Remove(character);
-
-                //add player to room
-                character.RoomId =
-                    $"{newRoom.AreaId}{newRoom.Coords.X}{newRoom.Coords.Y}{newRoom.Coords.Z}";
-                newRoom.Players.Add(character);
-
-                //player entered new area TODO: Add area announce
-                //if(oldRoom.AreaId != newRoom.AreaId)
-                //    _areaActions.AreaEntered(player, newRoom);
-            }
-            else
-            {
-                // remove mob from room
-                oldRoom.Mobs.Remove(character);
-
-                //add mob to room
-                character.RoomId =
-                    $"{newRoom.AreaId}{newRoom.Coords.X}{newRoom.Coords.Y}{newRoom.Coords.Z}";
-                newRoom.Mobs.Add(character);
-            }
-        }
-
-        private void EnterRoom(Player character, Room toRoom, Room fromRoom, bool isFlee)
-        {
-            var direction = "from nowhere";
-            var movement = "appears";
-
-            if (toRoom.Exits != null)
-            {
-                if (toRoom.Exits.Down?.RoomId == fromRoom.Id)
-                    direction = "in from below";
-                if (toRoom.Exits.Up?.RoomId == fromRoom.Id)
-                    direction = "in from above";
-                if (toRoom.Exits.North?.RoomId == fromRoom.Id)
-                    direction = "in from the north";
-                if (toRoom.Exits.South?.RoomId == fromRoom.Id)
-                    direction = "in from the south";
-                if (toRoom.Exits.East?.RoomId == fromRoom.Id)
-                    direction = "in from the east";
-                if (toRoom.Exits.West?.RoomId == fromRoom.Id)
-                    direction = "in from the west";
-                if (toRoom.Exits.NorthEast?.RoomId == fromRoom.Id)
-                    direction = "in from the northeast";
-                if (toRoom.Exits.NorthWest?.RoomId == fromRoom.Id)
-                    direction = "in from the northwest";
-                if (toRoom.Exits.SouthEast?.RoomId == fromRoom.Id)
-                    direction = "in from the southeast";
-                if (toRoom.Exits.SouthWest?.RoomId == fromRoom.Id)
-                    direction = "in from the southwest";
-            }
-
-            switch (character.Status)
-            {
-                case CharacterStatus.Status.Floating:
-                    movement = "floats";
-                    break;
-                case CharacterStatus.Status.Mounted:
-                    movement = "rides";
-                    break;
-                case CharacterStatus.Status.Standing:
-                    Services.Instance.UpdateClient.PlaySound("walk", character);
-                    movement = "walks";
-                    break;
-            }
-
-            if (isFlee)
-            {
-                Services.Instance.UpdateClient.PlaySound("flee", character);
-                movement = "rushes";
-            }
-
-            foreach (var p in toRoom.Players.Where(p => character.Name != p.Name))
-            {
-                Services.Instance.Writer.WriteLine(
-                    $"<span class='{(character.ConnectionId != "mob" ? "player" : "mob")}'>{character.Name} {movement} {direction}.</span>",
-                    p.ConnectionId
-                );
-            }
-        }
-
-        private void ExitRoom(Player characterBase, Room toRoom, Room fromRoom, bool isFlee)
-        {
-            var direction = "to thin air";
-            var movement = "vanishes";
-
-            if (fromRoom.Exits != null)
-            {
-                if (fromRoom.Exits.Down?.RoomId == toRoom.Id)
-                    direction = "down";
-                if (fromRoom.Exits.Up?.RoomId == toRoom.Id)
-                    direction = "up";
-                if (fromRoom.Exits.North?.RoomId == toRoom.Id)
-                    direction = "to the north";
-                if (fromRoom.Exits.South?.RoomId == toRoom.Id)
-                    direction = "to the south";
-                if (fromRoom.Exits.East?.RoomId == toRoom.Id)
-                    direction = "to the east";
-                if (fromRoom.Exits.West?.RoomId == toRoom.Id)
-                    direction = "to the west";
-                if (fromRoom.Exits.NorthEast?.RoomId == toRoom.Id)
-                    direction = "to the northeast";
-                if (fromRoom.Exits.NorthWest?.RoomId == toRoom.Id)
-                    direction = "to the northwest";
-                if (fromRoom.Exits.SouthEast?.RoomId == toRoom.Id)
-                    direction = "to the southeast";
-                if (fromRoom.Exits.SouthWest?.RoomId == toRoom.Id)
-                    direction = "to the southwest";
-            }
-
-            switch (characterBase.Status)
-            {
-                case CharacterStatus.Status.Floating:
-                    movement = "floats";
-                    break;
-                case CharacterStatus.Status.Mounted:
-                    movement = "rides";
-                    break;
-                case CharacterStatus.Status.Standing:
-                    movement = "walks";
-                    break;
-            }
-
-            if (isFlee)
-            {
-                movement = "flee";
-            }
-
-            foreach (var p in fromRoom.Players.Where(p => characterBase.Name != p.Name))
-            {
-                Services.Instance.Writer.WriteLine(
-                    $"<span class='{(characterBase.ConnectionId != "mob" ? "player" : "mob")}'>{characterBase.Name} {movement} {direction}.</span>",
-                    p.ConnectionId
-                );
-            }
-        }
-
-        private void OnPlayerLeaveEvent(Room room, Player character)
+        public static void OnPlayerLeaveEvent(this Room room, Player character)
         {
             foreach (var mob in room.Mobs.Where(mob => !string.IsNullOrEmpty(mob.Events.Leave)))
             {
@@ -416,8 +208,11 @@ namespace ArchaicQuestII.GameLogic.World.Room
             }
         }
 
-        private void OnPlayerEnterEvent(Room room, Player character)
+        public static async Task OnPlayerEnterEvent(this Room room, Player character)
         {
+            // force the on enter event to fire after Look
+            await Task.Delay(125);
+
             foreach (var mob in room.Mobs.ToList())
             {
                 if (!string.IsNullOrEmpty(mob.Events.Enter))
@@ -453,20 +248,17 @@ namespace ArchaicQuestII.GameLogic.World.Room
                     && character.ConnectionId != "mob"
                 )
                 {
-                    Services.Instance.Writer.WriteLine(
-                        $"{mob.Name} attacks you!",
-                        character.ConnectionId
-                    );
+                    Services.Instance.Writer.WriteLine($"{mob.Name} attacks you!", character);
                     Services.Instance.MobScripts.AttackPlayer(room, character, mob);
                 }
             }
         }
 
-        public Exit GetRoomExit(string exit, Room room)
+        public static Exit GetExit(this Room room, string direction)
         {
             Exit getExitToNextRoom = null;
 
-            switch (exit)
+            switch (direction)
             {
                 case "north":
                 case "n":

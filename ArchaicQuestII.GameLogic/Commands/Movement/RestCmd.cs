@@ -41,26 +41,17 @@ public class RestCmd : ICommand
     {
         if (!string.IsNullOrEmpty(player.Mounted.Name))
         {
-            Services.Instance.Writer.WriteLine(
-                "<p>You can't do that while mounted.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>You can't do that while mounted.</p>", player);
             return;
         }
 
         if (player.Status == CharacterStatus.Status.Resting)
         {
-            Services.Instance.Writer.WriteLine(
-                "<p>You are already resting!</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>You are already resting!</p>", player);
             return;
         }
 
-        Services.Instance.Writer.WriteLine(
-            "<p>You sprawl out haphazardly.</p>",
-            player.ConnectionId
-        );
+        Services.Instance.Writer.WriteLine("<p>You sprawl out haphazardly.</p>", player);
         SetCharacterStatus(player, "is sprawled out here", CharacterStatus.Status.Resting);
         Services.Instance.Writer.WriteToOthersInRoom(
             $"<p>{player.Name} sprawls out haphazardly.</p>",

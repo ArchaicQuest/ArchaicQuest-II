@@ -37,7 +37,7 @@ namespace ArchaicQuestII.GameLogic.Loops
             {
                 Services.Instance.Writer.WriteLine(
                     $"<span style='color:lawngreen'>[Hint]</span> {HttpUtility.HtmlEncode(_hints[DiceBag.Roll(1, 0, _hints.Count)])}",
-                    player.ConnectionId
+                    player
                 );
             }
         }

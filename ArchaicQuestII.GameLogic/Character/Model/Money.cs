@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ArchaicQuestII.GameLogic.Character.Model
+﻿namespace ArchaicQuestII.GameLogic.Character.Model
 {
     public class Money
     {

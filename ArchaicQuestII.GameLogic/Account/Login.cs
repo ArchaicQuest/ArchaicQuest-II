@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ArchaicQuestII.GameLogic.Account
+﻿namespace ArchaicQuestII.GameLogic.Account
 {
     public class Login
     {

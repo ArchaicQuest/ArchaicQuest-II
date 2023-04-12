@@ -327,7 +327,7 @@ namespace ArchaicQuestII.GameLogic.Tests.World.Room
             //new RoomActions(_writer.Object, _time.Object, _cache.Object, _dice.Object, _gain.Object, _formulas.Object,  _passiveSkills.Object, _updateClient.Object, _mobScripts.Object).LookInPortal(item, currentRoom, _player);
 
             _writer.Verify(
-                w => w.WriteLine(It.Is<string>(s => s.Contains("Room description")), "1"),
+                w => w.WriteLine(It.Is<string>(s => s.Contains("Room description")), _player, 0),
                 Times.Once()
             );
         }

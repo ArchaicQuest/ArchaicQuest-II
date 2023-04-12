@@ -45,29 +45,23 @@ public class TasteCmd : ICommand
 
         if (string.IsNullOrEmpty(target))
         {
-            Services.Instance.Writer.WriteLine("<p>Taste what?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Taste what?</p>", player);
             return;
         }
 
         var nthTarget = Helpers.findNth(target);
         var item =
-            Helpers.findRoomObject(nthTarget, room)
-            ?? Helpers.findObjectInInventory(nthTarget, player);
+            Helpers.findRoomObject(nthTarget, room) ?? player.FindObjectInInventory(nthTarget);
 
         if (item == null)
         {
-            Services.Instance.Writer.WriteLine(
-                "<p>You don't see that here.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>You don't see that here.</p>", player);
             return;
         }
 
-        var isDark = Services.Instance.RoomActions.RoomIsDark(player, room);
-
         Services.Instance.Writer.WriteLine(
-            $"<p class='{(isDark ? "room-dark" : "")}'>{item.Description.Taste}</p>",
-            player.ConnectionId
+            $"<p class='{(!player.CanSee(room) ? "room-dark" : "")}'>{item.Description.Taste}</p>",
+            player
         );
         Services.Instance.Writer.WriteToOthersInRoom(
             $"<p>{player.Name} tastes {item.Name.ToLower()}.</p>",

@@ -1,7 +1,5 @@
 ﻿using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Model;
-using ArchaicQuestII.GameLogic.Client;
-using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Item;
@@ -156,7 +154,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             {
                 Services.Instance.Writer.WriteLine(
                     $"{target.Name} has already been blinded.",
-                    player.ConnectionId
+                    player
                 );
             }
 
@@ -195,7 +193,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
                 _skillManager.EmoteAction(player, target, room, skillMessage);
 
-                Services.Instance.Writer.WriteLine("You can't see a thing!", target.ConnectionId);
+                Services.Instance.Writer.WriteLine("You can't see a thing!", target);
 
                 target.Affects.Blind = true;
 
@@ -306,10 +304,7 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
         {
             if (player.Equipped.Shield == null)
             {
-                Services.Instance.Writer.WriteLine(
-                    "You need a shield before you can bash",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine("You need a shield before you can bash", player);
                 return 0;
             }
 
@@ -357,9 +352,9 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                     {
                         ToPlayer = $"You lift your shield and smash it at {target.Name}",
                         ToRoom =
-                            $"{player.Name} lifts {Helpers.GetPronoun(player.Gender)} shield and smashes it at {target.Name}!",
+                            $"{player.Name} lifts {player.ReturnPronoun()} shield and smashes it at {target.Name}!",
                         ToTarget =
-                            $"{player.Name} lifts {Helpers.GetPronoun(player.Gender)} shield and smashes it at you!"
+                            $"{player.Name} lifts {player.ReturnPronoun()} shield and smashes it at you!"
                     }
                 };
 
@@ -375,9 +370,9 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
                     {
                         ToPlayer = $"You lift your shield and swing it at {target.Name} but miss.",
                         ToRoom =
-                            $"{player.Name} lifts {Helpers.GetPronoun(player.Gender)} shield and swings it at {target.Name} but misses.",
+                            $"{player.Name} lifts {player.ReturnPronoun()} shield and swings it at {target.Name} but misses.",
                         ToTarget =
-                            $"{player.Name} lifts {Helpers.GetPronoun(player.Gender)} shield and swings it at you but you avoid it easily."
+                            $"{player.Name} lifts {player.ReturnPronoun()} shield and swings it at you but you avoid it easily."
                     }
                 };
 

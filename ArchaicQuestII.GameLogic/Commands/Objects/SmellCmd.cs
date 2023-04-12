@@ -45,26 +45,23 @@ public class SmellCmd : ICommand
 
         if (string.IsNullOrEmpty(target))
         {
-            Services.Instance.Writer.WriteLine("<p>Smell what?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Smell what?</p>", player);
             return;
         }
 
         var nthTarget = Helpers.findNth(target);
         var item =
-            Helpers.findRoomObject(nthTarget, room)
-            ?? Helpers.findObjectInInventory(nthTarget, player);
+            Helpers.findRoomObject(nthTarget, room) ?? player.FindObjectInInventory(nthTarget);
 
         if (item == null)
         {
-            Services.Instance.Writer.WriteLine("<p>You don't see that here.", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>You don't see that here.", player);
             return;
         }
 
-        var isDark = Services.Instance.RoomActions.RoomIsDark(player, room);
-
         Services.Instance.Writer.WriteLine(
-            $"<p class='{(isDark ? "room-dark" : "")}'>{item.Description.Smell}",
-            player.ConnectionId
+            $"<p class='{(!player.CanSee(room) ? "room-dark" : "")}'>{item.Description.Smell}",
+            player
         );
         Services.Instance.Writer.WriteToOthersInRoom(
             $"<p>{player.Name} smells {item.Name.ToLower()}.</p>",

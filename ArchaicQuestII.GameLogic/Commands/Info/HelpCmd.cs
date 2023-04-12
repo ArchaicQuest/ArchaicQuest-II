@@ -142,10 +142,7 @@ say tell reply who
 
             if (command == null && help == null)
             {
-                Services.Instance.Writer.WriteLine(
-                    $"<p>No help found for {target}.",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine($"<p>No help found for {target}.", player);
                 return;
             }
 
@@ -158,7 +155,7 @@ say tell reply who
             };
 
             var helpString = HelpHtml(helpText, target);
-            Services.Instance.Writer.WriteLine(helpString, player.ConnectionId);
+            Services.Instance.Writer.WriteLine(helpString, player);
         }
 
         private static string HelpHtml(HelpFileContent command, string target)

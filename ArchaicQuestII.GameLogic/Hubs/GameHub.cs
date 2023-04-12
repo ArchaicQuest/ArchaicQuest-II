@@ -54,7 +54,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
 
             if (player == null)
             {
-                Services.Instance.Writer.WriteLine("<p>Refresh the page to reconnect!</p>");
+                Services.Instance.Writer.WriteLine("<p>Refresh the page to reconnect!</p>", player);
                 return;
             }
             player.Buffer.Enqueue(message);
@@ -70,10 +70,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
 
             if (player == null)
             {
-                Services.Instance.Writer.WriteLine(
-                    "<p>Refresh the page to reconnect!</p>",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine("<p>Refresh the page to reconnect!</p>", player);
                 return;
             }
 
@@ -96,7 +93,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
                 {
                     Services.Instance.Writer.WriteLine(
                         "<p>There's a puff of smoke and all your work is undone. Seek an Immortal</p>",
-                        player.ConnectionId
+                        player
                     );
                     return;
                 }
@@ -106,7 +103,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
                 player.OpenedBook = getBook;
                 Services.Instance.Writer.WriteLine(
                     "You have successfully written in your book.",
-                    player.ConnectionId
+                    player
                 );
             }
 
@@ -115,7 +112,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
                 player.Description = json.GetValue("desc")?.ToString();
                 Services.Instance.Writer.WriteLine(
                     "You have successfully updated your description.",
-                    player.ConnectionId
+                    player
                 );
                 Services.Instance.UpdateClient.UpdateScore(player);
             }

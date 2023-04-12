@@ -69,10 +69,7 @@ public class MoveCmd : ICommand
         var isFlee = !string.IsNullOrEmpty(input.ElementAtOrDefault(1));
         if (CharacterCanMove(player) == false)
         {
-            Services.Instance.Writer.WriteLine(
-                "<p>You are too exhausted to move.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>You are too exhausted to move.</p>", player);
             return;
         }
 
@@ -85,7 +82,7 @@ public class MoveCmd : ICommand
         {
             Services.Instance.Writer.WriteLine(
                 $"<p>You are over encumbered and cannot move.</p>",
-                player.ConnectionId
+                player
             );
             return;
         }
@@ -138,10 +135,7 @@ public class MoveCmd : ICommand
 
         if (getExitToNextRoom == null)
         {
-            Services.Instance.Writer.WriteLine(
-                "<p>You can't go that way.</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("<p>You can't go that way.</p>", player);
             return;
         }
 
@@ -153,7 +147,7 @@ public class MoveCmd : ICommand
         {
             Services.Instance.Writer.WriteLine(
                 "<p>A mysterious force prevents you from going that way.</p>",
-                player.ConnectionId
+                player
             );
             //TODO: log bug that the new room could not be found
             return;
@@ -161,7 +155,7 @@ public class MoveCmd : ICommand
 
         if (getExitToNextRoom.Closed)
         {
-            Services.Instance.Writer.WriteLine("<p>The door is close.</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>The door is close.</p>", player);
             return;
         }
 
@@ -175,7 +169,7 @@ public class MoveCmd : ICommand
             }
         }
 
-        Services.Instance.RoomActions.RoomChange(player, room, getNextRoom, isFlee);
+        player.ChangeRoom(room, getNextRoom, isFlee);
 
         if (player.Followers.Count >= 1)
         {
@@ -185,7 +179,7 @@ public class MoveCmd : ICommand
                 )
             )
             {
-                Services.Instance.RoomActions.RoomChange(follower, room, getNextRoom, isFlee);
+                follower.ChangeRoom(room, getNextRoom, isFlee);
             }
         }
 
@@ -199,7 +193,7 @@ public class MoveCmd : ICommand
 
             if (mountedMob != null)
             {
-                Services.Instance.RoomActions.RoomChange(mountedMob, room, getNextRoom, isFlee);
+                mountedMob.ChangeRoom(room, getNextRoom, isFlee);
             }
         }
     }

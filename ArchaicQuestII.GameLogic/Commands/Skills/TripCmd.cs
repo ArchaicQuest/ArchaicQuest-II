@@ -48,7 +48,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             var obj = input.ElementAtOrDefault(1)?.ToLower() ?? player.Target;
             if (string.IsNullOrEmpty(obj))
             {
-                Services.Instance.Writer.WriteLine("Trip What!?.", player.ConnectionId);
+                Services.Instance.Writer.WriteLine("Trip What!?.", player);
                 return;
             }
 
@@ -61,9 +61,9 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             var textToTarget = string.Empty;
             var textToRoom = string.Empty;
 
-            var skillSuccess = SkillSuccessWithMessage(
-                player,
-                DefineSkill.Trip(),
+            var skillSuccess = player.RollSkill(
+                SkillName.Trip,
+                true,
                 $"You try to trip {target.Name} and miss."
             );
             if (!skillSuccess)
@@ -79,7 +79,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             if (target.Lag <= 1)
             {
                 Services.Instance.Writer.WriteLine(
-                    $"You trip {target.Name} and {target.Name} goes down!"
+                    $"You trip {target.Name} and {target.Name} goes down!",
+                    player
                 );
                 textToRoom = $"{player.Name} trips {target.Name} and {target.Name} goes down!";
                 textToTarget = $"{player.Name} trips you and you go down!";
@@ -96,14 +97,16 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 //Player already stunned
                 player.Lag += 1;
 
-                Services.Instance.Writer.WriteLine($"You try to trip {target.Name} and miss.");
+                Services.Instance.Writer.WriteLine(
+                    $"You try to trip {target.Name} and miss.",
+                    player
+                );
                 textToRoom =
                     $"{player.Name} tries to trip {target.Name} but {target.Name} easily avoids it.";
                 textToTarget = $"{player.Name} tries to trip you but fails.";
 
                 EmoteAction(textToTarget, textToRoom, target.Name, room, player);
-                player.FailedSkill(SkillName.Trip, out var message);
-                Services.Instance.Writer.WriteLine(message, player.ConnectionId);
+                player.FailedSkill(SkillName.Trip, true);
             }
             updateCombat(player, target, room);
         }

@@ -38,15 +38,6 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 
         public void Execute(Player player, Room room, string[] input)
         {
-            if (player.Affects.Blind)
-            {
-                Services.Instance.Writer.WriteLine(
-                    "<p>You are blind and can't see a thing!</p>",
-                    player.ConnectionId
-                );
-                return;
-            }
-
             var verb = input.ElementAtOrDefault(1)?.ToLower();
             var target = input.ElementAtOrDefault(2)?.ToLower();
 
@@ -61,16 +52,10 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                 switch (verb)
                 {
                     case "at" when string.IsNullOrEmpty(target):
-                        Services.Instance.Writer.WriteLine(
-                            "<p>Look at what?</p>",
-                            player.ConnectionId
-                        );
+                        Services.Instance.Writer.WriteLine("<p>Look at what?</p>", player);
                         return;
                     case "in" when string.IsNullOrEmpty(target):
-                        Services.Instance.Writer.WriteLine(
-                            "<p>Look in what?</p>",
-                            player.ConnectionId
-                        );
+                        Services.Instance.Writer.WriteLine("<p>Look in what?</p>", player);
                         return;
                 }
             }
@@ -90,53 +75,53 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
         private void Look(Player player, Room room)
         {
             var showVerboseExits = player.Config.VerboseExits;
-            var exits = Services.Instance.RoomActions.FindValidExits(room, showVerboseExits);
+            var exits = room.ValidExits(showVerboseExits);
 
             var items = DisplayItems(room, player);
             var mobs = DisplayMobs(room, player);
             var players = DisplayPlayers(room, player);
-            var isDark = Services.Instance.RoomActions.RoomIsDark(player, room);
             var roomDesc = new StringBuilder();
 
             roomDesc.Append(
-                $"<p class=\"room-title {(isDark ? "room-dark" : "")}\">{room.Title} ({room.Coords.X},{room.Coords.Y},{room.Coords.Z})<br /></p>"
+                $"<p class=\"room-title {(!player.CanSee(room) ? "room-dark" : "")}\">{room.Title} ({room.Coords.X},{room.Coords.Y},{room.Coords.Z})<br /></p>"
             );
 
             // With brief toggled we don't show the room description
             if (!player.Config.Brief)
             {
                 roomDesc.Append(
-                    $"<p class=\"room-description  {(isDark ? "room-dark" : "")}\">{room.Description}</p>"
+                    $"<p class=\"room-description  {(!player.CanSee(room) ? "room-dark" : "")}\">{room.Description}</p>"
                 );
             }
 
             if (!showVerboseExits)
             {
                 roomDesc.Append(
-                    $"<p class=\"room-exit  {(isDark ? "room-dark" : "")}\"> <span class=\"room-exits\">[</span>Exits: <span class=\"room-exits\">{exits}</span><span class=\"room-exits\">]</span></p>"
+                    $"<p class=\"room-exit  {(!player.CanSee(room) ? "room-dark" : "")}\"> <span class=\"room-exits\">[</span>Exits: <span class=\"room-exits\">{exits}</span><span class=\"room-exits\">]</span></p>"
                 );
             }
             else
             {
                 roomDesc.Append(
-                    $"<div class=\" {(isDark ? "room-dark" : "")}\">Obvious exits: <table class=\"room-exits\"><tbody>{exits}</tbody></table></div>"
+                    $"<div class=\" {(!player.CanSee(room) ? "room-dark" : "")}\">Obvious exits: <table class=\"room-exits\"><tbody>{exits}</tbody></table></div>"
                 );
             }
 
             roomDesc
-                .Append($"<p  class=\" {(isDark ? "room-dark" : "")}\">{items}</p>")
-                .Append($"<p  class=\"{(isDark ? "room-dark" : "")}\">{mobs}</p>")
-                .Append($"<p  class=\"  {(isDark ? "room-dark" : "")}\">{players}</p>");
+                .Append($"<p  class=\" {(!player.CanSee(room) ? "room-dark" : "")}\">{items}</p>")
+                .Append($"<p  class=\"{(!player.CanSee(room) ? "room-dark" : "")}\">{mobs}</p>")
+                .Append(
+                    $"<p  class=\"  {(!player.CanSee(room) ? "room-dark" : "")}\">{players}</p>"
+                );
 
-            Services.Instance.Writer.WriteLine(roomDesc.ToString(), player.ConnectionId);
+            Services.Instance.Writer.WriteLine(roomDesc.ToString(), player);
         }
 
         private void LookInContainer(Player player, Room room, string target)
         {
             var nthTarget = Helpers.findNth(target);
             var container =
-                Helpers.findRoomObject(nthTarget, room)
-                ?? Helpers.findObjectInInventory(nthTarget, player);
+                Helpers.findRoomObject(nthTarget, room) ?? player.FindObjectInInventory(nthTarget);
 
             if (
                 container != null
@@ -152,46 +137,35 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 
                 Services.Instance.Writer.WriteLine(
                     $"<p>{container.Name} is not a container",
-                    player.ConnectionId
+                    player
                 );
                 return;
             }
 
             if (container == null)
             {
-                Services.Instance.Writer.WriteLine(
-                    "<p>You don't see that here.",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine("<p>You don't see that here.", player);
                 return;
             }
 
             if (container.Container.IsOpen == false)
             {
-                Services.Instance.Writer.WriteLine(
-                    "<p>You need to open it first.",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine("<p>You need to open it first.", player);
                 return;
             }
 
-            Services.Instance.Writer.WriteLine(
-                $"<p>{container.Name} contains:</p>",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine($"<p>{container.Name} contains:</p>", player);
 
             if (container.Container.Items.Count == 0)
             {
-                Services.Instance.Writer.WriteLine("<p>Nothing.</p>", player.ConnectionId);
+                Services.Instance.Writer.WriteLine("<p>Nothing.</p>", player);
             }
-
-            var isDark = Services.Instance.RoomActions.RoomIsDark(player, room);
 
             foreach (var obj in container.Container.Items.List(false))
             {
                 Services.Instance.Writer.WriteLine(
-                    $"<span class='item {(isDark ? "room-dark" : "")}'>{obj.Name}</span>",
-                    player.ConnectionId
+                    $"<span class='item {(!player.CanSee(room) ? "room-dark" : "")}'>{obj.Name}</span>",
+                    player
                 );
             }
 
@@ -199,7 +173,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
             {
                 Services.Instance.Writer.WriteLine(
                     $"<p>{player.Name} looks inside {container.Name.ToLower()}.</p>",
-                    pc.ConnectionId
+                    pc
                 );
             }
         }
@@ -217,7 +191,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                 );
                 Services.Instance.Writer.WriteLine(
                     "<p>The dark abyss, I wouldn't enter if I were you.</p>",
-                    player.ConnectionId
+                    player
                 );
                 return;
             }
@@ -227,12 +201,10 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 
         private void LookAtObject(Player player, Room room, string target)
         {
-            var isDark = Services.Instance.RoomActions.RoomIsDark(player, room);
             var nthTarget = Helpers.findNth(target);
 
             var item =
-                Helpers.findRoomObject(nthTarget, room)
-                ?? Helpers.findObjectInInventory(nthTarget, player);
+                Helpers.findRoomObject(nthTarget, room) ?? player.FindObjectInInventory(nthTarget);
             var character = Helpers.FindMob(nthTarget, room) ?? Helpers.FindPlayer(nthTarget, room);
 
             RoomObject roomObjects = null;
@@ -250,58 +222,52 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 
             if (item == null && character == null && roomObjects == null)
             {
-                Services.Instance.Writer.WriteLine(
-                    "<p>You don't see that here.",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine("<p>You don't see that here.", player);
                 return;
             }
 
             if (item != null)
             {
                 Services.Instance.Writer.WriteLine(
-                    $"<p  class='{(isDark ? "room-dark" : "")}'>{item.Description.Look}",
-                    player.ConnectionId
+                    $"<p  class='{(!player.CanSee(room) ? "room-dark" : "")}'>{item.Description.Look}",
+                    player
                 );
 
                 if (player.HasSkill(SkillName.Lore))
                 {
-                    if (player.RollSkill(SkillName.Lore))
+                    if (player.RollSkill(SkillName.Lore, false))
                     {
                         Services.Instance.PassiveSkills.Lore(player, room, item.Name);
                     }
                     else
                     {
-                        player.FailedSkill(SkillName.Lore, out _);
+                        player.FailedSkill(SkillName.Lore, false);
                     }
                 }
 
                 if (item.Container is { CanOpen: false } && item.Container.Items.Any())
                 {
                     Services.Instance.Writer.WriteLine(
-                        $"<p  class='{(isDark ? "room-dark" : "")}'>{item.Name} contains:",
-                        player.ConnectionId
+                        $"<p  class='{(!player.CanSee(room) ? "room-dark" : "")}'>{item.Name} contains:",
+                        player
                     );
 
                     var listOfContainerItems = new StringBuilder();
                     foreach (var containerItem in item.Container.Items.List())
                     {
                         listOfContainerItems.Append(
-                            $"<p class='{(isDark ? "room-dark" : "")} container-item'>{containerItem.Name.Replace(" lies here.", "")}</p>"
+                            $"<p class='{(!player.CanSee(room) ? "room-dark" : "")} container-item'>{containerItem.Name.Replace(" lies here.", "")}</p>"
                         );
                     }
 
-                    Services.Instance.Writer.WriteLine(
-                        listOfContainerItems.ToString(),
-                        player.ConnectionId
-                    );
+                    Services.Instance.Writer.WriteLine(listOfContainerItems.ToString(), player);
                 }
 
                 foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
                 {
                     Services.Instance.Writer.WriteLine(
                         $"<p>{player.Name} looks at {item.Name.ToLower()}.</p>",
-                        pc.ConnectionId
+                        pc
                     );
                 }
 
@@ -312,15 +278,15 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
             if (roomObjects != null)
             {
                 Services.Instance.Writer.WriteLine(
-                    $"<p class='{(isDark ? "room-dark" : "")}'>{roomObjects.Look}",
-                    player.ConnectionId
+                    $"<p class='{(!player.CanSee(room) ? "room-dark" : "")}'>{roomObjects.Look}",
+                    player
                 );
 
                 foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
                 {
                     Services.Instance.Writer.WriteLine(
                         $"<p>{player.Name} looks at {roomObjects.Name.ToLower()}.</p>",
-                        pc.ConnectionId
+                        pc
                     );
                 }
 
@@ -329,10 +295,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 
             if (character == null)
             {
-                Services.Instance.Writer.WriteLine(
-                    "<p>You don't see them here.",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine("<p>You don't see them here.", player);
                 return;
             }
 
@@ -381,7 +344,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     .Append("&lt;used as light&gt;")
                     .Append("</td>")
                     .Append("<td>")
-                    .Append(character.Equipped.Light?.Name ?? "(nothing)")
+                    .Append(character.Equipped.Light?.ReturnWithFlags() ?? "(nothing)")
                     .Append("</td></tr>");
             }
 
@@ -392,7 +355,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     .Append(" &lt;worn on finger&gt;")
                     .Append("</td>")
                     .Append("<td>")
-                    .Append(character.Equipped.Finger?.Name ?? "(nothing)")
+                    .Append(character.Equipped.Finger?.ReturnWithFlags() ?? "(nothing)")
                     .Append("</td></tr>");
             }
 
@@ -403,7 +366,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     .Append(" &lt;worn on finger&gt;")
                     .Append("</td>")
                     .Append("<td>")
-                    .Append(character.Equipped.Finger2?.Name ?? "(nothing)")
+                    .Append(character.Equipped.Finger2?.ReturnWithFlags() ?? "(nothing)")
                     .Append("</td></tr>");
             }
 
@@ -414,7 +377,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     .Append(" &lt;worn around neck&gt;")
                     .Append("</td>")
                     .Append("<td>")
-                    .Append(character.Equipped.Neck?.Name ?? "(nothing)")
+                    .Append(character.Equipped.Neck?.ReturnWithFlags() ?? "(nothing)")
                     .Append("</td></tr>");
             }
 
@@ -425,7 +388,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     .Append(" &lt;worn around neck&gt;")
                     .Append("</td>")
                     .Append("<td>")
-                    .Append(character.Equipped.Neck2?.Name ?? "(nothing)")
+                    .Append(character.Equipped.Neck2?.ReturnWithFlags() ?? "(nothing)")
                     .Append("</td></tr>");
             }
 
@@ -436,7 +399,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     .Append(" &lt;worn on face&gt;")
                     .Append("</td>")
                     .Append("<td>")
-                    .Append(character.Equipped.Face?.Name ?? "(nothing)")
+                    .Append(character.Equipped.Face?.ReturnWithFlags() ?? "(nothing)")
                     .Append("</td></tr>");
             }
 
@@ -447,7 +410,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     .Append(" &lt;worn on head&gt;")
                     .Append("</td>")
                     .Append("<td>")
-                    .Append(character.Equipped.Head?.Name ?? "(nothing)")
+                    .Append(character.Equipped.Head?.ReturnWithFlags() ?? "(nothing)")
                     .Append("</td></tr>");
             }
 
@@ -458,7 +421,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     .Append(" &lt;worn on torso&gt;")
                     .Append("</td>")
                     .Append("<td>")
-                    .Append(character.Equipped.Torso?.Name ?? "(nothing)")
+                    .Append(character.Equipped.Torso?.ReturnWithFlags() ?? "(nothing)")
                     .Append("</td></tr>");
             }
 
@@ -469,7 +432,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     .Append(" &lt;worn on legs&gt;")
                     .Append("</td>")
                     .Append("<td>")
-                    .Append(character.Equipped.Legs?.Name ?? "(nothing)")
+                    .Append(character.Equipped.Legs?.ReturnWithFlags() ?? "(nothing)")
                     .Append("</td></tr>");
             }
 
@@ -480,7 +443,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     .Append(" &lt;worn on feet&gt;")
                     .Append("</td>")
                     .Append("<td>")
-                    .Append(character.Equipped.Feet?.Name ?? "(nothing)")
+                    .Append(character.Equipped.Feet?.ReturnWithFlags() ?? "(nothing)")
                     .Append("</td></tr>");
             }
 
@@ -491,7 +454,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     .Append(" &lt;worn on hands&gt;")
                     .Append("</td>")
                     .Append("<td>")
-                    .Append(character.Equipped.Hands?.Name ?? "(nothing)")
+                    .Append(character.Equipped.Hands?.ReturnWithFlags() ?? "(nothing)")
                     .Append("</td></tr>");
             }
 
@@ -502,7 +465,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     .Append(" &lt;worn on arms&gt;")
                     .Append("</td>")
                     .Append("<td>")
-                    .Append(character.Equipped.Arms?.Name ?? "(nothing)")
+                    .Append(character.Equipped.Arms?.ReturnWithFlags() ?? "(nothing)")
                     .Append("</td></tr>");
             }
 
@@ -513,9 +476,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     .Append(" &lt;worn about body&gt;")
                     .Append("</td>")
                     .Append("<td>")
-                    .Append(
-                        Helpers.DisplayEQNameWithFlags(character.Equipped.AboutBody) ?? "(nothing)"
-                    )
+                    .Append(character.Equipped.AboutBody?.ReturnWithFlags() ?? "(nothing)")
                     .Append("</td></tr>");
             }
 
@@ -526,7 +487,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     .Append(" &lt;worn about waist&gt;")
                     .Append("</td>")
                     .Append("<td>")
-                    .Append(character.Equipped.Waist?.Name ?? "(nothing)")
+                    .Append(character.Equipped.Waist?.ReturnWithFlags() ?? "(nothing)")
                     .Append("</td></tr>");
             }
 
@@ -537,7 +498,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     .Append(" &lt;worn around wrist&gt;")
                     .Append("</td>")
                     .Append("<td>")
-                    .Append(character.Equipped.Wrist?.Name ?? "(nothing)")
+                    .Append(character.Equipped.Wrist?.ReturnWithFlags() ?? "(nothing)")
                     .Append("</td></tr>");
             }
 
@@ -548,7 +509,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     .Append(" &lt;worn around wrist&gt;")
                     .Append("</td>")
                     .Append("<td>")
-                    .Append(character.Equipped.Wrist2?.Name ?? "(nothing)")
+                    .Append(character.Equipped.Wrist2?.ReturnWithFlags() ?? "(nothing)")
                     .Append("</td></tr>");
             }
 
@@ -559,7 +520,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     .Append(" &lt;wielded&gt;")
                     .Append("</td>")
                     .Append("<td>")
-                    .Append(character.Equipped.Wielded?.Name ?? "(nothing)")
+                    .Append(character.Equipped.Wielded?.ReturnWithFlags() ?? "(nothing)")
                     .Append("</td></tr>");
             }
 
@@ -570,7 +531,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     .Append(" &lt;secondary&gt;")
                     .Append("</td>")
                     .Append("<td>")
-                    .Append(character.Equipped.Secondary?.Name ?? "(nothing)")
+                    .Append(character.Equipped.Secondary?.ReturnWithFlags() ?? "(nothing)")
                     .Append("</td></tr>");
             }
 
@@ -581,7 +542,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     .Append(" &lt;worn as shield&gt;")
                     .Append("</td>")
                     .Append("<td>")
-                    .Append(character.Equipped.Shield?.Name ?? "(nothing)")
+                    .Append(character.Equipped.Shield?.ReturnWithFlags() ?? "(nothing)")
                     .Append("</td></tr>");
             }
 
@@ -592,7 +553,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     .Append(" &lt;Held&gt;")
                     .Append("</td>")
                     .Append("<td>")
-                    .Append(character.Equipped.Held?.Name ?? "(nothing)")
+                    .Append(character.Equipped.Held?.ReturnWithFlags() ?? "(nothing)")
                     .Append("</td></tr>");
             }
 
@@ -603,7 +564,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     .Append(" &lt;Floating nearby&gt;")
                     .Append("</td>")
                     .Append("<td>")
-                    .Append(character.Equipped.Floating?.Name ?? "(nothing)")
+                    .Append(character.Equipped.Floating?.ReturnWithFlags() ?? "(nothing)")
                     .Append("</td></tr>")
                     .Append("</table");
             }
@@ -637,22 +598,21 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
             }
 
             Services.Instance.Writer.WriteLine(
-                $"{sb}<p class='{(isDark ? "room-dark" : "")}'>{character.Description} <br/>{character.Name} {Services.Instance.Formulas.TargetHealth(player, character)} and is {statusText}<br/> {displayEquipment}",
-                player.ConnectionId
+                $"{sb}<p class='{(!player.CanSee(room) ? "room-dark" : "")}'>{character.Description} <br/>{character.Name} {Services.Instance.Formulas.TargetHealth(player, character)} and is {statusText}<br/> {displayEquipment}",
+                player
             );
 
             foreach (var pc in room.Players.Where(pc => pc.Name != player.Name))
             {
                 Services.Instance.Writer.WriteLine(
                     $"<p>{player.Name} looks at {character.Name.ToLower()}.</p>",
-                    pc.ConnectionId
+                    pc
                 );
             }
         }
 
         private string DisplayItems(Room room, Player player)
         {
-            var isDark = Services.Instance.RoomActions.RoomIsDark(player, room);
             var items = room.Items.List();
             var x = string.Empty;
 
@@ -669,7 +629,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     var clickEvent =
                         $"window.dispatchEvent(new CustomEvent(\"open-detail\", {data}))";
                     x +=
-                        $"<p onClick='{clickEvent}' class='item {(isDark ? "dark-room" : "")}' >{item.Name}</p>";
+                        $"<p onClick='{clickEvent}' class='item {(!player.CanSee(room) ? "dark-room" : "")}' >{item.Name}</p>";
                 }
             }
 
@@ -680,7 +640,6 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
         {
             var mobs = string.Empty;
             var mobName = string.Empty;
-            var isDark = Services.Instance.RoomActions.RoomIsDark(player, room);
             var isFightingPC = false;
 
             foreach (var mob in room.Mobs.Where(x => x.IsHiddenScriptMob == false))
@@ -709,17 +668,18 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     if (mob.Status == CharacterStatus.Status.Fighting)
                     {
                         mobs +=
-                            $"<p class='mob {(isDark ? "dark-room" : "")}'>{mob.Name} is here{(isFightingPC ? " fighting YOU!" : "")}</p>";
+                            $"<p class='mob {(!player.CanSee(room) ? "dark-room" : "")}'>{mob.Name} is here{(isFightingPC ? " fighting YOU!" : "")}</p>";
                     }
                     else
                     {
-                        mobs += $"<p class='mob {(isDark ? "dark-room" : "")}'>{mobName}</p>";
+                        mobs +=
+                            $"<p class='mob {(!player.CanSee(room) ? "dark-room" : "")}'>{mobName}</p>";
                     }
                 }
                 else
                 {
                     mobs +=
-                        $"<p class='mob {(isDark ? "dark-room" : "")}'>{mobName} is here{(isFightingPC ? " fighting YOU!" : ".")}.</p>";
+                        $"<p class='mob {(!player.CanSee(room) ? "dark-room" : "")}'>{mobName} is here{(isFightingPC ? " fighting YOU!" : ".")}.</p>";
                 }
             }
 
@@ -753,7 +713,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 
                 pcName += pc.Pose;
                 players +=
-                    $"<p class='player {(Services.Instance.RoomActions.RoomIsDark(player, room) ? "dark-room" : "")}'>{pcName}.</p>";
+                    $"<p class='player {(!player.CanSee(room) ? "dark-room" : "")}'>{pcName}.</p>";
             }
 
             return players;

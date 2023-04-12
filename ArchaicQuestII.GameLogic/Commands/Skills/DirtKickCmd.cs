@@ -50,7 +50,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             var obj = input.ElementAtOrDefault(1)?.ToLower() ?? player.Target;
             if (string.IsNullOrEmpty(obj))
             {
-                Services.Instance.Writer.WriteLine("Dirt kick What!?.", player.ConnectionId);
+                Services.Instance.Writer.WriteLine("Dirt kick What!?.", player);
                 return;
             }
 
@@ -64,26 +64,26 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             {
                 Services.Instance.Writer.WriteLine(
                     $"{target.Name} has already been blinded.",
-                    player.ConnectionId
+                    player
                 );
             }
             var textToTarget = string.Empty;
             var textToRoom = string.Empty;
             if (
-                SkillSuccess(player, DefineSkill.DirtKick())
+                player.RollSkill(SkillName.DirtKick, true)
                 && DexterityAndLevelCheck(player, target) == true
             )
             {
                 Services.Instance.Writer.WriteLine(
                     $"You kick dirt in {target.Name}'s eyes!",
-                    player.ConnectionId
+                    player
                 );
                 textToTarget = $"{player.Name} kicks dirt into your eyes!";
                 textToRoom = $"{player.Name} kicks dirt into {target.Name}'s eyes!";
 
                 EmoteAction(textToTarget, textToRoom, target.Name, room, player);
 
-                Services.Instance.Writer.WriteLine("You can't see a thing!", target.ConnectionId);
+                Services.Instance.Writer.WriteLine("You can't see a thing!", target);
 
                 target.Affects.Blind = true;
 
@@ -103,14 +103,13 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             {
                 Services.Instance.Writer.WriteLine(
                     $"You try to kick dirt but {target.Name} shut their eyes in time.",
-                    player.ConnectionId
+                    player
                 );
                 textToTarget = $"{player.Name} tries to kick dirt into your eyes.";
                 textToRoom = $"{player.Name} tries to kicks dirt into {target.Name}'s eyes!";
 
                 EmoteAction(textToTarget, textToRoom, target.Name, room, player);
-                player.FailedSkill(SkillName.DirtKick, out var message);
-                Services.Instance.Writer.WriteLine(message, player.ConnectionId);
+                player.FailedSkill(SkillName.DirtKick, true);
             }
 
             player.Lag += 1;

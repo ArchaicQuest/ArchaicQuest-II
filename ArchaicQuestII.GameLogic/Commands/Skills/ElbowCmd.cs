@@ -52,7 +52,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             var obj = input.ElementAtOrDefault(1)?.ToLower() ?? player.Target;
             if (string.IsNullOrEmpty(obj))
             {
-                Services.Instance.Writer.WriteLine("Elbow What!?.", player.ConnectionId);
+                Services.Instance.Writer.WriteLine("Elbow What!?.", player);
                 return;
             }
 
@@ -62,18 +62,13 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 return;
             }
 
-            var skillSuccess = SkillSuccessWithMessage(
-                player,
-                DefineSkill.Elbow(),
-                "You miss and stumble."
-            );
+            var skillSuccess = player.RollSkill(SkillName.Elbow, true, "You miss and stumble.");
             if (!skillSuccess)
             {
                 var textToTarget = $"{player.Name} tries to elbow you but stumbles.";
                 var textToRoom = $"{player.Name} tries to elbow {target.Name} but stumbles.";
                 EmoteAction(textToTarget, textToRoom, target.Name, room, player);
-                player.FailedSkill(SkillName.Elbow, out var message);
-                Services.Instance.Writer.WriteLine(message, player.ConnectionId);
+                player.FailedSkill(SkillName.Elbow, true);
                 player.Lag += 1;
                 return;
             }

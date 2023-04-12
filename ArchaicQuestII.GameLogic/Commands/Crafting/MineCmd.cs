@@ -48,13 +48,13 @@ public class MineCmd : ICommand
 
         if (string.IsNullOrEmpty(target))
         {
-            Services.Instance.Writer.WriteLine("Chop what?", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("Chop what?", player);
             return;
         }
 
         if (player.Status == CharacterStatus.Status.Busy)
         {
-            Services.Instance.Writer.WriteLine("You are already doing it.", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("You are already doing it.", player);
             return;
         }
 
@@ -64,13 +64,13 @@ public class MineCmd : ICommand
 
         if (thingToHarvest == null)
         {
-            Services.Instance.Writer.WriteLine($"You don't see that here.", player.ConnectionId);
+            Services.Instance.Writer.WriteLine($"You don't see that here.", player);
             return;
         }
 
         if (thingToHarvest.ItemType != Item.Item.ItemTypes.Mineable)
         {
-            Services.Instance.Writer.WriteLine("You can't mine this.", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("You can't mine this.", player);
             return;
         }
 
@@ -82,17 +82,14 @@ public class MineCmd : ICommand
         {
             Services.Instance.Writer.WriteLine(
                 $"You attempt to dig {thingToHarvest.Name.ToLower()} with your bare hands. Probably better to try with a Pickaxe.",
-                player.ConnectionId
+                player
             );
             return;
         }
 
         if (!thingToHarvest.Container.Items.Any())
         {
-            Services.Instance.Writer.WriteLine(
-                "There's nothing left to mine.",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine("There's nothing left to mine.", player);
             return;
         }
 
@@ -114,7 +111,7 @@ public class MineCmd : ICommand
 
             Services.Instance.Writer.WriteLine(
                 $"<p>You begin mining {thingToHarvest.Name}.</p>",
-                player.ConnectionId
+                player
             );
 
             await Task.Delay(4000);
@@ -128,7 +125,7 @@ public class MineCmd : ICommand
 
             Services.Instance.Writer.WriteLine(
                 $"<p>You swing your {hasChoppingTool.Name} back and forth striking the rock with each swing.</p>",
-                player.ConnectionId
+                player
             );
 
             await Task.Delay(4000);
@@ -140,7 +137,7 @@ public class MineCmd : ICommand
 
             Services.Instance.UpdateClient.PlaySound("mining", player);
 
-            Services.Instance.Writer.WriteLine("<p>You continue mining.</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>You continue mining.</p>", player);
 
             await Task.Delay(4000);
 
@@ -160,20 +157,16 @@ public class MineCmd : ICommand
             {
                 Services.Instance.Writer.WriteLine(
                     $"<p>{{yellow}}You cut yourself mining, OUCH!{{/}}</p>",
-                    player.ConnectionId
+                    player
                 );
                 player.Status = CharacterStatus.Status.Standing;
                 return;
             }
 
-            if (!player.RollSkill(SkillName.Foraging))
+            if (!player.RollSkill(SkillName.Foraging, false))
             {
-                player.FailedSkill(SkillName.Foraging, out var message);
-                Services.Instance.Writer.WriteLine(
-                    "<p>You fail to mine a thing.</p>",
-                    player.ConnectionId
-                );
-                Services.Instance.Writer.WriteLine(message, player.ConnectionId);
+                player.FailedSkill(SkillName.Foraging, true);
+                Services.Instance.Writer.WriteLine("<p>You fail to mine a thing.</p>", player);
                 player.Status = CharacterStatus.Status.Standing;
                 return;
             }
@@ -225,14 +218,14 @@ public class MineCmd : ICommand
             {
                 Services.Instance.Writer.WriteLine(
                     $"<p>You fail to collect a single thing.</p>",
-                    player.ConnectionId
+                    player
                 );
             }
             else
             {
                 Services.Instance.Writer.WriteLine(
                     $"<p>Ah you have collected some {collected}</p>",
-                    player.ConnectionId
+                    player
                 );
             }
 

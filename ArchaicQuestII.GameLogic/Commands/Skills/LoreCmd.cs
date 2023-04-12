@@ -40,22 +40,21 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 return;
             }
 
-            var skillSuccess = SkillSuccessWithMessage(player, DefineSkill.Lore());
-            if (!skillSuccess)
+            if (!player.RollSkill(SkillName.Lore, true))
             {
                 return;
             }
 
             if (string.IsNullOrEmpty(obj))
             {
-                Services.Instance.Writer.WriteLine("Lore What!?.", player.ConnectionId);
+                Services.Instance.Writer.WriteLine("Lore What!?.", player);
                 return;
             }
 
             var item = FindItem(obj, room, player);
             if (item == null)
             {
-                Services.Instance.Writer.WriteLine("You don't see that here.", player.ConnectionId);
+                Services.Instance.Writer.WriteLine("You don't see that here.", player);
                 return;
             }
 
@@ -64,7 +63,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             {
                 Services.Instance.Writer.WriteLine(
                     "There is nothing more to note about that object.",
-                    player.ConnectionId
+                    player
                 );
                 return;
             }
@@ -72,7 +71,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             var sb = new StringBuilder();
 
             sb.Append(
-                $"It is a level {item.Level} {item.ItemType}, weight {item.Weight}.<br/>Locations it can be worn: {(item.ItemType == Item.Item.ItemTypes.Light || item.ItemType == Item.Item.ItemTypes.Weapon || item.ItemType == Item.Item.ItemTypes.Armour ? item.Slot : GameLogic.Character.Equipment.Equipment.EqSlot.Held)}.<br /> This {item.ItemType} has a gold value of {item.Value}.<br />"
+                $"It is a level {item.Level} {item.ItemType}, weight {item.Weight}.<br/>Locations it can be worn: {(item.ItemType == Item.Item.ItemTypes.Light || item.ItemType == Item.Item.ItemTypes.Weapon || item.ItemType == Item.Item.ItemTypes.Armour ? item.Slot : EquipmentSlot.Held)}.<br /> This {item.ItemType} has a gold value of {item.Value}.<br />"
             );
 
             if (item.ItemType == Item.Item.ItemTypes.Weapon)
@@ -175,11 +174,11 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             {
                 Services.Instance.Writer.WriteLine(
                     $"{player.Name} twists and turns {item.Name.ToLower()} trying to figure out it's properties.",
-                    pc.ConnectionId
+                    pc
                 );
             }
 
-            Services.Instance.Writer.WriteLine(sb.ToString(), player.ConnectionId);
+            Services.Instance.Writer.WriteLine(sb.ToString(), player);
         }
     }
 }

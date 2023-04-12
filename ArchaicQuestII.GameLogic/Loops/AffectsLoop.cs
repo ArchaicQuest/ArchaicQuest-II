@@ -87,23 +87,10 @@ namespace ArchaicQuestII.GameLogic.Loops
 
                         pc.Affects.Custom.Remove(aff);
 
-                        Services.Instance.SpellList.CastSpell(
-                            aff.Name,
-                            "",
-                            pc,
-                            "",
-                            pc,
-                            Services.Instance.Cache.GetRoom(pc.RoomId),
-                            true
-                        );
-
                         if (aff.Affects == DefineSpell.SpellAffect.Blind)
                         {
                             pc.Affects.Blind = false;
-                            Services.Instance.Writer.WriteLine(
-                                "You are no longer blinded.",
-                                pc.ConnectionId
-                            );
+                            Services.Instance.Writer.WriteLine("You are no longer blinded.", pc);
                         }
                         if (aff.Affects == DefineSpell.SpellAffect.Berserk)
                         {
@@ -141,7 +128,7 @@ namespace ArchaicQuestII.GameLogic.Loops
 
                 if (!pc.Idle && idleTime5Mins)
                 {
-                    Services.Instance.Writer.WriteLine("You enter the void.", pc.ConnectionId);
+                    Services.Instance.Writer.WriteLine("You enter the void.", pc);
                     pc.Idle = true;
                     return;
                 }
@@ -150,10 +137,7 @@ namespace ArchaicQuestII.GameLogic.Loops
                 var idleTime15Mins = pc.LastCommandTime.AddMinutes(16) <= DateTime.Now;
                 if (idleTime10Mins && !idleTime15Mins)
                 {
-                    Services.Instance.Writer.WriteLine(
-                        "You go deeper into the void.",
-                        pc.ConnectionId
-                    );
+                    Services.Instance.Writer.WriteLine("You go deeper into the void.", pc);
                 }
 
                 if (idleTime15Mins)

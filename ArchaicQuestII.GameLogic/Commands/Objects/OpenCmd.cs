@@ -47,7 +47,7 @@ public class OpenCmd : ICommand
 
         if (string.IsNullOrEmpty(target))
         {
-            Services.Instance.Writer.WriteLine("<p>Open what?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Open what?</p>", player);
             return;
         }
 
@@ -55,14 +55,13 @@ public class OpenCmd : ICommand
         {
             Services.Instance.Writer.WriteLine(
                 "<p>You are blind and can't see a thing!</p>",
-                player.ConnectionId
+                player
             );
             return;
         }
 
         var nthItem = Helpers.findNth(target);
-        var item =
-            Helpers.findRoomObject(nthItem, room) ?? Helpers.findObjectInInventory(nthItem, player);
+        var item = Helpers.findRoomObject(nthItem, room) ?? player.FindObjectInInventory(nthItem);
         var isExit = Helpers.IsExit(target, room);
 
         if (isExit != null)
@@ -70,10 +69,7 @@ public class OpenCmd : ICommand
             if (!isExit.Locked)
             {
                 isExit.Closed = false;
-                Services.Instance.Writer.WriteLine(
-                    $"<p>You open the door {isExit.Name}.",
-                    player.ConnectionId
-                );
+                Services.Instance.Writer.WriteLine($"<p>You open the door {isExit.Name}.", player);
                 Services.Instance.UpdateClient.PlaySound("door", player);
                 // play sound for others in the room
                 foreach (var pc in room.Players.Where(pc => pc.Id != player.Id))
@@ -87,7 +83,7 @@ public class OpenCmd : ICommand
             {
                 Services.Instance.Writer.WriteLine(
                     "<p>You try to open it but it's locked.",
-                    player.ConnectionId
+                    player
                 );
                 return;
             }
@@ -95,29 +91,23 @@ public class OpenCmd : ICommand
 
         if (item != null && item.Container.CanOpen != true)
         {
-            Services.Instance.Writer.WriteLine(
-                $"<p>{item.Name} cannot be opened",
-                player.ConnectionId
-            );
+            Services.Instance.Writer.WriteLine($"<p>{item.Name} cannot be opened", player);
             return;
         }
 
         if (item == null)
         {
-            Services.Instance.Writer.WriteLine("<p>You don't see that here.", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>You don't see that here.", player);
             return;
         }
 
         if (item.Container.IsOpen)
         {
-            Services.Instance.Writer.WriteLine("<p>It's already open.</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>It's already open.</p>", player);
             return;
         }
 
-        Services.Instance.Writer.WriteLine(
-            $"<p>You open {item.Name.ToLower()}.</p>",
-            player.ConnectionId
-        );
+        Services.Instance.Writer.WriteLine($"<p>You open {item.Name.ToLower()}.</p>", player);
 
         Services.Instance.Writer.WriteToOthersInRoom(
             $"<p>{player.Name} opens {item.Name.ToLower()}.</p>",

@@ -7,14 +7,14 @@ namespace ArchaicQuestII.GameLogic.World.Area
     /// <summary>
     /// Handles all actions relating to areas
     /// </summary>
-    public class AreaActions : IAreaActions
+    public class AreaActions
     {
         /// <summary>
         /// Display notice when player enters a new area
         /// </summary>
         /// <param name="player">Player entering area</param>
         /// <param name="room">Room that was entered</param>
-        public void AreaEntered(Player player, Room.Room room)
+        public static void AreaEntered(Player player, Room.Room room)
         {
             var area = Services.Instance.DataBase
                 .GetCollection<Area>(DataBase.Collections.Area)
@@ -22,7 +22,7 @@ namespace ArchaicQuestII.GameLogic.World.Area
 
             Services.Instance.Writer.WriteLine(
                 $"<p>You have traversed into <b>{area.Title}</b>.",
-                player.ConnectionId
+                player
             );
         }
     }

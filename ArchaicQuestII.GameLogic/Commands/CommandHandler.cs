@@ -76,7 +76,7 @@ namespace ArchaicQuestII.GameLogic.Commands
             {
                 Services.Instance.Writer.WriteLine(
                     "<p>{yellow}That is not a command.{yellow}</p>",
-                    player.ConnectionId
+                    player
                 );
                 return;
             }
@@ -85,7 +85,7 @@ namespace ArchaicQuestII.GameLogic.Commands
             {
                 Services.Instance.Writer.WriteLine(
                     "<p>{red}You dont have the required role to use that command.{/}</p>",
-                    player.ConnectionId
+                    player
                 );
                 return;
             }
@@ -149,79 +149,79 @@ namespace ArchaicQuestII.GameLogic.Commands
                 case CharacterStatus.Status.Standing:
                     Services.Instance.Writer.WriteLine(
                         "<p>{yellow}You can't do that while standing.{/}</p>",
-                        player.ConnectionId
+                        player
                     );
                     break;
                 case CharacterStatus.Status.Sitting:
                     Services.Instance.Writer.WriteLine(
                         "<p>{yellow}You can't do that while sitting.{/}</p>",
-                        player.ConnectionId
+                        player
                     );
                     break;
                 case CharacterStatus.Status.Sleeping:
                     Services.Instance.Writer.WriteLine(
                         "<p>{yellow}You can't do that while sleeping.{/}</p>",
-                        player.ConnectionId
+                        player
                     );
                     break;
                 case CharacterStatus.Status.Fighting:
                     Services.Instance.Writer.WriteLine(
                         "<p>{yellow}You can't do that while fighting.{/}</p>",
-                        player.ConnectionId
+                        player
                     );
                     break;
                 case CharacterStatus.Status.Resting:
                     Services.Instance.Writer.WriteLine(
                         "<p>{yellow}You can't do that while resting.{/}</p>",
-                        player.ConnectionId
+                        player
                     );
                     break;
                 case CharacterStatus.Status.Incapacitated:
                     Services.Instance.Writer.WriteLine(
                         "<p>{yellow}You can't do that while incapacitated.{/}</p>",
-                        player.ConnectionId
+                        player
                     );
                     break;
                 case CharacterStatus.Status.Dead:
                     Services.Instance.Writer.WriteLine(
                         "<p>{yellow}You can't do that while dead.{/}</p>",
-                        player.ConnectionId
+                        player
                     );
                     break;
                 case CharacterStatus.Status.Ghost:
                     Services.Instance.Writer.WriteLine(
                         "<p>{yellow}You can't do that while a ghost.{/}</p>",
-                        player.ConnectionId
+                        player
                     );
                     break;
                 case CharacterStatus.Status.Busy:
                     Services.Instance.Writer.WriteLine(
                         "<p>{yellow}You can't do that while busy.{/}</p>",
-                        player.ConnectionId
+                        player
                     );
                     break;
                 case CharacterStatus.Status.Floating:
                     Services.Instance.Writer.WriteLine(
                         "<p>{yellow}You can't do that while floating.{/}</p>",
-                        player.ConnectionId
+                        player
                     );
                     break;
                 case CharacterStatus.Status.Mounted:
                     Services.Instance.Writer.WriteLine(
                         "<p>{yellow}You can't do that while mounted.{/}</p>",
-                        player.ConnectionId
+                        player
                     );
                     break;
                 case CharacterStatus.Status.Stunned:
                     Services.Instance.Writer.WriteLine(
                         "<p>{yellow}You can't do that while stunned.{/}</p>",
-                        player.ConnectionId
+                        player
                     );
                     break;
                 case CharacterStatus.Status.Fleeing:
                     Services.Instance.Writer.WriteLine(
                         "<p>{yellow}You can't do that while fleeing.{/}</p>",
-                        player.ConnectionId
+                        player
                     );
                     break;
             }
@@ -247,7 +247,7 @@ namespace ArchaicQuestII.GameLogic.Commands
             // Check if player has skill
             if (player.Skills.FirstOrDefault(x => x.Name.Equals(command.Title)) == null)
             {
-                Services.Instance.Writer.WriteLine("You do not know that skill.");
+                Services.Instance.Writer.WriteLine("You do not know that skill.", player);
                 return false;
             }
 
@@ -257,7 +257,10 @@ namespace ArchaicQuestII.GameLogic.Commands
                 < player.Skills.FirstOrDefault(x => x.Name.ToString() == command.Title)?.Level
             )
             {
-                Services.Instance.Writer.WriteLine("You are not skilled enough to use this skill");
+                Services.Instance.Writer.WriteLine(
+                    "You are not skilled enough to use this skill",
+                    player
+                );
                 return false;
             }
 
