@@ -103,6 +103,13 @@ public static class CharacterHelpers
         return skill == null ? false : true;
     }
 
+    public static bool HasSkill(this Player player, string skillName)
+    {
+        var skill = player.GetSkill(skillName);
+
+        return skill == null ? false : true;
+    }
+
     public static bool RollSkill(
         this Player player,
         SkillName skillName,
