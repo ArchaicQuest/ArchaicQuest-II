@@ -200,6 +200,7 @@ namespace ArchaicQuestII.GameLogic.Combat
 
         public static void TargetKilled(Player player, Player target, Room room)
         {
+            player.Target = null;
             target.Status = CharacterStatus.Status.Ghost;
 
             target.DeathCry(room);
@@ -387,17 +388,15 @@ namespace ArchaicQuestII.GameLogic.Combat
                     PlayerDataBase.Collections.MobStats
                 );
             }
-            // take player to Temple / recall area
 
+            // take player to Temple / recall area
             if (target.ConnectionId != "mob")
             {
                 target.Status = CharacterStatus.Status.Resting;
                 var newRoom = Services.Instance.Cache.GetRoom(target.RecallId);
-
+                target.Target = null;
                 target.Buffer = new Queue<string>();
-
                 target.RoomId = Helpers.ReturnRoomId(newRoom);
-
                 newRoom.Players.Add(target);
                 target.Buffer.Enqueue("look");
             }
