@@ -245,7 +245,7 @@ namespace ArchaicQuestII.GameLogic.Commands
             }
 
             // Check if player has skill
-            if (player.HasSkill(Enum.Parse<SkillName>(command.Title)))
+            if (player.HasSkill(command.Title))
             {
                 Services.Instance.Writer.WriteLine("That skill alludes you.", player);
                 return false;
