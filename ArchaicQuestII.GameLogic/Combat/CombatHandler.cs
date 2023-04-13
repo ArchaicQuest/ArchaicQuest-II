@@ -232,6 +232,7 @@ namespace ArchaicQuestII.GameLogic.Combat
                 )
                 {
                     follower.GainExperiencePoints(exp, true);
+                    follower.Target = null;
                 }
             }
             else
