@@ -311,7 +311,9 @@ namespace ArchaicQuestII.GameLogic.Combat
             Services.Instance.UpdateClient.UpdateScore(target);
             Services.Instance.UpdateClient.UpdateScore(player);
 
-            if (target.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
+            room.Clean = false;
+
+            if (!target.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
             {
                 player.MobKills += 1;
 
@@ -329,8 +331,6 @@ namespace ArchaicQuestII.GameLogic.Combat
                     command.Execute(player, room, new[] { "get", "all", $"{corpseIndex}.corpse" });
                 }
             }
-
-            room.Clean = false;
 
             if (target.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
             {

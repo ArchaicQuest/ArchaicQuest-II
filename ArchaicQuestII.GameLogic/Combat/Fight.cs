@@ -5,7 +5,6 @@ using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Commands;
 using ArchaicQuestII.GameLogic.Core;
-using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
 
@@ -44,7 +43,6 @@ namespace ArchaicQuestII.GameLogic.Combat
                         if (follower.Config.AutoAssist && string.IsNullOrEmpty(follower.Target))
                         {
                             follower.Buffer.Clear();
-                            follower.Target = aggressor.Target;
                             follower.Status = CharacterStatus.Status.Fighting;
                             _aggressors.Add(follower);
                         }
@@ -72,7 +70,6 @@ namespace ArchaicQuestII.GameLogic.Combat
                         if (follower.Config.AutoAssist && string.IsNullOrEmpty(follower.Target))
                         {
                             follower.Buffer.Clear();
-                            follower.Target = victim.Target;
                             follower.Status = CharacterStatus.Status.Fighting;
                             _victims.Add(follower);
                         }
@@ -98,14 +95,19 @@ namespace ArchaicQuestII.GameLogic.Combat
             foreach (var player in _aggressors)
             {
                 player.Status = CharacterStatus.Status.Standing;
+                player.Target = null;
                 Services.Instance.Writer.WriteLine("<p>Combat has ended.</p>", player);
             }
 
             foreach (var player in _victims)
             {
                 player.Status = CharacterStatus.Status.Standing;
+                player.Target = null;
                 Services.Instance.Writer.WriteLine("<p>Combat has ended.</p>", player);
             }
+
+            _aggressors.Clear();
+            _victims.Clear();
         }
 
         public void Do()
@@ -129,6 +131,9 @@ namespace ArchaicQuestII.GameLogic.Combat
             while (_combatQueue.Count > 0 && !Ended)
             {
                 var player = _combatQueue.Dequeue();
+
+                // For the UI to create a nice gap between rounds of auto attacks
+                Services.Instance.Writer.WriteLine($"<p class='combat-start'></p>", player);
 
                 if (!_killed.Contains(player))
                     DoRound(player);
@@ -167,37 +172,7 @@ namespace ArchaicQuestII.GameLogic.Combat
                     return;
                 }
 
-                if (target.Name == player.Name)
-                {
-                    Services.Instance.Writer.WriteLine(
-                        "<p>You can't start a fight with yourself!</p>",
-                        player
-                    );
-                    return;
-                }
-
-                if (player.Attributes.Attribute[EffectLocation.Hitpoints] <= 0)
-                {
-                    Services.Instance.Writer.WriteLine(
-                        "<p>You cannot do that while dead.</p>",
-                        player
-                    );
-                    return;
-                }
-
-                if (target.Attributes.Attribute[EffectLocation.Hitpoints] <= 0)
-                {
-                    Services.Instance.Writer.WriteLine("<p>They are already dead.</p>", player);
-
-                    player.Target = String.Empty;
-                    return;
-                }
-
-                // For the UI to create a nice gap between rounds of auto attacks
-                Services.Instance.Writer.WriteLine($"<p class='combat-start'></p>", player);
-
                 player.Target = target.Name;
-                target.Target = string.IsNullOrEmpty(target.Target) ? player.Name : target.Target; //for group combat, if target is ganged, there target should not be changed when combat is initiated.
 
                 /*
                  *  This section crying out for a refactor
@@ -399,6 +374,7 @@ namespace ArchaicQuestII.GameLogic.Combat
 
                     Services.Instance.UpdateClient.PlaySound("hit", target);
                     Services.Instance.UpdateClient.PlaySound("hit", player);
+
                     target.HarmTarget(damage);
 
                     CombatHandler.DisplayDamage(player, target, _room, weapon, damage);
@@ -639,6 +615,10 @@ namespace ArchaicQuestII.GameLogic.Combat
                         {
                             RemoveFromCombat(target);
                             CombatHandler.TargetKilled(player, target, _room);
+                            if (_combatQueue.Contains(target))
+                            {
+                                return;
+                            }
                         }
                     }
                     else
