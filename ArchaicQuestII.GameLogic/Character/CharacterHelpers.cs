@@ -249,6 +249,12 @@ public static class CharacterHelpers
                 : $"<p class='improve'>You receive {expWorth} experience points.</p>",
             player
         );
+        
+          
+        if (player.ExperienceToNextLevel <= 0)
+        {
+            GainLevel(player, true);
+        }
     }
 
     public static void GainExperiencePoints(this Player player, int amount, bool display)
@@ -267,6 +273,11 @@ public static class CharacterHelpers
                 : $"<p class='improve'>You receive {amount} experience points.</p>",
             player
         );
+        
+        if (player.ExperienceToNextLevel <= 0)
+        {
+            GainLevel(player, true);
+        }
     }
 
     public static void GainLevel(this Player player, bool display)
