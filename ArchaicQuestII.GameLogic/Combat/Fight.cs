@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Commands;
@@ -117,12 +118,18 @@ namespace ArchaicQuestII.GameLogic.Combat
                 SetupInitiative(player);
             }
 
+            if (!_aggressors.Any() || !_victims.Any())
+            {
+                End();
+                return;
+            }
+
             while (_combatQueue.Count > 0 && !Ended)
             {
                 var player = _combatQueue.Dequeue();
-                if (_killed.Contains(player))
-                    continue;
-                DoRound(player);
+
+                if (!_killed.Contains(player))
+                    DoRound(player);
             }
         }
 
