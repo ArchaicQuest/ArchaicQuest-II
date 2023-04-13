@@ -13,7 +13,9 @@ namespace ArchaicQuestII.GameLogic.SeedData
             }
 
             var config = Services.Instance.DataBase.GetById<Config>(1, DataBase.Collections.Config);
-            Services.Instance.Cache.SetConfig(config);
+
+            if (config != null)
+                Services.Instance.Config = config;
         }
     }
 }

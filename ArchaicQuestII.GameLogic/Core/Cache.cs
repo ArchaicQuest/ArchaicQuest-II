@@ -5,6 +5,7 @@ using System.Linq;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Emote;
 using ArchaicQuestII.GameLogic.Character.Model;
+using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Commands;
 using ArchaicQuestII.GameLogic.Crafting;
 using ArchaicQuestII.GameLogic.World.Room;
@@ -22,13 +23,12 @@ namespace ArchaicQuestII.GameLogic.Core
         private readonly ConcurrentDictionary<string, Room> _roomCache = new();
         private readonly ConcurrentDictionary<int, Skill.Model.Skill> _skillCache = new();
         private readonly ConcurrentDictionary<string, string> _mapCache = new();
-        private readonly ConcurrentDictionary<string, Player> _combatCache = new();
+        private readonly ConcurrentBag<Fight> _combatCache = new();
         private readonly ConcurrentDictionary<int, Quest> _questCache = new();
         private readonly ConcurrentDictionary<int, Help> _helpCache = new();
         private readonly ConcurrentDictionary<int, CraftingRecipes> _craftingRecipesCache = new();
         private readonly Dictionary<string, Emote> _socials = new();
         private readonly Dictionary<string, ICommand> _commands = new();
-        private Config _configCache = new();
 
         #region Commands
 
@@ -252,16 +252,6 @@ namespace ArchaicQuestII.GameLogic.Core
         }
         #endregion
 
-        public void SetConfig(Config config)
-        {
-            _configCache = config;
-        }
-
-        public Config GetConfig()
-        {
-            return _configCache;
-        }
-
         public void ClearRoomCache()
         {
             _roomCache.Clear();
@@ -287,32 +277,14 @@ namespace ArchaicQuestII.GameLogic.Core
 
         #region mobs or players fighting
 
-        public bool IsCharInCombat(string id)
+        public void AddCombat(Fight fight)
         {
-            return _combatCache.ContainsKey(id);
+            _combatCache.Add(fight);
         }
 
-        public bool AddCharToCombat(string id, Player character)
+        public List<Fight> GetCombatList()
         {
-            return _combatCache.TryAdd(id, character);
-        }
-
-        public Player GetCharFromCombat(string id)
-        {
-            _combatCache.TryGetValue(id, out Player character);
-
-            return character;
-        }
-
-        public Player RemoveCharFromCombat(string id)
-        {
-            _combatCache.TryRemove(id, out Player character);
-            return character;
-        }
-
-        public List<Player> GetCombatList()
-        {
-            return _combatCache.Values.ToList();
+            return _combatCache.ToList();
         }
 
         public void AddSocial(string key, Emote emote)

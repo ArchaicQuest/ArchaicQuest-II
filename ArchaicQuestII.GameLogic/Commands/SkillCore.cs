@@ -8,6 +8,7 @@ using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Spell;
 using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
+using ArchaicQuestII.GameLogic.Combat;
 
 namespace ArchaicQuestII.GameLogic.Commands;
 
@@ -38,22 +39,6 @@ public abstract class SkillCore
         }
 
         return setTarget;
-    }
-
-    public Player findTarget(Player player, string target, Room room, bool murder)
-    {
-        return Services.Instance.Combat.FindTarget(player, target, room, murder);
-    }
-
-    public void updateCombat(Player player, Player target, Room room)
-    {
-        if (target != null)
-        {
-            if (target.IsAlive())
-            {
-                Services.Instance.Combat.InitFightStatus(player, target);
-            }
-        }
     }
 
     public string ReplacePlaceholders(string str, Player player, bool isTarget)
@@ -163,7 +148,7 @@ public abstract class SkillCore
     {
         if (target.IsAlive())
         {
-            var totalDam = Services.Instance.Combat.CalculateSkillDamage(player, target, damage);
+            var totalDam = CombatHandler.CalculateSkillDamage(player, target, damage);
 
             Services.Instance.Writer.WriteLine(
                 $"<p>Your {skillName} {Services.Instance.Damage.DamageText(totalDam).Value} {target.Name}  <span class='damage'>[{damage}]</span></p>",
@@ -194,7 +179,7 @@ public abstract class SkillCore
 
             if (!target.IsAlive())
             {
-                Services.Instance.Combat.TargetKilled(player, target, room);
+                CombatHandler.TargetKilled(player, target, room);
 
                 Services.Instance.UpdateClient.UpdateHP(target);
                 return;
@@ -204,8 +189,8 @@ public abstract class SkillCore
             //update UI
             Services.Instance.UpdateClient.UpdateHP(target);
 
-            target.AddToCombat();
-            player.AddToCombat();
+            var combat = new Fight(player, target, room, false);
+            Services.Instance.Cache.AddCombat(combat);
         }
     }
 

@@ -41,11 +41,12 @@ public static class CharacterHelpers
     {
         var c = Services.Instance.CharacterHandler.GetClass(className);
 
-        if (c == null) return;
-        
+        if (c == null)
+            return;
+
         // remove skills that are null or none
         player.Skills.RemoveAll(x => x.Name.Equals(SkillName.None));
-            
+
         // remove skills no longer part of class
         for (var i = player.Skills.Count - 1; i >= 0; i--)
         {
@@ -55,12 +56,13 @@ public static class CharacterHelpers
             }
         }
     }
-    
+
     public static void UpdateSkillLevel(this Player player, ClassName className)
     {
         var c = Services.Instance.CharacterHandler.GetClass(className);
-        if (c == null) return;
-        
+        if (c == null)
+            return;
+
         // update skills incase levels get updated
         for (var i = player.Skills.Count - 1; i >= 0; i--)
         {
@@ -72,6 +74,7 @@ public static class CharacterHelpers
             }
         }
     }
+
     public static SkillList GetSkill(this Player player, SkillName skillName)
     {
         return player.Skills.FirstOrDefault(x => x.Name == skillName && player.Level >= x.Level);
@@ -772,14 +775,6 @@ public static class CharacterHelpers
                 $"<p>Your blood freezes as you hear someone's death cry.</p>",
                 pc
             );
-        }
-    }
-
-    public static void AddToCombat(this Player character)
-    {
-        if (!Services.Instance.Cache.IsCharInCombat(character.Id.ToString()))
-        {
-            Services.Instance.Cache.AddCharToCombat(character.Id.ToString(), character);
         }
     }
 

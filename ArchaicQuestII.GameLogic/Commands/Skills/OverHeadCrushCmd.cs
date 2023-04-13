@@ -98,8 +98,6 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             DamagePlayer(DefineSkill.OverheadCrush().Name, damage, player, target, room);
 
             player.Lag += 1;
-
-            updateCombat(player, target, room);
         }
     }
 }

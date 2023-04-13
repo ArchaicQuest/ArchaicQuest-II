@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Model;
+using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.Utilities;
@@ -135,7 +136,8 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public void AttackPlayer(Room room, Player player, Player mob)
         {
-            Services.Instance.Combat.Fight(mob, GetName(player), room, true);
+            var combat = new Fight(mob, player, room, true);
+            Services.Instance.Cache.AddCombat(combat);
         }
 
         public void AddEventState(Player player, string key, int value)
@@ -290,9 +292,10 @@ namespace ArchaicQuestII.GameLogic.Core
             player.HarmTarget(damage);
             Services.Instance.UpdateClient.UpdateScore(player);
             Services.Instance.UpdateClient.UpdateHP(player);
+
             if (!player.IsAlive())
             {
-                Services.Instance.Combat.TargetKilled(dummyPlayer, player, room);
+                CombatHandler.TargetKilled(dummyPlayer, player, room);
             }
         }
 

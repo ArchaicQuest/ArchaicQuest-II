@@ -2,6 +2,7 @@ using System.Linq;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
+using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.World.Room;
 
@@ -45,9 +46,14 @@ public class KillCmd : ICommand
     public void Execute(Player player, Room room, string[] input)
     {
         var command = input.ElementAtOrDefault(0);
-        var target = input.ElementAtOrDefault(1);
         var isMurder = command == "murder";
+        var target = CombatHandler.FindTarget(player, input.ElementAtOrDefault(1), room, isMurder);
 
-        Services.Instance.Combat.Fight(player, target, room, isMurder);
+        if (target == null)
+            return;
+
+        var combat = new Fight(player, target, room, isMurder);
+
+        Services.Instance.Cache.AddCombat(combat);
     }
 }

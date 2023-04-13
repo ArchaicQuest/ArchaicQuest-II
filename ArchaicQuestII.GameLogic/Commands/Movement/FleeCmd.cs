@@ -119,12 +119,9 @@ public class FleeCmd : ICommand
 
         player.Status = CharacterStatus.Status.Standing;
 
-        Services.Instance.Cache.RemoveCharFromCombat(player.Id.ToString());
-
         foreach (var mob in room.Mobs.Where(mob => mob.Target == player.Name))
         {
             mob.Status = CharacterStatus.Status.Standing;
-            Services.Instance.Cache.RemoveCharFromCombat(mob.Id.ToString());
         }
 
         Services.Instance.Cache

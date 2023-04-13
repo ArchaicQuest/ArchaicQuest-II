@@ -60,7 +60,7 @@ public class OOCCmd : ICommand
         Helpers.PostToDiscordBot(
             $"{player.Name}: {text}",
             1092857287758057593,
-            Services.Instance.Cache.GetConfig().ChannelDiscordWebHookURL
+            Services.Instance.Config.ChannelDiscordWebHookURL
         );
     }
 }

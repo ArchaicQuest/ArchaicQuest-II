@@ -79,7 +79,6 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             player.Lag += 1;
 
             DamagePlayer(DefineSkill.Elbow().Name, damage, player, target, room);
-            updateCombat(player, target, room);
         }
     }
 }

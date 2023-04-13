@@ -95,8 +95,6 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             DamagePlayer(DefineSkill.Cleave().Name, damage, player, target, room);
 
             player.Lag += 1;
-
-            updateCombat(player, target, room);
         }
     }
 }

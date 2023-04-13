@@ -7,6 +7,7 @@ using ArchaicQuestII.GameLogic.Commands;
 using System;
 using Microsoft.AspNetCore.SignalR;
 using ArchaicQuestII.GameLogic.Hubs;
+using ArchaicQuestII.GameLogic.Item;
 
 namespace ArchaicQuestII.GameLogic.Core
 {
@@ -17,7 +18,6 @@ namespace ArchaicQuestII.GameLogic.Core
         public IDataBase DataBase { get; private set; }
         public IPlayerDataBase PlayerDataBase { get; private set; }
         public IUpdateClientUI UpdateClient { get; private set; }
-        public ICombat Combat { get; private set; }
         public IMobScripts MobScripts { get; private set; }
         public IPassiveSkills PassiveSkills { get; private set; }
         public IFormulas Formulas { get; private set; }
@@ -29,6 +29,9 @@ namespace ArchaicQuestII.GameLogic.Core
         public ILoopHandler GameLoop { get; private set; }
         public ICommandHandler CommandHandler { get; private set; }
         public IHubContext<GameHub> Hub { get; private set; }
+        public IQuestLog Quest { get; private set; }
+        public IRandomItem RandomItem { get; private set; }
+        public Config Config { get; set; }
 
         private static readonly Lazy<Services> lazy = new Lazy<Services>(() => new Services());
 
@@ -40,13 +43,13 @@ namespace ArchaicQuestII.GameLogic.Core
         private Services()
         {
             Cache = new Cache();
+            Config = new Config();
         }
 
         public void InitServices(
             IWriteToClient writeToClient,
             IDataBase dataBase,
             IUpdateClientUI updateClient,
-            ICombat combat,
             IPlayerDataBase playerDataBase,
             IMobScripts mobScripts,
             IErrorLog errorLog,
@@ -58,13 +61,14 @@ namespace ArchaicQuestII.GameLogic.Core
             ICharacterHandler characterHandler,
             ILoopHandler gameLoop,
             ICommandHandler commandHandler,
-            IHubContext<GameHub> hub
+            IHubContext<GameHub> hub,
+            IQuestLog quest,
+            IRandomItem randomItem
         )
         {
             Writer = writeToClient;
             DataBase = dataBase;
             UpdateClient = updateClient;
-            Combat = combat;
             PlayerDataBase = playerDataBase;
             MobScripts = mobScripts;
             ErrorLog = errorLog;
@@ -77,6 +81,7 @@ namespace ArchaicQuestII.GameLogic.Core
             GameLoop = gameLoop;
             CommandHandler = commandHandler;
             Hub = hub;
+            Quest = quest;
         }
     }
 }

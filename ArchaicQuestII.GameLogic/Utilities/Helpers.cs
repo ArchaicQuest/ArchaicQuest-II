@@ -387,12 +387,15 @@ namespace ArchaicQuestII.GameLogic.Utilities
             await (channel as IMessageChannel).SendMessageAsync(message);
         }
 
-        public static async void PostToDiscord(string botToSay, string eventName, Config config)
+        public static async void PostToDiscord(string botToSay, string eventName)
         {
+            var config = Services.Instance.Config;
+
             if (!config.PostToDiscord)
             {
                 return;
             }
+
             var client = new HttpClient();
             var content = new FormUrlEncodedContent(
                 new[] { new KeyValuePair<string, string>("content", botToSay) }

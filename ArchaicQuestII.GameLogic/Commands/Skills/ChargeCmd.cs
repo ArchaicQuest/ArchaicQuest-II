@@ -119,8 +119,6 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
 
                 EmoteAction(textToTarget, textToRoom, target.Name, room, player);
             }
-
-            updateCombat(player, target, room);
         }
     }
 }

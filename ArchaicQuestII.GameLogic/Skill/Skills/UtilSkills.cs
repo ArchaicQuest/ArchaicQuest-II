@@ -213,7 +213,6 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
                 _skillManager.EmoteAction(player, target, room, skillMessage);
 
-                _skillManager.updateCombat(player, findTarget, room);
                 return 0;
             }
 

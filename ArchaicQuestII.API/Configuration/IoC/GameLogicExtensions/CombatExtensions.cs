@@ -7,7 +7,6 @@ namespace ArchaicQuestII.API.Configuration.IoC.GameLogicExtensions
     {
         public static IServiceCollection AddCombatLogic(this IServiceCollection services)
         {
-            services.AddSingleton<ICombat, Combat>();
             services.AddSingleton<IFormulas, Formulas>();
 
             return services;

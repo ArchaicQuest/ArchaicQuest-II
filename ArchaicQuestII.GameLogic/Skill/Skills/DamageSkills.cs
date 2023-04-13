@@ -143,8 +143,6 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
             player.Lag += 1;
 
-            _skillManager.updateCombat(player, target, room);
-
             return damage;
         }
 
@@ -226,8 +224,6 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
             player.Lag += 1;
 
-            _skillManager.updateCombat(player, target, room);
-
             Services.Instance.UpdateClient.UpdateScore(player);
             Services.Instance.UpdateClient.UpdateMoves(player);
             Services.Instance.UpdateClient.UpdateHP(player);
@@ -294,8 +290,6 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
                 player.Lag += 2;
             }
-
-            _skillManager.updateCombat(player, target, room);
 
             return 0;
         }
@@ -383,8 +377,6 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
 
             player.Lag += 1;
 
-            _skillManager.updateCombat(player, target, room);
-
             return 0;
         }
 
@@ -455,8 +447,6 @@ namespace ArchaicQuestII.GameLogic.Skill.Skills
             }
 
             player.Lag += 2;
-
-            _skillManager.updateCombat(player, target, room);
 
             return 0;
         }

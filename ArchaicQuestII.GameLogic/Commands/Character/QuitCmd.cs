@@ -64,8 +64,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
             );
             Helpers.PostToDiscord(
                 $"{player.Name} quit after playing for {Math.Floor(DateTime.Now.Subtract(player.LastLoginTime).TotalMinutes)} minutes.",
-                "event",
-                Services.Instance.Cache.GetConfig()
+                "event"
             );
             Services.Instance.Cache.RemovePlayer(player.ConnectionId);
         }

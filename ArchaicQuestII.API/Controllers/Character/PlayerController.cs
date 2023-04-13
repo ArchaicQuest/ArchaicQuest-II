@@ -86,7 +86,7 @@ namespace ArchaicQuestII.Controllers.character
                 HairColour = player.HairColour,
                 HairLength = player.HairLength,
                 HairTexture = player.HairTexture,
-                RoomId = Services.Instance.Cache.GetConfig().StartingRoom,
+                RoomId = Services.Instance.Config.StartingRoom,
             };
 
             var ItemSeed = Items.seedData;
@@ -193,8 +193,7 @@ namespace ArchaicQuestII.Controllers.character
             account.Characters.Add(newPlayer.Id);
             Helpers.PostToDiscord(
                 $"{player.Name} has joined the realms for the first time.",
-                "event",
-                Services.Instance.Cache.GetConfig()
+                "event"
             );
 
             var dupeCheck = Services.Instance.PlayerDataBase
