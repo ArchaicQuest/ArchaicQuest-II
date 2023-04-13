@@ -137,6 +137,13 @@ public class Cleric : IClass
             },
             new SkillList
             {
+                Name = SkillName.Fishing,
+                Level = 1,
+                Proficiency = 0,
+                IsSpell = false,
+            },
+            new SkillList
+            {
                 Name = SkillName.Lore,
                 Level = 9,
                 Proficiency = 0,
