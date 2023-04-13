@@ -62,12 +62,9 @@ public static class CharacterHelpers
 
     public static bool HasSkill(this Player player, SkillName skillName)
     {
-        var skill = player.Skills.FirstOrDefault(x => x.Name == skillName);
+        var skill = player.GetSkill(skillName);
 
-        if (skill != null)
-            return true;
-
-        return false;
+        return skill == null ? false : true;
     }
 
     public static bool RollSkill(
@@ -78,8 +75,13 @@ public static class CharacterHelpers
         int modifier = 0
     )
     {
+        var skill = player.GetSkill(skillName);
+
+        if (skill == null)
+            return false;
+
         var roll = DiceBag.Roll(1, 1, 100);
-        var skill = player.Skills.FirstOrDefault(x => x.Name == skillName);
+
         var success = skill.Proficiency > roll + modifier;
 
         if (roll == 1 && display)
@@ -108,13 +110,13 @@ public static class CharacterHelpers
     {
         var skill = player.Skills.FirstOrDefault(x => x.Name == name);
 
-        var increase = DiceBag.Roll(1, 1, 5);
-
         if (skill == null)
         {
             Services.Instance.Writer.WriteLine("Skill not found", player);
             return;
         }
+
+        var increase = DiceBag.Roll(1, 1, 5);
 
         if (skill.Proficiency == 100)
         {
