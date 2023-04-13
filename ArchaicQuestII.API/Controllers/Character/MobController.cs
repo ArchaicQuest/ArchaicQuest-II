@@ -6,13 +6,11 @@ using ArchaicQuestII.API.Helpers;
 using ArchaicQuestII.API.Models;
 using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Equipment;
 using Microsoft.AspNetCore.Mvc;
 
 using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.World.Room;
 using Newtonsoft.Json;
-
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 public class MobData
@@ -26,20 +24,17 @@ namespace ArchaicQuestII.Controllers
     [Authorize]
     public class MobController : Controller
     {
-
         private IDataBase _db { get; }
+
         public MobController(IDataBase db)
         {
             _db = db;
         }
 
-
         [HttpPost]
         [Route("api/Character/Mob")]
         public IActionResult Post([FromBody] MobData mob)
         {
-
-
             if (!ModelState.IsValid)
             {
                 var exception = new Exception("Invalid mob");
@@ -94,69 +89,67 @@ namespace ArchaicQuestII.Controllers
                 {
                     switch (item.Slot)
                     {
-                        case Equipment.EqSlot.Arms:
+                        case EquipmentSlot.Arms:
                             mob.Mob.Equipped.Arms = item;
                             break;
-                        case Equipment.EqSlot.Body:
+                        case EquipmentSlot.Body:
                             mob.Mob.Equipped.AboutBody = item;
                             break;
-                        case Equipment.EqSlot.Face:
+                        case EquipmentSlot.Face:
                             mob.Mob.Equipped.Face = item;
                             break;
-                        case Equipment.EqSlot.Feet:
+                        case EquipmentSlot.Feet:
                             mob.Mob.Equipped.Feet = item;
                             break;
-                        case Equipment.EqSlot.Finger:
+                        case EquipmentSlot.Finger:
                             mob.Mob.Equipped.Finger = item;
                             break;
-                        case Equipment.EqSlot.Floating:
+                        case EquipmentSlot.Floating:
                             mob.Mob.Equipped.Floating = item;
                             break;
-                        case Equipment.EqSlot.Hands:
+                        case EquipmentSlot.Hands:
                             mob.Mob.Equipped.Hands = item;
                             break;
-                        case Equipment.EqSlot.Head:
+                        case EquipmentSlot.Head:
                             mob.Mob.Equipped.Head = item;
                             break;
-                        case Equipment.EqSlot.Held:
+                        case EquipmentSlot.Held:
                             mob.Mob.Equipped.Held = item;
                             break;
-                        case Equipment.EqSlot.Legs:
+                        case EquipmentSlot.Legs:
                             mob.Mob.Equipped.Legs = item;
                             break;
-                        case Equipment.EqSlot.Light:
+                        case EquipmentSlot.Light:
                             mob.Mob.Equipped.Light = item;
                             break;
-                        case Equipment.EqSlot.Neck:
+                        case EquipmentSlot.Neck:
                             mob.Mob.Equipped.Neck = item;
                             break;
-                        case Equipment.EqSlot.Shield:
+                        case EquipmentSlot.Shield:
                             mob.Mob.Equipped.Shield = item;
                             break;
-                        case Equipment.EqSlot.Torso:
+                        case EquipmentSlot.Torso:
                             mob.Mob.Equipped.Torso = item;
                             break;
-                        case Equipment.EqSlot.Waist:
+                        case EquipmentSlot.Waist:
                             mob.Mob.Equipped.Waist = item;
                             break;
-                        case Equipment.EqSlot.Wielded:
+                        case EquipmentSlot.Wielded:
                             mob.Mob.Equipped.Wielded = item;
 
                             break;
-                        case Equipment.EqSlot.Wrist:
+                        case EquipmentSlot.Wrist:
                             mob.Mob.Equipped.Wrist = item;
                             break;
-                        case Equipment.EqSlot.Secondary:
+                        case EquipmentSlot.Secondary:
                             mob.Mob.Equipped.Secondary = item;
                             break;
                     }
                 }
             }
 
-
             if (mob.Mob.Id != Guid.Empty)
             {
-
                 var foundItem = _db.GetById<Player>(mob.Mob.Id, DataBase.Collections.Mobs);
 
                 if (foundItem == null)
@@ -166,13 +159,11 @@ namespace ArchaicQuestII.Controllers
 
                 newMob.Id = mob.Mob.Id;
 
-
                 // If you update a mob, Update all the objects where it exists in a room
                 // save yourself alot of work huh
 
                 if (mob.UpdateAllInstances)
                 {
-
                     var rooms = _db.GetList<Room>(DataBase.Collections.Room);
 
                     foreach (var room in rooms)
@@ -192,7 +183,6 @@ namespace ArchaicQuestII.Controllers
                 }
             }
 
-
             _db.Save(newMob, DataBase.Collections.Mobs);
             var user = (HttpContext.Items["User"] as AdminUser);
             user.Contributions += 1;
@@ -209,44 +199,41 @@ namespace ArchaicQuestII.Controllers
             return Ok(JsonConvert.SerializeObject(new { toast = $"Mob saved successfully." }));
         }
 
-
         [HttpGet]
         [Route("api/mob/Get")]
         public List<Player> GetMob()
         {
-
-            var mobs = _db.GetCollection<Player>(DataBase.Collections.Mobs).FindAll().Where(x => x.Deleted == false).ToList();
+            var mobs = _db.GetCollection<Player>(DataBase.Collections.Mobs)
+                .FindAll()
+                .Where(x => x.Deleted == false)
+                .ToList();
 
             return mobs;
-
         }
-
 
         [HttpGet]
         [Route("api/Character/Mob")]
         public List<Player> Get([FromQuery] string query)
         {
-
-            var mobs = _db.GetCollection<Player>(DataBase.Collections.Mobs).FindAll().Where(x => x.Name != null && x.Deleted == false);
+            var mobs = _db.GetCollection<Player>(DataBase.Collections.Mobs)
+                .FindAll()
+                .Where(x => x.Name != null && x.Deleted == false);
 
             if (string.IsNullOrEmpty(query))
             {
                 return mobs.ToList();
             }
 
-            return mobs.Where(x => x.Name.IndexOf(query, StringComparison.OrdinalIgnoreCase) != -1).ToList();
-
+            return mobs.Where(x => x.Name.IndexOf(query, StringComparison.OrdinalIgnoreCase) != -1)
+                .ToList();
         }
 
         [HttpGet]
         [Route("api/mob/FindMobById")]
         public Player FindMobById([FromQuery] Guid id)
         {
-
             return _db.GetById<Player>(id, DataBase.Collections.Mobs);
-
         }
-
 
         [HttpDelete]
         [Route("api/mob/delete/{id:guid}")]
@@ -258,15 +245,13 @@ namespace ArchaicQuestII.Controllers
 
             if (saved)
             {
-                return Ok(JsonConvert.SerializeObject(new { toast = $"{item.Name} deleted successfully." }));
+                return Ok(
+                    JsonConvert.SerializeObject(
+                        new { toast = $"{item.Name} deleted successfully." }
+                    )
+                );
             }
             return Ok(JsonConvert.SerializeObject(new { toast = $"{item.Name} deletion failed." }));
-
-
-
         }
-
-
-
     }
 }

@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Core
 {
-
     public class MudTime
     {
         public double Hours { get; set; }
@@ -35,46 +31,42 @@ namespace ArchaicQuestII.GameLogic.Core
         public int SecondsPerRealYear { get; set; }
         public MudTime GameTime { get; set; }
 
+        public List<string> Days { get; set; } =
+            new List<string>
+            {
+                "The Sun",
+                "The Moon",
+                "Mars",
+                "Mercury",
+                "Jupiter",
+                "Venus",
+                "Saturn"
+            };
 
-        public List<string> Days { get; set; } = new List<string>
+        public List<string> Months { get; set; } =
+            new List<string>
+            {
+                "Winter",
+                "The Winter Wolf",
+                "The Frozen Forests",
+                "The Crystal Tundra",
+                "Rebirth",
+                "The Spring",
+                "Nature",
+                "Growth",
+                "The Dragon",
+                "The Sun",
+                "The Heat",
+                "The Battle",
+                "The Dark Shades",
+                "The Shadows",
+                "The Long Shadows",
+                "The Ancient Darkness",
+                "The Great Evil",
+            };
+
+        public Time()
         {
-            "The Sun",
-            "The Moon",
-            "Mars",
-            "Mercury",
-            "Jupiter",
-            "Venus",
-            "Saturn"
-        };
-
-        public List<string> Months { get; set; } = new List<string>
-        {
-            "Winter",
-            "The Winter Wolf",
-            "The Frozen Forests",
-            "The Crystal Tundra",
-            "Rebirth",
-            "The Spring",
-            "Nature",
-            "Growth",
-            "The Dragon",
-            "The Sun",
-            "The Heat",
-            "The Battle",
-            "The Dark Shades",
-            "The Shadows",
-            "The Long Shadows",
-            "The Ancient Darkness",
-            "The Great Evil",
-        };
-
-        private IWriteToClient _writeToClient;
-        private ICache _cache;
-        public Time(IWriteToClient writeToClient, ICache cache)
-        {
-            _writeToClient = writeToClient;
-            _cache = cache;
-
             /*
              *  Real life seconds in one mud day.
              *  1,440 seconds = 24 real life minutes.
@@ -98,12 +90,10 @@ namespace ArchaicQuestII.GameLogic.Core
             var dt = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0);
 
             this.GameTime = MudTimePassed(dt, new DateTime(2016, 04, 14));
-
         }
 
         public MudTime MudTimePassed(DateTime currentTime, DateTime pastTime)
         {
-
             var mudTime = new MudTime();
             var seconds = (currentTime - pastTime).TotalSeconds;
 
@@ -119,13 +109,9 @@ namespace ArchaicQuestII.GameLogic.Core
             mudTime.Year = (seconds / SecondsPerMudYear);
             mudTime.RLDateTime = currentTime;
 
-
             this.GameTime = mudTime;
             return mudTime;
-
         }
-
-
 
         public string GetDay(int day)
         {
@@ -138,33 +124,46 @@ namespace ArchaicQuestII.GameLogic.Core
             var Saturn = new List<int>() { 5, 12, 19, 26, 33 };
             var TheSun = new List<int>() { 6, 13, 20, 27, 34 };
 
-            var nameOfDay = TheMoon.Contains(day) ? "The Moon" :
-                Mars.Contains(day) ? "Mars" :
-                Mercury.Contains(day) ? "Mercury" :
-                Jupiter.Contains(day) ? "Jupiter" :
-                Venus.Contains(day) ? "Venus" :
-                Saturn.Contains(day) ? "Saturn" : "TheSun";
+            var nameOfDay = TheMoon.Contains(day)
+                ? "The Moon"
+                : Mars.Contains(day)
+                    ? "Mars"
+                    : Mercury.Contains(day)
+                        ? "Mercury"
+                        : Jupiter.Contains(day)
+                            ? "Jupiter"
+                            : Venus.Contains(day)
+                                ? "Venus"
+                                : Saturn.Contains(day)
+                                    ? "Saturn"
+                                    : "TheSun";
 
             return nameOfDay;
         }
 
         public void DisplayTimeOfDayMessage(string TickMessage)
         {
-
-            var players = _cache.GetPlayerCache();
+            var players = Services.Instance.Cache.GetPlayerCache();
 
             foreach (var pc in players.Values)
             {
-                var room = _cache.GetRoom(pc.RoomId);
+                var room = Services.Instance.Cache.GetRoom(pc.RoomId);
 
                 if (room == null)
                 {
                     return;
                 }
 
-                if (room.Terrain != Room.TerrainType.Inside && room.Terrain != Room.TerrainType.Underground && !string.IsNullOrEmpty(TickMessage))
+                if (
+                    room.Terrain != Room.TerrainType.Inside
+                    && room.Terrain != Room.TerrainType.Underground
+                    && !string.IsNullOrEmpty(TickMessage)
+                )
                 {
-                    _writeToClient.WriteLine($"<span class='time-of-day'>{TickMessage}</span>", pc.ConnectionId);
+                    Services.Instance.Writer.WriteLine(
+                        $"<span class='time-of-day'>{TickMessage}</span>",
+                        pc
+                    );
                 }
             }
         }
@@ -248,15 +247,14 @@ namespace ArchaicQuestII.GameLogic.Core
                 case 22:
                 case 23:
                     return "The moon is slowly moving west across the sky.";
-
-
             }
             return String.Empty;
         }
 
         public bool IsNightTime()
         {
-            return Convert.ToInt32(Math.Floor(GameTime.Hours)) >= 6 && Convert.ToInt32(Math.Floor(GameTime.Hours)) <= 18;
+            return Convert.ToInt32(Math.Floor(GameTime.Hours)) >= 6
+                && Convert.ToInt32(Math.Floor(GameTime.Hours)) <= 18;
         }
 
         public string ReturnDate()
@@ -266,15 +264,15 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public string ReturnTime()
         {
-
-            var hour = Math.Floor(GameTime.Hours) > 12 ? Math.Floor(GameTime.Hours) - 12 : Math.Floor(GameTime.Hours);
+            var hour =
+                Math.Floor(GameTime.Hours) > 12
+                    ? Math.Floor(GameTime.Hours) - 12
+                    : Math.Floor(GameTime.Hours);
             if (Math.Floor(GameTime.Hours) == 0)
             {
                 hour = 12;
             }
             return $"{hour}:00 {(Convert.ToInt32(Math.Floor(GameTime.Hours)) >= 12 ? " PM" : " AM")}";
         }
-
-
     }
 }

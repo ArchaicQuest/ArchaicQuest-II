@@ -6,14 +6,16 @@ namespace ArchaicQuestII.GameLogic.SeedData
 {
     internal static class CraftingRecipeSeeds
     {
-        internal static void SeedAndCache(IDataBase db, ICache cache)
+        internal static void SeedAndCache()
         {
             //no seeding done
 
-            var craftingRecipes = db.GetList<CraftingRecipes>(DataBase.Collections.CraftingRecipes);
+            var craftingRecipes = Services.Instance.DataBase.GetList<CraftingRecipes>(
+                DataBase.Collections.CraftingRecipes
+            );
             foreach (var craftingRecipe in craftingRecipes)
             {
-                cache.AddCraftingRecipes(craftingRecipe.Id, craftingRecipe);
+                Services.Instance.Cache.AddCraftingRecipes(craftingRecipe.Id, craftingRecipe);
             }
         }
     }

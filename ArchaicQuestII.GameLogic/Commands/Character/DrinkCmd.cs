@@ -10,11 +10,12 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 {
     public class DrinkCmd : ICommand
     {
-        public DrinkCmd(ICore core)
+        public DrinkCmd()
         {
-            Aliases = new[] {"drink"};
-            Description = "Drink a liquid from a container. Drinking is for RP purposes, your character does not get hungry or thirsty.";
-            Usages = new[] {"Type: drink ale"};
+            Aliases = new[] { "drink" };
+            Description =
+                "Drink a liquid from a container. Drinking is for RP purposes, your character does not get hungry or thirsty.";
+            Usages = new[] { "Type: drink ale" };
             Title = "";
             DeniedStatus = new[]
             {
@@ -28,16 +29,14 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
                 CharacterStatus.Status.Stunned
             };
             UserRole = UserRole.Player;
-            Core = core;
         }
-        
+
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
         public string Title { get; }
         public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
-        public ICore Core { get; }
 
         public void Execute(Player player, Room room, string[] input)
         {
@@ -45,30 +44,40 @@ namespace ArchaicQuestII.GameLogic.Commands.Character
 
             if (string.IsNullOrEmpty(target))
             {
-                Core.Writer.WriteLine("<p>Drink what?</p>", player.ConnectionId);
+                Services.Instance.Writer.WriteLine("<p>Drink what?</p>", player);
                 return;
             }
-            
+
             var findNth = Helpers.findNth(target);
-            var drink = Helpers.findObjectInInventory(findNth, player) ??
-                        Helpers.findRoomObject(findNth, room);
+            var drink =
+                player.FindObjectInInventory(findNth) ?? Helpers.findRoomObject(findNth, room);
 
             if (drink == null)
             {
-                Core.Writer.WriteLine("<p>You can't find that.</p>", player.ConnectionId);
+                Services.Instance.Writer.WriteLine("<p>You can't find that.</p>", player);
                 return;
             }
 
             if (drink.ItemType != Item.Item.ItemTypes.Drink)
             {
-                Core.Writer.WriteLine($"<p>You can't drink from {drink.Name.ToLower()}.</p>", player.ConnectionId);
+                Services.Instance.Writer.WriteLine(
+                    $"<p>You can't drink from {drink.Name.ToLower()}.</p>",
+                    player
+                );
                 return;
             }
-            
+
             //TODO: Add drink affects
-            
-            Core.Writer.WriteLine($"<p>You drink from {drink.Name.ToLower()}.</p>", player.ConnectionId);
-            Core.Writer.WriteToOthersInRoom($"<p>{player.Name} drink from {drink.Name.ToLower()}.</p>", room, player);
+
+            Services.Instance.Writer.WriteLine(
+                $"<p>You drink from {drink.Name.ToLower()}.</p>",
+                player
+            );
+            Services.Instance.Writer.WriteToOthersInRoom(
+                $"<p>{player.Name} drink from {drink.Name.ToLower()}.</p>",
+                room,
+                player
+            );
         }
     }
 }

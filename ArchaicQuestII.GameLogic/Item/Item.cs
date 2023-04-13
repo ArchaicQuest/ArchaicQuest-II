@@ -1,19 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
-using ArchaicQuestII.GameLogic.Character.Equipment;
-using static ArchaicQuestII.GameLogic.Character.Equipment.Equipment;
+using ArchaicQuestII.GameLogic.Character;
 
 namespace ArchaicQuestII.GameLogic.Item
 {
-
     public class Forage
     {
         public int Respawn { get; set; } = 5;
         public int ItemCount { get; set; } = 3;
         public int MaxItemCount { get; set; } = 3;
     }
+
     public class Item : BaseItem
     {
         public enum ItemTypes
@@ -50,7 +48,6 @@ namespace ArchaicQuestII.GameLogic.Item
             Mineable,
             PickAxe,
             WoodCutter
-
         }
 
         [Flags]
@@ -70,7 +67,7 @@ namespace ArchaicQuestII.GameLogic.Item
             Hum = 1 << 10, //affect n/a
             Invis = 1 << 11, //invisible
             Nodrop = 1 << 12, // cannot drop
-            Nolocate = 1 << 13,   //locate spell fails
+            Nolocate = 1 << 13, //locate spell fails
             Noremove = 1 << 14, //cannot remove w/o remove curse
             QuestItem = 1 << 15,
             Vampric = 1 << 16, // Drains hp on hoit
@@ -83,8 +80,6 @@ namespace ArchaicQuestII.GameLogic.Item
             Worn,
             Wield
         }
-
-
 
         public enum AttackTypes
         {
@@ -107,7 +102,6 @@ namespace ArchaicQuestII.GameLogic.Item
             Whip
         }
 
-
         public enum DamageTypes
         {
             None,
@@ -124,6 +118,7 @@ namespace ArchaicQuestII.GameLogic.Item
             Wrath
         }
 
+        [Obsolete("Weapon types are no longer used, Use SkillName instead")]
         public enum WeaponTypes
         {
             Arrows,
@@ -134,11 +129,14 @@ namespace ArchaicQuestII.GameLogic.Item
             Crossbow,
             Exotic,
             Flail,
+
             [Display(Name = "Hand to hand")]
             HandToHand,
+
             [Display(Name = "Long blades")]
             LongBlades,
             Polearm,
+
             [Display(Name = "Short blades")]
             ShortBlades,
             Spear,
@@ -150,13 +148,15 @@ namespace ArchaicQuestII.GameLogic.Item
         {
             Cloth,
             Leather,
+
             [Display(Name = "Studded Leather")]
             StuddedLeather,
+
             [Display(Name = "Chain Mail")]
             ChainMail,
+
             [Display(Name = "Plate Mail")]
             PlateMail,
-
         }
 
         public enum LockStrength
@@ -168,16 +168,15 @@ namespace ArchaicQuestII.GameLogic.Item
             Impossible,
         }
 
-
         public bool Equipped { get; set; }
         public DamageTypes DamageType { get; set; }
         public ArmourTypes ArmourType { get; set; }
         public ItemFlags ItemFlag { get; set; }
         public ItemTypes ItemType { get; set; }
         public AttackTypes AttackType { get; set; }
-        public EqSlot Slot { get; set; }
+        public EquipmentSlot Slot { get; set; }
         public Forage Forage { get; set; } = new Forage();
-        public WeaponTypes WeaponType { get; set; }
+        public SkillName WeaponType { get; set; }
         public int WeaponSpeed { get; set; }
         public Damage Damage { get; set; }
         public Guid KeyId { get; set; }
@@ -195,10 +194,12 @@ namespace ArchaicQuestII.GameLogic.Item
         /// player can find item
         /// </summary>
         public int ForageRank { get; set; } = 1;
+
         /// <summary>
         /// Used for wands, starves and repai hammers to determine how many uses they have left
         /// </summary>
         public int Uses { get; set; }
+
         /// <summary>
         /// Infinite uses
         /// </summary>
@@ -214,7 +215,7 @@ namespace ArchaicQuestII.GameLogic.Item
         /// Used to slow corpse removal
         /// </summary>
         public int Decay { get; set; } = 5; // 10 for players
-        
+
         /// <summary>
         ///  For potions the spell name and level is used in casting the spell upon the player when quaffing.
         ///  potentially could be used for on hit spell affects for weapons and armor o.0
@@ -224,12 +225,12 @@ namespace ArchaicQuestII.GameLogic.Item
 
         public List<string> DecayMessages = new List<string>()
         {
-            {"A quivering horde of maggots consumes $n."}, // 0
-            {"The corpse of $n is in the last stages of decay."}, // 1
-            {"The corpse of %n is crawling with vermin."}, // 2
-            {"The corpse of $n fills the air with a foul stench."}, // 3
-            {"The corpse of $n is buzzing with flies."}, // 4
-            {"The corpse of $n lies here."}, // 5 | 10 - 5
+            { "A quivering horde of maggots consumes $n." }, // 0
+            { "The corpse of $n is in the last stages of decay." }, // 1
+            { "The corpse of %n is crawling with vermin." }, // 2
+            { "The corpse of $n fills the air with a foul stench." }, // 3
+            { "The corpse of $n is buzzing with flies." }, // 4
+            { "The corpse of $n lies here." }, // 5 | 10 - 5
         };
     }
 }

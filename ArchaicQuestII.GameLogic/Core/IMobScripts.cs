@@ -31,7 +31,6 @@ namespace ArchaicQuestII.GameLogic.Core
         public void GiveGold(int value, Player player);
 
         public int Random(int min, int max);
-        public string GetClass(Player player);
         public bool IsPC(Player player);
         public bool IsMob(Player player);
         public bool IsGood(Player player);

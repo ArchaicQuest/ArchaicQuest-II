@@ -1,7 +1,4 @@
-﻿using System;
-using ArchaicQuestII.GameLogic.Character.Status;
-using System.Threading.Tasks;
-using ArchaicQuestII.GameLogic.Commands;
+﻿using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Utilities;
@@ -10,7 +7,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using ArchaicQuestII.GameLogic.Character;
 using System.Linq;
-using ArchaicQuestII.GameLogic.Character.Gain;
+using System;
 
 namespace ArchaicQuestII.GameLogic.Loops
 {
@@ -18,34 +15,32 @@ namespace ArchaicQuestII.GameLogic.Loops
     {
         public int TickDelay => 120000;
         public bool ConfigureAwait => true;
-        private ICore _core;
-        private List<Room> _rooms;
-        private List<Player> _players;
-
-        public void Init(ICore core, ICommandHandler commandHandler)
-        {
-            _core = core;
-        }
+        private List<Room> _rooms = new List<Room>();
+        private List<Player> _players = new List<Player>();
 
         public void PreTick()
         {
-            _rooms = _core.Cache.GetAllRoomsToRepop();
-            _players = _core.Cache.GetPlayerCache().Values.ToList();
+            _rooms = Services.Instance.Cache.GetAllRoomsToRepop();
+            _players = Services.Instance.Cache.GetPlayerCache().Values.ToList();
         }
 
         public void Tick()
         {
+            //Console.WriteLine("MiscLoop");
+
             foreach (var room in _rooms)
             {
                 //max 187MB allocated type: string too much memory used here
                 var originalRoom = JsonConvert.DeserializeObject<Room>(
-                        JsonConvert.SerializeObject(_core.Cache.GetOriginalRoom(Helpers.ReturnRoomId(room))));
-
+                    JsonConvert.SerializeObject(
+                        Services.Instance.Cache.GetOriginalRoom(Helpers.ReturnRoomId(room))
+                    )
+                );
 
                 foreach (var mob in originalRoom.Mobs)
                 {
-
-                    var mobExist = _rooms.Find(x => x.Mobs.Any(y => y.UniqueId.Equals(mob.UniqueId)))
+                    var mobExist = _rooms
+                        .Find(x => x.Mobs.Any(y => y.UniqueId.Equals(mob.UniqueId)))
                         ?.Mobs.FirstOrDefault(z => z.UniqueId.Equals(mob.UniqueId));
 
                     if (mobExist == null)
@@ -56,7 +51,6 @@ namespace ArchaicQuestII.GameLogic.Loops
                     {
                         if (mob.Status != CharacterStatus.Status.Fighting)
                         {
-
                             mobExist.Attributes.Attribute[EffectLocation.Hitpoints] +=
                                 DiceBag.Roll(1, 2, 5) + mobExist.Level;
                             mobExist.Attributes.Attribute[EffectLocation.Mana] +=
@@ -74,29 +68,37 @@ namespace ArchaicQuestII.GameLogic.Loops
                                 (DiceBag.Roll(1, 1, 5) + mobExist.Level) / 2;
                         }
 
-                        if (mobExist.Attributes.Attribute[EffectLocation.Hitpoints] >
-                            mobExist.MaxAttributes.Attribute[EffectLocation.Hitpoints])
+                        if (
+                            mobExist.Attributes.Attribute[EffectLocation.Hitpoints]
+                            > mobExist.MaxAttributes.Attribute[EffectLocation.Hitpoints]
+                        )
                         {
-                            mobExist.Attributes.Attribute[EffectLocation.Hitpoints] =
-                                mobExist.MaxAttributes.Attribute[EffectLocation.Hitpoints];
+                            mobExist.Attributes.Attribute[EffectLocation.Hitpoints] = mobExist
+                                .MaxAttributes
+                                .Attribute[EffectLocation.Hitpoints];
                         }
 
-                        if (mobExist.Attributes.Attribute[EffectLocation.Mana] >
-                            mobExist.MaxAttributes.Attribute[EffectLocation.Mana])
+                        if (
+                            mobExist.Attributes.Attribute[EffectLocation.Mana]
+                            > mobExist.MaxAttributes.Attribute[EffectLocation.Mana]
+                        )
                         {
-                            mobExist.Attributes.Attribute[EffectLocation.Mana] =
-                                mobExist.MaxAttributes.Attribute[EffectLocation.Mana];
+                            mobExist.Attributes.Attribute[EffectLocation.Mana] = mobExist
+                                .MaxAttributes
+                                .Attribute[EffectLocation.Mana];
                         }
 
-                        if (mobExist.Attributes.Attribute[EffectLocation.Moves] >
-                            mobExist.MaxAttributes.Attribute[EffectLocation.Moves])
+                        if (
+                            mobExist.Attributes.Attribute[EffectLocation.Moves]
+                            > mobExist.MaxAttributes.Attribute[EffectLocation.Moves]
+                        )
                         {
-                            mobExist.Attributes.Attribute[EffectLocation.Moves] =
-                                mobExist.MaxAttributes.Attribute[EffectLocation.Moves];
+                            mobExist.Attributes.Attribute[EffectLocation.Moves] = mobExist
+                                .MaxAttributes
+                                .Attribute[EffectLocation.Moves];
                         }
                     }
                 }
-
 
                 foreach (var item in originalRoom.Items)
                 {
@@ -110,7 +112,10 @@ namespace ArchaicQuestII.GameLogic.Loops
                         room.Items.Add(item);
                     }
 
-                    if (itemExist != null && itemExist.ItemType == Item.Item.ItemTypes.Container || itemExist.ItemType == Item.Item.ItemTypes.Forage)
+                    if (
+                        itemExist != null && itemExist.ItemType == Item.Item.ItemTypes.Container
+                        || itemExist.ItemType == Item.Item.ItemTypes.Forage
+                    )
                     {
                         itemExist.Container.IsOpen = item.Container.IsOpen;
                         itemExist.Container.IsLocked = item.Container.IsLocked;
@@ -122,10 +127,7 @@ namespace ArchaicQuestII.GameLogic.Loops
                                 itemExist.Container.Items.Add(items);
                             }
                         }
-
                     }
-
-
                 }
 
                 // reset doors
@@ -138,17 +140,16 @@ namespace ArchaicQuestII.GameLogic.Loops
 
                 foreach (var player in room.Players)
                 {
-                    _core.Writer.WriteLine("<p>The hairs on your neck stand up.</p>",
-                        player.ConnectionId);
+                    Services.Instance.Writer.WriteLine(
+                        "<p>The hairs on your neck stand up.</p>",
+                        player
+                    );
                 }
                 //  }
-
-
             }
 
             foreach (var player in _players)
             {
-
                 //  IdleCheck(player);
 
                 var hP = (DiceBag.Roll(1, 2, 5));
@@ -156,10 +157,9 @@ namespace ArchaicQuestII.GameLogic.Loops
                 var moves = (DiceBag.Roll(1, 2, 5));
 
                 // if player has fast healing add the bonus here
-                var hasFastHealing = player.Skills.FirstOrDefault(x =>
-                    x.SkillName.Equals("Fast Healing", StringComparison.CurrentCultureIgnoreCase) &&
-                    player.Level >= x.Level);
-
+                var hasFastHealing = player.Skills.FirstOrDefault(
+                    x => x.Name == SkillName.FastHealing && player.Level >= x.Level
+                );
 
                 if ((player.Status & CharacterStatus.Status.Sleeping) != 0)
                 {
@@ -175,61 +175,74 @@ namespace ArchaicQuestII.GameLogic.Loops
                     moves *= (int)1.5;
                 }
 
-                if (player.Attributes.Attribute[EffectLocation.Hitpoints] <
-                    player.MaxAttributes.Attribute[EffectLocation.Hitpoints])
+                if (
+                    player.Attributes.Attribute[EffectLocation.Hitpoints]
+                    < player.MaxAttributes.Attribute[EffectLocation.Hitpoints]
+                )
                 {
-
                     if (hasFastHealing != null)
                     {
-                        if (Helpers.SkillSuccessCheck(hasFastHealing))
+                        if (player.RollSkill(SkillName.FastHealing, false))
                         {
                             hP *= 2;
                         }
                         else
                         {
-                            player.FailedSkill("Fast Healing", out _);
+                            player.FailedSkill(SkillName.FastHealing, false);
                         }
                     }
 
                     player.Attributes.Attribute[EffectLocation.Hitpoints] += GainAmount(hP, player);
-                    if (player.Attributes.Attribute[EffectLocation.Hitpoints] >
-                        player.MaxAttributes.Attribute[EffectLocation.Hitpoints])
+                    if (
+                        player.Attributes.Attribute[EffectLocation.Hitpoints]
+                        > player.MaxAttributes.Attribute[EffectLocation.Hitpoints]
+                    )
                     {
-                        player.Attributes.Attribute[EffectLocation.Hitpoints] =
-                            player.MaxAttributes.Attribute[EffectLocation.Hitpoints];
+                        player.Attributes.Attribute[EffectLocation.Hitpoints] = player
+                            .MaxAttributes
+                            .Attribute[EffectLocation.Hitpoints];
                     }
                 }
 
-                if (player.Attributes.Attribute[EffectLocation.Mana] <
-                    player.MaxAttributes.Attribute[EffectLocation.Mana])
+                if (
+                    player.Attributes.Attribute[EffectLocation.Mana]
+                    < player.MaxAttributes.Attribute[EffectLocation.Mana]
+                )
                 {
                     player.Attributes.Attribute[EffectLocation.Mana] += GainAmount(mana, player);
 
-                    if (player.Attributes.Attribute[EffectLocation.Mana] >
-                        player.MaxAttributes.Attribute[EffectLocation.Mana])
+                    if (
+                        player.Attributes.Attribute[EffectLocation.Mana]
+                        > player.MaxAttributes.Attribute[EffectLocation.Mana]
+                    )
                     {
-                        player.Attributes.Attribute[EffectLocation.Mana] =
-                            player.MaxAttributes.Attribute[EffectLocation.Mana];
+                        player.Attributes.Attribute[EffectLocation.Mana] = player
+                            .MaxAttributes
+                            .Attribute[EffectLocation.Mana];
                     }
                 }
 
-                if (player.Attributes.Attribute[EffectLocation.Moves] <
-                    player.MaxAttributes.Attribute[EffectLocation.Moves])
+                if (
+                    player.Attributes.Attribute[EffectLocation.Moves]
+                    < player.MaxAttributes.Attribute[EffectLocation.Moves]
+                )
                 {
                     player.Attributes.Attribute[EffectLocation.Moves] += GainAmount(moves, player);
-                    if (player.Attributes.Attribute[EffectLocation.Moves] >
-                        player.MaxAttributes.Attribute[EffectLocation.Moves])
+                    if (
+                        player.Attributes.Attribute[EffectLocation.Moves]
+                        > player.MaxAttributes.Attribute[EffectLocation.Moves]
+                    )
                     {
-                        player.Attributes.Attribute[EffectLocation.Moves] =
-                            player.MaxAttributes.Attribute[EffectLocation.Moves];
+                        player.Attributes.Attribute[EffectLocation.Moves] = player
+                            .MaxAttributes
+                            .Attribute[EffectLocation.Moves];
                     }
                 }
 
-                _core.UpdateClient.UpdateHP(player);
-                _core.UpdateClient.UpdateMana(player);
-                _core.UpdateClient.UpdateMoves(player);
-                _core.UpdateClient.UpdateScore(player);
-
+                Services.Instance.UpdateClient.UpdateHP(player);
+                Services.Instance.UpdateClient.UpdateMana(player);
+                Services.Instance.UpdateClient.UpdateMoves(player);
+                Services.Instance.UpdateClient.UpdateScore(player);
             }
         }
 
@@ -250,4 +263,3 @@ namespace ArchaicQuestII.GameLogic.Loops
         }
     }
 }
-

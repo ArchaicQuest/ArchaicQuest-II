@@ -1,6 +1,6 @@
 ﻿namespace ArchaicQuestII.GameLogic.Core
 {
-    public interface IGameLoop
+    public interface ILoopHandler
     {
         void StartLoops();
     }

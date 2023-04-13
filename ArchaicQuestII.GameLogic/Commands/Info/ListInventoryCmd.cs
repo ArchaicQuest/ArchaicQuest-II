@@ -11,24 +11,22 @@ namespace ArchaicQuestII.GameLogic.Commands.Info;
 
 public class ListInventoryCmd : ICommand
 {
-    public ListInventoryCmd(ICore core)
+    public ListInventoryCmd()
     {
-        Aliases = new[] {"inventory", "inv", "i"};
+        Aliases = new[] { "inventory", "inv", "i" };
         Description = "Lists players inventory";
-        Usages = new[] {"Type: inv"};
-            Title = "";
-    DeniedStatus = null;
+        Usages = new[] { "Type: inv" };
+        Title = "";
+        DeniedStatus = null;
         UserRole = UserRole.Player;
-        Core = core;
     }
-    
+
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
     public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
-    public ICore Core { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
@@ -39,7 +37,7 @@ public class ListInventoryCmd : ICommand
         {
             inventory.Append("<ul>");
             var inv = new ItemList();
-            
+
             inv.AddRange(player.Inventory.Where(x => x.Equipped == false).ToList());
 
             foreach (var item in inv.List(false))
@@ -60,7 +58,7 @@ public class ListInventoryCmd : ICommand
         {
             inventory.Append("<p>Nothing.</p>");
         }
-        
-        Core.Writer.WriteLine(inventory.ToString(), player.ConnectionId);
+
+        Services.Instance.Writer.WriteLine(inventory.ToString(), player);
     }
 }

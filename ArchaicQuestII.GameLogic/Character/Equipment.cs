@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace ArchaicQuestII.GameLogic.Character.Equipment
+namespace ArchaicQuestII.GameLogic.Character
 {
     public class Equipment
     {
@@ -29,45 +29,62 @@ namespace ArchaicQuestII.GameLogic.Character.Equipment
         public Item.Item Held { get; set; }
         public Item.Item Floating { get; set; }
         public Item.Item Quiver { get; set; }
+    }
 
-        public enum EqSlot
-        {
-            [Description("Arms")]
-            Arms = 0,
-            [Description("Body")]
-            Body = 1,
-            [Description("Face")]
-            Face = 2,
-            [Description("Feet")]
-            Feet = 3,
-            [Description("Finger")]
-            Finger = 4,
-            [Description("Floating")]
-            Floating = 5,
-            [Description("Hands")]
-            Hands = 6,
-            [Description("Head")]
-            Head = 7,
-            [Description("Held")]
-            Held = 8,
-            [Description("Legs")]
-            Legs = 9,
-            [Description("Light")]
-            Light = 10,
-            [Description("Neck")]
-            Neck = 11,
-            [Description("Shield")]
-            Shield = 12,
-            [Description("Torso")]
-            Torso = 13,
-            [Description("Waist")]
-            Waist = 14,
-            [Description("Wielded")]
-            Wielded = 15,
-            [Description("Wrist")]
-            Wrist = 16,
-            [Description("Secondary")]
-            Secondary = 17,
-        }
+    public enum EquipmentSlot
+    {
+        [Description("Arms")]
+        Arms = 0,
+
+        [Description("Body")]
+        Body = 1,
+
+        [Description("Face")]
+        Face = 2,
+
+        [Description("Feet")]
+        Feet = 3,
+
+        [Description("Finger")]
+        Finger = 4,
+
+        [Description("Floating")]
+        Floating = 5,
+
+        [Description("Hands")]
+        Hands = 6,
+
+        [Description("Head")]
+        Head = 7,
+
+        [Description("Held")]
+        Held = 8,
+
+        [Description("Legs")]
+        Legs = 9,
+
+        [Description("Light")]
+        Light = 10,
+
+        [Description("Neck")]
+        Neck = 11,
+
+        [Description("Shield")]
+        Shield = 12,
+
+        [Description("Torso")]
+        Torso = 13,
+
+        [Description("Waist")]
+        Waist = 14,
+
+        [Description("Wielded")]
+        Wielded = 15,
+
+        [Description("Wrist")]
+        Wrist = 16,
+
+        [Description("Secondary")]
+        Secondary = 17,
     }
 }

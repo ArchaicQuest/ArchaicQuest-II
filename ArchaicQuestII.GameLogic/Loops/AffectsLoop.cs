@@ -1,38 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
-using System.Threading.Tasks;
 using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Commands;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Spell;
 
 namespace ArchaicQuestII.GameLogic.Loops
 {
-	public class AffectsLoop : ILoop
-	{
+    public class AffectsLoop : ILoop
+    {
         public int TickDelay => 60000;
 
         public bool ConfigureAwait => true;
 
-        private ICore _core;
-        private List<Player> _players;
-
-        public void Init(ICore core, ICommandHandler commandHandler)
-        {
-            _core = core;
-            _players = new List<Player>();
-        }
+        private List<Player> _players = new List<Player>();
 
         public void PreTick()
         {
-            _players = _core.Cache.GetPlayerCache().Values.ToList();
+            _players = Services.Instance.Cache.GetPlayerCache().Values.ToList();
         }
 
         public void Tick()
         {
+            //Console.WriteLine("AffectsLoop");
+
             foreach (var pc in _players)
             {
                 pc.Hunger--;
@@ -44,22 +36,26 @@ namespace ArchaicQuestII.GameLogic.Loops
                     {
                         if (aff.Modifier.Strength != 0)
                         {
-                            pc.Attributes.Attribute[EffectLocation.Strength] -= aff.Modifier.Strength;
+                            pc.Attributes.Attribute[EffectLocation.Strength] -=
+                                aff.Modifier.Strength;
                         }
 
                         if (aff.Modifier.Dexterity != 0)
                         {
-                            pc.Attributes.Attribute[EffectLocation.Dexterity] -= aff.Modifier.Dexterity;
+                            pc.Attributes.Attribute[EffectLocation.Dexterity] -=
+                                aff.Modifier.Dexterity;
                         }
 
                         if (aff.Modifier.Constitution != 0)
                         {
-                            pc.Attributes.Attribute[EffectLocation.Constitution] -= aff.Modifier.Constitution;
+                            pc.Attributes.Attribute[EffectLocation.Constitution] -=
+                                aff.Modifier.Constitution;
                         }
 
                         if (aff.Modifier.Intelligence != 0)
                         {
-                            pc.Attributes.Attribute[EffectLocation.Intelligence] -= aff.Modifier.Intelligence;
+                            pc.Attributes.Attribute[EffectLocation.Intelligence] -=
+                                aff.Modifier.Intelligence;
                         }
 
                         if (aff.Modifier.Wisdom != 0)
@@ -69,7 +65,8 @@ namespace ArchaicQuestII.GameLogic.Loops
 
                         if (aff.Modifier.Charisma != 0)
                         {
-                            pc.Attributes.Attribute[EffectLocation.Charisma] -= aff.Modifier.Charisma;
+                            pc.Attributes.Attribute[EffectLocation.Charisma] -=
+                                aff.Modifier.Charisma;
                         }
 
                         if (aff.Modifier.HitRoll != 0)
@@ -79,7 +76,8 @@ namespace ArchaicQuestII.GameLogic.Loops
 
                         if (aff.Modifier.DamRoll != 0)
                         {
-                            pc.Attributes.Attribute[EffectLocation.DamageRoll] -= aff.Modifier.DamRoll;
+                            pc.Attributes.Attribute[EffectLocation.DamageRoll] -=
+                                aff.Modifier.DamRoll;
                         }
                         if (aff.Modifier.Armour != 0)
                         {
@@ -87,15 +85,12 @@ namespace ArchaicQuestII.GameLogic.Loops
                             pc.ArmorRating.Magic -= aff.Modifier.Armour;
                         }
 
-
                         pc.Affects.Custom.Remove(aff);
-
-                        _core.SpellList.CastSpell(aff.Name, "", pc, "", pc, _core.Cache.GetRoom(pc.RoomId), true);
 
                         if (aff.Affects == DefineSpell.SpellAffect.Blind)
                         {
                             pc.Affects.Blind = false;
-                            _core.Writer.WriteLine("You are no longer blinded.", pc.ConnectionId);
+                            Services.Instance.Writer.WriteLine("You are no longer blinded.", pc);
                         }
                         if (aff.Affects == DefineSpell.SpellAffect.Berserk)
                         {
@@ -121,20 +116,19 @@ namespace ArchaicQuestII.GameLogic.Loops
                         {
                             pc.Affects.Poisoned = false;
                         }
-                        if (aff.Affects == DefineSpell.SpellAffect.Haste
-                        )
+                        if (aff.Affects == DefineSpell.SpellAffect.Haste)
                         {
                             pc.Affects.Haste = false;
                         }
                     }
-                    _core.UpdateClient.UpdateAffects(pc);
+                    Services.Instance.UpdateClient.UpdateAffects(pc);
                 }
 
                 var idleTime5Mins = pc.LastCommandTime.AddMinutes(6) <= DateTime.Now;
 
                 if (!pc.Idle && idleTime5Mins)
                 {
-                    _core.Writer.WriteLine("You enter the void.", pc.ConnectionId);
+                    Services.Instance.Writer.WriteLine("You enter the void.", pc);
                     pc.Idle = true;
                     return;
                 }
@@ -143,7 +137,7 @@ namespace ArchaicQuestII.GameLogic.Loops
                 var idleTime15Mins = pc.LastCommandTime.AddMinutes(16) <= DateTime.Now;
                 if (idleTime10Mins && !idleTime15Mins)
                 {
-                    _core.Writer.WriteLine("You go deeper into the void.", pc.ConnectionId);
+                    Services.Instance.Writer.WriteLine("You go deeper into the void.", pc);
                 }
 
                 if (idleTime15Mins)
@@ -159,4 +153,3 @@ namespace ArchaicQuestII.GameLogic.Loops
         }
     }
 }
-

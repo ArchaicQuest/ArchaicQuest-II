@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using ArchaicQuestII.GameLogic.Account;
-using ArchaicQuestII.GameLogic.Character.Config;
 using ArchaicQuestII.GameLogic.Character.Model;
 
 namespace ArchaicQuestII.GameLogic.Character
@@ -39,7 +38,7 @@ namespace ArchaicQuestII.GameLogic.Character
         public List<string> CommandLog { get; set; } = new();
         public string Pose { get; set; }
         public string Title { get; set; }
-        
+
         public Item.Item OpenedBook { get; set; }
 
         public UserRole UserRole { get; set; } = UserRole.Player;

@@ -2,12 +2,12 @@
 {
     public class Config
     {
-        public int Id { get; set; }
         public bool DoubleXp { get; set; } = false;
         public bool DoubleGains { get; set; } = false;
         public bool DoubleQuestPoints { get; set; } = false;
         public bool PkAllowed { get; set; } = true;
         public bool PlayerThievingAllowed { get; set; } = true;
+
         /// <summary>
         /// Min level required to use Yell, gossip, channels
         /// </summary>
@@ -19,6 +19,7 @@
         /// Number of tics before NPC corpses decompose
         /// </summary>
         public int MaxNpcCorpseTime { get; set; } = 5;
+
         /// <summary>
         /// Number of tics before NPC corpses decompose
         /// </summary>
@@ -29,10 +30,12 @@
         /// default is 5 minutes
         /// </summary>
         public int MaxIdleTime { get; set; } = 300000;
+
         /// <summary>
         /// Time in ms for player update tick
         /// </summary>
         public int PlayerTick { get; set; } = 500;
+
         /// <summary>
         /// Time in ms for game update tick
         /// </summary>
@@ -44,6 +47,5 @@
         public string EventsDiscordWebHookURL { get; set; } = "";
         public string ErrorDiscordWebHookURL { get; set; } = "";
         public string PostMarkKey { get; set; } = "";
-
     }
 }

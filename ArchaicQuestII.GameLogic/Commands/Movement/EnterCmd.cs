@@ -10,12 +10,13 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement;
 
 public class EnterCmd : ICommand
 {
-    public EnterCmd(ICore core)
+    public EnterCmd()
     {
-        Aliases = new[] {"enter"};
-        Description = "If you happen to find a portal or hole in the wall or some other clear exit that is not of " +
-                      "the usual cardinal directions the command to use to take the exit is enter. <br /><br />Example:<br />enter portal<br />enter hole";
-        Usages = new[] {"Type: enter portal"};
+        Aliases = new[] { "enter" };
+        Description =
+            "If you happen to find a portal or hole in the wall or some other clear exit that is not of "
+            + "the usual cardinal directions the command to use to take the exit is enter. <br /><br />Example:<br />enter portal<br />enter hole";
+        Usages = new[] { "Type: enter portal" };
         Title = "";
         DeniedStatus = new[]
         {
@@ -30,25 +31,22 @@ public class EnterCmd : ICommand
             CharacterStatus.Status.Resting
         };
         UserRole = UserRole.Player;
-        Core = core;
     }
-    
+
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
     public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
-    public ICore Core { get; }
-
 
     public void Execute(Player player, Room room, string[] input)
     {
         var target = input.ElementAtOrDefault(1);
-        
+
         if (string.IsNullOrEmpty(target))
         {
-            Core.Writer.WriteLine("<p>You can't do that here.</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>You can't do that here.</p>", player);
             return;
         }
 
@@ -57,21 +55,25 @@ public class EnterCmd : ICommand
 
         if (item == null)
         {
-            Core.Writer.WriteLine("<p>You don't see that here.</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>You don't see that here.</p>", player);
             return;
         }
 
         if (item.ItemType != Item.Item.ItemTypes.Portal)
         {
-            Core.Writer.WriteLine("<p>You can't enter that.</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>You can't enter that.</p>", player);
             return;
         }
 
-        Core.Writer.WriteLine($"<p>You {item.Portal.EnterDescription}</p>", player.ConnectionId);
-        Core.Writer.WriteToOthersInRoom($"<p>{player.Name} {item.Portal.EnterDescription}</p>", room, player);
+        Services.Instance.Writer.WriteLine($"<p>You {item.Portal.EnterDescription}</p>", player);
+        Services.Instance.Writer.WriteToOthersInRoom(
+            $"<p>{player.Name} {item.Portal.EnterDescription}</p>",
+            room,
+            player
+        );
 
-        var newRoom = Core.Cache.GetRoom(item.Portal.Destination);
-        
-        Core.RoomActions.RoomChange(player, room, newRoom, false);
+        var newRoom = Services.Instance.Cache.GetRoom(item.Portal.Destination);
+
+        player.ChangeRoom(room, newRoom, false);
     }
 }

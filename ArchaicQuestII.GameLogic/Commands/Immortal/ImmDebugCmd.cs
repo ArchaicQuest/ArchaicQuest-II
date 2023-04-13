@@ -9,15 +9,14 @@ namespace ArchaicQuestII.GameLogic.Commands.Immortal
 {
     public class ImmDebugCmd : ICommand
     {
-        public ImmDebugCmd(ICore core)
+        public ImmDebugCmd()
         {
-            Aliases = new[] {"/debug"};
+            Aliases = new[] { "/debug" };
             Description = "Displays debug info for the current room.";
-            Usages = new[] {"Type: /debug"};
-                Title = "";
-    DeniedStatus = null;
+            Usages = new[] { "Type: /debug" };
+            Title = "";
+            DeniedStatus = null;
             UserRole = UserRole.Staff;
-            Core = core;
         }
 
         public string[] Aliases { get; }
@@ -26,13 +25,12 @@ namespace ArchaicQuestII.GameLogic.Commands.Immortal
         public string Title { get; }
         public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
-        public ICore Core { get; }
 
         public void Execute(Player player, Room room, string[] input)
         {
             var jsonObject = JsonConvert.SerializeObject(room);
 
-            Core.Writer.WriteLine(jsonObject, player.ConnectionId);
+            Services.Instance.Writer.WriteLine(jsonObject, player);
         }
     }
 }

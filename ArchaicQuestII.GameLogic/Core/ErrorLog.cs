@@ -4,13 +4,6 @@ namespace ArchaicQuestII.GameLogic.Core;
 
 public class ErrorLog : IErrorLog
 {
-    public IDataBase Database { get; }
-    
-    public ErrorLog(IDataBase db)
-    {
-        Database = db;
-    }
-
     /// <summary>
     /// Logs and error to the database
     /// </summary>
@@ -25,8 +18,8 @@ public class ErrorLog : IErrorLog
             Error = error,
             Priority = priority
         };
-        
-        Database.Save(e, DataBase.Collections.ErrorLog);
+
+        Services.Instance.DataBase.Save(e, DataBase.Collections.ErrorLog);
     }
 
     public struct ErrorInfo

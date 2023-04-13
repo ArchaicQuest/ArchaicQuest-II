@@ -1,39 +1,38 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Character.Status;
-using ArchaicQuestII.GameLogic.Commands;
 
 namespace ArchaicQuestII.GameLogic.Loops
 {
-	public class CombatLoop : ILoop
-	{
+    public class CombatLoop : ILoop
+    {
         public int TickDelay => 3200;
 
         public bool ConfigureAwait => true;
 
-        private ICore _core;
         private List<Player> _combatants;
-
-        public void Init(ICore core, ICommandHandler commandHandler)
-        {
-            _core = core;
-        }
 
         public void PreTick()
         {
-            _combatants = _core.Cache.GetCombatList().Where(x => x.Status == CharacterStatus.Status.Fighting).ToList();
+            _combatants = Services.Instance.Cache
+                .GetCombatList()
+                .Where(x => x.Status == CharacterStatus.Status.Fighting)
+                .ToList();
         }
 
         public void Tick()
         {
+            //Console.WriteLine("CombatLoop");
+
             foreach (var player in _combatants)
             {
-                if (player.Lag > 0 &&
-                    player.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
+                if (
+                    player.Lag > 0
+                    && player.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase)
+                )
                 {
                     player.Lag -= 1;
                     continue;
@@ -41,28 +40,33 @@ namespace ArchaicQuestII.GameLogic.Loops
 
                 var attackCount = 1;
 
-                var hasSecondAttack = player.Skills.FirstOrDefault(x =>
-                    x.SkillName.Equals("Second Attack", StringComparison.CurrentCultureIgnoreCase));
+                var hasSecondAttack = player.Skills.FirstOrDefault(
+                    x => x.Name == SkillName.SecondAttack
+                );
                 if (hasSecondAttack != null)
                 {
-                    hasSecondAttack = player.Level >= hasSecondAttack.Level ? hasSecondAttack : null;
+                    hasSecondAttack =
+                        player.Level >= hasSecondAttack.Level ? hasSecondAttack : null;
                 }
 
-                var hasThirdAttack = player.Skills.FirstOrDefault(x =>
-                    x.SkillName.Equals("Third Attack", StringComparison.CurrentCultureIgnoreCase));
+                var hasThirdAttack = player.Skills.FirstOrDefault(
+                    x => x.Name == SkillName.ThirdAttack
+                );
                 if (hasThirdAttack != null)
                 {
                     hasThirdAttack = player.Level >= hasThirdAttack.Level ? hasThirdAttack : null;
                 }
 
-                var hasFouthAttack = player.Skills.FirstOrDefault(x =>
-                    x.SkillName.Equals("Fourth Attack", StringComparison.CurrentCultureIgnoreCase));
+                var hasFouthAttack = player.Skills.FirstOrDefault(
+                    x => x.Name == SkillName.FourthAttack
+                );
                 if (hasFouthAttack != null)
                 {
                     hasFouthAttack = player.Level >= hasFouthAttack.Level ? hasFouthAttack : null;
                 }
-                var hasFithAttack = player.Skills.FirstOrDefault(x =>
-                    x.SkillName.Equals("Fifth Attack", StringComparison.CurrentCultureIgnoreCase));
+                var hasFithAttack = player.Skills.FirstOrDefault(
+                    x => x.Name == SkillName.FifthAttack
+                );
 
                 if (hasFithAttack != null)
                 {
@@ -94,12 +98,15 @@ namespace ArchaicQuestII.GameLogic.Loops
                     attackCount += 1;
                 }
 
-
                 for (var i = 0; i < attackCount; i++)
                 {
-                    _core.Combat.Fight(player, player.Target, _core.Cache.GetRoom(player.RoomId), false);
+                    Services.Instance.Combat.Fight(
+                        player,
+                        player.Target,
+                        Services.Instance.Cache.GetRoom(player.RoomId),
+                        false
+                    );
                 }
-
             }
         }
 
@@ -109,4 +116,3 @@ namespace ArchaicQuestII.GameLogic.Loops
         }
     }
 }
-

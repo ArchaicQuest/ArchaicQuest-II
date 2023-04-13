@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace ArchaicQuestII.GameLogic.Character.Help
+namespace ArchaicQuestII.GameLogic.Core
 {
     public class Help
     {

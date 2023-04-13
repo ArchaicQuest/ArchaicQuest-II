@@ -10,24 +10,22 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 {
     public class QuestLogCmd : ICommand
     {
-        public QuestLogCmd(ICore core)
+        public QuestLogCmd()
         {
-            Aliases = new[] {"questlog", "qlog"};
+            Aliases = new[] { "questlog", "qlog" };
             Description = "Displays your current quests.";
-            Usages = new[] {"Type: questlog"};
+            Usages = new[] { "Type: questlog" };
             Title = "";
-    DeniedStatus = null;
+            DeniedStatus = null;
             UserRole = UserRole.Player;
-            Core = core;
         }
-        
+
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
         public string Title { get; }
         public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
-        public ICore Core { get; }
 
         public void Execute(Player player, Room room, string[] input)
         {
@@ -48,7 +46,9 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                     sb.Append($"<li>{mob.Name} {mob.Current}/{mob.Count}</li>");
                 }
 
-                sb.Append($"</ol><p>{q.Description}</p><p>Reward:</p><ul><li>{q.ExpGain} Experience points</li><li>{q.GoldGain} Gold</li>");
+                sb.Append(
+                    $"</ol><p>{q.Description}</p><p>Reward:</p><ul><li>{q.ExpGain} Experience points</li><li>{q.GoldGain} Gold</li>"
+                );
 
                 foreach (var i in q.ItemGain)
                 {
@@ -58,7 +58,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                 sb.Append("</ul></div>");
             }
 
-            Core.Writer.WriteLine(sb.ToString(), player.ConnectionId);
+            Services.Instance.Writer.WriteLine(sb.ToString(), player);
         }
     }
 }

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using ArchaicQuestII.GameLogic.Client;
+﻿using ArchaicQuestII.GameLogic.Client;
 using ArchaicQuestII.GameLogic.Core;
 using Moq;
-using Xunit;
 
 namespace ArchaicQuestII.GameLogic.Tests.Core
 {
@@ -12,12 +8,12 @@ namespace ArchaicQuestII.GameLogic.Tests.Core
     public class Time
     {
         private readonly Mock<IWriteToClient> _writeToClient;
-        private readonly Mock<ICache> _cache;
+        private readonly Mock<Cache> _cache;
 
         public Time()
         {
             _writeToClient = new Mock<IWriteToClient>();
-            _cache = new Mock<ICache>();
+            _cache = new Mock<Cache>();
         }
 
         // [Fact]
@@ -54,7 +50,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Core
         //
         //     var month = time.UpdateTime();
         //
-        //  
+        //
         //     Assert.Equal("The moon is high in the sky.", month);
         //
         // }
@@ -372,7 +368,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Core
         //
         // [Fact]
         // public void Time_cycle_6PM()
-        // { 
+        // {
         //     var time = new GameLogic.Core.Time(_writeToClient.Object, _cache.Object);
         //
         //     var startDate = new DateTime(2016, 04, 14);
@@ -452,9 +448,9 @@ namespace ArchaicQuestII.GameLogic.Tests.Core
         //
         //     var timePassed = time.MudTimePassed(endDate, startDate);
         //     time.GameTime = timePassed;
-        //     
+        //
         //     var month = time.UpdateTime();
-        //     
+        //
         //     Assert.Equal("The moon is slowly moving west across the sky.", month);
         //
         // }
@@ -622,7 +618,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Core
         //
         //
         //     Assert.Equal("", month);
-        // }  
+        // }
         //
         // [Fact]
         // public void Time_cycle_8AM_day2()
@@ -639,7 +635,7 @@ namespace ArchaicQuestII.GameLogic.Tests.Core
         //
         //
         //     Assert.Equal("The sun has risen from the east, the day has begun.", month);
-        //     
+        //
         // }
         //
         // [Fact]
@@ -695,7 +691,5 @@ namespace ArchaicQuestII.GameLogic.Tests.Core
         //     Assert.Equal("The sun is slowly moving west across the sky.", month);
         //
         // }
-
-
     }
 }

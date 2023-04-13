@@ -9,28 +9,22 @@ namespace ArchaicQuestII.GameLogic.Commands.Immortal;
 
 public class ImmTrainCmd : ICommand
 {
-    public ImmTrainCmd(ICore core)
+    public ImmTrainCmd()
     {
-        Aliases = new[] {"/train"};
+        Aliases = new[] { "/train" };
         Description = "Max out a players stats";
-        Usages = new[]
-        {
-            "Example: /train bob",
-            "Example: /train"
-        };
-            Title = "";
-    DeniedStatus = null;
+        Usages = new[] { "Example: /train bob", "Example: /train" };
+        Title = "";
+        DeniedStatus = null;
         UserRole = UserRole.Player;
-        Core = core;
     }
-    
+
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
     public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
-    public ICore Core { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
@@ -42,16 +36,20 @@ public class ImmTrainCmd : ICommand
             {
                 skill.Proficiency = 85;
             }
-            
-            Core.Writer.WriteLine("<p>You have max stats now.</p>", player.ConnectionId);
+
+            Services.Instance.Writer.WriteLine("<p>You have max stats now.</p>", player);
             return;
         }
-        
+
         Player foundPlayer = null;
-        
-        foreach (var checkRoom in Core.Cache.GetAllRooms())
+
+        foreach (var checkRoom in Services.Instance.Cache.GetAllRooms())
         {
-            foreach (var checkRoomPlayer in checkRoom.Players.Where(checkRoomPlayer => checkRoomPlayer.Name == target))
+            foreach (
+                var checkRoomPlayer in checkRoom.Players.Where(
+                    checkRoomPlayer => checkRoomPlayer.Name == target
+                )
+            )
             {
                 foundPlayer = checkRoomPlayer;
                 break;
@@ -60,15 +58,15 @@ public class ImmTrainCmd : ICommand
 
         if (foundPlayer == null)
         {
-            Core.Writer.WriteLine("<p>They're not here.</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>They're not here.</p>", player);
             return;
         }
-        
+
         foreach (var skill in foundPlayer.Skills)
         {
             skill.Proficiency = 85;
         }
-        
-        Core.Writer.WriteLine($"<p>{foundPlayer} has max stats now.</p>", player.ConnectionId);
+
+        Services.Instance.Writer.WriteLine($"<p>{foundPlayer} has max stats now.</p>", player);
     }
 }

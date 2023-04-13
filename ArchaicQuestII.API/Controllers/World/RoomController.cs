@@ -8,16 +8,15 @@ using System.Linq;
 using ArchaicQuestII.API.Entities;
 using ArchaicQuestII.API.Helpers;
 using ArchaicQuestII.API.Models;
-using ArchaicQuestII.GameLogic.Character.Class;
-using ArchaicQuestII.GameLogic.Character.Help;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Client;
-using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Crafting;
 using ArchaicQuestII.GameLogic.Item;
 using ArchaicQuestII.GameLogic.Skill.Model;
 using Newtonsoft.Json;
 using ArchaicQuestII.GameLogic.World.Area;
+using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Core;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -26,31 +25,17 @@ namespace ArchaicQuestII.API.World
     [Authorize]
     public class RoomController : Controller
     {
-
-        private IDataBase _db { get; }
-        private IAddRoom _addRoom { get; }
-        private ICache _cache { get; }
-        public RoomController(IDataBase db, IAddRoom addRoom, ICache cache)
-        {
-            _db = db;
-            _addRoom = addRoom;
-            _cache = cache;
-        }
-
         [HttpPost]
         [Route("api/World/Room")]
         public IActionResult Post([FromBody] Room room)
         {
-            var newRoom = _addRoom.MapRoom(room);
+            var newRoom = room.MapRoom();
 
-
-            _db.Save(newRoom, DataBase.Collections.Room);
+            GameLogic.Core.Services.Instance.DataBase.Save(newRoom, DataBase.Collections.Room);
 
             var user = (HttpContext.Items["User"] as AdminUser);
             user.Contributions += 1;
-            _db.Save(user, DataBase.Collections.Users);
-
-
+            GameLogic.Core.Services.Instance.DataBase.Save(user, DataBase.Collections.Users);
 
             return Ok(JsonConvert.SerializeObject(new { toast = $"Room saved successfully." }));
         }
@@ -75,7 +60,10 @@ namespace ArchaicQuestII.API.World
         [Route("api/World/Room/{id:int}")]
         public Room Get(int id)
         {
-            return _db.GetById<Room>(id, DataBase.Collections.Room);
+            return GameLogic.Core.Services.Instance.DataBase.GetById<Room>(
+                id,
+                DataBase.Collections.Room
+            );
         }
 
         ///
@@ -84,47 +72,49 @@ namespace ArchaicQuestII.API.World
         [Route("api/World/Room/returnRoomTypes")]
         public JsonResult ReturnRoomTypes()
         {
-
             var roomTypes = new List<object>();
 
             foreach (var item in Enum.GetValues(typeof(Room.RoomType)))
             {
-
-                roomTypes.Add(new
-                {
-                    id = (int)item,
-                    name = item.ToString()
-                });
+                roomTypes.Add(new { id = (int)item, name = item.ToString() });
             }
             return Json(roomTypes);
-
         }
+
         [HttpPut]
         [Route("api/World/Room/{id:int}")]
         public void Put([FromBody] Room data)
         {
-            var updateRoom = _addRoom.MapRoom(data);
-            _db.Save(updateRoom, DataBase.Collections.Room);
+            var updateRoom = data.MapRoom();
+            GameLogic.Core.Services.Instance.DataBase.Save(updateRoom, DataBase.Collections.Room);
 
             var user = (HttpContext.Items["User"] as AdminUser);
             user.Contributions += 1;
-            _db.Save(user, DataBase.Collections.Users);
+            GameLogic.Core.Services.Instance.DataBase.Save(user, DataBase.Collections.Users);
 
             var log = new AdminLog()
             {
-                Detail = $"({data.AreaId}, {data.Id}, x: {data.Coords.X} y: {data.Coords.Y}, z: {data.Coords.Z}) {data.Title}",
+                Detail =
+                    $"({data.AreaId}, {data.Id}, x: {data.Coords.X} y: {data.Coords.Y}, z: {data.Coords.Z}) {data.Title}",
                 Type = DataBase.Collections.Room,
                 UserName = user.Username
             };
-            _db.Save(log, DataBase.Collections.Log);
-
+            GameLogic.Core.Services.Instance.DataBase.Save(log, DataBase.Collections.Log);
         }
 
         [HttpGet("{x}/{y}/{z}/{areaId}")]
         [Route("api/World/Room/{x:int}/{y:int}/{z:int}/{areaId:int}")]
         public bool validExit(int x, int y, int z, int areaId)
         {
-            return _addRoom.GetRoomFromCoords(new Coordinates { X = x, Y = y, Z = z }, areaId) != null;
+            return AddRoom.GetRoomFromCoords(
+                    new Coordinates
+                    {
+                        X = x,
+                        Y = y,
+                        Z = z
+                    },
+                    areaId
+                ) != null;
         }
 
         public void MapMobRoomId(Room room)
@@ -140,30 +130,11 @@ namespace ArchaicQuestII.API.World
         {
             foreach (var mob in room.Mobs)
             {
+                mob.AddSkills(Enum.Parse<ClassName>(mob.ClassName));
 
-                mob.Skills = new List<SkillList>();
-
-                var classSkill = _db.GetCollection<Class>(DataBase.Collections.Class).FindOne(x =>
-                    x.Name.Equals(mob.ClassName, StringComparison.CurrentCultureIgnoreCase));
-
-                foreach (var skill in classSkill.Skills)
+                foreach (var skill in mob.Skills)
                 {
-                    // skill doesn't exist and should be added
-                    if (mob.Skills.FirstOrDefault(x =>
-                            x.SkillName.Equals(skill.SkillName, StringComparison.CurrentCultureIgnoreCase)) == null)
-                    {
-                        mob.Skills.Add(
-                            new SkillList()
-                            {
-                                Proficiency = 100,
-                                Level = skill.Level,
-                                SkillName = skill.SkillName,
-                                SkillId = skill.SkillId
-                            }
-                        );
-                    }
-
-                    mob.Skills.FirstOrDefault(x => x.SkillName.Equals(skill.SkillName, StringComparison.CurrentCultureIgnoreCase)).SkillId = skill.SkillId;
+                    skill.Proficiency = 100;
                 }
 
                 //set mob armor
@@ -178,21 +149,23 @@ namespace ArchaicQuestII.API.World
             }
         }
 
-
         [HttpPost]
         [Route("api/World/Room/updateCache")]
         public IActionResult UpdateRoomCache()
         {
-
             Stopwatch s = Stopwatch.StartNew();
 
-            var roomsWithPlayers = _cache.GetAllRooms().Where(x => x.Players.Any());
+            var roomsWithPlayers = GameLogic.Core.Services.Instance.Cache
+                .GetAllRooms()
+                .Where(x => x.Players.Any());
 
-            _cache.ClearRoomCache();
+            GameLogic.Core.Services.Instance.Cache.ClearRoomCache();
 
             try
             {
-                var rooms = _db.GetList<Room>(DataBase.Collections.Room);
+                var rooms = GameLogic.Core.Services.Instance.DataBase.GetList<Room>(
+                    DataBase.Collections.Room
+                );
 
                 foreach (var room in rooms.Where(x => x.Deleted == false))
                 {
@@ -208,12 +181,20 @@ namespace ArchaicQuestII.API.World
                             room.Players.Add(player);
                         }
                     }
-                    
-                    _cache.AddRoom($"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}", room);
-                    _cache.AddOriginalRoom($"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}", JsonConvert.DeserializeObject<Room>(JsonConvert.SerializeObject(room)));
+
+                    GameLogic.Core.Services.Instance.Cache.AddRoom(
+                        $"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}",
+                        room
+                    );
+                    GameLogic.Core.Services.Instance.Cache.AddOriginalRoom(
+                        $"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}",
+                        JsonConvert.DeserializeObject<Room>(JsonConvert.SerializeObject(room))
+                    );
                 }
 
-                var areas = _db.GetList<Area>(DataBase.Collections.Area);
+                var areas = GameLogic.Core.Services.Instance.DataBase.GetList<Area>(
+                    DataBase.Collections.Area
+                );
 
                 foreach (var area in areas)
                 {
@@ -227,62 +208,84 @@ namespace ArchaicQuestII.API.World
                             roomsByZ.Add(room);
                         }
 
-                        _cache.AddMap($"{area.Id}{zarea.Coords.Z}", Map.DrawMap(roomsByZ));
+                        GameLogic.Core.Services.Instance.Cache.AddMap(
+                            $"{area.Id}{zarea.Coords.Z}",
+                            Map.DrawMap(roomsByZ)
+                        );
                     }
 
                     var rooms0index = roomList.FindAll(x => x.Coords.Z == 0);
-                    _cache.AddMap($"{area.Id}0", Map.DrawMap(rooms0index));
+                    GameLogic.Core.Services.Instance.Cache.AddMap(
+                        $"{area.Id}0",
+                        Map.DrawMap(rooms0index)
+                    );
                 }
 
-                var helps = _db.GetList<Help>(DataBase.Collections.Help);
+                var helps = GameLogic.Core.Services.Instance.DataBase.GetList<Help>(
+                    DataBase.Collections.Help
+                );
 
                 foreach (var help in helps)
                 {
-                    _cache.AddHelp(help.Id, help);
+                    GameLogic.Core.Services.Instance.Cache.AddHelp(help.Id, help);
                 }
 
-                var quests = _db.GetList<Quest>(DataBase.Collections.Quests);
+                var quests = GameLogic.Core.Services.Instance.DataBase.GetList<Quest>(
+                    DataBase.Collections.Quests
+                );
 
                 foreach (var quest in quests)
                 {
-                    _cache.AddQuest(quest.Id, quest);
+                    GameLogic.Core.Services.Instance.Cache.AddQuest(quest.Id, quest);
                 }
 
-                var skills = _db.GetList<Skill>(DataBase.Collections.Skill);
+                var skills = GameLogic.Core.Services.Instance.DataBase.GetList<Skill>(
+                    DataBase.Collections.Skill
+                );
 
                 foreach (var skill in skills)
                 {
-                    _cache.AddSkill(skill.Id, skill);
+                    GameLogic.Core.Services.Instance.Cache.AddSkill(skill.Id, skill);
                 }
 
-                var craftingRecipes = _db.GetList<CraftingRecipes>(DataBase.Collections.CraftingRecipes);
+                var craftingRecipes =
+                    GameLogic.Core.Services.Instance.DataBase.GetList<CraftingRecipes>(
+                        DataBase.Collections.CraftingRecipes
+                    );
                 foreach (var craftingRecipe in craftingRecipes)
                 {
-                    _cache.AddCraftingRecipes(craftingRecipe.Id, craftingRecipe);
+                    GameLogic.Core.Services.Instance.Cache.AddCraftingRecipes(
+                        craftingRecipe.Id,
+                        craftingRecipe
+                    );
                 }
             }
-            catch (Exception)
-            {
-
-            }
+            catch (Exception) { }
 
             s.Stop();
 
-            return Ok(JsonConvert.SerializeObject(new { toast = $"Room and Map cache updated successfully. Elapsed Time: {s.ElapsedMilliseconds} ms" }));
+            return Ok(
+                JsonConvert.SerializeObject(
+                    new
+                    {
+                        toast = $"Room and Map cache updated successfully. Elapsed Time: {s.ElapsedMilliseconds} ms"
+                    }
+                )
+            );
         }
 
         [HttpDelete]
         [Route("api/World/Room/delete/{id:int}")]
         public IActionResult Delete(int id)
         {
-           var room = _db.GetCollection<Room>(DataBase.Collections.Room).FindById(id);
-            _db.Delete<Room>(id, DataBase.Collections.Room);
-      
-                return Ok(JsonConvert.SerializeObject(new { toast = $"{room.Title} deleted successfully." }));
-         
+            var room = GameLogic.Core.Services.Instance.DataBase
+                .GetCollection<Room>(DataBase.Collections.Room)
+                .FindById(id);
+            GameLogic.Core.Services.Instance.DataBase.Delete<Room>(id, DataBase.Collections.Room);
 
+            return Ok(
+                JsonConvert.SerializeObject(new { toast = $"{room.Title} deleted successfully." })
+            );
         }
-
-
     }
 }

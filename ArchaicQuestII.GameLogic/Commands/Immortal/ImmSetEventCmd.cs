@@ -9,27 +9,23 @@ namespace ArchaicQuestII.GameLogic.Commands.Immortal;
 
 public class ImmSetEventCmd : ICommand
 {
-    public ImmSetEventCmd(ICore core)
+    public ImmSetEventCmd()
     {
-        Aliases = new[] {"/setevent"};
+        Aliases = new[] { "/setevent" };
         Description = "Set an event, for mob testing";
-        Usages = new[]
-        {
-            "Example: /train bob",
-        };
-            Title = "";
-    DeniedStatus = null;
+        Usages = new[] { "Example: /train bob", };
+        Title = "";
+        DeniedStatus = null;
         UserRole = UserRole.Staff;
-        Core = core;
     }
-    
+
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
-  
-    public string Title { get; }  public CharacterStatus.Status[] DeniedStatus { get; }
+
+    public string Title { get; }
+    public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
-    public ICore Core { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
@@ -40,7 +36,7 @@ public class ImmSetEventCmd : ICommand
         {
             foreach (var ev in player.EventState)
             {
-                Core.Writer.WriteLine($"{ev.Key} - {ev.Value}", player.ConnectionId);
+                Services.Instance.Writer.WriteLine($"{ev.Key} - {ev.Value}", player);
             }
 
             return;
@@ -49,10 +45,13 @@ public class ImmSetEventCmd : ICommand
         if (player.EventState.ContainsKey(eventName))
         {
             player.EventState[eventName] = num;
-            Core.Writer.WriteLine($"{eventName} state changed to {player.EventState[eventName]}", player.ConnectionId);
+            Services.Instance.Writer.WriteLine(
+                $"{eventName} state changed to {player.EventState[eventName]}",
+                player
+            );
             return;
         }
 
-        Core.Writer.WriteLine("Invalid Event state", player.ConnectionId);
+        Services.Instance.Writer.WriteLine("Invalid Event state", player);
     }
 }

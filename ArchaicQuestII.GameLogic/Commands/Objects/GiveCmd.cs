@@ -12,10 +12,11 @@ namespace ArchaicQuestII.GameLogic.Commands.Objects;
 
 public class GiveCmd : ICommand
 {
-    public GiveCmd(ICore core)
+    public GiveCmd()
     {
-        Aliases = new[] {"give"};
-        Description = @"'{yellow}give{/}' is used to give the specified item or gold to a player or mob.  
+        Aliases = new[] { "give" };
+        Description =
+            @"'{yellow}give{/}' is used to give the specified item or gold to a player or mob.  
 
 Examples:
 give sword charlotte
@@ -23,7 +24,10 @@ give 10 gold larissa
 
 Related help files: get, put, give, drop
 ";
-        Usages = new[] {"Type: give 'object' 'target', Example: give apple timmy, Example: give 10 gold timmy"};
+        Usages = new[]
+        {
+            "Type: give 'object' 'target', Example: give apple timmy, Example: give 10 gold timmy"
+        };
         Title = "";
         DeniedStatus = new[]
         {
@@ -39,24 +43,22 @@ Related help files: get, put, give, drop
             CharacterStatus.Status.Sitting,
         };
         UserRole = UserRole.Player;
-        Core = core;
     }
-    
+
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
     public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
-    public ICore Core { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
         var targetName = input.ElementAtOrDefault(2);
-        
+
         if (string.IsNullOrEmpty(targetName))
         {
-            Core.Writer.WriteLine("<p>Give what to whom?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Give what to whom?</p>", player);
             return;
         }
 
@@ -76,23 +78,26 @@ Related help files: get, put, give, drop
 
         if (player.Affects.Blind)
         {
-            Core.Writer.WriteLine("<p>You are blind and can't see a thing!</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine(
+                "<p>You are blind and can't see a thing!</p>",
+                player
+            );
             return;
         }
 
         if (string.IsNullOrEmpty(itemName))
         {
-            Core.Writer.WriteLine("<p>Give what to whom?</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>Give what to whom?</p>", player);
             return;
         }
 
         var nthItem = Helpers.findNth(itemName);
         var nthTarget = Helpers.findNth(targetName);
         var target = Helpers.FindMob(nthTarget, room) ?? Helpers.findPlayerObject(nthTarget, room);
-        
+
         if (target == null)
         {
-            Core.Writer.WriteLine("<p>They aren't here.</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>They aren't here.</p>", player);
             return;
         }
 
@@ -102,46 +107,59 @@ Related help files: get, put, give, drop
             return;
         }
 
-        var item = Helpers.findObjectInInventory(nthItem, player);
+        var item = player.FindObjectInInventory(nthItem);
 
         if (item == null)
         {
-            Core.Writer.WriteLine("<p>You do not have that item.</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>You do not have that item.</p>", player);
             return;
         }
 
         if (item.Equipped)
         {
-            Core.Writer.WriteLine($"<p>You must remove {item.Name.ToLower()} before you can give it.</p>",
-                player.ConnectionId);
+            Services.Instance.Writer.WriteLine(
+                $"<p>You must remove {item.Name.ToLower()} before you can give it.</p>",
+                player
+            );
             return;
         }
 
         if ((item.ItemFlag & Item.Item.ItemFlags.Nodrop) != 0)
         {
-            Core.Writer.WriteLine($"<p>You can't let go of {item.Name.ToLower()}. It appears to be cursed.</p>",
-                player.ConnectionId);
+            Services.Instance.Writer.WriteLine(
+                $"<p>You can't let go of {item.Name.ToLower()}. It appears to be cursed.</p>",
+                player
+            );
             return;
         }
 
         player.Inventory.Remove(item);
         player.Weight -= item.Weight;
-        
-        Core.Writer.WriteLine($"<p>You give {item.Name.ToLower()} to {target.Name.ToLower()}.</p>", player.ConnectionId);
-        Core.Writer.WriteLine($"<p>{player.Name} gives you {item.Name.ToLower()}.</p>", target.ConnectionId);
-        Core.Writer.WriteToOthersInRoom($"<p>{player.Name} gives {item.Name.ToLower()} to {target.Name.ToLower()}.</p>",
-            room, player);
+
+        Services.Instance.Writer.WriteLine(
+            $"<p>You give {item.Name.ToLower()} to {target.Name.ToLower()}.</p>",
+            player
+        );
+        Services.Instance.Writer.WriteLine(
+            $"<p>{player.Name} gives you {item.Name.ToLower()}.</p>",
+            target
+        );
+        Services.Instance.Writer.WriteToOthersInRoom(
+            $"<p>{player.Name} gives {item.Name.ToLower()} to {target.Name.ToLower()}.</p>",
+            room,
+            player
+        );
 
         target.Inventory.Add(item);
-        Core.UpdateClient.UpdateInventory(player);
-        Core.UpdateClient.UpdateInventory(target);
-        
+        Services.Instance.UpdateClient.UpdateInventory(player);
+        Services.Instance.UpdateClient.UpdateInventory(target);
+
         if (!string.IsNullOrEmpty(target.Events.Give))
         {
             UserData.RegisterType<MobScripts>();
 
             var script = new Script();
-            var obj = UserData.Create(Core.MobScripts);
+            var obj = UserData.Create(Services.Instance.MobScripts);
             script.Globals.Set("obj", obj);
             UserData.RegisterProxyType<MyProxy, Room>(r => new MyProxy(room));
             UserData.RegisterProxyType<ProxyPlayer, Player>(r => new ProxyPlayer(player));
@@ -152,41 +170,51 @@ Related help files: get, put, give, drop
 
             var res = script.DoString(target.Events.Give);
         }
-        
-        if(target.Weight > target.Attributes.Attribute[EffectLocation.Strength] * 3)
+
+        if (target.Weight > target.Attributes.Attribute[EffectLocation.Strength] * 3)
         {
-            Core.Writer.WriteLine($"<p>You are now over encumbered by carrying too much weight.</p>", target.ConnectionId);
+            Services.Instance.Writer.WriteLine(
+                $"<p>You are now over encumbered by carrying too much weight.</p>",
+                target
+            );
         }
     }
 
     private void GiveGold(Player player, Room room, Player target, int amount)
     {
-
         if (player.Money.Gold < amount)
         {
-            Core.Writer.WriteLine("<p>You don't have that much gold to give.</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine(
+                "<p>You don't have that much gold to give.</p>",
+                player
+            );
             return;
         }
 
         if (target == null)
         {
-            Core.Writer.WriteLine("<p>They aren't here.</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>They aren't here.</p>", player);
             return;
         }
 
-        Core.Writer.WriteLine(
+        Services.Instance.Writer.WriteLine(
             $"<p>You give {target.Name} {(amount == 1 ? "1 gold coin." : $"{amount} gold coins.")}</p>",
-            player.ConnectionId);
-        Core.Writer.WriteLine(
+            player
+        );
+        Services.Instance.Writer.WriteLine(
             $"<p>{player.Name} gives you {(amount == 1 ? "1 gold coin." : $"{amount} gold coins.")}</p>",
-            target.ConnectionId);
-        Core.Writer.WriteToOthersInRoom($"<p>{player.Name} gives {target.Name} some gold.</p>",
-            room, player);
+            target
+        );
+        Services.Instance.Writer.WriteToOthersInRoom(
+            $"<p>{player.Name} gives {target.Name} some gold.</p>",
+            room,
+            player
+        );
 
         player.Money.Gold -= amount;
         player.Weight -= amount * 0.1;
         target.Money.Gold += amount;
         target.Weight += amount * 0.1;
-        Core.UpdateClient.UpdateScore(player);
+        Services.Instance.UpdateClient.UpdateScore(player);
     }
 }

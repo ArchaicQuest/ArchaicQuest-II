@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using ArchaicQuestII.GameLogic.Core;
+﻿using ArchaicQuestII.GameLogic.Core;
 
 namespace ArchaicQuestII.GameLogic.Character.Alignment
 {
@@ -8,7 +6,7 @@ namespace ArchaicQuestII.GameLogic.Character.Alignment
     {
         /// <summary>
         /// Value determines Alignment value
-        ///   
+        ///
         ///Evil    - Alignment between and including -1000 and -350
         ///Neutral - Alignment between and including -349 and 349
         ///Good    - Alignment between and including 350 and 1000

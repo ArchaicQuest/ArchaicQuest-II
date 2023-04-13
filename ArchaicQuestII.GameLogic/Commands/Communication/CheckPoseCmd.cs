@@ -8,11 +8,11 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
 {
     public class CheckPoseCmd : ICommand
     {
-        public CheckPoseCmd(ICore core)
+        public CheckPoseCmd()
         {
-            Aliases = new[] {"checkpose"};
+            Aliases = new[] { "checkpose" };
             Description = "Shows you what your characters current pose is";
-            Usages = new[] {"Type: checkpose"};
+            Usages = new[] { "Type: checkpose" };
             Title = "";
             DeniedStatus = new[]
             {
@@ -26,23 +26,22 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
                 CharacterStatus.Status.Stunned,
             };
             UserRole = UserRole.Player;
-            Core = core;
         }
-        
+
         public string[] Aliases { get; }
         public string Description { get; }
         public string[] Usages { get; }
         public string Title { get; }
         public CharacterStatus.Status[] DeniedStatus { get; }
         public UserRole UserRole { get; }
-        public ICore Core { get; }
-
 
         public void Execute(Player player, Room room, string[] input)
         {
             var poseText = string.Empty;
 
-            poseText = string.IsNullOrEmpty(player.LongName) ? $"<p>{ player.Name}" : $"{ player.Name} {player.LongName}";
+            poseText = string.IsNullOrEmpty(player.LongName)
+                ? $"<p>{player.Name}"
+                : $"{player.Name} {player.LongName}";
 
             if (!string.IsNullOrEmpty(player.Mounted.Name))
             {
@@ -51,14 +50,13 @@ namespace ArchaicQuestII.GameLogic.Commands.Communication
             else if (string.IsNullOrEmpty(player.LongName))
             {
                 poseText += " is here";
-
             }
 
             poseText += player.Pose;
 
             poseText += "</p>";
 
-            Core.Writer.WriteLine(poseText, player.ConnectionId);
+            Services.Instance.Writer.WriteLine(poseText, player);
         }
     }
 }

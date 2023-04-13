@@ -11,8 +11,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
         {
             var location = System.Reflection.Assembly.GetEntryAssembly().Location;
             var directory = System.IO.Path.GetDirectoryName(location);
-            System.IO.StreamReader file =
-                new System.IO.StreamReader(directory + "/socials.txt");
+            System.IO.StreamReader file = new System.IO.StreamReader(directory + "/socials.txt");
             string line;
 
             // var socials = new List<Emote>();
@@ -21,7 +20,7 @@ namespace ArchaicQuestII.GameLogic.SeedData
             var key = string.Empty;
             while ((line = file.ReadLine()) != null)
             {
-                System.Console.WriteLine(line);
+                //System.Console.WriteLine(line);
 
                 var x = line.Split(" ");
 
@@ -35,7 +34,8 @@ namespace ArchaicQuestII.GameLogic.SeedData
                     var s = string.Join(" ", x);
                     var indexOfFirstSpace = s.IndexOf(" ");
 
-                    emote.RoomNoTarget = s.Substring(indexOfFirstSpace + 1).Replace("$n", "#player#")
+                    emote.RoomNoTarget = s.Substring(indexOfFirstSpace + 1)
+                        .Replace("$n", "#player#")
                         .Replace("$N", "#target#")
                         .Replace("$n", "#player#")
                         .Replace("$e", "#pgender2#")
@@ -43,7 +43,9 @@ namespace ArchaicQuestII.GameLogic.SeedData
                         .Replace("$s", "#pgender#")
                         .Replace("$S", "#tgender#")
                         .Replace("$M", "#tgender3#")
-                        .Replace("$m", "#pgender3#").Replace("~", "").Trim();
+                        .Replace("$m", "#pgender3#")
+                        .Replace("~", "")
+                        .Trim();
                 }
 
                 if (x[0] == "CharNoArg")
@@ -51,7 +53,8 @@ namespace ArchaicQuestII.GameLogic.SeedData
                     var s = string.Join(" ", x);
                     var indexOfFirstSpace = s.IndexOf(" ");
 
-                    emote.CharNoTarget = s.Substring(indexOfFirstSpace + 1).Replace("$n", "#player#")
+                    emote.CharNoTarget = s.Substring(indexOfFirstSpace + 1)
+                        .Replace("$n", "#player#")
                         .Replace("$N", "#target#")
                         .Replace("$n", "#player#")
                         .Replace("$e", "#pgender2#")
@@ -59,15 +62,17 @@ namespace ArchaicQuestII.GameLogic.SeedData
                         .Replace("$s", "#pgender#")
                         .Replace("$S", "#tgender#")
                         .Replace("$M", "#tgender3#")
-                        .Replace("$m", "#pgender3#").Replace("~", "").Trim();
+                        .Replace("$m", "#pgender3#")
+                        .Replace("~", "")
+                        .Trim();
                 }
-
 
                 if (x[0] == "CharFound")
                 {
                     var s = string.Join(" ", x);
                     var indexOfFirstSpace = s.IndexOf(" ");
-                    emote.TargetFound = s.Substring(indexOfFirstSpace + 1).Replace("$n", "#player#")
+                    emote.TargetFound = s.Substring(indexOfFirstSpace + 1)
+                        .Replace("$n", "#player#")
                         .Replace("$N", "#target#")
                         .Replace("$n", "#player#")
                         .Replace("$e", "#pgender2#")
@@ -75,14 +80,17 @@ namespace ArchaicQuestII.GameLogic.SeedData
                         .Replace("$s", "#pgender#")
                         .Replace("$S", "#tgender#")
                         .Replace("$M", "#tgender3#")
-                        .Replace("$m", "#pgender3#").Replace("~", "").Trim();
+                        .Replace("$m", "#pgender3#")
+                        .Replace("~", "")
+                        .Trim();
                 }
 
                 if (x[0] == "OthersFound")
                 {
                     var s = string.Join(" ", x);
                     var indexOfFirstSpace = s.IndexOf(" ");
-                    emote.RoomTarget = s.Substring(indexOfFirstSpace + 1).Replace("$n", "#player#")
+                    emote.RoomTarget = s.Substring(indexOfFirstSpace + 1)
+                        .Replace("$n", "#player#")
                         .Replace("$N", "#target#")
                         .Replace("$n", "#player#")
                         .Replace("$e", "#pgender2#")
@@ -90,14 +98,17 @@ namespace ArchaicQuestII.GameLogic.SeedData
                         .Replace("$s", "#pgender#")
                         .Replace("$S", "#tgender#")
                         .Replace("$M", "#tgender3#")
-                        .Replace("$m", "#pgender3#").Replace("~", "").Trim();
+                        .Replace("$m", "#pgender3#")
+                        .Replace("~", "")
+                        .Trim();
                 }
 
                 if (x[0] == "VictFound")
                 {
                     var s = string.Join(" ", x);
                     var indexOfFirstSpace = s.IndexOf(" ");
-                    emote.ToTarget = s.Substring(indexOfFirstSpace + 1).Replace("$n", "#player#")
+                    emote.ToTarget = s.Substring(indexOfFirstSpace + 1)
+                        .Replace("$n", "#player#")
                         .Replace("$N", "#target#")
                         .Replace("$n", "#player#")
                         .Replace("$e", "#pgender2#")
@@ -105,14 +116,17 @@ namespace ArchaicQuestII.GameLogic.SeedData
                         .Replace("$s", "#pgender#")
                         .Replace("$S", "#tgender#")
                         .Replace("$M", "#tgender3#")
-                        .Replace("$m", "#pgender3#").Replace("~", "").Trim();
+                        .Replace("$m", "#pgender3#")
+                        .Replace("~", "")
+                        .Trim();
                 }
 
                 if (x[0] == "CharAuto")
                 {
                     var s = string.Join(" ", x);
                     var indexOfFirstSpace = s.IndexOf(" ");
-                    emote.TargetSelf = s.Substring(indexOfFirstSpace + 1).Replace("$n", "#player#")
+                    emote.TargetSelf = s.Substring(indexOfFirstSpace + 1)
+                        .Replace("$n", "#player#")
                         .Replace("$N", "#target#")
                         .Replace("$n", "#player#")
                         .Replace("$e", "#pgender2#")
@@ -120,14 +134,17 @@ namespace ArchaicQuestII.GameLogic.SeedData
                         .Replace("$s", "#pgender#")
                         .Replace("$S", "#tgender#")
                         .Replace("$M", "#tgender3#")
-                        .Replace("$m", "#pgender3#").Replace("~", "").Trim();
+                        .Replace("$m", "#pgender3#")
+                        .Replace("~", "")
+                        .Trim();
                 }
 
                 if (x[0] == "CharAuto")
                 {
                     var s = string.Join(" ", x);
                     var indexOfFirstSpace = s.IndexOf(" ");
-                    emote.TargetSelf = s.Substring(indexOfFirstSpace + 1).Replace("$n", "#player#")
+                    emote.TargetSelf = s.Substring(indexOfFirstSpace + 1)
+                        .Replace("$n", "#player#")
                         .Replace("$N", "#target#")
                         .Replace("$n", "#player#")
                         .Replace("$e", "#pgender2#")
@@ -135,14 +152,17 @@ namespace ArchaicQuestII.GameLogic.SeedData
                         .Replace("$s", "#pgender#")
                         .Replace("$S", "#tgender#")
                         .Replace("$M", "#tgender3#")
-                        .Replace("$m", "#pgender3#").Replace("~", "").Trim();
+                        .Replace("$m", "#pgender3#")
+                        .Replace("~", "")
+                        .Trim();
                 }
 
                 if (x[0] == "OthersAuto")
                 {
                     var s = string.Join(" ", x);
                     var indexOfFirstSpace = s.IndexOf(" ");
-                    emote.RoomSelf = s.Substring(indexOfFirstSpace + 1).Replace("$n", "#player#")
+                    emote.RoomSelf = s.Substring(indexOfFirstSpace + 1)
+                        .Replace("$n", "#player#")
                         .Replace("$N", "#target#")
                         .Replace("$n", "#player#")
                         .Replace("$e", "#pgender2#")
@@ -150,7 +170,9 @@ namespace ArchaicQuestII.GameLogic.SeedData
                         .Replace("$s", "#pgender#")
                         .Replace("$S", "#tgender#")
                         .Replace("$M", "#tgender3#")
-                        .Replace("$m", "#pgender3#").Replace("~", "").Trim();
+                        .Replace("$m", "#pgender3#")
+                        .Replace("~", "")
+                        .Trim();
                 }
 
                 if (x[0] == "End")
@@ -164,21 +186,21 @@ namespace ArchaicQuestII.GameLogic.SeedData
             return socialObject;
         }
 
-        internal static void SeedAndCache(IDataBase db, ICache cache)
+        internal static void SeedAndCache()
         {
             var seedData = SeedData();
 
-            if (!db.DoesCollectionExist(DataBase.Collections.Socials))
+            if (!Services.Instance.DataBase.DoesCollectionExist(DataBase.Collections.Socials))
             {
                 foreach (var socialSeed in seedData)
                 {
-                    db.Save(socialSeed, DataBase.Collections.Socials);
+                    Services.Instance.DataBase.Save(socialSeed, DataBase.Collections.Socials);
                 }
             }
 
             foreach (var socialSeed in seedData)
             {
-                cache.AddSocial(socialSeed.Key, socialSeed.Value);
+                Services.Instance.Cache.AddSocial(socialSeed.Key, socialSeed.Value);
             }
         }
     }

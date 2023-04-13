@@ -8,12 +8,13 @@ namespace ArchaicQuestII.GameLogic.Commands.Movement;
 
 public class RestCmd : ICommand
 {
-    public RestCmd(ICore core)
+    public RestCmd()
     {
-        Aliases = new[] {"rest"};
-        Description = "Your character will rest. Resting will increase the speed of health, mana, and moves regeneration." +
-                      " Make sure you are somewhere safe because if attacked it will be a guaranteed critical hit.<br /><br />To stop resting enter stand.";
-        Usages = new[] {"Type: rest"};
+        Aliases = new[] { "rest" };
+        Description =
+            "Your character will rest. Resting will increase the speed of health, mana, and moves regeneration."
+            + " Make sure you are somewhere safe because if attacked it will be a guaranteed critical hit.<br /><br />To stop resting enter stand.";
+        Usages = new[] { "Type: rest" };
         Title = "";
         DeniedStatus = new[]
         {
@@ -27,34 +28,36 @@ public class RestCmd : ICommand
             CharacterStatus.Status.Stunned,
         };
         UserRole = UserRole.Player;
-        Core = core;
     }
-    
+
     public string[] Aliases { get; }
     public string Description { get; }
     public string[] Usages { get; }
     public string Title { get; }
     public CharacterStatus.Status[] DeniedStatus { get; }
     public UserRole UserRole { get; }
-    public ICore Core { get; }
 
     public void Execute(Player player, Room room, string[] input)
     {
         if (!string.IsNullOrEmpty(player.Mounted.Name))
         {
-            Core.Writer.WriteLine("<p>You can't do that while mounted.</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>You can't do that while mounted.</p>", player);
             return;
         }
 
         if (player.Status == CharacterStatus.Status.Resting)
         {
-            Core.Writer.WriteLine("<p>You are already resting!</p>", player.ConnectionId);
+            Services.Instance.Writer.WriteLine("<p>You are already resting!</p>", player);
             return;
         }
 
-        Core.Writer.WriteLine("<p>You sprawl out haphazardly.</p>", player.ConnectionId);
+        Services.Instance.Writer.WriteLine("<p>You sprawl out haphazardly.</p>", player);
         SetCharacterStatus(player, "is sprawled out here", CharacterStatus.Status.Resting);
-        Core.Writer.WriteToOthersInRoom($"<p>{player.Name} sprawls out haphazardly.</p>", room, player);
+        Services.Instance.Writer.WriteToOthersInRoom(
+            $"<p>{player.Name} sprawls out haphazardly.</p>",
+            room,
+            player
+        );
     }
 
     private void SetCharacterStatus(Player player, string longName, CharacterStatus.Status status)
