@@ -31,7 +31,7 @@ namespace ArchaicQuestII.GameLogic.Loops
             {
                 if (
                     player.Lag > 0
-                    && player.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase)
+                    && !player.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase)
                 )
                 {
                     player.Lag -= 1;
