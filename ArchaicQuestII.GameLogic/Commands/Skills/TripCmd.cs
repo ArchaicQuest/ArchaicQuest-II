@@ -108,7 +108,6 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 EmoteAction(textToTarget, textToRoom, target.Name, room, player);
                 player.FailedSkill(SkillName.Trip, true);
             }
-            updateCombat(player, target, room);
         }
     }
 }

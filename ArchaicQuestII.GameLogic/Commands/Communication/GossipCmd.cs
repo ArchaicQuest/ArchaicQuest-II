@@ -61,7 +61,7 @@ public class GossipCmd : ICommand
         Helpers.PostToDiscordBot(
             $"{player.Name}: {text}",
             1092857545183473694,
-            Services.Instance.Cache.GetConfig().ChannelDiscordWebHookURL
+            Services.Instance.Config.ChannelDiscordWebHookURL
         );
     }
 }

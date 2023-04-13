@@ -60,7 +60,7 @@ public class NewbieCmd : ICommand
         Helpers.PostToDiscordBot(
             $"{player.Name}: {text}",
             1091818289249923162,
-            Services.Instance.Cache.GetConfig().ChannelDiscordWebHookURL
+            Services.Instance.Config.ChannelDiscordWebHookURL
         );
     }
 }

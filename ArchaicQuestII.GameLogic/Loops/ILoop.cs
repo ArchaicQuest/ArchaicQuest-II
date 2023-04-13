@@ -13,6 +13,8 @@ namespace ArchaicQuestII.GameLogic.Core
 
         async Task Loop()
         {
+            await Task.Delay(5000);
+
             while (true)
             {
                 await Task.Delay(TickDelay);

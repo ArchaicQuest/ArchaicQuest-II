@@ -76,7 +76,6 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 textToTarget = $"{player.Name} tries to kick you but stumbles.";
                 textToRoom = $"{player.Name} tries to kick {target.Name} but stumbles.";
                 EmoteAction(textToTarget, textToRoom, target.Name, room, player);
-                updateCombat(player, target, room);
                 player.FailedSkill(SkillName.Kick, true);
                 player.Lag += 1;
                 return;
@@ -91,7 +90,6 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             player.Lag += 1;
 
             DamagePlayer("Kick", damage, player, target, room);
-            updateCombat(player, target, room);
         }
     }
 }

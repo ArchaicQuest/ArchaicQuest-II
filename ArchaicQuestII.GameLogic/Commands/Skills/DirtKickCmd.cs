@@ -113,8 +113,6 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             }
 
             player.Lag += 1;
-
-            updateCombat(player, target, room);
         }
     }
 }

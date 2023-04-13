@@ -33,7 +33,7 @@ public class Bot
         _client.Log += Log;
 
         //TODO: Rename to Discord TOKEN here and in the admin project
-        var token = GameLogic.Core.Services.Instance.Cache.GetConfig().ChannelDiscordWebHookURL;
+        var token = GameLogic.Core.Services.Instance.Config.ChannelDiscordWebHookURL;
 
         if (string.IsNullOrEmpty(token))
         {

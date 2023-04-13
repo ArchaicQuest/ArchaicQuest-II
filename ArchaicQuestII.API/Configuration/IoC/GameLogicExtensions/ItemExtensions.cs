@@ -9,12 +9,12 @@ namespace ArchaicQuestII.API.Configuration.IoC.GameLogicExtensions
         public static IServiceCollection AddItems(this IServiceCollection services)
         {
             services.AddSingleton<IRandomWeapon, RandomWeapons>();
-            services.AddSingleton<IRandomItem, RandomItem>();
             services.AddSingleton<IRandomClothItems, RandomClothItems>();
             services.AddSingleton<IRandomLeatherItems, RandomLeatherItems>();
             services.AddSingleton<IRandomStuddedLeatherArmour, RandomStuddedLeatherItems>();
             services.AddSingleton<IRandomChainMailArmour, RandomChainMailItems>();
             services.AddSingleton<IRandomPlateMailArmour, RandomPlateMailItems>();
+            services.AddSingleton<IRandomItem, RandomItem>();
 
             return services;
         }

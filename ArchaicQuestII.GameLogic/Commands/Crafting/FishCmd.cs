@@ -6,6 +6,7 @@ using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Character.Status;
+using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Item;
@@ -232,7 +233,8 @@ public class FishCmd : ICommand
             );
             room.Mobs.Add(randomMob);
             player.Status = CharacterStatus.Status.Standing;
-            InitFightStatus(randomMob, player);
+            var combat = new Fight(randomMob, player, room, false);
+            Services.Instance.Cache.AddCombat(combat);
             return;
         }
 
@@ -278,33 +280,6 @@ public class FishCmd : ICommand
 
         player.Status = CharacterStatus.Status.Standing;
         Services.Instance.UpdateClient.UpdateInventory(player);
-    }
-
-    private void InitFightStatus(Player player, Player target)
-    {
-        player.Target = string.IsNullOrEmpty(player.Target) ? target.Name : player.Target;
-        player.Status = CharacterStatus.Status.Fighting;
-        target.Status =
-            (target.Status & CharacterStatus.Status.Stunned) != 0
-                ? CharacterStatus.Status.Stunned
-                : CharacterStatus.Status.Fighting;
-        target.Target = string.IsNullOrEmpty(target.Target) ? player.Name : target.Target; //for group combat, if target is ganged, there target should not be changed when combat is initiated.
-
-        if (player.Target == player.Name)
-        {
-            player.Status = CharacterStatus.Status.Standing;
-            return;
-        }
-
-        if (!Services.Instance.Cache.IsCharInCombat(player.Id.ToString()))
-        {
-            Services.Instance.Cache.AddCharToCombat(player.Id.ToString(), player);
-        }
-
-        if (!Services.Instance.Cache.IsCharInCombat(target.Id.ToString()))
-        {
-            Services.Instance.Cache.AddCharToCombat(target.Id.ToString(), target);
-        }
     }
 
     private Item.Item PossibleFish()

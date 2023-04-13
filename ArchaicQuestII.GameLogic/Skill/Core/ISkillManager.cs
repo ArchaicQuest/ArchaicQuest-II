@@ -6,10 +6,15 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
 {
     public interface ISkillManager
     {
-        public void updateCombat(Player player, Player target, Room room);
         public string ReplacePlaceholders(string str, Player player, bool isTarget);
 
-        public void DamagePlayer(string spellName, int damage, Player player, Player target, Room room);
+        public void DamagePlayer(
+            string spellName,
+            int damage,
+            Player player,
+            Player target,
+            Room room
+        );
 
         public void UpdateClientUI(Player player);
 

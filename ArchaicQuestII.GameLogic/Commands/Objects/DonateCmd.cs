@@ -127,8 +127,7 @@ Related help files: get, put, give, drop
 
         Helpers.PostToDiscord(
             $"<p>[Newbie] {player.Name} donates {item.Name.ToLower()} to {donationRoom.Title}.</p>",
-            "channels",
-            Services.Instance.Cache.GetConfig()
+            "channels"
         );
 
         Services.Instance.UpdateClient.UpdateInventory(player);
@@ -192,8 +191,7 @@ Related help files: get, put, give, drop
 
         Helpers.PostToDiscord(
             $"<p>[Newbie] {player.Name} donates {ItemList.DisplayMoneyAmount(amount).ToLower()} to {donationRoom.Title}.</p>",
-            "channels",
-            Services.Instance.Cache.GetConfig()
+            "channels"
         );
 
         player.Money.Gold -= amount;

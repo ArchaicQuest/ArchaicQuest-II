@@ -21,9 +21,9 @@ using ArchaicQuestII.GameLogic.Client;
 using Discord.WebSocket;
 using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Skill.Skills;
-using ArchaicQuestII.GameLogic.Spell;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Commands;
+using ArchaicQuestII.GameLogic.Item;
 
 namespace ArchaicQuestII.API
 {
@@ -94,7 +94,6 @@ namespace ArchaicQuestII.API
             IWriteToClient writer,
             IDataBase db,
             IUpdateClientUI updateClient,
-            ICombat combat,
             IPlayerDataBase pdb,
             IMobScripts mobScripts,
             IErrorLog errorLog,
@@ -105,7 +104,9 @@ namespace ArchaicQuestII.API
             IWeather weather,
             ICharacterHandler characterHandler,
             ILoopHandler loopHandler,
-            ICommandHandler commandHandler
+            ICommandHandler commandHandler,
+            IQuestLog quest,
+            IRandomItem randomItem
         )
         {
             if (env.EnvironmentName == "dev")
@@ -146,7 +147,6 @@ namespace ArchaicQuestII.API
                 writer,
                 db,
                 updateClient,
-                combat,
                 pdb,
                 mobScripts,
                 errorLog,
@@ -158,7 +158,9 @@ namespace ArchaicQuestII.API
                 characterHandler,
                 loopHandler,
                 commandHandler,
-                app.ApplicationServices.GetService<IHubContext<GameHub>>()
+                app.ApplicationServices.GetService<IHubContext<GameHub>>(),
+                quest,
+                randomItem
             );
 
             app.StartLoops();
@@ -187,8 +189,7 @@ namespace ArchaicQuestII.API
             Console.WriteLine($"Start up completed in {elapsedMs}");
             GameLogic.Utilities.Helpers.PostToDiscord(
                 $"Start up completed in {Math.Ceiling((decimal)elapsedMs / 1000)} seconds",
-                "event",
-                GameLogic.Core.Services.Instance.Cache.GetConfig()
+                "event"
             );
 
             try

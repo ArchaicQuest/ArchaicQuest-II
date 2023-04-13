@@ -174,7 +174,6 @@ namespace ArchaicQuestII.GameLogic.Hubs
                 player.RemoveSkills(Enum.Parse<ClassName>(player.ClassName));
                 player.UpdateSkillLevel(Enum.Parse<ClassName>(player.ClassName));
             }
-           
 
             if (player.SubClassName != null && player.SubClassName != SubClassName.None.ToString())
             {
@@ -239,11 +238,7 @@ namespace ArchaicQuestII.GameLogic.Hubs
 
             if (playerExist != null)
             {
-                Helpers.PostToDiscord(
-                    $"{player.Name} has entered the realms.",
-                    "event",
-                    Services.Instance.Cache.GetConfig()
-                );
+                Helpers.PostToDiscord($"{player.Name} has entered the realms.", "event");
                 GetRoom(hubId, playerExist, playerExist.RoomId);
             }
             else
@@ -330,17 +325,15 @@ namespace ArchaicQuestII.GameLogic.Hubs
             //add to DB, configure from admin
             var roomid = !string.IsNullOrEmpty(startingRoom)
                 ? startingRoom
-                : Services.Instance.Cache.GetConfig().StartingRoom;
+                : Services.Instance.Config.StartingRoom;
             var room =
                 Services.Instance.Cache.GetRoom(roomid)
-                ?? Services.Instance.Cache.GetRoom(
-                    Services.Instance.Cache.GetConfig().StartingRoom
-                );
+                ?? Services.Instance.Cache.GetRoom(Services.Instance.Config.StartingRoom);
             character.RoomId = $"{room.AreaId}{room.Coords.X}{room.Coords.Y}{room.Coords.Z}";
 
             if (string.IsNullOrEmpty(character.RecallId))
             {
-                var defaultRoom = Services.Instance.Cache.GetConfig().StartingRoom;
+                var defaultRoom = Services.Instance.Config.StartingRoom;
                 character.RecallId = defaultRoom;
             }
 

@@ -96,8 +96,6 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             DamagePlayer("stab", damage, player, target, room);
 
             player.Lag += 1;
-
-            updateCombat(player, target, room);
         }
     }
 }

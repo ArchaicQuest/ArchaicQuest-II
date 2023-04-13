@@ -119,8 +119,6 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             DamagePlayer(DefineSkill.UpperCut().Name, damage, player, target, room);
 
             player.Lag += 1;
-
-            updateCombat(player, target, room);
         }
     }
 }
