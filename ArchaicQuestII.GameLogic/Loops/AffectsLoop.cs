@@ -12,7 +12,7 @@ namespace ArchaicQuestII.GameLogic.Loops
     {
         public int TickDelay => 60000;
 
-        public bool ConfigureAwait => true;
+        public bool ConfigureAwait => false;
 
         private List<Player> _players = new List<Player>();
 

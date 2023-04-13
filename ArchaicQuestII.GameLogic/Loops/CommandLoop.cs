@@ -9,7 +9,7 @@ namespace ArchaicQuestII.GameLogic.Loops
     public class CommandLoop : ILoop
     {
         public int TickDelay => 125; //4000 for lag
-        public bool ConfigureAwait => true;
+        public bool ConfigureAwait => false;
         private int LagTick = 32;
         private List<Player> _laggedPlayers = new List<Player>();
         private List<Player> _bufferedPlayers = new List<Player>();

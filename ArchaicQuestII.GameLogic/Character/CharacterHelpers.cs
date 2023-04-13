@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Character.Status;
@@ -1377,11 +1378,6 @@ public static class CharacterHelpers
     {
         player.Pose = string.Empty;
 
-        if (oldRoom.Mobs.Any())
-        {
-            oldRoom.OnPlayerLeaveEvent(player);
-        }
-
         player.ExitMessage(oldRoom, newRoom, isFlee);
 
         player.UpdateLocation(oldRoom, newRoom);
@@ -1394,11 +1390,6 @@ public static class CharacterHelpers
         );
         Services.Instance.UpdateClient.UpdateMoves(player);
         player.Buffer.Enqueue("look");
-
-        if (newRoom.Mobs.Any())
-        {
-            newRoom.OnPlayerEnterEvent(player);
-        }
     }
 
     /// <summary>

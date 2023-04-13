@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Status;
+using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Item;
+using MoonSharp.Interpreter;
 
 namespace ArchaicQuestII.GameLogic.World.Room
 {
     public class Room
     {
-        
         public enum TerrainType
         {
             Inside, //no weather
@@ -51,6 +55,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
         public int AreaId { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
+
         /// <summary>
         /// List of available exits
         /// North, East, West, South, Up, and Down
@@ -62,35 +67,41 @@ namespace ArchaicQuestII.GameLogic.World.Room
         public ItemList Items { get; set; } = new();
         public RoomType? Type { get; set; } = RoomType.Standard;
         public TerrainType? Terrain { get; set; } = TerrainType.City;
+
         /// <summary>
         /// List of emotes that will be randomly played on tick
         /// </summary>
         public List<string> Emotes { get; set; } = new();
+
         /// <summary>
-        /// Room descriptions will contain nouns which should be 
+        /// Room descriptions will contain nouns which should be
         /// extended with a keyword so a player can examine 'noun' or
         /// look 'noun' for more information about an object mentioned
         /// in the room description
         /// </summary>
         public List<RoomObject> RoomObjects { get; set; } = new();
+
         /// <summary>
         /// Has the room been touched or not
         /// </summary>
         public bool? Clean { get; set; } = true;
+
         /// <summary>
         /// When room re-populates we may want to send
         /// an emote to any players in the room
         /// </summary>
         public string UpdateMessage { get; set; }
+
         /// <summary>
         /// Does this repop every tick
         /// </summary>
         public bool InstantRePop { get; set; }
         public bool IsLit { get; set; }
+
         /// <summary>
         /// Set flags for rooms
         /// </summary>
-        public List<RoomFlag> RoomFlags {get; set;} = new List<RoomFlag>();
+        public List<RoomFlag> RoomFlags { get; set; } = new List<RoomFlag>();
         public DateTime DateCreated { get; set; }
         public DateTime DateUpdated { get; set; }
     }

@@ -1,13 +1,7 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using ArchaicQuestII.DataAccess;
-using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Utilities;
-using MoonSharp.Interpreter;
 
 namespace ArchaicQuestII.GameLogic.World.Room
 {
@@ -185,73 +179,6 @@ namespace ArchaicQuestII.GameLogic.World.Room
             }
 
             return exitList;
-        }
-
-        public static void OnPlayerLeaveEvent(this Room room, Player character)
-        {
-            foreach (var mob in room.Mobs.Where(mob => !string.IsNullOrEmpty(mob.Events.Leave)))
-            {
-                UserData.RegisterType<MobScripts>();
-
-                var script = new Script();
-
-                var obj = UserData.Create(Services.Instance.MobScripts);
-                script.Globals.Set("obj", obj);
-                UserData.RegisterProxyType<MyProxy, Room>(r => new MyProxy(room));
-                UserData.RegisterProxyType<ProxyPlayer, Player>(r => new ProxyPlayer(character));
-
-                script.Globals["room"] = room;
-                script.Globals["player"] = character;
-                script.Globals["mob"] = mob;
-
-                var res = script.DoString(mob.Events.Leave);
-            }
-        }
-
-        public static async Task OnPlayerEnterEvent(this Room room, Player character)
-        {
-            // force the on enter event to fire after Look
-            await Task.Delay(125);
-
-            foreach (var mob in room.Mobs.ToList())
-            {
-                if (!string.IsNullOrEmpty(mob.Events.Enter))
-                {
-                    try
-                    {
-                        UserData.RegisterType<MobScripts>();
-
-                        var script = new Script();
-
-                        var obj = UserData.Create(Services.Instance.MobScripts);
-                        script.Globals.Set("obj", obj);
-                        UserData.RegisterProxyType<MyProxy, Room>(r => new MyProxy(room));
-                        UserData.RegisterProxyType<ProxyPlayer, Player>(
-                            r => new ProxyPlayer(character)
-                        );
-
-                        script.Globals["room"] = room;
-                        script.Globals["player"] = character;
-                        script.Globals["mob"] = mob;
-
-                        var res = script.DoString(mob.Events.Enter);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine("RoomActions.cs: " + ex);
-                    }
-                }
-
-                if (
-                    mob.Aggro
-                    && mob.Status != CharacterStatus.Status.Fighting
-                    && character.ConnectionId != "mob"
-                )
-                {
-                    Services.Instance.Writer.WriteLine($"{mob.Name} attacks you!", character);
-                    Services.Instance.MobScripts.AttackPlayer(room, character, mob);
-                }
-            }
         }
 
         public static Exit GetExit(this Room room, string direction)
