@@ -40,55 +40,30 @@ namespace ArchaicQuestII.GameLogic.Loops
 
                 var attackCount = 1;
 
-                var hasSecondAttack = player.Skills.FirstOrDefault(
-                    x => x.Name == SkillName.SecondAttack
-                );
-                if (hasSecondAttack != null)
-                {
-                    hasSecondAttack =
-                        player.Level >= hasSecondAttack.Level ? hasSecondAttack : null;
-                }
+                var hasSecondAttack = player.HasSkill(SkillName.SecondAttack);
 
-                var hasThirdAttack = player.Skills.FirstOrDefault(
-                    x => x.Name == SkillName.ThirdAttack
-                );
-                if (hasThirdAttack != null)
-                {
-                    hasThirdAttack = player.Level >= hasThirdAttack.Level ? hasThirdAttack : null;
-                }
+                var hasThirdAttack = player.HasSkill(SkillName.ThirdAttack);
 
-                var hasFouthAttack = player.Skills.FirstOrDefault(
-                    x => x.Name == SkillName.FourthAttack
-                );
-                if (hasFouthAttack != null)
-                {
-                    hasFouthAttack = player.Level >= hasFouthAttack.Level ? hasFouthAttack : null;
-                }
-                var hasFithAttack = player.Skills.FirstOrDefault(
-                    x => x.Name == SkillName.FifthAttack
-                );
+                var hasForthAttack = player.HasSkill(SkillName.FourthAttack);
 
-                if (hasFithAttack != null)
-                {
-                    hasFithAttack = player.Level >= hasFithAttack.Level ? hasFithAttack : null;
-                }
+                var hasFithAttack = player.HasSkill(SkillName.FifthAttack);
 
-                if (hasSecondAttack != null)
+                if (hasSecondAttack)
                 {
                     attackCount += 1;
                 }
 
-                if (hasThirdAttack != null)
+                if (hasThirdAttack)
                 {
                     attackCount += 1;
                 }
 
-                if (hasFouthAttack != null)
+                if (hasForthAttack)
                 {
                     attackCount += 1;
                 }
 
-                if (hasFithAttack != null)
+                if (hasFithAttack)
                 {
                     attackCount += 1;
                 }
