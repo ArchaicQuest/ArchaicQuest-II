@@ -42,7 +42,7 @@ public class Mage : IClass
         };
 
     public List<SkillList> Skills =>
-        new List<SkillList>
+     new List<SkillList>
         {
             new SkillList
             {
@@ -138,217 +138,217 @@ public class Mage : IClass
             new SkillList
             {
                 Name = SkillName.Lore,
-                Level = 1,
+                Level = 9,
                 Proficiency = 0,
                 IsSpell = false,
             },
             new SkillList
             {
                 Name = SkillName.Elbow,
-                Level = 1,
+                Level = 2,
                 Proficiency = 0,
                 IsSpell = false,
             },
             new SkillList
             {
                 Name = SkillName.DirtKick,
-                Level = 1,
+                Level = 3,
                 Proficiency = 0,
                 IsSpell = false,
             },
             new SkillList
             {
                 Name = SkillName.Kick,
-                Level = 1,
+                Level = 4,
                 Proficiency = 0,
                 IsSpell = false,
             },
             new SkillList
             {
                 Name = SkillName.Crossbow,
-                Level = 1,
+                Level = 5,
                 Proficiency = 0,
                 IsSpell = false,
             },
             new SkillList
             {
                 Name = SkillName.Bow,
-                Level = 1,
+                Level = 5,
                 Proficiency = 0,
                 IsSpell = false,
             },
             new SkillList
             {
                 Name = SkillName.Parry,
-                Level = 1,
+                Level = 6,
                 Proficiency = 0,
                 IsSpell = false,
             },
             new SkillList
             {
                 Name = SkillName.FastHealing,
-                Level = 1,
+                Level = 7,
                 Proficiency = 0,
                 IsSpell = false,
             },
             new SkillList
             {
                 Name = SkillName.ShieldBlock,
-                Level = 1,
+                Level = 8,
                 Proficiency = 0,
                 IsSpell = false,
             },
             new SkillList
             {
                 Name = SkillName.Charge,
-                Level = 1,
+                Level = 11,
                 Proficiency = 0,
                 IsSpell = false,
             },
             new SkillList
             {
                 Name = SkillName.Rescue,
-                Level = 1,
+                Level = 12,
                 Proficiency = 0,
                 IsSpell = false,
             },
             new SkillList
             {
                 Name = SkillName.UpperCut,
-                Level = 1,
+                Level = 14,
                 Proficiency = 0,
                 IsSpell = false,
             },
             new SkillList
             {
                 Name = SkillName.Trip,
-                Level = 1,
+                Level = 15,
                 Proficiency = 0,
                 IsSpell = false,
             },
             new SkillList
             {
                 Name = SkillName.Stab,
-                Level = 1,
+                Level = 17,
                 Proficiency = 0,
                 IsSpell = false,
             },
             new SkillList
             {
                 Name = SkillName.Mount,
-                Level = 1,
+                Level = 18,
                 Proficiency = 0,
                 IsSpell = false,
             },
             new SkillList
             {
                 Name = SkillName.SecondAttack,
-                Level = 1,
+                Level = 18,
                 Proficiency = 0,
                 IsSpell = false,
             },
             new SkillList
             {
                 Name = SkillName.Disarm,
-                Level = 1,
+                Level = 20,
                 Proficiency = 0,
                 IsSpell = false,
             },
             new SkillList
             {
                 Name = SkillName.EnhancedDamage,
-                Level = 1,
+                Level = 22,
                 Proficiency = 0,
                 IsSpell = false,
             },
             new SkillList
             {
                 Name = SkillName.WarCry,
-                Level = 1,
+                Level = 25,
                 Proficiency = 0,
                 IsSpell = false,
             },
             new SkillList
             {
                 Name = SkillName.ShieldBash,
-                Level = 1,
+                Level = 26,
                 Proficiency = 0,
                 IsSpell = false,
             },
             new SkillList
             {
                 Name = SkillName.Lunge,
-                Level = 1,
+                Level = 28,
                 Proficiency = 0,
                 IsSpell = false,
             },
             new SkillList
             {
                 Name = SkillName.BlindFighting,
-                Level = 1,
+                Level = 29,
                 Proficiency = 0,
                 IsSpell = false,
             },
             new SkillList
             {
                 Name = SkillName.DualWield,
-                Level = 1,
+                Level = 31,
                 Proficiency = 0,
                 IsSpell = false,
             },
             new SkillList
             {
                 Name = SkillName.ThirdAttack,
-                Level = 1,
+                Level = 32,
                 Proficiency = 0,
                 IsSpell = false,
             },
             new SkillList
             {
                 Name = SkillName.HamString,
-                Level = 1,
+                Level = 35,
                 Proficiency = 0,
                 IsSpell = false,
             },
             new SkillList
             {
                 Name = SkillName.Slash,
-                Level = 1,
+                Level = 36,
                 Proficiency = 0,
                 IsSpell = false,
             },
             new SkillList
             {
                 Name = SkillName.Impale,
-                Level = 1,
+                Level = 37,
                 Proficiency = 0,
                 IsSpell = false,
             },
             new SkillList
             {
                 Name = SkillName.Cleave,
-                Level = 1,
+                Level = 40,
                 Proficiency = 0,
                 IsSpell = false,
             },
             new SkillList
             {
                 Name = SkillName.FourthAttack,
-                Level = 1,
+                Level = 42,
                 Proficiency = 0,
                 IsSpell = false,
             },
             new SkillList
             {
                 Name = SkillName.OverheadCrush,
-                Level = 1,
+                Level = 46,
                 Proficiency = 0,
                 IsSpell = false,
             },
             new SkillList
             {
                 Name = SkillName.FifthAttack,
-                Level = 1,
+                Level = 50,
                 Proficiency = 0,
                 IsSpell = false,
             },
