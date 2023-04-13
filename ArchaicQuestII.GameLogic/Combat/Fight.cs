@@ -76,6 +76,16 @@ namespace ArchaicQuestII.GameLogic.Combat
                     }
                 }
             }
+
+            foreach (var player in _aggressors)
+            {
+                Services.Instance.Writer.WriteLine("<p>You initiated combat!</p>", player);
+            }
+
+            foreach (var player in _victims)
+            {
+                Services.Instance.Writer.WriteLine("<p>You have been attacked!</p>", player);
+            }
         }
 
         private void End()
