@@ -37,6 +37,41 @@ public static class CharacterHelpers
         }
     }
 
+    public static void RemoveSkills(this Player player, ClassName className)
+    {
+        var c = Services.Instance.CharacterHandler.GetClass(className);
+
+        if (c == null) return;
+        
+        // remove skills that are null or none
+        player.Skills.RemoveAll(x => x.Name.Equals(SkillName.None));
+            
+        // remove skills no longer part of class
+        for (var i = player.Skills.Count - 1; i >= 0; i--)
+        {
+            if (c.Skills.FirstOrDefault(x => x.Name == player.Skills[i].Name) == null)
+            {
+                player.Skills.Remove(player.Skills[i]);
+            }
+        }
+    }
+    
+    public static void UpdateSkillLevel(this Player player, ClassName className)
+    {
+        var c = Services.Instance.CharacterHandler.GetClass(className);
+        if (c == null) return;
+        
+        // update skills incase levels get updated
+        for (var i = player.Skills.Count - 1; i >= 0; i--)
+        {
+            var skill = c.Skills.FirstOrDefault(x => x.Name == player.Skills[i].Name);
+
+            if (skill != null)
+            {
+                player.Skills[i].Level = skill.Level;
+            }
+        }
+    }
     public static SkillList GetSkill(this Player player, SkillName skillName)
     {
         return player.Skills.FirstOrDefault(x => x.Name == skillName && player.Level >= x.Level);
