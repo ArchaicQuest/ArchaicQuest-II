@@ -200,10 +200,7 @@ namespace ArchaicQuestII.GameLogic.Combat
 
         public static void TargetKilled(Player player, Player target, Room room)
         {
-            player.Target = string.Empty;
-            player.Status = CharacterStatus.Status.Standing;
             target.Status = CharacterStatus.Status.Ghost;
-            target.Target = string.Empty;
 
             target.DeathCry(room);
 
@@ -234,8 +231,6 @@ namespace ArchaicQuestII.GameLogic.Combat
                 )
                 {
                     follower.GainExperiencePoints(exp, true);
-                    follower.Status = CharacterStatus.Status.Standing;
-                    follower.Target = string.Empty;
                 }
             }
             else

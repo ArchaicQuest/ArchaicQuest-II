@@ -12,9 +12,11 @@ namespace ArchaicQuestII.GameLogic.Combat
 {
     public class Fight
     {
+        public Guid Id = new Guid();
         private List<Player> _aggressors = new List<Player>();
         private List<Player> _victims = new List<Player>();
         private Queue<Player> _combatQueue = new Queue<Player>();
+        private List<Player> _killed = new List<Player>();
         private Room _room;
         private bool _isMurder;
         public bool Ended;
@@ -117,7 +119,10 @@ namespace ArchaicQuestII.GameLogic.Combat
 
             while (_combatQueue.Count > 0 && !Ended)
             {
-                DoRound(_combatQueue.Dequeue());
+                var player = _combatQueue.Dequeue();
+                if (_killed.Contains(player))
+                    continue;
+                DoRound(player);
             }
         }
 
@@ -288,7 +293,12 @@ namespace ArchaicQuestII.GameLogic.Combat
 
                                 if (!target.IsAlive())
                                 {
+                                    RemoveFromCombat(target);
                                     CombatHandler.TargetKilled(target, player, _room);
+                                    if (_combatQueue.Contains(target))
+                                    {
+                                        return;
+                                    }
                                 }
                             }
                             else
@@ -382,7 +392,12 @@ namespace ArchaicQuestII.GameLogic.Combat
 
                     if (!target.IsAlive())
                     {
+                        RemoveFromCombat(target);
                         CombatHandler.TargetKilled(player, target, _room);
+                        if (_combatQueue.Contains(target))
+                        {
+                            return;
+                        }
                     }
                 }
                 else
@@ -530,7 +545,12 @@ namespace ArchaicQuestII.GameLogic.Combat
 
                                     if (!player.IsAlive())
                                     {
+                                        RemoveFromCombat(player);
                                         CombatHandler.TargetKilled(target, player, _room);
+                                        if (_combatQueue.Contains(target))
+                                        {
+                                            return;
+                                        }
                                     }
                                 }
 
@@ -602,6 +622,7 @@ namespace ArchaicQuestII.GameLogic.Combat
 
                         if (!target.IsAlive())
                         {
+                            RemoveFromCombat(target);
                             CombatHandler.TargetKilled(player, target, _room);
                         }
                     }
@@ -653,6 +674,16 @@ namespace ArchaicQuestII.GameLogic.Combat
                 Console.WriteLine(e);
                 throw;
             }
+        }
+
+        public void RemoveFromCombat(Player player)
+        {
+            if (_aggressors.Contains(player))
+                _aggressors.Remove(player);
+            else
+                _victims.Remove(player);
+
+            _killed.Add(player);
         }
 
         private void SetupInitiative(Player player)

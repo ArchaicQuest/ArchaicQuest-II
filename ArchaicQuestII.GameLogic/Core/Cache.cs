@@ -23,7 +23,7 @@ namespace ArchaicQuestII.GameLogic.Core
         private readonly ConcurrentDictionary<string, Room> _roomCache = new();
         private readonly ConcurrentDictionary<int, Skill.Model.Skill> _skillCache = new();
         private readonly ConcurrentDictionary<string, string> _mapCache = new();
-        private readonly ConcurrentBag<Fight> _combatCache = new();
+        private readonly ConcurrentDictionary<Guid, Fight> _combatCache = new();
         private readonly ConcurrentDictionary<int, Quest> _questCache = new();
         private readonly ConcurrentDictionary<int, Help> _helpCache = new();
         private readonly ConcurrentDictionary<int, CraftingRecipes> _craftingRecipesCache = new();
@@ -279,12 +279,17 @@ namespace ArchaicQuestII.GameLogic.Core
 
         public void AddCombat(Fight fight)
         {
-            _combatCache.Add(fight);
+            _combatCache.TryAdd(fight.Id, fight);
         }
 
         public List<Fight> GetCombatList()
         {
-            return _combatCache.ToList();
+            return _combatCache.Values.ToList();
+        }
+
+        public void RemoveCombat(Fight combat)
+        {
+            _combatCache.TryRemove(combat.Id, out _);
         }
 
         public void AddSocial(string key, Emote emote)
