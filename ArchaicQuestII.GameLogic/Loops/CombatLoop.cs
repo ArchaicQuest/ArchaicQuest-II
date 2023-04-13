@@ -82,6 +82,8 @@ namespace ArchaicQuestII.GameLogic.Loops
                         false
                     );
                 }
+                
+                player.UpdateClientUI();
             }
         }
 
