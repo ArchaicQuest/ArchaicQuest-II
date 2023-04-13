@@ -165,10 +165,29 @@ namespace ArchaicQuestII.GameLogic.Hubs
         public async void AddCharacter(string hubId, Guid characterId)
         {
             var player = GetCharacter(hubId, characterId);
-            player.AddSkills(Enum.Parse<ClassName>(player.ClassName));
+            if (!player.Skills.Any())
+            {
+                player.AddSkills(Enum.Parse<ClassName>(player.ClassName));
+            }
+            else
+            {
+                player.RemoveSkills(Enum.Parse<ClassName>(player.ClassName));
+                player.UpdateSkillLevel(Enum.Parse<ClassName>(player.ClassName));
+            }
+           
 
             if (player.SubClassName != null && player.SubClassName != SubClassName.None.ToString())
-                player.AddSkills(Enum.Parse<ClassName>(player.SubClassName));
+            {
+                if (!player.Skills.Any())
+                {
+                    player.AddSkills(Enum.Parse<ClassName>(player.SubClassName));
+                }
+                else
+                {
+                    player.RemoveSkills(Enum.Parse<ClassName>(player.SubClassName));
+                    player.UpdateSkillLevel(Enum.Parse<ClassName>(player.SubClassName));
+                }
+            }
 
             player.Config ??= new PlayerConfig();
 
