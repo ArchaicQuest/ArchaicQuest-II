@@ -11,7 +11,7 @@ namespace ArchaicQuestII.GameLogic.Loops
     public class HintLoop : ILoop
     {
         public int TickDelay => 120000;
-        public bool ConfigureAwait => true;
+        public bool ConfigureAwait => false;
         private List<Player> _players = new List<Player>();
         private List<string> _hints = new List<string>()
         {
