@@ -399,6 +399,7 @@ namespace ArchaicQuestII.GameLogic.Combat
                 target.Buffer = new Queue<string>();
                 target.RoomId = Helpers.ReturnRoomId(newRoom);
                 newRoom.Players.Add(target);
+                target.UpdateClientUI();
                 target.Buffer.Enqueue("look");
             }
         }

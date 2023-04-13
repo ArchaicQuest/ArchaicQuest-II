@@ -691,6 +691,12 @@ namespace ArchaicQuestII.GameLogic.Combat
             if (player.Lag > 0)
                 return;
 
+            if (player.RoomId != Helpers.ReturnRoomId(_room))
+            {
+                RemoveFromCombat(player);
+                return;
+            }
+
             var attackCount = 1;
 
             var hasSecondAttack = player.HasSkill(SkillName.SecondAttack);
