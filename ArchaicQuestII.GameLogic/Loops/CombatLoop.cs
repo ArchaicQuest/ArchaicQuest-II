@@ -11,7 +11,7 @@ namespace ArchaicQuestII.GameLogic.Loops
     {
         public int TickDelay => 3200;
 
-        public bool ConfigureAwait => true;
+        public bool ConfigureAwait => false;
 
         private List<Player> _combatants;
 
