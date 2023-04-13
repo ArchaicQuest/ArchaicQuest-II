@@ -98,11 +98,13 @@ namespace ArchaicQuestII.GameLogic.Combat
             foreach (var player in _aggressors)
             {
                 player.Status = CharacterStatus.Status.Standing;
+                Services.Instance.Writer.WriteLine("<p>Combat has ended.</p>", player);
             }
 
             foreach (var player in _victims)
             {
                 player.Status = CharacterStatus.Status.Standing;
+                Services.Instance.Writer.WriteLine("<p>Combat has ended.</p>", player);
             }
         }
 
@@ -156,6 +158,12 @@ namespace ArchaicQuestII.GameLogic.Combat
                 if (target == null)
                 {
                     End();
+                    return;
+                }
+
+                if (!target.IsAlive())
+                {
+                    RemoveFromCombat(target);
                     return;
                 }
 
