@@ -467,7 +467,7 @@ namespace ArchaicQuestII.GameLogic.Combat
 
                     Services.Instance.UpdateClient.PlaySound("hit", target);
                     Services.Instance.UpdateClient.PlaySound("hit", player);
-                    player.HarmTarget(damage);
+                    target.HarmTarget(damage);
 
                     DisplayDamage(player, target, room, weapon, damage);
 
