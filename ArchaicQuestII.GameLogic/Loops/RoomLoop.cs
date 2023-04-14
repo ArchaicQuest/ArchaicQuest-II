@@ -1,14 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
-using MoonSharp.Interpreter;
-using Newtonsoft.Json;
 
 namespace ArchaicQuestII.GameLogic.Loops
 {
@@ -16,8 +13,7 @@ namespace ArchaicQuestII.GameLogic.Loops
     {
         public int TickDelay => 125;
         public bool ConfigureAwait => false;
-        private List<Player> _currentPlayers = new List<Player>();
-        private List<Room> _rooms = Services.Instance.Cache.GetAllRoomsToRepop();
+        private List<Room> _rooms = Services.Instance.Cache.GetAllRooms();
         private int _emoteTick = 36;
         private int _corpsesTick = 960;
         private int _mobsTick = 960;
@@ -56,18 +52,6 @@ namespace ArchaicQuestII.GameLogic.Loops
                 //reset the room
                 if (_resetTick <= 0)
                     Reset(room);
-
-                //check for new players in room
-                foreach (var player in room.Players)
-                {
-                    if (player.ConnectionId == "mob")
-                        continue;
-
-                    if (_currentPlayers.Contains(player) && !room.Players.Contains(player))
-                        PlayerLeft(room, player);
-                    if (!_currentPlayers.Contains(player) && room.Players.Contains(player))
-                        PlayerEntered(room, player);
-                }
             }
         }
 
@@ -75,12 +59,12 @@ namespace ArchaicQuestII.GameLogic.Loops
 
         private void Reset(Room room)
         {
+            var originalRoom = Services.Instance.Cache.GetOriginalRoom(Helpers.ReturnRoomId(room));
+
             // reset doors
-            room.Exits = room.Exits;
+            room.Exits = originalRoom.Exits;
 
             //set room clean
-            // if (room.Players.Count == 0)
-            //   {
             room.Clean = true;
 
             foreach (var player in room.Players)
@@ -90,7 +74,6 @@ namespace ArchaicQuestII.GameLogic.Loops
                     player
                 );
             }
-            //  }
 
             _resetTick = 960;
         }
@@ -132,12 +115,7 @@ namespace ArchaicQuestII.GameLogic.Loops
 
         private void Mobs(Room room)
         {
-            //max 187MB allocated type: string too much memory used here
-            var originalRoom = JsonConvert.DeserializeObject<Room>(
-                JsonConvert.SerializeObject(
-                    Services.Instance.Cache.GetOriginalRoom(Helpers.ReturnRoomId(room))
-                )
-            );
+            var originalRoom = Services.Instance.Cache.GetOriginalRoom(Helpers.ReturnRoomId(room));
 
             foreach (var mob in originalRoom.Mobs)
             {
@@ -207,7 +185,7 @@ namespace ArchaicQuestII.GameLogic.Loops
 
         private void Emote(Room room)
         {
-            if (!room.Emotes.Any() || !_currentPlayers.Any())
+            if (!room.Emotes.Any() || !room.Players.Any())
                 return;
 
             if (DiceBag.Roll(1, 1, 10) < 7)
@@ -277,70 +255,6 @@ namespace ArchaicQuestII.GameLogic.Loops
             }
 
             _corpsesTick = 960;
-        }
-
-        private void PlayerEntered(Room room, Player player)
-        {
-            _currentPlayers.Add(player);
-
-            foreach (var mob in room.Mobs.ToList())
-            {
-                if (!string.IsNullOrEmpty(mob.Events.Enter))
-                {
-                    try
-                    {
-                        UserData.RegisterType<MobScripts>();
-
-                        var script = new Script();
-
-                        var obj = UserData.Create(Services.Instance.MobScripts);
-                        script.Globals.Set("obj", obj);
-                        UserData.RegisterProxyType<MyProxy, Room>(r => new MyProxy(room));
-                        UserData.RegisterProxyType<ProxyPlayer, Player>(
-                            r => new ProxyPlayer(player)
-                        );
-
-                        script.Globals["room"] = room;
-                        script.Globals["player"] = player;
-                        script.Globals["mob"] = mob;
-
-                        var res = script.DoString(mob.Events.Enter);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine("RoomActions.cs: " + ex);
-                    }
-                }
-
-                if (mob.Aggro && mob.Status != CharacterStatus.Status.Fighting)
-                {
-                    Services.Instance.Writer.WriteLine($"{mob.Name} attacks you!", player);
-                    Services.Instance.MobScripts.AttackPlayer(room, player, mob);
-                }
-            }
-        }
-
-        private void PlayerLeft(Room room, Player player)
-        {
-            _currentPlayers.Remove(player);
-
-            foreach (var mob in room.Mobs.Where(mob => !string.IsNullOrEmpty(mob.Events.Leave)))
-            {
-                UserData.RegisterType<MobScripts>();
-
-                var script = new Script();
-
-                var obj = UserData.Create(Services.Instance.MobScripts);
-                script.Globals.Set("obj", obj);
-                UserData.RegisterProxyType<MyProxy, Room>(r => new MyProxy(room));
-                UserData.RegisterProxyType<ProxyPlayer, Player>(r => new ProxyPlayer(player));
-
-                script.Globals["room"] = room;
-                script.Globals["player"] = player;
-                script.Globals["mob"] = mob;
-
-                var res = script.DoString(mob.Events.Leave);
-            }
         }
     }
 }

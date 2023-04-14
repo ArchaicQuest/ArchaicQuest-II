@@ -157,13 +157,6 @@ namespace ArchaicQuestII.GameLogic.Core
             return room;
         }
 
-        public List<Room> GetAllRoomsToRepop()
-        {
-            var room = _roomCache.Values.ToList();
-
-            return room;
-        }
-
         public List<Skill.Model.Skill> GetAllSkills()
         {
             var data = _skillCache.Values.ToList();

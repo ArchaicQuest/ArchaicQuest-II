@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Character.Status;
@@ -13,7 +12,9 @@ using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Spell;
 using ArchaicQuestII.GameLogic.Utilities;
+using ArchaicQuestII.GameLogic.World.Area;
 using ArchaicQuestII.GameLogic.World.Room;
+using MoonSharp.Interpreter;
 
 namespace ArchaicQuestII.GameLogic.Character;
 
@@ -184,7 +185,7 @@ public static class CharacterHelpers
 
         Services.Instance.Writer.WriteLine(
             $"<p class='improve'>You learn from your mistakes and gain {100 * skill.Level / 4} experience points.</p>"
-            + $"<p class='improve'>Your knowledge of {skill.Name} increases by {increase}%.</p>",
+                + $"<p class='improve'>Your knowledge of {skill.Name} increases by {increase}%.</p>",
             player
         );
     }
@@ -1470,11 +1471,15 @@ public static class CharacterHelpers
     {
         player.Pose = string.Empty;
 
+        oldRoom.PlayerLeft(player);
+
         player.ExitMessage(oldRoom, newRoom);
 
         player.UpdateLocation(oldRoom, newRoom);
 
         player.EnterMessage(newRoom, oldRoom);
+
+        newRoom.PlayerEntered(player);
 
         Services.Instance.UpdateClient.GetMap(
             player,
@@ -1503,8 +1508,8 @@ public static class CharacterHelpers
             newRoom.Players.Add(character);
 
             //player entered new area TODO: Add area announce
-            //if(oldRoom.AreaId != newRoom.AreaId)
-            //    _areaActions.AreaEntered(player, newRoom);
+            if (oldRoom.AreaId != newRoom.AreaId)
+                AreaActions.AreaEntered(character, newRoom);
         }
         else
         {
@@ -1515,6 +1520,64 @@ public static class CharacterHelpers
             character.RoomId =
                 $"{newRoom.AreaId}{newRoom.Coords.X}{newRoom.Coords.Y}{newRoom.Coords.Z}";
             newRoom.Mobs.Add(character);
+        }
+    }
+
+    private static void PlayerEntered(this Room room, Player player)
+    {
+        foreach (var mob in room.Mobs.ToList())
+        {
+            if (!string.IsNullOrEmpty(mob.Events.Enter))
+            {
+                try
+                {
+                    UserData.RegisterType<MobScripts>();
+
+                    var script = new Script();
+
+                    var obj = UserData.Create(Services.Instance.MobScripts);
+                    script.Globals.Set("obj", obj);
+                    UserData.RegisterProxyType<MyProxy, Room>(r => new MyProxy(room));
+                    UserData.RegisterProxyType<ProxyPlayer, Player>(r => new ProxyPlayer(player));
+
+                    script.Globals["room"] = room;
+                    script.Globals["player"] = player;
+                    script.Globals["mob"] = mob;
+
+                    var res = script.DoString(mob.Events.Enter);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("RoomActions.cs: " + ex);
+                }
+            }
+
+            if (mob.Aggro && mob.Status != CharacterStatus.Status.Fighting)
+            {
+                Services.Instance.Writer.WriteLine($"{mob.Name} attacks you!", player);
+                Services.Instance.MobScripts.AttackPlayer(room, player, mob);
+            }
+        }
+    }
+
+    private static void PlayerLeft(this Room room, Player player)
+    {
+        foreach (var mob in room.Mobs.Where(mob => !string.IsNullOrEmpty(mob.Events.Leave)))
+        {
+            UserData.RegisterType<MobScripts>();
+
+            var script = new Script();
+
+            var obj = UserData.Create(Services.Instance.MobScripts);
+            script.Globals.Set("obj", obj);
+            UserData.RegisterProxyType<MyProxy, Room>(r => new MyProxy(room));
+            UserData.RegisterProxyType<ProxyPlayer, Player>(r => new ProxyPlayer(player));
+
+            script.Globals["room"] = room;
+            script.Globals["player"] = player;
+            script.Globals["mob"] = mob;
+
+            var res = script.DoString(mob.Events.Leave);
         }
     }
 
@@ -1632,9 +1695,9 @@ public static class CharacterHelpers
     public static string GetDisplayName(SkillName skillEnum)
     {
         var displayName = skillEnum.ToString();
-        var displayAttr = skillEnum.GetType()
-            .GetMember(skillEnum.ToString())[0]
-            .GetCustomAttribute<DisplayAttribute>();
+        var displayAttr = skillEnum.GetType().GetMember(skillEnum.ToString())[
+            0
+        ].GetCustomAttribute<DisplayAttribute>();
 
         if (displayAttr != null)
         {
@@ -1644,4 +1707,3 @@ public static class CharacterHelpers
         return displayName;
     }
 }
-

@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using ArchaicQuestII.GameLogic.Character;
-using ArchaicQuestII.GameLogic.Character.Status;
-using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Item;
-using MoonSharp.Interpreter;
 
 namespace ArchaicQuestII.GameLogic.World.Room
 {

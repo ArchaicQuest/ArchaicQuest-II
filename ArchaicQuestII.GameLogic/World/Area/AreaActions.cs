@@ -7,7 +7,7 @@ namespace ArchaicQuestII.GameLogic.World.Area
     /// <summary>
     /// Handles all actions relating to areas
     /// </summary>
-    public class AreaActions
+    public static class AreaActions
     {
         /// <summary>
         /// Display notice when player enters a new area
