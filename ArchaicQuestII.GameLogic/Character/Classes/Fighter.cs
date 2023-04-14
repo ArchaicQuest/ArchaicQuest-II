@@ -130,6 +130,13 @@ public class Fighter : IClass
             },
             new SkillList
             {
+                Name = SkillName.Dodge,
+                Level = 1,
+                Proficiency = 0,
+                IsSpell = false,
+            },
+            new SkillList
+            {
                 Name = SkillName.Foraging,
                 Level = 1,
                 Proficiency = 0,
