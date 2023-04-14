@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 using ArchaicQuestII.GameLogic.Character.Class;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Character.Status;
@@ -1486,7 +1487,7 @@ public static class CharacterHelpers
         Services.Instance.UpdateClient.UpdateMoves(player);
         player.Buffer.Enqueue("look");
 
-        newRoom.PlayerEntered(player);
+        Task.Run(() => newRoom.PlayerEntered(player));
     }
 
     /// <summary>
