@@ -1454,15 +1454,15 @@ public static class CharacterHelpers
     /// <param name="oldRoom"></param>
     /// <param name="newRoom"></param>
     /// <param name="isFlee"></param>
-    public static void ChangeRoom(this Player player, Room oldRoom, Room newRoom, bool isFlee)
+    public static void ChangeRoom(this Player player, Room oldRoom, Room newRoom)
     {
         player.Pose = string.Empty;
 
-        player.ExitMessage(oldRoom, newRoom, isFlee);
+        player.ExitMessage(oldRoom, newRoom);
 
         player.UpdateLocation(oldRoom, newRoom);
 
-        player.EnterMessage(newRoom, oldRoom, isFlee);
+        player.EnterMessage(newRoom, oldRoom);
 
         Services.Instance.UpdateClient.GetMap(
             player,
@@ -1506,7 +1506,7 @@ public static class CharacterHelpers
         }
     }
 
-    private static void EnterMessage(this Player character, Room toRoom, Room fromRoom, bool isFlee)
+    private static void EnterMessage(this Player character, Room toRoom, Room fromRoom)
     {
         var direction = "from nowhere";
         var movement = "appears";
@@ -1537,6 +1537,11 @@ public static class CharacterHelpers
 
         switch (character.Status)
         {
+            case CharacterStatus.Status.Fleeing:
+                Services.Instance.UpdateClient.PlaySound("flee", character);
+                movement = "rushes";
+                character.Status = CharacterStatus.Status.Standing;
+                break;
             case CharacterStatus.Status.Floating:
                 movement = "floats";
                 break;
@@ -1549,12 +1554,6 @@ public static class CharacterHelpers
                 break;
         }
 
-        if (isFlee)
-        {
-            Services.Instance.UpdateClient.PlaySound("flee", character);
-            movement = "rushes";
-        }
-
         foreach (var p in toRoom.Players.Where(p => character.Name != p.Name))
         {
             Services.Instance.Writer.WriteLine(
@@ -1564,12 +1563,7 @@ public static class CharacterHelpers
         }
     }
 
-    private static void ExitMessage(
-        this Player characterBase,
-        Room fromRoom,
-        Room toRoom,
-        bool isFlee
-    )
+    private static void ExitMessage(this Player characterBase, Room fromRoom, Room toRoom)
     {
         var direction = "to thin air";
         var movement = "vanishes";
@@ -1600,6 +1594,9 @@ public static class CharacterHelpers
 
         switch (characterBase.Status)
         {
+            case CharacterStatus.Status.Fleeing:
+                movement = "flees";
+                break;
             case CharacterStatus.Status.Floating:
                 movement = "floats";
                 break;
@@ -1609,11 +1606,6 @@ public static class CharacterHelpers
             case CharacterStatus.Status.Standing:
                 movement = "walks";
                 break;
-        }
-
-        if (isFlee)
-        {
-            movement = "flee";
         }
 
         foreach (var p in fromRoom.Players.Where(p => characterBase.Name != p.Name))
