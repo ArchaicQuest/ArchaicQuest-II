@@ -43,11 +43,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
 
         public void Execute(Player player, Room room, string[] input)
         {
-            var canDoSkill = CanPerformSkill(DefineSkill.Elbow(), player);
-            if (!canDoSkill)
-            {
+            if (!player.HasSkill(SkillName.Elbow))
                 return;
-            }
 
             var obj = input.ElementAtOrDefault(1)?.ToLower() ?? player.Target;
             if (string.IsNullOrEmpty(obj))
@@ -78,7 +75,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
 
             player.Lag += 1;
 
-            DamagePlayer(DefineSkill.Elbow().Name, damage, player, target, room);
+            DamagePlayer(SkillName.Elbow.ToString(), damage, player, target, room);
         }
     }
 }

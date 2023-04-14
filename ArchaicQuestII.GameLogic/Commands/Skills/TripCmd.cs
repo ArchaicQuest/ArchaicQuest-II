@@ -39,11 +39,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
 
         public void Execute(Player player, Room room, string[] input)
         {
-            var canDoSkill = CanPerformSkill(DefineSkill.Trip(), player);
-            if (!canDoSkill)
-            {
+            if (!player.HasSkill(SkillName.Trip))
                 return;
-            }
 
             var obj = input.ElementAtOrDefault(1)?.ToLower() ?? player.Target;
             if (string.IsNullOrEmpty(obj))

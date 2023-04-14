@@ -40,11 +40,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
 
         public void Execute(Player player, Room room, string[] input)
         {
-            var canDoSkill = CanPerformSkill(DefineSkill.Lunge(), player);
-            if (!canDoSkill)
-            {
+            if (!player.HasSkill(SkillName.Lunge))
                 return;
-            }
 
             if (player.Equipped.Wielded == null)
             {
@@ -91,7 +88,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             var str = player.Attributes.Attribute[EffectLocation.Strength];
             var damage = DiceBag.Roll(3, 1, 6) + str / 5 + weaponDam;
 
-            DamagePlayer(DefineSkill.Lunge().Name, damage, player, target, room);
+            DamagePlayer(SkillName.Lunge.ToString(), damage, player, target, room);
 
             player.Lag += 1;
         }

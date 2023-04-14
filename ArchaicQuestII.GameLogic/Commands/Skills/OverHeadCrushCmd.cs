@@ -40,11 +40,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
 
         public void Execute(Player player, Room room, string[] input)
         {
-            var canDoSkill = CanPerformSkill(DefineSkill.OverheadCrush(), player);
-            if (!canDoSkill)
-            {
+            if (!player.HasSkill(SkillName.OverheadCrush))
                 return;
-            }
 
             if (player.Equipped.Wielded == null)
             {
@@ -95,7 +92,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             var str = player.Attributes.Attribute[EffectLocation.Strength];
             var damage = weaponDam + DiceBag.Roll(1, 3, 10) + str / 5;
 
-            DamagePlayer(DefineSkill.OverheadCrush().Name, damage, player, target, room);
+            DamagePlayer(SkillName.OverheadCrush.ToString(), damage, player, target, room);
 
             player.Lag += 1;
         }

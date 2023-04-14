@@ -43,110 +43,6 @@ namespace ArchaicQuestII.GameLogic.Combat
             );
         }
 
-        public static Item.Item GetWeapon(Player player, bool dualWield = false)
-        {
-            return dualWield ? player.Equipped.Secondary : player.Equipped.Wielded;
-        }
-
-        public static void DisplayDamage(
-            Player player,
-            Player target,
-            Room room,
-            Item.Item weapon,
-            int damage
-        )
-        {
-            CultureInfo cc = CultureInfo.CurrentCulture;
-            var damText = Services.Instance.Damage.DamageText(damage);
-            var attackType = "";
-            var damageType = "";
-            if (weapon == null)
-            {
-                attackType = player.ConnectionId.Equals(
-                    "mob",
-                    StringComparison.CurrentCultureIgnoreCase
-                )
-                    ? player.DefaultAttack?.ToLower(cc)
-                    : "punch";
-            }
-            else
-            {
-                attackType = Enum.GetName(typeof(Item.Item.AttackTypes), weapon.AttackType)
-                    ?.ToLower(cc);
-                damageType = Enum.GetName(typeof(Item.Item.DamageTypes), weapon.DamageType)
-                    ?.ToLower(cc);
-            }
-
-            Services.Instance.Writer.WriteLine(
-                $"<p class='combat'>Your {(damageType != "none" ? damageType : "")} {attackType} {damText.Value} {target.Name.ToLower(cc)}. <span class='damage'>[{damage}]</span></p>",
-                player
-            );
-            Services.Instance.Writer.WriteLine(
-                $"<p class='combat'>{target.Name} {Services.Instance.Formulas.TargetHealth(player, target)}.</p>",
-                player
-            );
-
-            Services.Instance.Writer.WriteLine(
-                $"<p>{player.Name}'s {(damageType != "none" ? damageType : "")} {attackType} {damText.Value} you. <span class='damage'>[{damage}]</span></p></p>",
-                target
-            );
-
-            foreach (var pc in room.Players)
-            {
-                if (pc.Name == player.Name || pc.Name == target.Name)
-                {
-                    continue;
-                }
-
-                Services.Instance.Writer.WriteLine(
-                    $"<p>{player.Name}'s {attackType} {damText.Value} {target.Name.ToLower(cc)}.</p>",
-                    pc
-                );
-            }
-        }
-
-        public static void DisplayMiss(Player player, Player target, Room room, Item.Item weapon)
-        {
-            CultureInfo cc = CultureInfo.CurrentCulture;
-            var attackType = "";
-            if (weapon == null)
-            {
-                attackType = player.ConnectionId.Equals(
-                    "mob",
-                    StringComparison.CurrentCultureIgnoreCase
-                )
-                    ? player.DefaultAttack?.ToLower(cc)
-                    : "punch";
-            }
-            else
-            {
-                attackType = Enum.GetName(typeof(Item.Item.AttackTypes), weapon.AttackType)
-                    ?.ToLower(cc);
-            }
-
-            Services.Instance.Writer.WriteLine(
-                $"<p class='combat'>Your {attackType} misses {target.Name.ToLower(cc)}.</p>",
-                player
-            );
-            Services.Instance.Writer.WriteLine(
-                $"<p class='combat'>{player.Name}'s {attackType} misses you.</p>",
-                target
-            );
-
-            foreach (var pc in room.Players)
-            {
-                if (pc.Name == player.Name || pc.Name == target.Name)
-                {
-                    continue;
-                }
-
-                Services.Instance.Writer.WriteLine(
-                    $"<p>{player.Name}'s {attackType} misses {target.Name.ToLower(cc)}.</p>",
-                    pc
-                );
-            }
-        }
-
         public static int DamageReduction(Player defender, int damage)
         {
             var ArRating = defender.ArmorRating.Armour + 1;
@@ -196,212 +92,6 @@ namespace ArchaicQuestII.GameLogic.Combat
             var DamageAfterArmourReduction = DamageReduction(target, (int)totalDamage);
 
             return DamageAfterArmourReduction;
-        }
-
-        public static void TargetKilled(Player player, Player target, Room room)
-        {
-            player.Target = null;
-            target.Status = CharacterStatus.Status.Ghost;
-
-            target.DeathCry(room);
-
-            if (player.Grouped)
-            {
-                // other group members to drop from combat if they're fighting the same target
-                // other group members status set to standing
-
-                var isGroupLeader = string.IsNullOrEmpty(player.Following);
-
-                var groupLeader = player;
-
-                if (!isGroupLeader)
-                {
-                    groupLeader = Services.Instance.Cache
-                        .GetPlayerCache()
-                        .FirstOrDefault(x => x.Value.Name.Equals(player.Following))
-                        .Value;
-                }
-
-                var exp = target.GetExpWorth() / (groupLeader.Followers.Count + 1);
-                groupLeader.GainExperiencePoints(exp, true);
-
-                foreach (
-                    var follower in groupLeader.Followers.Where(
-                        follower => follower.Grouped && follower.Following == groupLeader.Name
-                    )
-                )
-                {
-                    follower.GainExperiencePoints(exp, true);
-                    follower.Target = null;
-                }
-            }
-            else
-            {
-                player.GainExperiencePoints(target, true);
-            }
-
-            Services.Instance.Quest.IsQuestMob(player, target.Name);
-
-            if (target.ConnectionId != "mob")
-            {
-                Helpers.PostToDiscord($"{target.Name} got killed by {player.Name}!", "event");
-
-                if (player.ConnectionId != "mob")
-                {
-                    target.PlayerDeaths += 1;
-                    player.PlayerKills += 1;
-                }
-                else
-                {
-                    target.MobDeaths += 1;
-                }
-            }
-
-            Services.Instance.Writer.WriteLine("<p class='dead'>You are dead. R.I.P.</p>", target);
-
-            var targetName = target.Name.ToLower(CultureInfo.CurrentCulture);
-            var corpse = new Item.Item
-            {
-                Name = $"The corpse of {targetName}",
-                Description = new Description
-                {
-                    Room = $"The corpse of {targetName} is laying here.",
-                    Exam = target.Description,
-                    Look = target.Description,
-                },
-                Slot = EquipmentSlot.Held,
-                Level = 1,
-                Stuck = true,
-                Container = new Container
-                {
-                    Items = new ItemList(),
-                    CanLock = false,
-                    IsOpen = true,
-                    CanOpen = false,
-                },
-                ItemType = Item.Item.ItemTypes.Container,
-                Decay = target.ConnectionId.Equals("mob", StringComparison.OrdinalIgnoreCase)
-                    ? 10
-                    : 20,
-                DecayTimer = 300 // 5 minutes,
-            };
-
-            foreach (var item in target.Inventory)
-            {
-                item.Equipped = false;
-                corpse.Container.Items.Add(item);
-            }
-
-            // clear list
-            target.Inventory = new ItemList();
-            // clear equipped
-            target.Equipped = new Equipment();
-
-            var mount = target.Pets.FirstOrDefault(x => x.Name.Equals(target.Mounted.Name));
-            if (mount != null)
-            {
-                target.Pets.Remove(mount);
-                target.Mounted.Name = string.Empty;
-            }
-
-            // add corpse to room
-            room.Items.Add(corpse);
-            Services.Instance.UpdateClient.UpdateInventory(target);
-            Services.Instance.UpdateClient.UpdateEquipment(target);
-            Services.Instance.UpdateClient.UpdateScore(target);
-            Services.Instance.UpdateClient.UpdateScore(player);
-
-            room.Clean = false;
-
-            if (!target.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
-            {
-                player.MobKills += 1;
-
-                var randomItem = Services.Instance.RandomItem.WeaponDrop(player);
-
-                if (randomItem != null)
-                {
-                    corpse.Container.Items.Add(randomItem);
-                }
-
-                var command = Services.Instance.Cache.GetCommand("get");
-                if (player.Config.AutoLoot && command != null)
-                {
-                    var corpseIndex = room.Items.IndexOf(corpse) + 1;
-                    command.Execute(player, room, new[] { "get", "all", $"{corpseIndex}.corpse" });
-                }
-            }
-
-            if (target.ConnectionId.Equals("mob", StringComparison.CurrentCultureIgnoreCase))
-            {
-                var command = Services.Instance.Cache.GetCommand("sacrifice");
-
-                if (player.Config.AutoSacrifice && command != null)
-                {
-                    command.Execute(player, room, new[] { "sacrifice", corpse.Name });
-                }
-
-                room.Mobs.Remove(target);
-                var getTodayMobStats = Services.Instance.PlayerDataBase
-                    .GetList<MobStats>(PlayerDataBase.Collections.MobStats)
-                    .FirstOrDefault(x => x.Date.Date.Equals(DateTime.Today));
-
-                if (getTodayMobStats != null)
-                {
-                    getTodayMobStats.MobKills += 1;
-                }
-                else
-                {
-                    getTodayMobStats = new MobStats()
-                    {
-                        MobKills = 1,
-                        PlayerDeaths = 0,
-                        Date = DateTime.Now,
-                    };
-                }
-                Services.Instance.PlayerDataBase.Save(
-                    getTodayMobStats,
-                    PlayerDataBase.Collections.MobStats
-                );
-            }
-            else
-            {
-                room.Players.Remove(target);
-                var getTodayMobStats = Services.Instance.PlayerDataBase
-                    .GetList<MobStats>(PlayerDataBase.Collections.MobStats)
-                    .FirstOrDefault(x => x.Date.Date.Equals(DateTime.Today));
-
-                if (getTodayMobStats != null)
-                {
-                    getTodayMobStats.PlayerDeaths += 1;
-                }
-                else
-                {
-                    getTodayMobStats = new MobStats()
-                    {
-                        MobKills = 0,
-                        PlayerDeaths = 1,
-                        Date = DateTime.Now,
-                    };
-                }
-                Services.Instance.PlayerDataBase.Save(
-                    getTodayMobStats,
-                    PlayerDataBase.Collections.MobStats
-                );
-            }
-
-            // take player to Temple / recall area
-            if (target.ConnectionId != "mob")
-            {
-                target.Status = CharacterStatus.Status.Resting;
-                var newRoom = Services.Instance.Cache.GetRoom(target.RecallId);
-                target.Target = null;
-                target.Buffer = new Queue<string>();
-                target.RoomId = Helpers.ReturnRoomId(newRoom);
-                newRoom.Players.Add(target);
-                target.UpdateClientUI();
-                target.Buffer.Enqueue("look");
-            }
         }
 
         /// <summary>
@@ -463,6 +153,236 @@ namespace ArchaicQuestII.GameLogic.Combat
             Services.Instance.UpdateClient.UpdateExp(player);
 
             return false;
+        }
+
+        /// <summary>
+        /// Target Killed
+        /// </summary>
+        /// <param name="killer">The one who did the killing</param>
+        /// <param name="victim">The one who died</param>
+        public static void TargetKilled(Combatant combatant, Room room)
+        {
+            Services.Instance.Writer.WriteLine(
+                "<p class='dead'>You are dead. R.I.P.</p>",
+                combatant.target
+            );
+
+            if (combatant.target.Combat != null)
+                combatant.target.Combat.RemoveFromCombat(combatant.target);
+
+            combatant.target.Target = null;
+            combatant.target.Status = CharacterStatus.Status.Ghost;
+            combatant.target.DeathCry(room);
+
+            if (combatant.player.Grouped)
+            {
+                // other group members to drop from combat if they're fighting the same target
+                // other group members status set to standing
+
+                var isGroupLeader = string.IsNullOrEmpty(combatant.player.Following);
+
+                var groupLeader = combatant.player;
+
+                if (!isGroupLeader)
+                {
+                    groupLeader = Services.Instance.Cache
+                        .GetPlayerCache()
+                        .FirstOrDefault(x => x.Value.Name.Equals(combatant.player.Following))
+                        .Value;
+                }
+
+                var exp = combatant.target.GetExpWorth() / (groupLeader.Followers.Count + 1);
+                groupLeader.GainExperiencePoints(exp, true);
+
+                foreach (
+                    var follower in groupLeader.Followers.Where(
+                        follower => follower.Grouped && follower.Following == groupLeader.Name
+                    )
+                )
+                {
+                    follower.GainExperiencePoints(exp, true);
+                    follower.Target = null;
+                }
+            }
+            else
+            {
+                combatant.player.GainExperiencePoints(combatant.target, true);
+            }
+
+            Services.Instance.Quest.IsQuestMob(combatant.player, combatant.target.Name);
+
+            if (combatant.target.ConnectionId != "mob")
+            {
+                Helpers.PostToDiscord(
+                    $"{combatant.target.Name} got killed by {combatant.player.Name}!",
+                    "event"
+                );
+
+                if (combatant.player.ConnectionId != "mob")
+                {
+                    combatant.target.PlayerDeaths += 1;
+                    combatant.player.PlayerKills += 1;
+                }
+                else
+                {
+                    combatant.target.MobDeaths += 1;
+                }
+            }
+
+            var targetName = combatant.target.Name.ToLower(CultureInfo.CurrentCulture);
+
+            var corpse = new Item.Item
+            {
+                Name = $"The corpse of {targetName}",
+                Description = new Description
+                {
+                    Room = $"The corpse of {targetName} is laying here.",
+                    Exam = combatant.target.Description,
+                    Look = combatant.target.Description,
+                },
+                Slot = EquipmentSlot.Held,
+                Level = 1,
+                Stuck = true,
+                Container = new Container
+                {
+                    Items = new ItemList(),
+                    CanLock = false,
+                    IsOpen = true,
+                    CanOpen = false,
+                },
+                ItemType = Item.Item.ItemTypes.Container,
+                Decay = combatant.target.ConnectionId.Equals(
+                    "mob",
+                    StringComparison.OrdinalIgnoreCase
+                )
+                    ? 10
+                    : 20,
+                DecayTimer = 300 // 5 minutes,
+            };
+
+            foreach (var item in combatant.target.Inventory)
+            {
+                item.Equipped = false;
+                corpse.Container.Items.Add(item);
+            }
+
+            // clear list
+            combatant.target.Inventory = new ItemList();
+            // clear equipped
+            combatant.target.Equipped = new Equipment();
+
+            var mount = combatant.target.Pets.FirstOrDefault(
+                x => x.Name.Equals(combatant.target.Mounted.Name)
+            );
+            if (mount != null)
+            {
+                combatant.target.Pets.Remove(mount);
+                combatant.target.Mounted.Name = string.Empty;
+            }
+
+            // add corpse to room
+            room.Items.Add(corpse);
+
+            room.Clean = false;
+
+            if (
+                combatant.target.ConnectionId.Equals(
+                    "mob",
+                    StringComparison.CurrentCultureIgnoreCase
+                )
+            )
+            {
+                combatant.player.MobKills += 1;
+
+                var randomItem = Services.Instance.RandomItem.WeaponDrop(combatant.player);
+
+                if (randomItem != null)
+                {
+                    corpse.Container.Items.Add(randomItem);
+                }
+
+                var command = Services.Instance.Cache.GetCommand("get");
+                if (combatant.player.Config.AutoLoot && command != null)
+                {
+                    var corpseIndex = room.Items.IndexOf(corpse) + 1;
+                    command.Execute(
+                        combatant.player,
+                        room,
+                        new[] { "get", "all", $"{corpseIndex}.corpse" }
+                    );
+                }
+
+                command = Services.Instance.Cache.GetCommand("sacrifice");
+                if (combatant.player.Config.AutoSacrifice && command != null)
+                {
+                    command.Execute(combatant.player, room, new[] { "sacrifice", corpse.Name });
+                }
+
+                room.Mobs.Remove(combatant.target);
+
+                var getTodayMobStats = Services.Instance.PlayerDataBase
+                    .GetList<MobStats>(PlayerDataBase.Collections.MobStats)
+                    .FirstOrDefault(x => x.Date.Date.Equals(DateTime.Today));
+
+                if (getTodayMobStats != null)
+                {
+                    getTodayMobStats.MobKills += 1;
+                }
+                else
+                {
+                    getTodayMobStats = new MobStats()
+                    {
+                        MobKills = 1,
+                        PlayerDeaths = 0,
+                        Date = DateTime.Now,
+                    };
+                }
+                Services.Instance.PlayerDataBase.Save(
+                    getTodayMobStats,
+                    PlayerDataBase.Collections.MobStats
+                );
+            }
+            else
+            {
+                room.Players.Remove(combatant.target);
+                var getTodayMobStats = Services.Instance.PlayerDataBase
+                    .GetList<MobStats>(PlayerDataBase.Collections.MobStats)
+                    .FirstOrDefault(x => x.Date.Date.Equals(DateTime.Today));
+
+                if (getTodayMobStats != null)
+                {
+                    getTodayMobStats.PlayerDeaths += 1;
+                }
+                else
+                {
+                    getTodayMobStats = new MobStats()
+                    {
+                        MobKills = 0,
+                        PlayerDeaths = 1,
+                        Date = DateTime.Now,
+                    };
+                }
+                Services.Instance.PlayerDataBase.Save(
+                    getTodayMobStats,
+                    PlayerDataBase.Collections.MobStats
+                );
+            }
+
+            Services.Instance.UpdateClient.UpdateScore(combatant.player);
+
+            // take player to Temple / recall area
+            if (combatant.target.ConnectionId != "mob")
+            {
+                combatant.target.Status = CharacterStatus.Status.Resting;
+                var newRoom = Services.Instance.Cache.GetRoom(combatant.target.RecallId);
+                combatant.target.RoomId = Helpers.ReturnRoomId(newRoom);
+                newRoom.Players.Add(combatant.target);
+                combatant.target.UpdateClientUI();
+                Services.Instance.UpdateClient.UpdateInventory(combatant.target);
+                Services.Instance.UpdateClient.UpdateEquipment(combatant.target);
+                combatant.target.Buffer = new Queue<string>();
+                combatant.target.Buffer.Enqueue("look");
+            }
         }
     }
 }

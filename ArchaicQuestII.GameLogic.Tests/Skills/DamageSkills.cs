@@ -23,7 +23,6 @@ namespace ArchaicQuestII.GameLogic.Tests.Skills
         private readonly Room _room;
         private readonly Mock<IWriteToClient> _writer;
         private readonly Mock<IDamage> _damage;
-        private readonly Mock<ICombat> _combat;
         private readonly Mock<Cache> _cache;
         private readonly Mock<ISkillManager> _skillManager;
         private readonly Mock<IUpdateClientUI> _updateClientUI;
@@ -83,7 +82,6 @@ namespace ArchaicQuestII.GameLogic.Tests.Skills
             _damage = new Mock<IDamage>();
             _skillManager = new Mock<ISkillManager>();
             _cache = new Mock<Cache>();
-            _combat = new Mock<ICombat>();
             _updateClientUI = new Mock<IUpdateClientUI>();
 
             _damageSkills = new DamageSkills(_skillManager.Object);

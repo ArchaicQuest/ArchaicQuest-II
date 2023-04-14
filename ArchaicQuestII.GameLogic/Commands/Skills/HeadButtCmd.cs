@@ -40,11 +40,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
 
         public void Execute(Player player, Room room, string[] input)
         {
-            var canDoSkill = CanPerformSkill(DefineSkill.Headbutt(), player);
-            if (!canDoSkill)
-            {
+            if (!player.HasSkill(SkillName.Headbutt))
                 return;
-            }
 
             var obj = input.ElementAtOrDefault(1)?.ToLower() ?? player.Target;
             if (string.IsNullOrEmpty(obj))
@@ -91,7 +88,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
 
             EmoteAction(textToTarget, textToRoom, target.Name, room, player);
 
-            DamagePlayer(DefineSkill.Headbutt().Name, damage, player, target, room);
+            DamagePlayer(SkillName.Headbutt.ToString(), damage, player, target, room);
 
             player.Lag += 1;
         }

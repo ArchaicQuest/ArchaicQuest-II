@@ -179,18 +179,21 @@ public abstract class SkillCore
 
             if (!target.IsAlive())
             {
-                CombatHandler.TargetKilled(player, target, room);
+                var combatant = new Combatant(player, true);
+                combatant.target = target;
+                CombatHandler.TargetKilled(combatant, room);
 
                 Services.Instance.UpdateClient.UpdateHP(target);
                 return;
-                //TODO: create corpse, refactor fight method from combat.cs
             }
 
             //update UI
             Services.Instance.UpdateClient.UpdateHP(target);
 
-            var combat = new Fight(player, target, room, false);
-            Services.Instance.Cache.AddCombat(combat);
+            if (player.Combat == null)
+            {
+                var combat = new Fight(player, target, room, false);
+            }
         }
     }
 

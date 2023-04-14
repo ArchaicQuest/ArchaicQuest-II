@@ -249,8 +249,7 @@ public static class CharacterHelpers
                 : $"<p class='improve'>You receive {expWorth} experience points.</p>",
             player
         );
-        
-          
+
         if (player.ExperienceToNextLevel <= 0)
         {
             GainLevel(player, true);
@@ -273,7 +272,7 @@ public static class CharacterHelpers
                 : $"<p class='improve'>You receive {amount} experience points.</p>",
             player
         );
-        
+
         if (player.ExperienceToNextLevel <= 0)
         {
             GainLevel(player, true);
@@ -540,23 +539,25 @@ public static class CharacterHelpers
         return modBenefits;
     }
 
-    public static void HarmTarget(this Player victim, int damage)
+    public static void Harm(this Player player, int damage)
     {
-        victim.Attributes.Attribute[EffectLocation.Hitpoints] -= damage;
+        player.Attributes.Attribute[EffectLocation.Hitpoints] -= damage;
 
-        if (victim.Attributes.Attribute[EffectLocation.Hitpoints] < 0)
+        if (player.Attributes.Attribute[EffectLocation.Hitpoints] < 0)
         {
-            victim.Attributes.Attribute[EffectLocation.Hitpoints] = 0;
+            player.Attributes.Attribute[EffectLocation.Hitpoints] = 0;
         }
 
         if (
-            victim.Config.Wimpy > 0
-            && victim.Attributes.Attribute[EffectLocation.Hitpoints] <= victim.Config.Wimpy
+            player.Config.Wimpy > 0
+            && player.Attributes.Attribute[EffectLocation.Hitpoints] <= player.Config.Wimpy
         )
         {
-            victim.Buffer.Clear();
-            victim.Buffer.Enqueue("flee");
+            player.Buffer.Clear();
+            player.Buffer.Enqueue("flee");
         }
+
+        Services.Instance.UpdateClient.UpdateHP(player);
     }
 
     public static bool IsAlive(this Player victim)
@@ -787,6 +788,11 @@ public static class CharacterHelpers
                 pc
             );
         }
+    }
+
+    public static Item.Item GetWeapon(this Player player, bool dualWield = false)
+    {
+        return dualWield ? player.Equipped.Secondary : player.Equipped.Wielded;
     }
 
     public static void DisplayEquipmentUI(this Player player)

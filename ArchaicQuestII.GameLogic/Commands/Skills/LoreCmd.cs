@@ -34,11 +34,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
         {
             var obj = input.ElementAtOrDefault(1)?.ToLower();
 
-            var canDoSkill = CanPerformSkill(DefineSkill.Lore(), player);
-            if (!canDoSkill)
-            {
+            if (!player.HasSkill(SkillName.Lore))
                 return;
-            }
 
             if (!player.RollSkill(SkillName.Lore, true))
             {

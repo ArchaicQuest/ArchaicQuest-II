@@ -40,11 +40,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
 
         public void Execute(Player player, Room room, string[] input)
         {
-            var canDoSkill = CanPerformSkill(DefineSkill.UpperCut(), player);
-            if (!canDoSkill)
-            {
+            if (!player.HasSkill(SkillName.UpperCut))
                 return;
-            }
 
             var obj = input.ElementAtOrDefault(1)?.ToLower() ?? player.Target;
             if (string.IsNullOrEmpty(obj))
@@ -116,7 +113,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 }
             }
 
-            DamagePlayer(DefineSkill.UpperCut().Name, damage, player, target, room);
+            DamagePlayer(SkillName.UpperCut.ToString(), damage, player, target, room);
 
             player.Lag += 1;
         }
