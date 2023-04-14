@@ -20,7 +20,6 @@ namespace ArchaicQuestII.GameLogic.Combat
         private Queue<Combatant> _combatQueue = new Queue<Combatant>();
         private Room _room;
         private bool _isMurder;
-        public bool Ended;
 
         public Fight(Player aggressor, Player victim, Room room, bool isMurder)
         {
@@ -95,8 +94,6 @@ namespace ArchaicQuestII.GameLogic.Combat
 
         private void End()
         {
-            Ended = true;
-
             foreach (var combatant in _combatants.Values)
             {
                 combatant.player.Status = CharacterStatus.Status.Standing;
@@ -108,6 +105,8 @@ namespace ArchaicQuestII.GameLogic.Combat
 
             _combatants.Clear();
             _combatQueue.Clear();
+
+            Services.Instance.Cache.RemoveCombat(this);
         }
 
         public void AddCommand(Player player, string command)
@@ -123,7 +122,7 @@ namespace ArchaicQuestII.GameLogic.Combat
                 SetupInitiative(c);
             }
 
-            while (_combatQueue.Count > 0 && !Ended)
+            while (_combatQueue.Count > 0)
             {
                 var combatant = _combatQueue.Dequeue();
 
@@ -136,6 +135,8 @@ namespace ArchaicQuestII.GameLogic.Combat
                     if (combatant.target != null)
                         DoRound(combatant);
                 }
+
+                CheckIfMoreCombatants();
             }
         }
 
@@ -647,7 +648,10 @@ namespace ArchaicQuestII.GameLogic.Combat
         {
             combatant.Combat = null;
             _combatants.Remove(combatant.Name, out _);
+        }
 
+        private void CheckIfMoreCombatants()
+        {
             bool aggressors = false;
             bool victims = false;
 

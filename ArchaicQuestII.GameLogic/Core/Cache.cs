@@ -277,9 +277,9 @@ namespace ArchaicQuestII.GameLogic.Core
 
         #region mobs or players fighting
 
-        public void AddCombat(Fight fight)
+        public void AddCombat(Fight combat)
         {
-            _combatCache.TryAdd(fight.Id, fight);
+            _combatCache.TryAdd(combat.Id, combat);
         }
 
         public List<Fight> GetCombatList()

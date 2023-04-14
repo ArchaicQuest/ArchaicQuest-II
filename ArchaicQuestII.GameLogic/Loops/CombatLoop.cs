@@ -21,12 +21,6 @@ namespace ArchaicQuestII.GameLogic.Loops
         {
             foreach (var combat in _combat)
             {
-                if (combat.Ended)
-                {
-                    Services.Instance.Cache.RemoveCombat(combat);
-                    continue;
-                }
-
                 combat.Do();
             }
         }
