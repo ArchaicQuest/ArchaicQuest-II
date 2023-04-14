@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using ArchaicQuestII.GameLogic.Character;
+using ArchaicQuestII.GameLogic.Character.Status;
+using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Item;
+using MoonSharp.Interpreter;
 
 namespace ArchaicQuestII.GameLogic.World.Room
 {
@@ -99,5 +104,67 @@ namespace ArchaicQuestII.GameLogic.World.Room
         public List<RoomFlag> RoomFlags { get; set; } = new List<RoomFlag>();
         public DateTime DateCreated { get; set; }
         public DateTime DateUpdated { get; set; }
+
+        public async Task PlayerEntered(Player player)
+        {
+            await Task.Delay(135);
+
+            foreach (var mob in Mobs.ToList())
+            {
+                if (!string.IsNullOrEmpty(mob.Events.Enter))
+                {
+                    try
+                    {
+                        UserData.RegisterType<MobScripts>();
+
+                        var script = new Script();
+
+                        var obj = UserData.Create(Services.Instance.MobScripts);
+                        script.Globals.Set("obj", obj);
+                        UserData.RegisterProxyType<MyProxy, Room>(r => new MyProxy(this));
+                        UserData.RegisterProxyType<ProxyPlayer, Player>(
+                            r => new ProxyPlayer(player)
+                        );
+
+                        script.Globals["room"] = this;
+                        script.Globals["player"] = player;
+                        script.Globals["mob"] = mob;
+
+                        var res = script.DoString(mob.Events.Enter);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("RoomActions.cs: " + ex);
+                    }
+                }
+
+                if (mob.Aggro && mob.Status != CharacterStatus.Status.Fighting)
+                {
+                    Services.Instance.Writer.WriteLine($"{mob.Name} attacks you!", player);
+                    Services.Instance.MobScripts.AttackPlayer(this, player, mob);
+                }
+            }
+        }
+
+        public void PlayerExited(Player player)
+        {
+            foreach (var mob in Mobs.Where(mob => !string.IsNullOrEmpty(mob.Events.Leave)))
+            {
+                UserData.RegisterType<MobScripts>();
+
+                var script = new Script();
+
+                var obj = UserData.Create(Services.Instance.MobScripts);
+                script.Globals.Set("obj", obj);
+                UserData.RegisterProxyType<MyProxy, Room>(r => new MyProxy(this));
+                UserData.RegisterProxyType<ProxyPlayer, Player>(r => new ProxyPlayer(player));
+
+                script.Globals["room"] = this;
+                script.Globals["player"] = player;
+                script.Globals["mob"] = mob;
+
+                var res = script.DoString(mob.Events.Leave);
+            }
+        }
     }
 }
