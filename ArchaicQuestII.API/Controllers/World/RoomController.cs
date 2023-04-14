@@ -130,6 +130,10 @@ namespace ArchaicQuestII.API.World
         {
             foreach (var mob in room.Mobs)
             {
+                //TEMP Fix
+                if (mob.ClassName == "Thief") {
+                    mob.ClassName = "Rogue";
+                }
                 mob.AddSkills(Enum.Parse<ClassName>(mob.ClassName));
 
                 foreach (var skill in mob.Skills)
@@ -259,8 +263,13 @@ namespace ArchaicQuestII.API.World
                         craftingRecipe
                     );
                 }
+                
+                GameLogic.Core.Services.Instance.Writer.WriteLineAll("The winds of change have blown through the land, leaving behind new challenges and treasures to be discovered.");
             }
-            catch (Exception) { }
+            catch (Exception ex)
+            {
+                
+            }
 
             s.Stop();
 
