@@ -158,6 +158,13 @@ public class Rogue : IClass
             },
             new SkillList
             {
+                Name = SkillName.Dodge,
+                Level = 1,
+                Proficiency = 0,
+                IsSpell = false,
+            },
+            new SkillList
+            {
                 Name = SkillName.Elbow,
                 Level = 2,
                 Proficiency = 0,
