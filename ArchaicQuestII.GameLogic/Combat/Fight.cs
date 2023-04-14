@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Reflection;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Commands;
@@ -427,8 +429,9 @@ namespace ArchaicQuestII.GameLogic.Combat
                     if (getWeaponSkill != null && getWeaponSkill.Proficiency < 100)
                     {
                         getWeaponSkill.Proficiency += 1;
+
                         Services.Instance.Writer.WriteLine(
-                            $"<p class='improve'>Your proficiency in {getWeaponSkill.Name.ToString()} has increased.</p>",
+                            $"<p class='improve'>Your proficiency in {CharacterHelpers.GetDisplayName(getWeaponSkill.Name)} has increased.</p>",
                             player
                         );
 

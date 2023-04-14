@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using ArchaicQuestII.GameLogic.Character.Class;
@@ -182,7 +184,7 @@ public static class CharacterHelpers
 
         Services.Instance.Writer.WriteLine(
             $"<p class='improve'>You learn from your mistakes and gain {100 * skill.Level / 4} experience points.</p>"
-                + $"<p class='improve'>Your knowledge of {skill.Name} increases by {increase}%.</p>",
+            + $"<p class='improve'>Your knowledge of {skill.Name} increases by {increase}%.</p>",
             player
         );
     }
@@ -249,8 +251,8 @@ public static class CharacterHelpers
                 : $"<p class='improve'>You receive {expWorth} experience points.</p>",
             player
         );
-        
-          
+
+
         if (player.ExperienceToNextLevel <= 0)
         {
             GainLevel(player, true);
@@ -273,7 +275,7 @@ public static class CharacterHelpers
                 : $"<p class='improve'>You receive {amount} experience points.</p>",
             player
         );
-        
+
         if (player.ExperienceToNextLevel <= 0)
         {
             GainLevel(player, true);
@@ -373,30 +375,37 @@ public static class CharacterHelpers
         {
             player.Affects.Blind = true;
         }
+
         if (affect.Affects == DefineSpell.SpellAffect.Berserk)
         {
             player.Affects.Berserk = true;
         }
+
         if (affect.Affects == DefineSpell.SpellAffect.NonDetect)
         {
             player.Affects.NonDectect = true;
         }
+
         if (affect.Affects == DefineSpell.SpellAffect.Invis)
         {
             player.Affects.Invis = true;
         }
+
         if (affect.Affects == DefineSpell.SpellAffect.DetectInvis)
         {
             player.Affects.DetectInvis = true;
         }
+
         if (affect.Affects == DefineSpell.SpellAffect.DetectHidden)
         {
             player.Affects.DetectHidden = true;
         }
+
         if (affect.Affects == DefineSpell.SpellAffect.Poison)
         {
             player.Affects.Poisoned = true;
         }
+
         if (affect.Affects == DefineSpell.SpellAffect.Haste)
         {
             player.Affects.Haste = true;
@@ -1058,6 +1067,7 @@ public static class CharacterHelpers
                 {
                     player.Equipped.Wielded = null;
                 }
+
                 break;
             case EquipmentSlot.Wrist:
                 player.Equipped.Wrist = null; // TODO: slot 2
@@ -1178,6 +1188,7 @@ public static class CharacterHelpers
                 {
                     player.Remove(player.Equipped.AboutBody.Name, room);
                 }
+
                 player.Equipped.AboutBody = itemToWear;
                 break;
             case EquipmentSlot.Face:
@@ -1248,6 +1259,7 @@ public static class CharacterHelpers
                 {
                     player.Remove(player.Equipped.Legs.Name, room);
                 }
+
                 player.Equipped.Legs = itemToWear;
                 break;
             case EquipmentSlot.Light:
@@ -1592,4 +1604,20 @@ public static class CharacterHelpers
             );
         }
     }
+
+    public static string GetDisplayName(SkillName skillEnum)
+    {
+        var displayName = skillEnum.ToString();
+        var displayAttr = skillEnum.GetType()
+            .GetMember(skillEnum.ToString())[0]
+            .GetCustomAttribute<DisplayAttribute>();
+
+        if (displayAttr != null)
+        {
+            displayName = displayAttr.GetName();
+        }
+
+        return displayName;
+    }
 }
+
