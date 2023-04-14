@@ -377,6 +377,7 @@ namespace ArchaicQuestII.GameLogic.Combat
                 var newRoom = Services.Instance.Cache.GetRoom(combatant.target.RecallId);
                 combatant.target.RoomId = Helpers.ReturnRoomId(newRoom);
                 newRoom.Players.Add(combatant.target);
+                combatant.target.Attributes.Attribute[EffectLocation.Hitpoints] = 1;
                 combatant.target.UpdateClientUI();
                 Services.Instance.UpdateClient.UpdateInventory(combatant.target);
                 Services.Instance.UpdateClient.UpdateEquipment(combatant.target);
