@@ -27,7 +27,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 CharacterStatus.Status.Mounted,
                 CharacterStatus.Status.Stunned
             };
-            Title = DefineSkill.Stab().Name;
+            Title = SkillName.Stab.ToString();
             UserRole = UserRole.Player;
         }
 

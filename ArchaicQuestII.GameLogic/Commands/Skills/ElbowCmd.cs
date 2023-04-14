@@ -6,7 +6,6 @@ using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
-using DefineSkill = ArchaicQuestII.GameLogic.Skill.Model.DefineSkill;
 
 namespace ArchaicQuestII.GameLogic.Commands.Skills
 {
@@ -30,7 +29,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 CharacterStatus.Status.Mounted,
                 CharacterStatus.Status.Stunned
             };
-            Title = DefineSkill.Elbow().Name;
+            Title = SkillName.Elbow.ToString();
             UserRole = UserRole.Player;
         }
 

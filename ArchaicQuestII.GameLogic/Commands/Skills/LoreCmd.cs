@@ -4,7 +4,6 @@ using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
-using ArchaicQuestII.GameLogic.Skill.Model;
 using ArchaicQuestII.GameLogic.World.Room;
 
 namespace ArchaicQuestII.GameLogic.Commands.Skills
@@ -19,7 +18,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 "Lore is a useful skill for those that do not have the identify spell. Lore will give you the information and stats on the specified item";
             Usages = new[] { "Type: lore sword - to see the stats of that item" };
             DeniedStatus = null;
-            Title = DefineSkill.Lore().Name;
+            Title = SkillName.Lore.ToString();
             UserRole = UserRole.Player;
         }
 
