@@ -408,7 +408,7 @@ namespace ArchaicQuestII.GameLogic.Combat
                 {
                     getWeaponSkill.Proficiency += 1;
                     Services.Instance.Writer.WriteLine(
-                        $"<p class='improve'>Your proficiency in {getWeaponSkill.Name.ToString()} has increased.</p>",
+                        $"<p class='improve'>Your proficiency in {CharacterHelpers.GetDisplayName(getWeaponSkill.Name)} has increased.</p>",
                         combatant.player
                     );
 
