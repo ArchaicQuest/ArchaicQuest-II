@@ -397,13 +397,16 @@ namespace ArchaicQuestII.Controllers.character
                 .GetRoom(player.RoomId)
                 .Players.FirstOrDefault(x => x.Name.Equals(foundItem.Name));
 
-            Services.Instance.Cache
-                .GetCommand("quit")
-                .Execute(
-                    activePlayer,
-                    Services.Instance.Cache.GetRoom(foundItem.RoomId),
-                    new[] { "quit" }
-                );
+            if (activePlayer != null)
+            {
+                Services.Instance.Cache
+                    .GetCommand("quit")
+                    .Execute(
+                        activePlayer,
+                        Services.Instance.Cache.GetRoom(foundItem.RoomId),
+                        new[] { "quit" }
+                    );
+            }
 
             foundItem.ConnectionId = player.ConnectionId;
 
@@ -411,106 +414,7 @@ namespace ArchaicQuestII.Controllers.character
             Services.Instance.Cache.RemovePlayer(foundItem.ConnectionId);
 
             foundItem = player;
-            /*
-                        var newPlayer = new Player
-                        {
-                            ConnectionId = player.ConnectionId,
-                            UniqueId = player.UniqueId,
-                            AccountId = player.AccountId,
-                            Id = player.Id,
-                            Name = player.Name,
-                            LongName = null,
-                            Status = player.Status,
-                            Level = player.Level,
-                            ArmorRating = new ArmourRating()
-                            {
-                                Armour = player.ArmorRating.Armour,
-                                Magic = player.ArmorRating.Magic
-                            },
-                            Affects = new Affects(),
-                            AlignmentScore = player.AlignmentScore,
-                            TotalExperience = player.TotalExperience,
-                            Experience = player.Experience,
-                            ExperienceToNextLevel = player.ExperienceToNextLevel,
-                            Attributes = player.Attributes,
-                            MaxAttributes = player.Attributes,
-                            Target = player.Target,
-                            Inventory = player.Inventory,
-                            Equipped = player.Equipped,
-                            ClassName = player.ClassName,
-                            Config = player.Config,
-                            Description = player.Description,
-                            Gender = player.Gender,
-                            Stats = player.Stats,
-                            MaxStats = player.MaxStats,
-                            Money = player.Money,
-                            Bank = player.Bank,
-                            Trains = player.Trains,
-                            Practices = player.Practices,
-                            MobKills = player.MobKills,
-                            MobDeaths = player.MobDeaths,
-                            PlayerKills = player.PlayerKills,
-                            PlayerDeaths = player.PlayerDeaths,
-                            QuestPoints = player.QuestPoints,
-                            Idle = false,
-                            AFK = false,
-                            CommandLog = player.CommandLog,
-                            Pose = player.Pose,
-                            Race = player.Race,
-                            JoinedDate = player.JoinedDate,
-                            LastLoginTime = DateTime.Now,
-                            LastCommandTime = player.LastCommandTime,
-                            PlayTime = player.PlayTime,
-                            IsTelnet = false,
-                            Skills = player.Skills,
-                            Deleted = false,
-                            DateCreated = player.DateCreated,
-                            DateUpdated = player.DateUpdated,
-                            Emotes = player.Emotes,
-                            Commands = player.Commands,
-                            EnterEmote = player.EnterEmote,
-                            LeaveEmote = player.LeaveEmote,
-                            Roam = false,
-                            Shopkeeper = false,
-                            Trainer = false,
-                            IsHiddenScriptMob = false,
-                            Events = player.Events,
-                            EventState = player.EventState,
-                            QuestLog = player.QuestLog,
-                            Weight = player.Weight,
-                            Hunger = player.Hunger,
-                            Lag = player.Lag,
-                            Mounted = player.Mounted,
-                            Pets = player.Pets,
-                            SpellList = player.SpellList,
-                            Aggro = false,
-                            Flags = player.Flags,
-                            Build = player.Build,
-                            Face = player.Face,
-                            Skin = player.Skin,
-                            Eyes = player.Eyes,
-                            FacialHair = player.FacialHair,
-                            ReplyTo = player.ReplyTo,
-                            Followers = player.Followers,
-                            Following = player.Following,
-                            Grouped = player.Grouped,
-                            HairColour = player.HairColour,
-                            HairLength = player.HairLength,
-                            HairTexture = player.HairTexture,
-                            RoomId = player.RoomId,
-                            RoomType = player.RoomType,
-                            RecallId = player.RecallId,
-                            DefaultAttack = player.DefaultAttack,
-                            Buffer = player.Buffer,
-                            Spells = player.Spells,
-                            UserRole = player.UserRole,
-                            Title = player.Title,
-                            OpenedBook = player.OpenedBook,
             
-            
-                        };
-            */
-
             Services.Instance.PlayerDataBase.Save(foundItem, PlayerDataBase.Collections.Players);
 
             return Ok(foundItem.Id);
