@@ -252,7 +252,6 @@ public static class CharacterHelpers
             player
         );
 
-
         if (player.ExperienceToNextLevel <= 0)
         {
             GainLevel(player, true);
@@ -549,23 +548,25 @@ public static class CharacterHelpers
         return modBenefits;
     }
 
-    public static void HarmTarget(this Player victim, int damage)
+    public static void Harm(this Player player, int damage)
     {
-        victim.Attributes.Attribute[EffectLocation.Hitpoints] -= damage;
+        player.Attributes.Attribute[EffectLocation.Hitpoints] -= damage;
 
-        if (victim.Attributes.Attribute[EffectLocation.Hitpoints] < 0)
+        if (player.Attributes.Attribute[EffectLocation.Hitpoints] < 0)
         {
-            victim.Attributes.Attribute[EffectLocation.Hitpoints] = 0;
+            player.Attributes.Attribute[EffectLocation.Hitpoints] = 0;
         }
 
         if (
-            victim.Config.Wimpy > 0
-            && victim.Attributes.Attribute[EffectLocation.Hitpoints] <= victim.Config.Wimpy
+            player.Config.Wimpy > 0
+            && player.Attributes.Attribute[EffectLocation.Hitpoints] <= player.Config.Wimpy
         )
         {
-            victim.Buffer.Clear();
-            victim.Buffer.Enqueue("flee");
+            player.Buffer.Clear();
+            player.Buffer.Enqueue("flee");
         }
+
+        Services.Instance.UpdateClient.UpdateHP(player);
     }
 
     public static bool IsAlive(this Player victim)
@@ -796,6 +797,11 @@ public static class CharacterHelpers
                 pc
             );
         }
+    }
+
+    public static Item.Item GetWeapon(this Player player, bool dualWield = false)
+    {
+        return dualWield ? player.Equipped.Secondary : player.Equipped.Wielded;
     }
 
     public static void DisplayEquipmentUI(this Player player)
@@ -1172,15 +1178,14 @@ public static class CharacterHelpers
         player.Attributes.Attribute[EffectLocation.HitRoll] += itemToWear.Modifier.HitRoll;
         // player.Attributes.Attribute[EffectLocation.DamageRoll] += itemToWear.Modifier.SpellDam; // spell dam no exist
         // player.Attributes.Attribute[EffectLocation.SavingSpell] += itemToWear.Modifier.Saves; not implemented
+
         switch (itemSlot)
         {
             case EquipmentSlot.Arms:
-
                 if (player.Equipped.Arms != null)
                 {
                     player.Remove(player.Equipped.Arms.Name, room);
                 }
-
                 player.Equipped.Arms = itemToWear;
                 break;
             case EquipmentSlot.Body:
@@ -1367,15 +1372,42 @@ public static class CharacterHelpers
                 return;
         }
 
-        Services.Instance.Writer.WriteLine(
-            $"<p>You wield {itemToWear.Name.ToLower()} as your second weapon.</p>",
-            player
-        );
-        Services.Instance.Writer.WriteToOthersInRoom(
-            $"{itemToWear.Name.ToLower()} as {player.ReturnPronoun()} secondary weapon.",
-            room,
-            player
-        );
+        if (itemSlot == EquipmentSlot.Wielded)
+        {
+            Services.Instance.Writer.WriteLine(
+                $"<p>You wield {itemToWear.Name.ToLower()} in your main hand.</p>",
+                player
+            );
+            Services.Instance.Writer.WriteToOthersInRoom(
+                $"{player.Name} wields {itemToWear.Name.ToLower()} in {player.ReturnPronoun()} main hand.",
+                room,
+                player
+            );
+        }
+        else if (itemSlot == EquipmentSlot.Secondary)
+        {
+            Services.Instance.Writer.WriteLine(
+                $"<p>You wield {itemToWear.Name.ToLower()} in your off hand.</p>",
+                player
+            );
+            Services.Instance.Writer.WriteToOthersInRoom(
+                $"{player.Name} wields {itemToWear.Name.ToLower()} in {player.ReturnPronoun()} off hand.",
+                room,
+                player
+            );
+        }
+        else
+        {
+            Services.Instance.Writer.WriteLine(
+                $"<p>You wear {itemToWear.Name.ToLower()} on your {itemSlot}.</p>",
+                player
+            );
+            Services.Instance.Writer.WriteToOthersInRoom(
+                $"{player.Name} puts {itemToWear.Name.ToLower()} on {player.ReturnPronoun()} {itemSlot}.",
+                room,
+                player
+            );
+        }
 
         player.UpdateClientUI();
         Services.Instance.UpdateClient.UpdateEquipment(player);
@@ -1434,15 +1466,15 @@ public static class CharacterHelpers
     /// <param name="oldRoom"></param>
     /// <param name="newRoom"></param>
     /// <param name="isFlee"></param>
-    public static void ChangeRoom(this Player player, Room oldRoom, Room newRoom, bool isFlee)
+    public static void ChangeRoom(this Player player, Room oldRoom, Room newRoom)
     {
         player.Pose = string.Empty;
 
-        player.ExitMessage(oldRoom, newRoom, isFlee);
+        player.ExitMessage(oldRoom, newRoom);
 
         player.UpdateLocation(oldRoom, newRoom);
 
-        player.EnterMessage(newRoom, oldRoom, isFlee);
+        player.EnterMessage(newRoom, oldRoom);
 
         Services.Instance.UpdateClient.GetMap(
             player,
@@ -1486,7 +1518,7 @@ public static class CharacterHelpers
         }
     }
 
-    private static void EnterMessage(this Player character, Room toRoom, Room fromRoom, bool isFlee)
+    private static void EnterMessage(this Player character, Room toRoom, Room fromRoom)
     {
         var direction = "from nowhere";
         var movement = "appears";
@@ -1517,6 +1549,11 @@ public static class CharacterHelpers
 
         switch (character.Status)
         {
+            case CharacterStatus.Status.Fleeing:
+                Services.Instance.UpdateClient.PlaySound("flee", character);
+                movement = "rushes";
+                character.Status = CharacterStatus.Status.Standing;
+                break;
             case CharacterStatus.Status.Floating:
                 movement = "floats";
                 break;
@@ -1529,12 +1566,6 @@ public static class CharacterHelpers
                 break;
         }
 
-        if (isFlee)
-        {
-            Services.Instance.UpdateClient.PlaySound("flee", character);
-            movement = "rushes";
-        }
-
         foreach (var p in toRoom.Players.Where(p => character.Name != p.Name))
         {
             Services.Instance.Writer.WriteLine(
@@ -1544,12 +1575,7 @@ public static class CharacterHelpers
         }
     }
 
-    private static void ExitMessage(
-        this Player characterBase,
-        Room fromRoom,
-        Room toRoom,
-        bool isFlee
-    )
+    private static void ExitMessage(this Player characterBase, Room fromRoom, Room toRoom)
     {
         var direction = "to thin air";
         var movement = "vanishes";
@@ -1580,6 +1606,9 @@ public static class CharacterHelpers
 
         switch (characterBase.Status)
         {
+            case CharacterStatus.Status.Fleeing:
+                movement = "flees";
+                break;
             case CharacterStatus.Status.Floating:
                 movement = "floats";
                 break;
@@ -1589,11 +1618,6 @@ public static class CharacterHelpers
             case CharacterStatus.Status.Standing:
                 movement = "walks";
                 break;
-        }
-
-        if (isFlee)
-        {
-            movement = "flee";
         }
 
         foreach (var p in fromRoom.Players.Where(p => characterBase.Name != p.Name))

@@ -48,7 +48,6 @@ public class MoveCmd : ICommand
             CharacterStatus.Status.Dead,
             CharacterStatus.Status.Fighting,
             CharacterStatus.Status.Ghost,
-            CharacterStatus.Status.Fleeing,
             CharacterStatus.Status.Incapacitated,
             CharacterStatus.Status.Sleeping,
             CharacterStatus.Status.Stunned,
@@ -66,7 +65,6 @@ public class MoveCmd : ICommand
 
     public void Execute(Player player, Room room, string[] input)
     {
-        var isFlee = !string.IsNullOrEmpty(input.ElementAtOrDefault(1));
         if (CharacterCanMove(player) == false)
         {
             Services.Instance.Writer.WriteLine("<p>You are too exhausted to move.</p>", player);
@@ -162,14 +160,9 @@ public class MoveCmd : ICommand
         if (string.IsNullOrEmpty(player.Mounted.Name))
         {
             player.Attributes.Attribute[EffectLocation.Moves] -= 1;
-
-            if (player.Attributes.Attribute[EffectLocation.Moves] < 0)
-            {
-                player.Attributes.Attribute[EffectLocation.Moves] = 0;
-            }
         }
 
-        player.ChangeRoom(room, getNextRoom, isFlee);
+        player.ChangeRoom(room, getNextRoom);
 
         if (player.Followers.Count >= 1)
         {
@@ -179,7 +172,7 @@ public class MoveCmd : ICommand
                 )
             )
             {
-                follower.ChangeRoom(room, getNextRoom, isFlee);
+                follower.ChangeRoom(room, getNextRoom);
             }
         }
 
@@ -193,7 +186,7 @@ public class MoveCmd : ICommand
 
             if (mountedMob != null)
             {
-                mountedMob.ChangeRoom(room, getNextRoom, isFlee);
+                mountedMob.ChangeRoom(room, getNextRoom);
             }
         }
     }

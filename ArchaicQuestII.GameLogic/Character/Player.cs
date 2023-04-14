@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character.Model;
+using ArchaicQuestII.GameLogic.Combat;
 
 namespace ArchaicQuestII.GameLogic.Character
 {
@@ -42,6 +43,7 @@ namespace ArchaicQuestII.GameLogic.Character
         public Item.Item OpenedBook { get; set; }
 
         public UserRole UserRole { get; set; } = UserRole.Player;
+        public Fight Combat { get; set; }
     }
 
     public class MobStats

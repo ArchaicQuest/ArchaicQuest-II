@@ -3,7 +3,6 @@ using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
-using ArchaicQuestII.GameLogic.Skill.Model;
 using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
 
@@ -26,7 +25,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 CharacterStatus.Status.Mounted,
                 CharacterStatus.Status.Stunned
             };
-            Title = DefineSkill.Trip().Name;
+            Title = SkillName.Trip.ToString();
             UserRole = UserRole.Player;
         }
 
@@ -39,11 +38,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
 
         public void Execute(Player player, Room room, string[] input)
         {
-            var canDoSkill = CanPerformSkill(DefineSkill.Trip(), player);
-            if (!canDoSkill)
-            {
+            if (!player.HasSkill(SkillName.Trip))
                 return;
-            }
 
             var obj = input.ElementAtOrDefault(1)?.ToLower() ?? player.Target;
             if (string.IsNullOrEmpty(obj))
@@ -87,7 +83,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
 
                 EmoteAction(textToTarget, textToRoom, target.Name, room, player);
 
-                DamagePlayer(DefineSkill.Trip().Name, DiceBag.Roll("1d6"), player, target, room);
+                DamagePlayer(SkillName.Trip.ToString(), DiceBag.Roll("1d6"), player, target, room);
 
                 target.Lag += 2;
                 target.Status = CharacterStatus.Status.Stunned;

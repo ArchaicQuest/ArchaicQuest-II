@@ -66,8 +66,6 @@ namespace ArchaicQuestII.GameLogic.Skill.Core
 
                 if (!target.IsAlive())
                 {
-                    CombatHandler.TargetKilled(player, target, room);
-
                     Services.Instance.UpdateClient.UpdateHP(target);
                     return;
                     //TODO: create corpse, refactor fight method from combat.cs

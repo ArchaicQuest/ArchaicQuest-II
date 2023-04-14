@@ -27,7 +27,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 CharacterStatus.Status.Mounted,
                 CharacterStatus.Status.Stunned
             };
-            Title = DefineSkill.Slash().Name;
+            Title = SkillName.Slash.ToString();
             UserRole = UserRole.Player;
         }
 
@@ -40,11 +40,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
 
         public void Execute(Player player, Room room, string[] input)
         {
-            var canDoSkill = CanPerformSkill(DefineSkill.Slash(), player);
-            if (!canDoSkill)
-            {
+            if (!player.HasSkill(SkillName.Slash))
                 return;
-            }
 
             if (player.Equipped.Wielded == null)
             {
@@ -91,7 +88,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             var str = player.Attributes.Attribute[EffectLocation.Strength];
             var damage = weaponDam + DiceBag.Roll(1, 2, 10) + str / 5;
 
-            DamagePlayer(DefineSkill.Slash().Name, damage, player, target, room);
+            DamagePlayer(SkillName.Slash.ToString(), damage, player, target, room);
 
             player.Lag += 1;
         }

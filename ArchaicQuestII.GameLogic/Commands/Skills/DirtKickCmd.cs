@@ -28,7 +28,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 CharacterStatus.Status.Mounted,
                 CharacterStatus.Status.Stunned
             };
-            Title = DefineSkill.DirtKick().Name;
+            Title = SkillName.DirtKick.ToString();
             UserRole = UserRole.Player;
         }
 
@@ -41,11 +41,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
 
         public void Execute(Player player, Room room, string[] input)
         {
-            var canDoSkill = CanPerformSkill(DefineSkill.DirtKick(), player);
-            if (!canDoSkill)
-            {
+            if (!player.HasSkill(SkillName.DirtKick))
                 return;
-            }
 
             var obj = input.ElementAtOrDefault(1)?.ToLower() ?? player.Target;
             if (string.IsNullOrEmpty(obj))

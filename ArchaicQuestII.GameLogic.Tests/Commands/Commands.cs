@@ -2,7 +2,6 @@
 using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.MobFunctions;
 using ArchaicQuestII.GameLogic.Character.MobFunctions.Healer;
-using ArchaicQuestII.GameLogic.Combat;
 using ArchaicQuestII.GameLogic.Commands;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Skill.Skills;
@@ -18,7 +17,6 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
         private Room _room;
         private Player _player;
         private ICommandHandler _commandHandler;
-        private readonly Mock<ICombat> _combat;
         private readonly Mock<Cache> _cache;
         private readonly Mock<Services> _core;
         private readonly Mock<IMobFunctions> _mobFunctions;
@@ -30,7 +28,6 @@ namespace ArchaicQuestII.GameLogic.Tests.Commands
 
         public CommandsTests()
         {
-            _combat = new Mock<ICombat>();
             _cache = new Mock<Cache>();
             _core = new Mock<Services>();
             _mobFunctions = new Mock<IMobFunctions>();

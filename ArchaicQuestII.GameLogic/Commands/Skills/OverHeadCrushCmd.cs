@@ -4,7 +4,6 @@ using ArchaicQuestII.GameLogic.Character;
 using ArchaicQuestII.GameLogic.Character.Status;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
-using ArchaicQuestII.GameLogic.Skill.Model;
 using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
 
@@ -27,7 +26,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 CharacterStatus.Status.Mounted,
                 CharacterStatus.Status.Stunned
             };
-            Title = DefineSkill.OverheadCrush().Name;
+            Title = SkillName.OverheadCrush.ToString();
             UserRole = UserRole.Player;
         }
 
@@ -40,11 +39,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
 
         public void Execute(Player player, Room room, string[] input)
         {
-            var canDoSkill = CanPerformSkill(DefineSkill.OverheadCrush(), player);
-            if (!canDoSkill)
-            {
+            if (!player.HasSkill(SkillName.OverheadCrush))
                 return;
-            }
 
             if (player.Equipped.Wielded == null)
             {
@@ -95,7 +91,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
             var str = player.Attributes.Attribute[EffectLocation.Strength];
             var damage = weaponDam + DiceBag.Roll(1, 3, 10) + str / 5;
 
-            DamagePlayer(DefineSkill.OverheadCrush().Name, damage, player, target, room);
+            DamagePlayer(SkillName.OverheadCrush.ToString(), damage, player, target, room);
 
             player.Lag += 1;
         }

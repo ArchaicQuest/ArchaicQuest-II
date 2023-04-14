@@ -49,6 +49,15 @@ public class FleeCmd : ICommand
             return;
         }
 
+        // costs 5
+        var moveCost = 5;
+
+        if (moveCost > player.Attributes.Attribute[EffectLocation.Moves])
+        {
+            Services.Instance.Writer.WriteLine("<p>You're to exhausted to flee.</p>", player);
+            return;
+        }
+
         if (
             room.Exits.Down == null
             && room.Exits.Up == null
@@ -117,20 +126,15 @@ public class FleeCmd : ICommand
 
         var getExitIndex = DiceBag.Roll(1, 0, validExits.Count - 1);
 
-        player.Status = CharacterStatus.Status.Standing;
+        player.Combat.RemoveFromCombat(player);
 
-        foreach (var mob in room.Mobs.Where(mob => mob.Target == player.Name))
-        {
-            mob.Status = CharacterStatus.Status.Standing;
-        }
+        player.Status = CharacterStatus.Status.Fleeing;
+
+        player.Attributes.Attribute[EffectLocation.Moves] -= moveCost;
 
         Services.Instance.Cache
             .GetCommand(validExits[getExitIndex].Name.ToLower())
-            .Execute(player, room, new[] { validExits[getExitIndex].Name.ToLower(), "flee" });
-
-        // costs 15% of your moves to flee
-        player.Attributes.Attribute[EffectLocation.Moves] -=
-            (100 * 15) / player.MaxAttributes.Attribute[EffectLocation.Moves];
+            .Execute(player, room, new[] { validExits[getExitIndex].Name.ToLower() });
 
         Services.Instance.UpdateClient.UpdateMoves(player);
     }

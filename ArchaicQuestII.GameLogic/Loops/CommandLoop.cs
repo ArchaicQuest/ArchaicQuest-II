@@ -34,7 +34,7 @@ namespace ArchaicQuestII.GameLogic.Loops
                 }
 
                 var command = player.Buffer.Dequeue();
-                var room = Services.Instance.Cache.GetRoom(player.RoomId);
+
                 player.LastCommandTime = DateTime.Now;
 
                 if (player.CommandLog.Count >= 2500)
@@ -43,6 +43,14 @@ namespace ArchaicQuestII.GameLogic.Loops
                 }
 
                 player.CommandLog.Add($"{string.Format("{0:f}", DateTime.Now)} - {command}");
+
+                if (player.Combat != null)
+                {
+                    player.Combat.AddCommand(player, command);
+                    continue;
+                }
+
+                var room = Services.Instance.Cache.GetRoom(player.RoomId);
                 Services.Instance.CommandHandler.HandleCommand(player, room, command);
             }
 

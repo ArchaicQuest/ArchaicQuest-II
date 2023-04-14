@@ -289,13 +289,15 @@ namespace ArchaicQuestII.GameLogic.Core
 
             var dummyPlayer = new Player() { Name = "Script damage" };
 
-            player.HarmTarget(damage);
+            player.Harm(damage);
             Services.Instance.UpdateClient.UpdateScore(player);
             Services.Instance.UpdateClient.UpdateHP(player);
 
             if (!player.IsAlive())
             {
-                CombatHandler.TargetKilled(dummyPlayer, player, room);
+                var combatant = new Combatant(dummyPlayer, true);
+                combatant.target = player;
+                CombatHandler.TargetKilled(combatant, room);
             }
         }
 

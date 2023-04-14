@@ -6,7 +6,6 @@ using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
 using ArchaicQuestII.GameLogic.Utilities;
 using ArchaicQuestII.GameLogic.World.Room;
-using DefineSkill = ArchaicQuestII.GameLogic.Skill.Model.DefineSkill;
 
 namespace ArchaicQuestII.GameLogic.Commands.Skills
 {
@@ -31,7 +30,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 CharacterStatus.Status.Mounted,
                 CharacterStatus.Status.Stunned
             };
-            Title = DefineSkill.Kick().Name;
+            Title = SkillName.Kick.ToString();
             UserRole = UserRole.Player;
         }
 
@@ -44,11 +43,8 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
 
         public void Execute(Player player, Room room, string[] input)
         {
-            var canDoSkill = CanPerformSkill(DefineSkill.Kick(), player);
-            if (!canDoSkill)
-            {
+            if (!player.HasSkill(SkillName.Kick))
                 return;
-            }
 
             var obj = input.ElementAtOrDefault(1)?.ToLower() ?? player.Target;
             if (string.IsNullOrEmpty(obj))
@@ -89,7 +85,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Skills
                 DiceBag.Roll(1, 1, 8) + player.Attributes.Attribute[EffectLocation.Strength] / 4;
             player.Lag += 1;
 
-            DamagePlayer("Kick", damage, player, target, room);
+            DamagePlayer(SkillName.Kick.ToString(), damage, player, target, room);
         }
     }
 }

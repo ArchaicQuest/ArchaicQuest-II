@@ -43,7 +43,7 @@ public class ImmTeleportCmd : ICommand
 
             if (newRoom != null)
             {
-                player.ChangeRoom(room, newRoom, false);
+                player.ChangeRoom(room, newRoom);
             }
             else
             {
@@ -82,7 +82,7 @@ public class ImmTeleportCmd : ICommand
                 return;
             }
 
-            player.ChangeRoom(room, Services.Instance.Cache.GetRoom(foundPlayer.RoomId), false);
+            player.ChangeRoom(room, Services.Instance.Cache.GetRoom(foundPlayer.RoomId));
         }
     }
 }
