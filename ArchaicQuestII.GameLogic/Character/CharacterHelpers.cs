@@ -1168,15 +1168,14 @@ public static class CharacterHelpers
         player.Attributes.Attribute[EffectLocation.HitRoll] += itemToWear.Modifier.HitRoll;
         // player.Attributes.Attribute[EffectLocation.DamageRoll] += itemToWear.Modifier.SpellDam; // spell dam no exist
         // player.Attributes.Attribute[EffectLocation.SavingSpell] += itemToWear.Modifier.Saves; not implemented
+
         switch (itemSlot)
         {
             case EquipmentSlot.Arms:
-
                 if (player.Equipped.Arms != null)
                 {
                     player.Remove(player.Equipped.Arms.Name, room);
                 }
-
                 player.Equipped.Arms = itemToWear;
                 break;
             case EquipmentSlot.Body:
@@ -1361,15 +1360,42 @@ public static class CharacterHelpers
                 return;
         }
 
-        Services.Instance.Writer.WriteLine(
-            $"<p>You wield {itemToWear.Name.ToLower()} as your second weapon.</p>",
-            player
-        );
-        Services.Instance.Writer.WriteToOthersInRoom(
-            $"{itemToWear.Name.ToLower()} as {player.ReturnPronoun()} secondary weapon.",
-            room,
-            player
-        );
+        if (itemSlot == EquipmentSlot.Wielded)
+        {
+            Services.Instance.Writer.WriteLine(
+                $"<p>You wield {itemToWear.Name.ToLower()} in your main hand.</p>",
+                player
+            );
+            Services.Instance.Writer.WriteToOthersInRoom(
+                $"{player.Name} wields {itemToWear.Name.ToLower()} in {player.ReturnPronoun()} main hand.",
+                room,
+                player
+            );
+        }
+        else if (itemSlot == EquipmentSlot.Secondary)
+        {
+            Services.Instance.Writer.WriteLine(
+                $"<p>You wield {itemToWear.Name.ToLower()} in your off hand.</p>",
+                player
+            );
+            Services.Instance.Writer.WriteToOthersInRoom(
+                $"{player.Name} wields {itemToWear.Name.ToLower()} in {player.ReturnPronoun()} off hand.",
+                room,
+                player
+            );
+        }
+        else
+        {
+            Services.Instance.Writer.WriteLine(
+                $"<p>You wear {itemToWear.Name.ToLower()} on your {itemSlot}.</p>",
+                player
+            );
+            Services.Instance.Writer.WriteToOthersInRoom(
+                $"{player.Name} puts {itemToWear.Name.ToLower()} on {player.ReturnPronoun()} {itemSlot}.",
+                room,
+                player
+            );
+        }
 
         player.UpdateClientUI();
         Services.Instance.UpdateClient.UpdateEquipment(player);
