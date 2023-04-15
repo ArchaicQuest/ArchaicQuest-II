@@ -1,4 +1,6 @@
-﻿using ArchaicQuestII.GameLogic.Character.Model;
+﻿using System.Collections.Generic;
+using ArchaicQuestII.GameLogic.Character.Model;
+using ArchaicQuestII.GameLogic.Commands;
 using ArchaicQuestII.GameLogic.Core;
 using LiteDB;
 
@@ -11,5 +13,8 @@ namespace ArchaicQuestII.GameLogic.Character.Race
 
         [BsonField("a")]
         public Attributes Attributes { get; set; } = new Attributes();
+
+        [BsonField("s")]
+        public List<SkillList> Skills { get; set; } = new List<SkillList>();
     }
 }

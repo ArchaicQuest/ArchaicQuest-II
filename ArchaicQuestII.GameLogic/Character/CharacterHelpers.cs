@@ -964,6 +964,12 @@ public static class CharacterHelpers
     {
         var itemsToWear = player.Inventory.Where(x => x.Equipped == false);
 
+        if (itemsToWear.Count() == 0)
+        {
+            Services.Instance.Writer.WriteLine("<p>You have no items to wear.</p>", player);
+            return;
+        }
+
         foreach (var itemToWear in itemsToWear)
         {
             if (!player.EqSlotSet(itemToWear.Slot))
@@ -1120,6 +1126,12 @@ public static class CharacterHelpers
     public static void RemoveAll(this Player player, Room room)
     {
         var itemsToRemove = player.Inventory.Where(x => x.Equipped == true);
+
+        if (itemsToRemove.Count() == 0)
+        {
+            Services.Instance.Writer.WriteLine("<p>You have no items to remove.</p>", player);
+            return;
+        }
 
         foreach (var itemToRemove in itemsToRemove)
         {

@@ -1,6 +1,7 @@
 ﻿using ArchaicQuestII.DataAccess;
 using ArchaicQuestII.GameLogic.Character.Model;
 using ArchaicQuestII.GameLogic.Character.Race;
+using ArchaicQuestII.GameLogic.Commands;
 using ArchaicQuestII.GameLogic.Core;
 using ArchaicQuestII.GameLogic.Effect;
 using System;
@@ -32,7 +33,8 @@ They come in a wide range of skin, eye and hair colours as well as different sha
                         { EffectLocation.Intelligence, 60 },
                         { EffectLocation.Charisma, 60 }
                     }
-                }
+                },
+                Skills = new List<SkillList>() { }
             },
             new Race()
             {
@@ -53,7 +55,8 @@ They come in a wide range of skin, eye and hair colours as well as different sha
                         { EffectLocation.Intelligence, 82 },
                         { EffectLocation.Charisma, 75 }
                     }
-                }
+                },
+                Skills = new List<SkillList>() { }
             },
             new Race()
             {
@@ -72,7 +75,8 @@ They come in a wide range of skin, eye and hair colours as well as different sha
                         { EffectLocation.Intelligence, 64 },
                         { EffectLocation.Charisma, 65 }
                     }
-                }
+                },
+                Skills = new List<SkillList>() { }
             },
             new Race()
             {
@@ -93,7 +97,8 @@ They come in a wide range of skin, eye and hair colours as well as different sha
                         { EffectLocation.Intelligence, 69 },
                         { EffectLocation.Charisma, 65 }
                     }
-                }
+                },
+                Skills = new List<SkillList>() { }
             },
             new Race()
             {
@@ -114,7 +119,8 @@ They come in a wide range of skin, eye and hair colours as well as different sha
                         { EffectLocation.Intelligence, 81 },
                         { EffectLocation.Charisma, 45 }
                     }
-                }
+                },
+                Skills = new List<SkillList>() { }
             },
             new Race()
             {
@@ -135,7 +141,8 @@ They come in a wide range of skin, eye and hair colours as well as different sha
                         { EffectLocation.Intelligence, 69 },
                         { EffectLocation.Charisma, 45 }
                     }
-                }
+                },
+                Skills = new List<SkillList>() { }
             },
             new Race()
             {
@@ -157,7 +164,8 @@ They come in a wide range of skin, eye and hair colours as well as different sha
                         { EffectLocation.Intelligence, 53 },
                         { EffectLocation.Charisma, 55 }
                     }
-                }
+                },
+                Skills = new List<SkillList>() { }
             },
             new Race()
             {
@@ -179,7 +187,8 @@ They come in a wide range of skin, eye and hair colours as well as different sha
                         { EffectLocation.Intelligence, 92 },
                         { EffectLocation.Charisma, 50 }
                     }
-                }
+                },
+                Skills = new List<SkillList>() { }
             },
             new Race()
             {
@@ -201,7 +210,8 @@ They come in a wide range of skin, eye and hair colours as well as different sha
                         { EffectLocation.Intelligence, 70 },
                         { EffectLocation.Charisma, 65 }
                     }
-                }
+                },
+                Skills = new List<SkillList>() { }
             },
             new Race()
             {
@@ -220,7 +230,8 @@ They come in a wide range of skin, eye and hair colours as well as different sha
                         { EffectLocation.Intelligence, 70 },
                         { EffectLocation.Charisma, 65 }
                     }
-                }
+                },
+                Skills = new List<SkillList>() { }
             },
             new Race()
             {
@@ -239,7 +250,8 @@ They come in a wide range of skin, eye and hair colours as well as different sha
                         { EffectLocation.Intelligence, 46 },
                         { EffectLocation.Charisma, 45 }
                     }
-                }
+                },
+                Skills = new List<SkillList>() { }
             },
             new Race()
             {
@@ -258,14 +270,78 @@ They come in a wide range of skin, eye and hair colours as well as different sha
                         { EffectLocation.Intelligence, 59 },
                         { EffectLocation.Charisma, 40 }
                     }
-                }
+                },
+                Skills = new List<SkillList>() { }
+            },
+            new Race()
+            {
+                Name = "Fae",
+                CreatedBy = "Ithdrak",
+                Playable = true,
+                Description =
+                    @"`Fae are a small humanoid like race with small insectish wings. Info coming soon",
+                Attributes = new Attributes()
+                {
+                    Attribute = new Dictionary<EffectLocation, int>()
+                    {
+                        { EffectLocation.Strength, 35 },
+                        { EffectLocation.Dexterity, 92 },
+                        { EffectLocation.Constitution, 45 },
+                        { EffectLocation.Wisdom, 65 },
+                        { EffectLocation.Intelligence, 70 },
+                        { EffectLocation.Charisma, 55 }
+                    }
+                },
+                Skills = new List<SkillList>() { }
+            },
+            new Race()
+            {
+                Name = "Shade",
+                CreatedBy = "Ithdrak",
+                Playable = true,
+                Description =
+                    @"`Shades are ethereal beings that not much is known about. Info coming soon",
+                Attributes = new Attributes()
+                {
+                    Attribute = new Dictionary<EffectLocation, int>()
+                    {
+                        { EffectLocation.Strength, 35 },
+                        { EffectLocation.Dexterity, 92 },
+                        { EffectLocation.Constitution, 45 },
+                        { EffectLocation.Wisdom, 65 },
+                        { EffectLocation.Intelligence, 70 },
+                        { EffectLocation.Charisma, 55 }
+                    }
+                },
+                Skills = new List<SkillList>() { }
+            },
+            new Race()
+            {
+                Name = "Renku",
+                CreatedBy = "Ithdrak",
+                Playable = true,
+                Description =
+                    @"`The Renku are bird-like humanoid creatures resembling ravens. Info coming soon",
+                Attributes = new Attributes()
+                {
+                    Attribute = new Dictionary<EffectLocation, int>()
+                    {
+                        { EffectLocation.Strength, 35 },
+                        { EffectLocation.Dexterity, 92 },
+                        { EffectLocation.Constitution, 45 },
+                        { EffectLocation.Wisdom, 65 },
+                        { EffectLocation.Intelligence, 70 },
+                        { EffectLocation.Charisma, 55 }
+                    }
+                },
+                Skills = new List<SkillList>() { }
             },
             new Race()
             {
                 Name = "Other",
                 CreatedBy = "Malleus",
                 Description =
-                    @"`Generic race for mob is none suitable is found. you could always create one",
+                    @"`Generic race for mob is nothing suitable is found. you could always create one",
                 Playable = false,
                 Attributes = new Attributes()
                 {
@@ -278,7 +354,8 @@ They come in a wide range of skin, eye and hair colours as well as different sha
                         { EffectLocation.Intelligence, 50 },
                         { EffectLocation.Charisma, 50 }
                     }
-                }
+                },
+                Skills = new List<SkillList>() { }
             },
         };
 
