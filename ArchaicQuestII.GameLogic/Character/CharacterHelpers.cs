@@ -103,6 +103,15 @@ public static class CharacterHelpers
         return Services.Instance.CharacterHandler.GetClass(player.ClassName);
     }
 
+    public static float CalculateWeight(this Player player)
+    {
+        var weight = player.Inventory.Sum(item => item.Weight == 0 ? 1 : item.Weight);
+
+        player.Weight = weight;
+
+        return weight;
+    }
+
     public static bool HasSkill(this Player player, SkillName skillName)
     {
         var skill = player.GetSkill(skillName);

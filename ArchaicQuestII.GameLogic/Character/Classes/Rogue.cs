@@ -34,15 +34,17 @@ public class Rogue : IClass
     public List<SubClassName> Reclasses =>
         new List<SubClassName>
         {
-            SubClassName.Ranger,
-            SubClassName.Barbarian,
-            SubClassName.Swashbuckler,
-            SubClassName.Armsman,
-            SubClassName.Samurai
+            SubClassName.Assassin,
+            SubClassName.Bandit,
+            SubClassName.Nightshade,
+            SubClassName.Pirate,
+            SubClassName.Ninja
         };
 
+    public List<Item.Item> StartingGear => new List<Item.Item> { };
+
     public List<SkillList> Skills =>
-       new List<SkillList>
+        new List<SkillList>
         {
             new SkillList
             {

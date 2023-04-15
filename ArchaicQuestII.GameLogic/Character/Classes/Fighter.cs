@@ -41,6 +41,8 @@ public class Fighter : IClass
             SubClassName.Samurai
         };
 
+    public List<Item.Item> StartingGear => new List<Item.Item> { };
+
     public List<SkillList> Skills =>
         new List<SkillList>
         {

@@ -107,10 +107,10 @@ namespace ArchaicQuestII.GameLogic.World.Room
 
         public async Task PlayerEntered(Player player)
         {
-            await Task.Delay(135);
-
             foreach (var mob in Mobs.ToList())
             {
+                await Task.Delay(500);
+
                 if (!string.IsNullOrEmpty(mob.Events.Enter))
                 {
                     try

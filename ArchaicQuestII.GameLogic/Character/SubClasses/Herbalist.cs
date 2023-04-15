@@ -6,22 +6,21 @@ using ArchaicQuestII.GameLogic.Effect;
 
 namespace ArchaicQuestII.GameLogic.Character.Class;
 
-public class Ranger : IClass
+public class Herbalist : IClass
 {
     public int Id { get; set; }
     public bool IsSubClass => true;
-    public string Name => SubClassName.Ranger.ToString();
+    public string Name => SubClassName.Herbalist.ToString();
     public string Description =>
-        "Warriors are lethal combatants who can use any weapon and armor with ease, "
-        + "relying on their strength and endurance instead of mana. With a wide range "
-        + "of offensive and defensive skills, they are a versatile class suitable for "
-        + "any race. For beginners, we highly recommend choosing a Human Warrior, as "
-        + "their high hit points and straightforward playstyle make them an easy class to learn.";
+        "Herbalists gain an increased knowledge of plants, herbs, and foliage during their"
+        + "training and advancement. Herblore is the collective name for all such knowledge"
+        + "gained to that point. At certain levels, your knowledge of herblore increases, "
+        + "allowing you to utilize your skills in various ways.";
 
-    public string PreferredWeapon => SkillName.Bow.ToString();
+    public string PreferredWeapon => SkillName.Staff.ToString();
     public string HitDice => "1D10";
     public int ExperiencePointsCost => 1000;
-    public string CreatedBy => "Malleus";
+    public string CreatedBy => "Ithdrak";
     public DateTime DateCreated => DateTime.Now;
     public DateTime DateUpdated => DateTime.Now;
 
@@ -31,7 +30,7 @@ public class Ranger : IClass
             Attribute = new Dictionary<EffectLocation, int>() { { EffectLocation.Strength, 2 }, }
         };
 
-    public List<Item.Item> StartingGear => new List<Item.Item> { };
+        public List<Item.Item> StartingGear => new List<Item.Item> { };
 
     public List<SkillList> Skills => new List<SkillList> { };
 

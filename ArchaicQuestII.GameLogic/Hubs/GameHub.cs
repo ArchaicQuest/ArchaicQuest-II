@@ -73,7 +73,9 @@ namespace ArchaicQuestII.GameLogic.Hubs
 
             if (player == null)
             {
-                Services.Instance.Writer.WriteLine("<p>Refresh the page to reconnect!</p>", player);
+                Services.Instance.Hub.Clients
+                    .Client(connectionId)
+                    .SendAsync("SendMessage", "<p>Refresh the page to reconnect!</p>", "");
                 return;
             }
 

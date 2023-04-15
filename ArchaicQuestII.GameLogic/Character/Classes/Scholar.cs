@@ -11,12 +11,7 @@ public class Scholar : IClass
     public int Id { get; set; }
     public bool IsSubClass => false;
     public string Name => ClassName.Scholar.ToString();
-    public string Description =>
-        "Warriors are lethal combatants who can use any weapon and armor with ease, "
-        + "relying on their strength and endurance instead of mana. With a wide range "
-        + "of offensive and defensive skills, they are a versatile class suitable for "
-        + "any race. For beginners, we highly recommend choosing a Human Warrior, as "
-        + "their high hit points and straightforward playstyle make them an easy class to learn.";
+    public string Description => "These academic researchers wield the power of knowledge.";
 
     public string PreferredWeapon => SkillName.Unarmed.ToString();
     public string HitDice => "1D10";
@@ -34,28 +29,30 @@ public class Scholar : IClass
     public List<SubClassName> Reclasses =>
         new List<SubClassName>
         {
-            SubClassName.Ranger,
-            SubClassName.Barbarian,
-            SubClassName.Swashbuckler,
-            SubClassName.Armsman,
-            SubClassName.Samurai
+            SubClassName.Herbalist,
+            SubClassName.Engineer,
+            SubClassName.Poisoner,
+            SubClassName.Alchemist,
+            SubClassName.Mentalist
         };
 
+    public List<Item.Item> StartingGear => new List<Item.Item> { };
+
     public List<SkillList> Skills =>
-      new List<SkillList>
+        new List<SkillList>
         {
             new SkillList
             {
                 Name = SkillName.LongBlades,
                 Level = 1,
-                Proficiency = 75,
+                Proficiency = 0,
                 IsSpell = false,
             },
             new SkillList
             {
                 Name = SkillName.ShortBlades,
                 Level = 1,
-                Proficiency = 0,
+                Proficiency = 25,
                 IsSpell = false,
             },
             new SkillList
@@ -118,7 +115,7 @@ public class Scholar : IClass
             {
                 Name = SkillName.Crafting,
                 Level = 1,
-                Proficiency = 0,
+                Proficiency = 25,
                 IsSpell = false,
             },
             new SkillList
@@ -153,7 +150,7 @@ public class Scholar : IClass
             {
                 Name = SkillName.Lore,
                 Level = 9,
-                Proficiency = 0,
+                Proficiency = 75,
                 IsSpell = false,
             },
             new SkillList

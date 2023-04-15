@@ -34,15 +34,17 @@ public class Mage : IClass
     public List<SubClassName> Reclasses =>
         new List<SubClassName>
         {
-            SubClassName.Ranger,
-            SubClassName.Barbarian,
-            SubClassName.Swashbuckler,
-            SubClassName.Armsman,
-            SubClassName.Samurai
+            SubClassName.Conjuror,
+            SubClassName.Enchanter,
+            SubClassName.Invoker,
+            SubClassName.Witch,
+            SubClassName.Illusionist
         };
 
+    public List<Item.Item> StartingGear => new List<Item.Item> { };
+
     public List<SkillList> Skills =>
-     new List<SkillList>
+        new List<SkillList>
         {
             new SkillList
             {
