@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Text;
 using ArchaicQuestII.GameLogic.Account;
 using ArchaicQuestII.GameLogic.Character;
@@ -35,11 +34,13 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
 
             var gameHours = TimeSpan.FromMinutes(player.PlayTime);
 
+            var className = player.SubClassName != "None" ? player.SubClassName : player.ClassName;
+
             sb.Append(
                 $"<table class=\"score-table\"><tr><td class=\"cell-title\">Level:</td><td>{player.Level}</td><td class=\"cell-title\">Race:</td><td>{player.Race}</td><td class=\"cell-title\">Born on:</td><td>{player.DateCreated}</td></tr>"
             );
             sb.Append(
-                $"<tr><td class=\"cell-title\">Years:</td><td>19</td><td class=\"cell-title\">Class:</td><td>{player.ClassName}</td><td class=\"cell-title\">Played:</td><td>{Math.Floor(gameHours.TotalHours)} hours</td></tr>"
+                $"<tr><td class=\"cell-title\">Years:</td><td>19</td><td class=\"cell-title\">Class:</td><td>{className}</td><td class=\"cell-title\">Played:</td><td>{Math.Floor(gameHours.TotalHours)} hours</td></tr>"
             );
             sb.Append(
                 $"<tr><td class=\"cell-title\">STR:</td><td>{player.Attributes.Attribute[EffectLocation.Strength]}({player.MaxAttributes.Attribute[EffectLocation.Strength]})</td><td class=\"cell-title\"></td> <!-- hit roll --><td></td><td class=\"cell-title\">Sex:</td><td>{player.Gender}</td></tr>"
@@ -63,7 +64,7 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
                 "<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td class=\"cell-title\"></td><td></td><td></td><td></td></tr>"
             );
             sb.Append(
-                $"<tr><td class=\"cell-title\">Qpoints:</td><td>0</td><td class=\"cell-title\">HP</td><td> {player.Attributes.Attribute[EffectLocation.Hitpoints]}/{player.MaxAttributes.Attribute[EffectLocation.Hitpoints]}</td><td class=\"cell-title\">weight:</td><td>{CalculateWeight(player)} lb. (max:{player.Attributes.Attribute[EffectLocation.Strength] * 3} lb.)</td></tr>"
+                $"<tr><td class=\"cell-title\">Qpoints:</td><td>0</td><td class=\"cell-title\">HP</td><td> {player.Attributes.Attribute[EffectLocation.Hitpoints]}/{player.MaxAttributes.Attribute[EffectLocation.Hitpoints]}</td><td class=\"cell-title\">weight:</td><td>{player.CalculateWeight()} lb. (max:{player.Attributes.Attribute[EffectLocation.Strength] * 3} lb.)</td></tr>"
             );
             sb.Append(
                 $"<tr><td class=\"cell-title\">Pract:</td><td>0</td><td class=\"cell-title\">Mana</td><td> {player.Attributes.Attribute[EffectLocation.Mana]}/{player.MaxAttributes.Attribute[EffectLocation.Mana]}</td><td class=\"cell-title\">Mkills:</td><td>0</td></tr>"
@@ -79,15 +80,6 @@ namespace ArchaicQuestII.GameLogic.Commands.Info
             );
 
             Services.Instance.Writer.WriteLine(sb.ToString(), player);
-        }
-
-        private float CalculateWeight(Player player)
-        {
-            var weight = player.Inventory.Sum(item => item.Weight == 0 ? 1 : item.Weight);
-
-            player.Weight = weight;
-
-            return weight;
         }
     }
 }

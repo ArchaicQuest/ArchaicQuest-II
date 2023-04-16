@@ -34,21 +34,23 @@ public class Cleric : IClass
     public List<SubClassName> Reclasses =>
         new List<SubClassName>
         {
-            SubClassName.Ranger,
-            SubClassName.Barbarian,
-            SubClassName.Swashbuckler,
-            SubClassName.Armsman,
-            SubClassName.Samurai
+            SubClassName.Crusader,
+            SubClassName.Druid,
+            SubClassName.Shaman,
+            SubClassName.Defiler,
+            SubClassName.Monk
         };
 
+    public List<Item.Item> StartingGear => new List<Item.Item> { };
+
     public List<SkillList> Skills =>
-      new List<SkillList>
+        new List<SkillList>
         {
             new SkillList
             {
                 Name = SkillName.LongBlades,
                 Level = 1,
-                Proficiency = 75,
+                Proficiency = 0,
                 IsSpell = false,
             },
             new SkillList
@@ -97,7 +99,7 @@ public class Cleric : IClass
             {
                 Name = SkillName.Staff,
                 Level = 1,
-                Proficiency = 0,
+                Proficiency = 25,
                 IsSpell = false,
             },
             new SkillList
@@ -202,7 +204,7 @@ public class Cleric : IClass
             {
                 Name = SkillName.FastHealing,
                 Level = 7,
-                Proficiency = 0,
+                Proficiency = 75,
                 IsSpell = false,
             },
             new SkillList
@@ -223,7 +225,7 @@ public class Cleric : IClass
             {
                 Name = SkillName.Rescue,
                 Level = 12,
-                Proficiency = 0,
+                Proficiency = 25,
                 IsSpell = false,
             },
             new SkillList

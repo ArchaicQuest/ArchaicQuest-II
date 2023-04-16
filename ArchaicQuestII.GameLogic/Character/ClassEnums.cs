@@ -1,15 +1,17 @@
 namespace ArchaicQuestII.GameLogic.Character;
 
-public enum ClassName {
+public enum ClassName
+{
     None,
     Fighter = 1,
     Rogue = 2,
     Mage = 3,
     Cleric = 4,
-    Scholar = 5,
+    Scholar = 5
 }
 
-public enum SubClassName {
+public enum SubClassName
+{
     None = 0,
 
     //Fighter Subs
@@ -28,21 +30,22 @@ public enum SubClassName {
 
     //Mage Subs
     Witch = 31,
-    Illusionist = 32, 
+    Illusionist = 32,
     Enchanter = 33,
-    Mentalist = 34,
-    Conjuror = 35,
-    Invoker = 36,
+    Conjuror = 34,
+    Invoker = 35,
 
     //Cleric Subs
-    Crusader = 41, 
+    Crusader = 41,
     Druid = 42,
     Shaman = 43,
-    Priest = 44,
+    Defiler = 44,
+    Monk = 45,
 
     //Scholar Subs
     Alchemist = 51,
     Engineer = 52,
     Herbalist = 53,
-    Poisoner = 54
+    Poisoner = 54,
+    Mentalist = 55,
 }

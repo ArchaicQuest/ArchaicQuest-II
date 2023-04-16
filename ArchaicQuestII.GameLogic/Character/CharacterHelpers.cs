@@ -103,6 +103,15 @@ public static class CharacterHelpers
         return Services.Instance.CharacterHandler.GetClass(player.ClassName);
     }
 
+    public static float CalculateWeight(this Player player)
+    {
+        var weight = player.Inventory.Sum(item => item.Weight == 0 ? 1 : item.Weight);
+
+        player.Weight = weight;
+
+        return weight;
+    }
+
     public static bool HasSkill(this Player player, SkillName skillName)
     {
         var skill = player.GetSkill(skillName);
@@ -955,6 +964,12 @@ public static class CharacterHelpers
     {
         var itemsToWear = player.Inventory.Where(x => x.Equipped == false);
 
+        if (itemsToWear.Count() == 0)
+        {
+            Services.Instance.Writer.WriteLine("<p>You have no items to wear.</p>", player);
+            return;
+        }
+
         foreach (var itemToWear in itemsToWear)
         {
             if (!player.EqSlotSet(itemToWear.Slot))
@@ -1111,6 +1126,12 @@ public static class CharacterHelpers
     public static void RemoveAll(this Player player, Room room)
     {
         var itemsToRemove = player.Inventory.Where(x => x.Equipped == true);
+
+        if (itemsToRemove.Count() == 0)
+        {
+            Services.Instance.Writer.WriteLine("<p>You have no items to remove.</p>", player);
+            return;
+        }
 
         foreach (var itemToRemove in itemsToRemove)
         {

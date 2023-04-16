@@ -20,4 +20,5 @@ public interface IClass
     public Attributes AttributeBonus { get; }
     public List<SubClassName> Reclasses { get; }
     public List<SkillList> Skills { get; }
+    public List<Item.Item> StartingGear { get; }
 }
