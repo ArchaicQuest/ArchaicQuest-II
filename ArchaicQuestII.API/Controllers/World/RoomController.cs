@@ -29,8 +29,13 @@ namespace ArchaicQuestII.API.World
         [Route("api/World/Room")]
         public IActionResult Post([FromBody] Room room)
         {
+            if (room == null)
+            {
+                return null;
+            }
+            
             var newRoom = room.MapRoom();
-
+        
             GameLogic.Core.Services.Instance.DataBase.Save(newRoom, DataBase.Collections.Room);
 
             var user = (HttpContext.Items["User"] as AdminUser);
@@ -85,6 +90,12 @@ namespace ArchaicQuestII.API.World
         [Route("api/World/Room/{id:int}")]
         public void Put([FromBody] Room data)
         {
+
+            if (data == null)
+            {
+                return;
+            }
+            
             var updateRoom = data.MapRoom();
             GameLogic.Core.Services.Instance.DataBase.Save(updateRoom, DataBase.Collections.Room);
 
@@ -295,6 +306,19 @@ namespace ArchaicQuestII.API.World
             return Ok(
                 JsonConvert.SerializeObject(new { toast = $"{room.Title} deleted successfully." })
             );
+        }
+        
+        [HttpGet]
+        [Route("api/World/Room/ReturnFlagTypes")]
+        public JsonResult ReturnFlagTypes()
+        {
+            var roomFlags = new List<object>();
+
+            foreach (var roomFlag in Enum.GetValues(typeof(Room.RoomFlag)))
+            {
+                roomFlags.Add(new { id = (int)roomFlag, name = roomFlag.ToString() });
+            }
+            return Json(roomFlags);
         }
     }
 }
