@@ -112,7 +112,10 @@ namespace ArchaicQuestII.GameLogic.Combat
         public void AddCommand(Player player, string command)
         {
             _combatants.TryGetValue(player.Name, out var combatant);
-            combatant.Command = command;
+            if (combatant != null)
+            {
+                combatant.Command = command;
+            }
         }
 
         public void Do()
@@ -717,9 +720,12 @@ namespace ArchaicQuestII.GameLogic.Combat
         {
             combatant.target = _combatants.Values
                 .FirstOrDefault(x => x.aggressor != combatant.aggressor)
-                .player;
+                ?.player;
 
-            combatant.player.Target = combatant.target.Name;
+            if (combatant.target != null)
+            {
+                combatant.player.Target = combatant.target.Name;
+            }
         }
 
         public void DisplayMiss(Player player, Player target, Item.Item weapon)

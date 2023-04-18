@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using ArchaicQuestII.GameLogic.Account;
@@ -123,19 +124,30 @@ public class FleeCmd : ICommand
             Services.Instance.Writer.WriteLine("<p>You have no where to go!</p>", player);
             return;
         }
-
+        
         var getExitIndex = DiceBag.Roll(1, 0, validExits.Count - 1);
 
-        player.Combat.RemoveFromCombat(player);
+            player.Combat?.RemoveFromCombat(player);
+            
+            //Remove target from combat
+            var playerTarget = room.Mobs.FirstOrDefault(x => x.Target?.Equals(player.Name) ?? false) ??
+                               room.Players.FirstOrDefault(x => x.Target?.Equals(player.Name) ?? false);
+            if (playerTarget != null)
+            {
+                playerTarget.Combat?.RemoveFromCombat(playerTarget);
+                playerTarget.Title = string.Empty;
+                playerTarget.Status = CharacterStatus.Status.Standing;
+            }
 
-        player.Status = CharacterStatus.Status.Fleeing;
+            player.Target = string.Empty;
+            player.Status = CharacterStatus.Status.Fleeing;
 
-        player.Attributes.Attribute[EffectLocation.Moves] -= moveCost;
+            player.Attributes.Attribute[EffectLocation.Moves] -= moveCost;
 
-        Services.Instance.Cache
-            .GetCommand(validExits[getExitIndex].Name.ToLower())
-            .Execute(player, room, new[] { validExits[getExitIndex].Name.ToLower() });
+            Services.Instance.Cache
+                .GetCommand(validExits[getExitIndex].Name.ToLower())
+                .Execute(player, room, new[] { validExits[getExitIndex].Name.ToLower() });
 
-        Services.Instance.UpdateClient.UpdateMoves(player);
-    }
+            Services.Instance.UpdateClient.UpdateMoves(player);
+        }
 }
