@@ -8,6 +8,10 @@ namespace ArchaicQuestII.GameLogic.World.Room
     {
         public static Room MapRoom(this Room room)
         {
+            if (room == null)
+            {
+                return null;
+            }
             var newRoom = new Room()
             {
                 Title = room.Title,
@@ -30,6 +34,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
                 Terrain = room.Terrain,
                 DateUpdated = DateTime.Now,
                 DateCreated = DateTime.Now,
+                RoomFlags = room.RoomFlags
             };
 
             newRoom.MapRoomId();
@@ -42,7 +47,7 @@ namespace ArchaicQuestII.GameLogic.World.Room
             return newRoom;
         }
 
-        public static void MapRoomId(this Room room)
+        private static void MapRoomId(this Room room)
         {
             var northRoom = room.Exits.North?.Coords;
             if (northRoom != null)
