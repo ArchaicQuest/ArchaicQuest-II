@@ -68,7 +68,25 @@ public class OpenCmd : ICommand
         {
             if (!isExit.Locked)
             {
+                
+                var oppositeRoom =
+                    Services.Instance.Cache.GetRoom(
+                        $"{isExit.AreaId}{isExit.Coords.X}{isExit.Coords.Y}{isExit.Coords.Z}");
+
+                if (oppositeRoom != null)
+                {
+                    var oppositeExit = Helpers.IsExit(GetOppositeExit(target), oppositeRoom);
+
+                    if (oppositeExit != null)
+                    {
+                        oppositeExit.Closed = false;
+                        oppositeExit.Locked = false;
+                    }
+                }
+                
                 isExit.Closed = false;
+                
+                
                 Services.Instance.Writer.WriteLine($"<p>You open the door {isExit.Name}.", player);
                 Services.Instance.UpdateClient.PlaySound("door", player);
                 // play sound for others in the room
@@ -117,5 +135,45 @@ public class OpenCmd : ICommand
 
         item.Container.IsOpen = true;
         room.Clean = false;
+    }
+    
+    
+    private string GetOppositeExit(string direction)
+    {
+        switch (direction)
+        {
+            case "north":
+            case "n":
+                return "s";
+            case "south":
+            case "s":
+                return "n";
+            case "east":
+            case "e":
+                return "w";
+            case "west":
+            case "w":
+                return "e";
+            case "southeast":
+            case "se":
+                return "nw";
+            case "southwest":
+            case "sw":
+                return "ne";
+            case "northeast":
+            case "ne":
+                return "sw";
+            case "northwest":
+            case "nw":
+                return "se";
+            case "down":
+            case "d":
+                return "u";
+            case "up":
+            case "u":
+                return "d";
+            default:
+                return "";
+        }
     }
 }

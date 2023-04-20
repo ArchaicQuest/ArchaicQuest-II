@@ -86,6 +86,20 @@ public class UnlockCmd : ICommand
                         Services.Instance.Writer.WriteLine("<p>It's already unlocked.</p>", player);
                         return;
                     }
+                    
+                    var oppositeRoom =
+                        Services.Instance.Cache.GetRoom(
+                            $"{doorToUnlock.AreaId}{doorToUnlock.Coords.X}{doorToUnlock.Coords.Y}{doorToUnlock.Coords.Z}");
+
+                    if (oppositeRoom != null)
+                    {
+                        var oppositeExit = Helpers.IsExit(GetOppositeExit(target), oppositeRoom);
+
+                        if (oppositeExit != null)
+                        {
+                            oppositeExit.Locked = false;
+                        }
+                    }
 
                     doorToUnlock.Locked = false;
                     Services.Instance.UpdateClient.PlaySound("unlock", player);
@@ -177,6 +191,46 @@ public class UnlockCmd : ICommand
                     player
                 );
             }
+        }
+    }
+    
+      
+    private string GetOppositeExit(string direction)
+    {
+        switch (direction)
+        {
+            case "north":
+            case "n":
+                return "s";
+            case "south":
+            case "s":
+                return "n";
+            case "east":
+            case "e":
+                return "w";
+            case "west":
+            case "w":
+                return "e";
+            case "southeast":
+            case "se":
+                return "nw";
+            case "southwest":
+            case "sw":
+                return "ne";
+            case "northeast":
+            case "ne":
+                return "sw";
+            case "northwest":
+            case "nw":
+                return "se";
+            case "down":
+            case "d":
+                return "u";
+            case "up":
+            case "u":
+                return "d";
+            default:
+                return "";
         }
     }
 }
