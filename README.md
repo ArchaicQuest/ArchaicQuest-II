@@ -91,3 +91,7 @@ View the [ArchaicQuest II - Admin tool](https://github.com/ArchaicQuest/ArchaicQ
 View the [ArchaicQuest II - Game Client](https://github.com/ArchaicQuest/ArchaicQuest-II-Web-Client) to find out more.
 
 ![alt ArchaicQuestII Web Admin](https://cdn.discordapp.com/attachments/660365544377155604/764419914970300456/web_client.PNG)
+
+## Play online
+
+Also playable on [WASM Arcade](https://www.wasmarcade.online/arcade/archaicquest-ii/) — free, no download.
